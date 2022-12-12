@@ -10,8 +10,8 @@ This repository contains central space for Saleor Apps, Integrations and Marketp
 
 | App                                          | Integrations       | Manifest URL to install                 |
 |----------------------------------------------|--------------------|-----------------------------------------|
-| https://github.com/saleor/saleor-app-search  | Algolia            | https://search.saleor.app/api/manifest  |
-| https://github.com/saleor/saleor-app-cms-hub | Contentful, Strapi | https://cms-hub.saleor.app/api/manifest |
-| https://github.com/saleor/saleor-app-klaviyo | Klaviyo            | https://klaviyo.saleor.app/api/manifest |
-| https://github.com/saleor/saleor-app-slack   | Slack              | https://slack.saleor.app/api/manifest   |
-| https://github.com/saleor/saleor-app-mailing |                    |                                         |
+| [Search Hub](https://github.com/saleor/saleor-app-search)  | Algolia            | https://search.saleor.app/api/manifest  |
+| [CMS Hub](https://github.com/saleor/saleor-app-cms-hub) | Contentful, Strapi | https://cms-hub.saleor.app/api/manifest |
+| [Klaviyo](https://github.com/saleor/saleor-app-klaviyo) | Klaviyo            | https://klaviyo.saleor.app/api/manifest |
+| [Slack](https://github.com/saleor/saleor-app-slack)   | Slack              | https://slack.saleor.app/api/manifest   |
+| [Mailing Hub](https://github.com/saleor/saleor-app-mailing) |                    |                                         |
