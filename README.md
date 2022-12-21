@@ -1,12 +1,45 @@
-# Saleor Apps
+![Saleor Apps](https://user-images.githubusercontent.com/44495184/208925145-78c5022c-1a6c-4f2c-8f4f-7500e7afcaf0.png)
 
-This repository contains central space for Saleor Apps, Integrations and Marketplace. 
+<div align="center">
+  <h1>Saleor Apps</h1>
+</div>
 
-- See [Roadmap](https://github.com/orgs/saleor/projects/22/views/1)
-- Vote on new integrations or submit a request [here](https://github.com/saleor/apps/discussions/categories/integrations-features)
-- Check [Apps Development Docs](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+<div align="center">
+  <p>The central space for Saleor Apps, Integrations and Marketplace.
+</div>
 
-## Available integrations
+<div align="center">
+  <a href="https://saleor.io/">🏠 Website</a>
+  <span> • </span>
+  <a href="https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts">📚 Docs</a>
+  <span> • </span>
+  <a href="https://saleor.io/blog/">📰 Blog</a>
+  <span> • </span>
+  <a href="https://twitter.com/getsaleor">🐦 Twitter</a>
+</div>
+
+<br />
+
+<div align="center">
+  <a href="https://docs.saleor.io/docs/3.x/developer/extending/apps/quickstart/getting-started">Build an app ▶️</a>
+</div>
+
+## Overview
+
+This repository serves as a starting point in the exploration of Saleor apps.
+
+> _Saleor apps are separate applications that use GraphQL to talk to the Saleor server and receive webhooks with event notifications from Saleor._
+> 
+> [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+
+From here, you can visit:
+
+- [🔍 Apps documentation](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts) - to learn more about how you can use apps to extend the capabilities of Saleor.
+- [🆕 Quickstart Tutorial](https://docs.saleor.io/docs/3.x/developer/extending/apps/quickstart/getting-started) - to build your first app using [Saleor CLI](https://docs.saleor.io/docs/3.x/cli).
+- [🗓️ Roadmap](https://github.com/orgs/saleor/projects/22/views/1) - to see the current progress on the development of official Saleor apps.
+- [✍️ GitHub issues](https://github.com/saleor/apps/discussions/categories/integrations-features) - to submit a proposal for creating a new integration or an app.
+
+## Apps
 
 | App                                          | Integrations       | Manifest URL to install                 |
 |----------------------------------------------|--------------------|-----------------------------------------|
