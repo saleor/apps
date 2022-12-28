@@ -37,7 +37,7 @@ From here, you can visit:
 - [🔍 Apps documentation](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts) - to learn more about how you can use apps to extend the capabilities of Saleor.
 - [🆕 Quickstart Tutorial](https://docs.saleor.io/docs/3.x/developer/extending/apps/quickstart/getting-started) - to build your first app using [Saleor CLI](https://docs.saleor.io/docs/3.x/cli).
 - [🗓️ Roadmap](https://github.com/orgs/saleor/projects/22/views/1) - to see the current progress on the development of official Saleor apps.
-- [✍️ GitHub issues](https://github.com/saleor/apps/discussions/categories/integrations-features) - to submit a proposal for creating a new integration or an app.
+- [✍️ GitHub discussions](https://github.com/saleor/apps/discussions/categories/integrations-features) - to submit a proposal for creating a new integration or an app.
 
 ## Apps
 
