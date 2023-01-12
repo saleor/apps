@@ -59,7 +59,7 @@ const ImporterPage: NextPage = () => {
           </div>
         }
       />
-      <Container maxWidth="unset">
+      <Container style={{ maxWidth: "unset" }}>
         <PageTabs
           style={{ marginBottom: 20, marginTop: 20 }}
           value={activeTab}
