@@ -48,3 +48,4 @@ From here, you can visit:
 | [Klaviyo](https://github.com/saleor/saleor-app-klaviyo) | Klaviyo            | https://klaviyo.saleor.app/api/manifest |
 | [Slack](https://github.com/saleor/saleor-app-slack)   | Slack              | https://slack.saleor.app/api/manifest   |
 | [Mailing Hub](https://github.com/saleor/saleor-app-mailing) |                    |                                         |
+| [Invoices](https://github.com/saleor/saleor-app-invoices) |                    | https://invoices.saleor.app/api/manifest |
