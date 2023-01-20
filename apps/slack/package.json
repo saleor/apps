@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "pnpm generate && prettier --loglevel warn --write . && eslint --fix .",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen",
-    "prepare": "husky install"
+    "generate": "graphql-codegen"
   },
   "saleor": {
     "schemaVersion": "3.4"
