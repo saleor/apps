@@ -31,3 +31,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Sentry
+.sentryclirc
+test-invoice.pdf
+.env
+# Sentry
+.sentryclirc
+sentry.properties
+.idea
