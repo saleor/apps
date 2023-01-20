@@ -8,7 +8,7 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
 
 import GraphQLProvider from "../providers/GraphQLProvider";
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
+import { ThemeSynchronizer } from "@saleor/shared";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { trpcClient } from "../modules/trpc/trpc-client";
 

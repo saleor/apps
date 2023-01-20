@@ -9,9 +9,10 @@ const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
 /**
- * @type import("@sentry/nextjs").ExportedNextConfig
+ * @type import("next").NextConfig
  */
 const moduleExports = {
+  transpilePackages: ["@saleor/shared"],
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
     // for client-side builds. (This will be the default starting in
