@@ -1,0 +1,15 @@
+{
+  "name": "@saleor/shared",
+  "version": "1.0.0",
+  "dependencies": {
+    "@saleor/macaw-ui": "^0.7.2",
+    "typescript": "^4.9.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@saleor/app-sdk": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10"
+  }
+}

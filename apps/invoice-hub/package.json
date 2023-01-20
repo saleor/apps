@@ -16,6 +16,7 @@
     "schemaVersion": "3.10"
   },
   "dependencies": {
+    "@saleor/shared": "workspace:*",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
@@ -34,7 +35,7 @@
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
     "microinvoice": "^1.0.6",
-    "next": "13.0.6",
+    "next": "13.1.3",
     "pino": "^8.8.0",
     "pino-pretty": "^9.1.1",
     "puppeteer": "^19.4.0",
@@ -62,7 +63,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "@vitest/coverage-c8": "^0.25.7",
     "eslint": "8.25.0",
-    "eslint-config-next": "13.0.6",
+    "eslint-config-next": "13.1.3",
     "eslint-config-prettier": "^8.5.0",
     "jsdom": "^20.0.3",
     "prettier": "^2.7.1",

@@ -7,7 +7,7 @@ import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { AppLayoutProps } from "../../types";
-import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
+import { ThemeSynchronizer } from "@saleor/shared";
 
 const themeOverrides: Partial<Theme> = {
   overrides: {
