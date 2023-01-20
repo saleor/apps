@@ -1,9 +1,30 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [],
   "pipeline": {
     "build": {
       "outputs": [".next/**"]
+    },
+    "saleor-app-invoice#build": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "VERCEL_URL",
+        "PORT",
+        "ALLOWED_DOMAIN_PATTERN",
+        "TEMP_PDF_STORAGE_DIR",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG",
+        "REST_APL_TOKEN",
+        "REST_APL_ENDPOINT",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SENTRY_DSN"
+      ]
+    },
+    "saleor-app-slack#build": {
+      "env": ["APL", "SENTRY_AUTH_TOKEN", "SENTRY_PROJECT", "SENTRY_ORG"]
     },
     "lint": {},
     "dev": {
