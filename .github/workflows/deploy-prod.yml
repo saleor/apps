@@ -6,7 +6,7 @@ on:
           type: choice
           required: true
           options:
-            - slack
+            - saleor-app-slack
           description: What app to deploy
 jobs:
   prepare:
@@ -22,14 +22,21 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Check linters
-        run: pnpm build
+      - name: Install Vercel CLI
+        run: npm i -g vercel
+
 
   deploy: 
     needs: [prepare]
     environment: Prod
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     name: Deploy
     steps:
+      - name: Link
+        run: vercel link apps/${{inputs.app_name}}
+      - name: Pull env
+        run: vercel pull --environment=production
+      - name: Build
+        run: pnpm vercel build --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy to Vecel
-        run: echo "TODO $TOKEN"
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
