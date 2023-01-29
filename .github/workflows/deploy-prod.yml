@@ -38,5 +38,5 @@ jobs:
         run: vercel pull --environment=production
       - name: Build
         run: pnpm vercel build --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy to Vecel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+#      - name: Deploy to Vecel
+#        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
