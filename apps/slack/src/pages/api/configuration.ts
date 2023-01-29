@@ -54,4 +54,4 @@ export const handler = async (
   }
 };
 
-export default createProtectedHandler(handler, saleorApp.apl);
+export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS", "MANAGE_ORDERS"]);

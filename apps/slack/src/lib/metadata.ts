@@ -6,6 +6,7 @@ import {
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
+import { settingsManagerSecretKey } from "./saleor-app";
 
 // Function is using urql graphql client to fetch all available metadata.
 // Before returning query result, we are transforming response to list of objects with key and value fields
@@ -54,7 +55,7 @@ export const createSettingsManager = (client: Client, appId: string) =>
   // If your use case require plain text values, you can use MetadataManager.
   new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
-    encryptionKey: "random key",
+    encryptionKey: settingsManagerSecretKey,
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, appId, metadata),
   });

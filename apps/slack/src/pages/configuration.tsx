@@ -20,6 +20,9 @@ import { ConfigurationError } from "../components/ConfigurationError/Configurati
 import useAppApi from "../hooks/useAppApi";
 import { saleorApp } from "../lib/saleor-app";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
+import { Link } from "@material-ui/core";
+import { SlackAppMainBar } from "../components/SlackAppMainBar/SlackAppMainBar";
+import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 
 interface ConfigurationField {
   key: string;
@@ -133,6 +136,7 @@ function Configuration({ isVercel, appReady }: PageProps) {
         <ConfirmButton
           type="submit"
           variant="primary"
+          fullWidth
           transitionState={transitionState}
           labels={{
             confirm: "Save",
@@ -172,7 +176,7 @@ function Instructions() {
       <Typography>How to configure</Typography>
       <List>
         <ListItem>
-          <a
+          <Link
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl(slackUrl.href);
@@ -180,7 +184,7 @@ function Instructions() {
             href={slackUrl.href}
           >
             Install Slack application
-          </a>
+          </Link>
         </ListItem>
         <ListItem>
           Copy incoming Webhook URL from Slack app configuration and paste it below into
@@ -191,7 +195,7 @@ function Instructions() {
       <Typography>Useful links</Typography>
       <List>
         <ListItem>
-          <a
+          <Link
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl("https://github.com/saleor/saleor-app-slack");
@@ -199,10 +203,10 @@ function Instructions() {
             href="https://github.com/saleor/saleor-app-slack"
           >
             Visit repository & readme
-          </a>
+          </Link>
         </ListItem>
         <ListItem>
-          <a
+          <Link
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl("https://api.slack.com/messaging/webhooks");
@@ -210,7 +214,7 @@ function Instructions() {
             href="https://api.slack.com/messaging/webhooks"
           >
             Read about Slack apps that use incoming webhooks
-          </a>
+          </Link>
         </ListItem>
       </List>
     </>
@@ -226,16 +230,20 @@ const ConfigurationWithAuth = withAuthorization({
 
 ConfigurationWithAuth.getLayout = (page: ReactElement) => (
   <div>
-    <Card style={{ marginBottom: 40 }}>
-      <CardHeader title="Instructions" />
-      <CardContent>
-        <Instructions />
-      </CardContent>
-    </Card>
-    <Card>
-      <CardHeader title="Configuration" />
-      <CardContent>{page}</CardContent>
-    </Card>
+    <SlackAppMainBar />
+    <AppColumnsLayout>
+      <div />
+      <Card>
+        <CardHeader title="Configuration" />
+        <CardContent>{page}</CardContent>
+      </Card>
+      <Card style={{ marginBottom: 40 }}>
+        <CardHeader title="Instructions" />
+        <CardContent>
+          <Instructions />
+        </CardContent>
+      </Card>
+    </AppColumnsLayout>
   </div>
 );
 
