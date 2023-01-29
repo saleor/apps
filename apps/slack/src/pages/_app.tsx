@@ -7,7 +7,8 @@ import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { AppLayoutProps } from "../../types";
-import { ThemeSynchronizer } from "@saleor/shared";
+import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
+import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 
 const themeOverrides: Partial<Theme> = {
   overrides: {
@@ -29,11 +30,12 @@ const themeOverrides: Partial<Theme> = {
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
-const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
+const appBridgeInstance =
+  typeof window !== "undefined" ? new AppBridge({ autoNotifyReady: false }) : undefined;
 
 // That's a hack required by Macaw-UI incompatibility with React@18
 const ThemeProvider = MacawUIThemeProvider as React.FC<
-  PropsWithChildren<{ overrides: Partial<Theme>; ssr: boolean }>
+  PropsWithChildren<{ overrides: Partial<Theme>; ssr: boolean; defaultTheme?: "light" | "dark" }>
 >;
 
 function SaleorApp({ Component, pageProps }: AppLayoutProps) {
@@ -47,13 +49,15 @@ function SaleorApp({ Component, pageProps }: AppLayoutProps) {
   }, []);
 
   return (
-    <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-      <ThemeProvider overrides={themeOverrides} ssr>
-        <ThemeSynchronizer />
-        <RoutePropagator />
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
-    </AppBridgeProvider>
+    <NoSSRWrapper>
+      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+        <ThemeProvider overrides={themeOverrides} ssr>
+          <ThemeSynchronizer />
+          <RoutePropagator />
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </AppBridgeProvider>
+    </NoSSRWrapper>
   );
 }
 

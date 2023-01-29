@@ -9,20 +9,10 @@ const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
 const moduleExports = {
-  transpilePackages: ["@saleor/shared"],
   eslint: {
     ignoreDuringBuilds: true,
   },
   reactStrictMode: true,
-  redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/configuration",
-        permanent: false,
-      },
-    ];
-  },
 
   sentry: {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
