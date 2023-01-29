@@ -26,6 +26,7 @@ jobs:
         run: pnpm build
 
   deploy: 
+    needs: [prepare]
     environment: Prod
     runs-on: ubuntu-latests
     name: Deploy
