@@ -10,7 +10,6 @@ on:
           description: What app to deploy
 jobs:
   prepare:
-    environment: Prod
     runs-on: ubuntu-latests
     steps:
       - uses: actions/checkout@v2
