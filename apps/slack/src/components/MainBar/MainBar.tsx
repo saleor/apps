@@ -1,8 +1,7 @@
-import { makeStyles } from "@saleor/macaw-ui";
-import { ReactNode } from "react";
 import { Paper, PaperProps } from "@material-ui/core";
-
+import { makeStyles } from "@saleor/macaw-ui";
 import clsx from "clsx";
+import { ReactNode } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { Link } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { AplReadyResult, VercelAPL } from "@saleor/app-sdk/APL";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
@@ -16,13 +17,12 @@ import { GetServerSideProps } from "next";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
 import AccessWarning from "../components/AccessWarning/AccessWarning";
+import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
+import { SlackAppMainBar } from "../components/SlackAppMainBar/SlackAppMainBar";
 import useAppApi from "../hooks/useAppApi";
 import { saleorApp } from "../lib/saleor-app";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
-import { Link } from "@material-ui/core";
-import { SlackAppMainBar } from "../components/SlackAppMainBar/SlackAppMainBar";
-import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 
 interface ConfigurationField {
   key: string;

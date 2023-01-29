@@ -1,13 +1,14 @@
-import { NextPage } from "next";
+import { InputAdornment, LinearProgress, TextField, Typography } from "@material-ui/core";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Button, makeStyles, useTheme } from "@saleor/macaw-ui";
+import { NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { FormEventHandler, useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
-import Image from "next/image";
+
 import SaleorLogoImage from "../assets/saleor-logo.svg";
 import SaleorLogoImageDark from "../assets/saleor-logo-dark.svg";
-import { InputAdornment, LinearProgress, TextField, Typography } from "@material-ui/core";
-import { Button, makeStyles, useTheme } from "@saleor/macaw-ui";
 import { isInIframe } from "../lib/is-in-iframe";
 
 const useStyles = makeStyles({

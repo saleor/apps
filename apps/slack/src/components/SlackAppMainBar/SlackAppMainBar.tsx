@@ -1,8 +1,9 @@
 import { GitHub, OfflineBoltOutlined } from "@material-ui/icons";
+import { actions,useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
-import { MainBar } from "../MainBar/MainBar";
-import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
+
 import { AppIcon } from "../AppIcon/AppIcon";
+import { MainBar } from "../MainBar/MainBar";
 
 const useStyles = makeStyles({
   buttonsGrid: { display: "flex", gap: 10 },

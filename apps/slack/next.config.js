@@ -8,7 +8,12 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
+/**
+ *
+ * @type import("next").NextConfig
+ */
 const moduleExports = {
+  transpilePackages: ["@saleor/shared"],
   eslint: {
     ignoreDuringBuilds: true,
   },
