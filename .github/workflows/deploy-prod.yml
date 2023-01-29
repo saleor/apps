@@ -1,0 +1,29 @@
+name: QA
+on: 
+    workflow_dispatch:
+      inputs: 
+        app_name:
+          type: choice
+          required: true
+          options:
+            - slack
+          description: What app to deploy
+jobs:
+  deploy:
+    environment: Prod
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.19.1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Check linters
+        run: pnpm build
+      - name: Deploy to Vecel
+        run: echo "TODO"
