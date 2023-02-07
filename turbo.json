@@ -7,10 +7,19 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "build#saleor-app-data-importer": {
-      "env": ["NEXT_PUBLIC_NUVO_LICENSE_KEY"]
+      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY"]
     },
-    "build#saleor-app-invoicesr": {
-      "env": ["APP_DEBUG", "NODE_ENV", "SECRET_KEY", "TEMP_PDF_STORAGE_DIR", "PORT","VERCEL_URL", "ALLOWED_DOMAIN_PATTERN"]
+    "build#saleor-app-invoices": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "TEMP_PDF_STORAGE_DIR",
+        "PORT",
+        "VERCEL_URL",
+        "ALLOWED_DOMAIN_PATTERN"
+      ]
     },
     "lint": {
       "outputs": []
