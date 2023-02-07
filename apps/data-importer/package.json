@@ -40,6 +40,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "eslint": "^8.33.0",
     "@graphql-codegen/cli": "2.13.3",
     "@graphql-codegen/introspection": "2.2.1",
     "@graphql-codegen/typed-document-node": "^2.3.3",

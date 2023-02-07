@@ -1,9 +1,10 @@
 module.exports = {
   extends: ["next", "turbo", "prettier"],
   rules: {},
-  parserOptions: {
-    babelOptions: {
-      presets: [require.resolve("next/babel")],
-    },
-  },
+  // todo - check this, it was default in turbo
+  // parserOptions: {
+  //   babelOptions: {
+  //     presets: [require.resolve("next/babel")],
+  //   },
+  // },
 };

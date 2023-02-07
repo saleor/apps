@@ -42,6 +42,7 @@ importers:
       '@vitest/coverage-c8': ^0.28.4
       clsx: ^1.2.1
       dot-object: ^2.1.4
+      eslint: ^8.33.0
       eslint-config-saleor: workspace:*
       graphql: ^16.6.0
       graphql-tag: ^2.12.6
@@ -96,6 +97,7 @@ importers:
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
       '@vitest/coverage-c8': 0.28.4_jsdom@20.0.3
+      eslint: 8.33.0
       eslint-config-saleor: link:../../packages/eslint-config-saleor
       typescript: 4.9.5
 
