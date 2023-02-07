@@ -1,11 +1,10 @@
 /**
- * TODO This should be solved using transpilePackages option
+ * @type {import('next').NextConfig}
  */
-const withTM = require("next-transpile-modules")(["nuvo-react"]);
-
-module.exports = withTM({
+module.exports = {
   reactStrictMode: true,
   experimental: {
     esmExternals: true,
   },
-});
+  transpilePackages: ["nuvo-react"],
+};
