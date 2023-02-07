@@ -6,6 +6,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "build#saleor-app-data-importer": {
+      "env": ["NEXT_PUBLIC_NUVO_LICENSE_KEY"]
+    },
     "lint": {
       "outputs": []
     },
