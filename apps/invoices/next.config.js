@@ -27,6 +27,7 @@ const moduleExports = {
     ignoreDuringBuilds: true,
   },
   reactStrictMode: true,
+  transpilePackages: ["@saleor/apps-shared"],
 };
 
 const sentryWebpackPluginOptions = {
