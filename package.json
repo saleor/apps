@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "prettier": "^2.8.3",
-    "turbo": "^1.7.3"
+    "turbo": "^1.7.3",
+    "eslint-config-saleor": "workspace:*"
   },
   "engines": {
     "node": ">=18.0.0"
