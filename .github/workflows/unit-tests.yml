@@ -1,4 +1,4 @@
-name: Assign PR to creator
+name: Run tests
 
 on:
   pull_request:
