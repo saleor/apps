@@ -41,6 +41,10 @@ From here, you can visit:
 
 ## Apps
 
+Apps are being migrated to single monorepo in this repository.
+
+Meantime they can be accessed from the repositories below:
+
 | App                                          | Integrations       | Manifest URL to install                 |
 |----------------------------------------------|--------------------|-----------------------------------------|
 | [Search Hub](https://github.com/saleor/saleor-app-search)  | Algolia            | https://search.saleor.app/api/manifest  |
