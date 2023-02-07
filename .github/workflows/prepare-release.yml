@@ -1,0 +1,39 @@
+name: Open release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+#
+# TODO
+# - Add tags for each app (e.g. search@3.0.1) for easier parsing
+# - Print versions name to commit, for easier Vercel deployments
+#
+jobs:
+  release:
+    name: Prepare release with Changesets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 16 # It was default for Changesets action, check if it can be bumped to v18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+      - run: pnpm install
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        id: changesets
+        with:
+          title: Release apps
+          commit: Release apps
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: print outputs
+        run: "echo '${{toJSON(steps.changesets)}}}'"
