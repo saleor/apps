@@ -1,0 +1,5 @@
+query Channels {
+  channels {
+    slug
+  }
+}
