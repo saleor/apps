@@ -1,0 +1,96 @@
+{
+  "name": "saleor-app-klaviyo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@7.18.1",
+  "scripts": {
+    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "build": "pnpm generate && next build",
+    "start": "next start",
+    "lint": "pnpm generate && prettier --loglevel warn --write . && eslint --fix .",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "generate": "graphql-codegen"
+  },
+  "saleor": {
+    "schemaVersion": "3.4"
+  },
+  "saleorApp": {
+    "name": "Klaviyo",
+    "logo": "/public/logo.png",
+    "shortDescription": "Email, SMS, and more - a unified customer platform",
+    "sourceUrl": "https://github.com/saleor/saleor-app-klaviyo",
+    "vendor": "Saleor Commerce",
+    "links": [
+      {
+        "type": "developerWebsite",
+        "href": "https://saleor.io/"
+      },
+      {
+        "type": "mailContact",
+        "href": "mailto:info@saleor.io"
+      },
+      {
+        "type": "privacyPolicy",
+        "href": "https://saleor.io/legal/privacy/"
+      }
+    ],
+    "description": "Klaviyo is a unified customer platform that gives your online brand direct ownership of your consumer data and interactions, empowering you to turn transactions with customers into productive long-term relationships—at scale. The Klaviyo database integrates seamlessly with your tech stack and gives you the full story on every customer that visits—what makes them click, what makes them bounce, and what makes them buy. From the same platform, you can use Klaviyo’s suite of proven email and SMS templates to automate personalized communications like price drop alerts, friendly cart reminders, and just-in-time recommendations. Customers feel seen, not targeted—which means no more ineffective batching and blasting. Over time, Klaviyo even reveals what works and what doesn’t, uncovering trends that help you acquire and retain new customers while inspiring existing customers to buy again. It’s all there in one intuitive place—no need to start from scratch, and no need to rely on third-party marketplaces and ad networks. With Klaviyo, it’s easy to talk to every customer like you know them, and grow your business—on your own terms.",
+    "images": [
+      "/public/image.png"
+    ]
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@material-ui/lab": "4.0.0-alpha.61",
+    "@saleor/app-sdk": "~0.27.1",
+    "@saleor/macaw-ui": "^0.7.2",
+    "@sentry/nextjs": "^7.31.0",
+    "@urql/exchange-auth": "^0.1.7",
+    "clsx": "^1.2.1",
+    "graphql": "^16.5.0",
+    "graphql-tag": "^2.12.6",
+    "next": "12.3.1",
+    "node-fetch": "^3.2.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-helmet": "^6.1.0",
+    "urql": "^2.2.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.7.0",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typed-document-node": "^2.2.14",
+    "@graphql-codegen/typescript": "2.6.0",
+    "@graphql-codegen/typescript-operations": "2.4.3",
+    "@graphql-codegen/typescript-urql": "^3.5.13",
+    "@graphql-codegen/urql-introspection": "2.1.1",
+    "@graphql-typed-document-node/core": "^3.1.1",
+    "@types/node": "18.0.1",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.30.7",
+    "autoprefixer": "^10.4.7",
+    "clean-publish": "^4.0.1",
+    "eslint": "8.15.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.3.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.0",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "husky": "^8.0.1",
+    "postcss": "^8.4.14",
+    "prettier": "^2.7.1",
+    "pretty-quick": "^3.1.3",
+    "typescript": "4.7.4",
+    "eslint-config-saleor": "workspace:*"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "*.{js,ts,tsx,css,md,json}": "prettier --write"
+  }
+}

@@ -1,0 +1,19 @@
+fragment PaymentFragment on Payment {
+  __typename
+  id
+  created
+  modified
+  gateway
+  isActive
+  chargeStatus
+  total {
+    amount
+  }
+  capturedAmount {
+    ...MoneyFragment
+  }
+  creditCard {
+    brand
+  }
+  paymentMethodType
+}
