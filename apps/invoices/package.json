@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-invoices",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
