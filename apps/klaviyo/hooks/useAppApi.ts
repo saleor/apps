@@ -48,7 +48,6 @@ const useAppApi = ({ url, options, skip }: UseFetchProps) => {
     };
 
     if (appBridgeState?.ready && !skip) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchData();
     }
 

@@ -9,7 +9,7 @@ const isSentryPropertiesInEnvironment =
 const nextConfig = {
   reactStrictMode: true,
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   sentry: {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
