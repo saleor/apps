@@ -1,0 +1,41 @@
+subscription ProductEdited {
+  event {
+    __typename
+    ... on ProductUpdated {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+    ... on ProductCreated {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+    ... on ProductDeleted {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+    ... on ProductVariantCreated {
+      __typename
+      productVariant {
+        ...ProductVariantWebhookPayload
+      }
+    }
+    ... on ProductVariantUpdated {
+      __typename
+      productVariant {
+        ...ProductVariantWebhookPayload
+      }
+    }
+    ... on ProductVariantDeleted {
+      __typename
+      productVariant {
+        ...ProductVariantWebhookPayload
+      }
+    }
+  }
+}
