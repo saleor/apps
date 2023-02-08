@@ -6,5 +6,5 @@ module.exports = {
   experimental: {
     esmExternals: true,
   },
-  transpilePackages: ["nuvo-react"],
+  transpilePackages: ["nuvo-react", "@saleor/apps-shared"],
 };
