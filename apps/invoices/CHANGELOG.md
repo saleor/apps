@@ -1,5 +1,14 @@
 # saleor-app-invoices
 
+## 1.1.2
+
+### Patch Changes
+
+- a641caf: Extract isInIframe to new shared package and use it in apps
+- a641caf: Update deps and disable SSR mode in trpc
+- Updated dependencies [a641caf]
+  - @saleor/apps-shared@1.0.1
+
 ## 1.1.1
 
 ### Patch Changes
