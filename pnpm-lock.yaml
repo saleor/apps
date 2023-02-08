@@ -225,13 +225,13 @@ importers:
       '@types/node': 18.0.1
       '@types/react': 18.0.14
       '@types/react-dom': 18.0.6
-      '@urql/exchange-auth': ^0.1.7
+      '@urql/exchange-auth': ^1.0.0
       autoprefixer: ^10.4.7
       clean-publish: ^4.0.1
       clsx: ^1.2.1
       eslint: 8.15.0
       eslint-config-saleor: workspace:*
-      graphql: ^16.5.0
+      graphql: ^16.6.0
       graphql-tag: ^2.12.6
       husky: ^8.0.1
       next: 12.3.1
@@ -243,7 +243,7 @@ importers:
       react-dom: 18.2.0
       react-helmet: ^6.1.0
       typescript: 4.9.5
-      urql: ^2.2.2
+      urql: ^3.0.3
     dependencies:
       '@material-ui/core': 4.12.4_twyhzqqpkwvvgrmyeapdo6i4my
       '@material-ui/icons': 4.11.3_xfab57qepcdrxdxif4xlv2kdgm
@@ -251,7 +251,7 @@ importers:
       '@saleor/app-sdk': 0.27.1_azq6kxkn3od7qdylwkyksrwopy
       '@saleor/macaw-ui': 0.7.2_5j6zkq4mzir5org5dcu2pr43hm
       '@sentry/nextjs': 7.36.0_next@12.3.1+react@18.2.0
-      '@urql/exchange-auth': 0.1.7_graphql@16.6.0
+      '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       clsx: 1.2.1
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
@@ -260,7 +260,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
-      urql: 2.2.3_onqnqwb3ubg5opvemcqf7c2qhy
+      urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
     devDependencies:
       '@graphql-codegen/cli': 2.7.0_74lnzcgk6cgqsdyscb5kbgak6q
       '@graphql-codegen/introspection': 2.1.1_graphql@16.6.0
@@ -2735,6 +2735,7 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
+    dev: true
 
   /@handsontable/react/12.1.2_handsontable@12.1.2:
     resolution: {integrity: sha512-brXQJjTDVWDshyn6qHezRJlfFLH35x6/61slzQq+FhKoYvymDxI/Vt9hNvIOjFtrl+2Gb9tXkp/sih1zvlvqBg==}
@@ -4592,16 +4593,6 @@ packages:
       '@typescript-eslint/types': 5.51.0
       eslint-visitor-keys: 3.3.0
 
-  /@urql/core/2.6.1_graphql@16.6.0:
-    resolution: {integrity: sha512-gYrEHy3tViJhwIhauK6MIf2Qp09QTsgNHZRd0n71rS+hF6gdwjspf1oKljl4m25+272cJF7fPjBUGmjaiEr7Kg==}
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
-      graphql: 16.6.0
-      wonka: 4.0.15
-    dev: false
-
   /@urql/core/3.1.1_graphql@16.6.0:
     resolution: {integrity: sha512-Mnxtq4I4QeFJsgs7Iytw+HyhiGxISR6qtyk66c9tipozLZ6QVxrCiUPF2HY4BxNIabaxcp+rivadvm8NAnXj4Q==}
     peerDependencies:
@@ -4609,16 +4600,6 @@ packages:
     dependencies:
       graphql: 16.6.0
       wonka: 6.1.2
-    dev: false
-
-  /@urql/exchange-auth/0.1.7_graphql@16.6.0:
-    resolution: {integrity: sha512-4Bmmi6YMW1YjZnTdr0Gfp9IoIY1fpNGq/fo1XHWEFEYe+IEOEDQhKT1CyhztyvvKpFw2C46D32MJRWJHQUPo/g==}
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@urql/core': 3.1.1_graphql@16.6.0
-      graphql: 16.6.0
-      wonka: 4.0.15
     dev: false
 
   /@urql/exchange-auth/1.0.0_graphql@16.6.0:
@@ -12059,18 +12040,6 @@ packages:
       braces: 3.0.2
     dev: true
 
-  /urql/2.2.3_onqnqwb3ubg5opvemcqf7c2qhy:
-    resolution: {integrity: sha512-XMkSYJKW9s4ZlbSuxcUz3fTBIykOn0sGileRXQeyZpaRBXJPVz5saSY05k7jdefNxShZtTI+/nr7PYUWQertfg==}
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-      react: '>= 16.8.0'
-    dependencies:
-      '@urql/core': 2.6.1_graphql@16.6.0
-      graphql: 16.6.0
-      react: 18.2.0
-      wonka: 4.0.15
-    dev: false
-
   /urql/3.0.3_onqnqwb3ubg5opvemcqf7c2qhy:
     resolution: {integrity: sha512-aVUAMRLdc5AOk239DxgXt6ZxTl/fEmjr7oyU5OGo8uvpqu42FkeJErzd2qBzhAQ3DyusoZIbqbBLPlnKo/yy2A==}
     peerDependencies:
@@ -12450,10 +12419,6 @@ packages:
   /wmf/1.0.2:
     resolution: {integrity: sha512-/p9K7bEh0Dj6WbXg4JG0xvLQmIadrner1bi45VMJTfnbVHsc7yIajZyoSoK60/dtVBs12Fm6WkUI5/3WAVsNMw==}
     engines: {node: '>=0.8'}
-    dev: false
-
-  /wonka/4.0.15:
-    resolution: {integrity: sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==}
     dev: false
 
   /wonka/6.1.2:
