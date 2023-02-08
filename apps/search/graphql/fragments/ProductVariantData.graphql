@@ -1,0 +1,32 @@
+fragment ProductVariantData on ProductVariant {
+  id
+  name
+  sku
+  pricing {
+    price {
+      gross {
+        amount
+        currency
+      }
+    }
+  }
+
+  channelListings {
+    id
+    channel {
+      slug
+    }
+    price {
+      currency
+      amount
+    }
+  }
+
+  attributes {
+    ...ProductAttributesData
+  }
+
+  product {
+    ...ProductData
+  }
+}

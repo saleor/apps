@@ -1,0 +1,3 @@
+fragment ProductVariantWebhookPayload on ProductVariant {
+  ...ProductVariantData
+}

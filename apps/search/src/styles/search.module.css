@@ -1,0 +1,50 @@
+.wrapper {
+    display: grid;
+    height: 60px;
+    width: 100%;
+    grid-auto-flow: column;
+    grid-template-columns: 60px auto;
+    gap: 30px;
+}
+
+.hitsWrapper {
+    display: grid;
+    gap: 15px;
+
+}
+.textField {
+    border: none;
+}
+.textFieldContainer {
+    display: flex;
+    place-content: left;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.filterGrid {
+    display: grid;
+    grid-template-columns: 4fr;
+    grid-gap: 2rem;
+    max-width: 100%;
+}
+
+.fallbackThumbnail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+}
+.filters {
+    margin-left: 16px;
+}
+
+.tabs {
+    margin-bottom: 32px;
+    margin-left: 32px;
+}

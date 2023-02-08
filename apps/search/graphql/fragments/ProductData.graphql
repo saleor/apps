@@ -1,0 +1,42 @@
+fragment ProductData on Product {
+  id
+  name
+  description
+  slug
+  category {
+    name
+    parent {
+      name
+      parent {
+        name
+        parent {
+          name
+          parent {
+            name
+          }
+        }
+      }
+    }
+  }
+  thumbnail {
+    url
+  }
+  attributes {
+    ...ProductAttributesData
+  }
+  channelListings {
+    id
+    visibleInListings
+    channel {
+      slug
+      currencyCode
+    }
+  }
+  collections {
+    name
+  }
+  metadata {
+    key
+    value
+  }
+}
