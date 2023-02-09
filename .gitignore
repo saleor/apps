@@ -38,3 +38,4 @@ yarn-error.log*
 .saleor-app-auth.json
 test-invoice.pdf
 coverage/
+apps/**/generated
