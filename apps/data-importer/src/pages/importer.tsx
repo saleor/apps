@@ -5,7 +5,7 @@ import { Button, makeStyles, PageTab, PageTabs, SaleorTheme } from "@saleor/maca
 import { CustomersImporterView } from "../modules/customers/customers-importer-nuvo/customers-importer-view";
 import GraphQLProvider from "../providers/GraphQLProvider";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { AppIcon, MainBar } from "@saleor/apps-shared";
+import { AppIcon, TitleBar } from "@saleor/apps-shared";
 
 
 type Tab = "customers";
@@ -34,7 +34,7 @@ const ImporterPage: NextPage = () => {
 
   return (
     <div className={styles.wrapper}>
-      <MainBar
+      <TitleBar
         bottomMargin
         icon={<AppIcon theme="rgb(58, 86, 199)" text="DI"/>}
         name="Data Importer"
