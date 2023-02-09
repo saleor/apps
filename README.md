@@ -39,6 +39,17 @@ From here, you can visit:
 - [🗓️ Roadmap](https://github.com/orgs/saleor/projects/22/views/1) - to see the current progress on the development of official Saleor apps.
 - [✍️ GitHub issues](https://github.com/saleor/apps/discussions/categories/integrations-features) - to submit a proposal for creating a new integration or an app.
 
+## Development
+
+1. Ensure `pnpm` is installed
+2. Run `pnpm install` to install dependencies
+3. Run `pnpm dev` to run all apps dev servers. Ports will be displayed in the terminal output
+4. Run `pnpm dev --filter=saleor-app-X` where X is app name (matching saleor/X)
+5. Run `pnpm build` to build all apps
+6. Visit `apps/NAME/README.MD` for documentation of each app
+7. Visit `apps/NAME/.env.example` for example env variables requires by each app
+
+
 ## Forking
 
 Saleor provides apps out of the box in Saleor Cloud plans, but all apps are open source and can be used
