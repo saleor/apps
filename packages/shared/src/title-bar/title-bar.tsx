@@ -3,9 +3,20 @@ import { makeStyles } from "@saleor/macaw-ui";
 import clsx from "clsx";
 import { ReactNode } from "react";
 
+const height = 96;
+
 const useStyles = makeStyles((theme) => ({
+  container: {
+    position: "relative",
+    height: height,
+  },
   root: {
-    height: 96,
+    zIndex: 300,
+    position: "fixed",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: height,
     padding: "0 32px",
     display: "flex",
     alignItems: "center",
@@ -51,18 +62,22 @@ export function TitleBar({
   const styles = useStyles();
 
   return (
-    <Paper
-      elevation={0}
-      className={clsx(styles.root, className, {
-        [styles.bottomMargin]: bottomMargin,
-      })}
-    >
-      {icon && <div className={styles.iconColumn}>{icon}</div>}
-      <div className={styles.leftColumn}>
-        <h1 className={styles.appName}>{name}</h1>
-        <h1 className={styles.appAuthor}>{author}</h1>
-      </div>
-      <div className={styles.rightColumn}>{rightColumnContent}</div>
-    </Paper>
+    <div className={styles.container}>
+      <Paper
+        elevation={0}
+        className={clsx(styles.root, className, {
+          [styles.bottomMargin]: bottomMargin,
+        })}
+      >
+        {icon && <div className={styles.iconColumn}>{icon}</div>}
+        <div className={styles.leftColumn}>
+          <h1 className={styles.appName}>{name}</h1>
+          <h1 className={styles.appAuthor}>{author}</h1>
+        </div>
+        <div className={styles.rightColumn}>{rightColumnContent}</div>
+      </Paper>
+    </div>
   );
 }
+
+TitleBar.height = height;

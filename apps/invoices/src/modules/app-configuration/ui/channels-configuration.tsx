@@ -7,16 +7,19 @@ import { AddressForm } from "./address-form";
 import { ChannelsList } from "./channels-list";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
+import { TitleBar } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
     header: { marginBottom: 20 },
     grid: { display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start", gap: 40 },
     formContainer: {
-      top: 0,
+      top: TitleBar.height + 16,
       position: "sticky",
     },
     instructionsContainer: {
+      top: TitleBar.height + 16,
+      position: "sticky",
       padding: 15,
     },
   };
