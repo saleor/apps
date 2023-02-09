@@ -36,7 +36,8 @@
     "react-hook-form": "^7.39.1",
     "react-instantsearch-hooks-web": "^6.38.0",
     "react-query": "^3.39.2",
-    "urql": "^3.0.3"
+    "urql": "^3.0.3",
+    "@saleor/apps-shared": "workspace:*"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.11",

@@ -3,7 +3,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
-import { isInIframe } from "@saleor/apps-shared/is-in-iframe";
+import { isInIframe } from "@saleor/apps-shared";
 import { LinearProgress } from "@material-ui/core";
 
 const IndexPage: NextPage = () => {

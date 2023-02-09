@@ -73,6 +73,9 @@
       "cache": false
     },
     "test": {},
-    "test:ci": {}
+    "test:ci": {},
+    "generate": {
+      "outputs": ["generated/"]
+    }
   }
 }

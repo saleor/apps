@@ -8,7 +8,7 @@ import SaleorLogoImage from "../assets/saleor-logo.svg";
 import SaleorLogoImageDark from "../assets/saleor-logo-dark.svg";
 import { InputAdornment, LinearProgress, TextField, Typography } from "@material-ui/core";
 import { Button, makeStyles, useTheme } from "@saleor/macaw-ui";
-import { isInIframe } from "../lib/is-in-iframe";
+import { isInIframe } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   root: {
