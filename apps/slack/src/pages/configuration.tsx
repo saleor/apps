@@ -2,25 +2,22 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Link,
   List,
   ListItem,
   TextField,
   Typography,
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { AplReadyResult, VercelAPL } from "@saleor/app-sdk/APL";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
-import { GetServerSideProps } from "next";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
 import AccessWarning from "../components/AccessWarning/AccessWarning";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
 import useAppApi from "../hooks/useAppApi";
-import { saleorApp } from "../lib/saleor-app";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
-import { Link } from "@material-ui/core";
 import { SlackAppMainBar } from "../components/SlackAppMainBar/SlackAppMainBar";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 
@@ -41,24 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type PageProps = {
-  isVercel: boolean;
-  appReady: AplReadyResult;
-};
-
-export const getServerSideProps: GetServerSideProps<PageProps> = async () => {
-  const isVercel = saleorApp.apl instanceof VercelAPL;
-  const isAppReady = await saleorApp.isReady();
-
-  return {
-    props: {
-      isVercel,
-      appReady: isAppReady,
-    },
-  };
-};
-
-function Configuration({ isVercel, appReady }: PageProps) {
+function Configuration() {
   const classes = useStyles();
   const { appBridgeState } = useAppBridge();
   const [notify] = useDashboardNotifier();
@@ -114,7 +94,7 @@ function Configuration({ isVercel, appReady }: PageProps) {
 
   if (error) {
     console.error("Can't establish connection with the App API: ", error);
-    return <ConfigurationError appReady={appReady} isVercel={isVercel} />;
+    return <ConfigurationError />;
   }
 
   if (configuration === undefined) {
