@@ -1,10 +1,12 @@
 module.exports = {
   extends: ["next", "turbo", "prettier"],
-  rules: {},
-  // todo - check this, it was default in turbo
-  // parserOptions: {
-  //   babelOptions: {
-  //     presets: [require.resolve("next/babel")],
-  //   },
-  // },
+  rules: {
+    "@next/next/no-html-link-for-pages": "off",
+    "react/jsx-key": "off",
+  },
+  parserOptions: {
+    babelOptions: {
+      presets: [require.resolve("next/babel")],
+    },
+  },
 };
