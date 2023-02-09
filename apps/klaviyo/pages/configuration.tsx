@@ -2,14 +2,14 @@ import { Link, List, ListItem, Paper, PaperProps, TextField, Typography } from "
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
+import { AppIcon, TitleBar } from "@saleor/apps-shared";
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 import AccessWarning from "../components/AccessWarning/AccessWarning";
 import useAppApi from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
-import { AppIcon } from "../lib/ui/app-icon";
-import { MainBar } from "../lib/ui/main-bar";
+
 import useDashboardNotifier from "../utils/useDashboardNotifier";
 
 interface ConfigurationField {
@@ -218,8 +218,8 @@ function Configuration() {
 
   return (
     <div>
-      <MainBar
-        icon={<AppIcon />}
+      <TitleBar
+        icon={<AppIcon theme="rgb(58, 86, 199)" text="K" />}
         bottomMargin
         name="Saleor Klaviyo App"
         author="By Saleor Commerce"

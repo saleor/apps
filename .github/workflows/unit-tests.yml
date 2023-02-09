@@ -18,6 +18,8 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Generate schema
+        run: pnpm generate
       - name: Test
         run: pnpm test:ci
 # TODO: Add coverage - crawl through every package

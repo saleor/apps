@@ -1,8 +1,8 @@
 import { GitHub, OfflineBoltOutlined } from "@material-ui/icons";
 import { Button, makeStyles } from "@saleor/macaw-ui";
-import { MainBar } from "../MainBar/MainBar";
-import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
-import { AppIcon } from "../AppIcon/AppIcon";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+
+import { AppIcon, TitleBar } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   buttonsGrid: { display: "flex", gap: 10 },
@@ -28,8 +28,8 @@ export const SlackAppMainBar = () => {
   };
 
   return (
-    <MainBar
-      icon={<AppIcon />}
+    <TitleBar
+      icon={<AppIcon theme={`rgb(95, 58, 199)`} text="S" />}
       className={styles.topBar}
       name="Saleor Slack"
       author="By Saleor Commerce"

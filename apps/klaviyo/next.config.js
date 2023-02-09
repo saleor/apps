@@ -15,6 +15,7 @@ const nextConfig = {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
     disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
   },
+  transpilePackages: ["nuvo-react", "@saleor/apps-shared"],
   redirects() {
     return [
       {

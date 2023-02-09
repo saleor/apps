@@ -1,6 +1,6 @@
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import ConfigurationView from "../components/ConfigurationView";
-import { isInIframe } from "../lib/is-in-iframe";
+import { isInIframe } from "@saleor/apps-shared";
 import { LinearProgress } from "@material-ui/core";
 
 const IndexPage = () => {
