@@ -1,0 +1,9 @@
+fragment TaxedMoneyFragment on TaxedMoney {
+  currency
+  net {
+    ...MoneyFragment
+  }
+  gross {
+    ...MoneyFragment
+  }
+}
