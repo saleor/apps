@@ -11,15 +11,15 @@ const debug = createDebug("Webhooks handler");
 export const handler: NextWebhookApiHandler<ProductEditedSubscription["event"]> = async (
   req,
   res,
-  context,
+  context
 ) => {
   const { event, authData } = context;
   debug(
-    `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
+    `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`
   );
 
   const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token }),
+    Promise.resolve({ token: authData.token })
   );
 
   const settings = createSettingsManager(client);

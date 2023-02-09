@@ -1,4 +1,4 @@
-import {Card, CardContent, CardHeader} from "@material-ui/core";
+import { Card, CardContent, CardHeader } from "@material-ui/core";
 import { ImportProductsToAlgolia } from "./ImportProductsToAlgolia";
 import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
 import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";

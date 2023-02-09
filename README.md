@@ -29,7 +29,7 @@
 This repository serves as a starting point in the exploration of Saleor apps.
 
 > _Saleor apps are separate applications that use GraphQL to talk to the Saleor server and receive webhooks with event notifications from Saleor._
-> 
+>
 > [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
 
 From here, you can visit:

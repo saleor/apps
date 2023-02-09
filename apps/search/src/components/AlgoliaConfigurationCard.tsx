@@ -80,7 +80,7 @@ export const AlgoliaConfigurationCard = () => {
           },
         });
       },
-    },
+    }
   );
 
   const onFormSubmit = handleSubmit(async (conf) => mutate(conf));

@@ -37,7 +37,7 @@ function Search() {
   const [indexName, setIndexName] = useState<string>();
   const algoliaConfiguration = useConfiguration(
     appBridgeState?.saleorApiUrl,
-    appBridgeState?.token,
+    appBridgeState?.token
   );
 
   const searchClient = useMemo(() => {

@@ -37,7 +37,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   if (idQueryError) {
     console.debug("Could not fetch the app id: ", idQueryError);
     throw new Error(
-      "Could not fetch the app id. Please check if auth data for the client are valid.",
+      "Could not fetch the app id. Please check if auth data for the client are valid."
     );
   }
 
