@@ -21,7 +21,7 @@ export function AppIcon() {
   return (
     <div className={styles.appIconContainer}>
       <div>
-        <Typography variant="h2">S</Typography>
+        <Typography variant="h2">K</Typography>
       </div>
     </div>
   );
