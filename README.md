@@ -41,9 +41,9 @@ From here, you can visit:
 
 ## Apps
 
-Apps are being migrated to single monorepo in this repository.
+🚧 We are in the process of migrating the apps to this monorepo. 🚧 
 
-Meantime they can be accessed from the repositories below:
+In the meantime, you can access the rest of the apps from their repositories below:
 
 | App                                          | Integrations       | Manifest URL to install                 |
 |----------------------------------------------|--------------------|-----------------------------------------|
