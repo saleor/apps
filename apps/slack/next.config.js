@@ -11,7 +11,7 @@ const isSentryPropertiesInEnvironment =
 const moduleExports = {
   transpilePackages: ["@saleor/apps-shared"],
   eslint: {
-    ignoreDuringBuilds: false
+    ignoreDuringBuilds: false,
   },
   reactStrictMode: true,
 
@@ -24,8 +24,8 @@ const moduleExports = {
     // https://webpack.js.org/configuration/devtool/ and
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#use-hidden-source-map
     // for more information.
-    hideSourceMaps: true
-  }
+    hideSourceMaps: true,
+  },
 };
 
 const sentryWebpackPluginOptions = {
@@ -35,7 +35,7 @@ const sentryWebpackPluginOptions = {
   //   release, url, org, project, authToken, configFile, stripPrefix,
   //   urlPrefix, include, ignore
 
-  silent: true // Suppresses all logs
+  silent: true, // Suppresses all logs
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
