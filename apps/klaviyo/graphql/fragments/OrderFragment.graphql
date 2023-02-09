@@ -1,0 +1,89 @@
+fragment OrderFragment on Order {
+  __typename
+  id
+  channel {
+    __typename
+    id
+    slug
+    currencyCode
+  }
+  shippingMethod {
+    type
+    id
+    name
+  }
+  shippingAddress {
+    ...AddressFragment
+  }
+  billingAddress {
+    ...AddressFragment
+  }
+  discounts {
+    id
+  }
+  token
+  userEmail
+  created
+  original
+  lines {
+    __typename
+    id
+    productVariantId
+    totalPrice {
+      ...TaxedMoneyFragment
+    }
+    allocations {
+      quantity
+      warehouse {
+        id
+      }
+    }
+    productName
+    variantName
+    translatedProductName
+    translatedVariantName
+    productSku
+    quantity
+    unitDiscountValue
+    unitDiscountType
+    unitDiscountReason
+    unitPrice {
+      ...TaxedMoneyFragment
+    }
+    undiscountedUnitPrice {
+      ...TaxedMoneyFragment
+    }
+    taxRate
+  }
+  fulfillments {
+    id
+  }
+  payments {
+    ...PaymentFragment
+  }
+  privateMetadata {
+    ...MetadataFragment
+  }
+  metadata {
+    ...MetadataFragment
+  }
+  status
+  languageCodeEnum
+  origin
+  shippingMethodName
+  collectionPointName
+  shippingPrice {
+    ...TaxedMoneyFragment
+  }
+  shippingTaxRate
+  total {
+    ...TaxedMoneyFragment
+  }
+  undiscountedTotal {
+    ...TaxedMoneyFragment
+  }
+  weight {
+    value
+    unit
+  }
+}
