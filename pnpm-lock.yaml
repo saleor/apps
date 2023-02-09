@@ -7,12 +7,14 @@ importers:
       '@changesets/cli': ^2.26.0
       eslint: ^8.33.0
       eslint-config-saleor: workspace:*
+      husky: ^8.0.3
       prettier: ^2.8.3
       turbo: ^1.7.4
     devDependencies:
       '@changesets/cli': 2.26.0
       eslint: 8.33.0
       eslint-config-saleor: link:packages/eslint-config-saleor
+      husky: 8.0.3
       prettier: 2.8.3
       turbo: 1.7.4
 
