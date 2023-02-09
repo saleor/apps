@@ -10,7 +10,7 @@ const isSentryPropertiesInEnvironment =
 
 const moduleExports = {
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   reactStrictMode: true,
 

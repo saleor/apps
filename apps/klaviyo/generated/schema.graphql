@@ -1,5 +1,5 @@
 """
-Create a new address for the customer. 
+Create a new address for the customer.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -37,7 +37,7 @@ type AccountAddressUpdate {
 }
 
 """
-Remove user account. 
+Remove user account.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -156,7 +156,7 @@ input AccountRegisterInput {
 }
 
 """
-Sends an email with the account removal link for the logged-in user. 
+Sends an email with the account removal link for the logged-in user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -166,7 +166,7 @@ type AccountRequestDeletion {
 }
 
 """
-Sets a default address for the authenticated user. 
+Sets a default address for the authenticated user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -179,7 +179,7 @@ type AccountSetDefaultAddress {
 }
 
 """
-Updates the account of the logged-in user. 
+Updates the account of the logged-in user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -272,7 +272,7 @@ type Address implements Node & ObjectWithMetadata {
 }
 
 """
-Creates user address. 
+Creates user address.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -310,7 +310,7 @@ type AddressCreated implements Event {
 }
 
 """
-Deletes an address. 
+Deletes an address.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -383,7 +383,7 @@ input AddressInput {
 }
 
 """
-Sets a default address for the given user. 
+Sets a default address for the given user.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -402,7 +402,7 @@ enum AddressTypeEnum {
 }
 
 """
-Updates an address. 
+Updates an address.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -614,7 +614,7 @@ type App implements Node & ObjectWithMetadata {
 }
 
 """
-Activate the app. 
+Activate the app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -655,7 +655,7 @@ type AppCreate {
 }
 
 """
-Deactivate the app. 
+Deactivate the app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -666,7 +666,7 @@ type AppDeactivate {
 }
 
 """
-Deletes an app. 
+Deletes an app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -677,7 +677,7 @@ type AppDelete {
 }
 
 """
-Delete failed installation. 
+Delete failed installation.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -821,7 +821,7 @@ enum AppExtensionTargetEnum {
 }
 
 """
-Fetch and validate manifest. 
+Fetch and validate manifest.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -946,7 +946,7 @@ type AppManifestWebhook {
 }
 
 """
-Retry failed installation of new app. 
+Retry failed installation of new app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -1007,7 +1007,7 @@ type AppToken implements Node {
 }
 
 """
-Creates a new token. 
+Creates a new token.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -1021,7 +1021,7 @@ type AppTokenCreate {
 }
 
 """
-Deletes an authentication token assigned to app. 
+Deletes an authentication token assigned to app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -1062,7 +1062,7 @@ enum AppTypeEnum {
 }
 
 """
-Updates an existing app. 
+Updates an existing app.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -1107,7 +1107,7 @@ enum AreaUnitsEnum {
 }
 
 """
-Assigns storefront's navigation menus. 
+Assigns storefront's navigation menus.
 
 Requires one of the following permissions: MANAGE_MENUS, MANAGE_SETTINGS.
 """
@@ -1168,7 +1168,7 @@ type Attribute implements Node & ObjectWithMetadata {
   entityType: AttributeEntityTypeEnum
 
   """
-  External ID of this attribute. 
+  External ID of this attribute.
   
   Added in Saleor 3.10.
   """
@@ -1298,7 +1298,7 @@ type Attribute implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes attributes. 
+Deletes attributes.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -1429,7 +1429,7 @@ type AttributeCreated implements Event {
 }
 
 """
-Deletes an attribute. 
+Deletes an attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -1497,7 +1497,7 @@ input AttributeFilterInput {
   availableInGrid: Boolean
 
   """
-  Specifies the channel by which the data should be filtered. 
+  Specifies the channel by which the data should be filtered.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
   """
@@ -1554,7 +1554,7 @@ enum AttributeInputTypeEnum {
 }
 
 """
-Reorder the values of an attribute. 
+Reorder the values of an attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -1618,7 +1618,7 @@ type AttributeTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for an attribute. 
+Creates/updates translations for an attribute.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -1643,7 +1643,7 @@ enum AttributeTypeEnum {
 }
 
 """
-Updates attribute. 
+Updates attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -1736,7 +1736,7 @@ type AttributeValue implements Node {
   dateTime: DateTime
 
   """
-  External ID of this attribute value. 
+  External ID of this attribute value.
   
   Added in Saleor 3.10.
   """
@@ -1783,7 +1783,7 @@ type AttributeValue implements Node {
 }
 
 """
-Deletes values of attributes. 
+Deletes values of attributes.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -1814,7 +1814,7 @@ type AttributeValueCountableEdge {
 }
 
 """
-Creates a value for an attribute. 
+Creates a value for an attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -1890,7 +1890,7 @@ type AttributeValueCreated implements Event {
 }
 
 """
-Deletes a value of an attribute. 
+Deletes a value of an attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -1994,7 +1994,7 @@ input AttributeValueInput {
 }
 
 """
-Represents attribute value. If no ID provided, value will be resolved. 
+Represents attribute value. If no ID provided, value will be resolved.
 
 Added in Saleor 3.9.
 """
@@ -2039,7 +2039,7 @@ type AttributeValueTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for an attribute value. 
+Creates/updates translations for an attribute value.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -2082,7 +2082,7 @@ input AttributeValueTranslationInput {
 }
 
 """
-Updates value of an attribute. 
+Updates value of an attribute.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -2433,7 +2433,7 @@ type Category implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes categories. 
+Deletes categories.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -2463,7 +2463,7 @@ type CategoryCountableEdge {
 }
 
 """
-Creates a new category. 
+Creates a new category.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -2498,7 +2498,7 @@ type CategoryCreated implements Event {
 }
 
 """
-Deletes a category. 
+Deletes a category.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -2633,7 +2633,7 @@ type CategoryTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a category. 
+Creates/updates translations for a category.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -2667,7 +2667,7 @@ type CategoryTranslation implements Node {
 }
 
 """
-Updates a category. 
+Updates a category.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -2786,7 +2786,7 @@ type Channel implements Node {
 }
 
 """
-Activate a channel. 
+Activate a channel.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -2798,7 +2798,7 @@ type ChannelActivate {
 }
 
 """
-Creates new channel. 
+Creates new channel.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -2877,7 +2877,7 @@ type ChannelCreated implements Event {
 }
 
 """
-Deactivate a channel. 
+Deactivate a channel.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -2889,7 +2889,7 @@ type ChannelDeactivate {
 }
 
 """
-Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
+Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -2965,7 +2965,7 @@ Reorder the warehouses of a channel.
 
 Added in Saleor 3.7.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -3000,7 +3000,7 @@ type ChannelStatusChanged implements Event {
 }
 
 """
-Update a channel. 
+Update a channel.
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 """
@@ -3384,7 +3384,7 @@ type CheckoutCreated implements Event {
 }
 
 """
-Sets the customer as the owner of the checkout. 
+Sets the customer as the owner of the checkout.
 
 Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
 """
@@ -3396,7 +3396,7 @@ type CheckoutCustomerAttach {
 }
 
 """
-Removes the user assigned as the owner of the checkout. 
+Removes the user assigned as the owner of the checkout.
 
 Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
 """
@@ -3627,7 +3627,7 @@ type CheckoutLineDelete {
 
 input CheckoutLineInput {
   """
-  Flag that allow force splitting the same variant into multiple lines by skipping the matching logic. 
+  Flag that allow force splitting the same variant into multiple lines by skipping the matching logic.
   
   Added in Saleor 3.6.
   
@@ -3681,7 +3681,7 @@ input CheckoutLineUpdateInput {
   quantity: Int
 
   """
-  ID of the product variant. 
+  ID of the product variant.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `lineId` instead.
   """
@@ -3956,7 +3956,7 @@ type Collection implements Node & ObjectWithMetadata {
 }
 
 """
-Adds products to a collection. 
+Adds products to a collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -3968,7 +3968,7 @@ type CollectionAddProducts {
 }
 
 """
-Deletes collections. 
+Deletes collections.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4018,7 +4018,7 @@ type CollectionChannelListingError {
 }
 
 """
-Manage collection's availability in channels. 
+Manage collection's availability in channels.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4056,7 +4056,7 @@ type CollectionCountableEdge {
 }
 
 """
-Creates a new collection. 
+Creates a new collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4104,7 +4104,7 @@ input CollectionCreateInput {
   products: [ID!]
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
@@ -4145,7 +4145,7 @@ type CollectionCreated implements Event {
 }
 
 """
-Deletes a collection. 
+Deletes a collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4211,7 +4211,7 @@ enum CollectionErrorCode {
 
 input CollectionFilterInput {
   """
-  Specifies the channel by which the data should be filtered. 
+  Specifies the channel by which the data should be filtered.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
   """
@@ -4258,7 +4258,7 @@ input CollectionInput {
   privateMetadata: [MetadataInput!]
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
@@ -4304,7 +4304,7 @@ enum CollectionPublished {
 }
 
 """
-Remove products from a collection. 
+Remove products from a collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4316,7 +4316,7 @@ type CollectionRemoveProducts {
 }
 
 """
-Reorder the products of a collection. 
+Reorder the products of a collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4401,7 +4401,7 @@ type CollectionTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a collection. 
+Creates/updates translations for a collection.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -4435,7 +4435,7 @@ type CollectionTranslation implements Node {
 }
 
 """
-Updates a collection. 
+Updates a collection.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -4519,7 +4519,7 @@ type ConfirmAccount {
 }
 
 """
-Confirm the email change of the logged-in user. 
+Confirm the email change of the logged-in user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -4859,7 +4859,7 @@ type CreditCard {
 }
 
 """
-Deletes customers. 
+Deletes customers.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4872,7 +4872,7 @@ type CustomerBulkDelete {
 }
 
 """
-Creates a new customer. 
+Creates a new customer.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4907,7 +4907,7 @@ type CustomerCreated implements Event {
 }
 
 """
-Deletes a customer. 
+Deletes a customer.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -4968,7 +4968,7 @@ input CustomerFilterInput {
   dateJoined: DateRangeInput
 
   """
-  Filter by ids. 
+  Filter by ids.
   
   Added in Saleor 3.8.
   """
@@ -5038,7 +5038,7 @@ type CustomerMetadataUpdated implements Event {
 }
 
 """
-Updates an existing customer. 
+Updates an existing customer.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -5103,7 +5103,7 @@ input DateTimeRangeInput {
 }
 
 """
-Deactivate all JWT tokens of the currently authenticated user. 
+Deactivate all JWT tokens of the currently authenticated user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -5219,7 +5219,7 @@ type DigitalContentCountableEdge {
 }
 
 """
-Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -5231,7 +5231,7 @@ type DigitalContentCreate {
 }
 
 """
-Remove digital content assigned to given variant. 
+Remove digital content assigned to given variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -5274,7 +5274,7 @@ input DigitalContentInput {
 }
 
 """
-Update digital content. 
+Update digital content.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -5334,7 +5334,7 @@ type DigitalContentUrl implements Node {
 }
 
 """
-Generate new URL to digital content. 
+Generate new URL to digital content.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -5414,7 +5414,7 @@ type Domain {
 }
 
 """
-Deletes draft orders. 
+Deletes draft orders.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5426,7 +5426,7 @@ type DraftOrderBulkDelete {
 }
 
 """
-Completes creating an order. 
+Completes creating an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5439,7 +5439,7 @@ type DraftOrderComplete {
 }
 
 """
-Creates a new draft order. 
+Creates a new draft order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5518,7 +5518,7 @@ type DraftOrderCreated implements Event {
 }
 
 """
-Deletes a draft order. 
+Deletes a draft order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5594,7 +5594,7 @@ input DraftOrderInput {
 }
 
 """
-Deletes order lines. 
+Deletes order lines.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5606,7 +5606,7 @@ type DraftOrderLinesBulkDelete {
 }
 
 """
-Updates a draft order. 
+Updates a draft order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -5769,7 +5769,7 @@ input EventDeliveryFilterInput {
 }
 
 """
-Retries event delivery. 
+Retries event delivery.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -5925,7 +5925,7 @@ Export gift cards to csv file.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -5967,7 +5967,7 @@ input ExportInfoInput {
 }
 
 """
-Export products to csv file. 
+Export products to csv file.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -6148,7 +6148,7 @@ enum FileTypesEnum {
 }
 
 """
-Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
 
 Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
 """
@@ -6225,7 +6225,7 @@ type Fulfillment implements Node & ObjectWithMetadata {
 """
 Approve existing fulfillment.
 
-Added in Saleor 3.1. 
+Added in Saleor 3.1.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -6268,7 +6268,7 @@ type FulfillmentApproved implements Event {
 }
 
 """
-Cancels existing fulfillment and optionally restocks items. 
+Cancels existing fulfillment and optionally restocks items.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -6379,7 +6379,7 @@ type FulfillmentMetadataUpdated implements Event {
 }
 
 """
-Refund products. 
+Refund products.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -6395,7 +6395,7 @@ type FulfillmentRefundProducts {
 }
 
 """
-Return products. 
+Return products.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -6428,7 +6428,7 @@ enum FulfillmentStatus {
 }
 
 """
-Updates a fulfillment for an order. 
+Updates a fulfillment for an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -6638,7 +6638,7 @@ type GiftCard implements Node & ObjectWithMetadata {
 }
 
 """
-Activate a gift card. 
+Activate a gift card.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6655,7 +6655,7 @@ Adds note to the gift card.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6679,7 +6679,7 @@ Activate gift cards.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6694,7 +6694,7 @@ Create gift cards.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6729,7 +6729,7 @@ Deactivate gift cards.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6744,7 +6744,7 @@ Delete gift cards.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6773,7 +6773,7 @@ type GiftCardCountableEdge {
 }
 
 """
-Creates a new gift card. 
+Creates a new gift card.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6806,14 +6806,14 @@ input GiftCardCreateInput {
   channel: String
 
   """
-  Code to use the gift card. 
+  Code to use the gift card.
   
   DEPRECATED: this field will be removed in Saleor 4.0. The code is now auto generated.
   """
   code: String
 
   """
-  End date of the gift card in ISO 8601 format. 
+  End date of the gift card in ISO 8601 format.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `expiryDate` from `expirySettings` instead.
   """
@@ -6847,7 +6847,7 @@ input GiftCardCreateInput {
   note: String
 
   """
-  Start date of the gift card in ISO 8601 format. 
+  Start date of the gift card in ISO 8601 format.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
@@ -6882,7 +6882,7 @@ type GiftCardCreated implements Event {
 }
 
 """
-Deactivate a gift card. 
+Deactivate a gift card.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -6899,7 +6899,7 @@ Delete gift card.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -7091,7 +7091,7 @@ Resend a gift card.
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -7149,7 +7149,7 @@ enum GiftCardSettingsExpiryTypeEnum {
 }
 
 """
-Update gift card settings. 
+Update gift card settings.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -7253,7 +7253,7 @@ input GiftCardTagFilterInput {
 }
 
 """
-Update a gift card. 
+Update a gift card.
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 """
@@ -7283,7 +7283,7 @@ input GiftCardUpdateInput {
   balanceAmount: PositiveDecimal
 
   """
-  End date of the gift card in ISO 8601 format. 
+  End date of the gift card in ISO 8601 format.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `expiryDate` from `expirySettings` instead.
   """
@@ -7308,7 +7308,7 @@ input GiftCardUpdateInput {
   removeTags: [String!]
 
   """
-  Start date of the gift card in ISO 8601 format. 
+  Start date of the gift card in ISO 8601 format.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
@@ -7467,7 +7467,7 @@ type Invoice implements Job & Node & ObjectWithMetadata {
 }
 
 """
-Creates a ready to send invoice. 
+Creates a ready to send invoice.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -7486,7 +7486,7 @@ input InvoiceCreateInput {
 }
 
 """
-Deletes an invoice. 
+Deletes an invoice.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -7553,7 +7553,7 @@ enum InvoiceErrorCode {
 }
 
 """
-Request an invoice for the order using plugin. 
+Request an invoice for the order using plugin.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -7567,7 +7567,7 @@ type InvoiceRequest {
 }
 
 """
-Requests deletion of an invoice. 
+Requests deletion of an invoice.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -7609,7 +7609,7 @@ type InvoiceRequested implements Event {
 }
 
 """
-Send an invoice notification to the customer. 
+Send an invoice notification to the customer.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -7651,7 +7651,7 @@ type InvoiceSent implements Event {
 }
 
 """
-Updates an invoice. 
+Updates an invoice.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -8642,7 +8642,7 @@ type Menu implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes menus. 
+Deletes menus.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -8672,7 +8672,7 @@ type MenuCountableEdge {
 }
 
 """
-Creates a new Menu. 
+Creates a new Menu.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -8721,7 +8721,7 @@ type MenuCreated implements Event {
 }
 
 """
-Deletes a menu. 
+Deletes a menu.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -8878,7 +8878,7 @@ type MenuItem implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes menu items. 
+Deletes menu items.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -8908,7 +8908,7 @@ type MenuItemCountableEdge {
 }
 
 """
-Creates a new menu item. 
+Creates a new menu item.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -8969,7 +8969,7 @@ type MenuItemCreated implements Event {
 }
 
 """
-Deletes a menu item. 
+Deletes a menu item.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -9029,7 +9029,7 @@ input MenuItemInput {
 }
 
 """
-Moves items of menus. 
+Moves items of menus.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -9079,7 +9079,7 @@ type MenuItemTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a menu item. 
+Creates/updates translations for a menu item.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -9098,7 +9098,7 @@ type MenuItemTranslation implements Node {
 }
 
 """
-Updates a menu item. 
+Updates a menu item.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -9157,7 +9157,7 @@ input MenuSortingInput {
 }
 
 """
-Updates a menu. 
+Updates a menu.
 
 Requires one of the following permissions: MANAGE_MENUS.
 """
@@ -9291,7 +9291,7 @@ input MoveProductInput {
 
 type Mutation {
   """
-  Create a new address for the customer. 
+  Create a new address for the customer.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -9325,7 +9325,7 @@ type Mutation {
   ): AccountAddressUpdate
 
   """
-  Remove user account. 
+  Remove user account.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -9343,7 +9343,7 @@ type Mutation {
   ): AccountRegister
 
   """
-  Sends an email with the account removal link for the logged-in user. 
+  Sends an email with the account removal link for the logged-in user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -9360,7 +9360,7 @@ type Mutation {
   ): AccountRequestDeletion
 
   """
-  Sets a default address for the authenticated user. 
+  Sets a default address for the authenticated user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -9373,7 +9373,7 @@ type Mutation {
   ): AccountSetDefaultAddress
 
   """
-  Updates the account of the logged-in user. 
+  Updates the account of the logged-in user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -9383,7 +9383,7 @@ type Mutation {
   ): AccountUpdate
 
   """
-  Creates user address. 
+  Creates user address.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -9396,7 +9396,7 @@ type Mutation {
   ): AddressCreate
 
   """
-  Deletes an address. 
+  Deletes an address.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -9406,7 +9406,7 @@ type Mutation {
   ): AddressDelete
 
   """
-  Sets a default address for the given user. 
+  Sets a default address for the given user.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -9422,7 +9422,7 @@ type Mutation {
   ): AddressSetDefault
 
   """
-  Updates an address. 
+  Updates an address.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -9435,7 +9435,7 @@ type Mutation {
   ): AddressUpdate
 
   """
-  Activate the app. 
+  Activate the app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9453,7 +9453,7 @@ type Mutation {
   ): AppCreate
 
   """
-  Deactivate the app. 
+  Deactivate the app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9463,7 +9463,7 @@ type Mutation {
   ): AppDeactivate
 
   """
-  Deletes an app. 
+  Deletes an app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9473,7 +9473,7 @@ type Mutation {
   ): AppDelete
 
   """
-  Delete failed installation. 
+  Delete failed installation.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9483,7 +9483,7 @@ type Mutation {
   ): AppDeleteFailedInstallation
 
   """
-  Fetch and validate manifest. 
+  Fetch and validate manifest.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9498,7 +9498,7 @@ type Mutation {
   ): AppInstall
 
   """
-  Retry failed installation of new app. 
+  Retry failed installation of new app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9511,7 +9511,7 @@ type Mutation {
   ): AppRetryInstall
 
   """
-  Creates a new token. 
+  Creates a new token.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9521,7 +9521,7 @@ type Mutation {
   ): AppTokenCreate
 
   """
-  Deletes an authentication token assigned to app. 
+  Deletes an authentication token assigned to app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9537,7 +9537,7 @@ type Mutation {
   ): AppTokenVerify
 
   """
-  Updates an existing app. 
+  Updates an existing app.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -9550,7 +9550,7 @@ type Mutation {
   ): AppUpdate
 
   """
-  Assigns storefront's navigation menus. 
+  Assigns storefront's navigation menus.
   
   Requires one of the following permissions: MANAGE_MENUS, MANAGE_SETTINGS.
   """
@@ -9563,7 +9563,7 @@ type Mutation {
   ): AssignNavigation
 
   """
-  Add shipping zone to given warehouse. 
+  Add shipping zone to given warehouse.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9576,7 +9576,7 @@ type Mutation {
   ): WarehouseShippingZoneAssign
 
   """
-  Deletes attributes. 
+  Deletes attributes.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -9592,13 +9592,13 @@ type Mutation {
   ): AttributeCreate
 
   """
-  Deletes an attribute. 
+  Deletes an attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
   attributeDelete(
     """
-    External ID of an attribute to delete. 
+    External ID of an attribute to delete.
     
     Added in Saleor 3.10.
     """
@@ -9609,7 +9609,7 @@ type Mutation {
   ): AttributeDelete
 
   """
-  Reorder the values of an attribute. 
+  Reorder the values of an attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -9622,7 +9622,7 @@ type Mutation {
   ): AttributeReorderValues
 
   """
-  Creates/updates translations for an attribute. 
+  Creates/updates translations for an attribute.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -9636,13 +9636,13 @@ type Mutation {
   ): AttributeTranslate
 
   """
-  Updates attribute. 
+  Updates attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
   attributeUpdate(
     """
-    External ID of an attribute to update. 
+    External ID of an attribute to update.
     
     Added in Saleor 3.10.
     """
@@ -9656,7 +9656,7 @@ type Mutation {
   ): AttributeUpdate
 
   """
-  Deletes values of attributes. 
+  Deletes values of attributes.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -9666,7 +9666,7 @@ type Mutation {
   ): AttributeValueBulkDelete
 
   """
-  Creates a value for an attribute. 
+  Creates a value for an attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9679,13 +9679,13 @@ type Mutation {
   ): AttributeValueCreate
 
   """
-  Deletes a value of an attribute. 
+  Deletes a value of an attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
   attributeValueDelete(
     """
-    External ID of a value to delete. 
+    External ID of a value to delete.
     
     Added in Saleor 3.10.
     """
@@ -9696,7 +9696,7 @@ type Mutation {
   ): AttributeValueDelete
 
   """
-  Creates/updates translations for an attribute value. 
+  Creates/updates translations for an attribute value.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -9710,13 +9710,13 @@ type Mutation {
   ): AttributeValueTranslate
 
   """
-  Updates value of an attribute. 
+  Updates value of an attribute.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
   attributeValueUpdate(
     """
-    External ID of an AttributeValue to update. 
+    External ID of an AttributeValue to update.
     
     Added in Saleor 3.10.
     """
@@ -9730,7 +9730,7 @@ type Mutation {
   ): AttributeValueUpdate
 
   """
-  Deletes categories. 
+  Deletes categories.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9740,7 +9740,7 @@ type Mutation {
   ): CategoryBulkDelete
 
   """
-  Creates a new category. 
+  Creates a new category.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9755,7 +9755,7 @@ type Mutation {
   ): CategoryCreate
 
   """
-  Deletes a category. 
+  Deletes a category.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9765,7 +9765,7 @@ type Mutation {
   ): CategoryDelete
 
   """
-  Creates/updates translations for a category. 
+  Creates/updates translations for a category.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -9779,7 +9779,7 @@ type Mutation {
   ): CategoryTranslate
 
   """
-  Updates a category. 
+  Updates a category.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -9792,7 +9792,7 @@ type Mutation {
   ): CategoryUpdate
 
   """
-  Activate a channel. 
+  Activate a channel.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9802,7 +9802,7 @@ type Mutation {
   ): ChannelActivate
 
   """
-  Creates new channel. 
+  Creates new channel.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9812,7 +9812,7 @@ type Mutation {
   ): ChannelCreate
 
   """
-  Deactivate a channel. 
+  Deactivate a channel.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9822,7 +9822,7 @@ type Mutation {
   ): ChannelDeactivate
 
   """
-  Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
+  Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9839,7 +9839,7 @@ type Mutation {
   
   Added in Saleor 3.7.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9852,7 +9852,7 @@ type Mutation {
   ): ChannelReorderWarehouses
 
   """
-  Update a channel. 
+  Update a channel.
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   """
@@ -9897,7 +9897,7 @@ type Mutation {
     billingAddress: AddressInput!
 
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -9932,7 +9932,7 @@ type Mutation {
   """
   checkoutComplete(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -9961,7 +9961,7 @@ type Mutation {
     redirectUrl: String
 
     """
-    Determines whether to store the payment source for future usage. 
+    Determines whether to store the payment source for future usage.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use checkoutPaymentCreate for this action.
     """
@@ -9982,13 +9982,13 @@ type Mutation {
   ): CheckoutCreate
 
   """
-  Sets the customer as the owner of the checkout. 
+  Sets the customer as the owner of the checkout.
   
   Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
   """
   checkoutCustomerAttach(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10015,13 +10015,13 @@ type Mutation {
   ): CheckoutCustomerAttach
 
   """
-  Removes the user assigned as the owner of the checkout. 
+  Removes the user assigned as the owner of the checkout.
   
   Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
   """
   checkoutCustomerDetach(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10071,7 +10071,7 @@ type Mutation {
   """Updates email address in the existing checkout object."""
   checkoutEmailUpdate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10098,7 +10098,7 @@ type Mutation {
   """Update language code in the existing checkout."""
   checkoutLanguageCodeUpdate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10125,7 +10125,7 @@ type Mutation {
   """Deletes a CheckoutLine."""
   checkoutLineDelete(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10154,7 +10154,7 @@ type Mutation {
   """
   checkoutLinesAdd(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10203,7 +10203,7 @@ type Mutation {
   """Updates checkout line in the existing checkout."""
   checkoutLinesUpdate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10232,7 +10232,7 @@ type Mutation {
   """Create a new payment for given checkout."""
   checkoutPaymentCreate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10259,7 +10259,7 @@ type Mutation {
   """Remove a gift card or a voucher from a checkout."""
   checkoutRemovePromoCode(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10289,7 +10289,7 @@ type Mutation {
   """Update shipping address in the existing checkout."""
   checkoutShippingAddressUpdate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10325,7 +10325,7 @@ type Mutation {
   """Updates the shipping method of the checkout."""
   checkoutShippingMethodUpdate(
     """
-    The ID of the checkout. 
+    The ID of the checkout.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `id` instead.
     """
@@ -10350,7 +10350,7 @@ type Mutation {
   ): CheckoutShippingMethodUpdate @deprecated(reason: "This field will be removed in Saleor 4.0. Use `checkoutDeliveryMethodUpdate` instead.")
 
   """
-  Adds products to a collection. 
+  Adds products to a collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10363,7 +10363,7 @@ type Mutation {
   ): CollectionAddProducts
 
   """
-  Deletes collections. 
+  Deletes collections.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10373,7 +10373,7 @@ type Mutation {
   ): CollectionBulkDelete
 
   """
-  Manage collection's availability in channels. 
+  Manage collection's availability in channels.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10386,7 +10386,7 @@ type Mutation {
   ): CollectionChannelListingUpdate
 
   """
-  Creates a new collection. 
+  Creates a new collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10396,7 +10396,7 @@ type Mutation {
   ): CollectionCreate
 
   """
-  Deletes a collection. 
+  Deletes a collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10406,7 +10406,7 @@ type Mutation {
   ): CollectionDelete
 
   """
-  Remove products from a collection. 
+  Remove products from a collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10419,7 +10419,7 @@ type Mutation {
   ): CollectionRemoveProducts
 
   """
-  Reorder the products of a collection. 
+  Reorder the products of a collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10432,7 +10432,7 @@ type Mutation {
   ): CollectionReorderProducts
 
   """
-  Creates/updates translations for a collection. 
+  Creates/updates translations for a collection.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -10446,7 +10446,7 @@ type Mutation {
   ): CollectionTranslate
 
   """
-  Updates a collection. 
+  Updates a collection.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10468,7 +10468,7 @@ type Mutation {
   ): ConfirmAccount
 
   """
-  Confirm the email change of the logged-in user. 
+  Confirm the email change of the logged-in user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -10483,7 +10483,7 @@ type Mutation {
   ): ConfirmEmailChange
 
   """
-  Creates new warehouse. 
+  Creates new warehouse.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10493,7 +10493,7 @@ type Mutation {
   ): WarehouseCreate
 
   """
-  Deletes customers. 
+  Deletes customers.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -10503,7 +10503,7 @@ type Mutation {
   ): CustomerBulkDelete
 
   """
-  Creates a new customer. 
+  Creates a new customer.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -10513,13 +10513,13 @@ type Mutation {
   ): CustomerCreate
 
   """
-  Deletes a customer. 
+  Deletes a customer.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerDelete(
     """
-    External ID of a customer to update. 
+    External ID of a customer to update.
     
     Added in Saleor 3.10.
     """
@@ -10530,13 +10530,13 @@ type Mutation {
   ): CustomerDelete
 
   """
-  Updates an existing customer. 
+  Updates an existing customer.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
   customerUpdate(
     """
-    External ID of a customer to update. 
+    External ID of a customer to update.
     
     Added in Saleor 3.10.
     """
@@ -10572,7 +10572,7 @@ type Mutation {
   ): DeletePrivateMetadata
 
   """
-  Deletes selected warehouse. 
+  Deletes selected warehouse.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10582,7 +10582,7 @@ type Mutation {
   ): WarehouseDelete
 
   """
-  Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10595,7 +10595,7 @@ type Mutation {
   ): DigitalContentCreate
 
   """
-  Remove digital content assigned to given variant. 
+  Remove digital content assigned to given variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10605,7 +10605,7 @@ type Mutation {
   ): DigitalContentDelete
 
   """
-  Update digital content. 
+  Update digital content.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10618,7 +10618,7 @@ type Mutation {
   ): DigitalContentUpdate
 
   """
-  Generate new URL to digital content. 
+  Generate new URL to digital content.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10628,7 +10628,7 @@ type Mutation {
   ): DigitalContentUrlCreate
 
   """
-  Deletes draft orders. 
+  Deletes draft orders.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10638,7 +10638,7 @@ type Mutation {
   ): DraftOrderBulkDelete
 
   """
-  Completes creating an order. 
+  Completes creating an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10648,7 +10648,7 @@ type Mutation {
   ): DraftOrderComplete
 
   """
-  Creates a new draft order. 
+  Creates a new draft order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10658,13 +10658,13 @@ type Mutation {
   ): DraftOrderCreate
 
   """
-  Deletes a draft order. 
+  Deletes a draft order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
   draftOrderDelete(
     """
-    External ID of a product to delete. 
+    External ID of a product to delete.
     
     Added in Saleor 3.10.
     """
@@ -10675,7 +10675,7 @@ type Mutation {
   ): DraftOrderDelete
 
   """
-  Deletes order lines. 
+  Deletes order lines.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10685,13 +10685,13 @@ type Mutation {
   ): DraftOrderLinesBulkDelete @deprecated(reason: "This field will be removed in Saleor 4.0.")
 
   """
-  Updates a draft order. 
+  Updates a draft order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
   draftOrderUpdate(
     """
-    External ID of a draft order to update. 
+    External ID of a draft order to update.
     
     Added in Saleor 3.10.
     """
@@ -10705,7 +10705,7 @@ type Mutation {
   ): DraftOrderUpdate
 
   """
-  Retries event delivery. 
+  Retries event delivery.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -10719,7 +10719,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10729,7 +10729,7 @@ type Mutation {
   ): ExportGiftCards
 
   """
-  Export products to csv file. 
+  Export products to csv file.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -10802,7 +10802,7 @@ type Mutation {
   ): ExternalVerify
 
   """
-  Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  Upload a file. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
   
   Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
   """
@@ -10812,7 +10812,7 @@ type Mutation {
   ): FileUpload
 
   """
-  Activate a gift card. 
+  Activate a gift card.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10826,7 +10826,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10843,7 +10843,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10857,7 +10857,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10871,7 +10871,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10885,7 +10885,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10895,7 +10895,7 @@ type Mutation {
   ): GiftCardBulkDelete
 
   """
-  Creates a new gift card. 
+  Creates a new gift card.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10905,7 +10905,7 @@ type Mutation {
   ): GiftCardCreate
 
   """
-  Deactivate a gift card. 
+  Deactivate a gift card.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10919,7 +10919,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10933,7 +10933,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10943,7 +10943,7 @@ type Mutation {
   ): GiftCardResend
 
   """
-  Update gift card settings. 
+  Update gift card settings.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10953,7 +10953,7 @@ type Mutation {
   ): GiftCardSettingsUpdate
 
   """
-  Update a gift card. 
+  Update a gift card.
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   """
@@ -10966,7 +10966,7 @@ type Mutation {
   ): GiftCardUpdate
 
   """
-  Creates a ready to send invoice. 
+  Creates a ready to send invoice.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10979,7 +10979,7 @@ type Mutation {
   ): InvoiceCreate
 
   """
-  Deletes an invoice. 
+  Deletes an invoice.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -10989,7 +10989,7 @@ type Mutation {
   ): InvoiceDelete
 
   """
-  Request an invoice for the order using plugin. 
+  Request an invoice for the order using plugin.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11002,7 +11002,7 @@ type Mutation {
   ): InvoiceRequest
 
   """
-  Requests deletion of an invoice. 
+  Requests deletion of an invoice.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11012,7 +11012,7 @@ type Mutation {
   ): InvoiceRequestDelete
 
   """
-  Send an invoice notification to the customer. 
+  Send an invoice notification to the customer.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11022,7 +11022,7 @@ type Mutation {
   ): InvoiceSendNotification
 
   """
-  Updates an invoice. 
+  Updates an invoice.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11035,7 +11035,7 @@ type Mutation {
   ): InvoiceUpdate
 
   """
-  Deletes menus. 
+  Deletes menus.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11045,7 +11045,7 @@ type Mutation {
   ): MenuBulkDelete
 
   """
-  Creates a new Menu. 
+  Creates a new Menu.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11055,7 +11055,7 @@ type Mutation {
   ): MenuCreate
 
   """
-  Deletes a menu. 
+  Deletes a menu.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11065,7 +11065,7 @@ type Mutation {
   ): MenuDelete
 
   """
-  Deletes menu items. 
+  Deletes menu items.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11075,7 +11075,7 @@ type Mutation {
   ): MenuItemBulkDelete
 
   """
-  Creates a new menu item. 
+  Creates a new menu item.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11087,7 +11087,7 @@ type Mutation {
   ): MenuItemCreate
 
   """
-  Deletes a menu item. 
+  Deletes a menu item.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11097,7 +11097,7 @@ type Mutation {
   ): MenuItemDelete
 
   """
-  Moves items of menus. 
+  Moves items of menus.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11110,7 +11110,7 @@ type Mutation {
   ): MenuItemMove
 
   """
-  Creates/updates translations for a menu item. 
+  Creates/updates translations for a menu item.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -11124,7 +11124,7 @@ type Mutation {
   ): MenuItemTranslate
 
   """
-  Updates a menu item. 
+  Updates a menu item.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11139,7 +11139,7 @@ type Mutation {
   ): MenuItemUpdate
 
   """
-  Updates a menu. 
+  Updates a menu.
   
   Requires one of the following permissions: MANAGE_MENUS.
   """
@@ -11152,7 +11152,7 @@ type Mutation {
   ): MenuUpdate
 
   """
-  Adds note to the order. 
+  Adds note to the order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11165,7 +11165,7 @@ type Mutation {
   ): OrderAddNote
 
   """
-  Cancels orders. 
+  Cancels orders.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11175,7 +11175,7 @@ type Mutation {
   ): OrderBulkCancel
 
   """
-  Cancel an order. 
+  Cancel an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11185,7 +11185,7 @@ type Mutation {
   ): OrderCancel
 
   """
-  Capture an order. 
+  Capture an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11198,7 +11198,7 @@ type Mutation {
   ): OrderCapture
 
   """
-  Confirms an unconfirmed order by changing status to unfulfilled. 
+  Confirms an unconfirmed order by changing status to unfulfilled.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11239,7 +11239,7 @@ type Mutation {
   ): OrderCreateFromCheckout
 
   """
-  Adds discount to the order. 
+  Adds discount to the order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11252,7 +11252,7 @@ type Mutation {
   ): OrderDiscountAdd
 
   """
-  Remove discount from the order. 
+  Remove discount from the order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11262,7 +11262,7 @@ type Mutation {
   ): OrderDiscountDelete
 
   """
-  Update discount for the order. 
+  Update discount for the order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11275,7 +11275,7 @@ type Mutation {
   ): OrderDiscountUpdate
 
   """
-  Creates new fulfillments for an order. 
+  Creates new fulfillments for an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11290,7 +11290,7 @@ type Mutation {
   """
   Approve existing fulfillment.
   
-  Added in Saleor 3.1. 
+  Added in Saleor 3.1.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11306,7 +11306,7 @@ type Mutation {
   ): FulfillmentApprove
 
   """
-  Cancels existing fulfillment and optionally restocks items. 
+  Cancels existing fulfillment and optionally restocks items.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11319,7 +11319,7 @@ type Mutation {
   ): FulfillmentCancel
 
   """
-  Refund products. 
+  Refund products.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11332,7 +11332,7 @@ type Mutation {
   ): FulfillmentRefundProducts
 
   """
-  Return products. 
+  Return products.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11345,7 +11345,7 @@ type Mutation {
   ): FulfillmentReturnProducts
 
   """
-  Updates a fulfillment for an order. 
+  Updates a fulfillment for an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11358,7 +11358,7 @@ type Mutation {
   ): FulfillmentUpdateTracking
 
   """
-  Deletes an order line from an order. 
+  Deletes an order line from an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11368,7 +11368,7 @@ type Mutation {
   ): OrderLineDelete
 
   """
-  Remove discount applied to the order line. 
+  Remove discount applied to the order line.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11378,7 +11378,7 @@ type Mutation {
   ): OrderLineDiscountRemove
 
   """
-  Update discount for the order line. 
+  Update discount for the order line.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11391,7 +11391,7 @@ type Mutation {
   ): OrderLineDiscountUpdate
 
   """
-  Updates an order line of an order. 
+  Updates an order line of an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11404,7 +11404,7 @@ type Mutation {
   ): OrderLineUpdate
 
   """
-  Create order lines for an order. 
+  Create order lines for an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11417,7 +11417,7 @@ type Mutation {
   ): OrderLinesCreate
 
   """
-  Mark order as manually paid. 
+  Mark order as manually paid.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11430,7 +11430,7 @@ type Mutation {
   ): OrderMarkAsPaid
 
   """
-  Refund an order. 
+  Refund an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11443,7 +11443,7 @@ type Mutation {
   ): OrderRefund
 
   """
-  Update shop order settings. 
+  Update shop order settings.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11453,13 +11453,13 @@ type Mutation {
   ): OrderSettingsUpdate
 
   """
-  Updates an order. 
+  Updates an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
   orderUpdate(
     """
-    External ID of an order to update. 
+    External ID of an order to update.
     
     Added in Saleor 3.10.
     """
@@ -11473,7 +11473,7 @@ type Mutation {
   ): OrderUpdate
 
   """
-  Updates a shipping method of the order. Requires shipping method ID to update, when null is passed then currently assigned shipping method is removed. 
+  Updates a shipping method of the order. Requires shipping method ID to update, when null is passed then currently assigned shipping method is removed.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11486,7 +11486,7 @@ type Mutation {
   ): OrderUpdateShipping
 
   """
-  Void an order. 
+  Void an order.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11496,7 +11496,7 @@ type Mutation {
   ): OrderVoid
 
   """
-  Assign attributes to a given page type. 
+  Assign attributes to a given page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11509,7 +11509,7 @@ type Mutation {
   ): PageAttributeAssign
 
   """
-  Unassign attributes from a given page type. 
+  Unassign attributes from a given page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11522,7 +11522,7 @@ type Mutation {
   ): PageAttributeUnassign
 
   """
-  Deletes pages. 
+  Deletes pages.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11532,7 +11532,7 @@ type Mutation {
   ): PageBulkDelete
 
   """
-  Publish pages. 
+  Publish pages.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11545,7 +11545,7 @@ type Mutation {
   ): PageBulkPublish
 
   """
-  Creates a new page. 
+  Creates a new page.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11555,7 +11555,7 @@ type Mutation {
   ): PageCreate
 
   """
-  Deletes a page. 
+  Deletes a page.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11565,7 +11565,7 @@ type Mutation {
   ): PageDelete
 
   """
-  Reorder page attribute values. 
+  Reorder page attribute values.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11581,7 +11581,7 @@ type Mutation {
   ): PageReorderAttributeValues
 
   """
-  Creates/updates translations for a page. 
+  Creates/updates translations for a page.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -11595,7 +11595,7 @@ type Mutation {
   ): PageTranslate
 
   """
-  Delete page types. 
+  Delete page types.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11605,7 +11605,7 @@ type Mutation {
   ): PageTypeBulkDelete
 
   """
-  Create a new page type. 
+  Create a new page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11615,7 +11615,7 @@ type Mutation {
   ): PageTypeCreate
 
   """
-  Delete a page type. 
+  Delete a page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11625,7 +11625,7 @@ type Mutation {
   ): PageTypeDelete
 
   """
-  Reorder the attributes of a page type. 
+  Reorder the attributes of a page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11638,7 +11638,7 @@ type Mutation {
   ): PageTypeReorderAttributes
 
   """
-  Update page type. 
+  Update page type.
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -11651,7 +11651,7 @@ type Mutation {
   ): PageTypeUpdate
 
   """
-  Updates an existing page. 
+  Updates an existing page.
   
   Requires one of the following permissions: MANAGE_PAGES.
   """
@@ -11664,7 +11664,7 @@ type Mutation {
   ): PageUpdate
 
   """
-  Change the password of the logged in user. 
+  Change the password of the logged in user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -11677,7 +11677,7 @@ type Mutation {
   ): PasswordChange
 
   """
-  Captures the authorized payment amount. 
+  Captures the authorized payment amount.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11708,7 +11708,7 @@ type Mutation {
   ): PaymentInitialize
 
   """
-  Refunds the captured payment amount. 
+  Refunds the captured payment amount.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11721,7 +11721,7 @@ type Mutation {
   ): PaymentRefund
 
   """
-  Voids the authorized payment. 
+  Voids the authorized payment.
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -11731,7 +11731,7 @@ type Mutation {
   ): PaymentVoid
 
   """
-  Create new permission group. Apps are not allowed to perform this mutation. 
+  Create new permission group. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -11741,7 +11741,7 @@ type Mutation {
   ): PermissionGroupCreate
 
   """
-  Delete permission group. Apps are not allowed to perform this mutation. 
+  Delete permission group. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -11751,7 +11751,7 @@ type Mutation {
   ): PermissionGroupDelete
 
   """
-  Update permission group. Apps are not allowed to perform this mutation. 
+  Update permission group. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -11764,7 +11764,7 @@ type Mutation {
   ): PermissionGroupUpdate
 
   """
-  Update plugin configuration. 
+  Update plugin configuration.
   
   Requires one of the following permissions: MANAGE_PLUGINS.
   """
@@ -11780,7 +11780,7 @@ type Mutation {
   ): PluginUpdate
 
   """
-  Assign attributes to a given product type. 
+  Assign attributes to a given product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11795,7 +11795,7 @@ type Mutation {
   """
   Update attributes assigned to product variant for given product type.
   
-  Added in Saleor 3.1. 
+  Added in Saleor 3.1.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11808,7 +11808,7 @@ type Mutation {
   ): ProductAttributeAssignmentUpdate
 
   """
-  Un-assign attributes from a given product type. 
+  Un-assign attributes from a given product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11821,7 +11821,7 @@ type Mutation {
   ): ProductAttributeUnassign
 
   """
-  Deletes products. 
+  Deletes products.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11831,7 +11831,7 @@ type Mutation {
   ): ProductBulkDelete
 
   """
-  Manage product's availability in channels. 
+  Manage product's availability in channels.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11844,7 +11844,7 @@ type Mutation {
   ): ProductChannelListingUpdate
 
   """
-  Creates a new product. 
+  Creates a new product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11854,13 +11854,13 @@ type Mutation {
   ): ProductCreate
 
   """
-  Deletes a product. 
+  Deletes a product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   productDelete(
     """
-    External ID of a product to delete. 
+    External ID of a product to delete.
     
     Added in Saleor 3.10.
     """
@@ -11871,7 +11871,7 @@ type Mutation {
   ): ProductDelete
 
   """
-  Deletes product media. 
+  Deletes product media.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11881,7 +11881,7 @@ type Mutation {
   ): ProductMediaBulkDelete
 
   """
-  Create a media object (image or video URL) associated with product. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  Create a media object (image or video URL) associated with product. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11891,7 +11891,7 @@ type Mutation {
   ): ProductMediaCreate
 
   """
-  Deletes a product media. 
+  Deletes a product media.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11901,7 +11901,7 @@ type Mutation {
   ): ProductMediaDelete
 
   """
-  Changes ordering of the product media. 
+  Changes ordering of the product media.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11914,7 +11914,7 @@ type Mutation {
   ): ProductMediaReorder
 
   """
-  Updates a product media. 
+  Updates a product media.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11927,7 +11927,7 @@ type Mutation {
   ): ProductMediaUpdate
 
   """
-  Reorder product attribute values. 
+  Reorder product attribute values.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -11943,7 +11943,7 @@ type Mutation {
   ): ProductReorderAttributeValues
 
   """
-  Creates/updates translations for a product. 
+  Creates/updates translations for a product.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -11957,7 +11957,7 @@ type Mutation {
   ): ProductTranslate
 
   """
-  Deletes product types. 
+  Deletes product types.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11967,7 +11967,7 @@ type Mutation {
   ): ProductTypeBulkDelete
 
   """
-  Creates a new product type. 
+  Creates a new product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11977,7 +11977,7 @@ type Mutation {
   ): ProductTypeCreate
 
   """
-  Deletes a product type. 
+  Deletes a product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -11987,7 +11987,7 @@ type Mutation {
   ): ProductTypeDelete
 
   """
-  Reorder the attributes of a product type. 
+  Reorder the attributes of a product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -12003,7 +12003,7 @@ type Mutation {
   ): ProductTypeReorderAttributes
 
   """
-  Updates an existing product type. 
+  Updates an existing product type.
   
   Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
   """
@@ -12016,13 +12016,13 @@ type Mutation {
   ): ProductTypeUpdate
 
   """
-  Updates an existing product. 
+  Updates an existing product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   productUpdate(
     """
-    External ID of a product to update. 
+    External ID of a product to update.
     
     Added in Saleor 3.10.
     """
@@ -12036,7 +12036,7 @@ type Mutation {
   ): ProductUpdate
 
   """
-  Creates product variants for a given product. 
+  Creates product variants for a given product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12049,7 +12049,7 @@ type Mutation {
   ): ProductVariantBulkCreate
 
   """
-  Deletes product variants. 
+  Deletes product variants.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12066,7 +12066,7 @@ type Mutation {
   ): ProductVariantBulkDelete
 
   """
-  Manage product variant prices in channels. 
+  Manage product variant prices in channels.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12088,7 +12088,7 @@ type Mutation {
   ): ProductVariantChannelListingUpdate
 
   """
-  Creates a new variant for a product. 
+  Creates a new variant for a product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12098,13 +12098,13 @@ type Mutation {
   ): ProductVariantCreate
 
   """
-  Deletes a product variant. 
+  Deletes a product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   productVariantDelete(
     """
-    External ID of a product variant to update. 
+    External ID of a product variant to update.
     
     Added in Saleor 3.10.
     """
@@ -12126,7 +12126,7 @@ type Mutation {
   
   Added in Saleor 3.1.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12136,7 +12136,7 @@ type Mutation {
   ): ProductVariantPreorderDeactivate
 
   """
-  Reorder the variants of a product. Mutation updates updated_at on product and triggers PRODUCT_UPDATED webhook. 
+  Reorder the variants of a product. Mutation updates updated_at on product and triggers PRODUCT_UPDATED webhook.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12149,7 +12149,7 @@ type Mutation {
   ): ProductVariantReorder
 
   """
-  Reorder product variant attribute values. 
+  Reorder product variant attribute values.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12165,7 +12165,7 @@ type Mutation {
   ): ProductVariantReorderAttributeValues
 
   """
-  Set default variant for a product. Mutation triggers PRODUCT_UPDATED webhook. 
+  Set default variant for a product. Mutation triggers PRODUCT_UPDATED webhook.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12178,7 +12178,7 @@ type Mutation {
   ): ProductVariantSetDefault
 
   """
-  Creates stocks for product variant. 
+  Creates stocks for product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12191,7 +12191,7 @@ type Mutation {
   ): ProductVariantStocksCreate
 
   """
-  Delete stocks from product variant. 
+  Delete stocks from product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12207,7 +12207,7 @@ type Mutation {
   ): ProductVariantStocksDelete
 
   """
-  Update stocks for product variant. 
+  Update stocks for product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12223,7 +12223,7 @@ type Mutation {
   ): ProductVariantStocksUpdate
 
   """
-  Creates/updates translations for a product variant. 
+  Creates/updates translations for a product variant.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -12237,13 +12237,13 @@ type Mutation {
   ): ProductVariantTranslate
 
   """
-  Updates an existing variant for product. 
+  Updates an existing variant for product.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   productVariantUpdate(
     """
-    External ID of a product variant to update. 
+    External ID of a product variant to update.
     
     Added in Saleor 3.10.
     """
@@ -12264,7 +12264,7 @@ type Mutation {
   ): ProductVariantUpdate
 
   """
-  Request email change of the logged in user. 
+  Request email change of the logged in user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -12303,7 +12303,7 @@ type Mutation {
   ): RequestPasswordReset
 
   """
-  Deletes sales. 
+  Deletes sales.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12313,7 +12313,7 @@ type Mutation {
   ): SaleBulkDelete
 
   """
-  Adds products, categories, collections to a voucher. 
+  Adds products, categories, collections to a voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12326,7 +12326,7 @@ type Mutation {
   ): SaleAddCatalogues
 
   """
-  Removes products, categories, collections from a sale. 
+  Removes products, categories, collections from a sale.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12339,7 +12339,7 @@ type Mutation {
   ): SaleRemoveCatalogues
 
   """
-  Manage sale's availability in channels. 
+  Manage sale's availability in channels.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12352,7 +12352,7 @@ type Mutation {
   ): SaleChannelListingUpdate
 
   """
-  Creates a new sale. 
+  Creates a new sale.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12362,7 +12362,7 @@ type Mutation {
   ): SaleCreate
 
   """
-  Deletes a sale. 
+  Deletes a sale.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12372,7 +12372,7 @@ type Mutation {
   ): SaleDelete
 
   """
-  Creates/updates translations for a sale. 
+  Creates/updates translations for a sale.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -12386,7 +12386,7 @@ type Mutation {
   ): SaleTranslate
 
   """
-  Updates a sale. 
+  Updates a sale.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -12413,7 +12413,7 @@ type Mutation {
   ): SetPassword
 
   """
-  Manage shipping method's availability in channels. 
+  Manage shipping method's availability in channels.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12426,7 +12426,7 @@ type Mutation {
   ): ShippingMethodChannelListingUpdate
 
   """
-  Deletes shipping prices. 
+  Deletes shipping prices.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12436,7 +12436,7 @@ type Mutation {
   ): ShippingPriceBulkDelete
 
   """
-  Creates a new shipping price. 
+  Creates a new shipping price.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12446,7 +12446,7 @@ type Mutation {
   ): ShippingPriceCreate
 
   """
-  Deletes a shipping price. 
+  Deletes a shipping price.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12456,7 +12456,7 @@ type Mutation {
   ): ShippingPriceDelete
 
   """
-  Exclude products from shipping price. 
+  Exclude products from shipping price.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12469,7 +12469,7 @@ type Mutation {
   ): ShippingPriceExcludeProducts
 
   """
-  Remove product from excluded list for shipping price. 
+  Remove product from excluded list for shipping price.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12482,7 +12482,7 @@ type Mutation {
   ): ShippingPriceRemoveProductFromExclude
 
   """
-  Creates/updates translations for a shipping method. 
+  Creates/updates translations for a shipping method.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -12496,7 +12496,7 @@ type Mutation {
   ): ShippingPriceTranslate
 
   """
-  Updates a new shipping price. 
+  Updates a new shipping price.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12509,7 +12509,7 @@ type Mutation {
   ): ShippingPriceUpdate
 
   """
-  Deletes shipping zones. 
+  Deletes shipping zones.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12519,7 +12519,7 @@ type Mutation {
   ): ShippingZoneBulkDelete
 
   """
-  Creates a new shipping zone. 
+  Creates a new shipping zone.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12529,7 +12529,7 @@ type Mutation {
   ): ShippingZoneCreate
 
   """
-  Deletes a shipping zone. 
+  Deletes a shipping zone.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12539,7 +12539,7 @@ type Mutation {
   ): ShippingZoneDelete
 
   """
-  Updates a new shipping zone. 
+  Updates a new shipping zone.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
   """
@@ -12552,7 +12552,7 @@ type Mutation {
   ): ShippingZoneUpdate
 
   """
-  Update the shop's address. If the `null` value is passed, the currently selected address will be deleted. 
+  Update the shop's address. If the `null` value is passed, the currently selected address will be deleted.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12562,7 +12562,7 @@ type Mutation {
   ): ShopAddressUpdate
 
   """
-  Updates site domain of the shop. 
+  Updates site domain of the shop.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12572,14 +12572,14 @@ type Mutation {
   ): ShopDomainUpdate
 
   """
-  Fetch tax rates. 
+  Fetch tax rates.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
   shopFetchTaxRates: ShopFetchTaxRates @deprecated(reason: "\\n\\nDEPRECATED: this mutation will be removed in Saleor 4.0.")
 
   """
-  Creates/updates translations for shop settings. 
+  Creates/updates translations for shop settings.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -12592,7 +12592,7 @@ type Mutation {
   ): ShopSettingsTranslate
 
   """
-  Updates shop settings. 
+  Updates shop settings.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12602,7 +12602,7 @@ type Mutation {
   ): ShopSettingsUpdate
 
   """
-  Deletes staff users. Apps are not allowed to perform this mutation. 
+  Deletes staff users. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -12612,7 +12612,7 @@ type Mutation {
   ): StaffBulkDelete
 
   """
-  Creates a new staff user. Apps are not allowed to perform this mutation. 
+  Creates a new staff user. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -12622,7 +12622,7 @@ type Mutation {
   ): StaffCreate
 
   """
-  Deletes a staff user. Apps are not allowed to perform this mutation. 
+  Deletes a staff user. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -12632,7 +12632,7 @@ type Mutation {
   ): StaffDelete
 
   """
-  Creates a new staff notification recipient. 
+  Creates a new staff notification recipient.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12642,7 +12642,7 @@ type Mutation {
   ): StaffNotificationRecipientCreate
 
   """
-  Delete staff notification recipient. 
+  Delete staff notification recipient.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12652,7 +12652,7 @@ type Mutation {
   ): StaffNotificationRecipientDelete
 
   """
-  Updates a staff notification recipient. 
+  Updates a staff notification recipient.
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -12665,7 +12665,7 @@ type Mutation {
   ): StaffNotificationRecipientUpdate
 
   """
-  Updates an existing staff user. Apps are not allowed to perform this mutation. 
+  Updates an existing staff user. Apps are not allowed to perform this mutation.
   
   Requires one of the following permissions: MANAGE_STAFF.
   """
@@ -12682,7 +12682,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12696,7 +12696,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12710,7 +12710,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12727,7 +12727,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12744,7 +12744,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12758,7 +12758,7 @@ type Mutation {
   
   Added in Saleor 3.9.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12777,7 +12777,7 @@ type Mutation {
   
   Added in Saleor 3.8.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -12827,7 +12827,7 @@ type Mutation {
   ): VerifyToken
 
   """
-  Deactivate all JWT tokens of the currently authenticated user. 
+  Deactivate all JWT tokens of the currently authenticated user.
   
   Requires one of the following permissions: AUTHENTICATED_USER.
   """
@@ -12856,7 +12856,7 @@ type Mutation {
   
   Added in Saleor 3.4.
   
-  Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
   """
@@ -12892,7 +12892,7 @@ type Mutation {
   ): TransactionUpdate
 
   """
-  Remove shipping zone from given warehouse. 
+  Remove shipping zone from given warehouse.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12927,7 +12927,7 @@ type Mutation {
   ): UpdatePrivateMetadata
 
   """
-  Updates given warehouse. 
+  Updates given warehouse.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12940,14 +12940,14 @@ type Mutation {
   ): WarehouseUpdate
 
   """
-  Deletes a user avatar. Only for staff members. 
+  Deletes a user avatar. Only for staff members.
   
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
   """
   userAvatarDelete: UserAvatarDelete
 
   """
-  Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+  Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
   
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
   """
@@ -12957,7 +12957,7 @@ type Mutation {
   ): UserAvatarUpdate
 
   """
-  Activate or deactivate users. 
+  Activate or deactivate users.
   
   Requires one of the following permissions: MANAGE_USERS.
   """
@@ -12970,7 +12970,7 @@ type Mutation {
   ): UserBulkSetActive
 
   """
-  Assign an media to a product variant. 
+  Assign an media to a product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12983,7 +12983,7 @@ type Mutation {
   ): VariantMediaAssign
 
   """
-  Unassign an media from a product variant. 
+  Unassign an media from a product variant.
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -12996,7 +12996,7 @@ type Mutation {
   ): VariantMediaUnassign
 
   """
-  Deletes vouchers. 
+  Deletes vouchers.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13006,7 +13006,7 @@ type Mutation {
   ): VoucherBulkDelete
 
   """
-  Adds products, categories, collections to a voucher. 
+  Adds products, categories, collections to a voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13019,7 +13019,7 @@ type Mutation {
   ): VoucherAddCatalogues
 
   """
-  Removes products, categories, collections from a voucher. 
+  Removes products, categories, collections from a voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13032,7 +13032,7 @@ type Mutation {
   ): VoucherRemoveCatalogues
 
   """
-  Manage voucher's availability in channels. 
+  Manage voucher's availability in channels.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13045,7 +13045,7 @@ type Mutation {
   ): VoucherChannelListingUpdate
 
   """
-  Creates a new voucher. 
+  Creates a new voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13055,7 +13055,7 @@ type Mutation {
   ): VoucherCreate
 
   """
-  Deletes a voucher. 
+  Deletes a voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13065,7 +13065,7 @@ type Mutation {
   ): VoucherDelete
 
   """
-  Creates/updates translations for a voucher. 
+  Creates/updates translations for a voucher.
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -13079,7 +13079,7 @@ type Mutation {
   ): VoucherTranslate
 
   """
-  Updates a voucher. 
+  Updates a voucher.
   
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
@@ -13092,7 +13092,7 @@ type Mutation {
   ): VoucherUpdate
 
   """
-  Creates a new webhook subscription. 
+  Creates a new webhook subscription.
   
   Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
   """
@@ -13102,7 +13102,7 @@ type Mutation {
   ): WebhookCreate
 
   """
-  Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
+  Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
   
   Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
   """
@@ -13112,7 +13112,7 @@ type Mutation {
   ): WebhookDelete
 
   """
-  Updates a webhook subscription. 
+  Updates a webhook subscription.
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -13280,7 +13280,7 @@ type Order implements Node & ObjectWithMetadata {
   events: [OrderEvent!]!
 
   """
-  External ID of this order. 
+  External ID of this order.
   
   Added in Saleor 3.10.
   """
@@ -13506,7 +13506,7 @@ enum OrderAction {
 }
 
 """
-Adds note to the order. 
+Adds note to the order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13548,7 +13548,7 @@ enum OrderAuthorizeStatusEnum {
 }
 
 """
-Cancels orders. 
+Cancels orders.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13560,7 +13560,7 @@ type OrderBulkCancel {
 }
 
 """
-Cancel an order. 
+Cancel an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13597,7 +13597,7 @@ type OrderCancelled implements Event {
 }
 
 """
-Capture an order. 
+Capture an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13630,7 +13630,7 @@ enum OrderChargeStatusEnum {
 }
 
 """
-Confirms an unconfirmed order by changing status to unfulfilled. 
+Confirms an unconfirmed order by changing status to unfulfilled.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13789,7 +13789,7 @@ type OrderDiscount implements Node {
 }
 
 """
-Adds discount to the order. 
+Adds discount to the order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13813,7 +13813,7 @@ input OrderDiscountCommonInput {
 }
 
 """
-Remove discount from the order. 
+Remove discount from the order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -13832,7 +13832,7 @@ enum OrderDiscountType {
 }
 
 """
-Update discount for the order. 
+Update discount for the order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14162,7 +14162,7 @@ type OrderFilterShippingMethods implements Event {
 }
 
 """
-Creates new fulfillments for an order. 
+Creates new fulfillments for an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14419,7 +14419,7 @@ type OrderLine implements Node & ObjectWithMetadata {
 
 input OrderLineCreateInput {
   """
-  Flag that allow force splitting the same variant into multiple lines by skipping the matching logic. 
+  Flag that allow force splitting the same variant into multiple lines by skipping the matching logic.
   
   Added in Saleor 3.6.
   
@@ -14435,7 +14435,7 @@ input OrderLineCreateInput {
 }
 
 """
-Deletes an order line from an order. 
+Deletes an order line from an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14451,7 +14451,7 @@ type OrderLineDelete {
 }
 
 """
-Remove discount applied to the order line. 
+Remove discount applied to the order line.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14467,7 +14467,7 @@ type OrderLineDiscountRemove {
 }
 
 """
-Update discount for the order line. 
+Update discount for the order line.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14488,7 +14488,7 @@ input OrderLineInput {
 }
 
 """
-Updates an order line of an order. 
+Updates an order line of an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14502,7 +14502,7 @@ type OrderLineUpdate {
 }
 
 """
-Create order lines for an order. 
+Create order lines for an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14518,7 +14518,7 @@ type OrderLinesCreate {
 }
 
 """
-Mark order as manually paid. 
+Mark order as manually paid.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14562,7 +14562,7 @@ enum OrderOriginEnum {
 }
 
 """
-Refund an order. 
+Refund an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14672,7 +14672,7 @@ enum OrderSettingsErrorCode {
 }
 
 """
-Update shop order settings. 
+Update shop order settings.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14698,14 +14698,14 @@ input OrderSettingsUpdateInput {
 
 enum OrderSortField {
   """
-  Sort orders by creation date. 
+  Sort orders by creation date.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
   CREATED_AT
 
   """
-  Sort orders by creation date. 
+  Sort orders by creation date.
   
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
@@ -14763,7 +14763,7 @@ enum OrderStatusFilter {
 }
 
 """
-Updates an order. 
+Updates an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14792,7 +14792,7 @@ input OrderUpdateInput {
 }
 
 """
-Updates a shipping method of the order. Requires shipping method ID to update, when null is passed then currently assigned shipping method is removed. 
+Updates a shipping method of the order. Requires shipping method ID to update, when null is passed then currently assigned shipping method is removed.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14836,7 +14836,7 @@ type OrderUpdated implements Event {
 }
 
 """
-Void an order. 
+Void an order.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -14939,7 +14939,7 @@ type Page implements Node & ObjectWithMetadata {
 }
 
 """
-Assign attributes to a given page type. 
+Assign attributes to a given page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -14952,7 +14952,7 @@ type PageAttributeAssign {
 }
 
 """
-Unassign attributes from a given page type. 
+Unassign attributes from a given page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -14965,7 +14965,7 @@ type PageAttributeUnassign {
 }
 
 """
-Deletes pages. 
+Deletes pages.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -14977,7 +14977,7 @@ type PageBulkDelete {
 }
 
 """
-Publish pages. 
+Publish pages.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -15007,7 +15007,7 @@ type PageCountableEdge {
 }
 
 """
-Creates a new page. 
+Creates a new page.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -15035,7 +15035,7 @@ input PageCreateInput {
   pageType: ID!
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
   """
@@ -15083,7 +15083,7 @@ type PageCreated implements Event {
 }
 
 """
-Deletes a page. 
+Deletes a page.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -15187,7 +15187,7 @@ input PageInput {
   isPublished: Boolean
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
   """
@@ -15211,7 +15211,7 @@ input PageInput {
 }
 
 """
-Reorder page attribute values. 
+Reorder page attribute values.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -15305,7 +15305,7 @@ type PageTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a page. 
+Creates/updates translations for a page.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -15435,7 +15435,7 @@ type PageType implements Node & ObjectWithMetadata {
 }
 
 """
-Delete page types. 
+Delete page types.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -15465,7 +15465,7 @@ type PageTypeCountableEdge {
 }
 
 """
-Create a new page type. 
+Create a new page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -15511,7 +15511,7 @@ type PageTypeCreated implements Event {
 }
 
 """
-Delete a page type. 
+Delete a page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -15551,7 +15551,7 @@ input PageTypeFilterInput {
 }
 
 """
-Reorder the attributes of a page type. 
+Reorder the attributes of a page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -15580,7 +15580,7 @@ input PageTypeSortingInput {
 }
 
 """
-Update page type. 
+Update page type.
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -15629,7 +15629,7 @@ type PageTypeUpdated implements Event {
 }
 
 """
-Updates an existing page. 
+Updates an existing page.
 
 Requires one of the following permissions: MANAGE_PAGES.
 """
@@ -15664,7 +15664,7 @@ type PageUpdated implements Event {
 }
 
 """
-Change the password of the logged in user. 
+Change the password of the logged in user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -15806,7 +15806,7 @@ type PaymentAuthorize implements Event {
 }
 
 """
-Captures the authorized payment amount. 
+Captures the authorized payment amount.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -15959,7 +15959,7 @@ input PaymentFilterInput {
   checkouts: [ID!]
 
   """
-  Filter by ids. 
+  Filter by ids.
   
   Added in Saleor 3.8.
   """
@@ -16087,7 +16087,7 @@ type PaymentProcessEvent implements Event {
 }
 
 """
-Refunds the captured payment amount. 
+Refunds the captured payment amount.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -16147,7 +16147,7 @@ type PaymentSource {
 }
 
 """
-Voids the authorized payment. 
+Voids the authorized payment.
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -16220,7 +16220,7 @@ enum PermissionEnum {
 }
 
 """
-Create new permission group. Apps are not allowed to perform this mutation. 
+Create new permission group. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -16266,7 +16266,7 @@ type PermissionGroupCreated implements Event {
 }
 
 """
-Delete permission group. Apps are not allowed to perform this mutation. 
+Delete permission group. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -16350,7 +16350,7 @@ input PermissionGroupSortingInput {
 }
 
 """
-Update permission group. Apps are not allowed to perform this mutation. 
+Update permission group. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -16502,7 +16502,7 @@ input PluginStatusInChannelsInput {
 }
 
 """
-Update plugin configuration. 
+Update plugin configuration.
 
 Requires one of the following permissions: MANAGE_PLUGINS.
 """
@@ -16643,7 +16643,7 @@ type Product implements Node & ObjectWithMetadata {
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
 
   """
-  External ID of this product. 
+  External ID of this product.
   
   Added in Saleor 3.10.
   """
@@ -16673,7 +16673,7 @@ type Product implements Node & ObjectWithMetadata {
   """List of media for the product."""
   media(
     """
-    Sort media. 
+    Sort media.
     
     Added in Saleor 3.9.
     """
@@ -16781,7 +16781,7 @@ type Product implements Node & ObjectWithMetadata {
   updatedAt: DateTime!
 
   """
-  Get a single variant by SKU or ID. 
+  Get a single variant by SKU or ID.
   
   Added in Saleor 3.9.
   """
@@ -16801,7 +16801,7 @@ type Product implements Node & ObjectWithMetadata {
 }
 
 """
-Assign attributes to a given product type. 
+Assign attributes to a given product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -16831,7 +16831,7 @@ input ProductAttributeAssignInput {
 """
 Update attributes assigned to product variant for given product type.
 
-Added in Saleor 3.1. 
+Added in Saleor 3.1.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -16861,7 +16861,7 @@ enum ProductAttributeType {
 }
 
 """
-Un-assign attributes from a given product type. 
+Un-assign attributes from a given product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -16874,7 +16874,7 @@ type ProductAttributeUnassign {
 }
 
 """
-Deletes products. 
+Deletes products.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -16951,7 +16951,7 @@ input ProductChannelListingAddInput {
   availableForPurchaseAt: DateTime
 
   """
-  A start date from which a product will be available for purchase. When not set and isAvailable is set to True, the current day is assumed. 
+  A start date from which a product will be available for purchase. When not set and isAvailable is set to True, the current day is assumed.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `availableForPurchaseAt` field instead.
   """
@@ -16967,7 +16967,7 @@ input ProductChannelListingAddInput {
   isPublished: Boolean
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
   """
@@ -17015,7 +17015,7 @@ type ProductChannelListingError {
 }
 
 """
-Manage product's availability in channels. 
+Manage product's availability in channels.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17054,7 +17054,7 @@ type ProductCountableEdge {
 }
 
 """
-Creates a new product. 
+Creates a new product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17072,7 +17072,7 @@ input ProductCreateInput {
   category: ID
 
   """
-  Determine if taxes are being charged for the product. 
+  Determine if taxes are being charged for the product.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
   """
@@ -17130,7 +17130,7 @@ input ProductCreateInput {
   taxClass: ID
 
   """
-  Tax rate for enabled tax gateway. 
+  Tax rate for enabled tax gateway.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use tax classes to control the tax calculation for a product.
   """
@@ -17171,7 +17171,7 @@ type ProductCreated implements Event {
 }
 
 """
-Deletes a product. 
+Deletes a product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17272,7 +17272,7 @@ input ProductFilterInput {
   attributes: [AttributeInput!]
 
   """
-  Filter by the date of availability for purchase. 
+  Filter by the date of availability for purchase.
   
   Added in Saleor 3.8.
   """
@@ -17280,7 +17280,7 @@ input ProductFilterInput {
   categories: [ID!]
 
   """
-  Specifies the channel by which the data should be filtered. 
+  Specifies the channel by which the data should be filtered.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
   """
@@ -17294,7 +17294,7 @@ input ProductFilterInput {
   ids: [ID!]
 
   """
-  Filter by availability for purchase. 
+  Filter by availability for purchase.
   
   Added in Saleor 3.8.
   """
@@ -17302,7 +17302,7 @@ input ProductFilterInput {
   isPublished: Boolean
 
   """
-  Filter by visibility in product listings. 
+  Filter by visibility in product listings.
   
   Added in Saleor 3.8.
   """
@@ -17315,7 +17315,7 @@ input ProductFilterInput {
   productTypes: [ID!]
 
   """
-  Filter by the publication date. 
+  Filter by the publication date.
   
   Added in Saleor 3.8.
   """
@@ -17368,7 +17368,7 @@ input ProductInput {
   category: ID
 
   """
-  Determine if taxes are being charged for the product. 
+  Determine if taxes are being charged for the product.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
   """
@@ -17423,7 +17423,7 @@ input ProductInput {
   taxClass: ID
 
   """
-  Tax rate for enabled tax gateway. 
+  Tax rate for enabled tax gateway.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use tax classes to control the tax calculation for a product.
   """
@@ -17458,7 +17458,7 @@ type ProductMedia implements Node {
 }
 
 """
-Deletes product media. 
+Deletes product media.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17470,7 +17470,7 @@ type ProductMediaBulkDelete {
 }
 
 """
-Create a media object (image or video URL) associated with product. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+Create a media object (image or video URL) associated with product. For image, this mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17496,7 +17496,7 @@ input ProductMediaCreateInput {
 }
 
 """
-Deletes a product media. 
+Deletes a product media.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17508,7 +17508,7 @@ type ProductMediaDelete {
 }
 
 """
-Changes ordering of the product media. 
+Changes ordering of the product media.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17526,7 +17526,7 @@ enum ProductMediaType {
 }
 
 """
-Updates a product media. 
+Updates a product media.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17700,7 +17700,7 @@ type ProductPricingInfo {
 }
 
 """
-Reorder product attribute values. 
+Reorder product attribute values.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -17750,7 +17750,7 @@ type ProductTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a product. 
+Creates/updates translations for a product.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -17912,7 +17912,7 @@ type ProductType implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes product types. 
+Deletes product types.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -17947,7 +17947,7 @@ type ProductTypeCountableEdge {
 }
 
 """
-Creates a new product type. 
+Creates a new product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -17958,7 +17958,7 @@ type ProductTypeCreate {
 }
 
 """
-Deletes a product type. 
+Deletes a product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -18013,7 +18013,7 @@ input ProductTypeInput {
   taxClass: ID
 
   """
-  Tax rate for enabled tax gateway. 
+  Tax rate for enabled tax gateway.
   
   DEPRECATED: this field will be removed in Saleor 4.0.. Use tax classes to control the tax calculation for a product type.
   """
@@ -18035,7 +18035,7 @@ enum ProductTypeKindEnum {
 }
 
 """
-Reorder the attributes of a product type. 
+Reorder the attributes of a product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -18067,7 +18067,7 @@ input ProductTypeSortingInput {
 }
 
 """
-Updates an existing product type. 
+Updates an existing product type.
 
 Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
 """
@@ -18078,7 +18078,7 @@ type ProductTypeUpdate {
 }
 
 """
-Updates an existing product. 
+Updates an existing product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18147,7 +18147,7 @@ type ProductVariant implements Node & ObjectWithMetadata {
   digitalContent: DigitalContent
 
   """
-  External ID of this product. 
+  External ID of this product.
   
   Added in Saleor 3.10.
   """
@@ -18240,7 +18240,7 @@ type ProductVariant implements Node & ObjectWithMetadata {
     address: AddressInput
 
     """
-    Two-letter ISO 3166-1 country code. When provided, the exact quantity from a warehouse operating in shipping zones that contain this country will be returned. Otherwise, it will return the maximum quantity from all shipping zones. 
+    Two-letter ISO 3166-1 country code. When provided, the exact quantity from a warehouse operating in shipping zones that contain this country will be returned. Otherwise, it will return the maximum quantity from all shipping zones.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `address` argument instead.
     """
@@ -18275,7 +18275,7 @@ type ProductVariant implements Node & ObjectWithMetadata {
     address: AddressInput
 
     """
-    Two-letter ISO 3166-1 country code. 
+    Two-letter ISO 3166-1 country code.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `address` argument instead.
     """
@@ -18323,7 +18323,7 @@ type ProductVariantBackInStock implements Event {
 }
 
 """
-Creates product variants for a given product. 
+Creates product variants for a given product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18403,7 +18403,7 @@ input ProductVariantBulkCreateInput {
 }
 
 """
-Deletes product variants. 
+Deletes product variants.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18461,7 +18461,7 @@ input ProductVariantChannelListingAddInput {
 }
 
 """
-Manage product variant prices in channels. 
+Manage product variant prices in channels.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18492,7 +18492,7 @@ type ProductVariantCountableEdge {
 }
 
 """
-Creates a new variant for a product. 
+Creates a new variant for a product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18594,7 +18594,7 @@ type ProductVariantCreated implements Event {
 }
 
 """
-Deletes a product variant. 
+Deletes a product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18759,7 +18759,7 @@ Deactivates product variant preorder. It changes all preorder allocation into re
 
 Added in Saleor 3.1.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18771,7 +18771,7 @@ type ProductVariantPreorderDeactivate {
 }
 
 """
-Reorder the variants of a product. Mutation updates updated_at on product and triggers PRODUCT_UPDATED webhook. 
+Reorder the variants of a product. Mutation updates updated_at on product and triggers PRODUCT_UPDATED webhook.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18782,7 +18782,7 @@ type ProductVariantReorder {
 }
 
 """
-Reorder product variant attribute values. 
+Reorder product variant attribute values.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18795,7 +18795,7 @@ type ProductVariantReorderAttributeValues {
 }
 
 """
-Set default variant for a product. Mutation triggers PRODUCT_UPDATED webhook. 
+Set default variant for a product. Mutation triggers PRODUCT_UPDATED webhook.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18819,7 +18819,7 @@ input ProductVariantSortingInput {
 }
 
 """
-Creates stocks for product variant. 
+Creates stocks for product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18832,7 +18832,7 @@ type ProductVariantStocksCreate {
 }
 
 """
-Delete stocks from product variant. 
+Delete stocks from product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18845,7 +18845,7 @@ type ProductVariantStocksDelete {
 }
 
 """
-Update stocks for product variant. 
+Update stocks for product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18874,7 +18874,7 @@ type ProductVariantTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a product variant. 
+Creates/updates translations for a product variant.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -18893,7 +18893,7 @@ type ProductVariantTranslation implements Node {
 }
 
 """
-Updates an existing variant for product. 
+Updates an existing variant for product.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -18938,7 +18938,7 @@ input PublishableChannelListingInput {
   isPublished: Boolean
 
   """
-  Publication date. ISO 8601 standard. 
+  Publication date. ISO 8601 standard.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
   """
@@ -19062,7 +19062,7 @@ type Query {
   """Look up an attribute by ID, slug or external reference."""
   attribute(
     """
-    External ID of the attribute. 
+    External ID of the attribute.
     
     Added in Saleor 3.10.
     """
@@ -19553,7 +19553,7 @@ type Query {
     channel: String
 
     """
-    Filtering options for menus. 
+    Filtering options for menus.
     
     `slug`: This field will be removed in Saleor 4.0. Use `slugs` instead.
     """
@@ -19572,7 +19572,7 @@ type Query {
   """Look up an order by ID or external reference."""
   order(
     """
-    External ID of an order. 
+    External ID of an order.
     
     Added in Saleor 3.10.
     """
@@ -19803,7 +19803,7 @@ type Query {
     channel: String
 
     """
-    External ID of the product. 
+    External ID of the product.
     
     Added in Saleor 3.10.
     """
@@ -19851,7 +19851,7 @@ type Query {
     channel: String
 
     """
-    External ID of the product. 
+    External ID of the product.
     
     Added in Saleor 3.10.
     """
@@ -19982,7 +19982,7 @@ type Query {
     last: Int
 
     """
-    Search sales by name, value or type. 
+    Search sales by name, value or type.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `filter.search` input instead.
     """
@@ -20248,7 +20248,7 @@ type Query {
     email: String
 
     """
-    External ID of the user. 
+    External ID of the user.
     
     Added in Saleor 3.10.
     """
@@ -20296,7 +20296,7 @@ type Query {
     last: Int
 
     """
-    Search vouchers by name or code. 
+    Search vouchers by name or code.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `filter.search` input instead.
     """
@@ -20313,7 +20313,7 @@ type Query {
   """
   warehouse(
     """
-    External ID of a warehouse. 
+    External ID of a warehouse.
     
     Added in Saleor 3.10.
     """
@@ -20407,7 +20407,7 @@ enum ReportingPeriod {
 }
 
 """
-Request email change of the logged in user. 
+Request email change of the logged in user.
 
 Requires one of the following permissions: AUTHENTICATED_USER.
 """
@@ -20577,7 +20577,7 @@ type Sale implements Node & ObjectWithMetadata {
 }
 
 """
-Adds products, categories, collections to a voucher. 
+Adds products, categories, collections to a voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20590,7 +20590,7 @@ type SaleAddCatalogues {
 }
 
 """
-Deletes sales. 
+Deletes sales.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20626,7 +20626,7 @@ input SaleChannelListingInput {
 }
 
 """
-Manage sale's availability in channels. 
+Manage sale's availability in channels.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20657,7 +20657,7 @@ type SaleCountableEdge {
 }
 
 """
-Creates a new sale. 
+Creates a new sale.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20695,7 +20695,7 @@ type SaleCreated implements Event {
 }
 
 """
-Deletes a sale. 
+Deletes a sale.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20769,7 +20769,7 @@ input SaleInput {
 }
 
 """
-Removes products, categories, collections from a sale. 
+Removes products, categories, collections from a sale.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -20875,7 +20875,7 @@ type SaleTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a sale. 
+Creates/updates translations for a sale.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -20899,7 +20899,7 @@ enum SaleType {
 }
 
 """
-Updates a sale. 
+Updates a sale.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -21169,7 +21169,7 @@ input ShippingMethodChannelListingInput {
 }
 
 """
-Manage shipping method's availability in channels. 
+Manage shipping method's availability in channels.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21393,7 +21393,7 @@ input ShippingPostalCodeRulesCreateInputRange {
 }
 
 """
-Deletes shipping prices. 
+Deletes shipping prices.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21405,7 +21405,7 @@ type ShippingPriceBulkDelete {
 }
 
 """
-Creates a new shipping price. 
+Creates a new shipping price.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21452,7 +21452,7 @@ type ShippingPriceCreated implements Event {
 }
 
 """
-Deletes a shipping price. 
+Deletes a shipping price.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21501,7 +21501,7 @@ type ShippingPriceDeleted implements Event {
 }
 
 """
-Exclude products from shipping price. 
+Exclude products from shipping price.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21559,7 +21559,7 @@ input ShippingPriceInput {
 }
 
 """
-Remove product from excluded list for shipping price. 
+Remove product from excluded list for shipping price.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21572,7 +21572,7 @@ type ShippingPriceRemoveProductFromExclude {
 }
 
 """
-Creates/updates translations for a shipping method. 
+Creates/updates translations for a shipping method.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -21593,7 +21593,7 @@ input ShippingPriceTranslationInput {
 }
 
 """
-Updates a new shipping price. 
+Updates a new shipping price.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21714,7 +21714,7 @@ type ShippingZone implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes shipping zones. 
+Deletes shipping zones.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21744,7 +21744,7 @@ type ShippingZoneCountableEdge {
 }
 
 """
-Creates a new shipping zone. 
+Creates a new shipping zone.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21804,7 +21804,7 @@ type ShippingZoneCreated implements Event {
 }
 
 """
-Deletes a shipping zone. 
+Deletes a shipping zone.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21874,7 +21874,7 @@ type ShippingZoneMetadataUpdated implements Event {
 }
 
 """
-Updates a new shipping zone. 
+Updates a new shipping zone.
 
 Requires one of the following permissions: MANAGE_SHIPPING.
 """
@@ -21959,7 +21959,7 @@ type Shop {
     channel: String
 
     """
-    A currency for which gateways will be returned. 
+    A currency for which gateways will be returned.
     
     DEPRECATED: this field will be removed in Saleor 4.0. Use `channel` argument instead.
     """
@@ -21996,7 +21996,7 @@ type Shop {
     filter: CountryFilterInput
 
     """
-    A language code to return the translation for. 
+    A language code to return the translation for.
     
     DEPRECATED: this field will be removed in Saleor 4.0.
     """
@@ -22149,7 +22149,7 @@ type Shop {
 }
 
 """
-Update the shop's address. If the `null` value is passed, the currently selected address will be deleted. 
+Update the shop's address. If the `null` value is passed, the currently selected address will be deleted.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22162,7 +22162,7 @@ type ShopAddressUpdate {
 }
 
 """
-Updates site domain of the shop. 
+Updates site domain of the shop.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22199,7 +22199,7 @@ enum ShopErrorCode {
 }
 
 """
-Fetch tax rates. 
+Fetch tax rates.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22216,7 +22216,7 @@ input ShopSettingsInput {
   automaticFulfillmentDigitalProducts: Boolean
 
   """
-  Charge taxes on shipping. 
+  Charge taxes on shipping.
   
   DEPRECATED: this field will be removed in Saleor 4.0. To enable taxes for a shipping method, assign a tax class to the shipping method with `shippingPriceCreate` or `shippingPriceUpdate` mutations.
   """
@@ -22244,7 +22244,7 @@ input ShopSettingsInput {
   description: String
 
   """
-  Display prices with tax in store. 
+  Display prices with tax in store.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
   """
@@ -22268,7 +22268,7 @@ input ShopSettingsInput {
   headerText: String
 
   """
-  Include taxes in prices. 
+  Include taxes in prices.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
   """
@@ -22302,7 +22302,7 @@ input ShopSettingsInput {
 }
 
 """
-Creates/updates translations for shop settings. 
+Creates/updates translations for shop settings.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -22320,7 +22320,7 @@ input ShopSettingsTranslationInput {
 }
 
 """
-Updates shop settings. 
+Updates shop settings.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22350,7 +22350,7 @@ input SiteDomainInput {
 }
 
 """
-Deletes staff users. Apps are not allowed to perform this mutation. 
+Deletes staff users. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -22362,7 +22362,7 @@ type StaffBulkDelete {
 }
 
 """
-Creates a new staff user. Apps are not allowed to perform this mutation. 
+Creates a new staff user. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -22422,7 +22422,7 @@ type StaffCreated implements Event {
 }
 
 """
-Deletes a staff user. Apps are not allowed to perform this mutation. 
+Deletes a staff user. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -22505,7 +22505,7 @@ type StaffNotificationRecipient implements Node {
 }
 
 """
-Creates a new staff notification recipient. 
+Creates a new staff notification recipient.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22516,7 +22516,7 @@ type StaffNotificationRecipientCreate {
 }
 
 """
-Delete staff notification recipient. 
+Delete staff notification recipient.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22538,7 +22538,7 @@ input StaffNotificationRecipientInput {
 }
 
 """
-Updates a staff notification recipient. 
+Updates a staff notification recipient.
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -22549,7 +22549,7 @@ type StaffNotificationRecipientUpdate {
 }
 
 """
-Updates an existing staff user. Apps are not allowed to perform this mutation. 
+Updates an existing staff user. Apps are not allowed to perform this mutation.
 
 Requires one of the following permissions: MANAGE_STAFF.
 """
@@ -22857,7 +22857,7 @@ Create a tax class.
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -22902,7 +22902,7 @@ Delete a tax class. After deleting the tax class any products, product types or 
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -22963,7 +22963,7 @@ Update a tax class.
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -23162,7 +23162,7 @@ Update tax configuration for a channel.
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -23241,7 +23241,7 @@ Remove all tax class rates for a specific country.
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -23277,7 +23277,7 @@ Update tax class rates for a specific country.
 
 Added in Saleor 3.9.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -23318,7 +23318,7 @@ Exempt checkout or order from charging the taxes. When tax exemption is enabled,
 
 Added in Saleor 3.8.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -23788,7 +23788,7 @@ Request an action for payment transaction.
 
 Added in Saleor 3.4.
 
-Note: this API is currently in Feature Preview and can be subject to changes at later point. 
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
 """
@@ -24131,7 +24131,7 @@ type User implements Node & ObjectWithMetadata {
   events: [CustomerEvent!]
 
   """
-  External ID of this user. 
+  External ID of this user.
   
   Added in Saleor 3.10.
   """
@@ -24246,7 +24246,7 @@ type User implements Node & ObjectWithMetadata {
 }
 
 """
-Deletes a user avatar. Only for staff members. 
+Deletes a user avatar. Only for staff members.
 
 Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
 """
@@ -24259,7 +24259,7 @@ type UserAvatarDelete {
 }
 
 """
-Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec 
+Create a user avatar. Only for staff members. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
 
 Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
 """
@@ -24272,7 +24272,7 @@ type UserAvatarUpdate {
 }
 
 """
-Activate or deactivate users. 
+Activate or deactivate users.
 
 Requires one of the following permissions: MANAGE_USERS.
 """
@@ -24406,7 +24406,7 @@ enum VariantAttributeScope {
 }
 
 """
-Assign an media to a product variant. 
+Assign an media to a product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -24418,7 +24418,7 @@ type VariantMediaAssign {
 }
 
 """
-Unassign an media from a product variant. 
+Unassign an media from a product variant.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -24651,7 +24651,7 @@ type Voucher implements Node & ObjectWithMetadata {
 }
 
 """
-Adds products, categories, collections to a voucher. 
+Adds products, categories, collections to a voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24664,7 +24664,7 @@ type VoucherAddCatalogues {
 }
 
 """
-Deletes vouchers. 
+Deletes vouchers.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24704,7 +24704,7 @@ input VoucherChannelListingInput {
 }
 
 """
-Manage voucher's availability in channels. 
+Manage voucher's availability in channels.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24735,7 +24735,7 @@ type VoucherCountableEdge {
 }
 
 """
-Creates a new voucher. 
+Creates a new voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24773,7 +24773,7 @@ type VoucherCreated implements Event {
 }
 
 """
-Deletes a voucher. 
+Deletes a voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24908,7 +24908,7 @@ type VoucherMetadataUpdated implements Event {
 }
 
 """
-Removes products, categories, collections from a voucher. 
+Removes products, categories, collections from a voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -24985,7 +24985,7 @@ type VoucherTranslatableContent implements Node {
 }
 
 """
-Creates/updates translations for a voucher. 
+Creates/updates translations for a voucher.
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -25010,7 +25010,7 @@ enum VoucherTypeEnum {
 }
 
 """
-Updates a voucher. 
+Updates a voucher.
 
 Requires one of the following permissions: MANAGE_DISCOUNTS.
 """
@@ -25065,7 +25065,7 @@ type Warehouse implements Node & ObjectWithMetadata {
   email: String!
 
   """
-  External ID of this warehouse. 
+  External ID of this warehouse.
   
   Added in Saleor 3.10.
   """
@@ -25161,7 +25161,7 @@ type WarehouseCountableEdge {
 }
 
 """
-Creates new warehouse. 
+Creates new warehouse.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -25224,7 +25224,7 @@ type WarehouseCreated implements Event {
 }
 
 """
-Deletes selected warehouse. 
+Deletes selected warehouse.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -25318,7 +25318,7 @@ type WarehouseMetadataUpdated implements Event {
 }
 
 """
-Add shipping zone to given warehouse. 
+Add shipping zone to given warehouse.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -25329,7 +25329,7 @@ type WarehouseShippingZoneAssign {
 }
 
 """
-Remove shipping zone from given warehouse. 
+Remove shipping zone from given warehouse.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -25353,7 +25353,7 @@ input WarehouseSortingInput {
 }
 
 """
-Updates given warehouse. 
+Updates given warehouse.
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -25476,7 +25476,7 @@ type Webhook implements Node {
 }
 
 """
-Creates a new webhook subscription. 
+Creates a new webhook subscription.
 
 Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
 """
@@ -25494,7 +25494,7 @@ input WebhookCreateInput {
   asyncEvents: [WebhookEventTypeAsyncEnum!]
 
   """
-  The events that webhook wants to subscribe. 
+  The events that webhook wants to subscribe.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
   """
@@ -25530,7 +25530,7 @@ input WebhookCreateInput {
 }
 
 """
-Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
+Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
 
 Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
 """
@@ -26604,7 +26604,7 @@ enum WebhookSampleEventTypeEnum {
 }
 
 """
-Updates a webhook subscription. 
+Updates a webhook subscription.
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -26622,7 +26622,7 @@ input WebhookUpdateInput {
   asyncEvents: [WebhookEventTypeAsyncEnum!]
 
   """
-  The events that webhook wants to subscribe. 
+  The events that webhook wants to subscribe.
   
   DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
   """
