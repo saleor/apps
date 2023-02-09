@@ -47,7 +47,7 @@ From here, you can visit:
 4. Run `pnpm dev --filter=saleor-app-X` where X is app name (matching saleor/X)
 5. Run `pnpm build` to build all apps
 6. Visit `apps/NAME/README.MD` for documentation of each app
-7. Visit `apps/NAME/.env.example` for example env variables requires by each app
+7. Visit `apps/NAME/.env.example` for example, env variables requires by each app
 
 
 ## Forking
@@ -57,26 +57,26 @@ under the [BSD-3 license](./LICENSE).
 
 Using monorepo with multiple apps may be confusing - you probably need only one app, but repository contains all of them.
 
-You can still fork and be able to track and merge original source code with 2 strategies:
+You can still fork and be able to track and merge the original source code with two strategies:
 
 ### Delete unused apps
 
-Repository contains apps and shared packages which are imported by apps. Apps never import other apps,
+The repository contains apps and shared packages which are imported by apps. Apps never import other apps,
 so they can be safely deleted.
 
 You can delete all apps except the one you need. Turborepo setup will automatically run all scripts only on the single package you have left,
 but it can be additionally filtered with `turbo run SCRIPT --filer=saleor-app-NAME`
 
-We recommend to keep other files to avoid unnecessary conflict.
+We recommend keeping other files to avoid unnecessary conflicts.
 
-If you want to update repository, you can still merge or rebase it with original source code. 
-You may face conflicts for apps folders you don't have anymore, but they can be easily discarded during conflict resulotion.
+If you want to update the repository, you can still merge or rebase it with the original source code. 
+You may face conflicts for apps folders you don't have anymore, but they can be easily discarded during conflict resolution.
 Just delete them again!
 
 ### Keep everything
 
-To avoid conflicts to minimum, you can leave other apps and just ignore them. These tips can help you with single app experience:
-- Mark other apps folders as "excluded" in your IDE, to avoid indexing these files
-- Run your scripts with Turborepo filters, eg. `turbo run SCRIPT --filer=saleor-app-NAME`
-- Use pnpm to avoid duplicated packages. Pnpm is installing packages once and links them, which causes minimal performance overhead of node_modules
+To avoid conflicts to a minimum, you can leave other apps and just ignore them. These tips can help you with a single app experience:
+- Mark other apps folders as "excluded" in your IDE to avoid indexing these files
+- Run your scripts with Turborepo filters, e.g. `turbo run SCRIPT --filer=saleor-app-NAME`
+- Use pnpm to avoid duplicated packages. Pnpm installs packages once and links them, which causes minimal performance overhead of node_modules
 
