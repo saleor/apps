@@ -8,7 +8,7 @@ import { GitHub, OfflineBoltOutlined } from "@material-ui/icons";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import appIcon from "../app-invoices-icon.svg";
 import Image from "next/image";
-import { AppIcon, MainBar } from "@saleor/apps-shared";
+import { AppIcon, TitleBar } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   buttonsGrid: { display: "flex", gap: 10 },
@@ -41,7 +41,7 @@ const ConfigurationPage: NextPage = () => {
 
   return (
     <div>
-      <MainBar
+      <TitleBar
         icon={
           <AppIcon
             theme={`rgb(227, 149, 60)`}

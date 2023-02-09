@@ -40,7 +40,7 @@ type Props = {
   bottomMargin?: boolean;
 } & PaperProps;
 
-export function MainBar({
+export function TitleBar({
   name,
   author,
   rightColumnContent,
