@@ -37,9 +37,11 @@ const ThemeProvider = MacawUIThemeProvider as React.FC<
   PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean; palettes: PalettesOverride }>
 >;
 
+type OuterProps = PropsWithChildren<{ themeOverrides?: Partial<Theme> }>;
+
 /**
  * This is theme provider for old Macaw. Will be removed with Macaw/next
  */
-export const MacawThemeProvider = ({ themeOverrides }: { themeOverrides?: Partial<Theme> }) => {
+export const MacawThemeProvider = ({ themeOverrides }: OuterProps) => {
   return <ThemeProvider overrides={themeOverrides} ssr palettes={palettes} />;
 };

@@ -1,21 +1,13 @@
 import "../styles/globals.css";
-
-import { Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from "react";
 import { AppProps } from "next/app";
 import GraphQLProvider from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
-
-const themeOverrides: Partial<Theme> = {
-  /**
-   * You can override MacawUI theme here
-   */
-};
+import { MacawThemeProvider } from "@saleor/apps-shared";
 
 /**
  * Ensure instance is a singleton.
@@ -30,13 +22,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-/**
- * That's a hack required by Macaw-UI incompatibility with React@18
- */
-const ThemeProvider = MacawUIThemeProvider as React.FC<
-  PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean }>
->;
 
 function NextApp({ Component, pageProps }: AppProps) {
   /**
@@ -53,13 +38,13 @@ function NextApp({ Component, pageProps }: AppProps) {
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <GraphQLProvider>
-          <ThemeProvider overrides={themeOverrides} ssr>
+          <MacawThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
             <QueryClientProvider client={queryClient}>
               <Component {...pageProps} />
             </QueryClientProvider>
-          </ThemeProvider>
+          </MacawThemeProvider>
         </GraphQLProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
