@@ -6,8 +6,6 @@ const getDefaultEmptyAddress = (): SellerShopConfig["address"] => ({
   companyName: "",
   country: "",
   countryArea: "",
-  firstName: "",
-  lastName: "",
   postalCode: "",
   streetAddress1: "",
   streetAddress2: "",

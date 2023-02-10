@@ -23,8 +23,6 @@ describe("appConfigInputSchema", () => {
               companyName: "",
               country: "",
               countryArea: "",
-              firstName: "",
-              lastName: "",
               postalCode: "",
               streetAddress1: "",
               streetAddress2: "",

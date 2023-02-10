@@ -9,8 +9,6 @@ gql`
         code
       }
       city
-      firstName
-      lastName
       streetAddress1
       streetAddress2
       companyName

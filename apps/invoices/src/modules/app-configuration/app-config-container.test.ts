@@ -8,8 +8,6 @@ const getDefaultAddressData = (): SellerShopConfig["address"] => ({
   companyName: "Saleor",
   country: "",
   countryArea: "",
-  firstName: "",
-  lastName: "",
   postalCode: "",
   streetAddress1: "",
   streetAddress2: "",

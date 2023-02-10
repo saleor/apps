@@ -7,8 +7,6 @@ export const getMockAddress = (): SellerShopConfig["address"] => {
     companyName: "Saleor",
     country: "Poland",
     countryArea: "Dolnoslaskie",
-    firstName: "",
-    lastName: "",
     postalCode: "12-123",
     streetAddress1: "Techowa 7",
     streetAddress2: "",
