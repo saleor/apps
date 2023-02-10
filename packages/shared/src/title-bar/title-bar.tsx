@@ -63,12 +63,12 @@ export function TitleBar({
   const styles = useStyles();
 
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container,className, {
+      [styles.bottomMargin]: bottomMargin,
+    })}>
       <Paper
         elevation={0}
-        className={clsx(styles.root, className, {
-          [styles.bottomMargin]: bottomMargin,
-        })}
+        className={styles.root}
       >
         {icon && <div className={styles.iconColumn}>{icon}</div>}
         <div className={styles.leftColumn}>

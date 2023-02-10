@@ -480,18 +480,20 @@ importers:
       '@types/react-dom': ^18.0.10
       clsx: ^1.2.1
       eslint-config-saleor: workspace:*
+      next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
     devDependencies:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.26.1_biqbaboplfbrettd7655fr4n2y
+      '@saleor/app-sdk': 0.26.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
       clsx: 1.2.1
       eslint-config-saleor: link:../eslint-config-saleor
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
@@ -3314,7 +3316,6 @@ packages:
 
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
-    dev: false
 
   /@next/eslint-plugin-next/13.0.2:
     resolution: {integrity: sha512-W+fIIIaFU7Kct7Okx91C7XDRGolv/w2RUenX2yZFeeNVcuVzDIKUcNmckrYbYcwrNQUSXmtwrs3g8xwast0YtA==}
@@ -3352,7 +3353,6 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-android-arm64/13.1.0:
@@ -3379,7 +3379,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-darwin-arm64/13.1.0:
@@ -3406,7 +3405,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-darwin-x64/13.1.0:
@@ -3433,7 +3431,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-freebsd-x64/13.1.0:
@@ -3460,7 +3457,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm-gnueabihf/13.1.0:
@@ -3487,7 +3483,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm64-gnu/13.1.0:
@@ -3514,7 +3509,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm64-musl/13.1.0:
@@ -3541,7 +3535,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-x64-gnu/13.1.0:
@@ -3568,7 +3561,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-x64-musl/13.1.0:
@@ -3595,7 +3587,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-arm64-msvc/13.1.0:
@@ -3622,7 +3613,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-ia32-msvc/13.1.0:
@@ -3649,7 +3639,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-x64-msvc/13.1.0:
@@ -3676,7 +3665,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -3803,27 +3791,6 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /@saleor/app-sdk/0.26.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-gkNQusr8XrfLR7EcB5OKt2MV7og7g1TmdeGBTsdJwkRK18lhYz4fpTGqzoQ+3UrNq98TNuoM3dznr7oPi1QFUA==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.11.4
-      raw-body: 2.5.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /@saleor/app-sdk/0.27.1_3vryta7zmbcsw4rrqf4axjqggm:
     resolution: {integrity: sha512-ZNbucokKCdBE1qa+YLHvjBVazYcRuUExBdaPW9aNxfeYyXgQNCdHqJx9oA/S1lMEVSbZSIRcn8Sx1+X/eEV8BA==}
@@ -4317,7 +4284,6 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
-    dev: false
 
   /@szmarczak/http-timer/1.1.2:
     resolution: {integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==}
@@ -5978,7 +5944,6 @@ packages:
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
-    dev: false
 
   /cliui/6.0.0:
     resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==}
@@ -9758,7 +9723,6 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-    dev: false
 
   /no-case/3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
@@ -10351,7 +10315,6 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: false
 
   /postcss/8.4.21:
     resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
@@ -11693,7 +11656,6 @@ packages:
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
-    dev: false
 
   /stylis/4.1.3:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}
