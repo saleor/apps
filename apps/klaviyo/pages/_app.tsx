@@ -1,13 +1,18 @@
 import "@saleor/apps-shared/src/globals.css";
 
-import { Theme } from "@material-ui/core/styles";
+import { StylesProvider, Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import { dark, light, SaleorThemeColors, ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
+import {
+  dark,
+  light,
+  SaleorThemeColors,
+  ThemeProvider as MacawUIThemeProvider,
+} from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
 import { AppLayoutProps } from "../types";
-
+import { createGenerateClassName } from "@material-ui/core";
 
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;
 
@@ -48,6 +53,11 @@ const themeOverrides: Partial<Theme> = {
   },
 };
 
+const generateClassName = createGenerateClassName({
+  productionPrefix: "c",
+  disableGlobal: true,
+});
+
 /**
  * Ensure instance is a singleton, so React 18 dev mode doesn't render it twice
  */
@@ -70,10 +80,12 @@ function SaleorApp({ Component, pageProps }: AppLayoutProps) {
 
   return (
     <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-      <ThemeProvider palettes={palettes} overrides={themeOverrides} ssr>
-        <ThemeSynchronizer />
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+      <StylesProvider generateClassName={generateClassName}>
+        <ThemeProvider palettes={palettes} overrides={themeOverrides} ssr>
+          <ThemeSynchronizer />
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </StylesProvider>
     </AppBridgeProvider>
   );
 }
