@@ -35,7 +35,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
         return index.saveObjects(objects);
-      }),
+      })
     );
   }
 
@@ -46,7 +46,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
         return index.deleteObjects(objects.map((o) => o.objectID));
-      }),
+      })
     );
   }
 
@@ -141,7 +141,7 @@ const groupVariantByIndexName = (
   {
     visibleInListings,
     indexNamePrefix,
-  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined },
+  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined }
 ) => {
   if (!productVariant.product.channelListings) {
     return null;
@@ -150,7 +150,7 @@ const groupVariantByIndexName = (
   const objectsToSaveByIndexName = productVariant.product.channelListings
     .filter((channelListing) =>
       // don't filter if `visibleInListings` is null
-      visibleInListings === null ? true : channelListing.visibleInListings === visibleInListings,
+      visibleInListings === null ? true : channelListing.visibleInListings === visibleInListings
     )
     .map((channelListing) => {
       const object = productAndVariantToAlgolia({
@@ -176,7 +176,7 @@ const groupProductsByIndexName = (
   {
     visibleInListings,
     indexNamePrefix,
-  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined },
+  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined }
 ) => {
   debug(`groupProductsByIndexName called`);
   const batchesAndIndices = productsBatch

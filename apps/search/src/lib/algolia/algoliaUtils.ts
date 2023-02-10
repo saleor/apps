@@ -10,7 +10,7 @@ type PartialChannelListing = {
 
 export function channelListingToAlgoliaIndexId(
   channelListing: PartialChannelListing,
-  indexNamePrefix: string | undefined,
+  indexNamePrefix: string | undefined
 ) {
   const nameSegments = [
     indexNamePrefix,

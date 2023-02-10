@@ -13,7 +13,7 @@ function GraphQLProvider(props: PropsWithChildren<{}>) {
   }
 
   const client = createClient(saleorApiUrl, async () =>
-    Promise.resolve({ token: appBridgeState?.token! }),
+    Promise.resolve({ token: appBridgeState?.token! })
   );
 
   return <Provider value={client} {...props} />;

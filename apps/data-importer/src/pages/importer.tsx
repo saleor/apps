@@ -7,7 +7,6 @@ import GraphQLProvider from "../providers/GraphQLProvider";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppIcon, TitleBar } from "@saleor/apps-shared";
 
-
 type Tab = "customers";
 
 const useStyles = makeStyles((theme: SaleorTheme) => ({
@@ -36,7 +35,7 @@ const ImporterPage: NextPage = () => {
     <div className={styles.wrapper}>
       <TitleBar
         bottomMargin
-        icon={<AppIcon theme="rgb(58, 86, 199)" text="DI"/>}
+        icon={<AppIcon theme="rgb(58, 86, 199)" text="DI" />}
         name="Data Importer"
         author="By Saleor Commerce"
         rightColumnContent={
