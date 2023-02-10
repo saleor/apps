@@ -38,11 +38,11 @@ This repository serves as a starting point in the exploration of Saleor apps.
 
 In the `apps` folder, you will find the following applications:
 
-- [data-importer](https://github.com/saleor/apps/tree/main/apps/data-importer) - import data from CSV to Saleor.
-- [invoices](https://github.com/saleor/apps/tree/main/apps/invoices) - generate invoice PDF for each order.
-- [klaviyo](https://github.com/saleor/apps/tree/main/apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
-- [search](https://github.com/saleor/apps/tree/main/apps/search) - connect Saleor with search engines.
-- [slack](https://github.com/saleor/apps/tree/main/apps/slack) - get notifications on Slack channel from Saleor events.
+- [data-importer](./apps/data-importer) - import data from CSV to Saleor.
+- [invoices](./apps/invoices) - generate invoice PDF for each order.
+- [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
+- [search](./apps/search) - connect Saleor with search engines.
+- [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
 
 ## Development
 
