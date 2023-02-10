@@ -7,7 +7,6 @@ import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
 
-import GraphQLProvider from "../providers/GraphQLProvider";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../no-ssr-wrapper";
 
