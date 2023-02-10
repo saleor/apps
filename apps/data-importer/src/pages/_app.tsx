@@ -1,33 +1,18 @@
-import "../styles/globals.css";
-
-import { Theme } from "@material-ui/core/styles";
+import "@saleor/apps-shared/src/globals.css";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from "react";
 import { AppProps } from "next/app";
 
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../no-ssr-wrapper";
-
-const themeOverrides: Partial<Theme> = {
-  /**
-   * You can override MacawUI theme here
-   */
-};
+import { MacawThemeProvider } from "@saleor/apps-shared";
 
 /**
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
 const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
-
-/**
- * That's a hack required by Macaw-UI incompatibility with React@18
- */
-const ThemeProvider = MacawUIThemeProvider as React.FC<
-  PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean }>
->;
 
 function NextApp({ Component, pageProps }: AppProps) {
   /**
@@ -43,11 +28,11 @@ function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <ThemeProvider overrides={themeOverrides} ssr>
+        <MacawThemeProvider>
           <ThemeSynchronizer />
           <RoutePropagator />
           <Component {...pageProps} />
-        </ThemeProvider>
+        </MacawThemeProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
   );
