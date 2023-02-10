@@ -70,7 +70,6 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
             {
               label: "Seller",
               value: [
-                `${companyAddressData.firstName} ${companyAddressData.lastName}`,
                 companyAddressData.companyName,
                 companyAddressData.streetAddress1,
                 companyAddressData.streetAddress2,
