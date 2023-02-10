@@ -20,7 +20,7 @@ const sendResponse = async (
   res: NextApiResponse<SettingsApiResponse>,
   statusCode: number,
   settings: SettingsManager,
-  domain: string,
+  domain: string
 ) => {
   res.status(statusCode).json({
     success: statusCode === 200,
@@ -36,7 +36,7 @@ const sendResponse = async (
 export const handler = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  ctx: ProtectedHandlerContext,
+  ctx: ProtectedHandlerContext
 ) => {
   debug("Configuration handler received request");
 
@@ -54,7 +54,7 @@ export const handler = async (
   } else if (req.method === "POST") {
     debug("Updating the configuration");
     const { appId, searchKey, secretKey, indexNamePrefix } = JSON.parse(
-      req.body,
+      req.body
     ) as AlgoliaConfigurationFields;
     await settings.set([
       { key: "secretKey", value: secretKey || "", domain },

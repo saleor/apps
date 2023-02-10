@@ -13,7 +13,9 @@ export const CustomersImportingResults = ({
 
   return (
     <div>
-      <Typography paragraph variant="h3">Customers rows from imported file</Typography>
+      <Typography paragraph variant="h3">
+        Customers rows from imported file
+      </Typography>
 
       <Typography paragraph>
         Lines will be imported one by one. Failed imports can be retried, but performed operations
@@ -33,7 +35,7 @@ export const CustomersImportingResults = ({
         </Button>
       )}
 
-      <Table style={{marginTop: 50}}>
+      <Table style={{ marginTop: 50 }}>
         <TableBody>
           {importedLines.map((row) => (
             <CustomerImportingRow

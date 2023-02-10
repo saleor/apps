@@ -46,8 +46,8 @@ const nuvoSettings: SettingsAPI = {
         color: "#fff",
       },
     },
-    loader:{
-      loadAnimationColor: '#000'
+    loader: {
+      loadAnimationColor: "#000",
     },
     header: {
       description: {

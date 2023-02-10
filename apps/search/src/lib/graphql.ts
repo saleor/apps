@@ -51,7 +51,7 @@ export const nextClient = (url: string, getAuth: AuthConfig<IAuthState>["getAuth
       url,
       exchanges: getExchanges(getAuth),
     },
-    false,
+    false
   );
 };
 

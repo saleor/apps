@@ -19,7 +19,7 @@ export const ImportProductsToAlgolia = () => {
   const { appBridgeState } = useAppBridge();
   const algoliaConfiguration = useConfiguration(
     appBridgeState?.saleorApiUrl,
-    appBridgeState?.token,
+    appBridgeState?.token
   );
 
   const searchProvider = useMemo(() => {

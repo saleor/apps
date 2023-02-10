@@ -14,17 +14,23 @@
     "test": "turbo run test",
     "test:ci": "turbo run test:ci",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "generate": "turbo run generate"
+    "generate": "turbo run generate",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
     "eslint-config-saleor": "workspace:*",
     "prettier": "^2.8.3",
     "turbo": "^1.7.4",
-    "eslint": "^8.33.0"
+    "eslint": "^8.33.0",
+    "husky": "^8.0.3"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@7.26.2"
+  "packageManager": "pnpm@7.26.2",
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx,md}": "prettier --write"
+  }
 }
