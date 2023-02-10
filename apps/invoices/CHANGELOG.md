@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.2.0
+
+### Minor Changes
+
+- 0219561: Remove firstName and lastName fields in billing address of a company
+
 ## 1.1.3
 
 ### Patch Changes
