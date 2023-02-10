@@ -42,6 +42,6 @@ type OuterProps = PropsWithChildren<{ themeOverrides?: Partial<Theme> }>;
 /**
  * This is theme provider for old Macaw. Will be removed with Macaw/next
  */
-export const MacawThemeProvider = ({ themeOverrides }: OuterProps) => {
-  return <ThemeProvider overrides={themeOverrides} ssr palettes={palettes} />;
+export const MacawThemeProvider = (props: OuterProps) => {
+  return <ThemeProvider {...props} ssr palettes={palettes} />;
 };
