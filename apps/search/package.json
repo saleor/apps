@@ -28,7 +28,7 @@
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
     "instantsearch.css": "^7.4.5",
-    "next": "13.1.2",
+    "next": "13.1.6",
     "next-urql": "4.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
