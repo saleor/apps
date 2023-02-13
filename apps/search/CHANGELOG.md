@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.0.2
+
+### Patch Changes
+
+- ce17e45: Fix missing attribute values in products
+
 ## 1.0.1
 
 ### Patch Changes
