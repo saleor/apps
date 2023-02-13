@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.3.0
+
+### Minor Changes
+
+- c1dab0b: Unsticky app cards and change loader type
+
 ## 1.2.0
 
 ### Minor Changes
