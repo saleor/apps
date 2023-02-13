@@ -36,7 +36,7 @@ const columns = getCustomersModelColumns();
 
 const nuvoSettings: SettingsAPI = {
   columns,
-  developerMode: true, //todo
+  developerMode: process.env.NODE_ENV !== "production",
   identifier: "customers",
   modal: false,
   style: {
