@@ -14,12 +14,10 @@ const useStyles = makeStyles((theme) => {
     header: { marginBottom: 20 },
     grid: { display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start", gap: 40 },
     formContainer: {
-      top: TitleBar.height + 16,
-      position: "sticky",
+      marginTop: 12,
     },
     instructionsContainer: {
-      top: TitleBar.height + 16,
-      position: "sticky",
+      marginTop: 12,
       padding: 15,
     },
   };
@@ -76,7 +74,10 @@ export const ChannelsConfiguration = () => {
       <ChannelsList
         channels={channels.data}
         activeChannelSlug={activeChannel.slug}
-        onChannelClick={setActiveChannelSlug}
+        onChannelClick={(slug) => {
+          setActiveChannelSlug(slug);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
 
       {activeChannel ? (
