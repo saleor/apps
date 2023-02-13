@@ -1,4 +1,7 @@
-import { ProductVariantWebhookPayloadFragment } from "../../../generated/graphql";
+import {
+  ProductAttributesDataFragment,
+  ProductVariantWebhookPayloadFragment,
+} from "../../../generated/graphql";
 import { isNotNil } from "../isNotNil";
 
 type PartialChannelListing = {
@@ -55,6 +58,22 @@ export function formatMetadata({ product }: ProductVariantWebhookPayloadFragment
 
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 
+/**
+ *  Returns object with a key being attribute name and value of all attribute values
+ *  separated by comma. If no value is selected, an empty string will be used instead.
+ */
+const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
+  if (!attr.attribute.name?.length) {
+    return undefined;
+  }
+
+  const filteredValues = attr.values.filter((v) => !!v.name?.length);
+
+  return {
+    [attr.attribute.name]: filteredValues.map((v) => v.name).join(", ") || "",
+  };
+};
+
 export function productAndVariantToAlgolia({
   variant,
   channel,
@@ -65,10 +84,24 @@ export function productAndVariantToAlgolia({
   const product = variant.product;
   const attributes = {
     ...product.attributes.reduce((acc, attr, idx) => {
-      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx]?.name ?? "" };
+      const preparedAttr = mapSelectedAttributesToRecord(attr);
+      if (!preparedAttr) {
+        return acc;
+      }
+      return {
+        ...acc,
+        ...preparedAttr,
+      };
     }, {}),
     ...variant.attributes.reduce((acc, attr, idx) => {
-      return { ...acc, [attr.attribute.name ?? ""]: attr.values[idx]?.name ?? "" };
+      const preparedAttr = mapSelectedAttributesToRecord(attr);
+      if (!preparedAttr) {
+        return acc;
+      }
+      return {
+        ...acc,
+        ...preparedAttr,
+      };
     }, {}),
   };
 
