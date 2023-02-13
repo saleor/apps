@@ -11,8 +11,7 @@ type Tab = "customers";
 
 const useStyles = makeStyles((theme: SaleorTheme) => ({
   wrapper: {
-    border: `1px solid ${theme.palette.divider}`,
-    minHeight: `calc(100vh - 100px)`,
+    minHeight: `100vh`,
   },
 }));
 
@@ -35,7 +34,7 @@ const ImporterPage: NextPage = () => {
     <div className={styles.wrapper}>
       <TitleBar
         bottomMargin
-        icon={<AppIcon theme="rgb(58, 86, 199)" text="DI" />}
+        icon={<AppIcon theme="#3BD579" icon={<img src="/logo.svg" />} />}
         name="Data Importer"
         author="By Saleor Commerce"
         rightColumnContent={
@@ -59,7 +58,7 @@ const ImporterPage: NextPage = () => {
           </div>
         }
       />
-      <Container>
+      <Container style={{ maxWidth: "unset" }}>
         <PageTabs
           style={{ marginBottom: 20, marginTop: 20 }}
           value={activeTab}
@@ -69,7 +68,7 @@ const ImporterPage: NextPage = () => {
           <PageTab disabled value="orders" label="Orders (coming soon)" />
           <PageTab disabled value="products" label="Products (coming soon)" />
         </PageTabs>
-        <Divider style={{ marginBottom: 50 }} />
+        <Divider />
         {activeTab === "customers" && <CustomersImporterView />}
       </Container>
     </div>

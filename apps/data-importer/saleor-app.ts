@@ -11,9 +11,6 @@ import { APL, FileAPL, SaleorCloudAPL, UpstashAPL, VercelAPL } from "@saleor/app
 
 export let apl: APL;
 switch (process.env.APL) {
-  case "vercel":
-    apl = new VercelAPL();
-    break;
   case "upstash":
     // Require `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables
     apl = new UpstashAPL();

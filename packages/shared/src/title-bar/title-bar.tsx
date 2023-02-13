@@ -64,6 +64,7 @@ export function TitleBar({
   return (
     <div className={styles.container}>
       <Paper
+        square
         elevation={0}
         className={clsx(styles.root, className, {
           [styles.bottomMargin]: bottomMargin,
