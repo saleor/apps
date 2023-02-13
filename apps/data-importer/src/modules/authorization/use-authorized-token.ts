@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import * as jose from "jose";
 
 /**
- * TODO test
- * TODO extract to app-sdk
+ * use app-sdk
  */
 export function useAuthorizedToken(requirePermission: string) {
   const [authorized, setAuthorized] = useState<boolean | undefined>();

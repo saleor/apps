@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { ConfigureAPI, OnResults, SettingsAPI } from "nuvo-react";
 import {
@@ -8,10 +8,11 @@ import {
 } from "./customers-columns-model";
 import dotObject from "dot-object";
 import { useAuthorizedToken } from "../../authorization/use-authorized-token";
-import { Alert, Button } from "@saleor/macaw-ui";
+import { Alert, Button, SaleorTheme, useTheme } from "@saleor/macaw-ui";
 import { CustomersImportingResults } from "../customers-results/customers-importing-results";
-import { LinearProgress } from "@material-ui/core";
+import { lighten, LinearProgress } from "@material-ui/core";
 import { CloudUpload } from "@material-ui/icons";
+import { Theme } from "@material-ui/core/styles";
 
 let PassSubmitResult: any;
 let RejectSubmitResult: any;
@@ -34,57 +35,160 @@ const NuvoImporter = dynamic<ConfigureAPI>(
 
 const columns = getCustomersModelColumns();
 
-const nuvoSettings: SettingsAPI = {
-  columns,
-  developerMode: process.env.NODE_ENV !== "production",
-  identifier: "customers",
-  modal: false,
-  style: {
-    buttons: {
-      primary: {
-        background: "black",
-        color: "#fff",
+const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
+  const dropdownStyles = {
+    option: {
+      color: theme.palette.text.primary,
+      ":hover": {
+        background: `${lighten(theme.palette.background.default, 0.1)}`,
       },
-    },
-    loader: {
-      loadAnimationColor: "#000",
     },
     header: {
-      description: {
-        display: "none",
-      },
+      background: theme.palette.background.default,
+      color: theme.palette.text.primary,
+    },
+    root: {
+      border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+      background: theme.palette.background.default,
+      color: theme.palette.text.primary,
+    },
+    search: {
       root: {
-        // display: "none",
+        background: theme.palette.background.default,
+        color: theme.palette.text.primary,
       },
     },
-    progressBar: {
-      root: {
-        display: "none",
-      },
-    },
-    dropzone: {
-      icon: {
-        box: {
-          filter: "grayscale(1)",
+  } as const;
+
+  return {
+    columns,
+    enableExamples: false,
+    developerMode: process.env.NODE_ENV !== "production",
+    identifier: "customers",
+    modal: false,
+    style: {
+      footer: {
+        root: {
+          background: theme.palette.background.default,
         },
       },
-      root: {
-        background: "#fff",
-        border: "1px dashed #ddd",
+      buttons: {
+        primary: {
+          background: "black",
+          color: "#fff",
+          ":hover": {
+            backgroundColor: "black",
+            color: "#fff",
+          },
+        },
+        secondary: {
+          background: "#444",
+          color: "#fff",
+          border: "none",
+          ":hover": {
+            background: "#444",
+            color: "#fff",
+          },
+        },
       },
+      loader: {
+        loadAnimationColor: theme.palette.type === "light" ? "#000" : "#fff",
+      },
+      headerSelect: {
+        root: {
+          background: theme.palette.background.default,
+          border: "none",
+        },
+        table: {
+          selectRowColor: lighten(theme.palette.background.default, 0.3),
+          th: {
+            color: theme.palette.text.primary,
+            background: theme.palette.background.default,
+          },
+          td: {
+            color: theme.palette.text.primary,
+            background: theme.palette.background.default,
+          },
+          hoverRowColor: lighten(theme.palette.background.default, 0.1),
+        },
+        sheetName: {
+          root: {
+            display: "none",
+          },
+        },
+      },
+      columnMatch: {
+        notMatchingValue: {
+          root: {
+            background: lighten(theme.palette.background.default, 0.1),
+          },
+        },
+        buttonJoined: {
+          root: {
+            background: lighten(theme.palette.background.default, 0.1),
+          },
+        },
+        root: {
+          background: theme.palette.background.default,
+          border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+        },
+        columnMatchHeader: {
+          dropdown: dropdownStyles,
+          root: {
+            background: theme.palette.background.default,
+            border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+          },
+        },
+        columnMatchValue: {
+          emptyValue: {
+            background: theme.palette.background.default,
+            color: theme.palette.text.primary,
+          },
+          dropdown: dropdownStyles,
+          root: {
+            border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+            background: theme.palette.background.default,
+          },
+        },
+      },
+      header: {
+        description: {
+          display: "none",
+        },
+        root: {
+          // display: "none",
+        },
+      },
+      progressBar: {
+        root: {
+          display: "none",
+        },
+      },
+      dropzone: {
+        icon: {
+          box: {
+            filter: "grayscale(1)",
+          },
+        },
+        root: {
+          background: theme.palette.background.default,
+          border: "1px dashed #ddd",
+        },
+      },
+      globals: { fontFamily: "Inter", backgroundColor: "transparent", textColor: "inherit" },
     },
-    globals: { fontFamily: "Inter", backgroundColor: "transparent" },
-  },
-  title: "Upload customers to Saleor",
-  disableExcelTemplate: true,
-  disableTemplates: true,
-  allowManualInput: true,
+    title: "Upload customers to Saleor",
+    disableExcelTemplate: true,
+    disableTemplates: true,
+    allowManualInput: true,
+  };
 };
 
 const licenseKey = process.env.NEXT_PUBLIC_NUVO_LICENSE_KEY as string;
 
 export const CustomersImporterView = () => {
   const authorized = useAuthorizedToken("MANAGE_USERS");
+  const saleorTheme = useTheme();
 
   const [importedLines, setImportedLines] = useState<CustomerColumnSchema[] | null>(null);
 
@@ -95,6 +199,10 @@ export const CustomersImporterView = () => {
 
     setImportedLines(parsedResult);
   }, []);
+
+  const nuvoSettings = useMemo(() => {
+    return getNuvoSettings(saleorTheme);
+  }, [saleorTheme]);
 
   if (authorized === undefined) {
     return <div>Authorizing</div>;
