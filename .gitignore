@@ -39,3 +39,5 @@ yarn-error.log*
 test-invoice.pdf
 coverage/
 apps/**/generated
+
+.eslintcache
