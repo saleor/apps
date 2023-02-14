@@ -11,7 +11,7 @@ import GraphQLProvider from "../providers/GraphQLProvider";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { Analytics } from "@vercel/analytics/dist/react";
+import { Analytics } from "@vercel/analytics/react";
 
 const themeOverrides: Partial<Theme> = {
   /**
