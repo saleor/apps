@@ -11,6 +11,7 @@ import GraphQLProvider from "../providers/GraphQLProvider";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { trpcClient } from "../modules/trpc/trpc-client";
+import { Analytics } from "@vercel/analytics/dist/react";
 
 const themeOverrides: Partial<Theme> = {
   /**
@@ -47,6 +48,7 @@ function NextApp({ Component, pageProps }: AppProps) {
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <GraphQLProvider>
           <ThemeProvider overrides={themeOverrides} ssr={false}>
+            <Analytics debug={true} />
             <ThemeSynchronizer />
             <RoutePropagator />
             <Component {...pageProps} />

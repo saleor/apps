@@ -133,6 +133,7 @@ importers:
       '@types/rimraf': ^3.0.2
       '@urql/exchange-auth': ^1.0.0
       '@urql/exchange-multipart-fetch': ^1.0.1
+      '@vercel/analytics': ^0.1.8
       '@vitejs/plugin-react': ^3.0.0
       '@vitest/coverage-c8': ^0.28.4
       '@web-std/file': ^3.0.2
@@ -171,6 +172,7 @@ importers:
       '@trpc/server': 10.10.0
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       '@urql/exchange-multipart-fetch': 1.0.1_graphql@16.6.0
+      '@vercel/analytics': 0.1.8_react@18.2.0
       '@web-std/file': 3.0.2
       clsx: 1.2.1
       graphql: 16.6.0
@@ -4916,6 +4918,14 @@ packages:
     dependencies:
       graphql: 16.6.0
     dev: true
+
+  /@vercel/analytics/0.1.8_react@18.2.0:
+    resolution: {integrity: sha512-PQrOI8BJ9qUiVJuQfnKiJd15eDjDJH9TBKsNeMrtelT4NAk7d9mBVz1CoZkvoFnHQ0OW7Xnqmr1F2nScfAnznQ==}
+    peerDependencies:
+      react: ^16.8||^17||^18
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /@vitejs/plugin-react/3.1.0_vite@4.1.1:
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
