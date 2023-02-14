@@ -61,7 +61,7 @@ const palettes: PalettesOverride = {
 /**
  * That's a hack required by Macaw-UI incompatibility with React@18
  *
- * todo use from packages/shared
+ * TODO: use from packages/shared
  */
 const ThemeProvider = MacawUIThemeProvider as React.FC<
   PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean; palettes: PalettesOverride }>
