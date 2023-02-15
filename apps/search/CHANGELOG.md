@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.0.3
+
+### Patch Changes
+
+- b874d10: Update @saleor/app-sdk to 0.29.0
+- c786483: Subscription queries for webhooks has been splitted to pass a new validation
+- Updated dependencies [648d99b]
+  - @saleor/apps-shared@1.1.1
+
 ## 1.0.2
 
 ### Patch Changes
