@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.1.1
+
+### Patch Changes
+
+- 648d99b: Remove not needed console log
+
 ## 1.1.0
 
 ### Minor Changes

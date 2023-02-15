@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "dependencies": {},
   "devDependencies": {
     "eslint-config-saleor": "workspace:*",
