@@ -1,0 +1,28 @@
+fragment GoogleFeedProductVariant on ProductVariant {
+  id
+  name
+  sku
+  pricing {
+    price {
+      gross {
+        currency
+        amount
+      }
+    }
+  }
+  quantityAvailable
+  product {
+    id
+    name
+    slug
+    description
+    seoDescription
+    thumbnail {
+      url
+    }
+    category {
+      id
+      name
+    }
+  }
+}
