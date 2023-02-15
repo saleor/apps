@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.1.3
+
+### Patch Changes
+
+- b874d10: Update @saleor/app-sdk to 0.29.0
+- Updated dependencies [648d99b]
+  - @saleor/apps-shared@1.1.1
+
 ## 1.1.2
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # saleor-app-invoices
 
+## 1.4.0
+
+### Minor Changes
+
+- b874d10: Add logging error in SaleorAsyncWebhook
+
+### Patch Changes
+
+- b874d10: Update @saleor/app-sdk to 0.29.0
+- Updated dependencies [648d99b]
+  - @saleor/apps-shared@1.1.1
+
 ## 1.3.0
 
 ### Minor Changes
