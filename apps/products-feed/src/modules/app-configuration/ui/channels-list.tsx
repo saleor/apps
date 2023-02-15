@@ -16,9 +16,12 @@ const useStyles = makeStyles((theme) => {
     listItem: {
       cursor: "pointer",
       height: "auto !important",
+      border: `1px solid transparent`,
     },
     listItemActive: {
-      border: `2px solid ${theme.palette.primary.main}`,
+      border: `1px solid ${
+        theme.palette.type === "light" ? theme.palette.divider : theme.palette.grey.A200
+      }`,
     },
     cellSlug: {
       fontFamily: "monospace",

@@ -6,7 +6,6 @@ import { FallbackAppConfig } from "./fallback-app-config";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
 
-// todo test
 export class GetAppConfigurationService {
   constructor(
     private settings: {

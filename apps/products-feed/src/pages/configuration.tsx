@@ -33,7 +33,7 @@ const AppIcon = () => {
 
   return (
     <div className={styles.appIconContainer}>
-      <Typography variant="h2">P</Typography>
+      <Typography variant="h2">PF</Typography>
     </div>
   );
 };
@@ -65,7 +65,7 @@ const ConfigurationPage: NextPage = () => {
       <MainBar
         icon={<AppIcon />}
         className={styles.topBar}
-        name="Products Feed Hub"
+        name="Products Feed"
         author="By Saleor Commerce"
         rightColumnContent={
           <div className={styles.buttonsGrid}>
@@ -73,7 +73,7 @@ const ConfigurationPage: NextPage = () => {
               variant="secondary"
               startIcon={<GitHub />}
               onClick={() => {
-                openInNewTab("https://github.com/saleor/saleor-app-products-feed");
+                openInNewTab("https://github.com/saleor/apps");
               }}
             >
               Repository

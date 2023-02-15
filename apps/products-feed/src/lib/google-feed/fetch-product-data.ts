@@ -28,6 +28,7 @@ export const fetchProductData = async ({ client, channel }: FetchProductDataArgs
 
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
     logger.debug("Fetching the next page of products");
+
     result = await client
       .query(FetchProductDataForFeedDocument, {
         channel: channel as string,
@@ -35,10 +36,12 @@ export const fetchProductData = async ({ client, channel }: FetchProductDataArgs
         after: result.data.productVariants.pageInfo.endCursor,
       })
       .toPromise();
+
     if (result.error) {
       logger.error(`Error during the GraphqlAPI call: ${result.error.message}`);
       throw new Error("Error during the GraphQL API call");
     }
+
     if (!result.data?.productVariants?.edges.length) {
       logger.warn("Fetching the second page of results resulted in no entries");
       break;
