@@ -14,13 +14,13 @@ export class PrivateMetadataAppConfigurator implements AppConfigurator {
   getConfig(): Promise<AppConfig | undefined> {
     return this.metadataManager.get(this.metadataKey, this.saleorApiUrl).then((data) => {
       if (!data) {
-        return data;
+        return undefined;
       }
 
       try {
         return JSON.parse(data);
       } catch (e) {
-        throw new Error("Invalid metadata value, cant be parsed");
+        throw new Error("Invalid metadata value, can't be parsed");
       }
     });
   }
