@@ -58,6 +58,14 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
         color: theme.palette.text.primary,
       },
     },
+    button: {
+      root: {
+        background: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        maxHeight: "20px",
+        border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+      },
+    },
   } as const;
 
   return {
@@ -175,7 +183,11 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
           border: "1px dashed #ddd",
         },
       },
-      globals: { fontFamily: "Inter", backgroundColor: "transparent", textColor: "inherit" },
+      globals: {
+        fontFamily: "Inter",
+        backgroundColor: "transparent",
+        textColor: "inherit",
+      },
     },
     title: "Upload customers to Saleor",
     disableExcelTemplate: true,
