@@ -4,7 +4,6 @@ import { HTMLProps, ReactNode } from "react";
 import clsx from "clsx";
 
 const useStyles = makeStyles(({ props }) => {
-  console.log(props);
   return {
     appIconContainer: {
       background: "rgb(58, 86, 199)",
