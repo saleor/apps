@@ -7,7 +7,7 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "build#saleor-app-data-importer": {
-      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY"]
+      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY","NEXT_PUBLIC_NUVO_PROD_MODE"]
     },
     "build#saleor-app-invoices": {
       "env": [

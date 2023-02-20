@@ -71,7 +71,7 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
   return {
     columns,
     enableExamples: false,
-    developerMode: process.env.NODE_ENV !== "production",
+    developerMode: process.env.NEXT_PUBLIC_NUVO_PROD_MODE !== "true",
     identifier: "customers",
     modal: false,
     style: {
