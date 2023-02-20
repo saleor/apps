@@ -183,6 +183,24 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
           border: "1px dashed #ddd",
         },
       },
+      reviewEntries: {
+        root: {
+          backgroundColor: "transparent",
+        },
+        table: {
+          th: {
+            backgroundColor: "transparent",
+          },
+          td: {
+            normal: {
+              backgroundColor: "transparent",
+            },
+            root: {
+              backgroundColor: "transparent",
+            },
+          },
+        },
+      },
       globals: {
         fontFamily: "Inter",
         backgroundColor: "transparent",
