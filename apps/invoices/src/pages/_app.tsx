@@ -1,4 +1,5 @@
 import "@saleor/apps-shared/src/globals.css";
+import "../styles/globals.css";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import React, { useEffect } from "react";
