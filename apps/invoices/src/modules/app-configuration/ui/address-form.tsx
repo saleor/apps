@@ -54,7 +54,7 @@ export const AddressForm = (props: Props) => {
       })}
       className={styles.form}
     >
-      <Typography variant="h3" paragraph>
+      <Typography component="h3" variant="h3" paragraph>
         Configure
         <span onClick={handleChannelNameClick} className={styles.channelName}>
           {` ${props.channelName} `}
