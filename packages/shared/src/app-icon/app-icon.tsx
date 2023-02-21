@@ -3,21 +3,18 @@ import { makeStyles } from "@saleor/macaw-ui";
 import { HTMLProps, ReactNode } from "react";
 import clsx from "clsx";
 
-const useStyles = makeStyles(({ props }) => {
-  console.log(props);
-  return {
-    appIconContainer: {
-      background: "rgb(58, 86, 199)",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: "50%",
-      color: "#fff",
-      width: 50,
-      height: 50,
-    },
-  };
+const useStyles = makeStyles({
+  appIconContainer: {
+    background: "rgb(58, 86, 199)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "50%",
+    color: "#fff",
+    width: 50,
+    height: 50,
+  },
 });
 
 type Props = HTMLProps<HTMLDivElement> & {

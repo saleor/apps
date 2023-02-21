@@ -1,0 +1,11 @@
+subscription ProductDeleted {
+  event {
+    __typename
+    ... on ProductDeleted {
+      __typename
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+  }
+}

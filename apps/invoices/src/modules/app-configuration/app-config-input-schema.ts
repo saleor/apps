@@ -13,8 +13,6 @@ export const appConfigInputSchema = z.object({
         streetAddress1: z.string().min(0),
         streetAddress2: z.string().min(0),
         postalCode: z.string().min(0),
-        firstName: z.string().min(0),
-        lastName: z.string().min(0),
         city: z.string().min(0),
         country: z.string().min(0),
       }),

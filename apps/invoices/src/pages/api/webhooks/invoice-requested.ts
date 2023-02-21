@@ -15,9 +15,9 @@ import {
 import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoice-generator/microinvoice/microinvoice-invoice-generator";
 import { hashInvoiceFilename } from "../../../modules/invoice-file-name/hash-invoice-filename";
 import { resolveTempPdfFileLocation } from "../../../modules/invoice-file-name/resolve-temp-pdf-file-location";
-import { appConfigurationRouter } from "../../../modules/app-configuration/app-configuration.router";
 import { createLogger } from "../../../lib/logger";
 import { GetAppConfigurationService } from "../../../modules/app-configuration/get-app-configuration.service";
+import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 
 const OrderPayload = gql`
   fragment Address on Address {
@@ -125,6 +125,13 @@ export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPa
   asyncEvent: "INVOICE_REQUESTED",
   apl: saleorApp.apl,
   subscriptionQueryAst: InvoiceRequestedSubscription,
+  onError(error, req, res) {
+    const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
+
+    const logger = createLogger({ domain: saleorApiUrl });
+
+    logger.error(error);
+  },
 });
 
 const invoiceNumberGenerator = new InvoiceNumberGenerator();

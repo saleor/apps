@@ -1,18 +1,7 @@
-import { AddressFragment } from "../../../generated/graphql";
+import { SellerAddress } from "./address";
 
 export interface SellerShopConfig {
-  address: {
-    companyName: string;
-    cityArea: string;
-    countryArea: string;
-    streetAddress1: string;
-    streetAddress2: string;
-    postalCode: string;
-    firstName: string;
-    lastName: string;
-    city: string;
-    country: string;
-  };
+  address: SellerAddress;
 }
 
 export type ShopConfigPerChannelSlug = Record<string, SellerShopConfig>;

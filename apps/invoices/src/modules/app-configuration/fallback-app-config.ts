@@ -18,8 +18,6 @@ export const FallbackAppConfig = {
           companyName: shopAddress?.companyAddress?.companyName ?? "",
           country: shopAddress?.companyAddress?.country.country ?? "",
           countryArea: shopAddress?.companyAddress?.countryArea ?? "",
-          firstName: shopAddress?.companyAddress?.firstName ?? "",
-          lastName: shopAddress?.companyAddress?.lastName ?? "",
           postalCode: shopAddress?.companyAddress?.postalCode ?? "",
           streetAddress1: shopAddress?.companyAddress?.streetAddress1 ?? "",
           streetAddress2: shopAddress?.companyAddress?.streetAddress2 ?? "",

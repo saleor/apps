@@ -1,13 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["VERCEL_ENV"],
   "pipeline": {
     "build": {
+      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "build#saleor-app-data-importer": {
-      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY"]
+      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY", "NEXT_PUBLIC_VERCEL_ENV"]
     },
     "build#saleor-app-invoices": {
       "env": [
@@ -18,7 +20,8 @@
         "TEMP_PDF_STORAGE_DIR",
         "PORT",
         "VERCEL_URL",
-        "ALLOWED_DOMAIN_PATTERN"
+        "ALLOWED_DOMAIN_PATTERN",
+        "NEXT_PUBLIC_VERCEL_ENV"
       ]
     },
     "build#saleor-app-search": {
@@ -29,7 +32,8 @@
         "SECRET_KEY",
         "ALLOWED_DOMAIN_PATTERN",
         "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN"
+        "REST_APL_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV"
       ]
     },
     "build#saleor-app-klaviyo": {
@@ -46,7 +50,8 @@
         "NEXT_PUBLIC_SENTRY_DSN",
         "SENTRY_ORG",
         "SENTRY_PROJECT",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV"
       ]
     },
     "build#saleor-app-slack": {
@@ -63,7 +68,26 @@
         "NEXT_PUBLIC_SENTRY_DSN",
         "SENTRY_ORG",
         "SENTRY_PROJECT",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV"
+      ]
+    },
+    "build#saleor-app-products-feed": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "ALLOWED_DOMAIN_PATTERN",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV"
       ]
     },
     "lint": {

@@ -61,8 +61,6 @@ export const AddressForm = (props: Props) => {
         channel:
       </Typography>
       <TextField label="Company Name" {...CommonFieldProps} {...register("companyName")} />
-      <TextField {...CommonFieldProps} label="First Name" {...register("firstName")} />
-      <TextField {...CommonFieldProps} label="Last Name" {...register("lastName")} />
       <TextField label="Street Address 1" {...CommonFieldProps} {...register("streetAddress1")} />
       <TextField {...CommonFieldProps} label="Street Address 2" {...register("streetAddress2")} />
       <div style={{ display: "grid", gap: 20, gridTemplateColumns: "1fr 2fr" }}>
