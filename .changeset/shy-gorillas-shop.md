@@ -1,9 +1,9 @@
 ---
 "@saleor/apps-shared": minor
-"@saleor/saleor-app-invoices": minor
-"@saleor/saleor-app-search": minor
-"@saleor/saleor-app-slack": minor
-"@saleor/saleor-app-klaviyo": minor
+"saleor-app-invoices": minor
+"saleor-app-search": minor
+"saleor-app-slack": minor
+"saleor-app-klaviyo": minor
 ---
 
 Add shared theme provider with color overrides and globals
