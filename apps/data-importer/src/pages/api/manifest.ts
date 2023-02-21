@@ -6,11 +6,11 @@ import packageJson from "../../../package.json";
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: packageJson.name,
+      name: "Data Importer",
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       appUrl: context.appBaseUrl,
       permissions: ["MANAGE_USERS"],
-      id: "saleor.app",
+      id: "saleor.app.data-importer",
       version: packageJson.version,
       webhooks: [
         /**

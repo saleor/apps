@@ -12,7 +12,7 @@ import { webhookProductVariantUpdated } from "./webhooks/saleor/product_variant_
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: packageJson.name,
+      name: "Search",
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       appUrl: context.appBaseUrl,
       permissions: [
@@ -23,7 +23,7 @@ export default createManifestHandler({
         "MANAGE_PRODUCTS",
         "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",
       ],
-      id: packageJson.name,
+      id: "saleor.app.search",
       version: packageJson.version,
       webhooks: [
         /**
