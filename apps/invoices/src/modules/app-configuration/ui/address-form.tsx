@@ -5,18 +5,19 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   field: {
     marginBottom: 20,
   },
   form: {
     padding: 20,
+    paddingTop: 0,
   },
   channelName: {
-    fontFamily: "monospace",
     cursor: "pointer",
+    borderBottom: `2px solid ${theme.palette.secondary.main}`,
   },
-});
+}));
 
 type Props = {
   channelSlug: string;
@@ -53,11 +54,11 @@ export const AddressForm = (props: Props) => {
       })}
       className={styles.form}
     >
-      <Typography variant="body1" paragraph>
+      <Typography component="h3" variant="h3" paragraph>
         Configure
-        <strong onClick={handleChannelNameClick} className={styles.channelName}>
+        <span onClick={handleChannelNameClick} className={styles.channelName}>
           {` ${props.channelName} `}
-        </strong>
+        </span>
         channel:
       </Typography>
       <TextField label="Company Name" {...CommonFieldProps} {...register("companyName")} />

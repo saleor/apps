@@ -14,9 +14,7 @@ const useStyles = makeStyles((theme) => {
   return {
     header: { marginBottom: 20 },
     grid: { display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start", gap: 40 },
-    formContainer: {
-      marginTop: 12,
-    },
+    formContainer: {},
     instructionsContainer: {
       marginTop: 12,
       padding: 15,
