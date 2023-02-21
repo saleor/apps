@@ -18,13 +18,13 @@ Additionally, you can run scripts per individual apps with `turbo run SCRIPT --f
 
 We recommend not removing anything else to avoid unnecessary conflicts.
 
-If you want to update the repository, you can still merge or rebase it with the original source code. 
+If you want to update the repository, you can still merge or rebase it with the original source code.
 You may face conflicts for apps you don't have anymore, but you can safely delete them again during conflict resolution.
 
 ## 2. Keep everything
 
 To avoid conflicts to a minimum, you can leave other apps and just ignore them. These tips can help you with a single app experience:
+
 - Mark other app folders as "excluded" in your IDE to avoid indexing these files.
 - Run your scripts with Turborepo filters, e.g. `turbo run SCRIPT --filter=saleor-app-NAME`.
 - Use `pnpm` to avoid duplicated packages. `pnpm` installs packages once and links them, which causes minimal performance overhead of node_modules.
-

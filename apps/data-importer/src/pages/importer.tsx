@@ -11,8 +11,7 @@ type Tab = "customers";
 
 const useStyles = makeStyles((theme: SaleorTheme) => ({
   wrapper: {
-    border: `1px solid ${theme.palette.divider}`,
-    minHeight: `calc(100vh - 100px)`,
+    minHeight: '100vh',
   },
 }));
 

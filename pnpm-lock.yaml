@@ -424,7 +424,7 @@ importers:
       graphql: ^16.6.0
       graphql-tag: ^2.12.6
       instantsearch.css: ^7.4.5
-      next: 13.1.2
+      next: 13.1.6
       next-urql: 4.0.0
       prettier: ^2.7.1
       react: 18.2.0
@@ -439,10 +439,10 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.29.0_7jnwqgtpcnwg4nzft4b6xlzlfi
+      '@saleor/app-sdk': 0.29.0_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_2dwar4pp5qoelfawvjffoi6dne
-      '@sentry/nextjs': 7.36.0_next@13.1.2+react@18.2.0
+      '@sentry/nextjs': 7.36.0_next@13.1.6+react@18.2.0
       '@types/debug': 4.1.7
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       algoliasearch: 4.14.2
@@ -451,7 +451,7 @@ importers:
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
       instantsearch.css: 7.4.5
-      next: 13.1.2_biqbaboplfbrettd7655fr4n2y
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       next-urql: 4.0.0_react@18.2.0+urql@3.0.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -585,18 +585,20 @@ importers:
       '@types/react-dom': ^18.0.10
       clsx: ^1.2.1
       eslint-config-saleor: workspace:*
+      next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
     devDependencies:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.26.1_biqbaboplfbrettd7655fr4n2y
+      '@saleor/app-sdk': 0.26.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
       clsx: 1.2.1
       eslint-config-saleor: link:../eslint-config-saleor
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
@@ -3400,7 +3402,6 @@ packages:
 
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
-    dev: false
 
   /@next/eslint-plugin-next/13.0.2:
     resolution: {integrity: sha512-W+fIIIaFU7Kct7Okx91C7XDRGolv/w2RUenX2yZFeeNVcuVzDIKUcNmckrYbYcwrNQUSXmtwrs3g8xwast0YtA==}
@@ -3444,7 +3445,6 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-android-arm64/13.1.0:
@@ -3471,7 +3471,6 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-darwin-arm64/13.1.0:
@@ -3498,7 +3497,6 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-darwin-x64/13.1.0:
@@ -3525,7 +3523,6 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-freebsd-x64/13.1.0:
@@ -3552,7 +3549,6 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm-gnueabihf/13.1.0:
@@ -3579,7 +3575,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm64-gnu/13.1.0:
@@ -3606,7 +3601,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-arm64-musl/13.1.0:
@@ -3633,7 +3627,6 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-x64-gnu/13.1.0:
@@ -3660,7 +3653,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-linux-x64-musl/13.1.0:
@@ -3687,7 +3679,6 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-arm64-msvc/13.1.0:
@@ -3714,7 +3705,6 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-ia32-msvc/13.1.0:
@@ -3741,7 +3731,6 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@next/swc-win32-x64-msvc/13.1.0:
@@ -3768,7 +3757,6 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
-    dev: false
     optional: true
 
   /@nodelib/fs.scandir/2.1.5:
@@ -3875,7 +3863,7 @@ packages:
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
 
-  /@saleor/app-sdk/0.26.1_biqbaboplfbrettd7655fr4n2y:
+  /@saleor/app-sdk/0.26.1_3vryta7zmbcsw4rrqf4axjqggm:
     resolution: {integrity: sha512-gkNQusr8XrfLR7EcB5OKt2MV7og7g1TmdeGBTsdJwkRK18lhYz4fpTGqzoQ+3UrNq98TNuoM3dznr7oPi1QFUA==}
     peerDependencies:
       next: '>=12'
@@ -3886,6 +3874,7 @@ packages:
       fast-glob: 3.2.12
       graphql: 16.6.0
       jose: 4.11.4
+      next: 13.1.6_biqbaboplfbrettd7655fr4n2y
       raw-body: 2.5.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -4136,36 +4125,6 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/nextjs/7.36.0_next@13.1.2+react@18.2.0:
-    resolution: {integrity: sha512-7IUwBjCjo3rWuvEG16D1wKb0D+aMyCU920VGCAQVZaqTZAgrgAKfpTa1Sk0fmDxYglW1EBI9QM+WEnOa9RleLw==}
-    engines: {node: '>=8'}
-    peerDependencies:
-      next: ^10.0.8 || ^11.0 || ^12.0 || ^13.0
-      react: 16.x || 17.x || 18.x
-      webpack: '>= 4.0.0'
-    peerDependenciesMeta:
-      webpack:
-        optional: true
-    dependencies:
-      '@rollup/plugin-commonjs': 24.0.0_rollup@2.78.0
-      '@sentry/core': 7.36.0
-      '@sentry/integrations': 7.36.0
-      '@sentry/node': 7.36.0
-      '@sentry/react': 7.36.0_react@18.2.0
-      '@sentry/tracing': 7.36.0
-      '@sentry/types': 7.36.0
-      '@sentry/utils': 7.36.0
-      '@sentry/webpack-plugin': 1.20.0
-      chalk: 3.0.0
-      next: 13.1.2_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      rollup: 2.78.0
-      tslib: 1.14.1
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: false
-
   /@sentry/nextjs/7.36.0_next@13.1.6+react@18.2.0:
     resolution: {integrity: sha512-7IUwBjCjo3rWuvEG16D1wKb0D+aMyCU920VGCAQVZaqTZAgrgAKfpTa1Sk0fmDxYglW1EBI9QM+WEnOa9RleLw==}
     engines: {node: '>=8'}
@@ -4390,7 +4349,6 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
-    dev: false
 
   /@szmarczak/http-timer/1.1.2:
     resolution: {integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==}
@@ -6099,7 +6057,6 @@ packages:
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
-    dev: false
 
   /cliui/6.0.0:
     resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==}
@@ -10081,7 +10038,6 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-    dev: false
 
   /no-case/3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
@@ -10667,7 +10623,6 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
-    dev: false
 
   /postcss/8.4.21:
     resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
@@ -11990,7 +11945,6 @@ packages:
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
-    dev: false
 
   /stylis/4.1.3:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}

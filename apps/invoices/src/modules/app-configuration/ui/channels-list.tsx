@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => {
       height: "auto !important",
     },
     listItemActive: {
-      border: `2px solid ${theme.palette.primary.main}`,
+      border: `1px solid ${theme.palette.grey.A100}`,
     },
     cellSlug: {
       fontFamily: "monospace",
