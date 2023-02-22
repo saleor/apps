@@ -56,7 +56,7 @@ export const ChannelsConfiguration = () => {
 
   useEffect(() => {
     if (channels.isSuccess) {
-      setActiveChannelSlug(channels.data![0].slug ?? null);
+      setActiveChannelSlug(channels.data![0]?.slug ?? null);
     }
   }, [channels.isSuccess, channels.data]);
 
