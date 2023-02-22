@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.2.0
+
+### Minor Changes
+
+- 5fc88ed: Add shared theme provider with color overrides and globals
+
 ## 1.1.1
 
 ### Patch Changes
