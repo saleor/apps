@@ -1,5 +1,17 @@
 # saleor-app-slack
 
+## 1.1.0
+
+### Minor Changes
+
+- 1c9b2c4: Change public app names to be more readable
+- 5fc88ed: Add shared theme provider with color overrides and globals
+
+### Patch Changes
+
+- Updated dependencies [5fc88ed]
+  - @saleor/apps-shared@1.2.0
+
 ## 1.0.2
 
 ### Patch Changes

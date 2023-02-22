@@ -1,5 +1,16 @@
 # saleor-app-data-importer
 
+## 1.2.0
+
+### Minor Changes
+
+- 1c9b2c4: Change public app names to be more readable
+
+### Patch Changes
+
+- Updated dependencies [5fc88ed]
+  - @saleor/apps-shared@1.2.0
+
 ## 1.1.3
 
 ### Patch Changes

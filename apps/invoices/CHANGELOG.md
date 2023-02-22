@@ -1,5 +1,18 @@
 # saleor-app-invoices
 
+## 1.5.0
+
+### Minor Changes
+
+- 1c9b2c4: Change public app names to be more readable
+- 5fc88ed: Add shared theme provider with color overrides and globals
+
+### Patch Changes
+
+- b3178b2: Improve UI - better styling, headers
+- Updated dependencies [5fc88ed]
+  - @saleor/apps-shared@1.2.0
+
 ## 1.4.0
 
 ### Minor Changes
