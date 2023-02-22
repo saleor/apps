@@ -1,5 +1,7 @@
 # Saleor Monitoring app
 
+❗️NOTE: This is Alpha version of the app.❗️
+
 ## Local development
 
 ### Start Monitoring backend
@@ -16,17 +18,14 @@ By default, backend will run at `localhost:5001` with:
 
 ### Develop frontend:
 
-Frontend app is located at:
-```shell
-cd frontend
-```
 Installing dependencies with:
 ```shell
 pnpm i
 ```
+
 Running dev server
 ```shell
-npm run dev
+pnpm dev
 ```
 The frontend app will run at `localhost:3000`.
 By default, it acts as a proxy and redirects all unhandled requests to the backend (configured by `MONITORING_APP_API_URL` env).
