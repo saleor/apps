@@ -14,7 +14,7 @@ const handler = createManifestHandler({
     return {
       id: "saleor.app.klaviyo",
       version: pkg.version,
-      name: pkg.name,
+      name: "Klaviyo",
       permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
       appUrl: appBaseUrl,
       tokenTargetUrl: `${appBaseUrl}/api/register`,
