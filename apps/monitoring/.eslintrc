@@ -1,3 +1,4 @@
 {
-  "extends": ["next", "prettier"]
+  "root": true,
+  "extends": ["saleor"]
 }
