@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: dev
+    stdin_open: true
+    tty: true
+    ports:
+      - "5001:80"
+    environment:
+      - DEBUG=True
+    volumes:
+      - ./backend/monitoring/:/app/monitoring
