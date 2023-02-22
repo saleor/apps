@@ -58,7 +58,7 @@ const ImporterPage: NextPage = () => {
           </div>
         }
       />
-      <Container style={{ maxWidth: "unset" }}>
+      <Container>
         <PageTabs
           style={{ marginBottom: 20, marginTop: 20 }}
           value={activeTab}
@@ -68,7 +68,7 @@ const ImporterPage: NextPage = () => {
           <PageTab disabled value="orders" label="Orders (coming soon)" />
           <PageTab disabled value="products" label="Products (coming soon)" />
         </PageTabs>
-        <Divider />
+        <Divider style={{ marginBottom: 50 }} />
         {activeTab === "customers" && <CustomersImporterView />}
       </Container>
     </div>
