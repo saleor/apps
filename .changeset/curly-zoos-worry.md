@@ -8,4 +8,4 @@
 "saleor-app-slack": minor
 ---
 
-VercelAPL can no longer be set for the app, since its deprecated and will be removed in app-sdk 0.30.0
+VercelAPL can no longer be set for the app since it's deprecated and will be removed in app-sdk 0.30.0
