@@ -22,12 +22,14 @@ export function TitleBar({
   bottomMargin,
 }: Props) {
   return (
-    <div
-      className={clsx(styles.container, className, {
-        [styles.bottomMargin]: bottomMargin,
-      })}
-    >
-      <Paper variant="outlined" square elevation={0} className={styles.root}>
+    <div className={styles.container}>
+      <Paper
+        square
+        elevation={0}
+        className={clsx(styles.root, className, {
+          [styles.bottomMargin]: bottomMargin,
+        })}
+      >
         {icon && <div className={styles.iconColumn}>{icon}</div>}
         <div className={styles.leftColumn}>
           <h1 className={styles.appName}>{name}</h1>
