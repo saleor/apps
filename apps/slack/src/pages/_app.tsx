@@ -3,7 +3,12 @@ import "../styles/globals.css";
 import { Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { dark, light, SaleorThemeColors, ThemeProvider as MacawUIThemeProvider } from "@saleor/macaw-ui";
+import {
+  dark,
+  light,
+  SaleorThemeColors,
+  ThemeProvider as MacawUIThemeProvider,
+} from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { AppLayoutProps } from "../../types";
@@ -62,7 +67,6 @@ const palettes: PalettesOverride = {
 const ThemeProvider = MacawUIThemeProvider as React.FC<
   PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean; palettes: PalettesOverride }>
 >;
-
 
 function SaleorApp({ Component, pageProps }: AppLayoutProps) {
   const getLayout = Component.getLayout ?? ((page) => page);

@@ -12,9 +12,9 @@ export const CustomersImportingResults = ({
   const [importingStarted, setImportingStarted] = useState(false);
 
   return (
-    <div>
+    <div style={{ marginTop: 20 }}>
       <Typography paragraph variant="h3">
-        Customers rows from imported file
+        Customers rows from the imported file
       </Typography>
 
       <Typography paragraph>

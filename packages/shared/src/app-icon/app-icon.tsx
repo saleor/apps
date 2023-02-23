@@ -5,7 +5,6 @@ import clsx from "clsx";
 
 const useStyles = makeStyles({
   appIconContainer: {
-    background: "rgb(58, 86, 199)",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -23,11 +22,17 @@ type Props = HTMLProps<HTMLDivElement> & {
   icon?: ReactNode;
 };
 
-export function AppIcon({ className, children, text, icon, ...props }: Props) {
+export function AppIcon({ className, children, text, icon, theme, ...props }: Props) {
   const styles = useStyles();
 
   return (
-    <div className={clsx(styles.appIconContainer, className)} {...props}>
+    <div
+      className={clsx(styles.appIconContainer, className)}
+      style={{
+        background: theme,
+      }}
+      {...props}
+    >
       {text && <Typography variant="h2">{text}</Typography>}
       {icon && icon}
     </div>
