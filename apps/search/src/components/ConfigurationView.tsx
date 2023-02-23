@@ -17,8 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
   },
   wrapper: {
-    border: `1px solid ${theme.palette.grey.A100}`,
-    minHeight: "calc(100vh - 100px)",
+    minHeight: "100vh",
     paddingBottom: 50,
   },
   tabs: { marginLeft: 32, marginBottom: 32 },

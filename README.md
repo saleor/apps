@@ -49,16 +49,19 @@ In the `apps` folder, you will find the following applications:
 ### Setup
 
 Make sure you have installed `pnpm`:
+
 ```bash
 npm install -g pnpm
 ```
 
 Install all dependencies:
+
 ```bash
 pnpm install
 ```
 
 Start the apps` dev servers:
+
 ```bash
 pnpm dev
 ```
@@ -68,6 +71,7 @@ pnpm dev
 > You can find the required env vars for each app in `apps/NAME/.env.example` file.
 
 To start an individual app, run:
+
 ```bash
 pnpm dev --filter=saleor-app-X
 ```
@@ -75,10 +79,13 @@ pnpm dev --filter=saleor-app-X
 where X is the app's name (matching saleor/X).
 
 ### Build
+
 To build all apps, run:
+
 ```bash
 pnpm build
 ```
 
 ### Documentation
+
 - [Forking](/docs/forking.md)

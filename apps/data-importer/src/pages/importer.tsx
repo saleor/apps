@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import React, { ComponentProps } from "react";
-import { Container, Divider, Typography } from "@material-ui/core";
+import { Container, Divider } from "@material-ui/core";
 import { Button, makeStyles, PageTab, PageTabs, SaleorTheme } from "@saleor/macaw-ui";
 import { CustomersImporterView } from "../modules/customers/customers-importer-nuvo/customers-importer-view";
 import GraphQLProvider from "../providers/GraphQLProvider";

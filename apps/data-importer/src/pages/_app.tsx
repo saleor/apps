@@ -1,6 +1,5 @@
+import "@saleor/apps-shared/src/globals.css";
 import "../styles/globals.css";
-
-import { Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import {
@@ -11,14 +10,10 @@ import {
 } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
+
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../no-ssr-wrapper";
-
-const themeOverrides: Partial<Theme> = {
-  /**
-   * You can override MacawUI theme here
-   */
-};
+import { Theme } from "@material-ui/core/styles";
 
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;
 
@@ -70,7 +65,7 @@ function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <ThemeProvider overrides={themeOverrides} ssr palettes={palettes}>
+        <ThemeProvider ssr palettes={palettes}>
           <ThemeSynchronizer />
           <RoutePropagator />
           <Component {...pageProps} />

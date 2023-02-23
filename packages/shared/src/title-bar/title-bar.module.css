@@ -1,0 +1,52 @@
+.container {
+  --title-bar-height: 96px; /* TODO use design token */
+
+  position: relative;
+  height: var(--title-bar-height);
+}
+
+.root {
+  z-index: 300;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--title-bar-height);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Override MUI. Remove with the new Macaw */
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-radius: 0;
+}
+
+.leftColumn {
+  margin-right: auto;
+}
+
+.rightColumn {
+}
+
+.iconColumn {
+  margin-right: 24px;
+}
+
+.appName {
+  font-size: 24px;
+  margin: 0;
+}
+
+.appAuthor {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4); /* TODO use design token */
+  font-weight: 500;
+  margin: 0;
+}
+
+.bottomMargin {
+  margin-bottom: 32px;
+}

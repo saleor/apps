@@ -18,9 +18,11 @@ const useStyles = makeStyles((theme) => {
       height: "auto !important",
     },
     listItemActive: {
-      border: `2px solid ${theme.palette.primary.main}`,
+      background: "#f4f4f4",
+      borderRadius: 4,
+      overflow: "hidden",
     },
-    cellSlug: {
+    channelSlug: {
       fontFamily: "monospace",
       opacity: 0.8,
     },
@@ -38,6 +40,11 @@ export const ChannelsList = ({ channels, activeChannelSlug, onChannelClick }: Pr
 
   return (
     <OffsettedList gridTemplate={["1fr"]}>
+      <OffsettedListHeader>
+        <Typography variant="h3" paragraph>
+          Available channels
+        </Typography>
+      </OffsettedListHeader>
       <OffsettedListBody>
         {channels.map((c) => {
           return (
@@ -52,8 +59,8 @@ export const ChannelsList = ({ channels, activeChannelSlug, onChannelClick }: Pr
             >
               <OffsettedListItemCell>
                 {c.name}
-                <Typography variant="caption">
-                  <code>{c.slug}</code>
+                <Typography variant="caption" className={styles.channelSlug}>
+                  {c.slug}
                 </Typography>
               </OffsettedListItemCell>
             </OffsettedListItem>

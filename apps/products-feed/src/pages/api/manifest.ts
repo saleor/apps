@@ -6,7 +6,7 @@ import packageJson from "../../../package.json";
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: packageJson.name,
+      name: "Product Feed",
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       appUrl: context.appBaseUrl,
       permissions: [],
