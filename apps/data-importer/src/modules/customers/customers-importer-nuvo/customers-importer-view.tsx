@@ -10,9 +10,8 @@ import dotObject from "dot-object";
 import { useAuthorizedToken } from "../../authorization/use-authorized-token";
 import { Alert, Button, SaleorTheme, useTheme } from "@saleor/macaw-ui";
 import { CustomersImportingResults } from "../customers-results/customers-importing-results";
-import { lighten, LinearProgress } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import { CloudUpload } from "@material-ui/icons";
-import { Theme } from "@material-ui/core/styles";
 
 let PassSubmitResult: any;
 let RejectSubmitResult: any;
@@ -36,34 +35,36 @@ const NuvoImporter = dynamic<ConfigureAPI>(
 const columns = getCustomersModelColumns();
 
 const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
+  const isDarkMode = theme.palette.type === "dark";
+
   const dropdownStyles = {
     option: {
-      color: theme.palette.text.primary,
+      color: "#111",
       ":hover": {
-        background: `${lighten(theme.palette.background.default, 0.1)}`,
+        background: "#eee",
       },
     },
     header: {
-      background: theme.palette.background.default,
-      color: theme.palette.text.primary,
+      background: "#fff",
+      color: "#eee",
     },
     root: {
-      border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
-      background: theme.palette.background.default,
-      color: theme.palette.text.primary,
+      border: `1px solid #eee`,
+      background: "#fff",
+      color: "#111",
     },
     search: {
       root: {
-        background: theme.palette.background.default,
-        color: theme.palette.text.primary,
+        background: "#fff",
+        color: "#111",
       },
     },
     button: {
       root: {
-        background: theme.palette.background.default,
-        color: theme.palette.text.primary,
+        background: "#fff",
+        color: "#111",
         maxHeight: "20px",
-        border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+        border: `1px solid #eee`,
       },
     },
   } as const;
@@ -75,9 +76,23 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
     identifier: "customers",
     modal: false,
     style: {
+      sheetSelect: { icon: { filter: isDarkMode ? "invert(1)" : "none" } },
+      joinSheet: {},
+      dialog: { closeIcon: { filter: isDarkMode ? "invert(1)" : "none" } },
+      messagePopup: {
+        closeIcon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
+        warnIcon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
+        successIcon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
+      },
       footer: {
         root: {
-          background: theme.palette.background.default,
+          background: "#fff",
         },
       },
       buttons: {
@@ -100,24 +115,27 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
         },
       },
       loader: {
-        loadAnimationColor: theme.palette.type === "light" ? "#000" : "#fff",
+        loadAnimationColor: "#111",
+        content: {
+          color: "#111",
+        },
       },
       headerSelect: {
         root: {
-          background: theme.palette.background.default,
+          background: "#fff",
           border: "none",
         },
         table: {
-          selectRowColor: lighten(theme.palette.background.default, 0.3),
+          selectRowColor: "#eee",
           th: {
-            color: theme.palette.text.primary,
-            background: theme.palette.background.default,
+            color: "#111",
+            background: "#fff",
           },
           td: {
-            color: theme.palette.text.primary,
-            background: theme.palette.background.default,
+            color: "#111",
+            background: "#fff",
           },
-          hoverRowColor: lighten(theme.palette.background.default, 0.1),
+          hoverRowColor: "#eee",
         },
         sheetName: {
           root: {
@@ -126,36 +144,48 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
         },
       },
       columnMatch: {
+        icon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
         notMatchingValue: {
           root: {
-            background: lighten(theme.palette.background.default, 0.1),
+            background: "#eee",
+          },
+          icon: {
+            filter: isDarkMode ? "invert(1)" : "none",
           },
         },
         buttonJoined: {
           root: {
-            background: lighten(theme.palette.background.default, 0.1),
+            background: "#eee",
           },
         },
         root: {
-          background: theme.palette.background.default,
-          border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+          background: "#fff",
+          border: `1px solid #eee`,
         },
         columnMatchHeader: {
           dropdown: dropdownStyles,
           root: {
-            background: theme.palette.background.default,
-            border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
+            background: "#fff",
+            border: `1px solid #eee`,
+          },
+          icon: {
+            filter: isDarkMode ? "invert(1)" : "none",
           },
         },
         columnMatchValue: {
+          icon: {
+            filter: isDarkMode ? "invert(1)" : "none",
+          },
           emptyValue: {
-            background: theme.palette.background.default,
-            color: theme.palette.text.primary,
+            background: "#fff",
+            color: "#111",
           },
           dropdown: dropdownStyles,
           root: {
-            border: `1px solid ${lighten(theme.palette.background.default, 0.1)}`,
-            background: theme.palette.background.default,
+            border: `1px solid #eee`,
+            background: "#fff",
           },
         },
       },
@@ -165,9 +195,13 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
         },
         root: {
           // display: "none",
+          color: "#111",
         },
       },
       progressBar: {
+        icon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
         root: {
           display: "none",
         },
@@ -179,32 +213,43 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
           },
         },
         root: {
-          background: theme.palette.background.default,
-          border: "1px dashed #ddd",
+          background: "#fff",
+          border: "1px dashed #eee",
         },
       },
       reviewEntries: {
+        icon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
         root: {
-          backgroundColor: "transparent",
+          backgroundColor: "#fff",
+        },
+        infoIcon: {
+          filter: isDarkMode ? "invert(1)" : "none",
+        },
+        moreIcon: {
+          filter: isDarkMode ? "invert(1)" : "none",
         },
         table: {
           th: {
-            backgroundColor: "transparent",
+            backgroundColor: "#fff",
           },
           td: {
             normal: {
-              backgroundColor: "transparent",
+              backgroundColor: "#fff",
             },
             root: {
-              backgroundColor: "transparent",
+              backgroundColor: "#fff",
             },
           },
         },
       },
       globals: {
         fontFamily: "Inter",
-        backgroundColor: "transparent",
-        textColor: "inherit",
+        backgroundColor: "#fff",
+        textColor: "#111",
+        primaryTextColor: "#111",
+        secondaryTextColor: "#222",
       },
     },
     title: "Upload customers to Saleor",
@@ -247,23 +292,29 @@ export const CustomersImporterView = () => {
   }
 
   return (
-    <NuvoImporter
-      renderUploadButton={({ launch }) => {
-        return (
-          <Button
-            size="large"
-            startIcon={<CloudUpload />}
-            variant="primary"
-            color="primary"
-            onClick={launch}
-          >
-            Upload file
-          </Button>
-        );
+    <div
+      style={{
+        filter: saleorTheme.themeType === "dark" ? "invert(1)" : "none",
       }}
-      onResults={handleResults}
-      licenseKey={licenseKey}
-      settings={nuvoSettings}
-    />
+    >
+      <NuvoImporter
+        renderUploadButton={({ launch }) => {
+          return (
+            <Button
+              size="large"
+              startIcon={<CloudUpload />}
+              variant="primary"
+              color="primary"
+              onClick={launch}
+            >
+              Upload file
+            </Button>
+          );
+        }}
+        onResults={handleResults}
+        licenseKey={licenseKey}
+        settings={nuvoSettings}
+      />
+    </div>
   );
 };
