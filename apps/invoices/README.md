@@ -112,6 +112,5 @@ The choice of the APL is done using `APL` environment variable. If value is not 
 
 - `file`: no additional setup is required. Good choice for local development. Can't be used for multi tenant-apps or be deployed (not intended for production)
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. Can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
-- `vercel`: used by deployments from the Marketplace. It's single-tenant only and only supported by Vercel deployments done with Saleor CLI. Requires `SALEOR_REGISTER_APP_URL` and `SALEOR_DEPLOYMENT_TOKEN` environment variables to be set (handled automatically by the Saleor CLI)
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
