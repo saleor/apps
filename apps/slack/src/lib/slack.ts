@@ -12,6 +12,14 @@ export const sendSlackMessage = async (
     order: { id, number, user, shippingAddress, subtotal, shippingPrice, total },
   } = data;
 
+  const getCustomerName = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    } else {
+      return `n/a`;
+    }
+  };
+
   const response = await fetch(to, {
     method: "POST",
     body: JSON.stringify({
@@ -27,7 +35,7 @@ export const sendSlackMessage = async (
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `*Customer*\n${user?.firstName} ${user?.lastName}\n${user?.email}`,
+            text: `*Customer*\n${getCustomerName()}\nEmail: ${user?.email ?? "n/a"}`,
           },
         },
         {
