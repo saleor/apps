@@ -2,7 +2,7 @@ import { Link, List, ListItem, Paper, PaperProps, TextField, Typography } from "
 import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
-import { AppIcon, TitleBar } from "@saleor/apps-shared";
+
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
@@ -217,39 +217,31 @@ function Configuration() {
   }
 
   return (
-    <div>
-      <TitleBar
-        icon={<AppIcon theme="rgb(58, 86, 199)" text="K" />}
-        bottomMargin
-        name="Saleor Klaviyo App"
-        author="By Saleor Commerce"
-      />
-      <AppColumnsLayout>
-        <div />
-        <Section>
-          <form onSubmit={handleSubmit}>
-            {configuration!.map(({ key, value }) => (
-              <div key={key} className={classes.fieldContainer}>
-                <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
-              </div>
-            ))}
-            <div>
-              <ConfirmButton
-                type="submit"
-                variant="primary"
-                transitionState={transitionState}
-                labels={{
-                  confirm: "Save",
-                  error: "Error",
-                }}
-                className={classes.confirmButton}
-              />
+    <AppColumnsLayout>
+      <div />
+      <Section>
+        <form onSubmit={handleSubmit}>
+          {configuration!.map(({ key, value }) => (
+            <div key={key} className={classes.fieldContainer}>
+              <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
             </div>
-          </form>
-        </Section>
-        <Instructions />
-      </AppColumnsLayout>
-    </div>
+          ))}
+          <div>
+            <ConfirmButton
+              type="submit"
+              variant="primary"
+              transitionState={transitionState}
+              labels={{
+                confirm: "Save",
+                error: "Error",
+              }}
+              className={classes.confirmButton}
+            />
+          </div>
+        </form>
+      </Section>
+      <Instructions />
+    </AppColumnsLayout>
   );
 }
 

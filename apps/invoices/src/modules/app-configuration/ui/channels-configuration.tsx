@@ -1,5 +1,5 @@
 import { trpcClient } from "../../trpc/trpc-client";
-import { LinearProgress, Link, Paper, Typography } from "@material-ui/core";
+import { Link, Paper, Typography } from "@material-ui/core";
 import React, { useEffect, useMemo, useState } from "react";
 import { makeStyles } from "@saleor/macaw-ui";
 import { AppConfigContainer } from "../app-config-container";
@@ -7,7 +7,6 @@ import { AddressForm } from "./address-form";
 import { ChannelsList } from "./channels-list";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
-import { TitleBar } from "@saleor/apps-shared";
 import { Loader } from "../../ui/loader";
 
 const useStyles = makeStyles((theme) => {

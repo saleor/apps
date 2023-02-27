@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Instructions from "./Instructions";
 
 import { AppColumnsLayout } from "./AppColumnsLayout";
-import { SearchAppMainBar } from "./SearchAppMainBar";
 
 const useStyles = makeStyles((theme) => ({
   buttonsGrid: { display: "flex", gap: 10 },
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
   },
   wrapper: {
-    minHeight: "100vh",
+    minHeight: "100%",
     paddingBottom: 50,
   },
   tabs: { marginLeft: 32, marginBottom: 32 },
@@ -30,7 +29,6 @@ export const ConfigurationView = () => {
   const handleClick = (val: string) => router.push("/" + val);
   return (
     <div className={styles.wrapper}>
-      <SearchAppMainBar />
       <PageTabs className={styles.tabs} value="" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
