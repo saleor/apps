@@ -10,6 +10,7 @@ import { sendSlackMessage } from "../../../lib/slack";
 const OrderCreatedWebhookPayload = gql`
   fragment OrderCreatedWebhookPayload on OrderCreated {
     order {
+      userEmail
       id
       number
       user {
@@ -18,6 +19,14 @@ const OrderCreatedWebhookPayload = gql`
         lastName
       }
       shippingAddress {
+        streetAddress1
+        city
+        postalCode
+        country {
+          country
+        }
+      }
+      billingAddress {
         streetAddress1
         city
         postalCode
