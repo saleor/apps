@@ -74,7 +74,9 @@ export default createAppRegisterHandler({
 
       logger.debug({ saleorVersion }, "Received saleor version from Shop query");
 
-      invariant(saleorVersion, "Saleor Version couldnt be fetched from the API");
+      if (!saleorVersion) {
+        throw new Error("Saleor Version couldnt be fetched from the API");
+      }
 
       const versionIsValid = semver.satisfies(
         semver.coerce(saleorVersion),
@@ -86,9 +88,11 @@ export default createAppRegisterHandler({
         "Semver validation failed"
       );
 
-      invariant(versionIsValid, `App requires Saleor matching semver: ${APP_SEMVER_REQUIREMENTS}`);
+      if (!versionIsValid) {
+        throw new Error(`App requires Saleor matching semver: ${APP_SEMVER_REQUIREMENTS}`);
+      }
     } catch (e: unknown) {
-      const message = (e as Error).message.replace("Invariant failed: ", "");
+      const message = (e as Error)?.message ?? "Unknown error";
 
       logger.debug({ message }, "Failed validating semver, will respond with error and status 400");
 
