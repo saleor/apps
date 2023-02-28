@@ -120,7 +120,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.32.7
+      '@saleor/app-sdk': 0.33.0
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sentry/nextjs': ^7.36.0
@@ -163,7 +163,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.32.7_3vryta7zmbcsw4rrqf4axjqggm
+      '@saleor/app-sdk': 0.33.0_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@sentry/nextjs': 7.36.0_next@13.1.6+react@18.2.0
@@ -4056,8 +4056,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/app-sdk/0.32.7_3vryta7zmbcsw4rrqf4axjqggm:
-    resolution: {integrity: sha512-nt4ylAc+pq39LUFzPdlDvmLlvgWDo0K+qMAklvFjiPFGXfFRqTpWs9t9pqDMACiJLM5dvFAkGYJI2T6h/LUD8Q==}
+  /@saleor/app-sdk/0.33.0_3vryta7zmbcsw4rrqf4axjqggm:
+    resolution: {integrity: sha512-JEeUTBIa2aRuIBEeV1U/C76Oy4hfdMnXo16XB+PH/wQUPSBIsKkfpAB82JmAQiLzHHvTh5V9QZynPqt8EZbCFw==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
