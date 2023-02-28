@@ -13,7 +13,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useConfiguration } from "../../lib/configuration";
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
-import { SearchAppMainBar } from "../../components/SearchAppMainBar";
+
 import { AppColumnsLayout } from "../../components/AppColumnsLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,6 @@ function Search() {
 
   return (
     <div className={classes.wrapper}>
-      <SearchAppMainBar />
       <PageTabs className={styles.tabs} value="search" onChange={handleClick}>
         <PageTab label={"Configuration"} value="" />
         <PageTab label={"Preview"} value="search" />
