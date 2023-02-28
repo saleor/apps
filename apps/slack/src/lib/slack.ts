@@ -9,8 +9,26 @@ export const sendSlackMessage = async (
 ) => {
   const {
     saleorDomain,
-    order: { id, number, user, shippingAddress, subtotal, shippingPrice, total },
+    order: {
+      id,
+      number,
+      user,
+      shippingAddress,
+      subtotal,
+      shippingPrice,
+      total,
+      billingAddress,
+      userEmail,
+    },
   } = data;
+
+  const getCustomerName = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    } else {
+      return `n/a`;
+    }
+  };
 
   const response = await fetch(to, {
     method: "POST",
@@ -27,7 +45,7 @@ export const sendSlackMessage = async (
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `*Customer*\n${user?.firstName} ${user?.lastName}\n${user?.email}`,
+            text: `*Customer*\n${getCustomerName()}\nEmail: ${userEmail}`,
           },
         },
         {
@@ -35,6 +53,13 @@ export const sendSlackMessage = async (
           text: {
             type: "mrkdwn",
             text: `*Shipping Address*\n${shippingAddress?.streetAddress1}\n${shippingAddress?.postalCode} ${shippingAddress?.city}\n${shippingAddress?.country.country}`,
+          },
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `*Billing Address*\n${billingAddress?.streetAddress1}\n${billingAddress?.postalCode} ${billingAddress?.city}\n${billingAddress?.country.country}`,
           },
         },
         {
