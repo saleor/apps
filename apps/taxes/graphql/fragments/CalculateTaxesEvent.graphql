@@ -1,0 +1,8 @@
+fragment CalculateTaxesEvent on Event {
+  __typename
+  ... on CalculateTaxes {
+    taxBase {
+      ...TaxBase
+    }
+  }
+}

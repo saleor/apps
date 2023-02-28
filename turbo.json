@@ -109,6 +109,18 @@
         "MONITORING_APP_API_URL"
       ]
     },
+    "build#saleor-app-taxes": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "PORT",
+        "VERCEL_URL",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN"
+      ]
+    },
     "lint": {
       "outputs": []
     },
