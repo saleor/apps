@@ -3,7 +3,6 @@ import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import React, { useEffect } from "react";
 import { IntegrationsList } from "../../ui/providers-list";
 import { NoProvidersConfigured } from "../../ui/no-providers-configured";
-import { AppMainBar } from "../../ui/app-main-bar";
 import { useRouter } from "next/router";
 import { DatadogConfig } from "../../ui/datadog/datadog-config";
 import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
@@ -11,12 +10,7 @@ import { LinearProgress, Link, Typography } from "@material-ui/core";
 import { Section } from "../../ui/sections";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Done, Error } from "@material-ui/icons";
-import { makeStyles } from "@saleor/macaw-ui";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
-
-const useStyles = makeStyles((theme) => ({
-  wrapper: {},
-}));
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -99,17 +93,13 @@ const Content = () => {
 };
 
 const ConfigurationPage: NextPage = () => {
-  const styles = useStyles();
   const selectedProvider = useActiveProvider();
 
   return (
-    <div className={styles.wrapper}>
-      <AppMainBar />
-      <AppColumnsLayout>
-        <IntegrationsList activeProvider={selectedProvider} />
-        <Content />
-      </AppColumnsLayout>
-    </div>
+    <AppColumnsLayout>
+      <IntegrationsList activeProvider={selectedProvider} />
+      <Content />
+    </AppColumnsLayout>
   );
 };
 

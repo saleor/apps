@@ -18,7 +18,6 @@ import AccessWarning from "../components/AccessWarning/AccessWarning";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
 import useAppApi from "../hooks/useAppApi";
 import useDashboardNotifier from "../utils/useDashboardNotifier";
-import { SlackAppMainBar } from "../components/SlackAppMainBar/SlackAppMainBar";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 
 interface ConfigurationField {
@@ -209,22 +208,19 @@ const ConfigurationWithAuth = withAuthorization({
 })(Configuration);
 
 ConfigurationWithAuth.getLayout = (page: ReactElement) => (
-  <div>
-    <SlackAppMainBar />
-    <AppColumnsLayout>
-      <div />
-      <Card>
-        <CardHeader title="Configuration" />
-        <CardContent>{page}</CardContent>
-      </Card>
-      <Card style={{ marginBottom: 40 }}>
-        <CardHeader title="Instructions" />
-        <CardContent>
-          <Instructions />
-        </CardContent>
-      </Card>
-    </AppColumnsLayout>
-  </div>
+  <AppColumnsLayout>
+    <div />
+    <Card>
+      <CardHeader title="Configuration" />
+      <CardContent>{page}</CardContent>
+    </Card>
+    <Card style={{ marginBottom: 40 }}>
+      <CardHeader title="Instructions" />
+      <CardContent>
+        <Instructions />
+      </CardContent>
+    </Card>
+  </AppColumnsLayout>
 );
 
 export default ConfigurationWithAuth;
