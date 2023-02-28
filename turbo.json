@@ -9,7 +9,12 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "build#saleor-app-data-importer": {
-      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY", "NEXT_PUBLIC_VERCEL_ENV", "NEXT_PUBLIC_NUVO_PROD_MODE"]
+      "env": [
+        "APL",
+        "NEXT_PUBLIC_NUVO_LICENSE_KEY",
+        "NEXT_PUBLIC_VERCEL_ENV",
+        "NEXT_PUBLIC_NUVO_PROD_MODE"
+      ]
     },
     "build#saleor-app-invoices": {
       "env": [
@@ -107,6 +112,18 @@
         "SENTRY_AUTH_TOKEN",
         "NEXT_PUBLIC_VERCEL_ENV",
         "MONITORING_APP_API_URL"
+      ]
+    },
+    "build#saleor-app-taxes": {
+      "env": [
+        "APL",
+        "VERCEL_URL",
+        "NODE_ENV",
+        "APP_DEBUG",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "SECRET_KEY",
+        "PORT"
       ]
     },
     "lint": {
