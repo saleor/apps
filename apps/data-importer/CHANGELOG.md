@@ -1,5 +1,23 @@
 # saleor-app-data-importer
 
+## 1.3.0
+
+### Minor Changes
+
+- 289b42f: Breaking change for app maintainers: VercelAPL can no longer be set for the app since it's deprecated and will be removed in app-sdk 0.30.0. As a replacement, we recommend using Upstash APL or implementing your own.
+  Read more about APLs: https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md
+- 1da5be3: Add dark mode styling
+- 1da5be3: Enable origins check for installation via env variables
+
+  Update app-sdk
+
+  Set Nuvo development mode based on env variables
+
+### Patch Changes
+
+- 6327586: Add naive dark mode by inverting colors
+- 1da5be3: Add valid icon and color
+
 ## 1.2.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # saleor-app-slack
 
+## 1.2.0
+
+### Minor Changes
+
+- 289b42f: Breaking change for app maintainers: VercelAPL can no longer be set for the app since it's deprecated and will be removed in app-sdk 0.30.0. As a replacement, we recommend using Upstash APL or implementing your own.
+  Read more about APLs: https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md
+- e746cf9: Billing address is now also included into Slack message. Additonally user emails is always defined
+
+### Patch Changes
+
+- e746cf9: Fix problem with "undefined" user's name & last name in case they are not available.
+  Introduces "n/a" fallback
+
 ## 1.1.0
 
 ### Minor Changes
