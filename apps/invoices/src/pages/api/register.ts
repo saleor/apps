@@ -3,7 +3,7 @@ import { saleorApp } from "../../../saleor-app";
 import { gql } from "urql";
 import { createClient } from "../../lib/graphql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
-import invariant from "tiny-invariant";
+
 import { createLogger } from "../../lib/logger";
 
 const semver = require("semver");
@@ -98,13 +98,6 @@ export default createAppRegisterHandler({
 
       throw respondWithError({
         message: message,
-        body: {
-          success: false,
-          error: {
-            code: "INVALID_SALEOR_VERSION",
-            message: message,
-          },
-        },
         status: 400,
       });
     }
