@@ -1,5 +1,17 @@
 # saleor-app-data-importer
 
+## 1.4.0
+
+### Minor Changes
+
+- 2d23480: Remove TitleBar component from apps, because it is moved to Dashboard, outside of iframe context
+- 3e612ca: App now is configured with Sentry Wizard and will log to sentry if proper env variables are set
+
+### Patch Changes
+
+- Updated dependencies [2d23480]
+  - @saleor/apps-shared@1.3.0
+
 ## 1.3.0
 
 ### Minor Changes
