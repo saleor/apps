@@ -18,12 +18,7 @@ export default createManifestHandler({
         orderCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
         checkoutCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
       ],
-      extensions: [
-        /**
-         * Optionally, extend Dashboard with custom UIs
-         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
-         */
-      ],
+      extensions: [],
     };
 
     return manifest;
