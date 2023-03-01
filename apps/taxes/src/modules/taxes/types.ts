@@ -1,4 +1,4 @@
-export type LineTaxResponsePayload = {
+type LineTaxResponsePayload = {
   total_gross_amount: number;
   total_net_amount: number;
   tax_rate: string;

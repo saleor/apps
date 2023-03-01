@@ -5,7 +5,7 @@ import {
   TaxBaseLineFragment,
   TaxDiscountFragment,
 } from "../../../../../generated/graphql";
-import { FetchTaxesLinePayload, ResponseTaxPayload } from "../../../../lib/saleor/types";
+import { FetchTaxesLinePayload, ResponseTaxPayload } from "../../types";
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
 import {
   formatCalculatedAmount,

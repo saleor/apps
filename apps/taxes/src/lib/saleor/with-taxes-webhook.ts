@@ -11,7 +11,7 @@ import { createClient } from "../graphql";
 import { createLogger } from "../logger";
 import { WebhookContext } from "./saleor-app-sdk";
 import { calculateTaxesPayloadSchema, ExpectedWebhookPayload } from "./schema";
-import { ResponseTaxPayload } from "./types";
+import { ResponseTaxPayload } from "../../modules/taxes/types";
 
 export const withTaxesWebhook =
   (

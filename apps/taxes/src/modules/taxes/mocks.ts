@@ -1,4 +1,4 @@
-import { ResponseTaxPayload } from "../../lib/saleor/types";
+import { ResponseTaxPayload } from "./types";
 
 export const MOCKED_RESPONSE_TAX_PAYLOAD: ResponseTaxPayload = {
   lines: [

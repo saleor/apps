@@ -1,5 +1,5 @@
 import { TaxBaseFragment } from "../../../generated/graphql";
-import { ResponseTaxPayload } from "../../lib/saleor/types";
+import { ResponseTaxPayload } from "./types";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { TaxProviderName } from "./providers/config";
 

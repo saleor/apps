@@ -2,7 +2,7 @@ import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../../generated/graphql";
-import { ResponseTaxPayload } from "../../../../lib/saleor/types";
+import { ResponseTaxPayload } from "../../types";
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
 import { formatCalculatedAmount, getTaxCodeFromLine } from "../../tax-prepare-data";
 import { AvataxConfig } from "./avatax-config";
