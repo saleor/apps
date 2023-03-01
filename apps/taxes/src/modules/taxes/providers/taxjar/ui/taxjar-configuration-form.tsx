@@ -238,6 +238,7 @@ export const TaxJarConfigurationForm = () => {
           )}
         </div>
       </form>
+      {/* // todo: bring back to life once Dashboard allows to summon dialog */}
       {/* <DeleteProviderDialog
         isOpen={isWarningDialogOpen}
         onClose={closeWarningDialog}

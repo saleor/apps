@@ -37,7 +37,7 @@ const prepareLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
 };
 
 const defaultAvataxTransactionModel = {
-  // todo: whats going on with customerCode
+  // todo: what is customerCode
   customerCode: "0",
   type: 0,
 };
@@ -87,7 +87,7 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
   return {
     shipping_price_gross_amount: shippingGrossAmount,
     shipping_price_net_amount: shippingNetAmount,
-    // todo: add
+    // todo: add shipping tax rate
     shipping_tax_rate: "0",
     lines:
       productLines?.map((line) => {
@@ -97,7 +97,7 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
         return {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,
-          // todo: add
+          // todo: add tax rate
           tax_rate: "0",
         };
       }) ?? [],
