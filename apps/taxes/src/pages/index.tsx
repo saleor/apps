@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
 import { LinearProgress } from "@material-ui/core";
-import { isInIframe } from "../lib/saleor/apps-shared";
+import { isInIframe } from "@saleor/apps-shared";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
