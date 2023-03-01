@@ -9,7 +9,12 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "build#saleor-app-data-importer": {
-      "env": ["APL", "NEXT_PUBLIC_NUVO_LICENSE_KEY", "NEXT_PUBLIC_VERCEL_ENV", "NEXT_PUBLIC_NUVO_PROD_MODE"]
+      "env": [
+        "APL",
+        "NEXT_PUBLIC_NUVO_LICENSE_KEY",
+        "NEXT_PUBLIC_VERCEL_ENV",
+        "NEXT_PUBLIC_NUVO_PROD_MODE"
+      ]
     },
     "build#saleor-app-invoices": {
       "env": [
@@ -118,7 +123,8 @@
         "PORT",
         "VERCEL_URL",
         "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN"
+        "REST_APL_TOKEN",
+        "ALLOWED_DOMAIN_PATTERN"
       ]
     },
     "lint": {

@@ -14,8 +14,8 @@ export const checkoutCalculateTaxesSyncWebhook = new TaxSaleorSyncWebhook({
 });
 
 const handler = withTaxesWebhook(async (payload, config, res) => {
-  const logger = createLogger({});
-  logger.info("Inside CHECKOUT_CALCULATE_TAXES handler");
+  const logger = createLogger({ fn: "Inside CHECKOUT_CALCULATE_TAXES handler" });
+  logger.info("Handler called");
   const { provider, channel } = config;
   const taxProvider = new ActiveTaxProvider(provider);
   const calculatedTaxes = await taxProvider.calculate(payload.taxBase, channel);
