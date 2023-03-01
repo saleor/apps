@@ -1,17 +1,13 @@
-import { TaxProviderName } from "..";
 import { TaxBaseFragment } from "../../../../../generated/graphql";
 import { logger } from "../../../../lib/logger";
-import {
-  ChannelConfig,
-  defaultChannelConfig,
-} from "../../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../../channels-configuration/channels-config";
 import { TaxProvider } from "../../tax-provider";
 import { avataxCalculate } from "./avatax-calculate";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
 
 export class AvataxProvider implements TaxProvider {
-  name = "avatax" as TaxProviderName;
+  readonly name = "avatax";
   config = defaultAvataxConfig;
   client: AvataxClient;
 

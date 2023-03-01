@@ -1,4 +1,3 @@
-import { TaxProviderName } from "..";
 import { TaxBaseFragment } from "../../../../../generated/graphql";
 import { logger } from "../../../../lib/logger";
 import {
@@ -11,7 +10,7 @@ import { TaxJarClient } from "./taxjar-client";
 import { defaultTaxJarConfig, TaxJarConfig } from "./taxjar-config";
 
 export class TaxJarProvider implements TaxProvider {
-  name = "taxjar" as TaxProviderName;
+  readonly name = "taxjar";
   config = defaultTaxJarConfig;
   channel = defaultChannelConfig;
   client: TaxJarClient;

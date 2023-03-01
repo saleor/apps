@@ -1,8 +1,6 @@
-import { ImageProps } from "next/image";
-import { TaxProviderName } from ".";
 import { AvataxIcon, TaxJarIcon } from "../../../assets";
 
-export const providerConfig: Record<TaxProviderName, { label: string; icon: ImageProps["src"] }> = {
+export const providerConfig = {
   taxjar: {
     label: "TaxJar",
     icon: TaxJarIcon,
@@ -12,3 +10,5 @@ export const providerConfig: Record<TaxProviderName, { label: string; icon: Imag
     icon: AvataxIcon,
   },
 };
+
+export type TaxProviderName = keyof typeof providerConfig;

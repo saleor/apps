@@ -1,5 +1,5 @@
 import { z, ZodTypeAny } from "zod";
-import { TaxProviderName } from "./providers";
+import { TaxProviderName } from "./providers/config";
 
 export const addressSchema = z.object({
   country: z.string(),

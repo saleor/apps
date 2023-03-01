@@ -1,9 +1,8 @@
 import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
-import type { TaxProviderName } from "../../taxes/providers";
 import { AvataxConfiguration } from "../../taxes/providers/avatax/ui/avatax-configuration";
-import { providerConfig } from "../../taxes/providers/config";
+import { providerConfig, TaxProviderName } from "../../taxes/providers/config";
 import { TaxJarConfiguration } from "../../taxes/providers/taxjar/ui/taxjar-configuration";
 import { useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
