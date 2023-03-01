@@ -43,6 +43,7 @@ In the `apps` folder, you will find the following applications:
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
+- [taxes](./apps/taxes) - calculate order and checkout taxes using external services.
 
 ## Development
 
