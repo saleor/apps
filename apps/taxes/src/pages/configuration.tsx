@@ -6,7 +6,6 @@ import { ProvidersInstances } from "../modules/providers-configuration/ui/provid
 import { useActiveTab } from "../modules/taxes/tax-context";
 import { AppContainer } from "../modules/ui/app-container";
 import { AppLayout } from "../modules/ui/app-layout";
-import { AppMainBar } from "../modules/ui/app-main-bar";
 import { Instructions } from "../modules/ui/instructions";
 
 const useStyles = makeStyles({
@@ -52,7 +51,6 @@ const ConfigurationPage = () => {
 
   return (
     <main>
-      <AppMainBar />
       <AppContainer>
         <div className={styles.tabs}>
           <PageTabs value={activeTab} onChange={(value) => setActiveTab(value as AppTab)}>

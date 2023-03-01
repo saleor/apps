@@ -19,6 +19,8 @@ export default createManifestHandler({
         checkoutCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
+      supportUrl: "https://github.com/saleor/apps/discussions",
     };
 
     return manifest;
