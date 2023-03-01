@@ -1,6 +1,6 @@
 import { TaxBaseLineFragment } from "../../../generated/graphql";
 
-export const getDiscountForLine = (
+const getLineDiscount = (
   line: TaxBaseLineFragment,
   totalDiscount: number,
   allLinesTotal: number
@@ -16,7 +16,7 @@ export const getDiscountForLine = (
   return discountAmount;
 };
 
-export const getTaxCodeFromLine = (line: TaxBaseLineFragment): string => {
+const getLineTaxCode = (line: TaxBaseLineFragment): string => {
   if (line.sourceLine.__typename === "OrderLine") {
     return (
       line.sourceLine.variant?.product.metafield ??
@@ -32,6 +32,7 @@ export const getTaxCodeFromLine = (line: TaxBaseLineFragment): string => {
   );
 };
 
-export const formatCalculatedAmount = (amount: number) => {
-  return Number(amount.toFixed(2));
+export const taxLineResolver = {
+  getLineDiscount,
+  getLineTaxCode,
 };

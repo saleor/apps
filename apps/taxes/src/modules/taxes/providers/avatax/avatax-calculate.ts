@@ -4,16 +4,20 @@ import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../../generated/graphql";
 import { ResponseTaxPayload } from "../../types";
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
-import { formatCalculatedAmount, getTaxCodeFromLine } from "../../tax-prepare-data";
+import { taxLineResolver } from "../../tax-line-resolver";
 import { AvataxConfig } from "./avatax-config";
 
 const SHIPPING_ITEM_CODE = "Shipping";
+
+const formatCalculatedAmount = (amount: number) => {
+  return Number(amount.toFixed(2));
+};
 
 const prepareLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
-    taxCode: getTaxCodeFromLine(line),
+    taxCode: taxLineResolver.getLineTaxCode(line),
     quantity: line.quantity,
     itemCode: "Product",
   }));

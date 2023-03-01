@@ -7,11 +7,11 @@ import {
 } from "../../../../../generated/graphql";
 import { FetchTaxesLinePayload, ResponseTaxPayload } from "../../types";
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
-import {
-  formatCalculatedAmount,
-  getDiscountForLine,
-  getTaxCodeFromLine,
-} from "../../tax-prepare-data";
+import { taxLineResolver } from "../../tax-line-resolver";
+
+const formatCalculatedAmount = (amount: number) => {
+  return Number(amount.toFixed(2));
+};
 
 const prepareLinesWithDiscountPayload = (
   lines: Array<TaxBaseLineFragment>,
@@ -28,9 +28,8 @@ const prepareLinesWithDiscountPayload = (
   const totalDiscount = discountsSum <= allLinesTotal ? discountsSum : allLinesTotal;
 
   return lines.map((line) => {
-    const discountAmount = getDiscountForLine(line, totalDiscount, allLinesTotal);
-
-    const taxCode = getTaxCodeFromLine(line);
+    const discountAmount = taxLineResolver.getLineDiscount(line, totalDiscount, allLinesTotal);
+    const taxCode = taxLineResolver.getLineTaxCode(line);
 
     return {
       id: line.sourceLine.id,
