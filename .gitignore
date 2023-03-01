@@ -40,3 +40,5 @@ test-invoice.pdf
 coverage/
 apps/**/generated
 .eslintcache
+
+.sentryclirc
