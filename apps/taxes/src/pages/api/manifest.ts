@@ -12,7 +12,7 @@ export default createManifestHandler({
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       appUrl: context.appBaseUrl,
       permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
-      id: "saleor.app",
+      id: "saleor.app.taxes",
       version: packageJson.version,
       webhooks: [
         orderCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
