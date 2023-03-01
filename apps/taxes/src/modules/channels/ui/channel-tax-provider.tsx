@@ -4,10 +4,9 @@ import { Skeleton } from "@material-ui/lab";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
 import { useCreateDashboardRedirect } from "../../../lib/app/redirect";
-import { useActiveTab } from "../../../pages/configuration";
 import { ProviderIcon } from "../../providers-configuration/ui/provider-icon";
 import { providerConfig, TaxProviderName } from "../../taxes/providers/config";
-import { useChannelSlug, useInstanceId } from "../../taxes/tax-context";
+import { useActiveTab, useChannelSlug, useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppDashboardLink } from "../../ui/app-dashboard-link";
 import { AppPaper } from "../../ui/app-paper";
@@ -45,7 +44,7 @@ const NoDataPlaceholder = ({
 };
 
 const NoChannelPlaceholder = () => {
-  const [_, redirect] = useCreateDashboardRedirect("taxConfiguration");
+  const { redirect } = useCreateDashboardRedirect("taxConfiguration");
   return (
     <NoDataPlaceholder title={"Channels not found"}>
       <Typography variant="body1">
@@ -66,8 +65,8 @@ const NoChannelPlaceholder = () => {
 
 const NoProviderPlaceholder = () => {
   const styles = useStyles();
-  const [, setActiveTab] = useActiveTab();
-  const [, setInstanceId] = useInstanceId();
+  const { setActiveTab } = useActiveTab();
+  const { setInstanceId } = useInstanceId();
 
   return (
     <NoDataPlaceholder title={"Tax providers not found"}>
@@ -135,7 +134,7 @@ const ChannelTaxProviderSkeleton = () => {
 };
 
 export const ChannelTaxProvider = () => {
-  const [channelSlug] = useChannelSlug();
+  const { channelSlug } = useChannelSlug();
   const channels = trpcClient.channels.fetch.useQuery(undefined, {});
   const providers = trpcClient.providersConfiguration.getAll.useQuery();
 

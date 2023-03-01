@@ -37,7 +37,7 @@ const ProvidersSkeleton = () => {
 export const ProvidersInstances = () => {
   const styles = useStyles();
   const providers = trpcClient.providersConfiguration.getAll.useQuery();
-  const [_, setInstanceId] = useInstanceId();
+  const { setInstanceId } = useInstanceId();
 
   if (providers?.isFetching) {
     return <ProvidersSkeleton />;

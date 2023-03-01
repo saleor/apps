@@ -75,7 +75,7 @@ export const ChannelTaxProviderForm = () => {
     resolver: zodResolver(channelSchema),
   });
 
-  const [channelSlug] = useChannelSlug();
+  const { channelSlug } = useChannelSlug();
 
   const { data: channelConfigurationData, refetch: refetchChannelConfigurationData } =
     trpcClient.channelsConfiguration.fetch.useQuery();

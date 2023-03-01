@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => {
 
 export const TaxProvidersInstancesList = () => {
   const styles = useStyles();
-  const [instanceId, setInstanceId] = useInstanceId();
+  const { instanceId, setInstanceId } = useInstanceId();
   const { data: providersConfigurationData } = trpcClient.providersConfiguration.getAll.useQuery();
   const instances = providersConfigurationData ?? [];
 

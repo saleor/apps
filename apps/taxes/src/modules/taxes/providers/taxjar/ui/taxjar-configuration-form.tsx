@@ -39,7 +39,7 @@ const defaultValues: FormValues = {
 export const TaxJarConfigurationForm = () => {
   const [isWarningDialogOpen, setIsWarningDialogOpen] = React.useState(false);
   const styles = useStyles();
-  const [instanceId, setInstanceId] = useInstanceId();
+  const { instanceId, setInstanceId } = useInstanceId();
   const { appBridge } = useAppBridge();
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),

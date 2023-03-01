@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Configuration = () => {
   const [provider, setProvider] = React.useState<TaxProviderName>("taxjar");
-  const [instanceId] = useInstanceId();
+  const { instanceId } = useInstanceId();
   const { data: providersConfigurationData } = trpcClient.providersConfiguration.getAll.useQuery();
   const styles = useStyles();
 

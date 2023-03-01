@@ -47,7 +47,7 @@ export const AvataxConfigurationForm = () => {
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
-  const [instanceId, setInstanceId] = useInstanceId();
+  const { instanceId, setInstanceId } = useInstanceId();
   const { refetch: refetchChannelConfigurationData } =
     trpcClient.channelsConfiguration.fetch.useQuery();
   const { data: providersConfigurationData, refetch: refetchProvidersConfigurationData } =

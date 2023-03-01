@@ -1,6 +1,7 @@
 import { Link, makeStyles } from "@material-ui/core";
 import { PropsWithChildren } from "react";
-import { AppTab, useActiveTab } from "../../pages/configuration";
+import { AppTab } from "../../pages/configuration";
+import { useActiveTab } from "../taxes/tax-context";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const AppTabNavButton = ({ children, to }: PropsWithChildren<{ to: AppTab }>) => {
   const styles = useStyles();
-  const [_, setActiveTab] = useActiveTab();
+  const { setActiveTab } = useActiveTab();
 
   return (
     <Link className={styles.button} component="button" onClick={() => setActiveTab(to)}>

@@ -21,7 +21,7 @@ const ChannelsSkeleton = () => {
 };
 
 export const Channels = () => {
-  const [channelSlug, setChannelSlug] = useChannelSlug();
+  const { channelSlug, setChannelSlug } = useChannelSlug();
 
   const channels = trpcClient.channels.fetch.useQuery(undefined, {
     onSuccess: (result) => {

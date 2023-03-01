@@ -24,7 +24,7 @@ const paths = {
 
 export type DashboardPath = keyof typeof paths;
 
-type DashboardRedirectValues = [AppLinkProps, () => void];
+type DashboardRedirectValues = { props: AppLinkProps; redirect: () => void };
 
 export const useCreateDashboardRedirect = (p: DashboardPath): DashboardRedirectValues => {
   const { appBridgeState } = useAppBridge();
@@ -39,5 +39,5 @@ export const useCreateDashboardRedirect = (p: DashboardPath): DashboardRedirectV
     href,
   };
 
-  return [linkProps, () => redirect(linkProps)];
+  return { props: linkProps, redirect: () => redirect(linkProps) };
 };
