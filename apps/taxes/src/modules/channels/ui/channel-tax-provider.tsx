@@ -3,12 +3,12 @@ import { Warning } from "@material-ui/icons";
 import { Skeleton } from "@material-ui/lab";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
-import { useCreateDashboardRedirect } from "../../../lib/app/redirect";
+import { useAppRedirect } from "../../../lib/app/redirect";
 import { ProviderIcon } from "../../providers-configuration/ui/provider-icon";
 import { providerConfig, TaxProviderName } from "../../taxes/providers/config";
 import { useActiveTab, useChannelSlug, useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
-import { AppDashboardLink } from "../../ui/app-dashboard-link";
+import { AppLink } from "../../ui/app-link";
 import { AppPaper } from "../../ui/app-paper";
 import { ChannelTaxProviderForm } from "./channel-tax-provider-form";
 
@@ -44,12 +44,12 @@ const NoDataPlaceholder = ({
 };
 
 const NoChannelPlaceholder = () => {
-  const { redirect } = useCreateDashboardRedirect("taxConfiguration");
+  const { redirect } = useAppRedirect();
   return (
     <NoDataPlaceholder title={"Channels not found"}>
       <Typography variant="body1">
         For a channel to appear on this list, you need to configure it on the{" "}
-        <AppDashboardLink path="taxConfiguration">Tax Configuration</AppDashboardLink> page.
+        <AppLink href="/taxes/channels">Tax Configuration</AppLink> page.
       </Typography>
       <br />
       <Typography variant="body1">
@@ -58,7 +58,7 @@ const NoChannelPlaceholder = () => {
         method to <b>Use tax app</b>.
       </Typography>
       <br />
-      <Button onClick={redirect}>Go to Tax Configuration</Button>
+      <Button onClick={() => redirect("/taxes/channels")}>Go to Tax Configuration</Button>
     </NoDataPlaceholder>
   );
 };

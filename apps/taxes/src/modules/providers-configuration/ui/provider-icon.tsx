@@ -13,7 +13,7 @@ const sizes: Record<Size, number> = {
 type ProviderIconProps = {
   provider: TaxProviderName;
   size?: Size;
-} & Omit<ImageProps, "src" | "height" | "width">;
+} & Omit<ImageProps, "src" | "height" | "width" | "alt">;
 
 export const ProviderIcon = ({ provider, size = "medium", ...props }: ProviderIconProps) => {
   const { icon, label } = providerConfig[provider];

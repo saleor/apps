@@ -1,6 +1,6 @@
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
-import { AppDashboardLink } from "./app-dashboard-link";
+import { AppLink } from "./app-link";
 import { AppPaper } from "./app-paper";
 import { AppTabNavButton } from "./app-tab-nav-button";
 
@@ -26,9 +26,8 @@ export const Instructions = () => {
         <Typography variant="body1">
           <ol className={styles.list}>
             <li>
-              Go to <AppDashboardLink path="taxConfiguration">Tax Configuration</AppDashboardLink>.
-              Make sure you chose <q>Use tax app</q> as the method of tax calculation for your
-              channel.
+              Go to <AppLink href="/taxes/channels">Tax Configuration</AppLink>. Make sure you chose{" "}
+              <q>Use tax app</q> as the method of tax calculation for your channel.
             </li>
             <li>
               In the Tax App, go to the <AppTabNavButton to="providers">Providers</AppTabNavButton>{" "}
