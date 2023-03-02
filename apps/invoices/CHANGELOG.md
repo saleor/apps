@@ -1,5 +1,18 @@
 # saleor-app-invoices
 
+## 1.7.0
+
+### Minor Changes
+
+- 55c8f1a: App now validates Saleor version and will fail if lower than 3.10
+- 2d23480: Remove TitleBar component from apps, because it is moved to Dashboard, outside of iframe context
+
+### Patch Changes
+
+- 2d23480: Add homepage and support url to manifest
+- Updated dependencies [2d23480]
+  - @saleor/apps-shared@1.3.0
+
 ## 1.6.0
 
 ### Minor Changes

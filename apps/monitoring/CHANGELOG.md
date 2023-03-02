@@ -1,5 +1,16 @@
 # saleor-app-monitoring
 
+## 0.3.0
+
+### Minor Changes
+
+- 2d23480: Remove TitleBar component from apps, because it is moved to Dashboard, outside of iframe context
+
+### Patch Changes
+
+- Updated dependencies [2d23480]
+  - @saleor/apps-shared@1.3.0
+
 ## 0.2.0
 
 ### Minor Changes

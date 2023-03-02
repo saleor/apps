@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.3.0
+
+### Minor Changes
+
+- 2d23480: Remove TitleBar component from apps, because it is moved to Dashboard, outside of iframe context
+
 ## 1.2.0
 
 ### Minor Changes
