@@ -46,6 +46,7 @@ export const AvataxConfigurationForm = () => {
   const { appBridge } = useAppBridge();
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    defaultValues,
   });
   const { instanceId, setInstanceId } = useInstanceId();
   const { refetch: refetchChannelConfigurationData } =
@@ -187,7 +188,7 @@ export const AvataxConfigurationForm = () => {
             <Controller
               name="name"
               control={control}
-              defaultValue=""
+              defaultValue={defaultValues.name}
               render={({ field }) => (
                 <TextField type="text" {...field} label="Instance name" {...textFieldProps} />
               )}
@@ -202,7 +203,7 @@ export const AvataxConfigurationForm = () => {
               <Controller
                 name={"config.isSandbox"}
                 control={control}
-                defaultValue={false}
+                defaultValue={defaultValues.config.isSandbox}
                 render={({ field }) => (
                   <Switch
                     {...field}
@@ -230,7 +231,7 @@ export const AvataxConfigurationForm = () => {
               <Controller
                 name={"config.isAutocommit"}
                 control={control}
-                defaultValue={false}
+                defaultValue={defaultValues.config.isAutocommit}
                 render={({ field }) => (
                   <Switch
                     {...field}
@@ -268,7 +269,7 @@ export const AvataxConfigurationForm = () => {
             <Controller
               name="config.password"
               control={control}
-              defaultValue=""
+              defaultValue={defaultValues.config.password}
               render={({ field }) => <TextField label="Password" {...field} {...textFieldProps} />}
             />
             {formState.errors.config?.password && (
@@ -279,7 +280,7 @@ export const AvataxConfigurationForm = () => {
             <Controller
               name="config.companyName"
               control={control}
-              defaultValue=""
+              defaultValue={defaultValues.config.companyName}
               render={({ field }) => (
                 <TextField type="text" {...field} label="Company name" {...textFieldProps} />
               )}

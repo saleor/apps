@@ -43,6 +43,7 @@ export const TaxJarConfigurationForm = () => {
   const { appBridge } = useAppBridge();
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    defaultValues,
   });
 
   const resetInstanceId = () => {
@@ -188,7 +189,7 @@ export const TaxJarConfigurationForm = () => {
             <Controller
               name="name"
               control={control}
-              defaultValue=""
+              defaultValue={defaultValues.name}
               render={({ field }) => (
                 <TextField type="text" {...field} label="Instance name" {...textFieldProps} />
               )}
@@ -201,7 +202,7 @@ export const TaxJarConfigurationForm = () => {
             <Controller
               name="config.apiKey"
               control={control}
-              defaultValue=""
+              defaultValue={defaultValues.config.apiKey}
               render={({ field }) => <TextField label="API Key" {...field} {...textFieldProps} />}
             />
             {formState.errors.config?.apiKey && (
@@ -214,7 +215,7 @@ export const TaxJarConfigurationForm = () => {
               <Controller
                 name={"config.isSandbox"}
                 control={control}
-                defaultValue={false}
+                defaultValue={defaultValues.config.isSandbox}
                 render={({ field }) => (
                   <Switch
                     {...field}
