@@ -2,6 +2,7 @@ body {
   font-family: Inter, -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   color: #111;
+  padding-top: 32px;
 }
 
 a {
