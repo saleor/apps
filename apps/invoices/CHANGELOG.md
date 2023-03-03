@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.7.1
+
+### Patch Changes
+
+- 2755ed2: Added extra padding on top of the app so it has some space between content and dashboard header
+
 ## 1.7.0
 
 ### Minor Changes
