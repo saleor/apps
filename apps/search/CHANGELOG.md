@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.3.1
+
+### Patch Changes
+
+- 2755ed2: Added extra padding on top of the app so it has some space between content and dashboard header
+
 ## 1.3.0
 
 ### Minor Changes
