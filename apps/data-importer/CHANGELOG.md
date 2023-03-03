@@ -1,5 +1,12 @@
 # saleor-app-data-importer
 
+## 1.4.1
+
+### Patch Changes
+
+- 2755ed2: Added extra padding on top of the app so it has some space between content and dashboard header
+- 2755ed2: Change main title header to be smaller
+
 ## 1.4.0
 
 ### Minor Changes

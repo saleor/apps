@@ -1,5 +1,11 @@
 # saleor-app-monitoring
 
+## 0.3.1
+
+### Patch Changes
+
+- 2755ed2: Added extra padding on top of the app so it has some space between content and dashboard header
+
 ## 0.3.0
 
 ### Minor Changes
