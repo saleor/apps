@@ -76,7 +76,9 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
     identifier: "customers",
     modal: false,
     style: {
-      sheetSelect: { icon: { filter: isDarkMode ? "invert(1)" : "none" } },
+      sheetSelect: {
+        icon: { filter: isDarkMode ? "invert(1)" : "none" },
+      },
       joinSheet: {},
       dialog: { closeIcon: { filter: isDarkMode ? "invert(1)" : "none" } },
       messagePopup: {
@@ -192,6 +194,9 @@ const getNuvoSettings = (theme: SaleorTheme): SettingsAPI => {
       header: {
         description: {
           display: "none",
+        },
+        title: {
+          fontSize: "18px",
         },
         root: {
           // display: "none",
