@@ -659,7 +659,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.0.0-20230306125948
+      '@saleor/app-sdk': 0.0.0-pr-20230306153715
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@tanstack/react-query': ^4.19.1
@@ -704,7 +704,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.0.0-20230306125948_nvzgbose6yf6w7ijjprgspqefi
+      '@saleor/app-sdk': 0.0.0-pr-20230306153715_nvzgbose6yf6w7ijjprgspqefi
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
@@ -4205,8 +4205,8 @@ packages:
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
 
-  /@saleor/app-sdk/0.0.0-20230306125948_nvzgbose6yf6w7ijjprgspqefi:
-    resolution: {integrity: sha512-noY+QNRp0Y7G7L1V40IAokRb5I1i7Ur0KbF9tH0Fz6LQCqQd6O71qSyEJZt4veHpTIdr29REn/lQSBbS6JMgdA==}
+  /@saleor/app-sdk/0.0.0-pr-20230306153715_nvzgbose6yf6w7ijjprgspqefi:
+    resolution: {integrity: sha512-ybD73XPuW9tCKchrPCV9BCtkQTf6XvcjMrdV8/u8OdNLhVFio877Pm+X5w/3AiPe20L1gbbJPSrs0juCpgYlDg==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
