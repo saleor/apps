@@ -1,56 +1,15 @@
 import React, { PropsWithChildren } from "react";
-import { Button, makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
-import { GitHub, OfflineBoltOutlined } from "@material-ui/icons";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { MainBar } from "../../modules/ui/main-bar";
-import { appBrandColor, appName } from "../../const";
-import Image from "next/image";
-import appIcon from "../../public/notification-hub.svg";
+import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 const useStyles = makeStyles({
-  buttonsGrid: { display: "flex", gap: 10 },
-  topBar: {
-    marginBottom: 32,
-  },
-  appIconContainer: {
-    background: appBrandColor,
-    padding: 10,
-    borderRadius: "50%",
-    width: 50,
-    height: 50,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#fff",
-  },
+  appContainer: { marginTop: 20 },
 });
-
-const AppIcon = () => {
-  const styles = useStyles();
-
-  return (
-    <div className={styles.appIconContainer}>
-      <Image width={30} height={30} alt="icon" src={appIcon} />
-    </div>
-  );
-};
 
 type Props = PropsWithChildren<{}>;
 
 export const ConfigurationPageBaseLayout = ({ children }: Props) => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
-
-  const openInNewTab = (url: string) => {
-    appBridge?.dispatch(
-      actions.Redirect({
-        to: url,
-        newContext: true,
-      })
-    );
-  };
 
   const router = useRouter();
   const tabs = [
@@ -77,35 +36,7 @@ export const ConfigurationPageBaseLayout = ({ children }: Props) => {
     }
   };
   return (
-    <div>
-      <MainBar
-        icon={<AppIcon />}
-        className={styles.topBar}
-        name={appName}
-        author="By Saleor Commerce"
-        rightColumnContent={
-          <div className={styles.buttonsGrid}>
-            <Button
-              variant="secondary"
-              startIcon={<GitHub />}
-              onClick={() => {
-                openInNewTab("https://github.com/saleor/saleor-emails-and-messages");
-              }}
-            >
-              Repository
-            </Button>
-            <Button
-              startIcon={<OfflineBoltOutlined />}
-              variant="secondary"
-              onClick={() => {
-                openInNewTab("https://github.com/saleor/apps/discussions");
-              }}
-            >
-              Request a feature
-            </Button>
-          </div>
-        }
-      />
+    <div className={styles.appContainer}>
       <PageTabs
         value={activePath}
         onChange={navigateToTab}
