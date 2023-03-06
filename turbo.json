@@ -1,12 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["VERCEL_ENV"],
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
+  "globalEnv": [
+    "VERCEL_ENV"
+  ],
   "pipeline": {
     "build": {
-      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "env": [
+        "NEXT_PUBLIC_VERCEL_ENV"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
     },
     "build#saleor-app-data-importer": {
       "env": [
@@ -30,6 +41,18 @@
       ]
     },
     "build#saleor-app-search": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "ALLOWED_DOMAIN_PATTERN",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV"
+      ]
+    },
+    "build#saleor-app-emails-and-messages": {
       "env": [
         "APL",
         "APP_DEBUG",
@@ -136,7 +159,9 @@
     "test": {},
     "test:ci": {},
     "generate": {
-      "outputs": ["generated/"]
+      "outputs": [
+        "generated/"
+      ]
     }
   }
 }

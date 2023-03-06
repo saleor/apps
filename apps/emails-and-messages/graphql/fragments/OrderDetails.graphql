@@ -1,0 +1,69 @@
+fragment OrderDetails on Order {
+  id
+  number
+  userEmail
+  channel {
+    slug
+  }
+  user {
+    email
+    firstName
+    lastName
+  }
+  billingAddress {
+    streetAddress1
+    city
+    postalCode
+    country {
+      country
+    }
+  }
+  shippingAddress {
+    streetAddress1
+    city
+    postalCode
+    country {
+      country
+    }
+  }
+  lines {
+    id
+    productName
+    variantName
+    quantity
+    thumbnail {
+      url
+      alt
+    }
+    unitPrice {
+      gross {
+        currency
+        amount
+      }
+    }
+    totalPrice {
+      gross {
+        currency
+        amount
+      }
+    }
+  }
+  subtotal {
+    gross {
+      amount
+      currency
+    }
+  }
+  shippingPrice {
+    gross {
+      amount
+      currency
+    }
+  }
+  total {
+    gross {
+      amount
+      currency
+    }
+  }
+}
