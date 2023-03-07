@@ -5,12 +5,22 @@ import {
   TaxBaseLineFragment,
   TaxDiscountFragment,
 } from "../../../../../generated/graphql";
-import { FetchTaxesLinePayload, ResponseTaxPayload } from "../../types";
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
 import { taxLineResolver } from "../../tax-line-resolver";
+import { ResponseTaxPayload } from "../../types";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
+};
+
+type FetchTaxesLinePayload = {
+  id: string;
+  quantity: number;
+  taxCode?: string | null;
+  discount: number;
+  chargeTaxes: boolean;
+  unitAmount: number;
+  totalAmount: number;
 };
 
 const prepareLinesWithDiscountPayload = (
@@ -66,7 +76,7 @@ const prepareResponse = (
   return {
     shipping_price_gross_amount: formatCalculatedAmount(shippingPriceGross),
     shipping_price_net_amount: formatCalculatedAmount(shippingPriceNet),
-    shipping_tax_rate: String(shippingTaxRate),
+    shipping_tax_rate: shippingTaxRate,
     // lines order needs to be the same as for recieved payload.
     // lines that have chargeTaxes === false will have returned default value
     lines: linesWithDiscount.map((line) => {
@@ -75,11 +85,11 @@ const prepareResponse = (
         ? lineTax.taxable_amount + lineTax.tax_collectable
         : line.totalAmount - line.discount;
       const totalNetAmount = lineTax ? lineTax.taxable_amount : line.totalAmount - line.discount;
-      const taxRate = lineTax ? String(lineTax.combined_tax_rate || 0) : "0";
+      const taxRate = lineTax ? lineTax.combined_tax_rate : 0;
       return {
         total_gross_amount: formatCalculatedAmount(totalGrossAmount),
         total_net_amount: formatCalculatedAmount(totalNetAmount),
-        tax_rate: taxRate,
+        tax_rate: taxRate ?? 0,
       };
     }),
   };
