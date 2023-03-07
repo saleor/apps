@@ -30,9 +30,9 @@ export const OrderFullyPaidGraphqlSubscription = gql`
 export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhookPayloadFragment>({
   name: "Order Fully Paid",
   webhookPath: "api/webhooks/order-fully-paid",
-  asyncEvent: "ORDER_FULLY_PAID",
+  event: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
-  subscriptionQueryAst: UntypedOrderFullyPaidDocument,
+  query: UntypedOrderFullyPaidDocument,
 });
 
 const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (

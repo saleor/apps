@@ -122,9 +122,9 @@ const InvoiceRequestedSubscription = gql`
 export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPayloadFragment>({
   name: "Invoice requested",
   webhookPath: "api/webhooks/invoice-requested",
-  asyncEvent: "INVOICE_REQUESTED",
+  event: "INVOICE_REQUESTED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: InvoiceRequestedSubscription,
+  query: InvoiceRequestedSubscription,
   onError(error, req, res) {
     const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
 

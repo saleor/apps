@@ -60,9 +60,9 @@ export const fulfillmentCreatedWebhook =
   new SaleorAsyncWebhook<FulfillmentCreatedWebhookPayloadFragment>({
     name: "Fulfillment Created",
     webhookPath: "api/webhooks/fulfillment-created",
-    asyncEvent: "FULFILLMENT_CREATED",
+    event: "FULFILLMENT_CREATED",
     apl: saleorApp.apl,
-    subscriptionQueryAst: UntypedFulfillmentCreatedDocument,
+    query: UntypedFulfillmentCreatedDocument,
   });
 
 const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> = async (
