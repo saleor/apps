@@ -1,5 +1,11 @@
 # saleor-app-slack
 
+## 1.3.2
+
+### Patch Changes
+
+- dca82bb: Update app-sdk to pre-0.34.0. Update Async Webhooks to use new API
+
 ## 1.3.1
 
 ### Patch Changes
