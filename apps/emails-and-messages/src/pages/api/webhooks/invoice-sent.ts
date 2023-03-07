@@ -7,6 +7,7 @@ import {
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { createClient } from "../../../lib/create-graphql-client";
 
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -71,10 +72,14 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
   }
 
   const channel = order.channel.slug;
+  const client = createClient(authData.saleorApiUrl, async () =>
+    Promise.resolve({ token: authData.token })
+  );
 
   await sendEventMessages({
     authData,
     channel,
+    client,
     event: "INVOICE_SENT",
     payload: { order: payload.order },
     recipientEmail,

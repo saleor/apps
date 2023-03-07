@@ -7,6 +7,7 @@ import {
   OrderFulfilledWebhookPayloadFragment,
 } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { createClient } from "../../../lib/create-graphql-client";
 
 const OrderFulfilledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -63,9 +64,13 @@ const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = asy
   }
 
   const channel = order.channel.slug;
+  const client = createClient(authData.saleorApiUrl, async () =>
+    Promise.resolve({ token: authData.token })
+  );
 
   await sendEventMessages({
     authData,
+    client,
     channel,
     event: "ORDER_FULFILLED",
     payload: { order: payload.order },

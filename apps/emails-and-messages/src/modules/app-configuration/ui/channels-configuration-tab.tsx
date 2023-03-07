@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { EditIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
-import { AppConfigContainer } from "../app-config-container";
 import { AppConfigurationForm } from "./app-configuration-form";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
@@ -28,96 +27,88 @@ const useStyles = makeStyles((theme) => {
 export const ChannelsConfigurationTab = () => {
   const styles = useStyles();
   const { appBridge } = useAppBridge();
-  const [mjmlConfigurationsListData, setMjmlConfigurationsListData] = useState<
-    { label: string; value: string }[]
-  >([]);
-
-  const [sendgridConfigurationsListData, setSendgridConfigurationsListData] = useState<
-    { label: string; value: string }[]
-  >([]);
-
-  const { data: configurationData, refetch: refetchConfig } =
-    trpcClient.appConfiguration.fetch.useQuery();
-
-  trpcClient.mjmlConfiguration.getConfigurations.useQuery(
-    {},
-    {
-      onSuccess(data) {
-        setMjmlConfigurationsListData(
-          data.map((configuration) => ({
-            value: configuration.id,
-            label: configuration.configurationName,
-          }))
-        );
-      },
-    }
-  );
-
-  trpcClient.sendgridConfiguration.fetch.useQuery(undefined, {
-    onSuccess(data) {
-      const keys = Object.keys(data.availableConfigurations);
-
-      setSendgridConfigurationsListData(
-        keys.map((key) => ({
-          value: key,
-          label: data.availableConfigurations[key].configurationName,
-        }))
-      );
-    },
-  });
-
-  const {
-    data: channels,
-    isLoading: isChannelsLoading,
-    isSuccess: isChannelsFetchSuccess,
-  } = trpcClient.channels.fetch.useQuery();
-
-  const { mutate, error: saveError } = trpcClient.appConfiguration.setAndReplace.useMutation({
-    onSuccess() {
-      refetchConfig();
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          text: "Saved app configuration",
-          status: "success",
-        })
-      );
-    },
-  });
-
   const [activeChannelSlug, setActiveChannelSlug] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isChannelsFetchSuccess) {
-      setActiveChannelSlug(channels[0].slug ?? null);
-    }
-  }, [isChannelsFetchSuccess, channels]);
+  const { data: channelsData, isLoading: isChannelsDataLoading } =
+    trpcClient.channels.fetch.useQuery(undefined, {
+      onSuccess: (data) => {
+        if (data?.length) {
+          setActiveChannelSlug(data[0].slug);
+        }
+      },
+    });
 
-  const activeChannel = useMemo(() => {
-    try {
-      return channels!.find((c) => c.slug === activeChannelSlug)!;
-    } catch (e) {
-      return null;
-    }
-  }, [channels, activeChannelSlug]);
+  const {
+    data: configurationData,
+    refetch: refetchConfig,
+    isLoading: isConfigurationDataLoading,
+  } = trpcClient.appConfiguration.getChannelConfiguration.useQuery(
+    {
+      channelSlug: activeChannelSlug!,
+    },
+    { enabled: !!activeChannelSlug }
+  );
 
-  if (isChannelsLoading) {
+  const { data: mjmlConfigurations, isLoading: isMjmlQueryLoading } =
+    trpcClient.mjmlConfiguration.getConfigurations.useQuery({});
+
+  const mjmlConfigurationsListData = useMemo(() => {
+    return (
+      mjmlConfigurations?.map((configuration) => ({
+        value: configuration.id,
+        label: configuration.configurationName,
+      })) ?? []
+    );
+  }, [mjmlConfigurations]);
+
+  const { data: sendgridConfigurations, isLoading: isSendgridQueryLoading } =
+    trpcClient.sendgridConfiguration.fetch.useQuery();
+
+  const sendgridConfigurationsListData = useMemo(() => {
+    if (!sendgridConfigurations) {
+      return [];
+    }
+    const keys = Object.keys(sendgridConfigurations.availableConfigurations ?? {}) || [];
+
+    return (
+      keys.map((key) => ({
+        value: key,
+        label: sendgridConfigurations.availableConfigurations[key].configurationName,
+      })) ?? []
+    );
+  }, [sendgridConfigurations]);
+
+  const { mutate: mutateAppChannelConfiguration, error: saveError } =
+    trpcClient.appConfiguration.setChannelConfiguration.useMutation({
+      onSuccess() {
+        refetchConfig();
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Success",
+            text: "Saved app configuration",
+            status: "success",
+          })
+        );
+      },
+    });
+
+  const activeChannel = channelsData?.find((c) => c.slug === activeChannelSlug);
+
+  if (isChannelsDataLoading) {
     return <LoadingIndicator />;
   }
-
-  if (!channels?.length) {
+  if (!channelsData?.length) {
     return <div>NO CHANNELS</div>;
   }
 
-  if (!activeChannel) {
-    return <div>Error. No channel available</div>;
-  }
+  const isFormDataLoading =
+    isConfigurationDataLoading || isMjmlQueryLoading || isSendgridQueryLoading;
 
   return (
     <AppColumnsLayout>
       <SideMenu
         title="Channels"
-        selectedItemId={activeChannel.slug}
+        selectedItemId={activeChannel?.slug}
         headerToolbar={
           <IconButton
             variant="secondary"
@@ -133,31 +124,32 @@ export const ChannelsConfigurationTab = () => {
           </IconButton>
         }
         onClick={(id) => setActiveChannelSlug(id)}
-        items={channels.map((c) => ({ label: c.name, id: c.slug })) || []}
+        items={channelsData.map((c) => ({ label: c.name, id: c.slug })) || []}
       />
-      {activeChannel ? (
-        <div className={styles.configurationColumn}>
-          <AppConfigurationForm
-            channelID={activeChannel.id}
-            key={activeChannelSlug}
-            channelSlug={activeChannel.slug}
-            mjmlConfigurationChoices={mjmlConfigurationsListData}
-            sendgridConfigurationChoices={sendgridConfigurationsListData}
-            onSubmit={async (data) => {
-              const newConfig = AppConfigContainer.setChannelAppConfiguration(configurationData)(
-                activeChannel.slug
-              )(data);
-
-              mutate(newConfig);
-            }}
-            initialData={AppConfigContainer.getChannelAppConfiguration(configurationData)(
-              activeChannel.slug
-            )}
-            channelName={activeChannel?.name ?? activeChannelSlug}
-          />
-          {saveError && <span>{saveError.message}</span>}
-        </div>
-      ) : null}
+      <div className={styles.configurationColumn}>
+        {!activeChannel || isFormDataLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <AppConfigurationForm
+              channelID={activeChannel.id}
+              key={activeChannelSlug}
+              channelSlug={activeChannel.slug}
+              mjmlConfigurationChoices={mjmlConfigurationsListData}
+              sendgridConfigurationChoices={sendgridConfigurationsListData}
+              onSubmit={async (data) => {
+                mutateAppChannelConfiguration({
+                  channel: activeChannel.slug,
+                  configuration: data,
+                });
+              }}
+              initialData={configurationData}
+              channelName={activeChannel?.name ?? activeChannelSlug}
+            />
+            {saveError && <span>{saveError.message}</span>}
+          </>
+        )}
+      </div>
     </AppColumnsLayout>
   );
 };

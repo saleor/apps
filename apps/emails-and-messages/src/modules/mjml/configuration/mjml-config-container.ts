@@ -2,7 +2,9 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { MjmlConfig as MjmlConfigurationRoot, MjmlConfiguration } from "./mjml-config";
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
 
-const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
+export const generateMjmlConfigurationId = () => Date.now().toString();
+
+export const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
   messageEventTypes.map((eventType) => ({
     active: true,
     eventType: eventType,
@@ -41,7 +43,7 @@ const getConfiguration =
     return mjmlConfigRoot.configurations.find((c) => c.id === id);
   };
 
-interface FilterConfigurationsArgs {
+export interface FilterConfigurationsArgs {
   ids?: string[];
   active?: boolean;
 }
@@ -74,7 +76,7 @@ const createConfiguration =
     // for creating a new configurations, the ID has to be generated
     const newConfiguration = {
       ...mjmlConfiguration,
-      id: Date.now().toString(),
+      id: generateMjmlConfigurationId(),
       events: getDefaultEventsConfiguration(),
     };
     mjmlConfigNormalized.configurations.unshift(newConfiguration);

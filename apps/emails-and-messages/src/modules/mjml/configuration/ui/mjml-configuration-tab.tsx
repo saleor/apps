@@ -116,19 +116,25 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
         items={configurations?.map((c) => ({ label: c.configurationName, id: c.id })) || []}
       />
       <div className={styles.configurationColumn}>
-        <MjmlConfigurationForm
-          onConfigurationSaved={() => refetchConfigurations()}
-          initialData={configuration || getDefaultEmptyConfiguration()}
-          configurationId={configurationId}
-        />
-        {!!configurationId && !!configuration && (
-          <MjmlTemplatesCard
-            configurationId={configurationId}
-            configuration={configuration}
-            onEventChanged={() => {
-              refetchConfigurations();
-            }}
-          />
+        {configurationsIsLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <MjmlConfigurationForm
+              onConfigurationSaved={() => refetchConfigurations()}
+              initialData={configuration || getDefaultEmptyConfiguration()}
+              configurationId={configurationId}
+            />
+            {!!configurationId && !!configuration && (
+              <MjmlTemplatesCard
+                configurationId={configurationId}
+                configuration={configuration}
+                onEventChanged={() => {
+                  refetchConfigurations();
+                }}
+              />
+            )}
+          </>
         )}
       </div>
     </AppColumnsLayout>
