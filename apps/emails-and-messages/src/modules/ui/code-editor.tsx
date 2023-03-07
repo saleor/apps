@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 
 import Editor from "@monaco-editor/react";
 import { useTheme } from "@saleor/macaw-ui";
@@ -19,6 +19,14 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
     editorRef.current = editor;
   }
 
+  const handleOnChange = useCallback(
+    (value?: string) => {
+      console.log("ON CHANGE");
+      onChange(value ?? "");
+    },
+    [value]
+  );
+
   return (
     <>
       <Editor
@@ -29,9 +37,7 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
         defaultLanguage={language}
         defaultValue={initialTemplate}
         onMount={handleEditorDidMount}
-        onChange={(value) => {
-          onChange(value ?? "");
-        }}
+        onChange={handleOnChange}
       />
     </>
   );
