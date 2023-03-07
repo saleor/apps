@@ -53,9 +53,9 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
   {
     name: "Customer Created",
     webhookPath: "api/webhooks/customer-created",
-    asyncEvent: "CUSTOMER_CREATED",
+    event: "CUSTOMER_CREATED",
     apl: saleorApp.apl,
-    subscriptionQueryAst: UntypedCustomerCreatedDocument,
+    query: UntypedCustomerCreatedDocument,
   }
 );
 

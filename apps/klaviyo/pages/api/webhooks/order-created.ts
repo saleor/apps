@@ -30,9 +30,9 @@ export const OrderCreatedGraphqlSubscription = gql`
 export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPayloadFragment>({
   name: "Order Created",
   webhookPath: "api/webhooks/order-created",
-  asyncEvent: "ORDER_CREATED",
+  event: "ORDER_CREATED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: UntypedOrderCreatedDocument,
+  query: UntypedOrderCreatedDocument,
 });
 
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
