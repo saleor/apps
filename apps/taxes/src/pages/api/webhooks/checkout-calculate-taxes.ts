@@ -27,14 +27,6 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   const { authData, payload } = ctx;
   logger.info({ payload }, "Handler called with payload");
 
-  if (!authData) {
-    logger.error("Auth data not found");
-    logger.info("Returning no data");
-    return res.send({});
-  }
-
-  logger.info("Parsing payload...");
-
   const validation = calculateTaxesPayloadSchema.safeParse(payload);
 
   if (!validation.success) {
