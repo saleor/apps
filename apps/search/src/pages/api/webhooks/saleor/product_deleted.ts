@@ -13,13 +13,13 @@ export const config = {
 
 export const webhookProductDeleted = new SaleorAsyncWebhook<ProductDeleted>({
   webhookPath: "api/webhooks/saleor/product_deleted",
-  asyncEvent: "PRODUCT_DELETED",
+  event: "PRODUCT_DELETED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: ProductDeletedDocument,
+  query: ProductDeletedDocument,
 });
 
 export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, context) => {
-  const debug = createDebug(`Webhook handler - ${webhookProductDeleted.asyncEvent}`);
+  const debug = createDebug(`Webhook handler - ${webhookProductDeleted.event}`);
 
   const { event, authData } = context;
   debug(

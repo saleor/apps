@@ -17,7 +17,8 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
-    "@saleor/app-sdk": "0.29.0",
+    "@saleor/app-sdk": "0.34.0",
+    "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.7.2",
     "@sentry/nextjs": "^7.31.1",
     "@types/debug": "^4.1.7",
@@ -36,8 +37,7 @@
     "react-hook-form": "^7.39.1",
     "react-instantsearch-hooks-web": "^6.38.0",
     "react-query": "^3.39.2",
-    "urql": "^3.0.3",
-    "@saleor/apps-shared": "workspace:*"
+    "urql": "^3.0.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.11",
@@ -54,9 +54,9 @@
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.2",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-config-saleor": "workspace:*",
     "prettier": "^2.7.1",
-    "typescript": "4.8.4",
-    "eslint-config-saleor": "workspace:*"
+    "typescript": "4.8.4"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
