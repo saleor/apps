@@ -1,27 +1,87 @@
+import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
+import { createClient } from "../../../lib/graphql";
 import { createLogger } from "../../../lib/logger";
-import { withTaxesWebhook } from "../../../lib/saleor/with-taxes-webhook";
+import { calculateTaxesPayloadSchema, ExpectedWebhookPayload } from "../../../lib/saleor/schema";
+import { GetChannelsConfigurationService } from "../../../modules/channels-configuration/get-channels-configuration.service";
+import { GetProvidersConfigurationService } from "../../../modules/providers-configuration/get-providers-configuration.service";
 import { ActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
-import { TaxSaleorSyncWebhook } from "../../../modules/taxes/tax-webhook";
 
-export const orderCalculateTaxesSyncWebhook = new TaxSaleorSyncWebhook({
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ExpectedWebhookPayload>({
   name: "OrderCalculateTaxes",
   apl: saleorApp.apl,
-  syncEvent: "ORDER_CALCULATE_TAXES",
-  subscriptionQueryAst: UntypedCalculateTaxesDocument,
+  event: "ORDER_CALCULATE_TAXES",
+  query: UntypedCalculateTaxesDocument,
   webhookPath: "/api/webhooks/order-calculate-taxes",
 });
 
-const handler = withTaxesWebhook(async (payload, config, res) => {
-  const logger = createLogger({});
-  logger.info("Inside ORDER_CALCULATE_TAXES handler");
-  const { provider, channel } = config;
-  const taxProvider = new ActiveTaxProvider(provider);
-  const calculatedTaxes = await taxProvider.calculate(payload.taxBase, channel);
+export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+  const logger = createLogger({ event: ctx.event });
+  const { authData, payload } = ctx;
+  logger.info({ payload }, "Handler called with payload");
 
-  logger.info({ calculatedTaxes }, "Taxes calculated");
-  return res.status(200).json(calculatedTaxes);
+  const validation = calculateTaxesPayloadSchema.safeParse(payload);
+
+  if (!validation.success) {
+    logger.error({ error: validation.error.message }, "Payload is invalid");
+    logger.info("Returning no data");
+    return res.status(200).json({});
+  }
+
+  const { data } = validation;
+  logger.info({ data }, "Payload is valid.");
+
+  try {
+    const client = createClient(authData.saleorApiUrl, async () =>
+      Promise.resolve({ token: authData.token })
+    );
+
+    const providersConfig = await new GetProvidersConfigurationService({
+      saleorApiUrl: authData.saleorApiUrl,
+      apiClient: client,
+    }).getConfiguration();
+
+    const channelsConfig = await new GetChannelsConfigurationService({
+      saleorApiUrl: authData.saleorApiUrl,
+      apiClient: client,
+    }).getConfiguration();
+
+    logger.info({ providersConfig }, "Providers configuration returned");
+
+    const channelSlug = payload.taxBase.channel.slug;
+    const channelConfig = channelsConfig[channelSlug];
+
+    if (!channelConfig) {
+      logger.error(`Channel config not found for channel ${channelSlug}`);
+      logger.info("Returning no data");
+      return res.send({});
+    }
+
+    const providerInstance = providersConfig.find(
+      (instance) => instance.id === channelConfig.providerInstanceId
+    );
+
+    if (!providerInstance) {
+      logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+      logger.info("Returning no data");
+      return res.send({});
+    }
+
+    const taxProvider = new ActiveTaxProvider(providerInstance);
+    const calculatedTaxes = await taxProvider.calculate(data.taxBase, channelConfig);
+
+    logger.info({ calculatedTaxes }, "Taxes calculated");
+    return res.send(ctx.buildResponse(calculatedTaxes));
+  } catch (error) {
+    logger.error({ error }, "Error while calculating taxes");
+    logger.info("Returning no data");
+    return res.send({});
+  }
 });
-
-export default orderCalculateTaxesSyncWebhook.createHandler(handler);
