@@ -2,9 +2,10 @@ import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../../generated/graphql";
-import { ResponseTaxPayload } from "../../types";
+
 import { ChannelConfig } from "../../../channels-configuration/channels-config";
 import { taxLineResolver } from "../../tax-line-resolver";
+import { ResponseTaxPayload } from "../../types";
 import { AvataxConfig } from "./avatax-config";
 
 const SHIPPING_ITEM_CODE = "Shipping";
@@ -88,7 +89,7 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
     shipping_price_gross_amount: shippingGrossAmount,
     shipping_price_net_amount: shippingNetAmount,
     // todo: add shipping tax rate
-    shipping_tax_rate: "0",
+    shipping_tax_rate: 0,
     lines:
       productLines?.map((line) => {
         const lineTaxCalculated = line.taxCalculated ?? 0;
@@ -98,7 +99,7 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,
           // todo: add tax rate
-          tax_rate: "0",
+          tax_rate: 0,
         };
       }) ?? [],
   };
