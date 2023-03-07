@@ -1,16 +1,13 @@
 import { logger as pinoLogger } from "../../lib/logger";
-import { AuthData } from "@saleor/app-sdk/APL";
-import { getActiveMjmlSettings } from "./get-active-mjml-settings";
 import { compileMjml } from "./compile-mjml";
 import { compileHandlebarsTemplate } from "./compile-handlebars-template";
 import { sendEmailWithSmtp } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
+import { MjmlConfiguration } from "./configuration/mjml-config";
 
 interface SendMjmlArgs {
-  authData: AuthData;
-  mjmlConfigurationId: string;
-  channel: string;
+  mjmlConfiguration: MjmlConfiguration;
   recipientEmail: string;
   event: MessageEventTypes;
   payload: any;
@@ -24,36 +21,17 @@ export interface EmailServiceResponse {
 }
 
 export const sendMjml = async ({
-  authData,
-  channel,
   payload,
   recipientEmail,
   event,
-  mjmlConfigurationId,
+  mjmlConfiguration,
 }: SendMjmlArgs) => {
   const logger = pinoLogger.child({
     fn: "sendMjml",
     event,
   });
 
-  const settings = await getActiveMjmlSettings({
-    authData,
-    channel,
-    configurationId: mjmlConfigurationId,
-  });
-
-  if (!settings) {
-    logger.debug("No active settings, skipping");
-    return {
-      errors: [
-        {
-          message: "No active settings",
-        },
-      ],
-    };
-  }
-
-  const eventSettings = settings.events.find((e) => e.eventType === event);
+  const eventSettings = mjmlConfiguration.events.find((e) => e.eventType === event);
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
     return {
@@ -154,13 +132,13 @@ export const sendMjml = async ({
     mailData: {
       text: emailBodyPlaintext,
       html: emailBodyHtml,
-      from: `${settings.senderName} <${settings.senderEmail}>`,
+      from: `${mjmlConfiguration.senderName} <${mjmlConfiguration.senderEmail}>`,
       to: recipientEmail,
       subject: emailSubject,
     },
     smtpSettings: {
-      host: settings.smtpHost,
-      port: parseInt(settings.smtpPort, 10),
+      host: mjmlConfiguration.smtpHost,
+      port: parseInt(mjmlConfiguration.smtpPort, 10),
     },
   });
 

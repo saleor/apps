@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { trpcClient } from "../../../../../modules/trpc/trpc-client";
 
-import { checkMessageEventType } from "../../../../../modules/event-handlers/check-message-event-type";
+import { parseMessageEventType } from "../../../../../modules/event-handlers/parse-message-event-type";
 import { ConfigurationPageBaseLayout } from "../../../../../modules/ui/configuration-page-base-layout";
 import { EventConfigurationForm } from "../../../../../modules/mjml/configuration/ui/mjml-event-configuration-form";
 import { LoadingIndicator } from "../../../../../modules/ui/loading-indicator";
@@ -13,7 +13,7 @@ const EventConfigurationPage: NextPage = () => {
 
   const configurationId = router.query.configurationId as string;
   const eventTypeFromQuery = router.query.eventType as string | undefined;
-  const eventType = checkMessageEventType(eventTypeFromQuery);
+  const eventType = parseMessageEventType(eventTypeFromQuery);
 
   const {
     data: configuration,

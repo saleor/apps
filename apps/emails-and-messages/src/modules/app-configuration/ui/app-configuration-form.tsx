@@ -83,7 +83,7 @@ export const AppConfigurationForm = (props: AppConfigurationFormProps) => {
                 <SwitchSelectorButton
                   value={button.value.toString()}
                   onClick={() => onChange(button.value)}
-                  activeTab={value.toString()}
+                  activeTab={value?.toString() || "false"}
                   key={button.label}
                 >
                   {button.label}

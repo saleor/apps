@@ -1,65 +1,91 @@
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
 import { createSettingsManager } from "./metadata-manager";
-import { ChannelsFetcher } from "../channels/channels-fetcher";
-import { ShopInfoFetcher } from "../shop-info/shop-info-fetcher";
-import { FallbackAppConfig } from "./fallback-app-config";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
+import { AppConfig, AppConfigurationPerChannel } from "./app-config";
+import { getDefaultEmptyAppConfiguration } from "./app-config-container";
 
-// todo test
-export class GetAppConfigurationService {
-  constructor(
-    private settings: {
-      apiClient: Client;
-      saleorApiUrl: string;
-    }
-  ) {}
+const logger = pinoLogger.child({
+  service: "AppConfigurationService",
+});
+
+export class AppConfigurationService {
+  private configurationData?: AppConfig;
+  private metadataConfigurator: PrivateMetadataAppConfigurator;
+
+  constructor(args: { apiClient: Client; saleorApiUrl: string; initialData?: AppConfig }) {
+    this.metadataConfigurator = new PrivateMetadataAppConfigurator(
+      createSettingsManager(args.apiClient),
+      args.saleorApiUrl
+    );
+  }
+
+  // Fetch configuration from Saleor API and cache it
+  private async pullConfiguration() {
+    logger.debug("Fetch configuration from Saleor API");
+
+    const config = await this.metadataConfigurator.getConfig();
+    this.configurationData = config;
+  }
+
+  // Push configuration to Saleor API
+  private async pushConfiguration() {
+    logger.debug("Push configuration to Saleor API");
+
+    await this.metadataConfigurator.setConfig(this.configurationData!);
+  }
 
   async getConfiguration() {
-    const logger = pinoLogger.child({
-      service: "GetAppConfigurationService",
-      saleorApiUrl: this.settings.saleorApiUrl,
-    });
+    logger.debug("Get configuration");
 
-    const { saleorApiUrl, apiClient } = this.settings;
+    if (!this.configurationData) {
+      logger.debug("No configuration found in cache. Will fetch it from Saleor API");
+      await this.pullConfiguration();
+    }
 
-    const appConfigurator = new PrivateMetadataAppConfigurator(
-      createSettingsManager(apiClient),
-      saleorApiUrl
-    );
-
-    const savedAppConfig = (await appConfigurator.getConfig()) ?? null;
+    const savedAppConfig = this.configurationData ?? null;
 
     logger.debug(savedAppConfig, "Retrieved app config from Metadata. Will return it");
 
     if (savedAppConfig) {
       return savedAppConfig;
     }
+  }
 
-    logger.info("App config not found in metadata. Will create default config now.");
+  // Saves configuration to Saleor API and cache it
+  async setConfigurationRoot(config: AppConfig) {
+    logger.debug("Set configuration");
 
-    const channelsFetcher = new ChannelsFetcher(apiClient);
-    const shopInfoFetcher = new ShopInfoFetcher(apiClient);
+    this.configurationData = config;
+    await this.pushConfiguration();
+  }
 
-    const [channels, shopAppConfiguration] = await Promise.all([
-      channelsFetcher.fetchChannels(),
-      shopInfoFetcher.fetchShopInfo(),
-    ]);
+  // Returns channel configuration if existing. Otherwise returns default empty one
+  async getChannelConfiguration(channel: string) {
+    logger.debug("Get channel configuration");
+    const configurations = await this.getConfiguration();
+    if (!configurations) {
+      return getDefaultEmptyAppConfiguration();
+    }
 
-    logger.debug(channels, "Fetched channels");
-    logger.debug(shopAppConfiguration, "Fetched shop app configuration");
+    const channelConfiguration = configurations.configurationsPerChannel[channel];
+    return channelConfiguration || getDefaultEmptyAppConfiguration();
+  }
 
-    const appConfig = FallbackAppConfig.createFallbackConfigFromExistingShopAndChannels(
-      channels ?? [],
-      shopAppConfiguration
-    );
+  async setChannelConfiguration({
+    channel,
+    configuration,
+  }: {
+    channel: string;
+    configuration: AppConfigurationPerChannel;
+  }) {
+    logger.debug("Set channel configuration");
+    let configurations = await this.getConfiguration();
+    if (!configurations) {
+      configurations = { configurationsPerChannel: {} };
+    }
 
-    logger.debug(appConfig, "Created a fallback AppConfig. Will save it.");
-
-    await appConfigurator.setConfig(appConfig);
-
-    logger.info("Saved initial AppConfig");
-
-    return appConfig;
+    configurations.configurationsPerChannel[channel] = configuration;
+    await this.setConfigurationRoot(configurations);
   }
 }

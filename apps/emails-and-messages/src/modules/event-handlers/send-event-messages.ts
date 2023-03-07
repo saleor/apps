@@ -1,8 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
+import { AppConfigurationService } from "../app-configuration/get-app-configuration.service";
+import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
 import { sendMjml } from "../mjml/send-mjml";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
-import { appRouter } from "../trpc/trpc-app-router";
 import { MessageEventTypes } from "./message-event-types";
 
 interface SendEventMessagesArgs {
@@ -11,6 +13,7 @@ interface SendEventMessagesArgs {
   event: MessageEventTypes;
   authData: AuthData;
   payload: any;
+  client: Client;
 }
 
 export const sendEventMessages = async ({
@@ -19,6 +22,7 @@ export const sendEventMessages = async ({
   event,
   authData,
   payload,
+  client,
 }: SendEventMessagesArgs) => {
   const logger = pinoLogger.child({
     fn: "sendEventMessages",
@@ -26,16 +30,12 @@ export const sendEventMessages = async ({
 
   logger.debug("Function called");
 
-  // get app configuration
-  const caller = appRouter.createCaller({
-    appId: authData.appId,
+  const appConfigurationService = new AppConfigurationService({
+    apiClient: client,
     saleorApiUrl: authData.saleorApiUrl,
-    token: authData.token,
-    ssr: true,
   });
 
-  const appConfigurations = await caller.appConfiguration.fetch();
-  const channelAppConfiguration = appConfigurations.configurationsPerChannel[channel];
+  const channelAppConfiguration = await appConfigurationService.getChannelConfiguration(channel);
 
   if (!channelAppConfiguration) {
     logger.warn("App has no configuration for this channel");
@@ -50,18 +50,27 @@ export const sendEventMessages = async ({
 
   if (channelAppConfiguration.mjmlConfigurationId) {
     logger.debug("Channel has assigned MJML configuration");
-    const mjmlStatus = await sendMjml({
-      authData,
-      channel,
-      event,
-      payload,
-      recipientEmail,
-      mjmlConfigurationId: channelAppConfiguration.mjmlConfigurationId,
+
+    const mjmlConfigurationService = new MjmlConfigurationService({
+      apiClient: client,
+      saleorApiUrl: authData.saleorApiUrl,
     });
 
-    if (mjmlStatus?.errors.length) {
-      logger.error("MJML errors");
-      logger.error(mjmlStatus?.errors);
+    const mjmlConfiguration = await mjmlConfigurationService.getConfiguration({
+      id: channelAppConfiguration.mjmlConfigurationId,
+    });
+    if (mjmlConfiguration) {
+      const mjmlStatus = await sendMjml({
+        event,
+        payload,
+        recipientEmail,
+        mjmlConfiguration,
+      });
+
+      if (mjmlStatus?.errors.length) {
+        logger.error("MJML errors");
+        logger.error(mjmlStatus?.errors);
+      }
     }
   }
   const sendgridStatus = await sendSendgrid({

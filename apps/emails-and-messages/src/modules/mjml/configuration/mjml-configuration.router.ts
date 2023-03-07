@@ -1,4 +1,3 @@
-import { PrivateMetadataMjmlConfigurator } from "./mjml-configurator";
 import { logger as pinoLogger } from "../../../lib/logger";
 import {
   mjmlCreateConfigurationSchema,
@@ -9,134 +8,96 @@ import {
   mjmlUpdateEventConfigurationInputSchema,
   mjmlUpdateOrCreateConfigurationSchema,
 } from "./mjml-config-input-schema";
-import { GetMjmlConfigurationService } from "./get-mjml-configuration.service";
+import { MjmlConfigurationService } from "./get-mjml-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
-import { createSettingsManager } from "../../app-configuration/metadata-manager";
 import { z } from "zod";
 import { compileMjml } from "../compile-mjml";
 import Handlebars from "handlebars";
-import { MjmlConfigContainer } from "./mjml-config-container";
 import { TRPCError } from "@trpc/server";
 
+// Allow access only for the dashboard users and attaches the
+// configuration service to the context
+const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
+  next({
+    ctx: {
+      ...ctx,
+      configurationService: new MjmlConfigurationService({
+        apiClient: ctx.apiClient,
+        saleorApiUrl: ctx.saleorApiUrl,
+      }),
+    },
+  })
+);
+
 export const mjmlConfigurationRouter = router({
-  fetch: protectedClientProcedure.query(async ({ ctx }) => {
+  fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-
     logger.debug("mjmlConfigurationRouter.fetch called");
-
-    return new GetMjmlConfigurationService({
-      apiClient: ctx.apiClient,
-      saleorApiUrl: ctx.saleorApiUrl,
-    }).getConfiguration();
+    return ctx.configurationService.getConfigurationRoot();
   }),
-  getConfiguration: protectedClientProcedure
+  getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlGetConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-
       logger.debug(input, "mjmlConfigurationRouter.get called");
-
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-
-      const configRoot = await mjmlConfigurator.getConfig();
-      return MjmlConfigContainer.getConfiguration(configRoot)(input);
+      return ctx.configurationService.getConfiguration(input);
     }),
-  getConfigurations: protectedClientProcedure
+  getConfigurations: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.getConfigurations called");
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-      const configRoot = await mjmlConfigurator.getConfig();
-      return MjmlConfigContainer.getConfigurations(configRoot)(input);
+      return ctx.configurationService.getConfigurations(input);
     }),
-  createConfiguration: protectedClientProcedure
+  createConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlCreateConfigurationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.create called");
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-
-      const configRoot = await mjmlConfigurator.getConfig();
-      const newConfigurationRoot = MjmlConfigContainer.createConfiguration(configRoot)(input);
-
-      await mjmlConfigurator.setConfig(newConfigurationRoot);
-
-      return null;
+      return await ctx.configurationService.createConfiguration(input);
     }),
-  deleteConfiguration: protectedClientProcedure
+  deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlDeleteConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.delete called");
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
 
-      const configRoot = await mjmlConfigurator.getConfig();
-      const newConfigurationRoot = MjmlConfigContainer.deleteConfiguration(configRoot)(input);
-
-      await mjmlConfigurator.setConfig(newConfigurationRoot);
-
+      await ctx.configurationService.deleteConfiguration(input);
       return null;
     }),
-  updateOrCreateConfiguration: protectedClientProcedure
+  updateOrCreateConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlUpdateOrCreateConfigurationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-
       logger.debug(input, "mjmlConfigurationRouter.update or create called");
 
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-
-      const configRoot = await mjmlConfigurator.getConfig();
-
       const { id } = input;
-      if (!!id) {
-        const existingConfiguration = MjmlConfigContainer.getConfiguration(configRoot)({ id });
+      if (!id) {
+        return await ctx.configurationService.createConfiguration(input);
+      } else {
+        const existingConfiguration = await ctx.configurationService.getConfiguration({ id });
         if (!existingConfiguration) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Configuration not found",
           });
         }
-        // checking typeof id is not enough to satisfy typescript, so need to override id field issue
         const configuration = {
           id,
           ...input,
           events: existingConfiguration.events,
         };
-
-        const newConfigurationRoot =
-          MjmlConfigContainer.updateConfiguration(configRoot)(configuration);
-        await mjmlConfigurator.setConfig(newConfigurationRoot);
+        await ctx.configurationService.updateConfiguration(configuration);
         return configuration;
-      } else {
-        const newConfigurationRoot = MjmlConfigContainer.createConfiguration(configRoot)(input);
-        await mjmlConfigurator.setConfig(newConfigurationRoot);
-        return newConfigurationRoot.configurations[newConfigurationRoot.configurations.length - 1];
       }
     }),
-  getEventConfiguration: protectedClientProcedure
+  getEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
@@ -144,22 +105,17 @@ export const mjmlConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.getEventConfiguration or create called");
 
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-
-      const configRoot = await mjmlConfigurator.getConfig();
-
-      const configuration = MjmlConfigContainer.getConfiguration(configRoot)({
+      const configuration = await ctx.configurationService.getConfiguration({
         id: input.configurationId,
       });
+
       if (!configuration) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Configuration not found",
         });
       }
+
       const event = configuration.events.find((e) => e.eventType === input.eventType);
       if (!event) {
         throw new TRPCError({
@@ -169,7 +125,7 @@ export const mjmlConfigurationRouter = router({
       }
       return event;
     }),
-  updateEventConfiguration: protectedClientProcedure
+  updateEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(mjmlUpdateEventConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -177,22 +133,17 @@ export const mjmlConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
 
-      const mjmlConfigurator = new PrivateMetadataMjmlConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
-
-      const configRoot = await mjmlConfigurator.getConfig();
-
-      const configuration = MjmlConfigContainer.getConfiguration(configRoot)({
+      const configuration = await ctx.configurationService.getConfiguration({
         id: input.configurationId,
       });
+
       if (!configuration) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Configuration not found",
         });
       }
+
       const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
       configuration.events[eventIndex] = {
         active: input.active,
@@ -200,13 +151,11 @@ export const mjmlConfigurationRouter = router({
         template: input.template,
         subject: input.subject,
       };
-      const newConfigurationRoot =
-        MjmlConfigContainer.updateConfiguration(configRoot)(configuration);
-      await mjmlConfigurator.setConfig(newConfigurationRoot);
+      await ctx.configurationService.updateConfiguration(configuration);
       return configuration;
     }),
 
-  renderTemplate: protectedClientProcedure
+  renderTemplate: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(
       z.object({

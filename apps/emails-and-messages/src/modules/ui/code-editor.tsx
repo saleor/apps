@@ -21,7 +21,6 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
 
   const handleOnChange = useCallback(
     (value?: string) => {
-      console.log("ON CHANGE");
       onChange(value ?? "");
     },
     [value]
