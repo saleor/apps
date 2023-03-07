@@ -13,6 +13,7 @@ const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
 };
 
+// * This type is related to `TaxLineItem` from TaxJar. It should be unified.
 type FetchTaxesLinePayload = {
   id: string;
   quantity: number;
