@@ -12,9 +12,6 @@ const useStyles = makeStyles((theme) => {
     formContainer: {
       top: 0,
     },
-    instructionsContainer: {
-      padding: 15,
-    },
     configurationColumn: {
       display: "flex",
       flexDirection: "column",
