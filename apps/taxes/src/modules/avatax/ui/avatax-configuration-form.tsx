@@ -13,10 +13,10 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { trpcClient } from "../../../../trpc/trpc-client";
-import { AppLink } from "../../../../ui/app-link";
-import { useInstanceId } from "../../../tax-context";
-import { avataxInstanceConfigSchema } from "../avatax-config";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AppLink } from "../../ui/app-link";
+import { useInstanceId } from "../../taxes/tax-context";
+import { avataxConfigSchema, avataxInstanceConfigSchema } from "../avatax-config";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -26,17 +26,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const schema = avataxInstanceConfigSchema.omit({ provider: true });
+const schema = avataxConfigSchema;
 type FormValues = z.infer<typeof schema>;
 
 const defaultValues: FormValues = {
-  config: {
-    companyName: "",
-    isAutocommit: false,
-    isSandbox: false,
-    password: "",
-    username: "",
-  },
+  companyName: "",
+  isAutocommit: false,
+  isSandbox: false,
+  password: "",
+  username: "",
   name: "",
 };
 
@@ -50,11 +48,31 @@ export const AvataxConfigurationForm = () => {
   });
   const { instanceId, setInstanceId } = useInstanceId();
   const { refetch: refetchChannelConfigurationData } =
-    trpcClient.channelsConfiguration.fetch.useQuery();
-  const { data: providersConfigurationData, refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery();
+    trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    });
+  const { data: providersConfig, refetch: refetchProvidersConfigurationData } =
+    trpcClient.providersConfiguration.getAll.useQuery(undefined, {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    });
 
-  const instance = providersConfigurationData?.find((instance) => instance.id === instanceId);
+  const instance = providersConfig?.find((instance) => instance.id === instanceId);
 
   const resetInstanceId = () => {
     setInstanceId(null);
@@ -62,16 +80,16 @@ export const AvataxConfigurationForm = () => {
 
   React.useEffect(() => {
     if (instance) {
-      const { provider, id, ...values } = instance;
-      reset(values);
+      const { config } = instance;
+      reset(config);
     } else {
       reset(defaultValues);
     }
   }, [instance, reset]);
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.providersConfiguration.create.useMutation({
-      onSuccess({ id }) {
+    trpcClient.avataxConfiguration.post.useMutation({
+      onSuccess({ data: { id } }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         appBridge?.dispatch(
@@ -94,7 +112,7 @@ export const AvataxConfigurationForm = () => {
     });
 
   const { mutate: updateMutation, isLoading: isUpdateLoading } =
-    trpcClient.providersConfiguration.update.useMutation({
+    trpcClient.avataxConfiguration.patch.useMutation({
       onSuccess() {
         refetchProvidersConfigurationData();
         appBridge?.dispatch(
@@ -116,7 +134,7 @@ export const AvataxConfigurationForm = () => {
       },
     });
 
-  const { mutate: deleteMutation } = trpcClient.providersConfiguration.delete.useMutation({
+  const { mutate: deleteMutation } = trpcClient.avataxConfiguration.delete.useMutation({
     onSuccess() {
       resetInstanceId();
       refetchProvidersConfigurationData();
@@ -144,21 +162,15 @@ export const AvataxConfigurationForm = () => {
     fullWidth: true,
   };
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (value: FormValues) => {
     if (instanceId) {
       updateMutation({
         id: instanceId,
-        provider: {
-          ...values,
-          provider: "avatax",
-        },
+        value,
       });
     } else {
       createMutation({
-        provider: {
-          ...values,
-          provider: "avatax",
-        },
+        value,
       });
     }
   };
@@ -201,9 +213,9 @@ export const AvataxConfigurationForm = () => {
             <InputLabel>
               Sandbox
               <Controller
-                name={"config.isSandbox"}
+                name={"isSandbox"}
                 control={control}
-                defaultValue={defaultValues.config.isSandbox}
+                defaultValue={defaultValues.isSandbox}
                 render={({ field }) => (
                   <Switch
                     {...field}
@@ -229,9 +241,9 @@ export const AvataxConfigurationForm = () => {
             <InputLabel>
               Autocommit
               <Controller
-                name={"config.isAutocommit"}
+                name={"isAutocommit"}
                 control={control}
-                defaultValue={defaultValues.config.isAutocommit}
+                defaultValue={defaultValues.isAutocommit}
                 render={({ field }) => (
                   <Switch
                     {...field}
@@ -254,39 +266,39 @@ export const AvataxConfigurationForm = () => {
           </Grid>
           <Grid item xs={12}>
             <Controller
-              name="config.username"
+              name="username"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField type="text" {...field} label="Username" {...textFieldProps} />
               )}
             />
-            {formState.errors.config?.username && (
-              <FormHelperText error>{formState.errors.config.username.message}</FormHelperText>
+            {formState.errors.username && (
+              <FormHelperText error>{formState.errors.username.message}</FormHelperText>
             )}
           </Grid>
           <Grid item xs={12}>
             <Controller
-              name="config.password"
+              name="password"
               control={control}
-              defaultValue={defaultValues.config.password}
+              defaultValue={defaultValues.password}
               render={({ field }) => <TextField label="Password" {...field} {...textFieldProps} />}
             />
-            {formState.errors.config?.password && (
-              <FormHelperText error>{formState.errors.config.password.message}</FormHelperText>
+            {formState.errors.password && (
+              <FormHelperText error>{formState.errors.password.message}</FormHelperText>
             )}
           </Grid>
           <Grid item xs={12}>
             <Controller
-              name="config.companyName"
+              name="companyName"
               control={control}
-              defaultValue={defaultValues.config.companyName}
+              defaultValue={defaultValues.companyName}
               render={({ field }) => (
                 <TextField type="text" {...field} label="Company name" {...textFieldProps} />
               )}
             />
-            {formState.errors.config?.companyName && (
-              <FormHelperText error>{formState.errors.config.companyName.message}</FormHelperText>
+            {formState.errors.companyName && (
+              <FormHelperText error>{formState.errors.companyName.message}</FormHelperText>
             )}
           </Grid>
         </Grid>

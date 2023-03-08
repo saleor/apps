@@ -78,9 +78,32 @@ export const ChannelTaxProviderForm = () => {
   const { channelSlug } = useChannelSlug();
 
   const { data: channelConfigurationData, refetch: refetchChannelConfigurationData } =
-    trpcClient.channelsConfiguration.fetch.useQuery();
+    trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    });
 
-  const { data: providerInstances = [] } = trpcClient.providersConfiguration.getAll.useQuery();
+  const { data: providerInstances = [] } = trpcClient.providersConfiguration.getAll.useQuery(
+    undefined,
+    {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    }
+  );
   const channelConfig = channelConfigurationData?.[channelSlug];
 
   const { mutate, isLoading } = trpcClient.channelsConfiguration.upsert.useMutation({
@@ -136,10 +159,10 @@ export const ChannelTaxProviderForm = () => {
                 defaultValue={""}
                 render={({ field }) => (
                   <Select fullWidth {...field}>
-                    {providerInstances.map(({ name, id, provider }) => (
-                      <MenuItem value={id} key={name}>
+                    {providerInstances.map(({ config, id, provider }) => (
+                      <MenuItem value={id} key={id}>
                         <div className={styles.menuItem}>
-                          <Typography variant="body1">{name}</Typography>
+                          <Typography variant="body1">{config.name}</Typography>
                           <ProviderIcon size={"medium"} provider={provider} />
                         </div>
                       </MenuItem>

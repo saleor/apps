@@ -1,5 +1,4 @@
-import { z, ZodTypeAny } from "zod";
-import { TaxProviderName } from "./providers/config";
+import { z } from "zod";
 
 export const addressSchema = z.object({
   country: z.string(),
@@ -8,19 +7,3 @@ export const addressSchema = z.object({
   city: z.string(),
   street: z.string(),
 });
-
-const baseProviderInstanceSchema = z.object({
-  name: z.string().min(1),
-});
-
-export const createProviderInstanceSchema = <
-  TConfig extends ZodTypeAny,
-  TProvider extends TaxProviderName
->(
-  provider: TProvider,
-  schema: TConfig
-) =>
-  baseProviderInstanceSchema.extend({
-    provider: z.literal(provider),
-    config: schema,
-  });

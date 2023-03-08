@@ -13,9 +13,9 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { trpcClient } from "../../../../trpc/trpc-client";
-import { useInstanceId } from "../../../tax-context";
-import { taxJarInstanceConfigSchema } from "../taxjar-config";
+import { trpcClient } from "../../trpc/trpc-client";
+import { useInstanceId } from "../../taxes/tax-context";
+import { taxJarConfigSchema, taxJarInstanceConfigSchema } from "../taxjar-config";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -25,15 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const schema = taxJarInstanceConfigSchema.omit({ provider: true });
+const schema = taxJarConfigSchema;
 type FormValues = z.infer<typeof schema>;
 
 const defaultValues: FormValues = {
-  config: {
-    apiKey: "",
-    isSandbox: false,
-  },
   name: "",
+  apiKey: "",
+  isSandbox: false,
 };
 
 export const TaxJarConfigurationForm = () => {
@@ -51,16 +49,36 @@ export const TaxJarConfigurationForm = () => {
   };
 
   const { refetch: refetchChannelConfigurationData } =
-    trpcClient.channelsConfiguration.fetch.useQuery();
+    trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    });
 
   const { data: providersConfigurationData, refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery();
+    trpcClient.providersConfiguration.getAll.useQuery(undefined, {
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    });
 
   const instance = providersConfigurationData?.find((instance) => instance.id === instanceId);
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.providersConfiguration.create.useMutation({
-      onSuccess({ id }) {
+    trpcClient.taxJarConfiguration.post.useMutation({
+      onSuccess({ data: { id } }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
@@ -84,7 +102,7 @@ export const TaxJarConfigurationForm = () => {
     });
 
   const { mutate: updateMutation, isLoading: isUpdateLoading } =
-    trpcClient.providersConfiguration.update.useMutation({
+    trpcClient.taxJarConfiguration.patch.useMutation({
       onSuccess() {
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
@@ -108,7 +126,7 @@ export const TaxJarConfigurationForm = () => {
     });
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
-    trpcClient.providersConfiguration.delete.useMutation({
+    trpcClient.taxJarConfiguration.delete.useMutation({
       onSuccess() {
         resetInstanceId();
         refetchProvidersConfigurationData();
@@ -134,8 +152,8 @@ export const TaxJarConfigurationForm = () => {
 
   React.useEffect(() => {
     if (instance) {
-      const { provider, id, ...values } = instance;
-      reset(values);
+      const { config } = instance;
+      reset(config);
     } else {
       reset({ ...defaultValues });
     }
@@ -145,21 +163,15 @@ export const TaxJarConfigurationForm = () => {
     fullWidth: true,
   };
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (value: FormValues) => {
     if (instanceId) {
       updateMutation({
         id: instanceId,
-        provider: {
-          ...values,
-          provider: "taxjar",
-        },
+        value,
       });
     } else {
       createMutation({
-        provider: {
-          ...values,
-          provider: "taxjar",
-        },
+        value,
       });
     }
   };
@@ -200,22 +212,22 @@ export const TaxJarConfigurationForm = () => {
           </Grid>
           <Grid item xs={12}>
             <Controller
-              name="config.apiKey"
+              name="apiKey"
               control={control}
-              defaultValue={defaultValues.config.apiKey}
+              defaultValue={defaultValues.apiKey}
               render={({ field }) => <TextField label="API Key" {...field} {...textFieldProps} />}
             />
-            {formState.errors.config?.apiKey && (
-              <FormHelperText error>{formState.errors.config?.apiKey.message}</FormHelperText>
+            {formState.errors?.apiKey && (
+              <FormHelperText error>{formState.errors?.apiKey.message}</FormHelperText>
             )}
           </Grid>
           <Grid item xs={12}>
             <InputLabel>
               Sandbox
               <Controller
-                name={"config.isSandbox"}
+                name={"isSandbox"}
                 control={control}
-                defaultValue={defaultValues.config.isSandbox}
+                defaultValue={defaultValues.isSandbox}
                 render={({ field }) => (
                   <Switch
                     {...field}
