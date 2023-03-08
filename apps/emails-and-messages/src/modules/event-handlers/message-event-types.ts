@@ -1,3 +1,5 @@
+import { AsyncWebhookEventType } from "@saleor/app-sdk/types";
+
 export const messageEventTypes = [
   "ORDER_CREATED",
   "ORDER_FULFILLED",
@@ -7,7 +9,9 @@ export const messageEventTypes = [
   "INVOICE_SENT",
 ] as const;
 
-export type MessageEventTypes = (typeof messageEventTypes)[number];
+type Subset<K, T extends K> = T;
+
+export type MessageEventTypes = Subset<AsyncWebhookEventType, (typeof messageEventTypes)[number]>;
 
 export const messageEventTypesLabels: Record<MessageEventTypes, string> = {
   ORDER_CREATED: "Order created",
