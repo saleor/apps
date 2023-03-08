@@ -60,7 +60,7 @@ export const ChannelsConfiguration = () => {
   }, [channels.data, activeChannelSlug]);
 
   if (channels.isLoading || !channels.data) {
-    return <Loader />;
+    return null;
   }
 
   if (!activeChannel) {

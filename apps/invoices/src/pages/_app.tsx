@@ -15,7 +15,8 @@ import { MacawThemeProvider } from "@saleor/apps-shared";
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
-export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
+export const appBridgeInstance =
+  typeof window !== "undefined" ? new AppBridge({ autoNotifyReady: false }) : undefined;
 
 function NextApp({ Component, pageProps }: AppProps) {
   /**
