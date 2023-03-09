@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
 import { isInIframe } from "@saleor/apps-shared";
-import { Loader } from "../modules/ui/loader";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -18,7 +17,7 @@ const IndexPage: NextPage = () => {
   }, [isMounted, appBridgeState?.ready]);
 
   if (isInIframe()) {
-    return <Loader />;
+    return null;
   }
 
   return (
