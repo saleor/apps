@@ -13,5 +13,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "next": "^13.2.3"
   }
 }
