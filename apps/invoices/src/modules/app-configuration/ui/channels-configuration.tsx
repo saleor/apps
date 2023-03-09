@@ -7,7 +7,6 @@ import { AddressForm } from "./address-form";
 import { ChannelsList } from "./channels-list";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
-import { Loader } from "../../ui/loader";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -60,7 +59,7 @@ export const ChannelsConfiguration = () => {
   }, [channels.data, activeChannelSlug]);
 
   if (channels.isLoading || !channels.data) {
-    return <Loader />;
+    return null;
   }
 
   if (!activeChannel) {

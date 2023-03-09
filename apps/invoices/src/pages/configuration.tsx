@@ -9,16 +9,15 @@ const ConfigurationPage: NextPage = () => {
   const channels = trpcClient.channels.fetch.useQuery();
   const router = useRouter();
 
-  const { appBridge } = useAppBridge();
+  const { appBridge, appBridgeState } = useAppBridge();
 
-  const openInNewTab = (url: string) => {
-    appBridge?.dispatch(
-      actions.Redirect({
-        to: url,
-        newContext: true,
-      })
-    );
-  };
+  useEffect(() => {
+    if (channels.isFetched && appBridge && !appBridgeState?.ready) {
+      if (appBridge && channels.isFetched) {
+        appBridge.dispatch(actions.NotifyReady());
+      }
+    }
+  }, [channels.isFetched, appBridge, appBridgeState?.ready]);
 
   useEffect(() => {
     if (channels.isSuccess && channels.data.length === 0) {

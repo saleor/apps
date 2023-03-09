@@ -4,8 +4,6 @@ import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import React, { useEffect } from "react";
 import { AppProps } from "next/app";
-
-import GraphQLProvider from "../providers/GraphQLProvider";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { trpcClient } from "../modules/trpc/trpc-client";
@@ -15,7 +13,8 @@ import { MacawThemeProvider } from "@saleor/apps-shared";
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
-export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
+export const appBridgeInstance =
+  typeof window !== "undefined" ? new AppBridge({ autoNotifyReady: false }) : undefined;
 
 function NextApp({ Component, pageProps }: AppProps) {
   /**
@@ -31,13 +30,11 @@ function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <GraphQLProvider>
-          <MacawThemeProvider>
-            <ThemeSynchronizer />
-            <RoutePropagator />
-            <Component {...pageProps} />
-          </MacawThemeProvider>
-        </GraphQLProvider>
+        <MacawThemeProvider>
+          <ThemeSynchronizer />
+          <RoutePropagator />
+          <Component {...pageProps} />
+        </MacawThemeProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
   );
