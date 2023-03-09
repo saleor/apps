@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 749941a: Update dependencies to fix config, so ESLint should work in IDEs
+- 749941a: Update dependencies to fix config, so ESLint should work in Jetbrains IDE
 
 ## 0.2.0
 
