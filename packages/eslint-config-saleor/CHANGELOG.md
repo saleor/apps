@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.2.1
+
+### Patch Changes
+
+- 749941a: Update dependencies to fix config, so ESLint should work in IDEs
+
 ## 0.2.0
 
 ### Minor Changes

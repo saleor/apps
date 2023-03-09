@@ -1,5 +1,16 @@
 # saleor-app-invoices
 
+## 1.8.0
+
+### Minor Changes
+
+- 639dfc3: App no longer shows initial loading spinner. It renders nothing until initial required data (channels) are fetched. When this happens, AppBridge informs Dashboard (via NotifyReady action) that it can be displayed.
+
+### Patch Changes
+
+- 639dfc3: Removed frontend GraphQL provider, because no frontend queries are used
+  - @saleor/apps-shared@1.3.0
+
 ## 1.7.2
 
 ### Patch Changes
