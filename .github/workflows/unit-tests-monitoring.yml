@@ -1,4 +1,4 @@
-name: Monitoring tests
+name: Monitoring App Backend tests
 
 on:
   pull_request:
