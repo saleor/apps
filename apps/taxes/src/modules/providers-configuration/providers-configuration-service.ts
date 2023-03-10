@@ -23,6 +23,7 @@ export class TaxProvidersConfigurationService {
     this.logger.debug(".getAll called");
     const taxJar = await this.taxJarConfigurationService.getAll();
     const avatax = await this.avataxConfigurationService.getAll();
+    // todo: add more clever way of joining the two. Maybe add updated_at date to the config and use it to sort?
     return [...taxJar, ...avatax];
   }
 }
