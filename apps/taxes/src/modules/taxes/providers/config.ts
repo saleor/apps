@@ -6,7 +6,7 @@ export const providerConfig = {
     icon: TaxJarIcon,
   },
   avatax: {
-    label: "Avalara",
+    label: "Avatax",
     icon: AvataxIcon,
   },
 };

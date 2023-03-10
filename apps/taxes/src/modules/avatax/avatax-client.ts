@@ -61,13 +61,13 @@ export class AvataxClient {
       return {
         authenticated: result.authenticated,
         ...(!result.authenticated && {
-          error: "Avalara was not able to authenticate with the provided credentials.",
+          error: "Avatax was not able to authenticate with the provided credentials.",
         }),
       };
     } catch (error) {}
     return {
       authenticated: false,
-      error: "Avalara was not able to authenticate with the provided credentials.",
+      error: "Avatax was not able to authenticate with the provided credentials.",
     };
   }
 }
