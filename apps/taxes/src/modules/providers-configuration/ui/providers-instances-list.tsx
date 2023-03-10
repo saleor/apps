@@ -58,7 +58,7 @@ export const TaxProvidersInstancesList = () => {
               key={instance.id}
             >
               <OffsettedListItemCell className={styles.cell}>
-                {instance.name}
+                {instance.config.name}
                 <ProviderIcon size="medium" provider={instance.provider} />
               </OffsettedListItemCell>
             </OffsettedListItem>

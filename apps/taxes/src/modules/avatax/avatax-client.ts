@@ -1,7 +1,7 @@
 import Avatax from "avatax";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
-import packageJson from "../../../../../package.json";
-import { logger } from "../../../../lib/logger";
+import packageJson from "../../../package.json";
+import { logger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
 
 type AvataxSettings = {
@@ -55,6 +55,20 @@ export class AvataxClient {
   }
 
   async ping() {
-    return this.client.ping();
+    try {
+      const result = await this.client.ping();
+
+      return {
+        authenticated: result.authenticated,
+        ...(!result.authenticated && {
+          error: "Avatax was not able to authenticate with the provided credentials.",
+        }),
+      };
+    } catch (error) {
+      return {
+        authenticated: false,
+        error: "Avatax was not able to authenticate with the provided credentials.",
+      };
+    }
   }
 }
