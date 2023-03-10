@@ -1,11 +1,11 @@
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { TaxBaseFragment } from "../../../../../generated/graphql";
+import { TaxBaseFragment } from "../../../generated/graphql";
 
-import { ChannelConfig } from "../../../channels-configuration/channels-config";
-import { taxLineResolver } from "../../tax-line-resolver";
-import { ResponseTaxPayload } from "../../types";
+import { ChannelConfig } from "../channels-configuration/channels-config";
+import { taxLineResolver } from "../taxes/tax-line-resolver";
+import { ResponseTaxPayload } from "../taxes/types";
 import { AvataxConfig } from "./avatax-config";
 
 const SHIPPING_ITEM_CODE = "Shipping";

@@ -1,6 +1,6 @@
 import TaxJar from "taxjar";
 import { Config, TaxForOrderRes, TaxParams } from "taxjar/dist/util/types";
-import { logger } from "../../../../lib/logger";
+import { logger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-config";
 
 const createTaxJarSettings = (config: TaxJarConfig): Config => {
@@ -26,5 +26,17 @@ export class TaxJarClient {
   async fetchTaxesForOrder(params: TaxParams) {
     const response: TaxForOrderRes = await this.client.taxForOrder(params);
     return response;
+  }
+
+  async ping() {
+    try {
+      await this.client.categories();
+      return { authenticated: true };
+    } catch (error) {
+      return {
+        authenticated: false,
+        error: "TaxJar was not able to authenticate with the provided credentials.",
+      };
+    }
   }
 }

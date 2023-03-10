@@ -1,10 +1,7 @@
-import { TaxBaseFragment } from "../../../../../generated/graphql";
-import { logger } from "../../../../lib/logger";
-import {
-  ChannelConfig,
-  defaultChannelConfig,
-} from "../../../channels-configuration/channels-config";
-import { TaxProvider } from "../../tax-provider";
+import { TaxBaseFragment } from "../../../generated/graphql";
+import { logger } from "../../lib/logger";
+import { ChannelConfig, defaultChannelConfig } from "../channels-configuration/channels-config";
+import { TaxProvider } from "../taxes/tax-provider";
 import { taxJarCalculate } from "./taxjar-calculate";
 import { TaxJarClient } from "./taxjar-client";
 import { defaultTaxJarConfig, TaxJarConfig } from "./taxjar-config";

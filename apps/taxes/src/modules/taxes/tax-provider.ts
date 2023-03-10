@@ -8,5 +8,4 @@ type ExternalValidationResult = { ok: boolean; error?: string };
 export interface TaxProvider {
   name: TaxProviderName;
   calculate: (payload: TaxBaseFragment, channel: ChannelConfig) => Promise<ResponseTaxPayload>;
-  validate?: () => Promise<ExternalValidationResult>;
 }

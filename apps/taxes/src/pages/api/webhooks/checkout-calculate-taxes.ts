@@ -5,7 +5,7 @@ import { createClient } from "../../../lib/graphql";
 import { createLogger } from "../../../lib/logger";
 import { calculateTaxesPayloadSchema, ExpectedWebhookPayload } from "../../../lib/saleor/schema";
 import { GetChannelsConfigurationService } from "../../../modules/channels-configuration/get-channels-configuration.service";
-import { GetProvidersConfigurationService } from "../../../modules/providers-configuration/get-providers-configuration.service";
+import { TaxProvidersConfigurationService } from "../../../modules/providers-configuration/providers-configuration-service";
 import { ActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 
 export const config = {
@@ -30,7 +30,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   const validation = calculateTaxesPayloadSchema.safeParse(payload);
 
   if (!validation.success) {
-    logger.error({ error: validation.error.message }, "Payload is invalid");
+    logger.error({ error: validation.error.format() }, "Payload is invalid");
     logger.info("Returning no data");
     return res.send({});
   }
@@ -43,10 +43,10 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
       Promise.resolve({ token: authData.token })
     );
 
-    const providersConfig = await new GetProvidersConfigurationService({
-      saleorApiUrl: authData.saleorApiUrl,
-      apiClient: client,
-    }).getConfiguration();
+    const providersConfig = await new TaxProvidersConfigurationService(
+      client,
+      authData.saleorApiUrl
+    ).getAll();
 
     const channelsConfig = await new GetChannelsConfigurationService({
       saleorApiUrl: authData.saleorApiUrl,

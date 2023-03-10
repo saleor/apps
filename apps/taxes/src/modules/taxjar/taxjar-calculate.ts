@@ -4,10 +4,10 @@ import {
   TaxBaseFragment,
   TaxBaseLineFragment,
   TaxDiscountFragment,
-} from "../../../../../generated/graphql";
-import { ChannelConfig } from "../../../channels-configuration/channels-config";
-import { taxLineResolver } from "../../tax-line-resolver";
-import { ResponseTaxPayload } from "../../types";
+} from "../../../generated/graphql";
+import { ChannelConfig } from "../channels-configuration/channels-config";
+import { taxLineResolver } from "../taxes/tax-line-resolver";
+import { ResponseTaxPayload } from "../taxes/types";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
