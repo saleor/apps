@@ -177,8 +177,9 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     logger.debug({ hashedInvoiceName });
 
     const hashedInvoiceFileName = `${hashedInvoiceName}.pdf`;
-    const tempPdfLocation = resolveTempPdfFileLocation(hashedInvoiceFileName);
-    logger.debug({ tempPdfLocation });
+    const tempPdfLocation = await resolveTempPdfFileLocation(hashedInvoiceFileName);
+
+    logger.debug({ tempPdfLocation }, "Resolved PDF location for temporary files");
 
     const appConfig = await new GetAppConfigurationService({
       saleorApiUrl: authData.saleorApiUrl,
@@ -203,6 +204,7 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     const uploader = new SaleorInvoiceUploader(client);
 
     const uploadedFileUrl = await uploader.upload(tempPdfLocation, `${invoiceName}.pdf`);
+
     logger.info({ uploadedFileUrl }, "Uploaded file to storage, will notify Saleor now");
 
     await new InvoiceCreateNotifier(client).notifyInvoiceCreated(
