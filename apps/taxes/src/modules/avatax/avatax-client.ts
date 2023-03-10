@@ -64,10 +64,11 @@ export class AvataxClient {
           error: "Avatax was not able to authenticate with the provided credentials.",
         }),
       };
-    } catch (error) {}
-    return {
-      authenticated: false,
-      error: "Avatax was not able to authenticate with the provided credentials.",
-    };
+    } catch (error) {
+      return {
+        authenticated: false,
+        error: "Avatax was not able to authenticate with the provided credentials.",
+      };
+    }
   }
 }
