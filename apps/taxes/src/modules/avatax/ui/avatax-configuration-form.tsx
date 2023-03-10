@@ -59,22 +59,23 @@ export const AvataxConfigurationForm = () => {
         );
       },
     });
-  const { data: instance, refetch: refetchProvidersConfigurationData } =
-    trpcClient.avataxConfiguration.get.useQuery(
-      { id: instanceId ?? "" },
-      {
-        enabled: !!instanceId,
-        onError(error) {
-          appBridge?.dispatch(
-            actions.Notification({
-              title: "Error",
-              text: error.message,
-              status: "error",
-            })
-          );
-        },
-      }
-    );
+  const { refetch: refetchProvidersConfigurationData } =
+    trpcClient.providersConfiguration.getAll.useQuery();
+  const { data: instance } = trpcClient.avataxConfiguration.get.useQuery(
+    { id: instanceId ?? "" },
+    {
+      enabled: !!instanceId,
+      onError(error) {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+    }
+  );
 
   const resetInstanceId = () => {
     setInstanceId(null);

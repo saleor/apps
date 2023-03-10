@@ -1,54 +1,14 @@
 import pino from "pino";
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
-import { isObfuscated, obfuscateSecret } from "../../lib/utils";
 import { createSettingsManager } from "../app-configuration/metadata-manager";
 import { CrudSettingsConfigurator } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../providers-configuration/providers-configuration-service";
+import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { AvataxClient } from "./avatax-client";
-import {
-  AvataxConfig,
-  avataxConfigSchema,
-  AvataxInstanceConfig,
-  avataxInstanceConfigSchema,
-} from "./avatax-config";
+import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
 
-const obfuscateConfig = (config: AvataxConfig) => ({
-  ...config,
-  username: obfuscateSecret(config.username),
-  password: obfuscateSecret(config.password),
-});
-
-const obfuscateProvidersConfig = (instances: AvataxInstanceConfig[]) =>
-  instances.map((instance) => ({
-    ...instance,
-    config: obfuscateConfig(instance.config),
-  }));
-
-const getSchema = avataxInstanceConfigSchema.transform((instance) => ({
-  ...instance,
-  config: obfuscateConfig(instance.config),
-}));
-
-const patchSchema = avataxConfigSchema.partial().transform((c) => {
-  const { username, password, ...config } = c ?? {};
-  return {
-    ...config,
-    ...(username && !isObfuscated(username) && { username }),
-    ...(password && !isObfuscated(password) && { password }),
-  };
-});
-
-const putSchema = avataxConfigSchema.transform((c) => {
-  const { username, password, ...config } = c;
-  return {
-    ...config,
-    ...(!isObfuscated(username) && { username }),
-    ...(!isObfuscated(password) && { password }),
-  };
-});
-
+const getSchema = avataxInstanceConfigSchema;
 export class AvataxConfigurationService {
   private crudSettingsConfigurator: CrudSettingsConfigurator;
   private logger: pino.Logger;
@@ -79,7 +39,7 @@ export class AvataxConfigurationService {
       (instance) => instance.provider === "avatax"
     ) as AvataxInstanceConfig[];
 
-    return obfuscateProvidersConfig(instances);
+    return instances;
   }
 
   async get(id: string): Promise<AvataxInstanceConfig> {
@@ -120,16 +80,10 @@ export class AvataxConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
-    const validation = patchSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
 
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...setting.config, ...validation.data },
+      config: { ...setting.config, ...config },
     });
   }
 
@@ -137,17 +91,11 @@ export class AvataxConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
-    const validation = putSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
 
     this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...validation.data },
+      config: { ...config },
     });
   }
 

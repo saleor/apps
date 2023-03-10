@@ -1,50 +1,14 @@
 import pino from "pino";
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
-import { isObfuscated, obfuscateSecret } from "../../lib/utils";
 import { createSettingsManager } from "../app-configuration/metadata-manager";
 import { CrudSettingsConfigurator } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../providers-configuration/providers-configuration-service";
+import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { TaxJarClient } from "./taxjar-client";
-import {
-  TaxJarConfig,
-  taxJarConfigSchema,
-  TaxJarInstanceConfig,
-  taxJarInstanceConfigSchema,
-} from "./taxjar-config";
+import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "./taxjar-config";
 
-const obfuscateConfig = (config: TaxJarConfig) => ({
-  ...config,
-  apiKey: obfuscateSecret(config.apiKey),
-});
-
-const obfuscateProvidersConfig = (instances: TaxJarInstanceConfig[]) =>
-  instances.map((instance) => ({
-    ...instance,
-    config: obfuscateConfig(instance.config),
-  }));
-
-const getSchema = taxJarInstanceConfigSchema.transform((instance) => ({
-  ...instance,
-  config: obfuscateConfig(instance.config),
-}));
-
-const patchSchema = taxJarConfigSchema.partial().transform((c) => {
-  const { apiKey, ...config } = c ?? {};
-  return {
-    ...config,
-    ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
-  };
-});
-
-const putSchema = taxJarConfigSchema.transform((c) => {
-  const { apiKey, ...config } = c;
-  return {
-    ...config,
-    ...(!isObfuscated(apiKey) && { apiKey }),
-  };
-});
+const getSchema = taxJarInstanceConfigSchema;
 
 export class TaxJarConfigurationService {
   private crudSettingsConfigurator: CrudSettingsConfigurator;
@@ -77,7 +41,7 @@ export class TaxJarConfigurationService {
       (instance) => instance.provider === "taxjar"
     ) as TaxJarInstanceConfig[];
 
-    return obfuscateProvidersConfig(instances);
+    return instances;
   }
 
   async get(id: string): Promise<TaxJarInstanceConfig> {
@@ -117,16 +81,10 @@ export class TaxJarConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
-    const validation = patchSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
 
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...setting.config, ...validation.data },
+      config: { ...setting.config, ...config },
     });
   }
 
@@ -134,17 +92,11 @@ export class TaxJarConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
-    const validation = putSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
 
     this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...validation.data },
+      config: { ...config },
     });
   }
 

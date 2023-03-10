@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { logger as pinoLogger } from "../../lib/logger";
+import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { taxJarConfigSchema } from "./taxjar-config";
+import { obfuscateTaxJarConfig, taxJarConfigSchema } from "./taxjar-config";
 import { TaxJarConfigurationService } from "./taxjar-configuration.service";
 
 const getInputSchema = z.object({
@@ -15,12 +16,13 @@ const deleteInputSchema = z.object({
 
 const patchInputSchema = z.object({
   id: z.string(),
-  value: taxJarConfigSchema.partial(),
-});
-
-const putInputSchema = z.object({
-  id: z.string(),
-  value: taxJarConfigSchema,
+  value: taxJarConfigSchema.partial().transform((c) => {
+    const { apiKey, ...config } = c ?? {};
+    return {
+      ...config,
+      ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
+    };
+  }),
 });
 
 const postInputSchema = z.object({
@@ -43,7 +45,7 @@ export const taxjarConfigurationRouter = router({
 
     logger.debug({ result }, "taxjarConfigurationRouter.get finished");
 
-    return result;
+    return { ...result, config: obfuscateTaxJarConfig(result.config) };
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = pinoLogger.child({
@@ -93,23 +95,6 @@ export const taxjarConfigurationRouter = router({
     const result = await taxjarConfigurationService.patch(input.id, input.value);
 
     logger.debug({ result }, "taxjarConfigurationRouter.patch finished");
-
-    return result;
-  }),
-  put: protectedClientProcedure.input(putInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "taxjarConfigurationRouter.put",
-    });
-
-    logger.debug("taxjarConfigurationRouter.put called");
-
-    const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
-
-    const result = await taxjarConfigurationService.put(input.id, input.value);
-
-    logger.debug({ result }, "taxjarConfigurationRouter.put finished");
 
     return result;
   }),
