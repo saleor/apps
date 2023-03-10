@@ -65,7 +65,7 @@ export class AvataxConfigurationService {
     });
   }
 
-  async getAll() {
+  async getAll(): Promise<AvataxInstanceConfig[]> {
     this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsConfigurator.readAll();
     const validation = providersSchema.safeParse(data);
@@ -82,7 +82,7 @@ export class AvataxConfigurationService {
     return obfuscateProvidersConfig(instances);
   }
 
-  async get(id: string) {
+  async get(id: string): Promise<AvataxInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsConfigurator.read(id);
     this.logger.debug({ setting: data }, `Fetched setting from crudSettingsConfigurator`);
@@ -97,7 +97,7 @@ export class AvataxConfigurationService {
     return validation.data;
   }
 
-  async post(config: AvataxConfig) {
+  async post(config: AvataxConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const avataxClient = new AvataxClient(config);
     const validation = await avataxClient.ping();
@@ -106,13 +106,20 @@ export class AvataxConfigurationService {
       this.logger.error(validation.error);
       throw new Error(validation.error);
     }
+
+    const result = await this.crudSettingsConfigurator.create({
+      provider: "avatax",
+      config: config,
+    });
+
+    return result.data;
   }
 
-  async patch(id: string, config: Partial<AvataxConfig>) {
+  async patch(id: string, config: Partial<AvataxConfig>): Promise<void> {
     this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
-    const result = await this.get(id);
+    const data = await this.get(id);
     // omit the key "id"  from the result
-    const { id: _, ...setting } = result;
+    const { id: _, ...setting } = data;
     const validation = patchSchema.safeParse(config);
 
     if (!validation.success) {
@@ -126,10 +133,10 @@ export class AvataxConfigurationService {
     });
   }
 
-  async put(id: string, config: AvataxConfig) {
-    const result = await this.get(id);
+  async put(id: string, config: AvataxConfig): Promise<void> {
+    const data = await this.get(id);
     // omit the key "id"  from the result
-    const { id: _, ...setting } = result;
+    const { id: _, ...setting } = data;
     const validation = putSchema.safeParse(config);
 
     if (!validation.success) {
@@ -144,7 +151,7 @@ export class AvataxConfigurationService {
     });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     this.logger.debug(`.delete called with id: ${id}`);
     return this.crudSettingsConfigurator.delete(id);
   }

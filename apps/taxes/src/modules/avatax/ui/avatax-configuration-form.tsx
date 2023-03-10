@@ -13,10 +13,10 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppLink } from "../../ui/app-link";
-import { useInstanceId } from "../../taxes/tax-context";
-import { avataxConfigSchema, avataxInstanceConfigSchema } from "../avatax-config";
+import { avataxConfigSchema } from "../avatax-config";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {

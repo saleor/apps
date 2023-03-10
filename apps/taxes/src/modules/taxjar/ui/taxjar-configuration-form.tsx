@@ -78,7 +78,7 @@ export const TaxJarConfigurationForm = () => {
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
     trpcClient.taxJarConfiguration.post.useMutation({
-      onSuccess({ data: { id } }) {
+      onSuccess({ id }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
