@@ -59,20 +59,22 @@ export const AvataxConfigurationForm = () => {
         );
       },
     });
-  const { data: providersConfig, refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery(undefined, {
-      onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
-      },
-    });
-
-  const instance = providersConfig?.find((instance) => instance.id === instanceId);
+  const { data: instance, refetch: refetchProvidersConfigurationData } =
+    trpcClient.avataxConfiguration.get.useQuery(
+      { id: instanceId ?? "" },
+      {
+        enabled: !!instanceId,
+        onError(error) {
+          appBridge?.dispatch(
+            actions.Notification({
+              title: "Error",
+              text: error.message,
+              status: "error",
+            })
+          );
+        },
+      }
+    );
 
   const resetInstanceId = () => {
     setInstanceId(null);
@@ -89,7 +91,7 @@ export const AvataxConfigurationForm = () => {
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
     trpcClient.avataxConfiguration.post.useMutation({
-      onSuccess({ data: { id } }) {
+      onSuccess({ id }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         appBridge?.dispatch(

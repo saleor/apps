@@ -13,9 +13,9 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { trpcClient } from "../../trpc/trpc-client";
 import { useInstanceId } from "../../taxes/tax-context";
-import { taxJarConfigSchema, taxJarInstanceConfigSchema } from "../taxjar-config";
+import { trpcClient } from "../../trpc/trpc-client";
+import { taxJarConfigSchema } from "../taxjar-config";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -61,20 +61,22 @@ export const TaxJarConfigurationForm = () => {
       },
     });
 
-  const { data: providersConfigurationData, refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery(undefined, {
-      onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
-      },
-    });
-
-  const instance = providersConfigurationData?.find((instance) => instance.id === instanceId);
+  const { data: instance, refetch: refetchProvidersConfigurationData } =
+    trpcClient.avataxConfiguration.get.useQuery(
+      { id: instanceId ?? "" },
+      {
+        enabled: !!instanceId,
+        onError(error) {
+          appBridge?.dispatch(
+            actions.Notification({
+              title: "Error",
+              text: error.message,
+              status: "error",
+            })
+          );
+        },
+      }
+    );
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
     trpcClient.taxJarConfiguration.post.useMutation({
