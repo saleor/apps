@@ -4,22 +4,30 @@ import { createCmsKeyForSaleorItem } from "./metadata";
 
 export const getChannelsSettings = async (settingsManager: EncryptedMetadataManager) => {
   const channelsSettings = await settingsManager.get("channels");
-  console.log("channelsSettings", channelsSettings);
-  const channelsSettingsParsed =
-    (channelsSettings && (JSON.parse(channelsSettings) as CMSSchemaChannels)) || {};
 
-  return channelsSettingsParsed;
+  try {
+    const channelsSettingsParsed =
+      (channelsSettings && (JSON.parse(channelsSettings) as CMSSchemaChannels)) || {};
+
+    return channelsSettingsParsed;
+  } catch (e) {
+    return {};
+  }
 };
 
 export const getProviderInstancesSettings = async (settingsManager: EncryptedMetadataManager) => {
   const providerInstancesSettings = await settingsManager.get("providerInstances");
-  console.log("providerInstancesSettings", providerInstancesSettings);
-  const providerInstancesSettingsParsed =
-    (providerInstancesSettings &&
-      (JSON.parse(providerInstancesSettings) as CMSSchemaProviderInstances)) ||
-    {};
 
-  return providerInstancesSettingsParsed;
+  try {
+    const providerInstancesSettingsParsed =
+      (providerInstancesSettings &&
+        (JSON.parse(providerInstancesSettings) as CMSSchemaProviderInstances)) ||
+      {};
+
+    return providerInstancesSettingsParsed;
+  } catch (e) {
+    return {};
+  }
 };
 
 export const getProductVariantChannelsSettings = async ({

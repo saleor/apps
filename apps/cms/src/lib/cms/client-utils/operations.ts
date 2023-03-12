@@ -32,7 +32,7 @@ export const getEnabledProviderInstancesFromChannelSettingsList = (
 ) => {
   return channelSettingsList.reduce<string[]>((acc, { enabledProviderInstances }) => {
     const moreEnabledProviderInstances = enabledProviderInstances.filter(
-      (instance) => acc.indexOf(instance) < 0
+      (instance) => !acc.includes(instance)
     );
     return [...acc, ...moreEnabledProviderInstances];
   }, [] as string[]);

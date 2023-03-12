@@ -7,7 +7,7 @@ type AppDashboardLinkProps = {
 };
 
 export const AppDashboardLink = ({ path, children }: PropsWithChildren<AppDashboardLinkProps>) => {
-  const [props] = useCreateDashboardRedirect(path);
+  const { linkProps } = useCreateDashboardRedirect(path);
 
-  return <AppLink {...props}>{children}</AppLink>;
+  return <AppLink {...linkProps}>{children}</AppLink>;
 };

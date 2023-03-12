@@ -10,6 +10,7 @@ import {
 import { providersSchemaSet } from "../config";
 import cmsProviders, { CMSProvider } from "../providers";
 import { CmsClientOperations } from "../types";
+import { logger as pinoLogger } from "../../logger";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
@@ -23,6 +24,11 @@ export const createCmsOperations = async ({
   channelsToUpdate?: string[] | null;
   cmsKeysToUpdate?: string[] | null;
 }) => {
+  const logger = pinoLogger.child({
+    channelsToUpdate,
+    cmsKeysToUpdate,
+  });
+
   const saleorApiUrl = context.authData.saleorApiUrl;
   const token = context.authData.token;
 
@@ -82,7 +88,8 @@ export const createCmsOperations = async ({
       if (!validation.success) {
         // todo: use instead: throw new Error(validation.error.message);
         // continue with other provider instances
-        console.error(validation.error.message);
+        logger.error("The provider instance settings validation failed.");
+        logger.error(validation.error.message);
 
         return acc;
       }

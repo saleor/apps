@@ -1,6 +1,7 @@
 import { ProductVariantUpdatedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { CmsClientOperations } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
+import { logger as pinoLogger } from "../../logger";
 
 interface CmsClientOperationResult {
   createdCmsId?: string;
@@ -18,12 +19,14 @@ const executeCmsClientOperation = async ({
     undefined | null
   >;
 }): Promise<CmsClientOperationResult | undefined> => {
-  console.log("CMS client instance", cmsClient);
+  const logger = pinoLogger.child({ cmsClient });
+  logger.debug("Execute CMS client operation called");
 
   const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
 
   if (cmsId && cmsClient.operationType === "deleteProduct") {
-    console.log("CMS deleting item", cmsId);
+    logger.debug("CMS deleting item called");
+    logger.debug(cmsId);
 
     try {
       await cmsClient.operations.deleteProduct({
@@ -33,14 +36,16 @@ const executeCmsClientOperation = async ({
         deletedCmsId: cmsId,
       };
     } catch (error) {
-      console.log(error);
+      logger.error("Error deleting item");
+      logger.error(error);
 
       return {
         error: "Error deleting item.",
       };
     }
   } else if (cmsId && cmsClient.operationType === "updateProduct") {
-    console.log("CMS updating item", cmsId);
+    logger.debug("CMS updating item called");
+    logger.debug(cmsId);
 
     try {
       await cmsClient.operations.updateProduct({
@@ -60,14 +65,15 @@ const executeCmsClientOperation = async ({
         },
       });
     } catch (error) {
-      console.log(error);
+      logger.error("Error updating item");
+      logger.error(error);
 
       return {
         error: "Error updating item.",
       };
     }
   } else if (!cmsId && cmsClient.operationType === "createProduct") {
-    console.log("CMS creating new item");
+    logger.debug("CMS creating item called");
 
     try {
       const createProductResponse = await cmsClient.operations.createProduct({
@@ -93,7 +99,8 @@ const executeCmsClientOperation = async ({
         };
       }
     } catch (error) {
-      console.log(error);
+      logger.error("Error creating item");
+      logger.error(error);
 
       return {
         error: "Error creating item.",

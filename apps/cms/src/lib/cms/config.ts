@@ -116,8 +116,6 @@ export const strapiConfigSchema = z.object({
   name: z.string().min(1),
   token: z.string().min(1),
   baseUrl: z.string().min(1),
-  // enabled: z.boolean(), // @deprecated
-  // enabledInChannels: z.array(z.string()),
 });
 
 export const contentfulConfigSchema = z.object({
@@ -128,8 +126,6 @@ export const contentfulConfigSchema = z.object({
   spaceId: z.string(),
   locale: z.string(),
   contentId: z.string(),
-  // enabled: z.boolean(), // @deprecated
-  // enabledInChannels: z.array(z.string()),
 });
 
 export const datocmsConfigSchema = z.object({
@@ -138,8 +134,6 @@ export const datocmsConfigSchema = z.object({
   baseUrl: z.string(),
   environment: z.string(),
   itemTypeId: z.string().min(1),
-  // enabled: z.boolean(), // @deprecated
-  // enabledInChannels: z.array(z.string()),
 });
 
 export const providerCommonSchema = z.object({

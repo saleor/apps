@@ -89,28 +89,34 @@ export const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadF
     cmsKeysToUpdate: [],
   });
 
-  if (productVariant) {
-    const {
-      cmsProviderInstanceProductVariantIdsToCreate,
-      cmsProviderInstanceProductVariantIdsToDelete,
-      cmsErrors,
-    } = await executeCmsOperations({
-      cmsOperations,
-      productVariant,
+  if (!productVariant) {
+    return res.status(500).json({
+      errors: [
+        "No product variant data payload provided. Cannot process product variant syncronisation in CMS providers.",
+      ],
     });
+  }
 
-    await executeMetadataUpdate({
-      context,
-      productVariant,
-      cmsProviderInstanceIdsToCreate: cmsProviderInstanceProductVariantIdsToCreate,
-      cmsProviderInstanceIdsToDelete: cmsProviderInstanceProductVariantIdsToDelete,
-    });
+  const {
+    cmsProviderInstanceProductVariantIdsToCreate,
+    cmsProviderInstanceProductVariantIdsToDelete,
+    cmsErrors,
+  } = await executeCmsOperations({
+    cmsOperations,
+    productVariant,
+  });
 
-    if (!cmsErrors.length) {
-      return res.status(200).end();
-    } else {
-      return res.status(500).json({ errors: cmsErrors });
-    }
+  await executeMetadataUpdate({
+    context,
+    productVariant,
+    cmsProviderInstanceIdsToCreate: cmsProviderInstanceProductVariantIdsToCreate,
+    cmsProviderInstanceIdsToDelete: cmsProviderInstanceProductVariantIdsToDelete,
+  });
+
+  if (!cmsErrors.length) {
+    return res.status(200).end();
+  } else {
+    return res.status(500).json({ errors: cmsErrors });
   }
 };
 

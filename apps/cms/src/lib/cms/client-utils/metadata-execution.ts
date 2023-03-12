@@ -24,8 +24,8 @@ export const executeMetadataUpdate = async ({
   cmsProviderInstanceIdsToCreate: Record<string, string>;
   cmsProviderInstanceIdsToDelete: Record<string, string>;
 }) => {
-  const { domain, token } = context.authData;
-  const apiClient = createClient(`https://${domain}/graphql/`, async () => ({ token }));
+  const { token, saleorApiUrl } = context.authData;
+  const apiClient = createClient(saleorApiUrl, async () => ({ token }));
 
   if (Object.keys(cmsProviderInstanceIdsToCreate).length) {
     await apiClient
