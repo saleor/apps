@@ -19,6 +19,11 @@ function _ThemeSynchronizer() {
 
     if (themeType !== appBridgeState?.theme) {
       setTheme(appBridgeState.theme);
+      /**
+       * Hack to fix macaw, which is going into infinite loop on light mode (probably de-sync local storage with react state)
+       * TODO Fix me when Macaw 2.0 is shipped
+       */
+      window.localStorage.setItem("macaw-ui-theme", appBridgeState.theme);
     }
   }, [appBridgeState?.theme, setTheme, themeType]);
 

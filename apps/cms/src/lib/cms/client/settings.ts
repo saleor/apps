@@ -30,35 +30,45 @@ export const getProviderInstancesSettings = async (settingsManager: EncryptedMet
   }
 };
 
-export const getProductVariantChannelsSettings = async ({
+const filterNotExistingProviderInstances = (
+  providerInstances: string[],
+  newProviderInstances: string[]
+) => {
+  return newProviderInstances.filter(
+    (newProviderInstance) => !providerInstances.includes(newProviderInstance)
+  );
+};
+
+const mergeProviderInstances = (providerInstances: string[], newProviderInstances: string[]) => {
+  return [
+    ...providerInstances,
+    ...filterNotExistingProviderInstances(providerInstances, newProviderInstances),
+  ];
+};
+
+export interface ProductVariantSingleChannelSettings {
+  enabledProviderInstances: string[];
+  channelSlug: string;
+}
+
+export interface ProductVariantProviderInstancesToAlter {
+  toCreate: string[];
+  toUpdate: string[];
+  toRemove: string[];
+}
+
+interface ProductVariantProviderInstancesToAlterOpts {
+  channelsSettingsParsed: Record<string, ProductVariantSingleChannelSettings>;
+  channelsToUpdate?: string[] | null;
+  cmsKeysToUpdate?: string[] | null;
+}
+
+export const getProductVariantProviderInstancesToAlter = async ({
   channelsSettingsParsed,
   channelsToUpdate,
   cmsKeysToUpdate,
-}: {
-  channelsSettingsParsed: Record<
-    string,
-    {
-      enabledProviderInstances: string[];
-      channelSlug: string;
-    }
-  >;
-  channelsToUpdate?: string[] | null;
-  cmsKeysToUpdate?: string[] | null;
-}) => {
-  return Object.values(channelsSettingsParsed).reduce<{
-    toCreate: {
-      enabledProviderInstances: string[];
-      channelSlug: string;
-    }[];
-    toUpdate: {
-      enabledProviderInstances: string[];
-      channelSlug: string;
-    }[];
-    toRemove: {
-      enabledProviderInstances: string[];
-      channelSlug: string;
-    }[];
-  }>(
+}: ProductVariantProviderInstancesToAlterOpts) => {
+  return Object.values(channelsSettingsParsed).reduce<ProductVariantProviderInstancesToAlter>(
     (acc, channelSettings) => {
       const isProductVariantInChannel = !!channelsToUpdate?.includes(channelSettings.channelSlug);
       const isProductVariantInSomeCMS = !!(
@@ -71,15 +81,15 @@ export const getProductVariantChannelsSettings = async ({
       return {
         toCreate:
           isProductVariantInChannel && !isProductVariantInSomeCMS
-            ? [...acc.toCreate, channelSettings]
+            ? mergeProviderInstances(acc.toCreate, channelSettings.enabledProviderInstances)
             : acc.toCreate,
         toUpdate:
           isProductVariantInChannel && isProductVariantInSomeCMS
-            ? [...acc.toUpdate, channelSettings]
+            ? mergeProviderInstances(acc.toUpdate, channelSettings.enabledProviderInstances)
             : acc.toUpdate,
         toRemove:
           !isProductVariantInChannel && isProductVariantInSomeCMS
-            ? [...acc.toRemove, channelSettings]
+            ? mergeProviderInstances(acc.toRemove, channelSettings.enabledProviderInstances)
             : acc.toRemove,
       };
     },
@@ -87,6 +97,6 @@ export const getProductVariantChannelsSettings = async ({
       toCreate: [],
       toUpdate: [],
       toRemove: [],
-    }
+    } as ProductVariantProviderInstancesToAlter
   );
 };

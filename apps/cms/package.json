@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "test": "vitest"
   },
   "saleor": {
     "schemaVersion": "3.7"
@@ -44,6 +45,7 @@
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-typed-document-node/core": "^3.1.1",
+    "@testing-library/react": "^13.4.0",
     "@types/node": "^18.8.1",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
@@ -52,7 +54,8 @@
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.7.1",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "vitest": "^0.29.2"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",

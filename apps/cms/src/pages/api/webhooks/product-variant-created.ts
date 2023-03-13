@@ -7,6 +7,7 @@ import {
   executeCmsOperations,
   executeMetadataUpdate,
 } from "../../../lib/cms/client";
+import { logger as pinoLogger } from "../../../lib/logger";
 
 export const config = {
   api: {
@@ -80,7 +81,10 @@ export const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadF
 ) => {
   const { productVariant } = context.payload;
 
-  console.log("PRODUCT_VARIANT_CREATED", productVariant);
+  const logger = pinoLogger.child({
+    productVariant,
+  });
+  logger.debug("Called webhook PRODUCT_VARIANT_CREATED");
 
   const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
   const cmsOperations = await createCmsOperations({

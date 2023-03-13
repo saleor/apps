@@ -2,12 +2,13 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 import { ProductVariantUpdatedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client-utils/metadata";
+import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
 import {
   createCmsOperations,
   executeCmsOperations,
   executeMetadataUpdate,
 } from "../../../lib/cms/client";
+import { logger as pinoLogger } from "../../../lib/logger";
 
 export const config = {
   api: {
@@ -82,7 +83,10 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadF
   // * product_updated event triggers on product_created as well 🤷
   const { productVariant } = context.payload;
 
-  console.log("PRODUCT_VARIANT_UPDATED", productVariant);
+  const logger = pinoLogger.child({
+    productVariant,
+  });
+  logger.debug("Called webhook PRODUCT_VARIANT_UPDATED");
 
   const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
   const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);

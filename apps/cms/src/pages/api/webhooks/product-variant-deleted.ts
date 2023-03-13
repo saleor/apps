@@ -2,12 +2,13 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 import { ProductVariantDeletedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client-utils/metadata";
+import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
 import {
   createCmsOperations,
   executeCmsOperations,
   executeMetadataUpdate,
 } from "../../../lib/cms/client";
+import { logger as pinoLogger } from "../../../lib/logger";
 
 export const config = {
   api: {
@@ -81,7 +82,10 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
 ) => {
   const { productVariant } = context.payload;
 
-  console.log("PRODUCT_VARIANT_DELETED", productVariant);
+  const logger = pinoLogger.child({
+    productVariant,
+  });
+  logger.debug("Called webhook PRODUCT_VARIANT_DELETED");
 
   const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
   const cmsOperations = await createCmsOperations({

@@ -25,8 +25,7 @@ const executeCmsClientOperation = async ({
   const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
 
   if (cmsId && cmsClient.operationType === "deleteProduct") {
-    logger.debug("CMS deleting item called");
-    logger.debug(cmsId);
+    logger.debug("CMS deleting item called", { cmsId });
 
     try {
       await cmsClient.operations.deleteProduct({
@@ -36,16 +35,14 @@ const executeCmsClientOperation = async ({
         deletedCmsId: cmsId,
       };
     } catch (error) {
-      logger.error("Error deleting item");
-      logger.error(error);
+      logger.error("Error deleting item", { error });
 
       return {
         error: "Error deleting item.",
       };
     }
   } else if (cmsId && cmsClient.operationType === "updateProduct") {
-    logger.debug("CMS updating item called");
-    logger.debug(cmsId);
+    logger.debug("CMS updating item called", { cmsId });
 
     try {
       await cmsClient.operations.updateProduct({
@@ -65,8 +62,7 @@ const executeCmsClientOperation = async ({
         },
       });
     } catch (error) {
-      logger.error("Error updating item");
-      logger.error(error);
+      logger.error("Error updating item", { error });
 
       return {
         error: "Error updating item.",
@@ -99,8 +95,7 @@ const executeCmsClientOperation = async ({
         };
       }
     } catch (error) {
-      logger.error("Error creating item");
-      logger.error(error);
+      logger.error("Error creating item", { error });
 
       return {
         error: "Error creating item.",

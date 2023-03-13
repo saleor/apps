@@ -1,11 +1,11 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { createClient } from "../../graphql";
 import { createSettingsManager } from "../../metadata";
-import { getEnabledProviderInstancesFromChannelSettingsList, getOperationType } from "./operations";
+import { getOperationType } from "./operations";
 import {
   getChannelsSettings,
-  getProductVariantChannelsSettings,
   getProviderInstancesSettings,
+  getProductVariantProviderInstancesToAlter,
 } from "./settings";
 import { providersSchemaSet } from "../config";
 import cmsProviders, { CMSProvider } from "../providers";
@@ -41,37 +41,26 @@ export const createCmsOperations = async ({
   const channelsSettingsParsed = await getChannelsSettings(settingsManager);
   const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
 
-  const productVariantChannelsSettings = await getProductVariantChannelsSettings({
+  const productVariantProviderInstancesToAlter = await getProductVariantProviderInstancesToAlter({
     channelsSettingsParsed,
     channelsToUpdate,
     cmsKeysToUpdate,
   });
 
-  if (
-    !productVariantChannelsSettings.toCreate.length &&
-    !productVariantChannelsSettings.toUpdate.length &&
-    !productVariantChannelsSettings.toRemove.length
-  ) {
+  const allProductVariantProviderInstancesToAlter = [
+    ...productVariantProviderInstancesToAlter.toCreate,
+    ...productVariantProviderInstancesToAlter.toUpdate,
+    ...productVariantProviderInstancesToAlter.toRemove,
+  ];
+
+  if (!allProductVariantProviderInstancesToAlter.length) {
     // todo: use instead: throw new Error("The channel settings were not found.");
     // continue with other provider instances
     return [];
   }
 
-  const providerInstancesWithProductVariantToCreate =
-    getEnabledProviderInstancesFromChannelSettingsList(productVariantChannelsSettings.toCreate);
-  const providerInstancesWithProductVariantToUpdate =
-    getEnabledProviderInstancesFromChannelSettingsList(productVariantChannelsSettings.toUpdate);
-  const providerInstancesWithProductVariantToRemove =
-    getEnabledProviderInstancesFromChannelSettingsList(productVariantChannelsSettings.toRemove);
-
-  const providerInstancesWithProductVariantToAlter = [
-    ...providerInstancesWithProductVariantToCreate,
-    ...providerInstancesWithProductVariantToUpdate,
-    ...providerInstancesWithProductVariantToRemove,
-  ];
-
   const enabledProviderInstancesSettings = Object.values(providerInstancesSettingsParsed).filter(
-    (providerInstance) => providerInstancesWithProductVariantToAlter.includes(providerInstance.id)
+    (providerInstance) => allProductVariantProviderInstancesToAlter.includes(providerInstance.id)
   );
 
   const clientsOperations = enabledProviderInstancesSettings.reduce<CmsClientOperations[]>(
@@ -88,8 +77,9 @@ export const createCmsOperations = async ({
       if (!validation.success) {
         // todo: use instead: throw new Error(validation.error.message);
         // continue with other provider instances
-        logger.error("The provider instance settings validation failed.");
-        logger.error(validation.error.message);
+        logger.error("The provider instance settings validation failed.", {
+          error: validation.error.message,
+        });
 
         return acc;
       }
@@ -104,9 +94,7 @@ export const createCmsOperations = async ({
             // todo: fix validation to not pass config as any
             operations: provider.create(config as any), // config without validation = providerInstanceSettings as any
             operationType: getOperationType({
-              providerInstancesWithCreateOperation: providerInstancesWithProductVariantToCreate,
-              providerInstancesWithUpdateOperation: providerInstancesWithProductVariantToUpdate,
-              providerInstancesWithRemoveOperation: providerInstancesWithProductVariantToRemove,
+              providerInstancesWithRequestedOperation: productVariantProviderInstancesToAlter,
               providerInstanceId: providerInstanceSettings.id,
             }),
           },
