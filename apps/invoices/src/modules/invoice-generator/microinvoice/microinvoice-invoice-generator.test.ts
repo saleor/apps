@@ -7,7 +7,7 @@ import { mockOrder } from "../../../fixtures/mock-order";
 import { getMockAddress } from "../../../fixtures/mock-address";
 
 const dirToSet = process.env.TEMP_PDF_STORAGE_DIR as string;
-const filePath = join(dirToSet, "test-invoice.pdf");
+const filePath = join(__dirname, dirToSet, "test-invoice.pdf");
 
 const cleanup = () => rimraf.sync(filePath);
 
@@ -29,8 +29,6 @@ describe("MicroinvoiceInvoiceGenerator", () => {
       invoiceNumber: "test-123/123",
       companyAddressData: getMockAddress(),
     });
-
-    console.log(filePath);
 
     return expect(readFile(filePath)).resolves.toBeDefined();
   });
