@@ -1,50 +1,14 @@
 import pino from "pino";
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
-import { isObfuscated, obfuscateSecret } from "../../lib/utils";
 import { createSettingsManager } from "../app-configuration/metadata-manager";
 import { CrudSettingsConfigurator } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../providers-configuration/providers-configuration-service";
+import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { TaxJarClient } from "./taxjar-client";
-import {
-  TaxJarConfig,
-  taxJarConfigSchema,
-  TaxJarInstanceConfig,
-  taxJarInstanceConfigSchema,
-} from "./taxjar-config";
+import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "./taxjar-config";
 
-const obfuscateConfig = (config: TaxJarConfig) => ({
-  ...config,
-  apiKey: obfuscateSecret(config.apiKey),
-});
-
-const obfuscateProvidersConfig = (instances: TaxJarInstanceConfig[]) =>
-  instances.map((instance) => ({
-    ...instance,
-    config: obfuscateConfig(instance.config),
-  }));
-
-const getSchema = taxJarInstanceConfigSchema.transform((instance) => ({
-  ...instance,
-  config: obfuscateConfig(instance.config),
-}));
-
-const patchSchema = taxJarConfigSchema.partial().transform((c) => {
-  const { apiKey, ...config } = c ?? {};
-  return {
-    ...config,
-    ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
-  };
-});
-
-const putSchema = taxJarConfigSchema.transform((c) => {
-  const { apiKey, ...config } = c;
-  return {
-    ...config,
-    ...(!isObfuscated(apiKey) && { apiKey }),
-  };
-});
+const getSchema = taxJarInstanceConfigSchema;
 
 export class TaxJarConfigurationService {
   private crudSettingsConfigurator: CrudSettingsConfigurator;
@@ -62,7 +26,7 @@ export class TaxJarConfigurationService {
     });
   }
 
-  async getAll() {
+  async getAll(): Promise<TaxJarInstanceConfig[]> {
     this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsConfigurator.readAll();
     this.logger.debug({ settings: data }, `Fetched settings from crudSettingsConfigurator`);
@@ -77,12 +41,12 @@ export class TaxJarConfigurationService {
       (instance) => instance.provider === "taxjar"
     ) as TaxJarInstanceConfig[];
 
-    return obfuscateProvidersConfig(instances);
+    return instances;
   }
 
-  async get(id: string) {
+  async get(id: string): Promise<TaxJarInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
-    const { data } = await this.crudSettingsConfigurator.read(id);
+    const data = await this.crudSettingsConfigurator.read(id);
     this.logger.debug({ setting: data }, `Fetched setting from crudSettingsConfigurator`);
 
     const validation = getSchema.safeParse(data);
@@ -95,7 +59,7 @@ export class TaxJarConfigurationService {
     return validation.data;
   }
 
-  async post(config: TaxJarConfig) {
+  async post(config: TaxJarConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const taxJarClient = new TaxJarClient(config);
     const validation = await taxJarClient.ping();
@@ -104,49 +68,39 @@ export class TaxJarConfigurationService {
       this.logger.error({ error: validation.error }, "Validation error while post");
       throw new Error(validation.error);
     }
-    return this.crudSettingsConfigurator.create({
+    const result = await this.crudSettingsConfigurator.create({
       provider: "taxjar",
       config: config,
     });
+
+    return result.data;
   }
 
-  async patch(id: string, config: Partial<TaxJarConfig>) {
+  async patch(id: string, config: Partial<TaxJarConfig>): Promise<void> {
     this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
-    const result = await this.get(id);
+    const data = await this.get(id);
     // omit the key "id"  from the result
-    const { id: _, ...setting } = result;
-    const validation = patchSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
+    const { id: _, ...setting } = data;
 
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...setting.config, ...validation.data },
+      config: { ...setting.config, ...config },
     });
   }
 
-  async put(id: string, config: TaxJarConfig) {
-    const result = await this.get(id);
+  async put(id: string, config: TaxJarConfig): Promise<void> {
+    const data = await this.get(id);
     // omit the key "id"  from the result
-    const { id: _, ...setting } = result;
-    const validation = putSchema.safeParse(config);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while patch");
-      throw new Error(validation.error.message);
-    }
+    const { id: _, ...setting } = data;
 
     this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
     return this.crudSettingsConfigurator.update(id, {
       ...setting,
-      config: { ...validation.data },
+      config: { ...config },
     });
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<void> {
     this.logger.debug(`.delete called with id: ${id}`);
     return this.crudSettingsConfigurator.delete(id);
   }

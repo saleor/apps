@@ -21,3 +21,14 @@ export const taxJarInstanceConfigSchema = z.object({
 });
 
 export type TaxJarInstanceConfig = z.infer<typeof taxJarInstanceConfigSchema>;
+
+export const obfuscateTaxJarConfig = (config: TaxJarConfig) => ({
+  ...config,
+  apiKey: obfuscateSecret(config.apiKey),
+});
+
+export const obfuscateTaxJarInstances = (instances: TaxJarInstanceConfig[]) =>
+  instances.map((instance) => ({
+    ...instance,
+    config: obfuscateTaxJarConfig(instance.config),
+  }));

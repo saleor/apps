@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { obfuscateSecret } from "../../lib/utils";
 
 export const avataxConfigSchema = z.object({
   name: z.string().min(1, { message: "Name requires at least one character." }),
@@ -27,3 +28,15 @@ export const avataxInstanceConfigSchema = z.object({
 });
 
 export type AvataxInstanceConfig = z.infer<typeof avataxInstanceConfigSchema>;
+
+export const obfuscateAvataxConfig = (config: AvataxConfig) => ({
+  ...config,
+  username: obfuscateSecret(config.username),
+  password: obfuscateSecret(config.password),
+});
+
+export const obfuscateAvataxInstances = (instances: AvataxInstanceConfig[]) =>
+  instances.map((instance) => ({
+    ...instance,
+    config: obfuscateAvataxConfig(instance.config),
+  }));
