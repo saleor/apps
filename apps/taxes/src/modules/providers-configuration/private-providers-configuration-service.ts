@@ -6,7 +6,7 @@ import { TaxJarConfigurationService } from "../taxjar/taxjar-configuration.servi
 
 export const TAX_PROVIDER_KEY = "tax-providers";
 
-export class TaxProvidersConfigurationService {
+export class PrivateTaxProvidersConfigurationService {
   private avataxConfigurationService: AvataxConfigurationService;
   private taxJarConfigurationService: TaxJarConfigurationService;
   private logger: pino.Logger;
@@ -14,7 +14,7 @@ export class TaxProvidersConfigurationService {
     this.avataxConfigurationService = new AvataxConfigurationService(client, saleorApiUrl);
     this.taxJarConfigurationService = new TaxJarConfigurationService(client, saleorApiUrl);
     this.logger = createLogger({
-      service: "TaxProvidersConfigurationService",
+      service: "PrivateTaxProvidersConfigurationService",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
@@ -23,7 +23,6 @@ export class TaxProvidersConfigurationService {
     this.logger.debug(".getAll called");
     const taxJar = await this.taxJarConfigurationService.getAll();
     const avatax = await this.avataxConfigurationService.getAll();
-    // todo: add more clever way of joining the two. Maybe add updated_at date to the config and use it to sort?
     return [...taxJar, ...avatax];
   }
 }

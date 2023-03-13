@@ -5,7 +5,8 @@ import { createClient } from "../../../lib/graphql";
 import { createLogger } from "../../../lib/logger";
 import { calculateTaxesPayloadSchema, ExpectedWebhookPayload } from "../../../lib/saleor/schema";
 import { GetChannelsConfigurationService } from "../../../modules/channels-configuration/get-channels-configuration.service";
-import { TaxProvidersConfigurationService } from "../../../modules/providers-configuration/providers-configuration-service";
+import { PrivateTaxProvidersConfigurationService } from "../../../modules/providers-configuration/private-providers-configuration-service";
+
 import { ActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 
 export const config = {
@@ -43,7 +44,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
       Promise.resolve({ token: authData.token })
     );
 
-    const providersConfig = await new TaxProvidersConfigurationService(
+    const providersConfig = await new PrivateTaxProvidersConfigurationService(
       client,
       authData.saleorApiUrl
     ).getAll();

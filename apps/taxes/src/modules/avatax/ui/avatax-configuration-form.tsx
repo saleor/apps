@@ -13,10 +13,10 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppLink } from "../../ui/app-link";
-import { useInstanceId } from "../../taxes/tax-context";
-import { avataxConfigSchema, avataxInstanceConfigSchema } from "../avatax-config";
+import { avataxConfigSchema } from "../avatax-config";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -59,8 +59,12 @@ export const AvataxConfigurationForm = () => {
         );
       },
     });
-  const { data: providersConfig, refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery(undefined, {
+  const { refetch: refetchProvidersConfigurationData } =
+    trpcClient.providersConfiguration.getAll.useQuery();
+  const { data: instance } = trpcClient.avataxConfiguration.get.useQuery(
+    { id: instanceId ?? "" },
+    {
+      enabled: !!instanceId,
       onError(error) {
         appBridge?.dispatch(
           actions.Notification({
@@ -70,9 +74,8 @@ export const AvataxConfigurationForm = () => {
           })
         );
       },
-    });
-
-  const instance = providersConfig?.find((instance) => instance.id === instanceId);
+    }
+  );
 
   const resetInstanceId = () => {
     setInstanceId(null);
@@ -89,7 +92,7 @@ export const AvataxConfigurationForm = () => {
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
     trpcClient.avataxConfiguration.post.useMutation({
-      onSuccess({ data: { id } }) {
+      onSuccess({ id }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         appBridge?.dispatch(
