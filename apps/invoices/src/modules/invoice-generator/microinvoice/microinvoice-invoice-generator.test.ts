@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, it } from "vitest";
+import { afterEach, beforeEach, describe, it, expect } from "vitest";
 import { MicroinvoiceInvoiceGenerator } from "./microinvoice-invoice-generator";
 import { readFile } from "fs/promises";
 import { join } from "path";
@@ -30,6 +30,6 @@ describe("MicroinvoiceInvoiceGenerator", () => {
       companyAddressData: getMockAddress(),
     });
 
-    return readFile(filePath);
+    return expect(readFile(filePath)).resolves.toBeDefined();
   });
 });
