@@ -30,6 +30,8 @@ describe("MicroinvoiceInvoiceGenerator", () => {
       companyAddressData: getMockAddress(),
     });
 
+    console.log(filePath);
+
     return expect(readFile(filePath)).resolves.toBeDefined();
   });
 });
