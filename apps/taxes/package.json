@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-taxes",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
