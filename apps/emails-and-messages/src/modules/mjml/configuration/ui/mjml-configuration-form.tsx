@@ -5,8 +5,7 @@ import React, { useEffect } from "react";
 import { MjmlConfiguration, smtpEncryptionTypes } from "../mjml-config";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
-import { useRouter } from "next/router";
-import { mjmlUrls } from "../../urls";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useStyles = makeStyles((theme) => ({
   field: {
@@ -31,19 +30,40 @@ type Props = {
 
 export const MjmlConfigurationForm = (props: Props) => {
   const styles = useStyles();
-  const router = useRouter();
   const { appBridge } = useAppBridge();
 
   const { handleSubmit, control, reset, setError } = useForm<MjmlConfiguration>({
     defaultValues: props.initialData,
   });
 
+  const queryClient = useQueryClient();
+
   const { mutate: createOrUpdateConfiguration } =
     trpcClient.mjmlConfiguration.updateOrCreateConfiguration.useMutation({
-      onSuccess(data, variables) {
-        router.replace(mjmlUrls.configuration(data.id));
-        props.onConfigurationSaved();
+      onSuccess: async (data, variables) => {
+        await queryClient.cancelQueries({ queryKey: ["mjmlConfiguration", "getConfigurations"] });
 
+        // Optimistically update to the new value
+        queryClient.setQueryData<Array<MjmlConfiguration>>(
+          ["mjmlConfiguration", "getConfigurations", undefined],
+          (old) => {
+            if (old) {
+              const index = old.findIndex((c) => c.id === data.id);
+              // If thats an update, replace the old one
+              if (index !== -1) {
+                old[index] = data;
+                return [...old];
+              } else {
+                return [...old, data];
+              }
+            } else {
+              return [data];
+            }
+          }
+        );
+
+        // Trigger refetch to make sure we have a fresh data
+        props.onConfigurationSaved();
         appBridge?.dispatch(
           actions.Notification({
             title: "Configuration saved",

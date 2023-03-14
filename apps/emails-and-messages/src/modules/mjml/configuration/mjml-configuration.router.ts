@@ -66,7 +66,13 @@ export const mjmlConfigurationRouter = router({
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.delete called");
-
+      const existingConfiguration = await ctx.configurationService.getConfiguration(input);
+      if (!existingConfiguration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
       await ctx.configurationService.deleteConfiguration(input);
       return null;
     }),
