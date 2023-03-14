@@ -20,7 +20,7 @@ export const createCmsOperations = async ({
   channelsToUpdate,
   cmsKeysToUpdate,
 }: {
-  context: WebhookContext;
+  context: Pick<WebhookContext, "authData">;
   channelsToUpdate?: string[] | null;
   cmsKeysToUpdate?: string[] | null;
 }) => {

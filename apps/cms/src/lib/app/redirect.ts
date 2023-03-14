@@ -9,7 +9,7 @@ export const useAppRedirect = () => {
       type: "redirect",
       payload: {
         newContext: false,
-        actionId: "redirect_from_tax_app",
+        actionId: "redirect_from_cms_app",
         to: props.path ? props.path : props.href,
       },
     });

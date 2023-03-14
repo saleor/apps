@@ -87,13 +87,6 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
   });
   logger.debug("Called webhook PRODUCT_VARIANT_DELETED");
 
-  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
-  const cmsOperations = await createCmsOperations({
-    context,
-    channelsToUpdate: [],
-    cmsKeysToUpdate: productVariantCMSKeys,
-  });
-
   if (!productVariant) {
     return res.status(500).json({
       errors: [
@@ -101,6 +94,13 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
       ],
     });
   }
+
+  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
+  const cmsOperations = await createCmsOperations({
+    context,
+    channelsToUpdate: [],
+    cmsKeysToUpdate: productVariantCMSKeys,
+  });
 
   const {
     cmsProviderInstanceProductVariantIdsToCreate,

@@ -57,7 +57,7 @@ export interface ProductVariantProviderInstancesToAlter {
   toRemove: string[];
 }
 
-interface ProductVariantProviderInstancesToAlterOpts {
+export interface ProductVariantProviderInstancesToAlterOpts {
   channelsSettingsParsed: Record<string, ProductVariantSingleChannelSettings>;
   channelsToUpdate?: string[] | null;
   cmsKeysToUpdate?: string[] | null;
@@ -70,26 +70,28 @@ export const getProductVariantProviderInstancesToAlter = async ({
 }: ProductVariantProviderInstancesToAlterOpts) => {
   return Object.values(channelsSettingsParsed).reduce<ProductVariantProviderInstancesToAlter>(
     (acc, channelSettings) => {
+      const productVariantEnabledProviderInstances =
+        channelSettings.enabledProviderInstances.filter((providerInstance) =>
+          cmsKeysToUpdate?.includes(createCmsKeyForSaleorItem(providerInstance))
+        );
+
       const isProductVariantInChannel = !!channelsToUpdate?.includes(channelSettings.channelSlug);
       const isProductVariantInSomeCMS = !!(
-        cmsKeysToUpdate?.length &&
-        channelSettings.enabledProviderInstances.find((key) =>
-          cmsKeysToUpdate.includes(createCmsKeyForSaleorItem(key))
-        )
+        cmsKeysToUpdate?.length && !!productVariantEnabledProviderInstances.length
       );
 
       return {
         toCreate:
           isProductVariantInChannel && !isProductVariantInSomeCMS
-            ? mergeProviderInstances(acc.toCreate, channelSettings.enabledProviderInstances)
+            ? mergeProviderInstances(acc.toCreate, productVariantEnabledProviderInstances)
             : acc.toCreate,
         toUpdate:
           isProductVariantInChannel && isProductVariantInSomeCMS
-            ? mergeProviderInstances(acc.toUpdate, channelSettings.enabledProviderInstances)
+            ? mergeProviderInstances(acc.toUpdate, productVariantEnabledProviderInstances)
             : acc.toUpdate,
         toRemove:
           !isProductVariantInChannel && isProductVariantInSomeCMS
-            ? mergeProviderInstances(acc.toRemove, channelSettings.enabledProviderInstances)
+            ? mergeProviderInstances(acc.toRemove, productVariantEnabledProviderInstances)
             : acc.toRemove,
       };
     },

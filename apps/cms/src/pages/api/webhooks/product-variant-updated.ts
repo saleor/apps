@@ -88,14 +88,6 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadF
   });
   logger.debug("Called webhook PRODUCT_VARIANT_UPDATED");
 
-  const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
-  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
-  const cmsOperations = await createCmsOperations({
-    context,
-    channelsToUpdate: productVariantChannels,
-    cmsKeysToUpdate: productVariantCMSKeys,
-  });
-
   if (!productVariant) {
     return res.status(500).json({
       errors: [
@@ -103,6 +95,14 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadF
       ],
     });
   }
+
+  const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
+  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
+  const cmsOperations = await createCmsOperations({
+    context,
+    channelsToUpdate: productVariantChannels,
+    cmsKeysToUpdate: productVariantCMSKeys,
+  });
 
   const {
     cmsProviderInstanceProductVariantIdsToCreate,
