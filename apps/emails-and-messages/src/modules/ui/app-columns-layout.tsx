@@ -1,17 +1,15 @@
 import { makeStyles } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "grid",
     gridTemplateColumns: "280px auto",
     alignItems: "start",
-    gap: 32,
-    maxWidth: 1180,
-    margin: "0 auto",
+    gap: theme.spacing(3),
     padding: "20px 0",
   },
-});
+}));
 
 type AppColumnsLayoutProps = PropsWithChildren<{}>;
 

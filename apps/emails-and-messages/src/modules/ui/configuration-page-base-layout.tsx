@@ -2,9 +2,12 @@ import React, { PropsWithChildren } from "react";
 import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
-const useStyles = makeStyles({
-  appContainer: { marginTop: 20 },
-});
+const useStyles = makeStyles((theme) => ({
+  appContainer: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(3),
+  },
+}));
 
 type Props = PropsWithChildren<{}>;
 
@@ -37,11 +40,7 @@ export const ConfigurationPageBaseLayout = ({ children }: Props) => {
   };
   return (
     <div className={styles.appContainer}>
-      <PageTabs
-        value={activePath}
-        onChange={navigateToTab}
-        style={{ maxWidth: 1180, margin: "0 auto" }}
-      >
+      <PageTabs value={activePath} onChange={navigateToTab}>
         {tabs.map((tab) => (
           <PageTab key={tab.key} value={tab.key} label={tab.label} disabled={tab.disabled} />
         ))}
