@@ -1,0 +1,12 @@
+query FetchCustomers {
+    customers(first: 100){
+        edges {
+            node {
+                id
+                lastName
+                firstName
+                email
+            }
+        }
+    }
+}
