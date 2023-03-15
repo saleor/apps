@@ -115,6 +115,7 @@ importers:
     specifiers:
       '@graphql-codegen/cli': 3.2.2
       '@graphql-codegen/introspection': 3.0.1
+      '@graphql-codegen/schema-ast': ^3.0.1
       '@graphql-codegen/typed-document-node': 3.0.2
       '@graphql-codegen/typescript': 3.0.2
       '@graphql-codegen/typescript-operations': 3.0.2
@@ -215,6 +216,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli': 3.2.2_d3dx4krdt4fsynqrp5lqxelwe4
       '@graphql-codegen/introspection': 3.0.1_graphql@16.6.0
+      '@graphql-codegen/schema-ast': 3.0.1_graphql@16.6.0
       '@graphql-codegen/typed-document-node': 3.0.2_graphql@16.6.0
       '@graphql-codegen/typescript': 3.0.2_graphql@16.6.0
       '@graphql-codegen/typescript-operations': 3.0.2_graphql@16.6.0
