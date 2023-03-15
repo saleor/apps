@@ -1,10 +1,10 @@
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
-import { AppDashboardLink } from "./app-dashboard-link";
+import { AppLink } from "./app-link";
 import { AppPaper } from "./app-paper";
 import { AppTabNavButton } from "./app-tab-nav-button";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -42,8 +42,8 @@ export const Instructions = () => {
               syncronisation once it is created, updated or deleted.
             </li>
             <li>
-              To see the effect, go to <AppDashboardLink path="products">Products</AppDashboardLink>
-              . Add, update or delete channel listing for any product variant.
+              To see the effect, go to <AppLink href="/products">Products</AppLink>. Add, update or
+              delete channel listing for any product variant.
             </li>
           </ol>
         </Typography>

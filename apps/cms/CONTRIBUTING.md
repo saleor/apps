@@ -34,7 +34,7 @@ export const providersConfig = {
       { name: "token", label: "Token", required: true },
     ],
   },
-} as const;
+} satisfies ProvidersConfig;
 ```
 
 > `tokens` is an array that contains names of all the tokens your provider requires. The names will be used to:

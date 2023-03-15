@@ -17,30 +17,3 @@ export const useAppRedirect = () => {
 
   return { redirect: redirectToPath };
 };
-
-const paths = {
-  products: `/products`,
-} as const;
-
-export type DashboardPath = keyof typeof paths;
-
-type DashboardRedirectValues = {
-  linkProps: AppLinkProps;
-  redirect: () => void;
-};
-
-export const useCreateDashboardRedirect = (p: DashboardPath): DashboardRedirectValues => {
-  const { appBridgeState } = useAppBridge();
-  const { redirect } = useAppRedirect();
-
-  const domain = appBridgeState?.domain;
-  const path = paths[p];
-  const href = `https://${domain}/dashboard${path}`;
-
-  const linkProps = {
-    path,
-    href,
-  };
-
-  return { linkProps, redirect: () => redirect(linkProps) };
-};
