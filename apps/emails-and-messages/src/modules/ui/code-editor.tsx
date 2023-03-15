@@ -29,8 +29,7 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
   return (
     <>
       <Editor
-        height="40vh"
-        width="100%"
+        height="600px"
         value={value}
         theme={themeType === "dark" ? "vs-dark" : "vs-light"}
         defaultLanguage={language}

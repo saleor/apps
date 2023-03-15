@@ -1,5 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
-import { CircularProgress, TextField, TextFieldProps, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, TextField, TextFieldProps, Typography } from "@material-ui/core";
 import {
   BackSmallIcon,
   Button,
@@ -26,13 +26,15 @@ import { examplePayloads } from "../../../event-handlers/default-payloads";
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
 const useStyles = makeStyles((theme) => ({
+  viewContainer: {
+    padding: theme.spacing(2),
+  },
   header: {
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
-    gap: theme.spacing(1),
-    padding: theme.spacing(3),
-    maxWidth: 1180,
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     margin: "0 auto",
   },
   previewHeader: {
@@ -40,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
 
   field: {
@@ -53,15 +56,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
   },
   form: {
-    padding: theme.spacing(3),
-  },
-  formAndPreviewSection: {
-    display: "grid",
-    gridTemplateColumns: "2fr 1fr",
-    alignItems: "start",
-    gap: 32,
-    maxWidth: 1180,
-    margin: "0 auto",
+    maxWidth: 800,
   },
 }));
 
@@ -115,7 +110,7 @@ export const EventConfigurationForm = ({
       },
     });
 
-  const { mutate: updateEventConfiguration, isLoading: isFetchingUpdateEvent } =
+  const { mutate: updateEventConfiguration } =
     trpcClient.mjmlConfiguration.updateEventConfiguration.useMutation({
       onSuccess: (data) => {
         appBridge?.dispatch(
@@ -164,7 +159,7 @@ export const EventConfigurationForm = ({
   }, [debouncedPayload, debouncedSubject, debouncedTemplate, fetchTemplatePreview]);
 
   return (
-    <div>
+    <div className={styles.viewContainer}>
       <div className={styles.header}>
         <IconButton
           variant="secondary"
@@ -178,100 +173,104 @@ export const EventConfigurationForm = ({
           {messageEventTypesLabels[eventType]} event configuration
         </Typography>
       </div>
-      <div className={styles.formAndPreviewSection}>
-        <form
-          onSubmit={handleSubmit((data, event) => {
-            updateEventConfiguration({ ...data, configurationId });
-          })}
-          className={styles.form}
-        >
-          <Controller
-            control={control}
-            name="active"
-            render={({ field: { value, name, onChange } }) => (
-              <div className={styles.field}>
-                {/* TODO: fix types in the MacawUI */}
-                {/* @ts-ignore: MacawUI use wrong type for */}
-                <SwitchSelector key={name} className={styles.field}>
-                  {[
-                    { label: "Active", value: true },
-                    { label: "Disabled", value: false },
-                  ].map((button) => (
-                    // @ts-ignore: MacawUI use wrong type for SwitchSelectorButton
-                    <SwitchSelectorButton
-                      value={button.value.toString()}
-                      onClick={() => onChange(button.value)}
-                      activeTab={value.toString()}
-                      key={button.label}
-                    >
-                      {button.label}
-                    </SwitchSelectorButton>
-                  ))}
-                </SwitchSelector>
-              </div>
-            )}
-          />
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={7}>
+          <form
+            onSubmit={handleSubmit((data, event) => {
+              updateEventConfiguration({ ...data, configurationId });
+            })}
+            className={styles.form}
+          >
+            <Controller
+              control={control}
+              name="active"
+              render={({ field: { value, name, onChange } }) => (
+                <div className={styles.field}>
+                  {/* TODO: fix types in the MacawUI */}
+                  {/* @ts-ignore: MacawUI use wrong type for */}
+                  <SwitchSelector key={name} className={styles.field}>
+                    {[
+                      { label: "Active", value: true },
+                      { label: "Disabled", value: false },
+                    ].map((button) => (
+                      // @ts-ignore: MacawUI use wrong type for SwitchSelectorButton
+                      <SwitchSelectorButton
+                        value={button.value.toString()}
+                        onClick={() => onChange(button.value)}
+                        activeTab={value.toString()}
+                        key={button.label}
+                      >
+                        {button.label}
+                      </SwitchSelectorButton>
+                    ))}
+                  </SwitchSelector>
+                </div>
+              )}
+            />
 
-          <Controller
-            name="subject"
-            control={control}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                label="Email subject"
-                value={value}
-                onChange={onChange}
-                error={!!error}
-                helperText={
-                  !error
-                    ? "You can use variables like {{ order.number }} or {{ order.userEmail }}"
-                    : error.message
-                }
-                {...CommonFieldProps}
-              />
-            )}
-          />
+            <Controller
+              name="subject"
+              control={control}
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <TextField
+                  label="Email subject"
+                  value={value}
+                  onChange={onChange}
+                  error={!!error}
+                  helperText={
+                    !error
+                      ? "You can use variables like {{ order.number }} or {{ order.userEmail }}"
+                      : error.message
+                  }
+                  {...CommonFieldProps}
+                />
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="template"
-            render={({ field: { value, onChange } }) => {
-              return (
-                <>
-                  <div className={styles.editor}>
-                    <CodeEditor
-                      initialTemplate={value}
-                      value={value}
-                      onChange={onChange}
-                      language="xml"
-                    />
-                  </div>
-                </>
-              );
-            }}
-          />
-          <Button type="submit" fullWidth variant="primary">
-            Save configuration
-          </Button>
-        </form>
-        <div>
-          <div className={styles.previewHeader}>
-            <Typography variant="h2">Preview</Typography>
-            {isFetchingTemplatePreview && <CircularProgress size="3rem" color="primary" />}
+            <Controller
+              control={control}
+              name="template"
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <>
+                    <div className={styles.editor}>
+                      <CodeEditor
+                        initialTemplate={value}
+                        value={value}
+                        onChange={onChange}
+                        language="xml"
+                      />
+                    </div>
+                  </>
+                );
+              }}
+            />
+            <Button type="submit" fullWidth variant="primary">
+              Save configuration
+            </Button>
+          </form>
+        </Grid>
+        <Grid item xs={12} lg={5}>
+          <div>
+            <div className={styles.previewHeader}>
+              <Typography variant="h2">Preview</Typography>
+              {isFetchingTemplatePreview && <CircularProgress size="3rem" color="primary" />}
+            </div>
+            <Typography variant="h3" paragraph>
+              Subject: {lastValidRenderedSubject}
+            </Typography>
+            <div className={styles.preview}>
+              <MjmlPreview value={lastValidRenderedTemplate} />
+            </div>
+            <CodeEditor
+              initialTemplate={payload}
+              value={payload}
+              onChange={setPayload}
+              language="json"
+            />
           </div>
-          <Typography variant="h3" paragraph>
-            Subject: {lastValidRenderedSubject}
-          </Typography>
-          <div className={styles.preview}>
-            <MjmlPreview value={lastValidRenderedTemplate} />
-          </div>
-          <CodeEditor
-            initialTemplate={payload}
-            value={payload}
-            onChange={setPayload}
-            language="json"
-          />
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };
