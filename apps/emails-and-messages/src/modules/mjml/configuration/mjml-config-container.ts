@@ -50,19 +50,19 @@ export interface FilterConfigurationsArgs {
 
 const getConfigurations =
   (mjmlConfigRoot: MjmlConfigurationRoot | null | undefined) =>
-  ({ ids, active }: FilterConfigurationsArgs): MjmlConfiguration[] => {
+  (filter: FilterConfigurationsArgs | undefined): MjmlConfiguration[] => {
     if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
       return [];
     }
 
     let filtered = mjmlConfigRoot.configurations;
 
-    if (ids?.length) {
-      filtered = filtered.filter((c) => ids.includes(c.id));
+    if (filter?.ids?.length) {
+      filtered = filtered.filter((c) => filter?.ids?.includes(c.id));
     }
 
-    if (active !== undefined) {
-      filtered = filtered.filter((c) => c.active === active);
+    if (filter?.active !== undefined) {
+      filtered = filtered.filter((c) => c.active === filter.active);
     }
 
     return filtered;
@@ -79,7 +79,7 @@ const createConfiguration =
       id: generateMjmlConfigurationId(),
       events: getDefaultEventsConfiguration(),
     };
-    mjmlConfigNormalized.configurations.unshift(newConfiguration);
+    mjmlConfigNormalized.configurations.push(newConfiguration);
     return mjmlConfigNormalized;
   };
 

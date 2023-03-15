@@ -60,10 +60,12 @@ export const mjmlGetConfigurationInputSchema = z.object({
 export const mjmlDeleteConfigurationInputSchema = z.object({
   id: z.string(),
 });
-export const mjmlGetConfigurationsInputSchema = z.object({
-  ids: z.array(z.string()).optional(),
-  active: z.boolean().optional(),
-});
+export const mjmlGetConfigurationsInputSchema = z
+  .object({
+    ids: z.array(z.string()).optional(),
+    active: z.boolean().optional(),
+  })
+  .optional();
 
 export const mjmlUpdateEventConfigurationInputSchema = z
   .object({

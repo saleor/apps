@@ -72,7 +72,7 @@ export class MjmlConfigurationService {
     return MjmlConfigContainer.getConfiguration(await this.getConfigurationRoot())({ id });
   }
 
-  async getConfigurations(filter: FilterConfigurationsArgs) {
+  async getConfigurations(filter?: FilterConfigurationsArgs) {
     logger.debug("Get configuration");
     return MjmlConfigContainer.getConfigurations(await this.getConfigurationRoot())(filter);
   }

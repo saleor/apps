@@ -12,6 +12,7 @@ import SideMenu from "../../../app-configuration/ui/side-menu";
 import { MjmlConfiguration } from "../mjml-config";
 import { LoadingIndicator } from "../../../ui/loading-indicator";
 import { Add } from "@material-ui/icons";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -50,31 +51,57 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
   const styles = useStyles();
   const { appBridge } = useAppBridge();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
     data: configurations,
     refetch: refetchConfigurations,
     isLoading: configurationsIsLoading,
-  } = trpcClient.mjmlConfiguration.getConfigurations.useQuery(
-    {},
-    {
-      onSuccess(data) {
-        if (!configurationId) {
-          navigateToFirstConfiguration(router, data);
-        }
-      },
-    }
-  );
+    isFetching: configurationsIsFetching,
+    isRefetching: configurationsIsRefetching,
+  } = trpcClient.mjmlConfiguration.getConfigurations.useQuery(undefined, {
+    onSuccess(data) {
+      if (!configurationId) {
+        console.log("no conf id! navigate to first");
+        navigateToFirstConfiguration(router, data);
+      }
+    },
+  });
 
-  const { mutate: deleteConfiguration, error: deleteError } =
+  const { mutate: deleteConfiguration } =
     trpcClient.mjmlConfiguration.deleteConfiguration.useMutation({
-      onSuccess(data, variables) {
-        refetchConfigurations();
+      onError: (error) => {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Could not remove the configuration",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+      onSuccess: async (_data, variables) => {
+        await queryClient.cancelQueries({ queryKey: ["mjmlConfiguration", "getConfigurations"] });
+        // remove value from the cache after the success
+        queryClient.setQueryData<Array<MjmlConfiguration>>(
+          ["mjmlConfiguration", "getConfigurations"],
+          (old) => {
+            if (old) {
+              const index = old.findIndex((c) => c.id === variables.id);
+              if (index !== -1) {
+                delete old[index];
+                return [...old];
+              }
+            }
+          }
+        );
+
         // if we just deleted the configuration that was selected
-        // we have to navigate to the first configuration
+        // we have to update the URL
         if (variables.id === configurationId) {
-          navigateToFirstConfiguration(router, configurations);
+          router.replace(mjmlUrls.configuration());
         }
+
+        refetchConfigurations();
         appBridge?.dispatch(
           actions.Notification({
             title: "Success",
@@ -85,7 +112,7 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
       },
     });
 
-  if (configurationsIsLoading) {
+  if (configurationsIsLoading || configurationsIsFetching) {
     return <LoadingIndicator />;
   }
 
@@ -117,7 +144,7 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
         items={configurations?.map((c) => ({ label: c.configurationName, id: c.id })) || []}
       />
       <div className={styles.configurationColumn}>
-        {configurationsIsLoading ? (
+        {configurationsIsLoading || configurationsIsFetching ? (
           <LoadingIndicator />
         ) : (
           <>
