@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
   sectionHeader: {
     marginTop: 20,
   },
-  form: {},
 }));
 
 type Props = {
@@ -35,12 +34,11 @@ export const MjmlConfigurationForm = (props: Props) => {
   const router = useRouter();
   const { appBridge } = useAppBridge();
 
-  const { handleSubmit, control, setValue, getValues, reset, setError } =
-    useForm<MjmlConfiguration>({
-      defaultValues: props.initialData,
-    });
+  const { handleSubmit, control, reset, setError } = useForm<MjmlConfiguration>({
+    defaultValues: props.initialData,
+  });
 
-  const { mutate: createOrUpdateConfiguration, error: createOrUpdateError } =
+  const { mutate: createOrUpdateConfiguration } =
     trpcClient.mjmlConfiguration.updateOrCreateConfiguration.useMutation({
       onSuccess(data, variables) {
         router.replace(mjmlUrls.configuration(data.id));
@@ -97,7 +95,6 @@ export const MjmlConfigurationForm = (props: Props) => {
           ...data,
         });
       })}
-      className={styles.form}
     >
       {isNewConfiguration ? (
         <Typography variant="h2" paragraph>
@@ -268,8 +265,6 @@ export const MjmlConfigurationForm = (props: Props) => {
       <Button type="submit" fullWidth variant="primary">
         Save configuration
       </Button>
-
-      {createOrUpdateError && <span>{createOrUpdateError.message}</span>}
     </form>
   );
 };
