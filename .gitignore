@@ -36,7 +36,6 @@ yarn-error.log*
 .turbo
 
 .saleor-app-auth.json
-test-invoice.pdf
 coverage/
 apps/**/generated
 .eslintcache
