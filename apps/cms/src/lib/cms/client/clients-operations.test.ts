@@ -23,7 +23,7 @@ vi.mock("../../metadata", () => ({
 }));
 
 describe("CMS Clients Operations", () => {
-  it("should return no creation operations when no channels to update passed and no cms to update passed", async () => {
+  it("should return no creation operations when no variant channels passed and no variant cms passed", async () => {
     vi.spyOn(Settings, "getChannelsSettings").mockImplementationOnce(async () => ({}));
     vi.spyOn(Settings, "getProviderInstancesSettings").mockImplementationOnce(async () => ({}));
     vi.spyOn(Settings, "getProductVariantProviderInstancesToAlter").mockImplementationOnce(
@@ -37,8 +37,8 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
-      channelsToUpdate: [],
-      cmsKeysToUpdate: [],
+      productVariantChannels: [],
+      productVariantCmsKeys: [],
     });
 
     expect(cmsOperations).toEqual<CmsClientOperations[]>([]);
@@ -96,8 +96,8 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
-      channelsToUpdate: ["default-channel"],
-      cmsKeysToUpdate: [],
+      productVariantChannels: ["default-channel"],
+      productVariantCmsKeys: [],
     });
 
     expect(cmsOperations).toEqual<CmsClientOperations[]>([
@@ -165,8 +165,8 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
-      channelsToUpdate: ["default-channel"],
-      cmsKeysToUpdate: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: ["default-channel"],
+      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
     expect(cmsOperations).toEqual<CmsClientOperations[]>([
@@ -234,8 +234,8 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
-      channelsToUpdate: [],
-      cmsKeysToUpdate: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: [],
+      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
     expect(cmsOperations).toEqual<CmsClientOperations[]>([

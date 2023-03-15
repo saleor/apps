@@ -31,7 +31,7 @@ Currently, the CMS Hub does not support mapping Saleor fields to your CMS fields
 
 ## How to use it?
 
-1. Install the application in your Dashboard.
+1. Install the application in your Dashboard and open it.
 2. Go to Providers.
 3. Add CMS provider instance with proper configuration.
 4. Go to Channels.

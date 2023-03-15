@@ -2,8 +2,22 @@ import { z } from "zod";
 import { CreateProviderConfig } from "../types";
 import { ContentfulIcon, DatocmsIcon, StrapiIcon } from "../../../assets";
 
-// todo: use types
-// todo: add satisfies
+type ProviderToken = {
+  name: string;
+  label: string;
+  helpText: string;
+  required?: boolean;
+};
+
+type ProviderConfig = {
+  name: string;
+  label: string;
+  icon: React.ReactNode;
+  tokens: ProviderToken[];
+};
+
+type ProvidersConfig = Record<string, ProviderConfig>;
+
 export const providersConfig = {
   contentful: {
     name: "contentful",
@@ -99,7 +113,7 @@ export const providersConfig = {
       },
     ],
   },
-} as const;
+} satisfies ProvidersConfig;
 
 export type StrapiConfig = CreateProviderConfig<"strapi">;
 export type ContentfulConfig = CreateProviderConfig<"contentful">;

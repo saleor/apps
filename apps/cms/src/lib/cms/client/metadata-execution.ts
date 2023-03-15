@@ -4,6 +4,7 @@ import {
   DeleteMetadataDocument,
   ProductVariantUpdatedWebhookPayloadFragment,
   UpdateMetadataDocument,
+  WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
 import { createClient } from "../../graphql";
 import { createCmsKeyForSaleorItem } from "./metadata";
@@ -17,10 +18,7 @@ export const executeMetadataUpdate = async ({
   cmsProviderInstanceIdsToDelete,
 }: {
   context: WebhookContext;
-  productVariant: Exclude<
-    ProductVariantUpdatedWebhookPayloadFragment["productVariant"],
-    undefined | null
-  >;
+  productVariant: WebhookProductVariantFragment;
   cmsProviderInstanceIdsToCreate: Record<string, string>;
   cmsProviderInstanceIdsToDelete: Record<string, string>;
 }) => {

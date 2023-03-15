@@ -1,8 +1,12 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
-import { ProductVariantUpdatedWebhookPayloadFragment } from "../../../../generated/graphql";
+import {
+  ProductVariantUpdatedWebhookPayloadFragment,
+  UntypedWebhookProductVariantFragmentDoc,
+} from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
+import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
 import {
   createCmsOperations,
   executeCmsOperations,
@@ -17,42 +21,10 @@ export const config = {
 };
 
 export const ProductVariantUpdatedWebhookPayload = gql`
+  ${UntypedWebhookProductVariantFragmentDoc}
   fragment ProductVariantUpdatedWebhookPayload on ProductVariantUpdated {
     productVariant {
-      id
-      name
-      sku
-      product {
-        id
-        name
-        slug
-        media {
-          url
-        }
-        channelListings {
-          id
-          channel {
-            id
-            slug
-          }
-          isPublished
-        }
-      }
-      channelListings {
-        id
-        channel {
-          id
-          slug
-        }
-        price {
-          amount
-          currency
-        }
-      }
-      metadata {
-        key
-        value
-      }
+      ...WebhookProductVariant
     }
   }
 `;
@@ -96,12 +68,12 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadF
     });
   }
 
-  const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
-  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
+  const productVariantChannels = getChannelsSlugsFromSaleorItem(productVariant);
+  const productVariantCmsKeys = getCmsKeysFromSaleorItem(productVariant);
   const cmsOperations = await createCmsOperations({
     context,
-    channelsToUpdate: productVariantChannels,
-    cmsKeysToUpdate: productVariantCMSKeys,
+    productVariantChannels: productVariantChannels,
+    productVariantCmsKeys: productVariantCmsKeys,
   });
 
   const {

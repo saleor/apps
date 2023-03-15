@@ -59,8 +59,8 @@ export interface ProductVariantProviderInstancesToAlter {
 
 export interface ProductVariantProviderInstancesToAlterOpts {
   channelsSettingsParsed: Record<string, ProductVariantSingleChannelSettings>;
-  channelsToUpdate?: string[] | null;
-  cmsKeysToUpdate?: string[] | null;
+  productVariantChannels: string[];
+  productVariantCmsKeys: string[];
 }
 
 /**
@@ -70,18 +70,19 @@ export interface ProductVariantProviderInstancesToAlterOpts {
  */
 export const getProductVariantProviderInstancesToAlter = async ({
   channelsSettingsParsed,
-  channelsToUpdate,
-  cmsKeysToUpdate,
+  productVariantChannels,
+  productVariantCmsKeys,
 }: ProductVariantProviderInstancesToAlterOpts) => {
   return Object.values(channelsSettingsParsed).reduce<ProductVariantProviderInstancesToAlter>(
     (acc, channelSettings) => {
       const isProductVariantInChannel =
-        !!channelsToUpdate?.length && !!channelsToUpdate?.includes(channelSettings.channelSlug);
+        !!productVariantChannels.length &&
+        !!productVariantChannels.includes(channelSettings.channelSlug);
 
       const isProductVariantInSomeCMS =
-        !!cmsKeysToUpdate?.length &&
+        !!productVariantCmsKeys.length &&
         !!channelSettings.enabledProviderInstances.some((providerInstance) =>
-          cmsKeysToUpdate?.includes(createCmsKeyForSaleorItem(providerInstance))
+          productVariantCmsKeys.includes(createCmsKeyForSaleorItem(providerInstance))
         );
 
       return {

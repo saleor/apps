@@ -17,16 +17,16 @@ type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 // todo: add support for multiple providers at once
 export const createCmsOperations = async ({
   context,
-  channelsToUpdate,
-  cmsKeysToUpdate,
+  productVariantChannels,
+  productVariantCmsKeys,
 }: {
   context: Pick<WebhookContext, "authData">;
-  channelsToUpdate?: string[] | null;
-  cmsKeysToUpdate?: string[] | null;
+  productVariantChannels: string[];
+  productVariantCmsKeys: string[];
 }) => {
   const logger = pinoLogger.child({
-    channelsToUpdate,
-    cmsKeysToUpdate,
+    productVariantChannels,
+    productVariantCmsKeys,
   });
 
   const saleorApiUrl = context.authData.saleorApiUrl;
@@ -43,8 +43,8 @@ export const createCmsOperations = async ({
 
   const productVariantProviderInstancesToAlter = await getProductVariantProviderInstancesToAlter({
     channelsSettingsParsed,
-    channelsToUpdate,
-    cmsKeysToUpdate,
+    productVariantChannels,
+    productVariantCmsKeys,
   });
 
   const allProductVariantProviderInstancesToAlter = [

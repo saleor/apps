@@ -1,6 +1,9 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
-import { ProductVariantDeletedWebhookPayloadFragment } from "../../../../generated/graphql";
+import {
+  ProductVariantDeletedWebhookPayloadFragment,
+  UntypedWebhookProductVariantFragmentDoc,
+} from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
 import {
@@ -17,42 +20,10 @@ export const config = {
 };
 
 export const ProductVariantDeletedWebhookPayload = gql`
+  ${UntypedWebhookProductVariantFragmentDoc}
   fragment ProductVariantDeletedWebhookPayload on ProductVariantDeleted {
     productVariant {
-      id
-      name
-      sku
-      product {
-        id
-        name
-        slug
-        media {
-          url
-        }
-        channelListings {
-          id
-          channel {
-            id
-            slug
-          }
-          isPublished
-        }
-      }
-      channelListings {
-        id
-        channel {
-          id
-          slug
-        }
-        price {
-          amount
-          currency
-        }
-      }
-      metadata {
-        key
-        value
-      }
+      ...WebhookProductVariant
     }
   }
 `;
@@ -95,11 +66,11 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
     });
   }
 
-  const productVariantCMSKeys = getCmsKeysFromSaleorItem(productVariant);
+  const productVariantCmsKeys = getCmsKeysFromSaleorItem(productVariant);
   const cmsOperations = await createCmsOperations({
     context,
-    channelsToUpdate: [],
-    cmsKeysToUpdate: productVariantCMSKeys,
+    productVariantChannels: [],
+    productVariantCmsKeys: productVariantCmsKeys,
   });
 
   const {

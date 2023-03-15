@@ -1,7 +1,11 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
-import { ProductVariantCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
+import {
+  ProductVariantCreatedWebhookPayloadFragment,
+  UntypedWebhookProductVariantFragmentDoc,
+} from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
+import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
 import {
   createCmsOperations,
   executeCmsOperations,
@@ -16,42 +20,10 @@ export const config = {
 };
 
 export const ProductVariantCreatedWebhookPayload = gql`
+  ${UntypedWebhookProductVariantFragmentDoc}
   fragment ProductVariantCreatedWebhookPayload on ProductVariantCreated {
     productVariant {
-      id
-      name
-      sku
-      product {
-        id
-        name
-        slug
-        media {
-          url
-        }
-        channelListings {
-          id
-          channel {
-            id
-            slug
-          }
-          isPublished
-        }
-      }
-      channelListings {
-        id
-        channel {
-          id
-          slug
-        }
-        price {
-          amount
-          currency
-        }
-      }
-      metadata {
-        key
-        value
-      }
+      ...WebhookProductVariant
     }
   }
 `;
@@ -94,11 +66,11 @@ export const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadF
     });
   }
 
-  const productVariantChannels = productVariant?.channelListings?.map((cl) => cl.channel.slug);
+  const productVariantChannels = getChannelsSlugsFromSaleorItem(productVariant);
   const cmsOperations = await createCmsOperations({
     context,
-    channelsToUpdate: productVariantChannels,
-    cmsKeysToUpdate: [],
+    productVariantChannels: productVariantChannels,
+    productVariantCmsKeys: [],
   });
 
   const {

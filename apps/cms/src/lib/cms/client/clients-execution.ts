@@ -1,4 +1,7 @@
-import { ProductVariantUpdatedWebhookPayloadFragment } from "../../../../generated/graphql";
+import {
+  ProductVariantUpdatedWebhookPayloadFragment,
+  WebhookProductVariantFragment,
+} from "../../../../generated/graphql";
 import { CmsClientOperations } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
 import { logger as pinoLogger } from "../../logger";
@@ -14,10 +17,7 @@ const executeCmsClientOperation = async ({
   productVariant,
 }: {
   cmsClient: CmsClientOperations;
-  productVariant: Exclude<
-    ProductVariantUpdatedWebhookPayloadFragment["productVariant"],
-    undefined | null
-  >;
+  productVariant: WebhookProductVariantFragment;
 }): Promise<CmsClientOperationResult | undefined> => {
   const logger = pinoLogger.child({ cmsClient });
   logger.debug("Execute CMS client operation called");

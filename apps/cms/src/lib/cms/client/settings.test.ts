@@ -26,8 +26,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      channelsToUpdate: ["default-channel"],
-      cmsKeysToUpdate: [],
+      productVariantChannels: ["default-channel"],
+      productVariantCmsKeys: [],
     });
 
     expect(providerInstances).toEqual({
@@ -52,8 +52,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      channelsToUpdate: ["default-channel"],
-      cmsKeysToUpdate: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: ["default-channel"],
+      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
     expect(providerInstances).toEqual({
@@ -77,8 +77,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      channelsToUpdate: [],
-      cmsKeysToUpdate: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: [],
+      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
     expect(providerInstances).toEqual({
