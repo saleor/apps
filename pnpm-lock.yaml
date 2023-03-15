@@ -242,14 +242,15 @@ importers:
 
   apps/invoices:
     specifiers:
-      '@graphql-codegen/cli': 2.13.3
-      '@graphql-codegen/introspection': 2.2.1
-      '@graphql-codegen/typed-document-node': ^2.3.3
-      '@graphql-codegen/typescript': 2.7.3
-      '@graphql-codegen/typescript-operations': 2.5.3
-      '@graphql-codegen/typescript-urql': ^3.7.0
+      '@graphql-codegen/cli': 3.2.2
+      '@graphql-codegen/introspection': 3.0.1
+      '@graphql-codegen/schema-ast': ^3.0.1
+      '@graphql-codegen/typed-document-node': 3.0.2
+      '@graphql-codegen/typescript': 3.0.2
+      '@graphql-codegen/typescript-operations': 3.0.2
+      '@graphql-codegen/typescript-urql': ^3.7.3
       '@graphql-codegen/urql-introspection': 2.2.1
-      '@graphql-typed-document-node/core': ^3.1.1
+      '@graphql-typed-document-node/core': ^3.1.2
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
@@ -325,14 +326,15 @@ importers:
       usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
       zod: 3.20.2
     devDependencies:
-      '@graphql-codegen/cli': 2.13.3_d3dx4krdt4fsynqrp5lqxelwe4
-      '@graphql-codegen/introspection': 2.2.1_graphql@16.6.0
-      '@graphql-codegen/typed-document-node': 2.3.13_graphql@16.6.0
-      '@graphql-codegen/typescript': 2.7.3_graphql@16.6.0
-      '@graphql-codegen/typescript-operations': 2.5.3_graphql@16.6.0
+      '@graphql-codegen/cli': 3.2.2_d3dx4krdt4fsynqrp5lqxelwe4
+      '@graphql-codegen/introspection': 3.0.1_graphql@16.6.0
+      '@graphql-codegen/schema-ast': 3.0.1_graphql@16.6.0
+      '@graphql-codegen/typed-document-node': 3.0.2_graphql@16.6.0
+      '@graphql-codegen/typescript': 3.0.2_graphql@16.6.0
+      '@graphql-codegen/typescript-operations': 3.0.2_graphql@16.6.0
       '@graphql-codegen/typescript-urql': 3.7.3_sy4knu3obj4ys7pjcqbyfxmqle
       '@graphql-codegen/urql-introspection': 2.2.1_graphql@16.6.0
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.1.2_graphql@16.6.0
       '@types/node': 18.13.0
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
