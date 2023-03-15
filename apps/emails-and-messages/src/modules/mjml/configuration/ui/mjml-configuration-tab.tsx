@@ -61,7 +61,6 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
     isRefetching: configurationsIsRefetching,
   } = trpcClient.mjmlConfiguration.getConfigurations.useQuery(undefined, {
     onSuccess(data) {
-      console.log("on success", configurationId);
       if (!configurationId) {
         console.log("no conf id! navigate to first");
         navigateToFirstConfiguration(router, data);
