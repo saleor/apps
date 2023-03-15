@@ -4,7 +4,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { saleorApp } from "../../../saleor-app";
 import { CMSSchemaChannels, SingleChannelSchema } from "../../lib/cms/config";
-import { Setting } from "../../lib/cms/utils";
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 

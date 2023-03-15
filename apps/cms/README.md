@@ -14,6 +14,7 @@ Here is a list of currently supported CMSes and their configuration guides:
 
 - [Strapi](docs/strapi.md)
 - [Contentful](docs/contentful.md)
+- [DatoCMS](docs/datocms.md)
 
 ## How does it work?
 

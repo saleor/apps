@@ -2,7 +2,7 @@
 
 ## Configuration
 
-Strapi integration requires several configuration tokens. You should enter them in the _Apps -> CMS Hub_ configuration view.
+Strapi integration requires several configuration tokens. You should enter them in the _Apps -> CMS_ configuration view.
 
 Here is the list of the tokens and instructions on how to obtain them
 

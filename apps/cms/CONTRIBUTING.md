@@ -46,7 +46,7 @@ export const providersConfig = {
 3. Add configuration fields to schema:
 
 ```ts
-// src/lib/cms/config.ts
+// src/lib/cms/config/providers.ts
 ...
 
 export type PayloadConfig = CreateProviderConfig<"payload">; // Generates the type for a config based on the configuration in `src/lib/cms/providers/index.ts`.

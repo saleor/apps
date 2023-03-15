@@ -35,21 +35,8 @@ const useChannelsFetch = () => {
       const result = (await response.json()) as ChannelsApiResponse;
       setIsFetching(false);
 
-      console.log("getSettings result", result);
-
       if (result.success && result.data) {
-        // const config = transformSettingsIntoConfig(result.data);
         const config = result.data;
-        console.log("getSettings config", config);
-        // const validation = cmsSchemaChannels.safeParse(config);
-        // console.log("getSettings validation", validation);
-
-        // if (validation.success) {
-        //   setConfig({ ...config, ...(validation.data as CMSSchemaChannels) });
-        // } else {
-        //   // todo: show toast instead
-        //   setValidationError(validation.error.message);
-        // }
 
         setConfig(config);
       }

@@ -127,7 +127,6 @@ const ChannelConfigurationForm = ({
                       );
                       valueCopy.splice(idx, 1);
                     }
-                    console.log(valueCopy);
                     resetField("enabledProviderInstances", {
                       defaultValue: valueCopy,
                     });
