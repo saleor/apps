@@ -11,4 +11,4 @@
 "saleor-app-cms": patch
 ---
 
-Updated @saleor/app-sdk to 0.37.0
+Updated @saleor/app-sdk to 0.37.1
