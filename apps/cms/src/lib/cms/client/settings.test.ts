@@ -11,7 +11,6 @@ vi.mock("../../metadata", () => ({
 }));
 
 describe("CMS Clients Operations", () => {
-  // todo: fix tests
   it("should return provider instance in create group when variant channel listing passed and channel provider instance not passed", async () => {
     const channelsSettings = {
       "default-channel": {
@@ -26,8 +25,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      productVariantChannels: ["default-channel"],
-      productVariantCmsKeys: [],
+      productVariantChannels: ["default-channel"], // function should infer that variant has ["first-provider"]
+      productVariantCmsProviderInstances: [],
     });
 
     expect(providerInstances).toEqual({
@@ -37,7 +36,6 @@ describe("CMS Clients Operations", () => {
     });
   });
 
-  // todo: fix tests
   it("should return provider instance in update group when variant channel listing passed and channel provider instance passed", async () => {
     const channelsSettings = {
       "default-channel": {
@@ -52,8 +50,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      productVariantChannels: ["default-channel"],
-      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: ["default-channel"], // function should infer that variant has ["first-provider"]
+      productVariantCmsProviderInstances: ["first-provider"],
     });
 
     expect(providerInstances).toEqual({
@@ -77,8 +75,8 @@ describe("CMS Clients Operations", () => {
 
     const providerInstances = await getProductVariantProviderInstancesToAlter({
       channelsSettingsParsed: channelsSettings,
-      productVariantChannels: [],
-      productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
+      productVariantChannels: [], // function should infer that variant has []
+      productVariantCmsProviderInstances: ["first-provider"],
     });
 
     expect(providerInstances).toEqual({

@@ -11,6 +11,7 @@ import { providersSchemaSet } from "../config";
 import cmsProviders, { CMSProvider } from "../providers";
 import { CmsClientOperations } from "../types";
 import { logger as pinoLogger } from "../../logger";
+import { getCmsIdFromSaleorItemKey } from "./metadata";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
@@ -41,10 +42,13 @@ export const createCmsOperations = async ({
   const channelsSettingsParsed = await getChannelsSettings(settingsManager);
   const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
 
+  const productVariantCmsProviderInstances = productVariantCmsKeys.map((cmsKey) =>
+    getCmsIdFromSaleorItemKey(cmsKey)
+  );
   const productVariantProviderInstancesToAlter = await getProductVariantProviderInstancesToAlter({
     channelsSettingsParsed,
     productVariantChannels,
-    productVariantCmsKeys,
+    productVariantCmsProviderInstances,
   });
 
   const allProductVariantProviderInstancesToAlter = [

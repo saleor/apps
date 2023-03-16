@@ -12,6 +12,10 @@ export const createCmsKeyForSaleorItem = (cmsProviderInstanceId: string) => {
   return `${CMS_ID_KEY}_${cmsProviderInstanceId}`;
 };
 
+export const getCmsIdFromSaleorItemKey = (key: string) => {
+  return key.split("_")[2];
+};
+
 export const getCmsIdFromSaleorItem = (
   item: Record<string, any> & { metadata: MetadataItem[] },
   cmsProviderInstanceId: string
