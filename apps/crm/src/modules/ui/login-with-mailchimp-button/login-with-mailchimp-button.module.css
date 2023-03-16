@@ -1,0 +1,27 @@
+.button {
+  background: var(--mailchimp-yellow);
+  border: 2px solid var(--mailchimp-brown);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mailchimp-brown);
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.button:hover {
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.text {
+  font-size: 18px;
+  font-weight: bold;
+}

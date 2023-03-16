@@ -1,8 +1,15 @@
+:root {
+  --mailchimp-yellow: #ffe01b;
+  --mailchimp-brown: #241c15;
+}
+
 body {
   font-family: Inter, -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   color: #111;
   padding: 1rem 2rem;
+  /*Overwrite Macaw, todo*/
+  background: #fff !important;
 }
 
 code {

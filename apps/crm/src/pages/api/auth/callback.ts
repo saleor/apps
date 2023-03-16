@@ -1,16 +1,10 @@
-import { NextRequest } from "next/server";
+import { NextApiHandler } from "next";
+import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 
-export const config = {
-  runtime: "edge",
-};
+const handler: NextApiHandler = async (req, res) => {
+  // const logger = createLogger({ url: req.url });
 
-const handler = async (req: NextRequest) => {
-  const { searchParams } = new URL(req.url);
-
-  const code = searchParams.get("code") as string;
-
-  console.log("code");
-  console.log(code);
+  const code = req.query.code as string;
 
   const tokenResponse = await fetch("https://login.mailchimp.com/oauth2/token", {
     method: "POST",
@@ -18,19 +12,27 @@ const handler = async (req: NextRequest) => {
       grant_type: "authorization_code",
       client_id: process.env.MAILCHIMP_CLIENT_ID as string,
       client_secret: process.env.MAILCHIMP_CLIENT_SECRET as string,
-      redirect_uri: "http://127.0.0.1:3000/api/auth/callback",
+      redirect_uri: "http://127.0.0.1:3000/api/auth/callback", // todo move to env and base url
       code,
     }),
   });
 
   const { access_token } = await tokenResponse.json();
-  console.log(access_token);
-  // save token in metadata
 
-  console.log(req.url);
-  console.log(new URL("configuration", req.url));
+  const metadataResponse = await fetch("https://login.mailchimp.com/oauth2/metadata", {
+    headers: {
+      Authorization: `OAuth ${access_token}`,
+    },
+  });
 
-  return Response.redirect(new URL("/configuration", req.url));
+  const metadata = await metadataResponse.json();
+  console.log(metadata);
+
+  const mc = new MailchimpClientOAuth(metadata.dc, access_token);
+
+  await mc.ping().then(console.log);
+
+  return res.redirect(`/configuration?token=${access_token}`); // todo maybe move to cookie?
 };
 
 export default handler;
