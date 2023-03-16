@@ -20,6 +20,7 @@ export interface MjmlConfiguration {
   smtpHost: string;
   smtpPort: string;
   smtpUser: string;
+  smtpPassword: string;
   encryption: SmtpEncryptionType;
   events: MjmlEventConfiguration[];
 }
