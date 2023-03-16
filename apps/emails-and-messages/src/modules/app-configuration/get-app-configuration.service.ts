@@ -1,9 +1,9 @@
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "./metadata-manager";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
 import { AppConfig, AppConfigurationPerChannel } from "./app-config";
 import { getDefaultEmptyAppConfiguration } from "./app-config-container";
+import { createSettingsManager } from "../../lib/metadata-manager";
 
 const logger = pinoLogger.child({
   service: "AppConfigurationService",

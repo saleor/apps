@@ -1,7 +1,7 @@
 import { PrivateMetadataSendgridConfigurator } from "./sendgrid-configurator";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../../lib/logger";
-import { createSettingsManager } from "../../app-configuration/metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
 
 // todo test
 export class GetSendgridConfigurationService {

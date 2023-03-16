@@ -4,7 +4,7 @@ import { sendgridConfigInputSchema } from "./sendgrid-config-input-schema";
 import { GetSendgridConfigurationService } from "./get-sendgrid-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
-import { createSettingsManager } from "../../app-configuration/metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
 
 export const sendgridConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
