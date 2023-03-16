@@ -45,6 +45,7 @@ In the `apps` folder, you will find the following applications:
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
 - [taxes](./apps/taxes) - calculate order and checkout taxes using external services.
+- [cms](./apps/cms) - exports products from Saleor to CMS.
 
 ## Development
 
