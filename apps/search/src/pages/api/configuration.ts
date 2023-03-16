@@ -41,11 +41,13 @@ export const handler = async (
   debug("Configuration handler received request");
 
   const {
-    authData: { domain, token, saleorApiUrl },
+    authData: { token, saleorApiUrl },
   } = ctx;
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
 
   const settings = createSettingsManager(client);
+
+  const domain = new URL(saleorApiUrl).host;
 
   if (req.method === "GET") {
     debug("Returning configuration");

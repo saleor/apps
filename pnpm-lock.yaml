@@ -37,7 +37,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/macaw-ui': ^0.6.7
       '@testing-library/react': ^13.4.0
       '@types/node': ^18.8.1
@@ -72,7 +72,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_ld2jel3hspngo3u5lti2kgl2sq
+      '@saleor/app-sdk': 0.37.1_ld2jel3hspngo3u5lti2kgl2sq
       '@saleor/macaw-ui': 0.6.7_pmlnlm755hlzzzocw2qhf3a34e
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       clsx: 1.2.1
@@ -125,7 +125,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sentry/nextjs': ^7.39.0
@@ -160,7 +160,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_3vryta7zmbcsw4rrqf4axjqggm
+      '@saleor/app-sdk': 0.37.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@sentry/nextjs': 7.39.0_next@13.1.6+react@18.2.0
@@ -217,7 +217,7 @@ importers:
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
       '@monaco-editor/react': ^4.4.6
-      '@saleor/app-sdk': 0.30.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sendgrid/client': ^7.7.0
@@ -270,7 +270,7 @@ importers:
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
       '@monaco-editor/react': 4.4.6_biqbaboplfbrettd7655fr4n2y
-      '@saleor/app-sdk': 0.30.0_qgtcjgzkkjtbiyvnx7d32fl5vu
+      '@saleor/app-sdk': 0.37.1_qgtcjgzkkjtbiyvnx7d32fl5vu
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@sendgrid/client': 7.7.0
@@ -343,7 +343,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sentry/nextjs': ^7.36.0
@@ -387,7 +387,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_3vryta7zmbcsw4rrqf4axjqggm
+      '@saleor/app-sdk': 0.37.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@sentry/nextjs': 7.36.0_next@13.1.6+react@18.2.0
@@ -452,7 +452,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sentry/nextjs': ^7.36.0
@@ -482,7 +482,7 @@ importers:
       '@material-ui/core': 4.12.4_twyhzqqpkwvvgrmyeapdo6i4my
       '@material-ui/icons': 4.11.3_xfab57qepcdrxdxif4xlv2kdgm
       '@material-ui/lab': 4.0.0-alpha.61_xfab57qepcdrxdxif4xlv2kdgm
-      '@saleor/app-sdk': 0.34.0_3vryta7zmbcsw4rrqf4axjqggm
+      '@saleor/app-sdk': 0.37.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_5j6zkq4mzir5org5dcu2pr43hm
       '@sentry/nextjs': 7.36.0_next@13.1.6+react@18.2.0
@@ -533,7 +533,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@testing-library/react': ^13.4.0
@@ -564,7 +564,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_7jnwqgtpcnwg4nzft4b6xlzlfi
+      '@saleor/app-sdk': 0.37.1_7jnwqgtpcnwg4nzft4b6xlzlfi
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
@@ -616,7 +616,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@tanstack/react-query': ^4.24.2
@@ -659,7 +659,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_7jnwqgtpcnwg4nzft4b6xlzlfi
+      '@saleor/app-sdk': 0.37.1_7jnwqgtpcnwg4nzft4b6xlzlfi
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
@@ -723,7 +723,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': 0.7.2
       '@sentry/nextjs': ^7.31.1
@@ -757,7 +757,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_3vryta7zmbcsw4rrqf4axjqggm
+      '@saleor/app-sdk': 0.37.1_3vryta7zmbcsw4rrqf4axjqggm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_2dwar4pp5qoelfawvjffoi6dne
       '@sentry/nextjs': 7.36.0_next@13.1.6+react@18.2.0
@@ -812,7 +812,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@sentry/nextjs': ^7.30.0
@@ -842,7 +842,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.0_s75y6mxmikaw2mhqmuko6w7njm
+      '@saleor/app-sdk': 0.37.1_s75y6mxmikaw2mhqmuko6w7njm
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_2dwar4pp5qoelfawvjffoi6dne
       '@sentry/nextjs': 7.36.0_next@13.1.0+react@18.2.0
@@ -894,7 +894,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.34.1
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@tanstack/react-query': ^4.19.1
@@ -939,7 +939,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.34.1_nvzgbose6yf6w7ijjprgspqefi
+      '@saleor/app-sdk': 0.37.1_nvzgbose6yf6w7ijjprgspqefi
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
@@ -4610,30 +4610,8 @@ packages:
       - supports-color
     dev: true
 
-  /@saleor/app-sdk/0.30.0_qgtcjgzkkjtbiyvnx7d32fl5vu:
-    resolution: {integrity: sha512-bjyFRSAfMNtIIQNV9HJqJ1uy1M6cWG5xB6lDuf42gbcMlJ4InrEdkMyihYtM7ezvWM12NJNBYHPxvNxwQkdZJw==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      '@changesets/cli': 2.26.0
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.11.4
-      next: 13.2.1_biqbaboplfbrettd7655fr4n2y
-      raw-body: 2.5.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@saleor/app-sdk/0.34.0_3vryta7zmbcsw4rrqf4axjqggm:
-    resolution: {integrity: sha512-szcXE7OJ3lmu1DN9X8aHQ6dlBSf9ySWhpd49UnOJdAAh42MlxPJDgbbBtw8rNA42hfU75WMyp73wQ6xxbp/TZg==}
+  /@saleor/app-sdk/0.37.1_3vryta7zmbcsw4rrqf4axjqggm:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -4654,8 +4632,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/app-sdk/0.34.0_7jnwqgtpcnwg4nzft4b6xlzlfi:
-    resolution: {integrity: sha512-szcXE7OJ3lmu1DN9X8aHQ6dlBSf9ySWhpd49UnOJdAAh42MlxPJDgbbBtw8rNA42hfU75WMyp73wQ6xxbp/TZg==}
+  /@saleor/app-sdk/0.37.1_7jnwqgtpcnwg4nzft4b6xlzlfi:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -4676,8 +4654,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/app-sdk/0.34.0_ld2jel3hspngo3u5lti2kgl2sq:
-    resolution: {integrity: sha512-szcXE7OJ3lmu1DN9X8aHQ6dlBSf9ySWhpd49UnOJdAAh42MlxPJDgbbBtw8rNA42hfU75WMyp73wQ6xxbp/TZg==}
+  /@saleor/app-sdk/0.37.1_ld2jel3hspngo3u5lti2kgl2sq:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -4698,30 +4676,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/app-sdk/0.34.0_s75y6mxmikaw2mhqmuko6w7njm:
-    resolution: {integrity: sha512-szcXE7OJ3lmu1DN9X8aHQ6dlBSf9ySWhpd49UnOJdAAh42MlxPJDgbbBtw8rNA42hfU75WMyp73wQ6xxbp/TZg==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      '@changesets/cli': 2.26.0
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.11.4
-      next: 13.1.0_biqbaboplfbrettd7655fr4n2y
-      raw-body: 2.5.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@saleor/app-sdk/0.34.1_nvzgbose6yf6w7ijjprgspqefi:
-    resolution: {integrity: sha512-z5oheqsJziYgsCHg2Q3x1EaiIBaWh7Y1DcAg/wGwxaI/1CLS2i4jKoTjTTvO0MzGNdZQdQRkQIQ8LQBwqQRlzQ==}
+  /@saleor/app-sdk/0.37.1_nvzgbose6yf6w7ijjprgspqefi:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -4733,6 +4689,50 @@ packages:
       graphql: 16.6.0
       jose: 4.11.4
       next: 13.2.3_biqbaboplfbrettd7655fr4n2y
+      raw-body: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      retes: 0.33.0
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@saleor/app-sdk/0.37.1_qgtcjgzkkjtbiyvnx7d32fl5vu:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
+    peerDependencies:
+      next: '>=12'
+      react: '>=17'
+      react-dom: '>=17'
+    dependencies:
+      '@changesets/cli': 2.26.0
+      debug: 4.3.4
+      fast-glob: 3.2.12
+      graphql: 16.6.0
+      jose: 4.11.4
+      next: 13.2.1_biqbaboplfbrettd7655fr4n2y
+      raw-body: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      retes: 0.33.0
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@saleor/app-sdk/0.37.1_s75y6mxmikaw2mhqmuko6w7njm:
+    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
+    peerDependencies:
+      next: '>=12'
+      react: '>=17'
+      react-dom: '>=17'
+    dependencies:
+      '@changesets/cli': 2.26.0
+      debug: 4.3.4
+      fast-glob: 3.2.12
+      graphql: 16.6.0
+      jose: 4.11.4
+      next: 13.1.0_biqbaboplfbrettd7655fr4n2y
       raw-body: 2.5.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
