@@ -19,7 +19,7 @@
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
     "@monaco-editor/react": "^4.4.6",
-    "@saleor/app-sdk": "0.30.0",
+    "@saleor/app-sdk": "0.37.0",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "^0.7.2",
     "@sendgrid/client": "^7.7.0",
