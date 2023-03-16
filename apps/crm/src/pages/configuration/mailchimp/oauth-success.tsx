@@ -4,6 +4,7 @@ import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useRouter } from "next/router";
 import { AppBridgeSession } from "../../../modules/app-bridge-session";
 
+// TODO What about performing Oauth flow in iframe? AppBridge should stay in parent
 const ConfigurationPage: NextPage = () => {
   // todo - this breaks, becasue iframe is refreshed. how to set it? in cookies?
   const { appBridgeState, appBridge } = useAppBridge();
