@@ -1,9 +1,5 @@
-import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { describe, expect, it, vi } from "vitest";
-import { CMSSchemaChannels, CMSSchemaProviderInstances } from "../config";
-import { CmsClientOperations } from "../types";
-import { createCmsOperations } from "./clients-operations";
-import { createCmsKeyForSaleorItem } from "./metadata";
+import { CMSSchemaChannels } from "../config";
 import { getProductVariantProviderInstancesToAlter } from "./settings";
 
 vi.mock("../../metadata", () => ({
