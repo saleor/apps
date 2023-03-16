@@ -4,11 +4,11 @@ export const sendSlackMessage = async (
   to: string,
   data: {
     order: Exclude<OrderCreatedWebhookPayloadFragment["order"], undefined | null>;
-    saleorDomain: string;
+    saleorApiUrl: string;
   }
 ) => {
   const {
-    saleorDomain,
+    saleorApiUrl,
     order: {
       id,
       number,
@@ -30,6 +30,8 @@ export const sendSlackMessage = async (
     }
   };
 
+  const dashboardUrl = saleorApiUrl.replace("/graphql/", "/dashboard/");
+
   const response = await fetch(to, {
     method: "POST",
     body: JSON.stringify({
@@ -38,7 +40,7 @@ export const sendSlackMessage = async (
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `Order <https://${saleorDomain}/dashboard/orders/${id}|#${number}> has been created 🎉`,
+            text: `Order <${dashboardUrl}/orders/${id}|#${number}> has been created 🎉`,
           },
         },
         {

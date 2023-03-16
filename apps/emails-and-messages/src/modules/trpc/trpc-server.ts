@@ -1,10 +1,10 @@
 import { initTRPC } from "@trpc/server";
 import { TrpcContext } from "./trpc-context";
-import { AppPermission } from "@saleor/app-sdk/types";
+import { Permission } from "@saleor/app-sdk/types";
 import { ZodError } from "zod";
 
 interface Meta {
-  requiredClientPermissions?: AppPermission[];
+  requiredClientPermissions?: Permission[];
 }
 
 const t = initTRPC
