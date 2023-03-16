@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useRouter } from "next/router";
+import { AppBridgeSession } from "../../../modules/app-bridge-session";
 
 const ConfigurationPage: NextPage = () => {
   // todo - this breaks, becasue iframe is refreshed. how to set it? in cookies?
@@ -9,8 +10,14 @@ const ConfigurationPage: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    appBridge?.dispatch(actions.NotifyReady());
+    // todo - this fails, because mailchimp redirects to localhost, instead ngrok, so domain doesnt match
+    const appBridge = new AppBridgeSession().constructAppBridgeFromSession();
+
+    appBridge.dispatch(actions.NotifyReady());
+    // todo somehow pass new appBridge instance to Provider, need to extend sdk?
   }, [appBridge]);
+
+  console.log(appBridgeState);
 
   return (
     <div>
