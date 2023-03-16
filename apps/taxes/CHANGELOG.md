@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.0.3
+
+### Patch Changes
+
+- e93a4dc: Updated GraphQL Code Generator package
+
 ## 1.0.2
 
 ### Patch Changes
