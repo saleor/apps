@@ -1,5 +1,11 @@
 # saleor-app-monitoring
 
+## 0.3.3
+
+### Patch Changes
+
+- e93a4dc: Updated GraphQL Code Generator package
+
 ## 0.3.2
 
 ### Patch Changes

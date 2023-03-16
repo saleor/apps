@@ -1,5 +1,11 @@
 # saleor-app-data-importer
 
+## 1.4.3
+
+### Patch Changes
+
+- e93a4dc: Updated GraphQL Code Generator package
+
 ## 1.4.2
 
 ### Patch Changes
