@@ -1,7 +1,7 @@
 import { logger as pinoLogger } from "../../lib/logger";
 import { compileMjml } from "./compile-mjml";
 import { compileHandlebarsTemplate } from "./compile-handlebars-template";
-import { sendEmailWithSmtp } from "./send-email-with-smtp";
+import { sendEmailWithSmtp, SendMailArgs } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
 import { MjmlConfiguration } from "./configuration/mjml-config";
@@ -128,7 +128,7 @@ export const sendMjml = async ({
     };
   }
 
-  const { response, errors: smtpErrors } = await sendEmailWithSmtp({
+  const sendEmailSettings: SendMailArgs = {
     mailData: {
       text: emailBodyPlaintext,
       html: emailBodyHtml,
@@ -140,7 +140,16 @@ export const sendMjml = async ({
       host: mjmlConfiguration.smtpHost,
       port: parseInt(mjmlConfiguration.smtpPort, 10),
     },
-  });
+  };
+
+  if (mjmlConfiguration.smtpUser) {
+    sendEmailSettings.smtpSettings.auth = {
+      user: mjmlConfiguration.smtpUser,
+      pass: mjmlConfiguration.smtpPassword,
+    };
+  }
+
+  const { response, errors: smtpErrors } = await sendEmailWithSmtp(sendEmailSettings);
 
   if (smtpErrors?.length) {
     return { errors: smtpErrors };
