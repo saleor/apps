@@ -45,12 +45,14 @@ importers:
       '@types/react-dom': ^18.0.6
       '@types/uuid': ^8.3.4
       '@urql/exchange-auth': ^1.0.0
+      '@vitejs/plugin-react': ^3.1.0
       clsx: ^1.2.1
       eslint: 8.25.0
       eslint-config-next: 12.3.1
       eslint-config-prettier: ^8.5.0
       graphql: ^16.6.0
       graphql-tag: ^2.12.6
+      jsdom: ^20.0.3
       next: '13.2'
       pino: ^8.8.0
       prettier: ^2.7.1
@@ -61,6 +63,7 @@ importers:
       urql: ^3.0.3
       usehooks-ts: ^2.9.1
       uuid: ^9.0.0
+      vite: ^4.1.4
       vitest: ^0.29.2
       zod: ^3.19.1
     dependencies:
@@ -83,6 +86,7 @@ importers:
       urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
       usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
       uuid: 9.0.0
+      vite: 4.1.4_@types+node@18.13.0
       zod: 3.20.2
     devDependencies:
       '@graphql-codegen/cli': 2.13.3_d3dx4krdt4fsynqrp5lqxelwe4
@@ -98,12 +102,14 @@ importers:
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
       '@types/uuid': 8.3.4
+      '@vitejs/plugin-react': 3.1.0_vite@4.1.4
       eslint: 8.25.0
       eslint-config-next: 12.3.1_mx6jhvnay66odhn2yt7eqo2wou
       eslint-config-prettier: 8.6.0_eslint@8.25.0
+      jsdom: 20.0.3
       prettier: 2.8.3
       typescript: 4.9.5
-      vitest: 0.29.3
+      vitest: 0.29.3_jsdom@20.0.3
 
   apps/data-importer:
     specifiers:
@@ -6094,6 +6100,22 @@ packages:
       vite: 4.1.1_@types+node@18.13.0
     transitivePeerDependencies:
       - supports-color
+
+  /@vitejs/plugin-react/3.1.0_vite@4.1.4:
+    resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.1.0-beta.0
+    dependencies:
+      '@babel/core': 7.20.12
+      '@babel/plugin-transform-react-jsx-self': 7.18.6_@babel+core@7.20.12
+      '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.12
+      magic-string: 0.27.0
+      react-refresh: 0.14.0
+      vite: 4.1.4_@types+node@18.13.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /@vitest/coverage-c8/0.28.4_jsdom@20.0.3:
     resolution: {integrity: sha512-btelLBxaWhHnywXRQxDlrvPhGdnuIaD3XulsxcZRIcnpLPbFu39dNTT0IYu2QWP2ZZrV0AmNtdLIfD4c77zMAg==}
@@ -15133,7 +15155,7 @@ packages:
       mlly: 1.1.0
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.1.1_@types+node@18.13.0
+      vite: 4.1.4_@types+node@18.13.0
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -15146,6 +15168,39 @@ packages:
 
   /vite/4.1.1_@types+node@18.13.0:
     resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.13.0
+      esbuild: 0.16.17
+      postcss: 8.4.21
+      resolve: 1.22.1
+      rollup: 3.14.0
+    optionalDependencies:
+      fsevents: 2.3.2
+
+  /vite/4.1.4_@types+node@18.13.0:
+    resolution: {integrity: sha512-3knk/HsbSTKEin43zHu7jTwYWv81f8kgAL99G5NWBcA1LKvtvcVAC4JjBH1arBunO9kQka+1oGbrMKOjk4ZrBg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -15329,7 +15384,7 @@ packages:
       - supports-color
       - terser
 
-  /vitest/0.29.3:
+  /vitest/0.29.3_jsdom@20.0.3:
     resolution: {integrity: sha512-muMsbXnZsrzDGiyqf/09BKQsGeUxxlyLeLK/sFFM4EXdURPQRv8y7dco32DXaRORYP0bvyN19C835dT23mL0ow==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -15363,6 +15418,7 @@ packages:
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
+      jsdom: 20.0.3
       local-pkg: 0.4.3
       pathe: 1.1.0
       picocolors: 1.0.0
@@ -15372,7 +15428,7 @@ packages:
       tinybench: 2.3.1
       tinypool: 0.3.1
       tinyspy: 1.1.1
-      vite: 4.1.1_@types+node@18.13.0
+      vite: 4.1.4_@types+node@18.13.0
       vite-node: 0.29.3_@types+node@18.13.0
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
