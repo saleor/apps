@@ -15,6 +15,7 @@ const handler = createManifestHandler({
       version: packageJson.version,
       webhooks: [orderCreatedWebhook.getWebhookManifest(context.appBaseUrl)],
       extensions: [],
+      author: "Saleor Commerce",
     };
 
     return manifest;

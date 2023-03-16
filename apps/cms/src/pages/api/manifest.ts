@@ -21,6 +21,7 @@ export default createManifestHandler({
         productVariantDeletedWebhook.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [],
+      author: "Saleor Commerce",
     };
 
     return manifest;

@@ -14,6 +14,7 @@ export default createManifestHandler({
       version: packageJson.version,
       webhooks: [],
       extensions: [],
+      author: "Saleor Commerce",
     };
 
     return manifest;
