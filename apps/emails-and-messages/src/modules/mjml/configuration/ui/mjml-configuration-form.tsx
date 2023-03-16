@@ -259,6 +259,21 @@ export const MjmlConfigurationForm = (props: Props) => {
       />
 
       <Controller
+        name="smtpPassword"
+        control={control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <TextField
+            label="SMTP server password"
+            value={value}
+            helperText={error?.message}
+            error={!!error}
+            onChange={onChange}
+            {...CommonFieldProps}
+          />
+        )}
+      />
+
+      <Controller
         control={control}
         name="encryption"
         render={({ field: { value, name, onChange } }) => (

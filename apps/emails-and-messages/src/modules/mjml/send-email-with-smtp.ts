@@ -5,10 +5,14 @@ const logger = pinoLogger.child({
   fn: "sendEmailWithSmtp",
 });
 
-interface SendMailArgs {
+export interface SendMailArgs {
   smtpSettings: {
     host: string;
     port: number;
+    auth?: {
+      user: string;
+      pass: string | undefined;
+    };
   };
   mailData: {
     from: string;

@@ -22,6 +22,7 @@ export const getDefaultEmptyConfiguration = (): MjmlConfiguration => {
     smtpHost: "",
     smtpPort: "",
     smtpUser: "",
+    smtpPassword: "",
     encryption: "NONE",
     events: getDefaultEventsConfiguration(),
   };
