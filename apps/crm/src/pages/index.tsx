@@ -2,25 +2,21 @@ import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { LoginWithMailchimpButton } from "../modules/ui/login-with-mailchimp-button/login-with-mailchimp-button";
+import { PageTab, PageTabs } from "@saleor/macaw-ui";
+import { LinearProgress } from "@material-ui/core";
+import { useRouter } from "next/router";
 
 const IndexPage: NextPage = () => {
-  const { appBridgeState } = useAppBridge();
+  const { appBridgeState, appBridge } = useAppBridge();
+  const { replace } = useRouter();
 
   useEffect(() => {
-    console.log(appBridgeState);
-  }, [appBridgeState]);
+    if (appBridgeState?.ready) {
+      replace("/configuration/providers");
+    }
+  }, [appBridgeState, appBridge]);
 
-  if (!appBridgeState?.ready) {
-    return <p>loading</p>;
-  }
-
-  return (
-    <div>
-      <a href={`/api/auth/mailchimp`}>
-        <LoginWithMailchimpButton />
-      </a>
-    </div>
-  );
+  return <LinearProgress />;
 };
 
 export default IndexPage;
