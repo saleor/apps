@@ -38,13 +38,14 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   const metadata = await metadataResponse.json();
-  console.log(metadata);
 
   const mc = new MailchimpClientOAuth(metadata.dc, access_token);
 
-  await mc.ping().then(console.log);
+  await mc.ping();
 
-  return res.redirect(`/configuration/mailchimp/oauth-success?token=${access_token}`); // todo maybe move to cookie
+  return res.redirect(
+    `/configuration/mailchimp/oauth-success?token=${access_token}&email=${metadata.login.email}`
+  ); // todo maybe move to cookie
 };
 
 export default handler;

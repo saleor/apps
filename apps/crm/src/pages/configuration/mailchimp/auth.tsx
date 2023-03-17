@@ -1,15 +1,9 @@
 import { NextPage } from "next";
-import { LoginWithMailchimpButton } from "../../../modules/ui/login-with-mailchimp-button/login-with-mailchimp-button";
 import React from "react";
+import { MailchimpAuth } from "../../../modules/mailchimp/mailchimp-auth/mailchimp-auth";
 
 const MailchimpAuthPage: NextPage = () => {
-  return (
-    <div>
-      <a href="/api/auth/mailchimp">
-        <LoginWithMailchimpButton />
-      </a>
-    </div>
-  );
+  return <MailchimpAuth />;
 };
 
 export default MailchimpAuthPage;

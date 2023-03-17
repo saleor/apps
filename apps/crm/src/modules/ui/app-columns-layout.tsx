@@ -8,6 +8,7 @@ const useStyles = makeStyles({
     alignItems: "start",
     gap: 32,
     margin: "0 auto",
+    height: "100%",
   },
 });
 

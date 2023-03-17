@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 const ConfigurationPage: NextPage = () => {
   const token = useRouter().query.token;
+  const email = useRouter().query.email;
 
   useEffect(() => {
     if (token) {
@@ -11,7 +12,12 @@ const ConfigurationPage: NextPage = () => {
     }
   }, [token]);
 
-  return <div>config success, token: {token}</div>;
+  return (
+    <div>
+      <h1>Success</h1>
+      <p>Successfully authorized Mailchimp as {email}</p>
+    </div>
+  );
 };
 
 export default ConfigurationPage;

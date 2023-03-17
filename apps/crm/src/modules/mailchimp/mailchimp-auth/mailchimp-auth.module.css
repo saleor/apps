@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info {
+  margin-bottom: 50px;
+  font-size: 18px;
+}
