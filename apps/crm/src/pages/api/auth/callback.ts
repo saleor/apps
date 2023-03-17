@@ -44,7 +44,7 @@ const handler: NextApiHandler = async (req, res) => {
   await mc.ping();
 
   return res.redirect(
-    `/configuration/mailchimp/oauth-success?token=${access_token}&email=${metadata.login.email}`
+    `/configuration/mailchimp/oauth-success?token=${access_token}&email=${metadata.login.email}&dc=${metadata.dc}`
   ); // todo maybe move to cookie
 };
 

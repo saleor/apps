@@ -9,19 +9,29 @@ import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const logger = createLogger({});
 
+/**
+ * todo
+ * - change providers, if there is one, add tab "mailchimp" and build entire page around it
+ * - add some tabs - settings & usage
+ * - add lists display https://mailchimp.com/developer/marketing/api/landing-pages-content/
+ * - add sync users to lists
+ */
 const ProvidersPage: NextPage = () => {
-  const { mutate, mutateAsync } = trpcClient.mailchimp.setToken.useMutation();
+  const { mutateAsync } = trpcClient.mailchimp.setToken.useMutation();
+  const { data, refetch, isFetched } = trpcClient.mailchimp.getMailchimpConfigured.useQuery();
 
   useEffect(() => {
     const handleMessage = (message: MessageEvent) => {
       //todo check origin
       try {
-        const payload = JSON.parse(message.data) as { token: string; type: "mailchimp_token" };
+        const payload = JSON.parse(message.data) as {
+          token: string;
+          type: "mailchimp_token";
+          dc: string;
+        };
 
-        console.log(payload);
-
-        mutateAsync({ token: payload.token }).then(() => {
-          console.log("saved token");
+        mutateAsync({ token: payload.token, dc: payload.dc }).then(() => {
+          return refetch();
         });
 
         // todo - save config in private metadata and show different UI
@@ -53,7 +63,11 @@ const ProvidersPage: NextPage = () => {
             overflow: "hidden",
           }}
         >
-          <MailchimpAuthFrame />
+          {isFetched && data?.configured ? (
+            <h2>Mailchimp service is configured</h2>
+          ) : (
+            <MailchimpAuthFrame />
+          )}
         </div>
       </AppColumnsLayout>
     </div>

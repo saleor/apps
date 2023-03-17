@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 const ConfigurationPage: NextPage = () => {
   const token = useRouter().query.token;
   const email = useRouter().query.email;
+  const dc = useRouter().query.dc;
 
   useEffect(() => {
     if (token) {
-      window.parent.postMessage(JSON.stringify({ type: "mailchimp_token", token })); // todo restrict origin
+      window.parent.postMessage(JSON.stringify({ type: "mailchimp_token", token, dc })); // todo restrict origin
     }
   }, [token]);
 
