@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { ContentfulConfig, contentfulConfigSchema } from "../config";
+import { logger as pinoLogger } from "../../logger";
 
 import { CreateOperations, CreateProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
 
 const contentfulFetch = (endpoint: string, config: ContentfulConfig, options?: RequestInit) => {
-  const { baseUrl, token } = config;
+  const baseUrl = config.baseUrl || "https://api.contentful.com";
+  const token = config.token;
 
   return fetch(`${baseUrl}${endpoint}`, {
     ...options,
@@ -55,11 +57,8 @@ const transformInputToBody = ({
         [locale]: input.productName,
       },
       channels: {
-        [locale]: JSON.stringify(input.channels),
+        [locale]: input.channels,
       },
-      // image: {
-      //   [locale]: input.image,
-      // },
     },
   };
   return body;
@@ -92,7 +91,9 @@ const getEntryEndpoint = ({
 }): string => `/spaces/${spaceId}/environments/${environment}/entries/${resourceId}`;
 
 const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
-  const { baseUrl, token, environment, spaceId, contentId, locale } = config;
+  const logger = pinoLogger.child({ cms: "strapi" });
+
+  const { environment, spaceId, contentId, locale } = config;
 
   return {
     createProduct: async (params) => {
@@ -111,6 +112,8 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
           "X-Contentful-Content-Type": contentId,
         },
       });
+      console.log(response);
+      console.log(response.body);
       const result = await response.json();
       return transformCreateProductResponse(result);
     },

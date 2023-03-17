@@ -28,6 +28,7 @@
     "graphql-tag": "^2.12.6",
     "next": "13.2",
     "pino": "^8.8.0",
+    "pino-pretty": "^9.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.39.1",
