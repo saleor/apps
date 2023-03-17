@@ -3,8 +3,9 @@ import { CmsOperations, CreateOperations, CreateProductResponse, ProductInput } 
 import { createProvider } from "./create";
 import { logger as pinoLogger } from "../../logger";
 
-const strapiFetch = (endpoint: string, config: StrapiConfig, options?: RequestInit) => {
+const strapiFetch = async (endpoint: string, config: StrapiConfig, options?: RequestInit) => {
   const { baseUrl, token } = config;
+
   return fetch(`${baseUrl}${endpoint}`, {
     ...options,
     headers: {
@@ -24,7 +25,7 @@ const transformInputToBody = ({ input }: { input: ProductInput }): StrapiBody =>
     data: {
       saleor_id: input.saleorId,
       name: input.name,
-      channels: JSON.stringify(input.channels),
+      channels: input.channels,
       product_id: input.productId,
       product_name: input.productName,
       product_slug: input.productSlug,
@@ -91,9 +92,9 @@ export const strapiOperations: CreateStrapiOperations = (config): CmsOperations 
 
       return transformCreateProductResponse(result);
     },
-    updateProduct: ({ id, input }) => {
+    updateProduct: async ({ id, input }) => {
       const body = transformInputToBody({ input });
-      const response = strapiFetch(`/${contentTypeId}/${id}`, config, {
+      const response = await strapiFetch(`/${contentTypeId}/${id}`, config, {
         method: "PUT",
         body: JSON.stringify(body),
       });
@@ -101,8 +102,8 @@ export const strapiOperations: CreateStrapiOperations = (config): CmsOperations 
 
       return response;
     },
-    deleteProduct: ({ id }) => {
-      const response = strapiFetch(`/${contentTypeId}/${id}`, config, { method: "DELETE" });
+    deleteProduct: async ({ id }) => {
+      const response = await strapiFetch(`/${contentTypeId}/${id}`, config, { method: "DELETE" });
       logger.debug("deleteProduct response", { response });
 
       return response;

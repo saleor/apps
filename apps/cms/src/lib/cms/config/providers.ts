@@ -76,7 +76,7 @@ export const providersConfig = {
         required: true,
         name: "baseUrl",
         label: "Base URL",
-        helpText: "API URL of your Strapi project.",
+        helpText: "API URL of your Strapi project. E.g. https://your-strapi-project/api.",
       },
       {
         required: true,
