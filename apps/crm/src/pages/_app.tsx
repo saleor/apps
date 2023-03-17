@@ -10,7 +10,6 @@ import { AppProps } from "next/app";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { AppBridgeSessionSaver } from "../modules/app-bridge-session";
 
 const themeOverrides: Partial<Theme> = {
   /**
@@ -48,7 +47,6 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppProps) 
         <ThemeProvider overrides={themeOverrides} ssr={false}>
           <ThemeSynchronizer />
           <RoutePropagator />
-          <AppBridgeSessionSaver />
           <Component {...pageProps} />
         </ThemeProvider>
       </AppBridgeProvider>

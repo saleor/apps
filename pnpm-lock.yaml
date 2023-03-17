@@ -131,7 +131,7 @@ importers:
       '@material-ui/core': ^4.12.4
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
-      '@saleor/app-sdk': 0.36.0
+      '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.7.2
       '@tanstack/react-query': ^4.24.4
@@ -148,6 +148,7 @@ importers:
       '@urql/exchange-auth': ^1.0.0
       '@vitejs/plugin-react': ^3.0.1
       clsx: ^1.2.1
+      cookies-next: ^2.1.1
       eslint: 8.31.0
       eslint-config-next: 13.1.2
       eslint-config-prettier: ^8.6.0
@@ -175,7 +176,7 @@ importers:
       '@material-ui/core': 4.12.4_5ndqzdd6t4rivxsukjv3i3ak2q
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
-      '@saleor/app-sdk': 0.36.0_ld2jel3hspngo3u5lti2kgl2sq
+      '@saleor/app-sdk': 0.37.1_ld2jel3hspngo3u5lti2kgl2sq
       '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.7.2_pmlnlm755hlzzzocw2qhf3a34e
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
@@ -186,6 +187,7 @@ importers:
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       '@vitejs/plugin-react': 3.1.0_vite@4.1.1
       clsx: 1.2.1
+      cookies-next: 2.1.1
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
       jsdom: 20.0.3
@@ -4737,28 +4739,6 @@ packages:
       - supports-color
     dev: true
 
-  /@saleor/app-sdk/0.36.0_ld2jel3hspngo3u5lti2kgl2sq:
-    resolution: {integrity: sha512-mkyb4G4XvuPM9Rtjwkn08tHkeDqaoAQGC6Mah0f1rPaotorwIYXkEmAqOH6QQ79JzQi5WaSQJp09CZSksgPGdw==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      '@changesets/cli': 2.26.0
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.11.4
-      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
-      raw-body: 2.5.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /@saleor/app-sdk/0.37.1_3vryta7zmbcsw4rrqf4axjqggm:
     resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
     peerDependencies:
@@ -6088,6 +6068,10 @@ packages:
   /@types/chai/4.3.4:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
 
+  /@types/cookie/0.4.1:
+    resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
+    dev: false
+
   /@types/debug/4.1.7:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
@@ -6219,6 +6203,10 @@ packages:
 
   /@types/node/14.18.36:
     resolution: {integrity: sha512-FXKWbsJ6a1hIrRxv+FoukuHnGTgEzKYGi7kilfMae96AL9UNkPFNWJEEYWzdRI9ooIkbr4AKldyuSTLql06vLQ==}
+    dev: false
+
+  /@types/node/16.18.16:
+    resolution: {integrity: sha512-ZOzvDRWp8dCVBmgnkIqYCArgdFOO9YzocZp8Ra25N/RStKiWvMOXHMz+GjSeVNe5TstaTmTWPucGJkDw0XXJWA==}
     dev: false
 
   /@types/node/18.0.1:
@@ -8007,6 +7995,14 @@ packages:
 
   /cookiejar/2.1.4:
     resolution: {integrity: sha512-LDx6oHrK+PhzLKJU9j5S7/Y3jM/mUHvD/DeI1WQmJn652iPC5Y4TBzC9l+5OMOXlyTTA+SmVUPm0HQUwpD5Jqw==}
+    dev: false
+
+  /cookies-next/2.1.1:
+    resolution: {integrity: sha512-AZGZPdL1hU3jCjN2UMJTGhLOYzNUN9Gm+v8BdptYIHUdwz397Et1p+sZRfvAl8pKnnmMdX2Pk9xDRKCGBum6GA==}
+    dependencies:
+      '@types/cookie': 0.4.1
+      '@types/node': 16.18.16
+      cookie: 0.4.2
     dev: false
 
   /copy-to-clipboard/3.3.3:
