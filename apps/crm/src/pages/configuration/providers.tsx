@@ -1,11 +1,15 @@
 import { NextPage } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { List, ListItem, ListItemCell } from "@saleor/macaw-ui";
 import { RootTabs } from "../../modules/ui/root-tabs/root-tabs";
 import { AppColumnsLayout } from "../../modules/ui/app-columns-layout";
 
 const IndexPage: NextPage = () => {
+  useEffect(() => {
+    window.addEventListener("message", console.log);
+  });
+
   return (
     <div>
       <RootTabs />
@@ -20,7 +24,7 @@ const IndexPage: NextPage = () => {
             src="/configuration/mailchimp/auth"
             style={{
               width: "100%",
-              height: "100%",
+              height: "700px",
             }}
           />
         </div>

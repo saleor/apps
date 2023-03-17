@@ -1,6 +1,5 @@
 import { NextApiHandler } from "next";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
-import { setCookie } from "cookies-next";
 import { createLogger } from "../../../lib/logger";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
@@ -45,9 +44,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   await mc.ping().then(console.log);
 
-  setCookie("mailchimp-token", access_token, { req, res, maxAge: 60 * 60 });
-
-  return res.redirect(`/configuration/mailchimp/oauth-success`);
+  return res.redirect(`/configuration/mailchimp/oauth-success?token=${access_token}`); // todo maybe move to cookie
 };
 
 export default handler;

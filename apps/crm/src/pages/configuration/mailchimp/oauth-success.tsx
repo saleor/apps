@@ -1,10 +1,15 @@
 import { NextPage } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { getCookie } from "cookies-next";
 
 const ConfigurationPage: NextPage = () => {
-  const token = getCookie("mailchimp-token");
+  const token = useRouter().query.token;
+
+  useEffect(() => {
+    if (token) {
+      window.parent.postMessage(JSON.stringify({ type: "mailchimp_token", token })); // todo restrict origin
+    }
+  }, [token]);
 
   return <div>config success, token: {token}</div>;
 };
