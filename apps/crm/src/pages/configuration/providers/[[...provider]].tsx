@@ -17,8 +17,13 @@ const logger = createLogger({});
  * - add sync users to lists
  */
 const ProvidersPage: NextPage = () => {
-  const { mutateAsync } = trpcClient.mailchimp.setToken.useMutation();
-  const { data, refetch, isFetched } = trpcClient.mailchimp.getMailchimpConfigured.useQuery();
+  const { mutateAsync } = trpcClient.mailchimp.config.setToken.useMutation();
+  const { data, refetch, isFetched } =
+    trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
+  const { data: listsData, refetch: fetchLists } =
+    trpcClient.mailchimp.audience.getLists.useQuery();
+
+  console.log(listsData);
 
   useEffect(() => {
     const handleMessage = (message: MessageEvent) => {
@@ -29,6 +34,10 @@ const ProvidersPage: NextPage = () => {
           type: "mailchimp_token";
           dc: string;
         };
+
+        if (payload.type !== "mailchimp_token") {
+          return;
+        }
 
         mutateAsync({ token: payload.token, dc: payload.dc }).then(() => {
           return refetch();
@@ -64,7 +73,16 @@ const ProvidersPage: NextPage = () => {
           }}
         >
           {isFetched && data?.configured ? (
-            <h2>Mailchimp service is configured</h2>
+            <h2>
+              Mailchimp service is configured{" "}
+              <button
+                onClick={() => {
+                  fetchLists();
+                }}
+              >
+                fetch lists
+              </button>
+            </h2>
           ) : (
             <MailchimpAuthFrame />
           )}

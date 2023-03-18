@@ -1,14 +1,13 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { z } from "zod";
-import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "../../lib/logger";
 import { MailchimpClientOAuth } from "./mailchimp-client";
+import {
+  MailchimpConfig,
+  MailchimpConfigSettingsManager,
+} from "./mailchimp-config-settings-manager";
 
-const setTokenInput = z.object({
-  token: z.string().min(1),
-  dc: z.string().min(1).describe("Prefix for mailchimp API"),
-});
+const setTokenInput = MailchimpConfig;
 
 // todo extract settings manager
 const mailchimpConfigRouter = router({
@@ -16,8 +15,6 @@ const mailchimpConfigRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(setTokenInput)
     .mutation(({ ctx, input }) => {
-      const settingsManager = createSettingsManager(ctx.apiClient);
-
       const logger = createLogger({
         context: "mailchimpConfigRouter",
         saleorApiUrl: ctx.saleorApiUrl,
@@ -25,18 +22,19 @@ const mailchimpConfigRouter = router({
 
       logger.info("Saving Mailchimp token");
 
-      return settingsManager.set({ key: "mailchimp_config", value: JSON.stringify(input) });
+      return new MailchimpConfigSettingsManager(ctx.apiClient).setConfig(input);
     }),
   getMailchimpConfigured: protectedClientProcedure.query(async ({ ctx }) => {
-    const settingsManager = createSettingsManager(ctx.apiClient);
-
     const logger = createLogger({
       context: "mailchimpConfigRouter",
       saleorApiUrl: ctx.saleorApiUrl,
     });
 
-    const config = await settingsManager.get("mailchimp_config");
+    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
 
+    logger.debug(config, "Received config from metadata");
+
+    // todo consider TRPCError?
     if (!config) {
       return {
         configured: false,
@@ -44,9 +42,7 @@ const mailchimpConfigRouter = router({
       };
     }
 
-    const parsedConfig = setTokenInput.parse(JSON.parse(config));
-
-    const mailchimpClient = new MailchimpClientOAuth(parsedConfig.dc, parsedConfig.token);
+    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
     try {
       await mailchimpClient.ping();

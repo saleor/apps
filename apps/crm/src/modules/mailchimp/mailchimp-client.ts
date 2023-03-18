@@ -1,7 +1,7 @@
-import { ping } from "@mailchimp/mailchimp_marketing";
+import mailchimp_marketing from "@mailchimp/mailchimp_marketing";
 
 export class MailchimpClientOAuth {
-  client = require("@mailchimp/mailchimp_marketing");
+  client = mailchimp_marketing;
 
   constructor(server: string, accessToken: string) {
     this.client.setConfig({
@@ -10,7 +10,20 @@ export class MailchimpClientOAuth {
     });
   }
 
-  async ping(): Promise<ping.APIHealthStatus> {
+  async ping() {
     return this.client.ping.get();
+  }
+
+  async fetchLists() {
+    return this.client.lists.getAllLists();
+  }
+
+  async addContact(listID: string, email: string) {
+    return this.client.lists.addListMember(listID, {
+      // TODO - add mapping on frontend?
+      status: "pending",
+      email_address: email,
+      // todo - add address
+    });
   }
 }
