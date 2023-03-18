@@ -1,48 +1,84 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { z } from "zod";
-import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "../../lib/logger";
 import { MailchimpClientOAuth } from "./mailchimp-client";
+import { MailchimpConfigSettingsManager } from "./mailchimp-config-settings-manager";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
-// todo remove and use settings manager extracted
-const setTokenInput = z.object({
-  token: z.string().min(1),
-  dc: z.string().min(1).describe("Prefix for mailchimp API"),
+const AddContactSchema = z.object({
+  listId: z.string().min(1),
+  contact: z.object({
+    email: z.string().min(2),
+  }),
 });
 
-// todo extract settings manager
-const mailchimpaudienceRouter = router({
+const mailchimpAudienceRouter = router({
   getLists: protectedClientProcedure.query(async ({ ctx }) => {
-    const settingsManager = createSettingsManager(ctx.apiClient);
+    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+
+    /**
+     * TODO extract mailchimp API readiness shared class
+     */
+    if (!config) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        cause: "MAILCHIMP_CONFIG_NOT_FOUND",
+        message: "Couldnt restore saved Mailchimp config",
+      });
+    }
 
     const logger = createLogger({
       context: "mailchimpConfigRouter",
       saleorApiUrl: ctx.saleorApiUrl,
     });
 
-    const config = await settingsManager.get("mailchimp_config");
+    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
-    if (!config) {
-      return {
-        configured: false,
-        reason: "NO_TOKEN",
-      };
+    const listsResponseOrError = await mailchimpClient.client.lists.getAllLists();
+
+    logger.trace(listsResponseOrError, "Fetched lists");
+
+    if ("lists" in listsResponseOrError) {
+      return listsResponseOrError.lists.map((l) => ({
+        id: l.id,
+        name: l.name,
+      }));
     }
 
-    const parsedConfig = setTokenInput.parse(JSON.parse(config));
+    throw new Error("Failed fetching lists from Mailchimp");
+  }),
+  addContact: protectedClientProcedure.input(AddContactSchema).mutation(async ({ ctx, input }) => {
+    const logger = createLogger({
+      context: "mailchimpConfigRouter",
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
 
-    const mailchimpClient = new MailchimpClientOAuth(parsedConfig.dc, parsedConfig.token);
+    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
 
-    const lists = await mailchimpClient.client.lists.getAllLists();
+    logger.debug("Fetched config from metadata");
 
-    logger.debug(lists);
+    if (!config) {
+      logger.warn("Config not found");
 
-    return lists;
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        cause: "MAILCHIMP_CONFIG_NOT_FOUND",
+        message: "Couldnt restore saved Mailchimp config",
+      });
+    }
+
+    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
+
+    logger.debug(input, "Will add contact to Mailchimp");
+
+    return mailchimpClient.addContact(input.listId, input.contact.email);
   }),
 });
 
 export const MailchimpAudienceRouter = {
-  router: mailchimpaudienceRouter,
-  input: {},
+  router: mailchimpAudienceRouter,
+  input: {
+    AddContactSchema,
+  },
 };
