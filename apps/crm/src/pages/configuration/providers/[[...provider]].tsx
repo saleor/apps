@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 
-import { RootTabs } from "../../../modules/ui/root-tabs/root-tabs";
 import { AppColumnsLayout } from "../../../modules/ui/app-columns-layout";
 import { MailchimpAuthFrame } from "../../../modules/mailchimp/mailchimp-auth-frame/mailchimp-auth-frame";
 import { createLogger } from "../../../lib/logger";
@@ -56,7 +55,6 @@ const ProvidersPage: NextPage = () => {
 
   return (
     <div>
-      <RootTabs />
       <p>
         Connect Saleor clients database with your favourite CRM platform. Currently available
         platform is Mailchimp

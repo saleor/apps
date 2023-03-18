@@ -9,6 +9,7 @@ type Props = {
   activeProvider?: ProviderType;
 } & HTMLAttributes<HTMLUListElement>;
 
+// todo maybe remove if not used
 export const ProvidersList = ({ className, onProviderClick, activeProvider, ...props }: Props) => {
   return (
     <ul className={clsx(className, styles.list)}>

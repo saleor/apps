@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { LinearProgress } from "@material-ui/core";
+
 import { useRouter } from "next/router";
 
 const IndexPage: NextPage = () => {
@@ -14,7 +14,7 @@ const IndexPage: NextPage = () => {
     }
   }, [appBridgeState, appBridge]);
 
-  return <LinearProgress />;
+  return <p>Loading</p>;
 };
 
 export default IndexPage;

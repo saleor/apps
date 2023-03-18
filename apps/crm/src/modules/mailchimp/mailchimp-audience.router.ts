@@ -43,6 +43,7 @@ const mailchimpAudienceRouter = router({
       return listsResponseOrError.lists.map((l) => ({
         id: l.id,
         name: l.name,
+        members: l.stats.member_count,
       }));
     }
 

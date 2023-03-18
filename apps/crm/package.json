@@ -16,11 +16,8 @@
   },
   "dependencies": {
     "cookies-next": "^2.1.1",
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "@material-ui/lab": "4.0.0-alpha.61",
     "@saleor/app-sdk": "0.37.1",
-    "@saleor/macaw-ui": "^0.7.2",
+    "@saleor/macaw-ui": "^0.8.0-pre.53",
     "@tanstack/react-query": "^4.24.4",
     "@trpc/client": "^10.9.1",
     "@trpc/next": "^10.9.1",
