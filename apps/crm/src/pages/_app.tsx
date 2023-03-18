@@ -9,6 +9,8 @@ import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { ThemeProvider } from "@saleor/macaw-ui/next";
 
+import "@saleor/macaw-ui/next/style";
+
 /**
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
