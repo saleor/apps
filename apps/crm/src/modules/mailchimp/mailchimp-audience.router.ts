@@ -73,7 +73,11 @@ const mailchimpAudienceRouter = router({
 
     logger.debug(input, "Will add contact to Mailchimp");
 
-    return mailchimpClient.addContact(input.listId, input.contact.email);
+    return mailchimpClient.addContact(input.listId, input.contact.email).catch((e) => {
+      console.error(e);
+
+      throw e;
+    });
   }),
 });
 

@@ -21,8 +21,9 @@ export class MailchimpClientOAuth {
   async addContact(listID: string, email: string) {
     return this.client.lists.addListMember(listID, {
       // TODO - add mapping on frontend?
-      status: "pending",
+      status: "transactional",
       email_address: email,
+      tags: ["Saleor Import"],
       // todo - add address
     });
   }
