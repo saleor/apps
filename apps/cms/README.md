@@ -22,9 +22,9 @@ Here is a list of currently supported CMSes and their configuration guides:
 2. When an event is triggered, we extract the product data and pass it to the CMS Client.
 3. CMS Client checks what CMS you picked, transforms the data to the format the CMS expects, and sends it over.
 
-### Assumptions
+### Mapping fields
 
-Currently, the CMS Hub does not support mapping Saleor fields to your CMS fields. We assume that products in your CMS have the following fields:
+Currently, the CMS Hub does not support mapping Saleor fields to your CMS fields. Your product model should have the following fields:
 
 - strings fields: `saleor_id`, `name`, `product_id`, `product_name`, `product_slug`,
 - JSON fileds: `channels`.
