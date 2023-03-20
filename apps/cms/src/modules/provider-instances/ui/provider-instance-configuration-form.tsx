@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, FormControlLabel, Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { Controller, DeepRequired, FieldErrorsImpl, Path, useForm } from "react-hook-form";
+import { Path, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   providersConfig,
@@ -14,6 +14,7 @@ import {
   ProviderInstanceSchema,
 } from "../../../lib/cms/config";
 import { Provider } from "../../providers/config";
+import { AppMarkdownText } from "../../ui/app-markdown-text";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -133,9 +134,7 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
               helperText={
                 <>
                   {errors[token.name as Path<ProvidersSchema[TProvider]>]?.message ||
-                    ("helpText" in token && (
-                      <ReactMarkdown linkTarget="_blank">{token.helpText}</ReactMarkdown>
-                    ))}
+                    ("helpText" in token && <AppMarkdownText>{token.helpText}</AppMarkdownText>)}
                 </>
               }
             />
