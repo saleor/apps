@@ -29,7 +29,7 @@ export const providersConfig = {
         name: "token",
         label: "Token",
         helpText:
-          "You can find this in your Contentful project, go to Settings > API keys > Content management tokens > Generate personal token.",
+          'You can find this in your Contentful project, go to Settings > API keys > Content management tokens > Generate personal token. More instructions at [Contentful "Authentication" documentation](https://www.contentful.com/developers/docs/references/authentication/).',
       },
       {
         required: true,
@@ -83,14 +83,14 @@ export const providersConfig = {
         name: "token",
         label: "API Token (with full access)",
         helpText:
-          "You can find this in your Strapi project settings, go to Settings > API Tokens and use full access token or create new one.",
+          'You can find this in your Strapi project settings, go to Settings > API Tokens and use full access token or create new one. More instructions at [Strapi "Managing API tokens" documentation](https://docs.strapi.io/user-docs/latest/settings/managing-global-settings.html#managing-api-tokens).',
       },
       {
         required: true,
         name: "contentTypeId",
         label: "Content Type ID",
         helpText:
-          "You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural).",
+          'You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
       },
     ],
   },
@@ -103,7 +103,8 @@ export const providersConfig = {
         required: true,
         name: "token",
         label: "API Token (with access to Content Management API)",
-        helpText: "You can find this in your DatoCMS project settings.",
+        helpText:
+          'You can find this in your DatoCMS project settings. More instructions at [DatoCMS "Authentication" documentation](https://www.datocms.com/docs/content-management-api/authentication).',
       },
       {
         required: true,
