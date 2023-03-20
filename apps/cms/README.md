@@ -29,6 +29,10 @@ Currently, the CMS Hub does not support mapping Saleor fields to your CMS fields
 - strings fields: `saleor_id`, `name`, `product_id`, `product_name`, `product_slug`,
 - JSON fileds: `channels`.
 
+### Known issues
+
+CMS Hub updates product variants in CMS providers on create, update or delete product variant webook events. They are triggered on product variant channel listing added or updated, but they currently don't trigger on deleting channel listing due to the [core issue #12247](https://github.com/saleor/saleor/issues/12247). To make it working on deleting channel listing, you can additionally modify other product variant field e.g. `name`, so webhook handlers receive the updated channel listings as well.
+
 ## How to use it?
 
 1. Install the application in your Dashboard and open it.
