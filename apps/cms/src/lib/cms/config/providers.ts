@@ -7,6 +7,7 @@ type ProviderToken = {
   label: string;
   helpText: string;
   required?: boolean;
+  secret?: boolean;
 };
 
 type ProviderConfig = {
@@ -26,6 +27,7 @@ export const providersConfig = {
     tokens: [
       {
         required: true,
+        secret: true,
         name: "token",
         label: "Token",
         helpText:
@@ -80,6 +82,7 @@ export const providersConfig = {
       },
       {
         required: true,
+        secret: true,
         name: "token",
         label: "API Token (with full access)",
         helpText:
@@ -101,6 +104,7 @@ export const providersConfig = {
     tokens: [
       {
         required: true,
+        secret: true,
         name: "token",
         label: "API Token (with access to Content Management API)",
         helpText:

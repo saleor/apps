@@ -112,7 +112,12 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
             }}
             fullWidth
             error={!!errors.name}
-            helperText={<>{errors.name?.message}</>}
+            helperText={
+              <>
+                {errors.name?.message ||
+                  "Used to differentiate configuration instance. You may create multiple instances of provider configuration, e.g. Contentful Prod, Contentful Test, etc."}
+              </>
+            }
           />
         </Grid>
         {fields.map((token) => (
@@ -123,7 +128,7 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
               })}
               // required={"required" in token && token.required}
               label={token.label + ("required" in token && token.required ? " *" : "")}
-              type="password"
+              type={token.secret ? "password" : "text"}
               name={token.name}
               InputLabelProps={{
                 shrink: !!watch(token.name as Path<ProvidersSchema[TProvider]>),
