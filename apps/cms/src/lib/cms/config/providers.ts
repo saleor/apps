@@ -25,39 +25,45 @@ export const providersConfig = {
     icon: ContentfulIcon,
     tokens: [
       {
-        name: "baseUrl",
-        label: "Base URL",
-        helpText: "CDN API URL of your Contentful project, e.g. https://cdn.contentful.com.",
-      },
-      {
+        required: true,
         name: "token",
         label: "Token",
         helpText:
-          "You can find this in your Contentful project, go to Settings > API keys > Content management tokens > Generate personal token.",
+          'You can find this in your Contentful project, go to Settings > API keys > Content management tokens > Generate personal token. More instructions at [Contentful "Authentication" documentation](https://www.contentful.com/developers/docs/references/authentication/).',
       },
       {
+        required: true,
         name: "environment",
         label: "Environment",
         helpText:
           "Environment of your content, e.g. master. You can find this in your Contentful project, go to Settings > Environments.",
       },
       {
+        required: true,
         name: "spaceId",
         label: "Space ID",
         helpText:
           "You can find this in your Contentful project, go to settings > general settings.",
       },
       {
+        required: true,
         name: "contentId",
         label: "Content ID",
         helpText:
           "You can find this in your Contentful project, go to Content model > select model > Content type id.",
       },
       {
+        required: true,
         name: "locale",
         label: "Locale",
         helpText:
           "Locale of your content, e.g. en-US. You can find this in your Contentful project, go to Settings > Locales.",
+      },
+      {
+        name: "baseUrl",
+        label: "Base URL",
+        helpText:
+          "Optional content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
       },
     ],
   },
@@ -70,14 +76,21 @@ export const providersConfig = {
         required: true,
         name: "baseUrl",
         label: "Base URL",
-        helpText: "API URL of your Strapi project.",
+        helpText: "API URL of your Strapi project. E.g. https://your-strapi-project/api.",
       },
       {
         required: true,
         name: "token",
         label: "API Token (with full access)",
         helpText:
-          "You can find this in your Strapi project settings, go to Settings > API Tokens and use full access token or create new one.",
+          'You can find this in your Strapi project settings, go to Settings > API Tokens and use full access token or create new one. More instructions at [Strapi "Managing API tokens" documentation](https://docs.strapi.io/user-docs/latest/settings/managing-global-settings.html#managing-api-tokens).',
+      },
+      {
+        required: true,
+        name: "contentTypeId",
+        label: "Content Type ID",
+        helpText:
+          'You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
       },
     ],
   },
@@ -90,7 +103,8 @@ export const providersConfig = {
         required: true,
         name: "token",
         label: "API Token (with access to Content Management API)",
-        helpText: "You can find this in your DatoCMS project settings.",
+        helpText:
+          'You can find this in your DatoCMS project settings. More instructions at [DatoCMS "Authentication" documentation](https://www.datocms.com/docs/content-management-api/authentication).',
       },
       {
         required: true,
@@ -123,24 +137,25 @@ export const strapiConfigSchema = z.object({
   name: z.string().min(1),
   token: z.string().min(1),
   baseUrl: z.string().min(1),
+  contentTypeId: z.string().min(1),
 });
 
 export const contentfulConfigSchema = z.object({
   name: z.string().min(1),
-  token: z.string(),
+  token: z.string().min(1),
+  environment: z.string().min(1),
+  spaceId: z.string().min(1),
+  locale: z.string().min(1),
+  contentId: z.string().min(1),
   baseUrl: z.string(),
-  environment: z.string(),
-  spaceId: z.string(),
-  locale: z.string(),
-  contentId: z.string(),
 });
 
 export const datocmsConfigSchema = z.object({
   name: z.string().min(1),
   token: z.string().min(1),
+  itemTypeId: z.string().min(1),
   baseUrl: z.string(),
   environment: z.string(),
-  itemTypeId: z.string().min(1),
 });
 
 export const providerCommonSchema = z.object({
