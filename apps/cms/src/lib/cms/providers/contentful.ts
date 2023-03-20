@@ -105,6 +105,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         environment,
         spaceId,
       });
+
       const response = await contentfulFetch(endpoint, config, {
         method: "PUT",
         body: JSON.stringify(body),
@@ -112,9 +113,10 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
           "X-Contentful-Content-Type": contentId,
         },
       });
-      console.log(response);
-      console.log(response.body);
+      logger.debug("createProduct response", { response });
       const result = await response.json();
+      logger.debug("createProduct result", { result });
+
       return transformCreateProductResponse(result);
     },
     updateProduct: async ({ id, input }) => {
@@ -124,8 +126,12 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         environment,
         spaceId,
       });
+
       const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
+      logger.debug("updateProduct getEntryResponse", { getEntryResponse });
       const entry = await getEntryResponse.json();
+      logger.debug("updateProduct entry", { entry });
+
       const response = await contentfulFetch(endpoint, config, {
         method: "PUT",
         body: JSON.stringify(body),
@@ -133,12 +139,19 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
           "X-Contentful-Version": entry.sys.version,
         },
       });
+      logger.debug("updateProduct response", { response });
       const result = await response.json();
+      logger.debug("updateProduct result", { result });
+
       return result;
     },
-    deleteProduct: ({ id }) => {
+    deleteProduct: async ({ id }) => {
       const endpoint = getEntryEndpoint({ resourceId: id, environment, spaceId });
-      return contentfulFetch(endpoint, config, { method: "DELETE" });
+
+      const response = await contentfulFetch(endpoint, config, { method: "DELETE" });
+      logger.debug("deleteProduct response", { response });
+
+      return response;
     },
   };
 };
