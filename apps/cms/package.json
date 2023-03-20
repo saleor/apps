@@ -22,6 +22,7 @@
     "@material-ui/lab": "4.0.0-alpha.61",
     "@saleor/app-sdk": "0.37.1",
     "@saleor/macaw-ui": "^0.6.7",
+    "@sentry/nextjs": "^7.43.0",
     "@urql/exchange-auth": "^1.0.0",
     "clsx": "^1.2.1",
     "graphql": "^16.6.0",
