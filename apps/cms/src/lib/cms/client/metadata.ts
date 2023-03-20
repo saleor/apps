@@ -13,7 +13,7 @@ export const createCmsKeyForSaleorItem = (cmsProviderInstanceId: string) => {
 };
 
 export const getCmsIdFromSaleorItemKey = (key: string) => {
-  return key.split("_")[2];
+  return key.split("_")[1];
 };
 
 export const getCmsIdFromSaleorItem = (

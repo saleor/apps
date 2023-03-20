@@ -1,5 +1,6 @@
 import { createProvider } from "./create";
 import { CreateOperations, CreateProductResponse } from "../types";
+import { logger as pinoLogger } from "../../logger";
 
 import { ApiError, buildClient, SimpleSchemaTypes } from "@datocms/cma-client-node";
 import { DatocmsConfig, datocmsConfigSchema } from "../config";
@@ -41,6 +42,8 @@ const transformResponseItem = (item: SimpleSchemaTypes.Item): CreateProductRespo
 };
 
 const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
+  const logger = pinoLogger.child({ cms: "strapi" });
+
   return {
     createProduct: async ({ input }) => {
       const client = datocmsClient(config);
@@ -58,6 +61,8 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
           product_name: input.productName,
           product_slug: input.productSlug,
         });
+        logger.debug("createProduct response", { item });
+
         return transformResponseItem(item);
       } catch (error) {
         return transformResponseError(error);
@@ -66,7 +71,7 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     updateProduct: async ({ id, input }) => {
       const client = datocmsClient(config);
 
-      await client.items.update(id, {
+      const item = await client.items.update(id, {
         saleor_id: input.saleorId,
         name: input.name,
         channels: JSON.stringify(input.channels),
@@ -74,11 +79,13 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
         product_name: input.productName,
         product_slug: input.productSlug,
       });
+      logger.debug("updateProduct response", { item });
     },
     deleteProduct: async ({ id }) => {
       const client = datocmsClient(config);
 
-      await client.items.destroy(id);
+      const item = await client.items.destroy(id);
+      logger.debug("deleteProduct response", { item });
     },
   };
 };

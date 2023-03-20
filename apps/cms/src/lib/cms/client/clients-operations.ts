@@ -15,7 +15,6 @@ import { getCmsIdFromSaleorItemKey } from "./metadata";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
-// todo: add support for multiple providers at once
 export const createCmsOperations = async ({
   context,
   productVariantChannels,

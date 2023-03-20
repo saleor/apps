@@ -17,11 +17,11 @@ CMS Hub will:
 
 If you want to add a provider for a new CMS, here is what you have to do:
 
-1. Go to `/src/lib/cms/config.ts`.
+1. Go to `/src/lib/cms/config/providers.ts`.
 2. Update the `providersConfig` variable with basic information about your provider: `name`, `label` and `tokens`:
 
 ```ts
-// src/lib/cms/config.ts
+// src/lib/cms/config/providers.ts
 export const providersConfig = {
   contentful: {
     ...
