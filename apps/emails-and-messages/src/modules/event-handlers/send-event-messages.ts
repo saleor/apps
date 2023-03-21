@@ -4,6 +4,7 @@ import { logger as pinoLogger } from "../../lib/logger";
 import { AppConfigurationService } from "../app-configuration/get-app-configuration.service";
 import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
 import { sendMjml } from "../mjml/send-mjml";
+import { SendgridConfigurationService } from "../sendgrid/configuration/get-sendgrid-configuration.service";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
 import { MessageEventTypes } from "./message-event-types";
 
@@ -73,16 +74,30 @@ export const sendEventMessages = async ({
       }
     }
   }
-  const sendgridStatus = await sendSendgrid({
-    authData,
-    channel,
-    event,
-    payload,
-    recipientEmail,
-  });
 
-  if (sendgridStatus?.errors.length) {
-    logger.error("Sending message with Sendgrid has failed");
-    logger.error(sendgridStatus?.errors);
+  if (channelAppConfiguration.sendgridConfigurationId) {
+    logger.debug("Channel has assigned Sendgrid configuration");
+
+    const sendgridConfigurationService = new SendgridConfigurationService({
+      apiClient: client,
+      saleorApiUrl: authData.saleorApiUrl,
+    });
+
+    const sendgridConfiguration = await sendgridConfigurationService.getConfiguration({
+      id: channelAppConfiguration.sendgridConfigurationId,
+    });
+    if (sendgridConfiguration) {
+      const sendgridStatus = await sendSendgrid({
+        event,
+        payload,
+        recipientEmail,
+        sendgridConfiguration,
+      });
+
+      if (sendgridStatus?.errors.length) {
+        logger.error("Sendgrid errors");
+        logger.error(sendgridStatus?.errors);
+      }
+    }
   }
 };
