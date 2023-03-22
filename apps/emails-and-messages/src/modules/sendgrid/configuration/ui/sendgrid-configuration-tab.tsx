@@ -13,6 +13,7 @@ import { Add } from "@material-ui/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { sendgridUrls } from "../../urls";
 import { SendgridTemplatesCard } from "./sendgrid-templates-card";
+import { SendgridInstructions } from "./sendgrid-instructions";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -170,6 +171,7 @@ export const SendgridConfigurationTab = ({ configurationId }: SendgridConfigurat
           </>
         )}
       </div>
+      <SendgridInstructions />
     </AppColumnsLayout>
   );
 };
