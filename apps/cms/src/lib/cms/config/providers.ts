@@ -65,7 +65,7 @@ export const providersConfig = {
         name: "baseUrl",
         label: "Base URL",
         helpText:
-          "Optional content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
+          "Content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
       },
     ],
   },
@@ -121,13 +121,13 @@ export const providersConfig = {
         name: "baseUrl",
         label: "Base URL",
         helpText:
-          "Optional URL to your DatoCMS project. If you leave this blank, this URL will be inferred from your API Token.",
+          "URL to your DatoCMS project. If you leave this blank, this URL will be inferred from your API Token.",
       },
       {
         name: "environment",
         label: "Environment",
         helpText:
-          "Optional environment name. If you leave this blank, default environment will be used. You can find this in your DatoCMS project settings.",
+          "Environment name. If you leave this blank, default environment will be used. You can find this in your DatoCMS project settings.",
       },
     ],
   },
