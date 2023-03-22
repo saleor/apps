@@ -80,8 +80,10 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
   };
 
   const fields = providersConfig[provider.name as TProvider].tokens;
-
   const errors = formState.errors;
+
+  const getOptionalText = (token: Record<string, unknown>) =>
+    "required" in token && token.required ? "" : "*Optional. ";
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -104,7 +106,7 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
         <Grid item xs={12}>
           <TextField
             {...register("name" as Path<ProvidersSchema[TProvider]>)}
-            label="Custom instance name *"
+            label="Configuration name"
             type="text"
             name="name"
             InputLabelProps={{
@@ -112,7 +114,12 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
             }}
             fullWidth
             error={!!errors.name}
-            helperText={<>{errors.name?.message}</>}
+            helperText={
+              <>
+                {errors.name?.message ||
+                  "Used to differentiate configuration instance. You may create multiple instances of provider configuration, e.g. Contentful Prod, Contentful Test, etc."}
+              </>
+            }
           />
         </Grid>
         {fields.map((token) => (
@@ -122,8 +129,8 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
                 required: "required" in token && token.required,
               })}
               // required={"required" in token && token.required}
-              label={token.label + ("required" in token && token.required ? " *" : "")}
-              type="password"
+              label={token.label}
+              type={token.secret ? "password" : "text"}
               name={token.name}
               InputLabelProps={{
                 shrink: !!watch(token.name as Path<ProvidersSchema[TProvider]>),
@@ -134,7 +141,11 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
               helperText={
                 <>
                   {errors[token.name as Path<ProvidersSchema[TProvider]>]?.message ||
-                    ("helpText" in token && <AppMarkdownText>{token.helpText}</AppMarkdownText>)}
+                    ("helpText" in token && (
+                      <AppMarkdownText>{`${getOptionalText(token)}${
+                        token.helpText
+                      }`}</AppMarkdownText>
+                    ))}
                 </>
               }
             />

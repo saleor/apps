@@ -1,4 +1,5 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { type Client } from "urql";
 import { describe, expect, it, vi } from "vitest";
 import { CMSSchemaChannels, CMSSchemaProviderInstances } from "../config";
 import { CmsClientOperations } from "../types";
@@ -17,6 +18,8 @@ const mockedContext: Pick<WebhookContext, "authData"> = {
     jwks: "jwks",
   },
 };
+
+const createMockedClient = () => ({} as Client);
 
 vi.mock("../../metadata", () => ({
   createSettingsManager: () => ({}),
@@ -37,6 +40,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: createMockedClient(),
       productVariantChannels: [],
       productVariantCmsKeys: [],
     });
@@ -99,6 +103,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: createMockedClient(),
       productVariantChannels: ["default-channel"],
       productVariantCmsKeys: [],
     });
@@ -171,6 +176,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: createMockedClient(),
       productVariantChannels: ["default-channel"],
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
@@ -243,6 +249,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: createMockedClient(),
       productVariantChannels: [],
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
