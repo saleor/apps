@@ -136,7 +136,9 @@ export const MjmlConfigurationForm = (props: Props) => {
             value={value}
             onChange={onChange}
             error={!!error}
-            helperText={error?.message}
+            helperText={
+              error?.message || "Name of the configuration, for example 'Production' or 'Test'"
+            }
             {...CommonFieldProps}
           />
         )}
@@ -182,7 +184,7 @@ export const MjmlConfigurationForm = (props: Props) => {
           <TextField
             label="Sender name"
             error={!!error}
-            helperText={error?.message}
+            helperText={error?.message || "Name which will be presented as author of the email"}
             value={value}
             onChange={onChange}
             {...CommonFieldProps}
@@ -198,7 +200,7 @@ export const MjmlConfigurationForm = (props: Props) => {
             <TextField
               label="Sender email"
               value={value}
-              helperText={error?.message}
+              helperText={error?.message || "Email which will be presented as author of the email"}
               error={!!error}
               onChange={onChange}
               {...CommonFieldProps}
@@ -221,7 +223,10 @@ export const MjmlConfigurationForm = (props: Props) => {
             label="SMTP server host"
             value={value}
             onChange={onChange}
-            helperText={error?.message}
+            helperText={
+              error?.message ||
+              "Address of the SMTP server, without the protocol. For example 'smtp.example.com'"
+            }
             error={!!error}
             {...CommonFieldProps}
           />

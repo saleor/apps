@@ -177,7 +177,9 @@ export const SendgridConfigurationForm = (props: Props) => {
             value={value}
             onChange={onChange}
             error={!!error}
-            helperText={error?.message}
+            helperText={
+              error?.message || "Name of the configuration, for example 'Production' or 'Test'"
+            }
             {...CommonFieldProps}
           />
         )}
@@ -224,7 +226,10 @@ export const SendgridConfigurationForm = (props: Props) => {
             label="Sendgrid API key"
             value={value}
             onChange={onChange}
-            helperText={error?.message}
+            helperText={
+              error?.message ||
+              "The API key can be generated at Sendgrid dashboard, in the Settings / API Keys section"
+            }
             error={!!error}
             {...CommonFieldProps}
           />
