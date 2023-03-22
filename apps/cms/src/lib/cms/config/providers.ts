@@ -7,6 +7,7 @@ type ProviderToken = {
   label: string;
   helpText: string;
   required?: boolean;
+  secret?: boolean;
 };
 
 type ProviderConfig = {
@@ -26,6 +27,7 @@ export const providersConfig = {
     tokens: [
       {
         required: true,
+        secret: true,
         name: "token",
         label: "Token",
         helpText:
@@ -63,7 +65,7 @@ export const providersConfig = {
         name: "baseUrl",
         label: "Base URL",
         helpText:
-          "Optional content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
+          "Content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
       },
     ],
   },
@@ -80,6 +82,7 @@ export const providersConfig = {
       },
       {
         required: true,
+        secret: true,
         name: "token",
         label: "API Token (with full access)",
         helpText:
@@ -88,7 +91,7 @@ export const providersConfig = {
       {
         required: true,
         name: "contentTypeId",
-        label: "Content Type ID",
+        label: "Content Type ID (plural)",
         helpText:
           'You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
       },
@@ -101,6 +104,7 @@ export const providersConfig = {
     tokens: [
       {
         required: true,
+        secret: true,
         name: "token",
         label: "API Token (with access to Content Management API)",
         helpText:
@@ -117,13 +121,13 @@ export const providersConfig = {
         name: "baseUrl",
         label: "Base URL",
         helpText:
-          "Optional URL to your DatoCMS project. If you leave this blank, this URL will be inferred from your API Token.",
+          "URL to your DatoCMS project. If you leave this blank, this URL will be inferred from your API Token.",
       },
       {
         name: "environment",
         label: "Environment",
         helpText:
-          "Optional environment name. If you leave this blank, default environment will be used. You can find this in your DatoCMS project settings.",
+          "Environment name. If you leave this blank, default environment will be used. You can find this in your DatoCMS project settings.",
       },
     ],
   },

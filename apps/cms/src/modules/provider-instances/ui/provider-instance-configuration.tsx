@@ -118,7 +118,7 @@ const ProviderInstanceConfiguration = ({
     return (
       <AppPaper>
         <Typography variant="body1" className={styles.textCenter}>
-          Please select a provider instance or add new one.
+          Please select a provider configuration or add new one.
         </Typography>
       </AppPaper>
     );
@@ -133,12 +133,12 @@ const ProviderInstanceConfiguration = ({
       )}
       {errors.saving && (
         <Typography variant="body1" color="error">
-          Error saving provider instance configuration
+          Error saving provider configuration
         </Typography>
       )}
       {!!newProviderInstance && (
         <Typography variant="h3" className={styles.textHeader}>
-          Add new instance
+          Add new configuration
         </Typography>
       )}
       <RadioGroup value={selectedProvider?.name ?? ""} onChange={handleProviderChange}>

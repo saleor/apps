@@ -87,8 +87,7 @@ const ChannelConfiguration = ({
     return (
       <AppPaper>
         <Typography variant="body1" className={styles.textCenter}>
-          Please create at least one provider instance before you manage its configuration in
-          channels.
+          Please create at least one provider configuration before you manage its setup in channels.
           <br />
           <br />
           Go to the <AppTabNavButton to="providers">Providers</AppTabNavButton> tab.

@@ -97,7 +97,7 @@ const ChannelConfigurationForm = ({
       <List gridTemplate={["1fr", "checkbox"]}>
         <ListHeader>
           <ListItem className={styles.item}>
-            <ListItemCell>CMS provider instance</ListItemCell>
+            <ListItemCell>CMS provider configuration</ListItemCell>
             <ListItemCell>Active</ListItemCell>
           </ListItem>
         </ListHeader>

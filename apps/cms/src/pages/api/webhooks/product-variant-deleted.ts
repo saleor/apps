@@ -12,6 +12,8 @@ import {
   executeMetadataUpdate,
 } from "../../../lib/cms/client";
 import { logger as pinoLogger } from "../../../lib/logger";
+import { createClient } from "../../../lib/graphql";
+import { fetchProductVariantMetadata } from "../../../lib/metadata";
 
 export const config = {
   api: {
@@ -52,6 +54,7 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
   context
 ) => {
   const { productVariant } = context.payload;
+  const { saleorApiUrl, token } = context.authData;
 
   const logger = pinoLogger.child({
     productVariant,
@@ -66,9 +69,14 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
     });
   }
 
+  const client = createClient(saleorApiUrl, async () => ({
+    token: token,
+  }));
+
   const productVariantCmsKeys = getCmsKeysFromSaleorItem(productVariant);
   const cmsOperations = await createCmsOperations({
     context,
+    client,
     productVariantChannels: [],
     productVariantCmsKeys: productVariantCmsKeys,
   });
