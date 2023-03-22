@@ -12,15 +12,18 @@ import cmsProviders, { CMSProvider } from "../providers";
 import { CmsClientOperations } from "../types";
 import { logger as pinoLogger } from "../../logger";
 import { getCmsIdFromSaleorItemKey } from "./metadata";
+import { type Client } from "urql";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
 export const createCmsOperations = async ({
   context,
+  client,
   productVariantChannels,
   productVariantCmsKeys,
 }: {
   context: Pick<WebhookContext, "authData">;
+  client: Client;
   productVariantChannels: string[];
   productVariantCmsKeys: string[];
 }) => {
@@ -28,13 +31,6 @@ export const createCmsOperations = async ({
     productVariantChannels,
     productVariantCmsKeys,
   });
-
-  const saleorApiUrl = context.authData.saleorApiUrl;
-  const token = context.authData.token;
-
-  const client = createClient(saleorApiUrl, async () => ({
-    token: token,
-  }));
 
   const settingsManager = createSettingsManager(client);
 

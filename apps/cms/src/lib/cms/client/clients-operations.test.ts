@@ -37,6 +37,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: {} as any,
       productVariantChannels: [],
       productVariantCmsKeys: [],
     });
@@ -99,6 +100,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: {} as any,
       productVariantChannels: ["default-channel"],
       productVariantCmsKeys: [],
     });
@@ -171,6 +173,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: {} as any,
       productVariantChannels: ["default-channel"],
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
@@ -243,6 +246,7 @@ describe("CMS Clients Operations", () => {
 
     const cmsOperations = await createCmsOperations({
       context: mockedContext,
+      client: {} as any,
       productVariantChannels: [],
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
