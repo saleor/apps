@@ -91,7 +91,7 @@ export const providersConfig = {
       {
         required: true,
         name: "contentTypeId",
-        label: "Content Type ID",
+        label: "Content Type ID (plural)",
         helpText:
           'You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
       },

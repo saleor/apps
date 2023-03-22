@@ -104,7 +104,7 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
         <Grid item xs={12}>
           <TextField
             {...register("name" as Path<ProvidersSchema[TProvider]>)}
-            label="Custom instance name *"
+            label="Configuration name *"
             type="text"
             name="name"
             InputLabelProps={{

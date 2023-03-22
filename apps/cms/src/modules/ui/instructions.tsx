@@ -29,8 +29,9 @@ export const Instructions = () => {
           <ol className={styles.list}>
             <li>
               In the CMS App, go to the <AppTabNavButton to="providers">Providers</AppTabNavButton>{" "}
-              tab to add an instance of your provider. Click <q>Add provider</q>, and select the cms
-              provider you want to use. Fill in the configuration form and hit <q>Save</q>.
+              tab to add a configuration of your provider. Click <q>Add configuration</q>, and
+              select the cms provider you want to use. Fill in the configuration form and hit{" "}
+              <q>Save</q>.
             </li>
             <li>
               Go to your CMS website and prepare product variant model shape with:
@@ -46,11 +47,11 @@ export const Instructions = () => {
             </li>
             <li>
               Go to the <AppTabNavButton to="channels">Channels</AppTabNavButton> tab. Select a
-              channel. In the <q>Channel cms provider</q> field, select the created instance. Fill
-              in the rest of the form, and hit <q>Save</q>.
+              channel. Select the CMS configurations you want to sync product variants data against
+              available in this channel and hit <q>Save</q>.
             </li>
             <li>
-              Saleor will now use the channel&#39;s configured cms provider for product
+              Saleor will now use the channel&#39;s configured CMS provider for product variant
               syncronisation once it is created, updated or deleted.
             </li>
             <li>

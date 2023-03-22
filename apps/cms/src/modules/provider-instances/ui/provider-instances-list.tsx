@@ -85,7 +85,7 @@ const ProviderInstancesList = ({
           fullWidth
           onClick={requestAddProviderInstance}
         >
-          Add provider
+          Add configuration
         </Button>
       </Grid>
     </Grid>
