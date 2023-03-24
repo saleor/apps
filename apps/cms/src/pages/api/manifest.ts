@@ -5,6 +5,7 @@ import packageJson from "../../../package.json";
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
 import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted";
+import { productUpdatedWebhook } from "./webhooks/product-updated";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -19,6 +20,7 @@ export default createManifestHandler({
         productVariantCreatedWebhook.getWebhookManifest(context.appBaseUrl),
         productVariantUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
         productVariantDeletedWebhook.getWebhookManifest(context.appBaseUrl),
+        productUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [],
       author: "Saleor Commerce",
