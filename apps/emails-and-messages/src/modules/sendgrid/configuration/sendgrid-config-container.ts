@@ -1,10 +1,9 @@
+import { generateRandomId } from "../../../lib/generate-random-id";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import {
   SendgridConfig as SendgridConfigurationRoot,
   SendgridConfiguration,
 } from "./sendgrid-config";
-
-export const generateSendgridConfigurationId = () => Date.now().toString();
 
 export const getDefaultEventsConfiguration = (): SendgridConfiguration["events"] =>
   messageEventTypes.map((eventType) => ({
@@ -75,7 +74,7 @@ const createConfiguration =
     // for creating a new configurations, the ID has to be generated
     const newConfiguration = {
       ...sendgridConfiguration,
-      id: generateSendgridConfigurationId(),
+      id: generateRandomId(),
       events: getDefaultEventsConfiguration(),
     };
     sendgridConfigNormalized.configurations.push(newConfiguration);
