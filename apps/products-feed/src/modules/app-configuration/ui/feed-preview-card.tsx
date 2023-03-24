@@ -38,8 +38,8 @@ export const FeedPreviewCard = ({ channelSlug }: FeedPreviewCardProps) => {
   };
   return (
     <Paper elevation={0} className={styles.instructionsContainer}>
-      <Typography paragraph variant="h4">
-        Your Google Merchant Feed
+      <Typography paragraph variant="h3">
+        Your Google Merchant Feed preview
       </Typography>
       <TextField
         label="Google feed URL"
@@ -47,6 +47,7 @@ export const FeedPreviewCard = ({ channelSlug }: FeedPreviewCardProps) => {
         value={googleFeedUrl}
         disabled={true}
         className={styles.field}
+        helperText="Dedicated URL for your Google Merchant Feed"
       />
 
       <Button
