@@ -24,7 +24,7 @@ export const Instructions = () => {
         Configure your Google Merchant account to schedule fetches of the feed. Instructions can be
         found{" "}
         <Link
-          href="#"
+          href="https://support.google.com/merchants/answer/1219255"
           onClick={() => {
             appBridge?.dispatch(
               actions.Redirect({
