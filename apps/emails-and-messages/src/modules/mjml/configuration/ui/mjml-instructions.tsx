@@ -21,7 +21,7 @@ export const MjmlInstructions = () => {
         MJML Provider
       </Typography>
       <Typography paragraph>
-        You can use this provider to send emails using MJML as template language. The emails are
+        You can use this provider to send emails using MJML as a template language. The emails are
         then sent using the SMTP.
       </Typography>
 
