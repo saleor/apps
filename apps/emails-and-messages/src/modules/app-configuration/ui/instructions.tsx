@@ -1,5 +1,4 @@
-import { Link, Paper, Typography } from "@material-ui/core";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
 
 const useStyles = makeStyles((theme) => {
@@ -12,8 +11,6 @@ const useStyles = makeStyles((theme) => {
 
 export const Instructions = () => {
   const styles = useStyles();
-
-  const { appBridge } = useAppBridge();
 
   return (
     <Paper elevation={0} className={styles.instructionsContainer}>
