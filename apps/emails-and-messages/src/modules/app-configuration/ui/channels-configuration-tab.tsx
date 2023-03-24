@@ -59,18 +59,13 @@ export const ChannelsConfigurationTab = () => {
   }, [mjmlConfigurations]);
 
   const { data: sendgridConfigurations, isLoading: isSendgridQueryLoading } =
-    trpcClient.sendgridConfiguration.fetch.useQuery();
+    trpcClient.sendgridConfiguration.getConfigurations.useQuery({});
 
   const sendgridConfigurationsListData = useMemo(() => {
-    if (!sendgridConfigurations) {
-      return [];
-    }
-    const keys = Object.keys(sendgridConfigurations.availableConfigurations ?? {}) || [];
-
     return (
-      keys.map((key) => ({
-        value: key,
-        label: sendgridConfigurations.availableConfigurations[key].configurationName,
+      sendgridConfigurations?.map((configuration) => ({
+        value: configuration.id,
+        label: configuration.configurationName,
       })) ?? []
     );
   }, [sendgridConfigurations]);

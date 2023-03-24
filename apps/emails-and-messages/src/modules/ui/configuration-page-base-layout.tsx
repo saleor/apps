@@ -24,9 +24,8 @@ export const ConfigurationPageBaseLayout = ({ children }: Props) => {
     { key: "mjml", label: "MJML", url: "/configuration/mjml" },
     {
       key: "sendgrid",
-      label: "Sendgrid (Coming soon!)",
+      label: "Sendgrid",
       url: "/configuration/sendgrid",
-      disabled: true,
     },
   ];
 
@@ -42,7 +41,7 @@ export const ConfigurationPageBaseLayout = ({ children }: Props) => {
     <div className={styles.appContainer}>
       <PageTabs value={activePath} onChange={navigateToTab}>
         {tabs.map((tab) => (
-          <PageTab key={tab.key} value={tab.key} label={tab.label} disabled={tab.disabled} />
+          <PageTab key={tab.key} value={tab.key} label={tab.label} />
         ))}
       </PageTabs>
       {children}
