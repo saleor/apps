@@ -13,6 +13,7 @@ import { MjmlConfiguration } from "../mjml-config";
 import { LoadingIndicator } from "../../../ui/loading-indicator";
 import { Add } from "@material-ui/icons";
 import { useQueryClient } from "@tanstack/react-query";
+import { MjmlInstructions } from "./mjml-instructions";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -165,6 +166,7 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
           </>
         )}
       </div>
+      <MjmlInstructions />
     </AppColumnsLayout>
   );
 };

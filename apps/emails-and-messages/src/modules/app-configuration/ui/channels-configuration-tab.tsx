@@ -6,6 +6,7 @@ import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { trpcClient } from "../../trpc/trpc-client";
 import SideMenu from "./side-menu";
 import { LoadingIndicator } from "../../ui/loading-indicator";
+import { Instructions } from "./instructions";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -142,6 +143,7 @@ export const ChannelsConfigurationTab = () => {
           </>
         )}
       </div>
+      <Instructions />
     </AppColumnsLayout>
   );
 };
