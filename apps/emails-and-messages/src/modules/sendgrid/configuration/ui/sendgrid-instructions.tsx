@@ -26,8 +26,9 @@ export const SendgridInstructions = () => {
 
       <Typography paragraph>
         <Link
-          href="#"
-          onClick={() => {
+          href="https://sendgrid.com/"
+          onClick={(event) => {
+            event.preventDefault();
             appBridge?.dispatch(
               actions.Redirect({
                 to: "https://sendgrid.com/",
@@ -48,8 +49,9 @@ export const SendgridInstructions = () => {
         will need:
         <br />
         <Link
-          href="#"
-          onClick={() => {
+          href="https://app.sendgrid.com/settings/api_keys"
+          onClick={(event) => {
+            event.preventDefault();
             appBridge?.dispatch(
               actions.Redirect({
                 to: "https://app.sendgrid.com/settings/api_keys",
@@ -62,8 +64,9 @@ export const SendgridInstructions = () => {
         </Link>
         <br />
         <Link
-          href="#"
-          onClick={() => {
+          href="https://app.sendgrid.com/settings/sender_auth"
+          onClick={(event) => {
+            event.preventDefault();
             appBridge?.dispatch(
               actions.Redirect({
                 to: "https://app.sendgrid.com/settings/sender_auth",
@@ -76,8 +79,9 @@ export const SendgridInstructions = () => {
         </Link>
         <br />
         <Link
-          href="#"
-          onClick={() => {
+          href="https://mc.sendgrid.com/dynamic-templates"
+          onClick={(event) => {
+            event.preventDefault();
             appBridge?.dispatch(
               actions.Redirect({
                 to: "https://mc.sendgrid.com/dynamic-templates",

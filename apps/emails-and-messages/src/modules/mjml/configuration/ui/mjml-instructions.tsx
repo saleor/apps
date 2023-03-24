@@ -27,8 +27,9 @@ export const MjmlInstructions = () => {
 
       <Typography paragraph>
         <Link
-          href="#"
-          onClick={() => {
+          href="https://mjml.io/"
+          onClick={(event) => {
+            event.preventDefault();
             appBridge?.dispatch(
               actions.Redirect({
                 to: "https://mjml.io/",
