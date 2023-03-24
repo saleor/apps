@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import React, { useEffect } from "react";
-import { ChannelsConfiguration } from "../modules/app-configuration/ui/channels-configuration";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { ConfigurationPageBaseLayout } from "../modules/ui/configuration-page-base-layout";
+import { CategoryMapping } from "../modules/category-mapping/ui/category-mapping";
 
 const ConfigurationPage: NextPage = () => {
   const channels = trpcClient.channels.fetch.useQuery();
@@ -17,7 +17,7 @@ const ConfigurationPage: NextPage = () => {
 
   return (
     <ConfigurationPageBaseLayout>
-      <ChannelsConfiguration />
+      <CategoryMapping />
     </ConfigurationPageBaseLayout>
   );
 };

@@ -1,0 +1,11 @@
+fragment CategoryWithMappingFragment on Category {
+    id
+    parent{
+        name
+        parent{
+            name
+        }
+    }
+    name
+    googleCategoryId: metafield(key: "google_category_id")
+}

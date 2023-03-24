@@ -24,19 +24,7 @@ export const productToProxy = (p: ProductEntry) => {
         },
       ],
     },
-    /**
-     * Consider implementing categories
-     * https://support.google.com/merchants/answer/6324436?hl=en
-     *
-     * However, this field is optional and google seems to automatically match category
-     */
-    // {
-    //   "g:google_product_category": [
-    //     {
-    //       "#text": p.googleProductCategory,
-    //     },
-    //   ],
-    // },
+
     {
       "g:availability": [
         {
@@ -58,6 +46,22 @@ export const productToProxy = (p: ProductEntry) => {
       "g:description": [
         {
           "#text": p.description,
+        },
+      ],
+    });
+  }
+
+  /**
+   * This field is optional and Google automatically match category if not has been provided
+   *
+   * https://support.google.com/merchants/answer/6324436?hl=en
+   */
+
+  if (p.googleProductCategory?.length) {
+    item.push({
+      "g:google_product_category": [
+        {
+          "#text": p.googleProductCategory,
         },
       ],
     });

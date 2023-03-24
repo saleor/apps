@@ -39,8 +39,7 @@ export const generateGoogleXmlFeed = ({
       description: v.product.seoDescription || v.product.description,
       availability: v.quantityAvailable && v.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
       category: v.product.category?.name || "unknown",
-      // TODO: prepare category mapping for google categories
-      googleProductCategory: "",
+      googleProductCategory: v.product.category?.googleCategoryId || "",
       price: price,
       imageUrl: v.product.thumbnail?.url || "",
     });

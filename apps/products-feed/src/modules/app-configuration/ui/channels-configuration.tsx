@@ -9,6 +9,7 @@ import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
 import SideMenu from "./side-menu";
+import { CategoryMappingForm } from "../../category-mapping/ui/category-mapping-form";
 
 const useStyles = makeStyles((theme) => {
   return {
