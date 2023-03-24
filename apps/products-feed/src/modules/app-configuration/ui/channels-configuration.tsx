@@ -1,22 +1,22 @@
 import { trpcClient } from "../../trpc/trpc-client";
 import { LinearProgress, Paper } from "@material-ui/core";
 import React, { useEffect, useMemo, useState } from "react";
-import { makeStyles } from "@saleor/macaw-ui";
+import { EditIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { AppConfigContainer } from "../app-config-container";
 import { UrlConfigurationForm } from "./url-configuration-form";
-import { ChannelsList } from "./channels-list";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
+import SideMenu from "./side-menu";
 
 const useStyles = makeStyles((theme) => {
   return {
-    header: { marginBottom: 20 },
-    grid: { display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start", gap: 40 },
-    formContainer: {
-      top: 0,
-      position: "sticky",
+    grid: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      alignItems: "start",
+      gap: 40,
     },
     instructionsContainer: {
       padding: 15,
@@ -78,16 +78,30 @@ export const ChannelsConfiguration = () => {
 
   return (
     <AppColumnsLayout>
-      <ChannelsList
-        channels={channels.data}
-        activeChannelSlug={activeChannel.slug}
-        onChannelClick={setActiveChannelSlug}
+      <SideMenu
+        title="Channels"
+        selectedItemId={activeChannel?.slug}
+        headerToolbar={
+          <IconButton
+            variant="secondary"
+            onClick={() => {
+              appBridge?.dispatch(
+                actions.Redirect({
+                  to: `/channels/`,
+                })
+              );
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+        }
+        onClick={(id) => setActiveChannelSlug(id)}
+        items={channels.data.map((c) => ({ label: c.name, id: c.slug })) || []}
       />
 
       {activeChannel ? (
         <div className={styles.configurationColumn}>
-          <FeedPreviewCard channelSlug={activeChannel.slug} />
-          <Paper elevation={0} className={styles.formContainer}>
+          <Paper elevation={0}>
             <UrlConfigurationForm
               channelID={activeChannel.id}
               key={activeChannelSlug}
@@ -106,6 +120,7 @@ export const ChannelsConfiguration = () => {
             />
             {saveError && <span>{saveError.message}</span>}
           </Paper>
+          <FeedPreviewCard channelSlug={activeChannel.slug} />
         </div>
       ) : null}
       <Instructions />

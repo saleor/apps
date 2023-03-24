@@ -23,7 +23,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div>
-      <h1>Saleor Merchant Feed</h1>
+      <h1>Saleor Product Feed</h1>
       <p>This is Saleor App that allows product feed generation</p>
       <p>Install app in your Saleor instance and open in with Dashboard</p>
     </div>

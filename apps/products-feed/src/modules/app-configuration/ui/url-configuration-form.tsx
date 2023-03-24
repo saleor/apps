@@ -53,12 +53,12 @@ export const UrlConfigurationForm = (props: Props) => {
       })}
       className={styles.form}
     >
-      <Typography variant="body1" paragraph>
+      <Typography variant="h3" paragraph>
         Configure
         <strong onClick={handleChannelNameClick} className={styles.channelName}>
           {` ${props.channelName} `}
         </strong>
-        channel:
+        channel
       </Typography>
       <TextField label="Storefront home URL" {...CommonFieldProps} {...register("storefrontUrl")} />
       <TextField
