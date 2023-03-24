@@ -1,16 +1,18 @@
-import { CircularProgress, Paper } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@saleor/macaw-ui";
-import { ConfigurationsList } from "../../../app-configuration/ui/configurations-list";
+import React from "react";
+import { IconButton, makeStyles } from "@saleor/macaw-ui";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../../ui/app-columns-layout";
 import { trpcClient } from "../../../trpc/trpc-client";
-import { SendgridConfiguration } from "../sendgrid-config";
-import {
-  getDefaultEmptySendgridConfiguration,
-  SendgridConfigContainer,
-} from "../sendgrid-config-container";
 import { SendgridConfigurationForm } from "./sendgrid-configuration-form";
+import { getDefaultEmptyConfiguration } from "../sendgrid-config-container";
+import { NextRouter, useRouter } from "next/router";
+import SideMenu from "../../../app-configuration/ui/side-menu";
+import { SendgridConfiguration } from "../sendgrid-config";
+import { LoadingIndicator } from "../../../ui/loading-indicator";
+import { Add } from "@material-ui/icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { sendgridUrls } from "../../urls";
+import { SendgridTemplatesCard } from "./sendgrid-templates-card";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -24,101 +26,149 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       gap: 20,
-    },
-    loaderContainer: {
-      margin: "50px auto",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      maxWidth: 600,
     },
   };
 });
 
-type Configurations = {
-  name: string;
-  id: string;
+interface SendgridConfigurationTabProps {
+  configurationId?: string;
+}
+
+const navigateToFirstConfiguration = (
+  router: NextRouter,
+  configurations?: SendgridConfiguration[]
+) => {
+  if (!configurations || !configurations?.length) {
+    router.replace(sendgridUrls.configuration());
+    return;
+  }
+  const firstConfigurationId = configurations[0]?.id;
+  if (firstConfigurationId) {
+    router.replace(sendgridUrls.configuration(firstConfigurationId));
+    return;
+  }
 };
 
-export const SendgridConfigurationTab = () => {
+export const SendgridConfigurationTab = ({ configurationId }: SendgridConfigurationTabProps) => {
   const styles = useStyles();
   const { appBridge } = useAppBridge();
-  const [configurationsListData, setConfigurationsListData] = useState<Configurations[]>([]);
-  const [activeConfigurationId, setActiveConfigurationId] = useState<string>();
-  const [initialData, setInitialData] = useState<SendgridConfiguration>();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const {
-    data: configurationData,
-    refetch: refetchConfig,
-    isLoading,
-  } = trpcClient.sendgridConfiguration.fetch.useQuery(undefined, {
+    data: configurations,
+    refetch: refetchConfigurations,
+    isLoading: configurationsIsLoading,
+    isFetching: configurationsIsFetching,
+    isRefetching: configurationsIsRefetching,
+  } = trpcClient.sendgridConfiguration.getConfigurations.useQuery(undefined, {
     onSuccess(data) {
-      if (!data.availableConfigurations) {
-        return;
+      if (!configurationId) {
+        console.log("no conf id! navigate to first");
+        navigateToFirstConfiguration(router, data);
       }
-      const keys = Object.keys(data.availableConfigurations);
-      setConfigurationsListData(
-        keys.map((key) => ({ id: key, name: data.availableConfigurations[key].configurationName }))
-      );
-      setActiveConfigurationId(keys[0]);
     },
   });
 
-  const { mutate, error: saveError } = trpcClient.sendgridConfiguration.setAndReplace.useMutation({
-    onSuccess() {
-      refetchConfig();
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          text: "Saved configuration",
-          status: "success",
-        })
-      );
-    },
-  });
+  const { mutate: deleteConfiguration } =
+    trpcClient.sendgridConfiguration.deleteConfiguration.useMutation({
+      onError: (error) => {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Could not remove the configuration",
+            text: error.message,
+            status: "error",
+          })
+        );
+      },
+      onSuccess: async (_data, variables) => {
+        await queryClient.cancelQueries({
+          queryKey: ["sendgridConfiguration", "getConfigurations"],
+        });
+        // remove value from the cache after the success
+        queryClient.setQueryData<Array<SendgridConfiguration>>(
+          ["sendgridConfiguration", "getConfigurations"],
+          (old) => {
+            if (old) {
+              const index = old.findIndex((c) => c.id === variables.id);
+              if (index !== -1) {
+                delete old[index];
+                return [...old];
+              }
+            }
+          }
+        );
 
-  useEffect(() => {
-    setInitialData(
-      activeConfigurationId
-        ? SendgridConfigContainer.getSendgridConfigurationById(configurationData)(
-            activeConfigurationId
-          )
-        : getDefaultEmptySendgridConfiguration()
-    );
-  }, [activeConfigurationId, configurationData]);
+        // if we just deleted the configuration that was selected
+        // we have to update the URL
+        if (variables.id === configurationId) {
+          router.replace(sendgridUrls.configuration());
+        }
 
-  if (isLoading) {
-    return (
-      <div className={styles.loaderContainer}>
-        <CircularProgress color="primary" />
-      </div>
-    );
+        refetchConfigurations();
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Success",
+            text: "Removed successfully",
+            status: "success",
+          })
+        );
+      },
+    });
+
+  if (configurationsIsLoading || configurationsIsFetching) {
+    return <LoadingIndicator />;
+  }
+
+  const configuration = configurations?.find((c) => c.id === configurationId?.toString());
+
+  if (configurationId && !configuration) {
+    return <div>Configuration not found</div>;
   }
 
   return (
     <AppColumnsLayout>
-      <ConfigurationsList
-        // TODO: FIXME
-        listItems={[]}
-        activeItemId={activeConfigurationId}
-        onItemClick={setActiveConfigurationId}
+      <SideMenu
+        title="Configurations"
+        selectedItemId={configurationId}
+        headerToolbar={
+          <IconButton
+            variant="secondary"
+            onClick={() => {
+              router.replace(sendgridUrls.configuration());
+            }}
+          >
+            <Add />
+          </IconButton>
+        }
+        onClick={(id) => router.replace(sendgridUrls.configuration(id))}
+        onDelete={(id) => {
+          deleteConfiguration({ id });
+        }}
+        items={configurations?.map((c) => ({ label: c.configurationName, id: c.id })) || []}
       />
       <div className={styles.configurationColumn}>
-        <Paper elevation={0} className={styles.formContainer}>
-          {!!initialData && (
+        {configurationsIsLoading || configurationsIsFetching ? (
+          <LoadingIndicator />
+        ) : (
+          <>
             <SendgridConfigurationForm
-              onSubmit={async (data) => {
-                const newConfig =
-                  SendgridConfigContainer.setSendgridConfigurationById(configurationData)(
-                    activeConfigurationId
-                  )(data);
-                mutate(newConfig);
-              }}
-              initialData={initialData}
-              configurationId={activeConfigurationId}
+              onConfigurationSaved={() => refetchConfigurations()}
+              initialData={configuration || getDefaultEmptyConfiguration()}
+              configurationId={configurationId}
             />
-          )}
-          {saveError && <span>{saveError.message}</span>}
-        </Paper>
+            {!!configurationId && !!configuration && (
+              <SendgridTemplatesCard
+                configurationId={configurationId}
+                configuration={configuration}
+                onEventChanged={() => {
+                  refetchConfigurations();
+                }}
+              />
+            )}
+          </>
+        )}
       </div>
     </AppColumnsLayout>
   );

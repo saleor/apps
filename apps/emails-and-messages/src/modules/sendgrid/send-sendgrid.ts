@@ -1,16 +1,13 @@
 import { logger as pinoLogger } from "../../lib/logger";
-import { AuthData } from "@saleor/app-sdk/APL";
 import { SendgridConfiguration } from "./configuration/sendgrid-config";
-import { getSendgridSettings } from "./get-sendgrid-settings";
 import { MailService } from "@sendgrid/mail";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 
 interface SendSendgridArgs {
-  authData: AuthData;
-  channel: string;
   recipientEmail: string;
   event: MessageEventTypes;
   payload: any;
+  sendgridConfiguration: SendgridConfiguration;
 }
 
 export interface EmailServiceResponse {
@@ -20,65 +17,55 @@ export interface EmailServiceResponse {
   }[];
 }
 
-const eventMapping = (event: SendSendgridArgs["event"], settings: SendgridConfiguration) => {
-  switch (event) {
-    case "ORDER_CREATED":
-      return {
-        templateId: settings.templateOrderCreatedTemplate,
-        subject: settings.templateOrderCreatedSubject || "Order created",
-      };
-    case "ORDER_FULFILLED":
-      return {
-        templateId: settings.templateOrderFulfilledTemplate,
-        subject: settings.templateOrderFulfilledSubject || "Order fulfilled",
-      };
-    case "ORDER_CONFIRMED":
-      return {
-        template: settings.templateOrderConfirmedTemplate,
-        subject: settings.templateOrderConfirmedSubject || "Order confirmed",
-      };
-    case "ORDER_CANCELLED":
-      return {
-        template: settings.templateOrderCancelledTemplate,
-        subject: settings.templateOrderCancelledSubject || "Order cancelled",
-      };
-    case "ORDER_FULLY_PAID":
-      return {
-        template: settings.templateOrderFullyPaidTemplate,
-        subject: settings.templateOrderFullyPaidSubject || "Order fully paid",
-      };
-    case "INVOICE_SENT":
-      return {
-        template: settings.templateInvoiceSentTemplate,
-        subject: settings.templateInvoiceSentSubject || "Invoice sent",
-      };
-  }
-};
-
 export const sendSendgrid = async ({
-  authData,
-  channel,
   payload,
   recipientEmail,
   event,
+  sendgridConfiguration,
 }: SendSendgridArgs) => {
   const logger = pinoLogger.child({
     fn: "sendSendgrid",
     event,
   });
+  if (!sendgridConfiguration.senderEmail) {
+    logger.debug("Sender email has not been specified, skipping");
+    return {
+      errors: [
+        {
+          message: "Sender email has not been set up",
+        },
+      ],
+    };
+  }
 
-  const settings = await getSendgridSettings({ authData, channel });
+  const eventSettings = sendgridConfiguration.events.find((e) => e.eventType === event);
+  if (!eventSettings) {
+    logger.debug("No active settings for this event, skipping");
+    return {
+      errors: [
+        {
+          message: "No active settings for this event",
+        },
+      ],
+    };
+  }
 
-  if (!settings?.active) {
-    logger.debug("Sendgrid is not active, skipping");
-    return;
+  if (!eventSettings.active) {
+    logger.debug("Event settings are not active, skipping");
+    return {
+      errors: [
+        {
+          message: "Event settings are not active",
+        },
+      ],
+    };
   }
 
   logger.debug("Sending an email using Sendgrid");
 
-  const { templateId, subject } = eventMapping(event, settings);
+  const { template } = eventSettings;
 
-  if (!templateId) {
+  if (!template) {
     logger.error("No template defined in the settings");
     return {
       errors: [{ message: `No template specified for the event ${event}` }],
@@ -87,35 +74,21 @@ export const sendSendgrid = async ({
 
   try {
     const mailService = new MailService();
-    mailService.setApiKey(settings.apiKey);
+    mailService.setApiKey(sendgridConfiguration.apiKey);
 
     await mailService.send({
       mailSettings: {
         sandboxMode: {
-          enable: settings.sandboxMode,
+          enable: sendgridConfiguration.sandboxMode,
         },
       },
       from: {
-        email: settings.senderEmail,
+        name: sendgridConfiguration.senderName,
+        email: sendgridConfiguration.senderEmail,
       },
-      to: {
-        email: recipientEmail,
-      },
-      personalizations: [
-        {
-          from: {
-            email: settings.senderEmail,
-          },
-          to: [
-            {
-              email: recipientEmail,
-            },
-          ],
-          subject,
-          dynamicTemplateData: payload,
-        },
-      ],
-      templateId,
+      to: recipientEmail,
+      dynamicTemplateData: payload,
+      templateId: template,
     });
     logger.debug("Email has been send");
   } catch (error) {
