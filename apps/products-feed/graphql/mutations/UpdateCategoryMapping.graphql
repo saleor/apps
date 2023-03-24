@@ -1,0 +1,7 @@
+mutation UpdateCategoryMapping($id: ID!, $googleCategoryId: String!) {
+  updateMetadata(id: $id, input: {key: "google_category_id", value: $googleCategoryId}) {
+    errors {
+      message
+    }
+  }
+}

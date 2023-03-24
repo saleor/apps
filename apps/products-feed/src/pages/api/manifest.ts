@@ -9,7 +9,7 @@ export default createManifestHandler({
       name: "Product Feed",
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       appUrl: context.appBaseUrl,
-      permissions: [],
+      permissions: ["MANAGE_PRODUCTS"],
       id: "saleor.app.products-feed",
       version: packageJson.version,
       webhooks: [],

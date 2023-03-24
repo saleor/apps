@@ -1,0 +1,13 @@
+query FetchCategoriesWithMapping{
+  categories(first: 10){
+    pageInfo{
+      hasNextPage
+      endCursor
+    }
+    edges{
+      node{
+        ...CategoryWithMappingFragment
+      }
+    }
+  }
+}

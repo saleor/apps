@@ -23,6 +23,7 @@ fragment GoogleFeedProductVariant on ProductVariant {
     category {
       id
       name
+      googleCategoryId: metafield(key: "google_category_id")
     }
   }
 }
