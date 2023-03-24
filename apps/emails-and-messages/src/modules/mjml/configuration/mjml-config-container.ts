@@ -1,8 +1,7 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { MjmlConfig as MjmlConfigurationRoot, MjmlConfiguration } from "./mjml-config";
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
-
-export const generateMjmlConfigurationId = () => Date.now().toString();
+import { generateRandomId } from "../../../lib/generate-random-id";
 
 export const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
   messageEventTypes.map((eventType) => ({
@@ -77,7 +76,7 @@ const createConfiguration =
     // for creating a new configurations, the ID has to be generated
     const newConfiguration = {
       ...mjmlConfiguration,
-      id: generateMjmlConfigurationId(),
+      id: generateRandomId(),
       events: getDefaultEventsConfiguration(),
     };
     mjmlConfigNormalized.configurations.push(newConfiguration);

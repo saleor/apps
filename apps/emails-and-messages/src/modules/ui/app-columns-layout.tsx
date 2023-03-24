@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "grid",
-    gridTemplateColumns: "280px auto",
+    gridTemplateColumns: "280px auto 400px",
     alignItems: "start",
     gap: theme.spacing(3),
     padding: "20px 0",
