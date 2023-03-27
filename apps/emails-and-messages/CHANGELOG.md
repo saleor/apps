@@ -1,5 +1,15 @@
 # saleor-app-emails-and-messages
 
+## 1.2.0
+
+### Minor Changes
+
+- 14ac614: Enable Sendgrid support
+
+### Patch Changes
+
+- 9d625fc: Improve instructions for the app configuration
+
 ## 1.1.0
 
 ### Minor Changes
