@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.4.1
+
+### Patch Changes
+
+- 5fad97c: Update the UI to the common theme
+- f58043f: Add Google Products Category mapping
+
 ## 1.4.0
 
 ### Minor Changes
