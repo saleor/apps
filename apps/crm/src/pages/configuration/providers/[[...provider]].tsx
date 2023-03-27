@@ -7,7 +7,11 @@ import { createLogger } from "../../../lib/logger";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { ProvidersList } from "../../../modules/providers/providers-list/providers-list";
 import { useRouter } from "next/router";
-import { isValidProviderType, ProviderType } from "../../../modules/providers/providers-types";
+import {
+  isValidProviderType,
+  ProvidersTypes,
+  ProviderType,
+} from "../../../modules/providers/providers-types";
 import { MailchimpConfigView } from "../../../modules/mailchimp/views/mailchimp-config-view/mailchimp-config-view";
 
 const views = {
@@ -27,11 +31,11 @@ const ProvidersPage: NextPage = () => {
 
   useEffect(() => {
     if (!isValidProviderType(selectedProviderQuery)) {
-      throw new Error("Invalid provider");
+      router.push(`/configuration/providers/${ProvidersTypes.Mailchimp}`);
 
       // show 404
     }
-  }, [selectedProviderQuery]);
+  }, [selectedProviderQuery, router]);
 
   const selectedProvider = selectedProviderQuery as ProviderType;
 

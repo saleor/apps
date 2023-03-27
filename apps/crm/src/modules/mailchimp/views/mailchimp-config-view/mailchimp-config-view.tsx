@@ -1,4 +1,6 @@
 import { trpcClient } from "../../../trpc/trpc-client";
+import { Text } from "@saleor/macaw-ui/next";
+import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
 
 export const MailchimpConfigView = () => {
   const {
@@ -15,8 +17,13 @@ export const MailchimpConfigView = () => {
   }
 
   if (isMailchimpConfigured) {
-    return <div>All set</div>;
+    return (
+      <div>
+        <Text>All set</Text>
+        <RemoveMailchimpConfig />
+      </div>
+    );
   }
 
-  return <div>config</div>;
+  return null;
 };

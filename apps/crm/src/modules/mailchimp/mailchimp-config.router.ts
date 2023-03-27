@@ -57,6 +57,11 @@ const mailchimpConfigRouter = router({
       };
     }
   }),
+  removeToken: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .mutation(({ ctx }) => {
+      return new MailchimpConfigSettingsManager(ctx.apiClient).removeConfig();
+    }),
 });
 
 export const MailchimpConfigRouter = {

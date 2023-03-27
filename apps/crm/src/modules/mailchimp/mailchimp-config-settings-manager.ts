@@ -60,6 +60,11 @@ class MailchimpConfigSettingsManagerV1 {
       return null;
     }
   }
+
+  async removeConfig() {
+    // todo = implement settingsManager.delete
+    return this.settingsManager.set({ key: this.metadataKey, value: "undefined" });
+  }
 }
 
 export const MailchimpConfigSettingsManager = MailchimpConfigSettingsManagerV1;
