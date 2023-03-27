@@ -5,6 +5,7 @@ import { AppColumnsLayout } from "../../../modules/ui/app-columns-layout";
 import { MailchimpAuthFrame } from "../../../modules/mailchimp/mailchimp-auth-frame/mailchimp-auth-frame";
 import { createLogger } from "../../../lib/logger";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
+import { ProvidersList } from "../../../modules/providers/providers-list/providers-list";
 
 const logger = createLogger({});
 
@@ -60,7 +61,7 @@ const ProvidersPage: NextPage = () => {
         platform is Mailchimp
       </p>
       <AppColumnsLayout>
-        <div />
+        <ProvidersList onProviderClick={console.log} activeProvider="Mailchimp" />
         <div
           style={{
             height: 700,

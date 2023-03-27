@@ -1,5 +1,6 @@
 import { ProvidersTypes, ProviderType } from "../providers-types";
 import MailchimpLogo from "../../../assets/mailchimp.svg";
+import SegmentLogo from "../../../assets/semgent.png";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
 import styles from "./providers-list.module.css";
@@ -9,7 +10,6 @@ type Props = {
   activeProvider?: ProviderType;
 } & HTMLAttributes<HTMLUListElement>;
 
-// todo maybe remove if not used
 export const ProvidersList = ({ className, onProviderClick, activeProvider, ...props }: Props) => {
   return (
     <ul className={clsx(className, styles.list)}>
@@ -23,6 +23,11 @@ export const ProvidersList = ({ className, onProviderClick, activeProvider, ...p
       >
         <img className={styles.logo} src={MailchimpLogo.src} />
         <span className={styles.name}>{ProvidersTypes.Mailchimp}</span>
+      </li>
+      <li className={clsx(styles.item, styles.comingSoonDivider)}>Coming soon</li>
+      <li className={clsx(styles.item, styles.disabled)}>
+        <img className={styles.logo} src={SegmentLogo.src} />
+        <span className={styles.name}>Segment.io</span>
       </li>
     </ul>
   );
