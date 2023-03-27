@@ -1,13 +1,18 @@
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
-import { AppColumnsLayout } from "../../../modules/ui/app-columns-layout";
+import { AppColumnsLayout } from "../../../modules/ui/app-columns-layout/app-columns-layout";
 import { MailchimpAuthFrame } from "../../../modules/mailchimp/mailchimp-auth-frame/mailchimp-auth-frame";
 import { createLogger } from "../../../lib/logger";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { ProvidersList } from "../../../modules/providers/providers-list/providers-list";
+import { useRouter } from "next/router";
+import { isValidProviderType, ProviderType } from "../../../modules/providers/providers-types";
+import { MailchimpConfigView } from "../../../modules/mailchimp/views/mailchimp-config-view/mailchimp-config-view";
 
-const logger = createLogger({});
+const views = {
+  Mailchimp: MailchimpConfigView,
+} satisfies Record<ProviderType, React.ComponentType>;
 
 /**
  * todo
@@ -17,75 +22,32 @@ const logger = createLogger({});
  * - add sync users to lists
  */
 const ProvidersPage: NextPage = () => {
-  const { mutateAsync } = trpcClient.mailchimp.config.setToken.useMutation();
-  const { data, refetch, isFetched } =
-    trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
-  const { data: listsData, refetch: fetchLists } =
-    trpcClient.mailchimp.audience.getLists.useQuery();
-
-  console.log(listsData);
+  const router = useRouter();
+  const selectedProviderQuery = router.query.provider && router.query.provider[0];
 
   useEffect(() => {
-    const handleMessage = (message: MessageEvent) => {
-      //todo check origin
-      try {
-        const payload = JSON.parse(message.data) as {
-          token: string;
-          type: "mailchimp_token";
-          dc: string;
-        };
+    if (!isValidProviderType(selectedProviderQuery)) {
+      throw new Error("Invalid provider");
 
-        if (payload.type !== "mailchimp_token") {
-          return;
-        }
+      // show 404
+    }
+  }, [selectedProviderQuery]);
 
-        mutateAsync({ token: payload.token, dc: payload.dc }).then(() => {
-          return refetch();
-        });
+  const selectedProvider = selectedProviderQuery as ProviderType;
 
-        // todo - save config in private metadata and show different UI
-      } catch (e) {
-        logger.error(e);
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-
-    return () => window.removeEventListener("message", handleMessage);
-  });
+  const ProviderView = views[selectedProvider] ?? (() => null);
 
   return (
     <div>
-      <p>
-        Connect Saleor clients database with your favourite CRM platform. Currently available
-        platform is Mailchimp
-      </p>
-      <AppColumnsLayout>
-        <ProvidersList onProviderClick={console.log} activeProvider="Mailchimp" />
-        <div
-          style={{
-            height: 700,
-            marginTop: 50,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            overflow: "hidden",
+      <p>Connect Saleor clients database with your favourite CRM platform.</p>
+      <AppColumnsLayout marginTop={12}>
+        <ProvidersList
+          onProviderClick={(provider) => {
+            router.push(`/configuration/providers/${provider}`);
           }}
-        >
-          {isFetched && data?.configured ? (
-            <h2>
-              Mailchimp service is configured{" "}
-              <button
-                onClick={() => {
-                  fetchLists();
-                }}
-              >
-                fetch lists
-              </button>
-            </h2>
-          ) : (
-            <MailchimpAuthFrame />
-          )}
-        </div>
+          activeProvider="Mailchimp"
+        />
+        <ProviderView />
       </AppColumnsLayout>
     </div>
   );
