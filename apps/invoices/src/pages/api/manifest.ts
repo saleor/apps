@@ -18,6 +18,10 @@ export default createManifestHandler({
       homepageUrl: "https://github.com/saleor/apps",
       supportUrl: "https://github.com/saleor/apps/discussions",
       author: "Saleor Commerce",
+      /**
+       * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
+       */
+      requiredSaleorVersion: ">=3.10 <4",
     };
 
     return manifest;
