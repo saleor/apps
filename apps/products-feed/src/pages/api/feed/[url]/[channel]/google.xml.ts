@@ -8,6 +8,11 @@ import { getGoogleFeedSettings } from "../../../../../lib/google-feed/get-google
 import { generateGoogleXmlFeed } from "../../../../../lib/google-feed/generate-google-xml-feed";
 import { fetchShopData } from "../../../../../lib/google-feed/fetch-shop-data";
 
+// By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
+const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
+  ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
+  : 60 * 5;
+
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
@@ -98,8 +103,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Feed generated. Returning formatted XML");
 
-  // TODO: add cache headers
   res.setHeader("Content-Type", "text/xml");
+  res.setHeader("Cache-Control", `s-maxage=${FEED_CACHE_MAX_AGE}`);
   res.write(xmlContent);
   res.end();
 };

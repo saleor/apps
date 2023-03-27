@@ -79,7 +79,7 @@ pnpm dev
 3. Expose local environment using tunnel:
    Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
 
-4. Install aplication at your dashboard:
+4. Install application at your dashboard:
 
 If you use Saleor Cloud or your local server is exposed, you can install your app by following this link:
 
@@ -108,3 +108,7 @@ The choice of the APL is done using `APL` environment variable. If value is not 
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. Can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
+
+### Environment variables
+
+- `FEED_CACHE_MAX_AGE`: Amount of seconds the the response will be cached for. Default time is 5 minutes.
