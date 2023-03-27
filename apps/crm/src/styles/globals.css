@@ -25,3 +25,7 @@ code::before {
   content: "$ ";
   opacity: 0.6;
 }
+
+a {
+  text-decoration: none;
+}
