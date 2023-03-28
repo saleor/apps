@@ -4,9 +4,21 @@ import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 
+export const CustomerCreatedEventConfig = z
+  .object({
+    enabled: z.literal(true),
+    listId: z.string(),
+  })
+  .or(
+    z.object({
+      enabled: z.literal(false),
+    })
+  );
+
 const ConfigV1 = z.object({
   token: z.string().min(1).describe("OAuth config from Mailchimp API"),
   dc: z.string().min(1).describe("Prefix for mailchimp API, received from Mailchimp metadata"),
+  customerCreateEvent: CustomerCreatedEventConfig.optional(),
 });
 
 const MetadataSchemaV1 = z.object({
@@ -37,6 +49,12 @@ class MailchimpConfigSettingsManagerV1 {
       configVersion: "v1",
     });
 
+    if (!configSchema.config.customerCreateEvent) {
+      configSchema.config.customerCreateEvent = {
+        enabled: false,
+      };
+    }
+
     this.logger.debug(configSchema, "Will set config");
 
     return this.settingsManager.set({
@@ -49,7 +67,7 @@ class MailchimpConfigSettingsManagerV1 {
     this.logger.debug(`Will fetched metadata key: ${this.metadataKey}`);
     const rawMetadata = await this.settingsManager.get(this.metadataKey);
 
-    this.logger.debug(rawMetadata, "Received raw metadata");
+    this.logger.debug({ rawMetadata }, "Received raw metadata");
 
     if (!rawMetadata) {
       this.logger.debug("Raw metadata is nullable");
@@ -60,8 +78,15 @@ class MailchimpConfigSettingsManagerV1 {
     try {
       const parsedMetadata = MetadataSchemaV1.parse(JSON.parse(rawMetadata));
 
+      if (!parsedMetadata.config.customerCreateEvent) {
+        parsedMetadata.config.customerCreateEvent = {
+          enabled: false,
+        };
+      }
+
       return parsedMetadata.config;
     } catch (e) {
+      console.error(e);
       return null;
     }
   }

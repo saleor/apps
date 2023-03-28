@@ -6,8 +6,19 @@ import {
   MailchimpConfig,
   MailchimpConfigSettingsManager,
 } from "./mailchimp-config-settings-manager";
+import { z } from "zod";
 
 const setTokenInput = MailchimpConfig;
+
+type ConfiguredResponse =
+  | {
+      configured: false;
+      reason: string;
+    }
+  | {
+      configured: true;
+      customerCreateEvent: z.infer<typeof MailchimpConfig>["customerCreateEvent"];
+    };
 
 // todo extract settings manager
 const mailchimpConfigRouter = router({
@@ -24,47 +35,63 @@ const mailchimpConfigRouter = router({
 
       return new MailchimpConfigSettingsManager(ctx.apiClient).setConfig(input);
     }),
-  getMailchimpConfigured: protectedClientProcedure.query(async ({ ctx }) => {
-    const logger = createLogger({
-      context: "mailchimpConfigRouter",
-      saleorApiUrl: ctx.saleorApiUrl,
-    });
+  setWebhookConfig: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(setTokenInput)
+    .mutation(({ ctx, input }) => {
+      const logger = createLogger({
+        context: "mailchimpConfigRouter",
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
-    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+      logger.info("Saving Mailchimp token");
 
-    logger.debug(config, "Received config from metadata");
+      return new MailchimpConfigSettingsManager(ctx.apiClient).setConfig(input);
+    }),
+  getMailchimpConfigured: protectedClientProcedure.query(
+    async ({ ctx }): Promise<ConfiguredResponse> => {
+      const logger = createLogger({
+        context: "mailchimpConfigRouter",
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
-    // todo consider TRPCError?
-    if (!config) {
-      logger.debug("No config - will return NO_TOKEN");
+      const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
 
-      return {
-        configured: false,
-        reason: "NO_TOKEN",
-      };
+      logger.debug(config, "Received config from metadata");
+
+      // todo consider TRPCError?
+      if (!config) {
+        logger.debug("No config - will return NO_TOKEN");
+
+        return {
+          configured: false,
+          reason: "NO_TOKEN",
+        };
+      }
+
+      const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
+
+      try {
+        logger.debug("Will ping Mailchimp");
+
+        await mailchimpClient.ping();
+
+        logger.debug("Mailchimp seems to be fine");
+
+        return {
+          configured: true,
+          customerCreateEvent: config.customerCreateEvent,
+        };
+      } catch (e) {
+        logger.debug("Ping to mailchimp failed, will return CANT_PING");
+
+        return {
+          configured: false,
+          reason: "CANT_PING",
+        };
+      }
     }
-
-    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
-
-    try {
-      logger.debug("Will ping Mailchimp");
-
-      await mailchimpClient.ping();
-
-      logger.debug("Mailchimp seems to be fine");
-
-      return {
-        configured: true,
-      };
-    } catch (e) {
-      logger.debug("Ping to mailchimp failed, will return CANT_PING");
-
-      return {
-        configured: false,
-        reason: "CANT_PING",
-      };
-    }
-  }),
+  ),
   removeToken: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .mutation(({ ctx }) => {
