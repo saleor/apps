@@ -6,6 +6,7 @@ import { Layout } from "../modules/ui/layout/layout";
 import { MailchimpLists } from "../modules/mailchimp/mailchimp-lists/mailchimp-lists";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
+// todo remove me
 const SettingsPage: NextPage = () => {
   const { data, mutateAsync } = trpcClient.mailchimp.audience.addContact.useMutation();
 

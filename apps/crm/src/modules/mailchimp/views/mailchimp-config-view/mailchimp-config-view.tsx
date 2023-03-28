@@ -3,6 +3,7 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthFrame } from "../../mailchimp-auth-frame/mailchimp-auth-frame";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
+import { MailchimpLists } from "../../mailchimp-lists/mailchimp-lists";
 
 const header = (
   <Text
@@ -42,9 +43,13 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
-        <Text as="p" marginBottom={8}>
-          Mailchimp connected - all set
-        </Text>
+        <Box marginBottom={12}>
+          <Text variant="heading" as="p" marginBottom={2}>
+            Connection status
+          </Text>
+          <Text>All good</Text>
+        </Box>
+        <MailchimpLists marginBottom={12} />
         <RemoveMailchimpConfig />
       </div>
     );

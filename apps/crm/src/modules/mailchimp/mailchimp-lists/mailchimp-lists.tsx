@@ -4,6 +4,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 
 export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children">) => {
   const { data, error, status } = trpcClient.mailchimp.audience.getLists.useQuery();
+
   switch (status) {
     case "error": {
       return (
@@ -27,7 +28,7 @@ export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children
         <Box {...props}>
           <List>
             <List.Item disabled>
-              <Text variant="heading">Mailchimp lists</Text>
+              <Text variant="heading">Available lists</Text>
             </List.Item>
             {data.map((listItem) => (
               <List.Item disabled key={listItem.id} paddingY={4}>
