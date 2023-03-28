@@ -46,7 +46,7 @@ export class TaxJarConfigurationService {
 
   async get(id: string): Promise<TaxJarInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
-    const data = await this.crudSettingsConfigurator.read(id);
+    const { data } = await this.crudSettingsConfigurator.read(id);
     this.logger.debug({ setting: data }, `Fetched setting from crudSettingsConfigurator`);
 
     const validation = getSchema.safeParse(data);

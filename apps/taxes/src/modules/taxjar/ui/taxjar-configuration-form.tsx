@@ -63,7 +63,7 @@ export const TaxJarConfigurationForm = () => {
 
   const { refetch: refetchProvidersConfigurationData } =
     trpcClient.providersConfiguration.getAll.useQuery();
-  const { data: instance } = trpcClient.avataxConfiguration.get.useQuery(
+  const { data: instance } = trpcClient.taxJarConfiguration.get.useQuery(
     { id: instanceId ?? "" },
     {
       enabled: !!instanceId,
@@ -137,7 +137,7 @@ export const TaxJarConfigurationForm = () => {
         appBridge?.dispatch(
           actions.Notification({
             title: "Success",
-            text: "Remove TaxJar instance",
+            text: "Removed TaxJar instance",
             status: "success",
           })
         );
