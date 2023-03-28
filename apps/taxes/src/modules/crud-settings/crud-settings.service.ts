@@ -4,7 +4,8 @@ import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 import { createId } from "../../lib/utils";
 
-const settingsSchema = z.array(z.record(z.any()));
+const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
+const settingsSchema = z.array(settingSchema);
 
 export class CrudSettingsConfigurator {
   private logger: pino.Logger;
@@ -59,8 +60,8 @@ export class CrudSettingsConfigurator {
   async create(data: any) {
     this.logger.debug(data, ".create called with:");
 
-    const getResponse = await this.readAll();
-    const prevData = getResponse.data;
+    const settings = await this.readAll();
+    const prevData = settings.data;
 
     const id = createId();
     const newData = [...prevData, { ...data, id }];
@@ -78,8 +79,8 @@ export class CrudSettingsConfigurator {
   async delete(id: string) {
     this.logger.debug(`.delete called with: ${id}`);
 
-    const getResponse = await this.readAll();
-    const prevData = getResponse.data;
+    const settings = await this.readAll();
+    const prevData = settings.data;
     const nextData = prevData.filter((item) => item.id !== id);
 
     await this.metadataManager.set({
@@ -91,11 +92,10 @@ export class CrudSettingsConfigurator {
 
   async update(id: string, data: any) {
     this.logger.debug(data, `.update called with: ${id}`);
-    const getResponse = await this.readAll();
-    const prevData = getResponse.data;
-    const nextData = prevData.map((item) => {
+    const { data: settings } = await this.readAll();
+    const nextData = settings.map((item) => {
       if (item.id === id) {
-        return { id, data };
+        return { id, ...data };
       }
       return item;
     });
