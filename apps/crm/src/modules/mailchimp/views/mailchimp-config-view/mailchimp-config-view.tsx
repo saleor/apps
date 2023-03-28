@@ -2,6 +2,7 @@ import { trpcClient } from "../../../trpc/trpc-client";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthFrame } from "../../mailchimp-auth-frame/mailchimp-auth-frame";
+import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 
 const header = (
   <Text
@@ -26,6 +27,8 @@ export const MailchimpConfigView = () => {
 
   const isMailchimpConfigured = mailchimpConfigured?.configured;
 
+  console.log({ mailchimpConfigured });
+
   if (isLoading) {
     return (
       <div>
@@ -39,7 +42,9 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
-        <Text>All set</Text>
+        <Text as="p" marginBottom={8}>
+          Mailchimp connected - all set
+        </Text>
         <RemoveMailchimpConfig />
       </div>
     );
@@ -51,7 +56,7 @@ export const MailchimpConfigView = () => {
           You need to connect Mailchimp with Saleor CRM App. Click button below and authorize the
           App.
         </Text>
-        <MailchimpAuthFrame __height="800px" />
+        <MailchimpAuthorizeView />
       </Box>
     );
   }

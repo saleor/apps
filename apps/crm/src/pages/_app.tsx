@@ -1,3 +1,4 @@
+import "@saleor/macaw-ui/next/style";
 import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
@@ -9,7 +10,6 @@ import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { ThemeProvider } from "@saleor/macaw-ui/next";
 
-import "@saleor/macaw-ui/next/style";
 import { NextPage } from "next";
 
 /**

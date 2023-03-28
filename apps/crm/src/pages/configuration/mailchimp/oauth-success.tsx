@@ -9,9 +9,13 @@ const ConfigurationPage: NextPage = () => {
 
   useEffect(() => {
     if (token) {
-      window.parent.postMessage(JSON.stringify({ type: "mailchimp_token", token, dc })); // todo restrict origin
+      const payload = { type: "mailchimp_token", token, dc };
+
+      console.log("Calling post message");
+
+      window.parent.postMessage(JSON.stringify(payload), window.location.origin); // todo restrict origin
     }
-  }, [token]);
+  }, [token, dc]);
 
   return (
     <div>

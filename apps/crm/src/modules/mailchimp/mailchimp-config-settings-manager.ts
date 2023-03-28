@@ -46,9 +46,14 @@ class MailchimpConfigSettingsManagerV1 {
   }
 
   async getConfig(): Promise<z.infer<typeof ConfigV1> | null> {
+    this.logger.debug(`Will fetched metadata key: ${this.metadataKey}`);
     const rawMetadata = await this.settingsManager.get(this.metadataKey);
 
+    this.logger.debug(rawMetadata, "Received raw metadata");
+
     if (!rawMetadata) {
+      this.logger.debug("Raw metadata is nullable");
+
       return null;
     }
 

@@ -36,6 +36,8 @@ const mailchimpConfigRouter = router({
 
     // todo consider TRPCError?
     if (!config) {
+      logger.debug("No config - will return NO_TOKEN");
+
       return {
         configured: false,
         reason: "NO_TOKEN",
@@ -45,12 +47,18 @@ const mailchimpConfigRouter = router({
     const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
     try {
+      logger.debug("Will ping Mailchimp");
+
       await mailchimpClient.ping();
+
+      logger.debug("Mailchimp seems to be fine");
 
       return {
         configured: true,
       };
     } catch (e) {
+      logger.debug("Ping to mailchimp failed, will return CANT_PING");
+
       return {
         configured: false,
         reason: "CANT_PING",
