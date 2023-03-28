@@ -28,9 +28,9 @@ export class GetChannelsConfigurationService {
 
     const channelsFetcher = new ChannelsFetcher(apiClient);
     const channels = await channelsFetcher.fetchChannels();
-    logger.info({ channels }, "Fetched Saleor channels that use TAX_APP for tax calculation");
+    logger.debug({ channels }, "Fetched Saleor channels that use TAX_APP for tax calculation");
     const defaultConfig = createDefaultChannelsConfig(channels ?? []);
-    logger.info({ defaultConfig }, "Generated config from Saleor channels");
+    logger.debug({ defaultConfig }, "Generated config from Saleor channels");
 
     // todo: validate config
     const appChannelsConfig = (await taxConfigurator.getConfig()) ?? null;

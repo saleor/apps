@@ -7,11 +7,15 @@ import { setAndReplaceChannelsInputSchema } from "./channels-config-input-schema
 import { TaxChannelsConfigurator } from "./channels-configurator";
 import { GetChannelsConfigurationService } from "./get-channels-configuration.service";
 
+// todo: refactor with crud-settings
 export const channelsConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+    const logger = pinoLogger.child({
+      saleorApiUrl: ctx.saleorApiUrl,
+      procedure: "channelsConfigurationRouter.fetch",
+    });
 
-    logger.debug("channelsConfigurationRouter.fetch called");
+    logger.info("channelsConfigurationRouter.fetch called");
 
     return new GetChannelsConfigurationService({
       apiClient: ctx.apiClient,
@@ -21,7 +25,10 @@ export const channelsConfigurationRouter = router({
   upsert: protectedClientProcedure
     .input(setAndReplaceChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = pinoLogger.child({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "channelsConfigurationRouter.upsert",
+      });
       logger.info(input, "channelsConfigurationRouter.upsert called with input");
 
       const config = await new GetChannelsConfigurationService({

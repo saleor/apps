@@ -36,14 +36,14 @@ export const taxjarConfigurationRouter = router({
       procedure: "taxjarConfigurationRouter.get",
     });
 
-    logger.debug("taxjarConfigurationRouter.get called");
+    logger.info("taxjarConfigurationRouter.get called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.get(input.id);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.get finished");
+    logger.info({ result }, "taxjarConfigurationRouter.get finished");
 
     return { ...result, config: obfuscateTaxJarConfig(result.config) };
   }),
@@ -53,14 +53,14 @@ export const taxjarConfigurationRouter = router({
       procedure: "taxjarConfigurationRouter.post",
     });
 
-    logger.debug("taxjarConfigurationRouter.post called");
+    logger.info("taxjarConfigurationRouter.post called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.post(input.value);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.post finished");
+    logger.info({ result }, "taxjarConfigurationRouter.post finished");
 
     return result;
   }),
@@ -70,14 +70,14 @@ export const taxjarConfigurationRouter = router({
       procedure: "taxjarConfigurationRouter.delete",
     });
 
-    logger.debug("taxjarConfigurationRouter.delete called");
+    logger.info("taxjarConfigurationRouter.delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.delete(input.id);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.delete finished");
+    logger.info({ result }, "taxjarConfigurationRouter.delete finished");
 
     return result;
   }),
@@ -87,14 +87,14 @@ export const taxjarConfigurationRouter = router({
       procedure: "taxjarConfigurationRouter.patch",
     });
 
-    logger.debug("taxjarConfigurationRouter.patch called");
+    logger.info("taxjarConfigurationRouter.patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.patch(input.id, input.value);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.patch finished");
+    logger.info({ result }, "taxjarConfigurationRouter.patch finished");
 
     return result;
   }),

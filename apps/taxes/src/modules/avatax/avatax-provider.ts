@@ -1,5 +1,6 @@
+import pino from "pino";
 import { TaxBaseFragment } from "../../../generated/graphql";
-import { logger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { TaxProvider } from "../taxes/tax-provider";
 import { avataxCalculate } from "./avatax-calculate";
@@ -10,21 +11,24 @@ export class AvataxProvider implements TaxProvider {
   readonly name = "avatax";
   config = defaultAvataxConfig;
   client: AvataxClient;
+  private logger: pino.Logger;
 
   constructor(config: AvataxConfig) {
+    this.logger = createLogger({
+      service: "AvataxProvider",
+    });
     const avataxClient = new AvataxClient(config);
-    logger.info({ client: avataxClient }, "Internal Avatax client created");
+    this.logger.trace({ client: avataxClient }, "Internal Avatax client created");
 
     this.config = config;
     this.client = avataxClient;
   }
 
   async calculate(payload: TaxBaseFragment, channel: ChannelConfig) {
-    logger.info("Avatax calculate");
+    this.logger.debug({ payload, channel }, "Avatax calculate called with:");
     const model = avataxCalculate.preparePayload(payload, channel, this.config);
-    logger.info(model, "Payload used for Avatax fetchTaxesForOrder");
     const result = await this.client.fetchTaxesForOrder(model);
-    logger.info({ createOrderTransaction: result }, "Avatax createOrderTransaction response");
+    this.logger.debug({ createOrderTransaction: result }, "Avatax createOrderTransaction response");
     return avataxCalculate.prepareResponse(result);
   }
 }

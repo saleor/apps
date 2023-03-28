@@ -36,7 +36,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
   }
 
   const { data } = validation;
-  logger.info({ data }, "Payload is valid.");
+  logger.info({ data }, "Payload validated succesfully");
 
   try {
     const client = createClient(authData.saleorApiUrl, async () =>
@@ -53,6 +53,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     }).getConfiguration();
 
     logger.info({ providersConfig }, "Providers configuration returned");
+    logger.info({ channelsConfig }, "Channels configuration returned");
 
     const channelSlug = payload.taxBase.channel.slug;
     const channelConfig = channelsConfig[channelSlug];

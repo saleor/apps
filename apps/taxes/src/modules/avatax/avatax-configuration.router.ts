@@ -37,14 +37,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.get",
     });
 
-    logger.debug("avataxConfigurationRouter.get called");
+    logger.info({ input }, "avataxConfigurationRouter.get called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.get(input.id);
 
-    logger.debug({ result }, "avataxConfigurationRouter.get finished");
+    logger.info({ result }, "avataxConfigurationRouter.get finished");
 
     return { ...result, config: obfuscateAvataxConfig(result.config) };
   }),
@@ -54,14 +54,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.post",
     });
 
-    logger.debug("avataxConfigurationRouter.post called");
+    logger.info({ input }, "avataxConfigurationRouter.post called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.post(input.value);
 
-    logger.debug({ result }, "avataxConfigurationRouter.post finished");
+    logger.info({ result }, "avataxConfigurationRouter.post finished");
 
     return result;
   }),
@@ -71,14 +71,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.delete",
     });
 
-    logger.debug("avataxConfigurationRouter.delete called");
+    logger.info({ input }, "avataxConfigurationRouter.delete called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.delete(input.id);
 
-    logger.debug({ result }, "avataxConfigurationRouter.delete finished");
+    logger.info({ result }, "avataxConfigurationRouter.delete finished");
 
     return result;
   }),
@@ -88,14 +88,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.patch",
     });
 
-    logger.debug("avataxConfigurationRouter.patch called");
+    logger.info({ input }, "avataxConfigurationRouter.patch called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.patch(input.id, input.value);
 
-    logger.debug({ result }, "avataxConfigurationRouter.patch finished");
+    logger.info({ result }, "avataxConfigurationRouter.patch finished");
 
     return result;
   }),
