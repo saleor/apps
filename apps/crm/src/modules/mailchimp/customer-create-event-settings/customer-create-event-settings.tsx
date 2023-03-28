@@ -1,10 +1,16 @@
 import { Box, Checkbox, Text, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ComponentProps, useEffect, useState } from "react";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) => {
+  const { appBridge } = useAppBridge();
+
   const { data: mailchimpConfig, status: mailchimpConfigStatus } =
     trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
+
+  const { mutateAsync, status: savingStatus } =
+    trpcClient.mailchimp.config.setWebhookConfig.useMutation();
 
   const { data: mailchimpLists } = trpcClient.mailchimp.audience.getLists.useQuery();
 
@@ -19,12 +25,7 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
     | null
   >(null);
 
-  console.log({ localState });
-
   useEffect(() => {
-    console.log({ mailchimpConfigStatus });
-    console.log({ mailchimpConfig });
-
     if (mailchimpConfigStatus) {
       if (
         mailchimpConfigStatus === "success" &&
@@ -101,7 +102,31 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
         </Box>
       </Box>
       <Box marginTop={8} display="flex" justifyContent="flex-end">
-        <Button>Save</Button>
+        <Button
+          disabled={savingStatus === "loading"}
+          onClick={() => {
+            mutateAsync(
+              localState?.selected
+                ? {
+                    enabled: true,
+                    listId: localState.listId,
+                  }
+                : {
+                    enabled: false,
+                  }
+            ).then(() => {
+              appBridge?.dispatch(
+                actions.Notification({
+                  status: "success",
+                  title: "Success",
+                  text: "Config saved",
+                })
+              );
+            });
+          }}
+        >
+          {savingStatus === "loading" ? "Saving..." : "Save"}
+        </Button>
       </Box>
     </Box>
   );

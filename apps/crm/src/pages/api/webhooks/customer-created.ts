@@ -4,6 +4,8 @@ import { saleorApp } from "../../../saleor-app";
 import { logger as pinoLogger } from "../../../lib/logger";
 import { CustomerDataFragment } from "../../../../generated/graphql";
 import { createClient } from "../../../lib/create-graphq-client";
+import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
+import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 
 const CustomerCreatedWebhookPayload = gql`
   fragment CustomerData on CustomerCreated {
@@ -59,6 +61,16 @@ const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, co
   const client = createClient(authData.saleorApiUrl, async () =>
     Promise.resolve({ token: authData.token })
   );
+
+  const settingsManager = new MailchimpConfigSettingsManager(client);
+
+  const config = await settingsManager.getConfig();
+
+  if (config?.customerCreateEvent?.enabled) {
+    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
+
+    await mailchimpClient.addContact(config.customerCreateEvent.listId, user.email);
+  }
 
   return res.status(200).json({ message: "The event has been handled" });
 };
