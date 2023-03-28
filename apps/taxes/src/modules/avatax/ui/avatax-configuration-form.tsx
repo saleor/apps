@@ -145,7 +145,7 @@ export const AvataxConfigurationForm = () => {
       appBridge?.dispatch(
         actions.Notification({
           title: "Success",
-          text: "Remove TaxJar instance",
+          text: "Removed Avatax instance",
           status: "success",
         })
       );
