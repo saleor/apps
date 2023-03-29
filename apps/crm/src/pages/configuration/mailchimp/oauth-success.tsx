@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 const ConfigurationPage: NextPage = () => {
   const token = useRouter().query.token;
@@ -11,17 +12,18 @@ const ConfigurationPage: NextPage = () => {
     if (token) {
       const payload = { type: "mailchimp_token", token, dc };
 
-      console.log("Calling post message");
-
       window.parent.postMessage(JSON.stringify(payload), window.location.origin); // todo restrict origin
     }
   }, [token, dc]);
 
   return (
-    <div>
-      <h1>Success</h1>
-      <p>Successfully authorized Mailchimp as {email}</p>
-    </div>
+    <Box>
+      {/* @ts-ignore todo macaw*/}
+      <Text variant="title" as="h1" marginBottom={4}>
+        Success
+      </Text>
+      <Text>Successfully authorized Mailchimp as {email}</Text>
+    </Box>
   );
 };
 

@@ -6,11 +6,11 @@ import { Box } from "@saleor/macaw-ui/next";
 
 const logger = createLogger({});
 
-export const MailchimpAuthorizeView = () => {
+export const MailchimpAuthorizeView = (props: { onSuccess(): void }) => {
   const { mutateAsync } = trpcClient.mailchimp.config.setToken.useMutation();
+
   useEffect(() => {
     const handleMessage = (message: MessageEvent) => {
-      console.log("received the message", message);
       //todo check origin
       try {
         const payload = JSON.parse(message.data) as {
@@ -26,7 +26,8 @@ export const MailchimpAuthorizeView = () => {
 
         mutateAsync({ token: payload.token, dc: payload.dc }).then(() => {
           logger.debug("Saved token in metadata");
-          // todo redirect
+
+          props.onSuccess();
         });
 
         // todo - save config in private metadata and show different UI

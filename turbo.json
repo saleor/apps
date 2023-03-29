@@ -1,23 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
-  "globalEnv": [
-    "VERCEL_ENV"
-  ],
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["VERCEL_ENV"],
   "pipeline": {
     "build": {
-      "env": [
-        "NEXT_PUBLIC_VERCEL_ENV"
-      ],
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "start": {
+      "dependsOn": ["^build"]
     },
     "build#saleor-app-data-importer": {
       "env": [
@@ -175,9 +167,7 @@
     "test": {},
     "test:ci": {},
     "generate": {
-      "outputs": [
-        "generated/"
-      ]
+      "outputs": ["generated/"]
     }
   }
 }

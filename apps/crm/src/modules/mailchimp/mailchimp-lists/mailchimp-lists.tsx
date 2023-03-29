@@ -25,7 +25,14 @@ export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children
 
     case "success": {
       return (
-        <Box padding={8} backgroundColor="subdued" borderRadius={4} {...props}>
+        <Box
+          padding={8}
+          borderColor="neutralHighlight"
+          borderWidth={1}
+          borderStyle="solid"
+          borderRadius={4}
+          {...props}
+        >
           <List>
             <List.Item disabled>
               <Text variant="title" size="small">
@@ -36,9 +43,8 @@ export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children
               <List.Item disabled key={listItem.id} paddingY={4}>
                 <div>
                   <Text variant="bodyStrong">{listItem.name}</Text>
-                  <Box marginLeft={6} display="grid" justifyContent="space-between">
+                  <Box display="grid" justifyContent="space-between">
                     <Text variant="caption">ID: {listItem.id}</Text>
-                    <Text variant="caption">Members: {listItem.members}</Text>
                   </Box>
                 </div>
               </List.Item>

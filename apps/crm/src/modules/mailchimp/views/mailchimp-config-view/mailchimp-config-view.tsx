@@ -7,18 +7,11 @@ import { CustomerCreateEventSettings } from "../../customer-create-event-setting
 import { SaleorCustomersList } from "../../../saleor-customers/saleor-customers-list";
 
 const header = (
-  <Text
-    as="h1"
-    /* @ts-ignore todo macaw*/
-    __borderBottomStyle="solid"
-    borderColor="neutralHighlight"
-    borderBottomWidth={1}
-    variant="title"
-    marginBottom={8}
-    size="large"
-  >
-    Mailchimp
-  </Text>
+  <Box marginBottom={12}>
+    <Text as="h1" variant="title" size="large">
+      Mailchimp
+    </Text>
+  </Box>
 );
 
 export const MailchimpConfigView = () => {
@@ -55,14 +48,21 @@ export const MailchimpConfigView = () => {
       <div>
         {header}
         <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
-          <Box __flex="0 0 50%" padding={8} backgroundColor="subdued" borderRadius={4}>
+          <Box
+            __flex="0 1 50%"
+            padding={8}
+            borderColor="neutralHighlight"
+            borderWidth={1}
+            borderStyle="solid"
+            borderRadius={4}
+          >
             {/* @ts-ignore todo macaw*/}
             <Text variant="title" size="small" as="p" marginBottom={2}>
               Connection status
             </Text>
             <Text>All good</Text>
           </Box>
-          <MailchimpLists __flex="0 0 50%" />
+          <MailchimpLists __flex="0 1 50%" />
         </Box>
 
         <CustomerCreateEventSettings marginBottom={12} />
@@ -79,7 +79,11 @@ export const MailchimpConfigView = () => {
           You need to connect Mailchimp with Saleor CRM App. Click button below and authorize the
           App.
         </Text>
-        <MailchimpAuthorizeView />
+        <MailchimpAuthorizeView
+          onSuccess={() => {
+            refetch();
+          }}
+        />
       </Box>
     );
   }

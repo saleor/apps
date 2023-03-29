@@ -72,7 +72,14 @@ const useFetchAllCustomers = (enabled: boolean) => {
 
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
-    <Box {...props} padding={8} backgroundColor="subdued" borderRadius={4}>
+    <Box
+      {...props}
+      padding={8}
+      borderColor="neutralHighlight"
+      borderWidth={1}
+      borderStyle="solid"
+      borderRadius={4}
+    >
       {/* @ts-ignore todo macaw*/}
       <Text as="h1" variant="title" size="small" marginBottom={4}>
         Bulk sync

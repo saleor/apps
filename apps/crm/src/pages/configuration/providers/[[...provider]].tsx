@@ -1,10 +1,7 @@
 import { NextPage } from "next";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { AppColumnsLayout } from "../../../modules/ui/app-columns-layout/app-columns-layout";
-import { MailchimpAuthFrame } from "../../../modules/mailchimp/mailchimp-auth-frame/mailchimp-auth-frame";
-import { createLogger } from "../../../lib/logger";
-import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { ProvidersList } from "../../../modules/providers/providers-list/providers-list";
 import { useRouter } from "next/router";
 import {
