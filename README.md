@@ -49,46 +49,4 @@ In the `apps` folder, you will find the following applications:
 
 ## Development
 
-### Setup
-
-Make sure you have installed `pnpm`:
-
-```bash
-npm install -g pnpm
-```
-
-Install all dependencies:
-
-```bash
-pnpm install
-```
-
-Start the apps` dev servers:
-
-```bash
-pnpm dev
-```
-
-> The apps' ports will be displayed in the terminal output.
->
-> You can find the required env vars for each app in `apps/NAME/.env.example` file.
-
-To start an individual app, run:
-
-```bash
-pnpm dev --filter=saleor-app-X
-```
-
-where X is the app's name (matching saleor/X).
-
-### Build
-
-To build all apps, run:
-
-```bash
-pnpm build
-```
-
-### Documentation
-
-- [Forking](/docs/forking.md)
+You can find the documentation for saleor/apps on [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/app-store/development).
