@@ -25,10 +25,12 @@ export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children
 
     case "success": {
       return (
-        <Box {...props}>
+        <Box padding={8} backgroundColor="subdued" borderRadius={4} {...props}>
           <List>
             <List.Item disabled>
-              <Text variant="heading">Available lists</Text>
+              <Text variant="title" size="small">
+                Available lists
+              </Text>
             </List.Item>
             {data.map((listItem) => (
               <List.Item disabled key={listItem.id} paddingY={4}>

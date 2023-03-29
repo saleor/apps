@@ -54,9 +54,11 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
 
   return (
     <Box {...props} padding={8} backgroundColor="subdued" borderRadius={4}>
-      <Text as="h1" variant="title" marginBottom={4}>
+      {/* @ts-ignore todo macaw*/}
+      <Text as="h1" variant="title" size="small" marginBottom={4}>
         Configure webhooks
       </Text>
+      {/* @ts-ignore todo macaw*/}
       <Text color="textNeutralSubdued" as="p" marginBottom={8}>
         Each time customer is created, it will be added to selected audience list in Mailchimp
       </Text>
@@ -74,11 +76,13 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
           }}
           checked={localState.selected}
         >
+          {/* @ts-ignore todo macaw*/}
           <Text marginRight="auto">Enable customers sync</Text>
         </Checkbox>
         <Box>
           <Text
             color={eventConfig?.enabled ? "textNeutralDefault" : "textNeutralSubdued"}
+            /* @ts-ignore todo macaw*/
             marginRight={4}
             variant="caption"
           >

@@ -73,9 +73,11 @@ const useFetchAllCustomers = (enabled: boolean) => {
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
     <Box {...props} padding={8} backgroundColor="subdued" borderRadius={4}>
-      <Text as="h1" variant="title" marginBottom={4}>
+      {/* @ts-ignore todo macaw*/}
+      <Text as="h1" variant="title" size="small" marginBottom={4}>
         Bulk sync
       </Text>
+      {/* @ts-ignore todo macaw*/}
       <Text color="textNeutralSubdued" as="p" marginBottom={8}>
         Scan Saleor customers and send them to Mailchimp
       </Text>
@@ -156,6 +158,7 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
       )}
       {done && (
         <Box>
+          {/* @ts-ignore todo macaw*/}
           <Text as="p" marginBottom={4}>
             Fetched customers from Saleor
           </Text>
