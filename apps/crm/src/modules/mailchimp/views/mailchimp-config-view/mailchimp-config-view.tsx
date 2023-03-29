@@ -52,13 +52,16 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
-        <Box marginBottom={12}>
-          <Text variant="heading" as="p" marginBottom={2}>
-            Connection status
-          </Text>
-          <Text>All good</Text>
+        <Box marginBottom={12} display="flex" justifyContent="space-between">
+          <Box>
+            <Text variant="heading" as="p" marginBottom={2}>
+              Connection status
+            </Text>
+            <Text>All good</Text>
+          </Box>
+          <MailchimpLists marginBottom={12} __flex="0 0 50%" />
         </Box>
-        <MailchimpLists marginBottom={12} />
+
         <CustomerCreateEventSettings marginBottom={12} />
         <RemoveMailchimpConfig />
       </div>
