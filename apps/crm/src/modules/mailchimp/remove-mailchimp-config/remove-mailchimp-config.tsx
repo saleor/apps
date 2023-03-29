@@ -1,4 +1,4 @@
-import { Box, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Text, Button, WarningIcon } from "@saleor/macaw-ui/next";
 import { ComponentProps } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -34,9 +34,11 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
           Mailchimp Dashboard
         </a>
       </Text>
-      <Button onClick={() => mutate()} variant="secondary">
-        Disconnect Mailchimp.
-      </Button>
+      <Box display="flex" justifyContent="flex-end">
+        <Button onClick={() => mutate()} variant="secondary">
+          Disconnect Mailchimp
+        </Button>
+      </Box>
     </Box>
   );
 };

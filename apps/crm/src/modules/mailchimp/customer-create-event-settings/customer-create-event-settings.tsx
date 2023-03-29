@@ -1,4 +1,4 @@
-import { Box, Checkbox, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ComponentProps, useEffect, useState } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
@@ -95,6 +95,7 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
           >
             Sync to the Mailchimp list:
           </Text>
+
           <select
             disabled={!localState.selected}
             onChange={(e) => {

@@ -124,7 +124,9 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
           <WarningIcon />
           <Text as="p">Do not close the app while indexing</Text>
         </Box>
-        <Button onClick={() => setEnabled(true)}>Start</Button>
+        <Box display="flex" justifyContent="flex-end">
+          <Button onClick={() => setEnabled(true)}>Start</Button>
+        </Box>
       </RootSection>
     );
   }
@@ -133,7 +135,7 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
     // todo add link to the dashboard
     return (
       <RootSection {...props}>
-        <Text>Contacts synchronized, check your Mailchimp Dashboard</Text>
+        <Text color="textBrandDefault">Contacts synchronized, check your Mailchimp Dashboard</Text>
       </RootSection>
     );
   }

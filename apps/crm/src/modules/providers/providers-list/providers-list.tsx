@@ -4,6 +4,7 @@ import SegmentLogo from "../../../assets/semgent.png";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
 import styles from "./providers-list.module.css";
+import { Text, Box } from "@saleor/macaw-ui/next";
 
 type Props = {
   onProviderClick(provider: ProviderType): void;
@@ -22,12 +23,16 @@ export const ProvidersList = ({ className, onProviderClick, activeProvider, ...p
         }}
       >
         <img className={styles.logo} src={MailchimpLogo.src} />
-        <span className={styles.name}>{ProvidersTypes.Mailchimp}</span>
+        <Text>{ProvidersTypes.Mailchimp}</Text>
       </li>
-      <li className={clsx(styles.item, styles.comingSoonDivider)}>Coming soon</li>
       <li className={clsx(styles.item, styles.disabled)}>
         <img className={styles.logo} src={SegmentLogo.src} />
-        <span className={styles.name}>Segment.io</span>
+        <Box>
+          <Text as="p" variant="caption" color="textNeutralDisabled">
+            Coming soon
+          </Text>
+          <Text color="textNeutralDisabled">Segment.io</Text>
+        </Box>
       </li>
     </ul>
   );
