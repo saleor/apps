@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.4.2
+
+### Patch Changes
+
+- a811d30: Added default cache of feed file to 5 minutes. It can be overwritten by env variable.
+
 ## 1.4.1
 
 ### Patch Changes

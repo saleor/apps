@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.10.0
+
+### Minor Changes
+
+- d0af8bd: App Manifest was extended to have minimum required Saleor version >= 3.10. Invoices events don't work correctly in older Saleor versions
+
 ## 1.9.0
 
 ### Minor Changes

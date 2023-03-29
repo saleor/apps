@@ -1,5 +1,12 @@
 # saleor-app-taxes
 
+## 1.1.1
+
+### Patch Changes
+
+- aa8a96a: Fix "no provider available" error while reading an updated provider.
+- 907e618: Added Sentry configuration that can be enabled via env variables
+
 ## 1.1.0
 
 ### Minor Changes
