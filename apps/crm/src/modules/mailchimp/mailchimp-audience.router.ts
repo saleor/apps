@@ -13,6 +13,11 @@ const AddContactSchema = z.object({
   }),
 });
 
+const BulkAddContactsSchema = z.object({
+  contacts: z.array(z.object({ email: z.string().min(2) })),
+  listId: z.string().min(1),
+});
+
 const mailchimpAudienceRouter = router({
   getLists: protectedClientProcedure.query(async ({ ctx }) => {
     const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
@@ -51,7 +56,7 @@ const mailchimpAudienceRouter = router({
   }),
   addContact: protectedClientProcedure.input(AddContactSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      context: "mailchimpConfigRouter",
+      context: "mailchimpConfigRouter.addContact",
       saleorApiUrl: ctx.saleorApiUrl,
     });
 
@@ -79,6 +84,37 @@ const mailchimpAudienceRouter = router({
       throw e;
     });
   }),
+  bulkAddContacts: protectedClientProcedure
+    .input(BulkAddContactsSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        context: "mailchimpConfigRouter.bulkAddContacts",
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
+
+      const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+
+      logger.debug("Fetched config from metadata");
+
+      if (!config) {
+        logger.warn("Config not found");
+
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          cause: "MAILCHIMP_CONFIG_NOT_FOUND",
+          message: "Couldnt restore saved Mailchimp config",
+        });
+      }
+
+      const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
+
+      logger.debug(input, "Will bulk add contacts to Mailchimp");
+
+      await mailchimpClient.batchAddContacts(
+        input.listId,
+        input.contacts.map((c) => c.email)
+      );
+    }),
 });
 
 export const MailchimpAudienceRouter = {

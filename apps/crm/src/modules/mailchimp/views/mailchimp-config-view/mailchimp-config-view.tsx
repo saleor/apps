@@ -1,7 +1,6 @@
 import { trpcClient } from "../../../trpc/trpc-client";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
-import { MailchimpAuthFrame } from "../../mailchimp-auth-frame/mailchimp-auth-frame";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 import { MailchimpLists } from "../../mailchimp-lists/mailchimp-lists";
 import { CustomerCreateEventSettings } from "../../customer-create-event-settings/customer-create-event-settings";

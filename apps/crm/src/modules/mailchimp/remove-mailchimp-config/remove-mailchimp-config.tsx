@@ -23,6 +23,7 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
 
             appBridge?.dispatch(
               actions.Redirect({
+                // todo - fetch DC and replace us21
                 to: "https://us21.admin.mailchimp.com/account/connected-sites/app-selection/",
                 newContext: true,
               })

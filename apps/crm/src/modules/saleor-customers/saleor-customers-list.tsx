@@ -1,18 +1,16 @@
-import {
-  FetchCustomersDocument,
-  FetchCustomersQuery,
-  useFetchCustomersQuery,
-} from "../../../generated/graphql";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { FetchCustomersDocument, FetchCustomersQuery } from "../../../generated/graphql";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { ComponentProps, useEffect, useState } from "react";
 import { createClient } from "../../lib/create-graphq-client";
 import { OperationResult } from "urql";
-import { Box, Text, Button, WarningIcon, useTheme } from "@saleor/macaw-ui/next";
+import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui/next";
+import { trpcClient } from "../trpc/trpc-client";
 
 const useFetchAllCustomers = (enabled: boolean) => {
   const { appBridgeState } = useAppBridge();
   const [customers, setCustomers] = useState<Array<{ email: string }>>([]);
   const [totalCustomersCount, setTotalCustomersCount] = useState<number | null>(null);
+  const [done, setDone] = useState(false);
 
   if (!appBridgeState) {
     throw new Error("Must be used withing AppBridgeProvider");
@@ -59,13 +57,16 @@ const useFetchAllCustomers = (enabled: boolean) => {
     };
 
     if (enabled) {
-      fetchAll();
+      fetchAll().then(() => {
+        setDone(true);
+      });
     }
   }, [appBridgeState, enabled]);
 
   return {
     customers,
     totalCustomersCount,
+    done,
   };
 };
 
@@ -85,8 +86,27 @@ const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
 
 export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
   const [enabled, setEnabled] = useState(false);
-  const { customers, totalCustomersCount } = useFetchAllCustomers(enabled);
+  const { customers, totalCustomersCount, done } = useFetchAllCustomers(enabled);
   const theme = useTheme().themeValues;
+  const { mutateAsync, status } = trpcClient.mailchimp.audience.bulkAddContacts.useMutation();
+  const { appBridge } = useAppBridge();
+
+  useEffect(() => {
+    if (done) {
+      mutateAsync({
+        listId: "31c727eb7e", // todo - list picker
+        contacts: customers,
+      }).then(() => {
+        appBridge!.dispatch(
+          actions.Notification({
+            status: "success",
+            title: "Sync successful",
+            text: "Contacts sent to Mailchimp",
+          })
+        );
+      });
+    }
+  }, [done]);
 
   if (!enabled) {
     return (
@@ -100,10 +120,29 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
     );
   }
 
+  if (status === "success") {
+    // todo add link to the dashboard
+    return (
+      <RootSection {...props}>
+        <Text>Contacts synchronized, check your Mailchimp Dashboard</Text>
+      </RootSection>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <RootSection {...props}>
+        <Text color="textCriticalSubdued">
+          Error synchronizing contacts with Mailchimp, please try again
+        </Text>
+      </RootSection>
+    );
+  }
+
   return (
     <RootSection {...props}>
       {totalCustomersCount && (
-        <Box display="flex" gap={4} alignItems="center">
+        <Box display="flex" gap={4} alignItems="center" marginBottom={8}>
           <progress
             style={{
               height: 30,
@@ -113,6 +152,14 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
             value={customers.length}
           />
           <Text>Synchronizing total {totalCustomersCount} accounts...</Text>
+        </Box>
+      )}
+      {done && (
+        <Box>
+          <Text as="p" marginBottom={4}>
+            Fetched customers from Saleor
+          </Text>
+          {status === "loading" && <Text as="p">Sending customer to Mailchimp in progress...</Text>}
         </Box>
       )}
     </RootSection>
