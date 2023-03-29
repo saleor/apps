@@ -11,6 +11,7 @@ import { trpcClient } from "../modules/trpc/trpc-client";
 import { ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { NextPage } from "next";
+import GraphQLProvider from "../lib/graphql-provider";
 
 /**
  * Ensure instance is a singleton.
@@ -38,10 +39,12 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWi
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <ThemeProvider defaultTheme="defaultLight">
-          <RoutePropagator />
-          <Component {...pageProps} />
-        </ThemeProvider>
+        <GraphQLProvider>
+          <ThemeProvider defaultTheme="defaultLight">
+            <RoutePropagator />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </GraphQLProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
   );

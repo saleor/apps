@@ -5,6 +5,7 @@ import { MailchimpAuthFrame } from "../../mailchimp-auth-frame/mailchimp-auth-fr
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 import { MailchimpLists } from "../../mailchimp-lists/mailchimp-lists";
 import { CustomerCreateEventSettings } from "../../customer-create-event-settings/customer-create-event-settings";
+import { SaleorCustomersList } from "../../../saleor-customers/saleor-customers-list";
 
 const header = (
   <Text
@@ -63,6 +64,7 @@ export const MailchimpConfigView = () => {
         </Box>
 
         <CustomerCreateEventSettings marginBottom={12} />
+        <SaleorCustomersList marginBottom={12} />
         <RemoveMailchimpConfig />
       </div>
     );
