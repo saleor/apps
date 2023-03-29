@@ -27,4 +27,21 @@ export class MailchimpClientOAuth {
       // todo - add address
     });
   }
+
+  async batchAddContacts(listID: string, emails: string[]) {
+    /**
+     * method "batchListMembers" exist in Mailchimp SDK
+     * https://mailchimp.com/developer/marketing/api/list-members/
+     *
+     * Its not available in typings, hence ts-ignore
+     */
+    // @ts-ignore
+    return this.client.lists.batchListMembers(listID, {
+      members: emails.map((e) => ({
+        status: "transactional",
+        email_address: e,
+        tags: ["Saleor Import"],
+      })),
+    });
+  }
 }

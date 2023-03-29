@@ -53,7 +53,7 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
   const eventConfig = mailchimpConfig.customerCreateEvent;
 
   return (
-    <Box {...props} padding={8} backgroundColor="subdued">
+    <Box {...props} padding={8} backgroundColor="subdued" borderRadius={4}>
       <Text as="h1" variant="title" marginBottom={4}>
         Configure webhooks
       </Text>
