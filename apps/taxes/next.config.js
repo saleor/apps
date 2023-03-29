@@ -19,7 +19,7 @@ const config = {
 };
 
 module.exports = withSentryConfig(
-  module.exports,
+  config,
   { silent: true },
   {
     hideSourcemaps: true,
