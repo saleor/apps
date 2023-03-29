@@ -54,10 +54,6 @@ const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, co
     return res.status(200).end();
   }
 
-  /**
-   * 1 check if configured
-   * 2 send to mailchimp
-   */
   const client = createClient(authData.saleorApiUrl, async () =>
     Promise.resolve({ token: authData.token })
   );
