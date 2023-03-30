@@ -15,13 +15,6 @@ const views = {
   Mailchimp: MailchimpConfigView,
 } satisfies Record<ProviderType, React.ComponentType>;
 
-/**
- * todo
- * - change providers, if there is one, add tab "mailchimp" and build entire page around it
- * - add some tabs - settings & usage
- * - add lists display https://mailchimp.com/developer/marketing/api/landing-pages-content/
- * - add sync users to lists
- */
 const ProvidersPage: NextPage = () => {
   const router = useRouter();
   const selectedProviderQuery = router.query.provider && router.query.provider[0];
@@ -29,9 +22,8 @@ const ProvidersPage: NextPage = () => {
   useEffect(() => {
     if (!isValidProviderType(selectedProviderQuery)) {
       router.push(`/configuration/providers/${ProvidersTypes.Mailchimp}`);
-
-      // show 404
     }
+    // todo show 404?
   }, [selectedProviderQuery, router]);
 
   const selectedProvider = selectedProviderQuery as ProviderType;

@@ -1,7 +1,6 @@
-import { HTMLAttributes, HTMLProps } from "react";
+import { HTMLAttributes } from "react";
 import MailchimpLogo from "../../../assets/mailchimp.svg";
-import clsx from "clsx";
-import styles from "./login-with-mailchimp-button.module.css";
+import { Button } from "@saleor/macaw-ui/next";
 
 export const LoginWithMailchimpButton = ({
   className,
@@ -9,9 +8,13 @@ export const LoginWithMailchimpButton = ({
   ...props
 }: HTMLAttributes<HTMLButtonElement>) => {
   return (
-    <button className={clsx(className, styles.button)} {...props}>
-      <img className={styles.logo} src={MailchimpLogo.src} alt="Mailchimp logo" />
-      <span className={styles.text}>Log in with Mailchimp</span>
-    </button>
+    <Button
+      variant="secondary"
+      icon={<img alt="Mailchimp Logo" width={25} src={MailchimpLogo.src} />}
+      size="large"
+      {...props}
+    >
+      Log in with Mailchimp
+    </Button>
   );
 };

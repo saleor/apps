@@ -8,7 +8,7 @@ import { AppProps } from "next/app";
 
 import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { NextPage } from "next";
 import GraphQLProvider from "../lib/graphql-provider";
@@ -42,7 +42,9 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWi
         <GraphQLProvider>
           <ThemeProvider defaultTheme="defaultLight">
             <RoutePropagator />
-            <Component {...pageProps} />
+            <Box padding={8}>
+              <Component {...pageProps} />
+            </Box>
           </ThemeProvider>
         </GraphQLProvider>
       </AppBridgeProvider>

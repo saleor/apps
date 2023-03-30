@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Box, Text } from "@saleor/macaw-ui/next";
 
-const ConfigurationPage: NextPage = () => {
+const MailchimpOauthSuccessPage: NextPage = () => {
   const token = useRouter().query.token;
   const email = useRouter().query.email;
   const dc = useRouter().query.dc;
@@ -22,9 +22,13 @@ const ConfigurationPage: NextPage = () => {
       <Text variant="title" as="h1" marginBottom={4}>
         Success
       </Text>
-      <Text>Successfully authorized Mailchimp as {email}</Text>
+      {/* @ts-ignore todo macaw*/}
+      <Text as="p" marginBottom={4}>
+        Successfully authorized Mailchimp as {email}
+      </Text>
+      <Text>Will redirect soon...</Text>
     </Box>
   );
 };
 
-export default ConfigurationPage;
+export default MailchimpOauthSuccessPage;

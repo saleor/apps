@@ -74,11 +74,6 @@ export const MailchimpConfigView = () => {
     return (
       <Box>
         {header}
-        {/* @ts-ignore todo macaw*/}
-        <Text as="p" marginBottom={8}>
-          You need to connect Mailchimp with Saleor CRM App. Click button below and authorize the
-          App.
-        </Text>
         <MailchimpAuthorizeView
           onSuccess={() => {
             refetch();

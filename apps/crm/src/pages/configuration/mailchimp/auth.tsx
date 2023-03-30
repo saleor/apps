@@ -1,12 +1,17 @@
-import { NextPage } from "next";
 import React from "react";
-import { MailchimpAuth } from "../../../modules/mailchimp/mailchimp-auth/mailchimp-auth";
+import { MailchimpAuthSection } from "../../../modules/mailchimp/mailchimp-auth-section/mailchimp-auth-section";
 import { NextPageWithLayoutOverwrite } from "../../_app";
+import { ThemeProvider } from "@saleor/macaw-ui/next";
+import { NoSSRWrapper } from "@saleor/apps-shared";
 
 const MailchimpAuthPage: NextPageWithLayoutOverwrite = () => {
-  return <MailchimpAuth />;
+  return <MailchimpAuthSection />;
 };
 
-MailchimpAuthPage.overwriteLayout = (page) => page;
+MailchimpAuthPage.overwriteLayout = (page) => (
+  <NoSSRWrapper>
+    <ThemeProvider>{page}</ThemeProvider>
+  </NoSSRWrapper>
+);
 
 export default MailchimpAuthPage;
