@@ -29,7 +29,7 @@ export class TaxJarConfigurationService {
   async getAll(): Promise<TaxJarInstanceConfig[]> {
     this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsConfigurator.readAll();
-    this.logger.debug({ settings: data }, `Fetched settings from crudSettingsConfigurator`);
+    this.logger.debug(`Fetched settings from crudSettingsConfigurator`);
     const validation = providersSchema.safeParse(data);
 
     if (!validation.success) {
@@ -47,7 +47,7 @@ export class TaxJarConfigurationService {
   async get(id: string): Promise<TaxJarInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsConfigurator.read(id);
-    this.logger.debug({ setting: data }, `Fetched setting from crudSettingsConfigurator`);
+    this.logger.debug(`Fetched setting from crudSettingsConfigurator`);
 
     const validation = getSchema.safeParse(data);
 

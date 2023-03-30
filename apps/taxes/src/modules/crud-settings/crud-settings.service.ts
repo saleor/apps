@@ -20,11 +20,11 @@ export class CrudSettingsConfigurator {
   }
 
   async readAll() {
-    this.logger.debug(".readAll called");
+    this.logger.trace(".readAll called");
     const result = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
 
     if (!result) {
-      this.logger.debug("No metadata found");
+      this.logger.trace("No metadata found");
       return { data: [] };
     }
 
@@ -42,7 +42,7 @@ export class CrudSettingsConfigurator {
   }
 
   async read(id: string) {
-    this.logger.debug(".read called");
+    this.logger.trace(".read called");
     const result = await this.readAll();
     const { data: settings } = result;
 
@@ -58,7 +58,7 @@ export class CrudSettingsConfigurator {
   }
 
   async create(data: any) {
-    this.logger.debug(data, ".create called with:");
+    this.logger.trace(data, ".create called with:");
 
     const settings = await this.readAll();
     const prevData = settings.data;
@@ -77,7 +77,7 @@ export class CrudSettingsConfigurator {
   }
 
   async delete(id: string) {
-    this.logger.debug(`.delete called with: ${id}`);
+    this.logger.trace(`.delete called with: ${id}`);
 
     const settings = await this.readAll();
     const prevData = settings.data;
@@ -91,7 +91,7 @@ export class CrudSettingsConfigurator {
   }
 
   async update(id: string, data: any) {
-    this.logger.debug(data, `.update called with: ${id}`);
+    this.logger.trace(data, `.update called with: ${id}`);
     const { data: settings } = await this.readAll();
     const nextData = settings.map((item) => {
       if (item.id === id) {
