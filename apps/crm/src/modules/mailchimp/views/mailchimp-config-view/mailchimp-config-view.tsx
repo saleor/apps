@@ -3,8 +3,8 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 import { MailchimpLists } from "../../config-sections/mailchimp-lists/mailchimp-lists";
-import { CustomerCreateEventSettings } from "../../customer-create-event-settings/customer-create-event-settings";
-import { SaleorCustomersList } from "../../../saleor-customers/saleor-customers-list";
+import { WebhookConfiguration } from "../../config-sections/webhook-configuration/webhook-configuration";
+import { SaleorCustomersSync } from "../../../saleor-customers-sync/saleor-customers-sync";
 import { ConnectionStatus } from "../../config-sections/connection-status/connection-status";
 
 const header = (
@@ -53,8 +53,8 @@ export const MailchimpConfigView = () => {
           <MailchimpLists __flex="0 1 50%" />
         </Box>
 
-        <CustomerCreateEventSettings marginBottom={12} />
-        <SaleorCustomersList marginBottom={12} />
+        <WebhookConfiguration marginBottom={12} />
+        <SaleorCustomersSync marginBottom={12} />
         <RemoveMailchimpConfig />
       </div>
     );

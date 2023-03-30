@@ -5,81 +5,13 @@ import { createClient } from "../../lib/create-graphq-client";
 import { OperationResult } from "urql";
 import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../trpc/trpc-client";
-
-const useFetchAllCustomers = (enabled: boolean) => {
-  const { appBridgeState } = useAppBridge();
-  const [customers, setCustomers] = useState<Array<{ email: string }>>([]);
-  const [totalCustomersCount, setTotalCustomersCount] = useState<number | null>(null);
-  const [done, setDone] = useState(false);
-
-  if (!appBridgeState) {
-    throw new Error("Must be used withing AppBridgeProvider");
-  }
-
-  useEffect(() => {
-    if (!appBridgeState.token || !appBridgeState.saleorApiUrl) {
-      return;
-    }
-
-    const client = createClient(appBridgeState.saleorApiUrl, async () => ({
-      token: appBridgeState.token!,
-    }));
-
-    const fetchPage = (cursor?: string) =>
-      client.query(FetchCustomersDocument, { cursor }).toPromise();
-
-    const fetchAll = async () => {
-      let allFetched = false;
-      let lastCursor: string | undefined = undefined;
-
-      while (!allFetched) {
-        const results: OperationResult<FetchCustomersQuery> = await fetchPage(lastCursor);
-
-        if (!results.data) {
-          return;
-        }
-
-        if (!totalCustomersCount) {
-          setTotalCustomersCount(results.data?.customers?.totalCount ?? null);
-        }
-
-        allFetched = !Boolean(results.data?.customers?.pageInfo.hasNextPage);
-        lastCursor = results.data?.customers?.pageInfo.endCursor ?? undefined;
-
-        setCustomers((current) => {
-          const newCustomers = results.data!.customers!.edges.map((c) => {
-            return { email: c.node.email };
-          });
-
-          return [...current, ...newCustomers];
-        });
-      }
-    };
-
-    if (enabled) {
-      fetchAll().then(() => {
-        setDone(true);
-      });
-    }
-  }, [appBridgeState, enabled]);
-
-  return {
-    customers,
-    totalCustomersCount,
-    done,
-  };
-};
+import { useDashboardNotification } from "../../lib/use-dashboard-notification";
+import { useFetchAllCustomers } from "./use-fetch-all-customers";
+import { Section } from "../ui/section/section";
 
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
-    <Box
-      {...props}
-      padding={8}
-      borderColor="neutralHighlight"
-      borderWidth={1}
-      borderStyle="solid"
-      borderRadius={4}
-    >
+    <Section {...props}>
       {/* @ts-ignore todo macaw*/}
       <Text as="h1" variant="title" size="small" marginBottom={4}>
         Bulk sync
@@ -89,16 +21,16 @@ const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
         Scan Saleor customers and send them to Mailchimp
       </Text>
       {children}
-    </Box>
+    </Section>
   );
 };
 
-export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
+export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
   const [enabled, setEnabled] = useState(false);
   const { customers, totalCustomersCount, done } = useFetchAllCustomers(enabled);
   const theme = useTheme().themeValues;
   const { mutateAsync, status } = trpcClient.mailchimp.audience.bulkAddContacts.useMutation();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess } = useDashboardNotification();
 
   useEffect(() => {
     if (done) {
@@ -106,13 +38,7 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
         listId: "31c727eb7e", // todo - list picker
         contacts: customers,
       }).then(() => {
-        appBridge!.dispatch(
-          actions.Notification({
-            status: "success",
-            title: "Sync successful",
-            text: "Contacts sent to Mailchimp",
-          })
-        );
+        notifySuccess("Sync successful", "Contacts sent to Mailchimp");
       });
     }
   }, [done]);
@@ -122,7 +48,7 @@ export const SaleorCustomersList = (props: ComponentProps<typeof Box>) => {
       <RootSection {...props}>
         <Box display="flex" marginBottom={6} gap={4}>
           <WarningIcon />
-          <Text as="p">Do not close the app while indexing</Text>
+          <Text as="p">Do not leave the app while indexing</Text>
         </Box>
         <Box display="flex" justifyContent="flex-end">
           <Button onClick={() => setEnabled(true)}>Start</Button>
