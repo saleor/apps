@@ -3,7 +3,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
 import { customerCreatedWebhook } from "./webhooks/customer-created";
-import { customerMetadataUpdatedWebhook } from "./webhooks/customer-metadata-updated";
+import { customerMetadataUpdatedWebhook } from "./webhooks/customer-updated";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -21,7 +21,7 @@ export default createManifestHandler({
       id: "saleor.app.crm",
       version: packageJson.version,
       webhooks: [
-        // customerCreatedWebhook.getWebhookManifest(context.appBaseUrl),
+        customerCreatedWebhook.getWebhookManifest(context.appBaseUrl),
         customerMetadataUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [

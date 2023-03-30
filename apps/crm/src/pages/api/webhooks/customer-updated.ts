@@ -1,21 +1,29 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { logger as pinoLogger } from "../../../lib/logger";
-import { CustomerDataFragment } from "../../../../generated/graphql";
+import {
+  CustomerUpdatedPayloadFragment,
+  CustomerUpdatedDocument,
+} from "../../../../generated/graphql";
 import { createClient } from "../../../lib/create-graphq-client";
 import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 import { metadataToMailchimpTags } from "../../../modules/saleor-customers-sync/metadata-to-mailchimp-tags";
 
-export const customerMetadataUpdatedWebhook = new SaleorAsyncWebhook<CustomerDataFragment>({
-  name: "Customer Metadata updated in Saleor",
-  webhookPath: "api/webhooks/customer-metadata-updated",
-  asyncEvent: "CUSTOMER_METADATA_UPDATED",
-  apl: saleorApp.apl,
-  query: Subscription,
-});
+export const customerMetadataUpdatedWebhook =
+  new SaleorAsyncWebhook<CustomerUpdatedPayloadFragment>({
+    name: "Customer updated in Saleor",
+    webhookPath: "api/webhooks/customer-updated",
+    asyncEvent: "CUSTOMER_UPDATED",
+    apl: saleorApp.apl,
+    query: CustomerUpdatedDocument,
+  });
 
-const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, context) => {
+const handler: NextWebhookApiHandler<CustomerUpdatedPayloadFragment> = async (
+  req,
+  res,
+  context
+) => {
   const logger = pinoLogger.child({
     webhook: customerMetadataUpdatedWebhook.name,
   });
@@ -40,16 +48,24 @@ const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, co
 
   const config = await settingsManager.getConfig();
 
+  logger.info(config, "webhook");
+
   if (config?.customerCreateEvent?.enabled) {
     const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
     const tags = metadataToMailchimpTags(user);
 
-    await mailchimpClient.addContact(config.customerCreateEvent.listId, user.email, {
-      lastName: user.lastName,
-      firstName: user.firstName,
-      extraTags: tags,
-    });
+    try {
+      await mailchimpClient.addContact(config.customerCreateEvent.listId, user.email, {
+        lastName: user.lastName,
+        firstName: user.firstName,
+        extraTags: tags,
+      });
+    } catch (e) {
+      logger.error(e);
+
+      return res.status(500).end("Error saving customer in Mailchimp");
+    }
   }
 
   return res.status(200).json({ message: "The event has been handled" });

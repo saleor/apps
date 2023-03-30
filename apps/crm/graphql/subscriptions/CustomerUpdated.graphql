@@ -1,0 +1,8 @@
+# todo Probably should be CustomerMetadataUpdated but codegen fails
+subscription CustomerUpdated {
+  event {
+    ... on CustomerUpdated {
+      ...CustomerUpdatedPayload
+    }
+  }
+}

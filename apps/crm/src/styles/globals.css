@@ -12,19 +12,11 @@ body {
 }
 
 code {
-  background: #f6f8fa;
-  border: 1px solid #eaeaea;
-  border-radius: 5px;
   display: inline-block;
-  margin-top: 10px;
-  padding: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--mu-colors-foreground-text-neutral-subdued);
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-code::before {
-  content: "$ ";
-  opacity: 0.6;
 }
 
 a {

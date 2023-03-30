@@ -119,14 +119,14 @@ importers:
 
   apps/crm:
     specifiers:
-      '@graphql-codegen/cli': 2.13.3
-      '@graphql-codegen/introspection': 2.2.1
-      '@graphql-codegen/typed-document-node': ^2.3.3
-      '@graphql-codegen/typescript': 2.7.3
-      '@graphql-codegen/typescript-operations': 2.5.3
-      '@graphql-codegen/typescript-urql': ^3.7.0
+      '@graphql-codegen/cli': 3.2.2
+      '@graphql-codegen/introspection': 3.0.1
+      '@graphql-codegen/typed-document-node': ^3.0.2
+      '@graphql-codegen/typescript': 3.0.2
+      '@graphql-codegen/typescript-operations': 3.0.2
+      '@graphql-codegen/typescript-urql': ^3.7.3
       '@graphql-codegen/urql-introspection': 2.2.1
-      '@graphql-typed-document-node/core': ^3.1.1
+      '@graphql-typed-document-node/core': ^3.2.0
       '@mailchimp/mailchimp_marketing': ^3.0.80
       '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
@@ -199,14 +199,14 @@ importers:
       vitest: 0.27.3_jsdom@20.0.3
       zod: 3.20.2
     devDependencies:
-      '@graphql-codegen/cli': 2.13.3_d3dx4krdt4fsynqrp5lqxelwe4
-      '@graphql-codegen/introspection': 2.2.1_graphql@16.6.0
-      '@graphql-codegen/typed-document-node': 2.3.13_graphql@16.6.0
-      '@graphql-codegen/typescript': 2.7.3_graphql@16.6.0
-      '@graphql-codegen/typescript-operations': 2.5.3_graphql@16.6.0
+      '@graphql-codegen/cli': 3.2.2_d3dx4krdt4fsynqrp5lqxelwe4
+      '@graphql-codegen/introspection': 3.0.1_graphql@16.6.0
+      '@graphql-codegen/typed-document-node': 3.0.2_graphql@16.6.0
+      '@graphql-codegen/typescript': 3.0.2_graphql@16.6.0
+      '@graphql-codegen/typescript-operations': 3.0.2_graphql@16.6.0
       '@graphql-codegen/typescript-urql': 3.7.3_sy4knu3obj4ys7pjcqbyfxmqle
       '@graphql-codegen/urql-introspection': 2.2.1_graphql@16.6.0
-      '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.2.0_graphql@16.6.0
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@testing-library/react-hooks': 8.0.1_5ndqzdd6t4rivxsukjv3i3ak2q
       '@types/mailchimp__mailchimp_marketing': 3.0.7
@@ -3413,7 +3413,7 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.2_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.2.0_graphql@16.6.0
       graphql: 16.6.0
       tslib: 2.5.0
     dev: true
@@ -3441,6 +3441,14 @@ packages:
 
   /@graphql-typed-document-node/core/3.1.2_graphql@16.6.0:
     resolution: {integrity: sha512-9anpBMM9mEgZN4wr2v8wHJI2/u5TnnggewRN6OlvXTTnuVyoY19X6rOv9XTqKRw6dcGKwZsBi8n0kDE2I5i4VA==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      graphql: 16.6.0
+    dev: true
+
+  /@graphql-typed-document-node/core/3.2.0_graphql@16.6.0:
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
@@ -11080,7 +11088,7 @@ packages:
     peerDependencies:
       graphql: 14 - 16
     dependencies:
-      '@graphql-typed-document-node/core': 3.1.2_graphql@16.6.0
+      '@graphql-typed-document-node/core': 3.2.0_graphql@16.6.0
       cross-fetch: 3.1.5
       extract-files: 9.0.0
       form-data: 3.0.1

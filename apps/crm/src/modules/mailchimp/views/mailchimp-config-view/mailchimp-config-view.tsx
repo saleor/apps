@@ -6,6 +6,7 @@ import { MailchimpLists } from "../../config-sections/mailchimp-lists/mailchimp-
 import { WebhookConfiguration } from "../../config-sections/webhook-configuration/webhook-configuration";
 import { SaleorCustomersSync } from "../../../saleor-customers-sync/saleor-customers-sync";
 import { ConnectionStatus } from "../../config-sections/connection-status/connection-status";
+import { Instructions } from "../../config-sections/instructions/instructions";
 
 const header = (
   <Box marginBottom={12}>
@@ -48,6 +49,7 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
+        <Instructions marginBottom={12} />
         <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
           <ConnectionStatus __flex="0 1 50%" />
           <MailchimpLists __flex="0 1 50%" />
