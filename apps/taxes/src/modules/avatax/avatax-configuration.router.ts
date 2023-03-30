@@ -44,7 +44,8 @@ export const avataxConfigurationRouter = router({
 
     const result = await avataxConfigurationService.get(input.id);
 
-    logger.debug({ result }, "avataxConfigurationRouter.get finished");
+    // * `providerInstance` name is required for secrets censorship
+    logger.debug({ providerInstance: result }, "avataxConfigurationRouter.get finished");
 
     return { ...result, config: obfuscateAvataxConfig(result.config) };
   }),

@@ -35,10 +35,10 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   }
 
   const { data } = validation;
-  logger.info({ data }, "Payload validated succesfully");
+  logger.info("Payload validated succesfully");
 
   const { providers, channels } = getAppConfig(data);
-  logger.debug({ providers, channels }, "Parsed providers & channels from payload");
+  logger.debug("Successfully parsed providers & channels from payload");
 
   try {
     const channelSlug = data.taxBase.channel.slug;

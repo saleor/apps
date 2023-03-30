@@ -43,8 +43,8 @@ export const taxjarConfigurationRouter = router({
 
     const result = await taxjarConfigurationService.get(input.id);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.get finished");
-
+    // * `providerInstance` name is required for secrets censorship
+    logger.debug({ providerInstance: result }, "taxjarConfigurationRouter.get finished");
     return { ...result, config: obfuscateTaxJarConfig(result.config) };
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {

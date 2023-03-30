@@ -15,7 +15,8 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
 
-  logger.debug({ error, data }, "Metadata fetched");
+  // * `metadata` name is required for secrets censorship
+  logger.debug({ error, metadata: data }, "Metadata fetched");
 
   if (error) {
     return [];

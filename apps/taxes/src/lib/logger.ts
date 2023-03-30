@@ -11,6 +11,12 @@ export const logger = pino({
           },
         }
       : undefined,
+  redact: [
+    "metadata",
+    "providerInstance.config.username",
+    "providerInstance.config.password",
+    "providerInstance.config.apiKey",
+  ],
 });
 
 export const createLogger = logger.child.bind(logger);
