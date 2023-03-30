@@ -33,7 +33,7 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
   useEffect(() => {
     if (done) {
       mutateAsync({
-        listId: selectedList!, // todo - list picker
+        listId: selectedList!,
         contacts: customers,
       }).then(() => {
         notifySuccess("Sync successful", "Contacts sent to Mailchimp");

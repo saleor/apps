@@ -3,6 +3,7 @@ import { ComponentProps } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { DangerSection } from "../../../ui/danger-section/danger-section";
+import { TextLink } from "../../../ui/text-link/text-link";
 
 export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
   const { appBridge } = useAppBridge();
@@ -18,23 +19,10 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
       <Text as="p" marginY={8}>
         This operation will remove saved Mailchimp token from App database. You will be able to
         connect it again. <br />
-        It will not disconnect CRM App in Mailchimp - you can do it in{" "}
-        <a
-          href="https://us21.admin.mailchimp.com/account/connected-sites/app-selection/"
-          onClick={(e) => {
-            e.preventDefault();
-
-            appBridge?.dispatch(
-              actions.Redirect({
-                // todo - fetch DC and replace us21
-                to: "https://us21.admin.mailchimp.com/account/connected-sites/app-selection/",
-                newContext: true,
-              })
-            );
-          }}
-        >
+        It will not disconnect CRM App in Mailchimp - you can do it in the{" "}
+        <TextLink href="https://us21.admin.mailchimp.com/account/connected-sites/app-selection/">
           Mailchimp Dashboard
-        </a>
+        </TextLink>
       </Text>
       <Box display="flex" justifyContent="flex-end">
         <Button

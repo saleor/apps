@@ -3,10 +3,18 @@ import { useEffect, useState } from "react";
 import { createClient } from "../../lib/create-graphq-client";
 import { FetchCustomersDocument, FetchCustomersQuery } from "../../../generated/graphql";
 import { OperationResult } from "urql";
+import { metadataToMailchimpTags } from "./metadata-to-mailchimp-tags";
+
+type CustomerCollectionItem = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  tags: string[];
+};
 
 export const useFetchAllCustomers = (enabled: boolean) => {
   const { appBridgeState } = useAppBridge();
-  const [customers, setCustomers] = useState<Array<{ email: string }>>([]);
+  const [customers, setCustomers] = useState<Array<CustomerCollectionItem>>([]);
   const [totalCustomersCount, setTotalCustomersCount] = useState<number | null>(null);
   const [done, setDone] = useState(false);
 
@@ -45,8 +53,15 @@ export const useFetchAllCustomers = (enabled: boolean) => {
         lastCursor = results.data?.customers?.pageInfo.endCursor ?? undefined;
 
         setCustomers((current) => {
-          const newCustomers = results.data!.customers!.edges.map((c) => {
-            return { email: c.node.email };
+          const newCustomers = results.data!.customers!.edges.map((c): CustomerCollectionItem => {
+            const tags = metadataToMailchimpTags(c.node);
+
+            return {
+              email: c.node.email,
+              lastName: c.node.lastName,
+              firstName: c.node.firstName,
+              tags,
+            };
           });
 
           return [...current, ...newCustomers];

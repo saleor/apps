@@ -14,7 +14,14 @@ const AddContactSchema = z.object({
 });
 
 const BulkAddContactsSchema = z.object({
-  contacts: z.array(z.object({ email: z.string().min(2) })),
+  contacts: z.array(
+    z.object({
+      email: z.string().min(2),
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+    })
+  ),
   listId: z.string().min(1),
 });
 
@@ -40,7 +47,7 @@ const mailchimpAudienceRouter = router({
 
     const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
-    const listsResponseOrError = await mailchimpClient.client.lists.getAllLists();
+    const listsResponseOrError = await mailchimpClient.fetchLists();
 
     logger.trace(listsResponseOrError, "Fetched lists");
 
@@ -80,10 +87,7 @@ const mailchimpAudienceRouter = router({
 
       logger.debug(input, "Will bulk add contacts to Mailchimp");
 
-      await mailchimpClient.batchAddContacts(
-        input.listId,
-        input.contacts.map((c) => c.email)
-      );
+      await mailchimpClient.batchAddContacts(input.listId, input.contacts);
     }),
 });
 

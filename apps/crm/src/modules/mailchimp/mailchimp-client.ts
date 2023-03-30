@@ -42,7 +42,10 @@ export class MailchimpClientOAuth {
   }
 
   // todo add names, tags
-  async batchAddContacts(listID: string, emails: string[]) {
+  async batchAddContacts(
+    listID: string,
+    contacts: Array<{ email: string; lastName?: string; firstName?: string; tags?: string[] }>
+  ) {
     /**
      * method "batchListMembers" exist in Mailchimp SDK
      * https://mailchimp.com/developer/marketing/api/list-members/
@@ -51,11 +54,15 @@ export class MailchimpClientOAuth {
      */
     // @ts-ignore
     return this.client.lists.batchListMembers(listID, {
-      members: emails.map((e) => ({
+      members: contacts.map((c) => ({
         status: "transactional",
-        email_address: e,
+        email_address: c.email,
+        merge_fields: {
+          FNAME: c.firstName,
+          LNAME: c.lastName,
+        },
         // todo add metadata tags
-        tags: ["Saleor Import"],
+        tags: ["Saleor Import", ...(c.tags ?? [])],
       })),
     });
   }
