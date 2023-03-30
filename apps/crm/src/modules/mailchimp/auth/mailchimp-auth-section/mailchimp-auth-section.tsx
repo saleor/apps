@@ -1,8 +1,8 @@
-import { LoginWithMailchimpButton } from "../../ui/login-with-mailchimp-button/login-with-mailchimp-button";
+import { LoginWithMailchimpButton } from "../../../ui/login-with-mailchimp-button/login-with-mailchimp-button";
 import React from "react";
 import Link from "next/link";
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { Section } from "../../ui/section/section";
+import { Section } from "../../../ui/section/section";
 
 export const MailchimpAuthSection = () => {
   return (

@@ -65,7 +65,10 @@ const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, co
   if (config?.customerCreateEvent?.enabled) {
     const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
-    await mailchimpClient.addContact(config.customerCreateEvent.listId, user.email);
+    await mailchimpClient.addContact(config.customerCreateEvent.listId, user.email, {
+      lastName: user.lastName,
+      firstName: user.firstName,
+    });
   }
 
   return res.status(200).json({ message: "The event has been handled" });

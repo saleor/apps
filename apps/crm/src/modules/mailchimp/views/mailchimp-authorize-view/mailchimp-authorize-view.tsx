@@ -1,4 +1,4 @@
-import { MailchimpAuthFrame } from "../../mailchimp-auth-frame/mailchimp-auth-frame";
+import { MailchimpAuthFrame } from "../../auth/mailchimp-auth-frame/mailchimp-auth-frame";
 import React, { useEffect } from "react";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { createLogger } from "../../../../lib/logger";
@@ -11,7 +11,10 @@ export const MailchimpAuthorizeView = (props: { onSuccess(): void }) => {
 
   useEffect(() => {
     const handleMessage = (message: MessageEvent) => {
-      //todo check origin
+      if (message.origin !== window.location.origin) {
+        return;
+      }
+
       try {
         const payload = JSON.parse(message.data) as {
           token: string;

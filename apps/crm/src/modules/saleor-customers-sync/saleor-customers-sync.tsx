@@ -1,13 +1,10 @@
-import { FetchCustomersDocument, FetchCustomersQuery } from "../../../generated/graphql";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { ComponentProps, useEffect, useState } from "react";
-import { createClient } from "../../lib/create-graphq-client";
-import { OperationResult } from "urql";
 import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../trpc/trpc-client";
 import { useDashboardNotification } from "../../lib/use-dashboard-notification";
 import { useFetchAllCustomers } from "./use-fetch-all-customers";
 import { Section } from "../ui/section/section";
+import { MailchimpListPicker } from "../mailchimp/mailchimp-list-picker/mailchimp-list-picker";
 
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
@@ -31,11 +28,12 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
   const theme = useTheme().themeValues;
   const { mutateAsync, status } = trpcClient.mailchimp.audience.bulkAddContacts.useMutation();
   const { notifySuccess } = useDashboardNotification();
+  const [selectedList, setSelectedList] = useState<null | string>(null);
 
   useEffect(() => {
     if (done) {
       mutateAsync({
-        listId: "31c727eb7e", // todo - list picker
+        listId: selectedList!, // todo - list picker
         contacts: customers,
       }).then(() => {
         notifySuccess("Sync successful", "Contacts sent to Mailchimp");
@@ -50,8 +48,17 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
           <WarningIcon />
           <Text as="p">Do not leave the app while indexing</Text>
         </Box>
-        <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => setEnabled(true)}>Start</Button>
+        <Box display="flex" justifyContent="flex-end" gap={4} alignItems="center">
+          <Text variant="caption">Sync to the Mailchimp list:</Text>
+          <MailchimpListPicker
+            onChange={(_, value) => {
+              setSelectedList(value);
+            }}
+          />
+          {/* @ts-ignore todo macaw*/}
+          <Button marginLeft={"auto"} disabled={!selectedList} onClick={() => setEnabled(true)}>
+            Start
+          </Button>
         </Box>
       </RootSection>
     );

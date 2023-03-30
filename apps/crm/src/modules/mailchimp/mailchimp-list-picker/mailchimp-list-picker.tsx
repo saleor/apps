@@ -1,10 +1,10 @@
 import { Box, PropsWithBox } from "@saleor/macaw-ui/next";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { trpcClient } from "../../trpc/trpc-client";
 
 type Props = PropsWithBox<{
   disabled?: boolean;
-  onChange(e: ChangeEvent<HTMLSelectElement>, listId: string): void;
+  onChange(e: ChangeEvent<HTMLSelectElement> | null, listId: string): void;
 }>;
 
 export const MailchimpListPicker = ({ disabled, onChange, ...props }: Props) => {
@@ -13,6 +13,12 @@ export const MailchimpListPicker = ({ disabled, onChange, ...props }: Props) => 
   if (isSuccess && !data) {
     console.error("Fetched empty audiences list, should not happen");
   }
+
+  useEffect(() => {
+    if (data?.length) {
+      onChange(null, data[0].id);
+    }
+  }, [data]);
 
   return (
     <Box {...props}>

@@ -1,6 +1,6 @@
 import { trpcClient } from "../../../trpc/trpc-client";
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
+import { RemoveMailchimpConfig } from "../../config-sections/remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 import { MailchimpLists } from "../../config-sections/mailchimp-lists/mailchimp-lists";
 import { WebhookConfiguration } from "../../config-sections/webhook-configuration/webhook-configuration";
@@ -62,11 +62,7 @@ export const MailchimpConfigView = () => {
     return (
       <Box>
         {header}
-        <MailchimpAuthorizeView
-          onSuccess={() => {
-            refetch();
-          }}
-        />
+        <MailchimpAuthorizeView onSuccess={refetch} />
       </Box>
     );
   }

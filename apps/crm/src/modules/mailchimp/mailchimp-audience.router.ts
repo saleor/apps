@@ -54,36 +54,6 @@ const mailchimpAudienceRouter = router({
 
     throw new Error("Failed fetching lists from Mailchimp");
   }),
-  addContact: protectedClientProcedure.input(AddContactSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
-      context: "mailchimpConfigRouter.addContact",
-      saleorApiUrl: ctx.saleorApiUrl,
-    });
-
-    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
-
-    logger.debug("Fetched config from metadata");
-
-    if (!config) {
-      logger.warn("Config not found");
-
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        cause: "MAILCHIMP_CONFIG_NOT_FOUND",
-        message: "Couldnt restore saved Mailchimp config",
-      });
-    }
-
-    const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
-
-    logger.debug(input, "Will add contact to Mailchimp");
-
-    return mailchimpClient.addContact(input.listId, input.contact.email).catch((e) => {
-      console.error(e);
-
-      throw e;
-    });
-  }),
   bulkAddContacts: protectedClientProcedure
     .input(BulkAddContactsSchema)
     .mutation(async ({ ctx, input }) => {

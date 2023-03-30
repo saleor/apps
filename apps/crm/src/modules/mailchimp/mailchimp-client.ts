@@ -18,12 +18,24 @@ export class MailchimpClientOAuth {
     return this.client.lists.getAllLists();
   }
 
-  async addContact(listID: string, email: string) {
+  async addContact(
+    listID: string,
+    email: string,
+    meta: {
+      firstName?: string;
+      lastName?: string;
+    }
+  ) {
     return this.client.lists.addListMember(listID, {
       // TODO - add mapping on frontend?
       status: "transactional",
       email_address: email,
+      // todo add metadata tags (eg key: mailchimp_tags: tag1,tag2)
       tags: ["Saleor Import"],
+      merge_fields: {
+        FNAME: meta.firstName,
+        LNAME: meta.lastName,
+      },
       // todo - add address
     });
   }
@@ -40,6 +52,7 @@ export class MailchimpClientOAuth {
       members: emails.map((e) => ({
         status: "transactional",
         email_address: e,
+        // todo add metadata tags
         tags: ["Saleor Import"],
       })),
     });
