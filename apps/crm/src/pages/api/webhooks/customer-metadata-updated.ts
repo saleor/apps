@@ -1,30 +1,23 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { logger as pinoLogger } from "../../../lib/logger";
-import {
-  CustomerCreatedPayloadFragment,
-  CustomerCreatedDocument,
-} from "../../../../generated/graphql";
+import { CustomerDataFragment } from "../../../../generated/graphql";
 import { createClient } from "../../../lib/create-graphq-client";
 import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 import { metadataToMailchimpTags } from "../../../modules/saleor-customers-sync/metadata-to-mailchimp-tags";
 
-export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayloadFragment>({
-  name: "Customer Created in Saleor",
-  webhookPath: "api/webhooks/customer-created",
-  asyncEvent: "CUSTOMER_CREATED",
+export const customerMetadataUpdatedWebhook = new SaleorAsyncWebhook<CustomerDataFragment>({
+  name: "Customer Metadata updated in Saleor",
+  webhookPath: "api/webhooks/customer-metadata-updated",
+  asyncEvent: "CUSTOMER_METADATA_UPDATED",
   apl: saleorApp.apl,
-  query: CustomerCreatedDocument,
+  query: Subscription,
 });
 
-const handler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
-  req,
-  res,
-  context
-) => {
+const handler: NextWebhookApiHandler<CustomerDataFragment> = async (req, res, context) => {
   const logger = pinoLogger.child({
-    webhook: customerCreatedWebhook.name,
+    webhook: customerMetadataUpdatedWebhook.name,
   });
 
   logger.debug("Webhook received");
@@ -62,7 +55,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default customerCreatedWebhook.createHandler(handler);
+export default customerMetadataUpdatedWebhook.createHandler(handler);
 
 export const config = {
   api: {

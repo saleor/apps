@@ -7,8 +7,9 @@ query FetchCustomers($cursor: String) {
     }
     edges {
       node {
-        id
-        email
+        ... on User {
+          ...Customer
+        }
       }
     }
   }

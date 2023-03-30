@@ -1,0 +1,7 @@
+#  subscription CustomerMetadataUpdated {
+#    event {
+#      ... on CustomerMetadataUpdated {
+#        ...CustomerUpdatedData
+#      }
+#    }
+#  }

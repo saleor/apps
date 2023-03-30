@@ -1,0 +1,5 @@
+  fragment CustomerCreatedPayload on CustomerCreated {
+    user {
+      ...Customer
+    }
+  }

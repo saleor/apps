@@ -24,6 +24,7 @@ export class MailchimpClientOAuth {
     meta: {
       firstName?: string;
       lastName?: string;
+      extraTags?: string[];
     }
   ) {
     return this.client.lists.addListMember(listID, {
@@ -31,7 +32,7 @@ export class MailchimpClientOAuth {
       status: "transactional",
       email_address: email,
       // todo add metadata tags (eg key: mailchimp_tags: tag1,tag2)
-      tags: ["Saleor Import"],
+      tags: ["Saleor Import", ...(meta.extraTags ?? [])],
       merge_fields: {
         FNAME: meta.firstName,
         LNAME: meta.lastName,
@@ -40,6 +41,7 @@ export class MailchimpClientOAuth {
     });
   }
 
+  // todo add names, tags
   async batchAddContacts(listID: string, emails: string[]) {
     /**
      * method "batchListMembers" exist in Mailchimp SDK
