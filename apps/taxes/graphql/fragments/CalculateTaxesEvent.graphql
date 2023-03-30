@@ -4,5 +4,11 @@ fragment CalculateTaxesEvent on Event {
     taxBase {
       ...TaxBase
     }
+    recipient {
+      privateMetadata {
+        key
+        value
+      }
+    }
   }
 }

@@ -1,7 +1,8 @@
 import Avatax from "avatax";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import pino from "pino";
 import packageJson from "../../../package.json";
-import { logger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
 
 type AvataxSettings = {
@@ -36,9 +37,11 @@ const createAvataxSettings = (config: AvataxConfig): AvataxSettings => {
 
 export class AvataxClient {
   private client: Avatax;
+  private logger: pino.Logger;
 
   constructor(config: AvataxConfig) {
-    logger.debug("AvataxClient constructor");
+    this.logger = createLogger({ service: "AvataxClient" });
+    this.logger.trace("AvataxClient constructor");
     const { username, password } = config;
     const credentials = {
       username,
@@ -46,15 +49,18 @@ export class AvataxClient {
     };
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(credentials);
-    logger.info({ client: avataxClient }, "External Avatax client created");
+    this.logger.trace({ client: avataxClient }, "External Avatax client created");
     this.client = avataxClient;
   }
 
   async fetchTaxesForOrder(model: CreateTransactionModel) {
+    this.logger.debug({ model }, "fetchTaxesForOrder called with:");
+
     return this.client.createTransaction({ model });
   }
 
   async ping() {
+    this.logger.debug("ping called");
     try {
       const result = await this.client.ping();
 

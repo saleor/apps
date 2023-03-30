@@ -1,9 +1,7 @@
 import { TaxBaseFragment } from "../../../generated/graphql";
-import { ResponseTaxPayload } from "./types";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { TaxProviderName } from "./providers/config";
-
-type ExternalValidationResult = { ok: boolean; error?: string };
+import { ResponseTaxPayload } from "./types";
 
 export interface TaxProvider {
   name: TaxProviderName;

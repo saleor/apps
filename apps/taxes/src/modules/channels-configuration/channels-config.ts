@@ -9,7 +9,7 @@ export const channelSchema = z.object({
 });
 export type ChannelConfig = z.infer<typeof channelSchema>;
 
-const channelsSchema = z.record(channelSchema);
+export const channelsSchema = z.record(channelSchema);
 export type ChannelsConfig = z.infer<typeof channelsSchema>;
 
 export const defaultChannelConfig: ChannelConfig = {

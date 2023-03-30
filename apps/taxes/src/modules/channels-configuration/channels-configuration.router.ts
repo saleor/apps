@@ -7,9 +7,13 @@ import { setAndReplaceChannelsInputSchema } from "./channels-config-input-schema
 import { TaxChannelsConfigurator } from "./channels-configurator";
 import { GetChannelsConfigurationService } from "./get-channels-configuration.service";
 
+// todo: refactor with crud-settings
 export const channelsConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+    const logger = pinoLogger.child({
+      saleorApiUrl: ctx.saleorApiUrl,
+      procedure: "channelsConfigurationRouter.fetch",
+    });
 
     logger.debug("channelsConfigurationRouter.fetch called");
 
@@ -21,14 +25,17 @@ export const channelsConfigurationRouter = router({
   upsert: protectedClientProcedure
     .input(setAndReplaceChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-      logger.info(input, "channelsConfigurationRouter.upsert called with input");
+      const logger = pinoLogger.child({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "channelsConfigurationRouter.upsert",
+      });
+      logger.debug(input, "channelsConfigurationRouter.upsert called with input");
 
       const config = await new GetChannelsConfigurationService({
         apiClient: ctx.apiClient,
         saleorApiUrl: ctx.saleorApiUrl,
       }).getConfiguration();
-      logger.info(config, "Fetched current channels config to update it");
+      logger.debug(config, "Fetched current channels config to update it");
 
       const taxChannelsConfigurator = new TaxChannelsConfigurator(
         createSettingsManager(ctx.apiClient),
@@ -43,7 +50,7 @@ export const channelsConfigurationRouter = router({
         },
       };
 
-      logger.info(channelsConfig, "Merged configs. Will set it now");
+      logger.debug(channelsConfig, "Merged configs. Will set it now");
 
       await taxChannelsConfigurator.setConfig(channelsConfig);
 

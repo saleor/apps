@@ -37,14 +37,15 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.get",
     });
 
-    logger.debug("avataxConfigurationRouter.get called");
+    logger.debug({ input }, "avataxConfigurationRouter.get called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.get(input.id);
 
-    logger.debug({ result }, "avataxConfigurationRouter.get finished");
+    // * `providerInstance` name is required for secrets censorship
+    logger.debug({ providerInstance: result }, "avataxConfigurationRouter.get finished");
 
     return { ...result, config: obfuscateAvataxConfig(result.config) };
   }),
@@ -54,7 +55,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.post",
     });
 
-    logger.debug("avataxConfigurationRouter.post called");
+    logger.debug({ input }, "avataxConfigurationRouter.post called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
@@ -71,7 +72,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.delete",
     });
 
-    logger.debug("avataxConfigurationRouter.delete called");
+    logger.debug({ input }, "avataxConfigurationRouter.delete called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
@@ -88,7 +89,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.patch",
     });
 
-    logger.debug("avataxConfigurationRouter.patch called");
+    logger.debug({ input }, "avataxConfigurationRouter.patch called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);

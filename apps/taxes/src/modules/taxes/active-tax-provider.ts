@@ -6,15 +6,19 @@ import { AvataxProvider } from "../avatax/avatax-provider";
 import { TaxJarProvider } from "../taxjar/taxjar-provider";
 import { TaxProvider } from "./tax-provider";
 import { TaxProviderError } from "./tax-provider-error";
+import pino from "pino";
 
 export class ActiveTaxProvider {
   private client: TaxProvider;
+  private logger: pino.Logger;
 
   constructor(providerInstance: ProviderConfig) {
-    const logger = createLogger({});
+    this.logger = createLogger({
+      service: "ActiveTaxProvider",
+    });
 
     const taxProviderName = providerInstance.provider;
-    logger.info({ taxProviderName }, "Constructing tax provider: ");
+    this.logger.trace({ taxProviderName }, "Constructing tax provider: ");
 
     switch (taxProviderName) {
       case "taxjar":
@@ -34,6 +38,8 @@ export class ActiveTaxProvider {
   }
 
   async calculate(payload: TaxBaseFragment, channel: ChannelConfig) {
+    this.logger.debug({ payload, channel }, ".calculate called");
+
     return this.client.calculate(payload, channel);
   }
 }

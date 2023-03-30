@@ -5,7 +5,10 @@ import { PublicTaxProvidersConfigurationService } from "./public-providers-confi
 
 export const providersConfigurationRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx }) => {
-    const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+    const logger = pinoLogger.child({
+      saleorApiUrl: ctx.saleorApiUrl,
+      procedure: "providersConfigurationRouter.getAll",
+    });
 
     logger.debug("providersConfigurationRouter.fetch called");
 

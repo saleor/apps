@@ -45,7 +45,7 @@ export class AvataxConfigurationService {
   async get(id: string): Promise<AvataxInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsConfigurator.read(id);
-    this.logger.debug({ setting: data }, `Fetched setting from crudSettingsConfigurator`);
+    this.logger.debug(`Fetched setting from crudSettingsConfigurator`);
 
     const validation = getSchema.safeParse(data);
 

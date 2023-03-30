@@ -65,6 +65,14 @@ const taxBaseLineSchema = z.object({
 
 export const calculateTaxesPayloadSchema: z.ZodType<ExpectedWebhookPayload> = z.object({
   __typename: z.literal("CalculateTaxes"),
+  recipient: z.object({
+    privateMetadata: z.array(
+      z.object({
+        key: z.string(),
+        value: z.string(),
+      })
+    ),
+  }),
   taxBase: z.object({
     currency: z.string(),
     channel: z.object({
