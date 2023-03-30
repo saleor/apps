@@ -41,6 +41,8 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
 
   const [localState, setLocalState] = useState<LocalState>(null);
 
+  console.log(localState);
+
   useEffect(() => {
     if (
       !(
@@ -125,10 +127,12 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
           <MailchimpListPicker
             disabled={!localState.selected}
             onChange={(_, value) => {
-              setLocalState({
-                selected: true,
-                listId: value,
-              });
+              if (localState?.selected) {
+                setLocalState({
+                  selected: true,
+                  listId: value,
+                });
+              }
             }}
           />
         </Box>
