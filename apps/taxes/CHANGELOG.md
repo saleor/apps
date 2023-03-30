@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.2.0
+
+### Minor Changes
+
+- d55b2f9: Improve webhook processing time by adding the app config to subscription payload instead of fetching it separately.
+
 ## 1.1.1
 
 ### Patch Changes
