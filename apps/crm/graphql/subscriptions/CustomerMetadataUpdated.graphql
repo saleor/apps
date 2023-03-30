@@ -1,7 +1,7 @@
-#  subscription CustomerMetadataUpdated {
-#    event {
-#      ... on CustomerMetadataUpdated {
-#        ...CustomerUpdatedData
-#      }
-#    }
-#  }
+subscription CustomerMetadataUpdated {
+  event {
+    ... on CustomerMetadataUpdated {
+      ...CustomerUpdatedPayload
+    }
+  }
+}

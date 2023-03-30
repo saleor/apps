@@ -1,7 +1,7 @@
 subscription CustomerCreated {
-    event {
-      ... on CustomerCreated {
-        ...CustomerCreatedPayload
-      }
+  event {
+    ... on CustomerCreated {
+      ...CustomerCreatedPayload
     }
   }
+}

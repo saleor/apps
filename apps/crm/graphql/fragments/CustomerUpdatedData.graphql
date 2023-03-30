@@ -1,5 +1,0 @@
-#fragment CustomerUpdatedPayload on CustomerMetadataUpdated {
-#  user {
-#    ...Customer
-#  }
-#}
