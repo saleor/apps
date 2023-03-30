@@ -2,13 +2,14 @@ import { Box, Text, Button, WarningIcon } from "@saleor/macaw-ui/next";
 import { ComponentProps } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { trpcClient } from "../../trpc/trpc-client";
+import { DangerSection } from "../../ui/danger-section/danger-section";
 
 export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
   const { appBridge } = useAppBridge();
   const { mutate } = trpcClient.mailchimp.config.removeToken.useMutation();
 
   return (
-    <Box backgroundColor="surfaceCriticalSubdued" {...props} padding={8} borderRadius={4}>
+    <DangerSection>
       <Text color="textCriticalDefault" variant="title" size="small">
         Remove configuration
       </Text>
@@ -35,10 +36,16 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
         </a>
       </Text>
       <Box display="flex" justifyContent="flex-end">
-        <Button onClick={() => mutate()} variant="secondary">
+        <Button
+          onClick={() => mutate()}
+          variant="secondary"
+          // @ts-ignore todo macaw
+          borderColor="criticalDefault"
+          color="textCriticalDefault"
+        >
           Disconnect Mailchimp
         </Button>
       </Box>
-    </Box>
+    </DangerSection>
   );
 };

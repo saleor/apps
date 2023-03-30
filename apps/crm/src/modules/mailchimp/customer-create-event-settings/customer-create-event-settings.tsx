@@ -2,6 +2,7 @@ import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ComponentProps, useEffect, useState } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Section } from "../../ui/section/section";
 
 export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) => {
   const { appBridge } = useAppBridge();
@@ -53,14 +54,7 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
   const eventConfig = mailchimpConfig.customerCreateEvent;
 
   return (
-    <Box
-      {...props}
-      padding={8}
-      borderColor="neutralHighlight"
-      borderWidth={1}
-      borderStyle="solid"
-      borderRadius={4}
-    >
+    <Section {...props}>
       {/* @ts-ignore todo macaw*/}
       <Text as="h1" variant="title" size="small" marginBottom={4}>
         Configure webhooks
@@ -140,6 +134,6 @@ export const CustomerCreateEventSettings = (props: ComponentProps<typeof Box>) =
           {savingStatus === "loading" ? "Saving..." : "Save"}
         </Button>
       </Box>
-    </Box>
+    </Section>
   );
 };

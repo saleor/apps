@@ -1,38 +1,31 @@
-import { Box, Text, List } from "@saleor/macaw-ui/next";
-import { ComponentProps } from "react";
+import { Box, List, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
+import { Section } from "../../ui/section/section";
 
-export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children">) => {
+export const MailchimpLists = (props: PropsWithBox<{}>) => {
   const { data, error, status } = trpcClient.mailchimp.audience.getLists.useQuery();
 
   switch (status) {
     case "error": {
       return (
-        <Box {...props}>
+        <Section {...props}>
           <Text color="textCriticalDefault">Failed fetching Mailchimp lists</Text>
-        </Box>
+        </Section>
       );
     }
 
     // TODO need loading component
     case "loading": {
       return (
-        <Box {...props}>
+        <Section {...props}>
           <Text>Loading lists...</Text>
-        </Box>
+        </Section>
       );
     }
 
     case "success": {
       return (
-        <Box
-          padding={8}
-          borderColor="neutralHighlight"
-          borderWidth={1}
-          borderStyle="solid"
-          borderRadius={4}
-          {...props}
-        >
+        <Section {...props}>
           <List>
             <List.Item disabled>
               <Text variant="title" size="small">
@@ -50,7 +43,7 @@ export const MailchimpLists = (props: Omit<ComponentProps<typeof Box>, "children
               </List.Item>
             ))}
           </List>
-        </Box>
+        </Section>
       );
     }
   }
