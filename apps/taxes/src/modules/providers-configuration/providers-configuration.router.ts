@@ -10,7 +10,7 @@ export const providersConfigurationRouter = router({
       procedure: "providersConfigurationRouter.getAll",
     });
 
-    logger.info("providersConfigurationRouter.fetch called");
+    logger.debug("providersConfigurationRouter.fetch called");
 
     return new PublicTaxProvidersConfigurationService(ctx.apiClient, ctx.saleorApiUrl).getAll();
   }),

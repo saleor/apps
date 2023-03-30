@@ -15,7 +15,7 @@ export const channelsConfigurationRouter = router({
       procedure: "channelsConfigurationRouter.fetch",
     });
 
-    logger.info("channelsConfigurationRouter.fetch called");
+    logger.debug("channelsConfigurationRouter.fetch called");
 
     return new GetChannelsConfigurationService({
       apiClient: ctx.apiClient,
@@ -29,13 +29,13 @@ export const channelsConfigurationRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
         procedure: "channelsConfigurationRouter.upsert",
       });
-      logger.info(input, "channelsConfigurationRouter.upsert called with input");
+      logger.debug(input, "channelsConfigurationRouter.upsert called with input");
 
       const config = await new GetChannelsConfigurationService({
         apiClient: ctx.apiClient,
         saleorApiUrl: ctx.saleorApiUrl,
       }).getConfiguration();
-      logger.info(config, "Fetched current channels config to update it");
+      logger.debug(config, "Fetched current channels config to update it");
 
       const taxChannelsConfigurator = new TaxChannelsConfigurator(
         createSettingsManager(ctx.apiClient),
@@ -50,7 +50,7 @@ export const channelsConfigurationRouter = router({
         },
       };
 
-      logger.info(channelsConfig, "Merged configs. Will set it now");
+      logger.debug(channelsConfig, "Merged configs. Will set it now");
 
       await taxChannelsConfigurator.setConfig(channelsConfig);
 
