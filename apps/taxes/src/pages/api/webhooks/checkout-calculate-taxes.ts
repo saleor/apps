@@ -1,11 +1,9 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createClient } from "../../../lib/graphql";
 import { createLogger } from "../../../lib/logger";
 import { calculateTaxesPayloadSchema, ExpectedWebhookPayload } from "../../../lib/saleor/schema";
-import { GetChannelsConfigurationService } from "../../../modules/channels-configuration/get-channels-configuration.service";
-import { PrivateTaxProvidersConfigurationService } from "../../../modules/providers-configuration/private-providers-configuration-service";
+import { getAppConfig } from "../../../modules/app-configuration/get-app-config";
 
 import { ActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 
@@ -25,7 +23,7 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ExpectedW
 
 export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
-  const { authData, payload } = ctx;
+  const { payload } = ctx;
   logger.info({ payload }, "Handler called with payload");
 
   const validation = calculateTaxesPayloadSchema.safeParse(payload);
@@ -39,26 +37,12 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   const { data } = validation;
   logger.info({ data }, "Payload validated succesfully");
 
+  const { providers, channels } = getAppConfig(data);
+  logger.debug({ providers, channels }, "Parsed providers & channels from payload");
+
   try {
-    const client = createClient(authData.saleorApiUrl, async () =>
-      Promise.resolve({ token: authData.token })
-    );
-
-    const providersConfig = await new PrivateTaxProvidersConfigurationService(
-      client,
-      authData.saleorApiUrl
-    ).getAll();
-
-    const channelsConfig = await new GetChannelsConfigurationService({
-      saleorApiUrl: authData.saleorApiUrl,
-      apiClient: client,
-    }).getConfiguration();
-
-    logger.info({ providersConfig }, "Providers configuration returned");
-    logger.info({ channelsConfig }, "Channels configuration returned");
-
-    const channelSlug = payload.taxBase.channel.slug;
-    const channelConfig = channelsConfig[channelSlug];
+    const channelSlug = data.taxBase.channel.slug;
+    const channelConfig = channels[channelSlug];
 
     if (!channelConfig) {
       logger.error(`Channel config not found for channel ${channelSlug}`);
@@ -66,7 +50,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
       return res.send({});
     }
 
-    const providerInstance = providersConfig.find(
+    const providerInstance = providers.find(
       (instance) => instance.id === channelConfig.providerInstanceId
     );
 
