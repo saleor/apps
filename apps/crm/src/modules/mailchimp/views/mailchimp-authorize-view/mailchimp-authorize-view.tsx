@@ -41,5 +41,6 @@ export const MailchimpAuthorizeView = (props: { onSuccess(): void }) => {
     return () => window.removeEventListener("message", handleMessage);
   });
 
-  return <MailchimpAuthFrame __height={600} />;
+  // todo calculate dynamically
+  return <MailchimpAuthFrame __height={900} />;
 };

@@ -2,9 +2,10 @@ import { trpcClient } from "../../../trpc/trpc-client";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { RemoveMailchimpConfig } from "../../remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
-import { MailchimpLists } from "../../mailchimp-lists/mailchimp-lists";
+import { MailchimpLists } from "../../config-sections/mailchimp-lists/mailchimp-lists";
 import { CustomerCreateEventSettings } from "../../customer-create-event-settings/customer-create-event-settings";
 import { SaleorCustomersList } from "../../../saleor-customers/saleor-customers-list";
+import { ConnectionStatus } from "../../config-sections/connection-status/connection-status";
 
 const header = (
   <Box marginBottom={12}>
@@ -48,20 +49,7 @@ export const MailchimpConfigView = () => {
       <div>
         {header}
         <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
-          <Box
-            __flex="0 1 50%"
-            padding={8}
-            borderColor="neutralHighlight"
-            borderWidth={1}
-            borderStyle="solid"
-            borderRadius={4}
-          >
-            {/* @ts-ignore todo macaw*/}
-            <Text variant="title" size="small" as="p" marginBottom={2}>
-              Connection status
-            </Text>
-            <Text>All good</Text>
-          </Box>
+          <ConnectionStatus __flex="0 1 50%" />
           <MailchimpLists __flex="0 1 50%" />
         </Box>
 

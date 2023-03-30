@@ -6,8 +6,8 @@ type Props = PropsWithBox<{}>;
 export const DangerSection = (props: Props) => {
   return (
     <Section
-      // backgroundColor="surfaceCriticalHighlight"
-      borderColor="criticalDefault"
+      backgroundColor="surfaceCriticalHighlight"
+      borderColor="criticalHighlight"
       {...props}
     />
   );
