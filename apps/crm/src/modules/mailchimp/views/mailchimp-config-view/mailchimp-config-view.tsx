@@ -36,7 +36,7 @@ export const MailchimpConfigView = () => {
     );
   }
 
-  if (error || !mailchimpConfigured.configured) {
+  if (error) {
     return (
       <div>
         {header}

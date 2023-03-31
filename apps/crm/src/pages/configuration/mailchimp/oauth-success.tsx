@@ -1,9 +1,10 @@
-import { NextPage } from "next";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text, ThemeProvider } from "@saleor/macaw-ui/next";
+import { NextPageWithLayoutOverwrite } from "../../_app";
+import { NoSSRWrapper } from "@saleor/apps-shared";
 
-const MailchimpOauthSuccessPage: NextPage = () => {
+const MailchimpOauthSuccessPage: NextPageWithLayoutOverwrite = () => {
   const token = useRouter().query.token;
   const email = useRouter().query.email;
   const dc = useRouter().query.dc;
@@ -30,5 +31,11 @@ const MailchimpOauthSuccessPage: NextPage = () => {
     </Box>
   );
 };
+
+MailchimpOauthSuccessPage.overwriteLayout = (page) => (
+  <NoSSRWrapper>
+    <ThemeProvider>{page}</ThemeProvider>
+  </NoSSRWrapper>
+);
 
 export default MailchimpOauthSuccessPage;
