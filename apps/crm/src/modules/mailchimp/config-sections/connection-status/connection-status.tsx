@@ -1,9 +1,6 @@
 import { PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { Section } from "../../../ui/section/section";
 
-/**
- * TODO Add other statuses
- */
 export const ConnectionStatus = (props: PropsWithBox<{ status: "error" | "ok" }>) => (
   <Section {...props}>
     {/* @ts-ignore todo macaw*/}

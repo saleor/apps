@@ -19,6 +19,7 @@ type ConfiguredResponse =
     }
   | {
       configured: true;
+      dc: string;
       customerCreateEvent: z.infer<typeof MailchimpConfig>["customerCreateEvent"];
     };
 
@@ -93,6 +94,7 @@ const mailchimpConfigRouter = router({
         return {
           configured: true,
           customerCreateEvent: config.customerCreateEvent,
+          dc: config.dc,
         };
       } catch (e) {
         logger.debug("Ping to mailchimp failed, will return CANT_PING");

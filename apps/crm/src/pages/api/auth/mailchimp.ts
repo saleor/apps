@@ -1,6 +1,5 @@
 import { NextApiHandler } from "next";
 import { createLogger } from "../../../lib/logger";
-import { AppBridgePersistence } from "../../../lib/app-bridge-persistence";
 import { processSaleorProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
@@ -12,10 +11,6 @@ export const getBaseUrl = (headers: { [name: string]: string | string[] | undefi
 
 const logger = createLogger({});
 
-/**
- * TODO This must be protected, possibly cookie must be set to read token and api url to reach apl
- 
- */
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).send("Should be POST request");

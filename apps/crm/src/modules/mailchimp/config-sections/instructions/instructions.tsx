@@ -1,7 +1,7 @@
 import { Section } from "../../../ui/section/section";
 import React from "react";
 import { List, Text, TextProps, PropsWithBox, Box, Button, Chip } from "@saleor/macaw-ui/next";
-import { useLocalStorage } from "../../../../lib/use-local-storage";
+import { useLocalStorage } from "usehooks-ts";
 import { TextLink } from "../../../ui/text-link/text-link";
 
 const P = (props: TextProps) => <Text marginBottom={5} as="p" {...props} />;

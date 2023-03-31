@@ -6,10 +6,12 @@ import { DangerSection } from "../../../ui/danger-section/danger-section";
 import { TextLink } from "../../../ui/text-link/text-link";
 
 export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
-  const { appBridge } = useAppBridge();
   const { mutateAsync } = trpcClient.mailchimp.config.removeToken.useMutation();
-  const { refetch } = trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
+  const { refetch, data } = trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
 
+  if (!data || !data.configured) {
+    return null;
+  }
   return (
     <DangerSection>
       <Text color="textCriticalDefault" variant="title" size="small">
@@ -20,7 +22,9 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
         This operation will remove saved Mailchimp token from App database. You will be able to
         connect it again. <br />
         It will not disconnect CRM App in Mailchimp - you can do it in the{" "}
-        <TextLink href="https://us21.admin.mailchimp.com/account/connected-sites/app-selection/">
+        <TextLink
+          href={`https://${data.dc}.admin.mailchimp.com/account/connected-sites/app-selection/`}
+        >
           Mailchimp Dashboard
         </TextLink>
       </Text>
