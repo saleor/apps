@@ -84,6 +84,12 @@ export const Instructions = (props: PropsWithBox<{}>) => {
             For example <code>mailchimp_tags: [&quot;Tag1&quot;, &quot;Tag2&quot;]</code>
           </Text>
         </P>
+        <P>
+          Check{" "}
+          <TextLink href="https://demo.saleor.io/graphql/#saleor/N4IgjiBcILYK4BcCGCCWB7AdgAgMoFMEBZJVAGwGMALVGABwBUkBzACgBIK4BnBdGfACcAkgBFI2MQEIAlNmAAdHNjh0AJinwAFQagBumooSQbkrJdkvZUaiZx58BI0RaupMdRBOABrfAE8JBVhSShp6AH1kZm5ggBpsAzI4fCCQAG0FLJAmZmwARiz47CKclmwAJlKAXWCAX1c5RWVLIUF0QW55VytsAW5uFnwe7AblMbqQOJB0KBACYlDqWkYWEDqgA">
+            example query
+          </TextLink>
+        </P>
       </Box>
     </Section>
   );
