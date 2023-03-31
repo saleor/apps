@@ -3,7 +3,6 @@ import { Section } from "../../../ui/section/section";
 
 export const ConnectionStatus = (props: PropsWithBox<{ status: "error" | "ok" }>) => (
   <Section {...props}>
-    {/* @ts-ignore todo macaw*/}
     <Text variant="title" size="small" as="p" marginBottom={4}>
       Connection status
     </Text>

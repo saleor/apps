@@ -9,11 +9,9 @@ import { MailchimpListPicker } from "../mailchimp/mailchimp-list-picker/mailchim
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
     <Section {...props}>
-      {/* @ts-ignore todo macaw*/}
       <Text as="h1" variant="title" size="small" marginBottom={4}>
         Bulk sync
       </Text>
-      {/* @ts-ignore todo macaw*/}
       <Text color="textNeutralSubdued" as="p" marginBottom={8}>
         Scan Saleor customers and send them to Mailchimp
       </Text>
@@ -55,7 +53,6 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
               setSelectedList(value);
             }}
           />
-          {/* @ts-ignore todo macaw*/}
           <Button marginLeft={"auto"} disabled={!selectedList} onClick={() => setEnabled(true)}>
             Start
           </Button>
@@ -100,7 +97,6 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
       )}
       {done && (
         <Box>
-          {/* @ts-ignore todo macaw*/}
           <Text as="p" marginBottom={4}>
             Fetched customers from Saleor
           </Text>

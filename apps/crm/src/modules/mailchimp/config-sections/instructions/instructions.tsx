@@ -24,7 +24,6 @@ export const Instructions = (props: PropsWithBox<{}>) => {
         justifyContent="space-between"
         onClick={() => setInstructionsVisible((v) => !v)}
       >
-        {/* @ts-ignore todo macaw*/}
         <Text as="h1" variant="title" size="small" marginBottom={12}>
           Instructions
         </Text>
@@ -67,7 +66,6 @@ export const Instructions = (props: PropsWithBox<{}>) => {
         <P>
           Customer will be added to contacts list with{" "}
           <Box as="span" __display="inline-block">
-            {/* @ts-ignore todo macaw*/}
             <Chip as="span">Saleor Import</Chip>
           </Box>{" "}
           tag. To create customs segments, you can use{" "}

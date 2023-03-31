@@ -99,23 +99,19 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
 
   return (
     <Section {...props}>
-      {/* @ts-ignore todo macaw*/}
       <Text as="h1" variant="title" size="small" marginBottom={4}>
         Configure webhooks
       </Text>
-      {/* @ts-ignore todo macaw*/}
       <Text color="textNeutralSubdued" as="p" marginBottom={8}>
         Each time customer is created, it will be added to selected audience list in Mailchimp
       </Text>
       <Box display="flex" gap={4} flexDirection="column">
         <Checkbox onCheckedChange={handleCheckboxChange} checked={localState.selected}>
-          {/* @ts-ignore todo macaw*/}
           <Text marginRight="auto">Enable customers sync</Text>
         </Checkbox>
         <Box display="flex" alignItems="center">
           <Text
             color={localState?.selected ? "textNeutralDefault" : "textNeutralDisabled"}
-            /* @ts-ignore todo macaw*/
             marginRight={4}
             variant="caption"
           >

@@ -18,7 +18,7 @@
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@saleor/app-sdk": "0.37.1",
     "@saleor/apps-shared": "workspace:*",
-    "@saleor/macaw-ui": "0.8.0-pre.63",
+    "@saleor/macaw-ui": "0.8.0-pre.64",
     "@tanstack/react-query": "^4.24.4",
     "@trpc/client": "^10.9.1",
     "@trpc/next": "^10.9.1",

@@ -130,7 +130,7 @@ importers:
       '@mailchimp/mailchimp_marketing': ^3.0.80
       '@saleor/app-sdk': 0.37.1
       '@saleor/apps-shared': workspace:*
-      '@saleor/macaw-ui': 0.8.0-pre.63
+      '@saleor/macaw-ui': 0.8.0-pre.64
       '@tanstack/react-query': ^4.24.4
       '@testing-library/react': ^13.4.0
       '@testing-library/react-hooks': ^8.0.1
@@ -171,7 +171,7 @@ importers:
       '@mailchimp/mailchimp_marketing': 3.0.80
       '@saleor/app-sdk': 0.37.1_ld2jel3hspngo3u5lti2kgl2sq
       '@saleor/apps-shared': link:../../packages/shared
-      '@saleor/macaw-ui': 0.8.0-pre.63_5ndqzdd6t4rivxsukjv3i3ak2q
+      '@saleor/macaw-ui': 0.8.0-pre.64_5ndqzdd6t4rivxsukjv3i3ak2q
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
       '@trpc/next': 10.14.0_kqii3h5ibgec7gt3tb3ld6jree
@@ -5484,8 +5484,8 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
 
-  /@saleor/macaw-ui/0.8.0-pre.63_5ndqzdd6t4rivxsukjv3i3ak2q:
-    resolution: {integrity: sha512-qWWgOLsz7dgzk+/bI8VKfwb5uClvKED1w1lq3O5zV1XypthH4p5tDAXmhpuWrvNLoo3vBo+mNRX/GDpEcbB0qA==}
+  /@saleor/macaw-ui/0.8.0-pre.64_5ndqzdd6t4rivxsukjv3i3ak2q:
+    resolution: {integrity: sha512-u0DZTaBZAV0YtdOioLXSQ9+qJofOCDT2cgncZ6oqll5BWlN7PHXlQnlBkNFecqNcVk1Qa0dvpYF8aROjFiQzJg==}
     engines: {node: '>=16 <19'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

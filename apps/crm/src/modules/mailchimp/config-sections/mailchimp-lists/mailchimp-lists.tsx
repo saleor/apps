@@ -28,7 +28,6 @@ export const MailchimpLists = (props: PropsWithBox<{}>) => {
     case "loading": {
       return (
         <Wrapper {...props}>
-          {/* @ts-ignore todo macaw */}
           <Text as="p" marginTop={4}>
             Loading lists...
           </Text>

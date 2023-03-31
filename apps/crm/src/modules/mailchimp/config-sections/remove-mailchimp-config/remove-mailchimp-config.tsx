@@ -17,7 +17,6 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
       <Text color="textCriticalDefault" variant="title" size="small">
         Remove configuration
       </Text>
-      {/* @ts-ignore todo macaw*/}
       <Text as="p" marginY={8}>
         This operation will remove saved Mailchimp token from App database. You will be able to
         connect it again. <br />
@@ -32,7 +31,6 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
         <Button
           onClick={() => mutateAsync().then(() => refetch())}
           variant="secondary"
-          // @ts-ignore todo macaw
           borderColor="criticalDefault"
           color="textCriticalDefault"
         >
