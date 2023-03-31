@@ -36,11 +36,13 @@ export const MailchimpConfigView = () => {
     );
   }
 
-  if (error) {
+  if (error || !mailchimpConfigured.configured) {
     return (
       <div>
         {header}
-        <Text>{error.message}</Text>
+        <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
+          <ConnectionStatus status="error" __flex="0 1 50%" />
+        </Box>
       </div>
     );
   }
@@ -51,7 +53,7 @@ export const MailchimpConfigView = () => {
         {header}
         <Instructions marginBottom={12} />
         <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
-          <ConnectionStatus __flex="0 1 50%" />
+          <ConnectionStatus status="ok" __flex="0 1 50%" />
           <MailchimpLists __flex="0 1 50%" />
         </Box>
 

@@ -41,8 +41,6 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
 
   const [localState, setLocalState] = useState<LocalState>(null);
 
-  console.log(localState);
-
   useEffect(() => {
     if (
       !(

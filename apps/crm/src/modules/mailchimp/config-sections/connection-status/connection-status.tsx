@@ -4,12 +4,17 @@ import { Section } from "../../../ui/section/section";
 /**
  * TODO Add other statuses
  */
-export const ConnectionStatus = (props: PropsWithBox<{}>) => (
+export const ConnectionStatus = (props: PropsWithBox<{ status: "error" | "ok" }>) => (
   <Section {...props}>
     {/* @ts-ignore todo macaw*/}
     <Text variant="title" size="small" as="p" marginBottom={4}>
       Connection status
     </Text>
-    <Text color="textBrandDefault">All good</Text>
+    {props.status === "ok" && <Text color="textBrandDefault">All good</Text>}
+    {props.status === "error" && (
+      <Text color="textCriticalDefault">
+        Error connecting to Mailchimp. Please refresh the page or reinstall the app.
+      </Text>
+    )}
   </Section>
 );

@@ -31,7 +31,6 @@ export class MailchimpClientOAuth {
       // TODO - add mapping on frontend?
       status: "transactional",
       email_address: email,
-      // todo add metadata tags (eg key: mailchimp_tags: tag1,tag2)
       tags: ["Saleor Import", ...(meta.extraTags ?? [])],
       merge_fields: {
         FNAME: meta.firstName,
@@ -41,7 +40,7 @@ export class MailchimpClientOAuth {
     });
   }
 
-  // todo add names, tags
+  // TODO - map address
   async batchAddContacts(
     listID: string,
     contacts: Array<{ email: string; lastName?: string; firstName?: string; tags?: string[] }>
@@ -61,7 +60,6 @@ export class MailchimpClientOAuth {
           FNAME: c.firstName,
           LNAME: c.lastName,
         },
-        // todo add metadata tags
         tags: ["Saleor Import", ...(c.tags ?? [])],
       })),
     });
