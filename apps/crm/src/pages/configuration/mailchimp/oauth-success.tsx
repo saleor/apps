@@ -12,7 +12,7 @@ const MailchimpOauthSuccessPage: NextPage = () => {
     if (token) {
       const payload = { type: "mailchimp_token", token, dc };
 
-      window.parent.postMessage(JSON.stringify(payload), window.location.origin);
+      window.parent.postMessage(payload, window.location.origin);
     }
   }, [token, dc]);
 

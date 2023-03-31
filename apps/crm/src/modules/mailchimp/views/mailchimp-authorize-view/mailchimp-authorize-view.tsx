@@ -16,14 +16,13 @@ export const MailchimpAuthorizeView = (props: { onSuccess(): void }) => {
       }
 
       try {
-        const payload = JSON.parse(message.data) as {
+        const payload = message.data as {
           token: string;
           type: "mailchimp_token";
           dc: string;
         };
 
         if (payload.type !== "mailchimp_token") {
-          logger.debug("Message payload dont match mailchimp_token, exit");
           return;
         }
 

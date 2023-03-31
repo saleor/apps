@@ -1,12 +1,7 @@
-import { HTMLAttributes } from "react";
 import MailchimpLogo from "../../../assets/mailchimp.svg";
-import { Button } from "@saleor/macaw-ui/next";
+import { Button, ButtonProps } from "@saleor/macaw-ui/next";
 
-export const LoginWithMailchimpButton = ({
-  className,
-  children,
-  ...props
-}: HTMLAttributes<HTMLButtonElement>) => {
+export const LoginWithMailchimpButton = ({ children, ...props }: ButtonProps) => {
   return (
     <Button
       variant="secondary"

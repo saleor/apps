@@ -69,7 +69,11 @@ class MailchimpConfigSettingsManagerV1 {
 
     this.logger.debug({ rawMetadata }, "Received raw metadata");
 
-    if (!rawMetadata) {
+    /**
+     * Check for "undefined" string because after config is deleted, its actually set to "undefined" instead removing
+     * TODO remove config instead setting it to "undefined"
+     */
+    if (!rawMetadata || rawMetadata === "undefined") {
       this.logger.debug("Raw metadata is nullable");
 
       return null;

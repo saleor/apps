@@ -12,6 +12,7 @@ import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { NextPage } from "next";
 import GraphQLProvider from "../lib/graphql-provider";
+import { AppBridgeStorageSetter } from "../lib/app-bridge-persistence";
 
 /**
  * Ensure instance is a singleton.
@@ -42,6 +43,7 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWi
         <GraphQLProvider>
           <ThemeProvider defaultTheme="defaultLight">
             <RoutePropagator />
+            <AppBridgeStorageSetter />
             <Box padding={8}>
               <Component {...pageProps} />
             </Box>
