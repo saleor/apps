@@ -9,5 +9,5 @@ export interface ProviderWebhookService {
     payload: TaxBaseFragment,
     channel: ChannelConfig
   ) => Promise<CalculateTaxesResponse>;
-  createOrder: (payload: TaxBaseFragment, channel: ChannelConfig) => Promise<any>;
+  createOrder: (payload: TaxBaseFragment, channel: ChannelConfig) => Promise<{ ok: boolean }>;
 }

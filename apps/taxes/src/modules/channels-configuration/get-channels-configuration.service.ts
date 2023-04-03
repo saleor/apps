@@ -24,7 +24,6 @@ export class GetChannelsConfigurationService {
       saleorApiUrl
     );
 
-    // todo: validate config
     const appChannelsConfig = (await taxConfigurator.getConfig()) ?? null;
 
     logger.debug(appChannelsConfig, "Retrieved channels config from Metadata");

@@ -38,10 +38,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.logger.debug({ payload, channel }, "createOrder called with:");
     const model = avataxTransform.prepareSalesInvoice(payload, channel, this.config);
     const result = await this.client.createTransaction(model);
-    this.logger.debug(
-      { createOrderTransaction: result },
-      "AvataxClient createTransaction response"
-    );
-    return avataxTransform.prepareCalculateTaxesResponse(result);
+    this.logger.debug({ createOrderTransaction: result }, "createTransaction response");
+    return { ok: true };
   }
 }

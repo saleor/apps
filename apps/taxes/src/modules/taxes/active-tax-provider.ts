@@ -8,17 +8,19 @@ import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
 
-export class ActiveTaxProvider implements ProviderWebhookService {
+export class ActiveTaxProvider {
   private client: ProviderWebhookService;
   private logger: pino.Logger;
+  private channel: ChannelConfig;
 
-  constructor(providerInstance: ProviderConfig) {
+  constructor(providerInstance: ProviderConfig, channelConfig: ChannelConfig) {
     this.logger = createLogger({
       service: "ActiveTaxProvider",
     });
 
     const taxProviderName = providerInstance.provider;
     this.logger.trace({ taxProviderName }, "Constructing tax provider: ");
+    this.channel = channelConfig;
 
     switch (taxProviderName) {
       case "taxjar":
@@ -37,15 +39,15 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     }
   }
 
-  async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
-    this.logger.debug({ payload, channel }, ".calculate called");
+  async calculateTaxes(payload: TaxBaseFragment) {
+    this.logger.debug({ payload }, ".calculate called");
 
-    return this.client.calculateTaxes(payload, channel);
+    return this.client.calculateTaxes(payload, this.channel);
   }
 
-  async createOrder(payload: TaxBaseFragment, channel: ChannelConfig) {
+  async createOrder(payload: TaxBaseFragment) {
     this.logger.debug(".createOrder called");
 
-    return this.client.createOrder(payload, channel);
+    return this.client.createOrder(payload, this.channel);
   }
 }

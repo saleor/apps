@@ -2,9 +2,9 @@ import { decrypt } from "@saleor/app-sdk/settings-manager";
 import { ExpectedWebhookPayload } from "../../lib/saleor/schema";
 import { ChannelsConfig, channelsSchema } from "../channels-configuration/channels-config";
 import { ProvidersConfig, providersSchema } from "../providers-configuration/providers-config";
+import { MetadataItem } from "../../../generated/graphql";
 
-export const getAppConfig = (payload: ExpectedWebhookPayload) => {
-  const metadata = payload.recipient?.privateMetadata;
+export const getAppConfig = (metadata: MetadataItem[]) => {
   let providersConfig = [] as ProvidersConfig;
   let channelsConfig = {} as ChannelsConfig;
 
