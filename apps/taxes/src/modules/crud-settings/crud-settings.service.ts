@@ -7,7 +7,7 @@ import { createId } from "../../lib/utils";
 const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
-export class CrudSettingsConfigurator {
+export class CrudSettingsManager {
   private logger: pino.Logger;
 
   constructor(
@@ -16,7 +16,7 @@ export class CrudSettingsConfigurator {
     private metadataKey: string
   ) {
     this.metadataKey = metadataKey;
-    this.logger = createLogger({ service: "CrudSettingsConfigurator", metadataKey });
+    this.logger = createLogger({ service: "CrudSettingsManager", metadataKey });
   }
 
   async readAll() {
