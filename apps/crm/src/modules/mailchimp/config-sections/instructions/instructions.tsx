@@ -1,8 +1,9 @@
 import { Section } from "../../../ui/section/section";
 import React from "react";
-import { List, Text, TextProps, PropsWithBox, Box, Button, Chip } from "@saleor/macaw-ui/next";
+import { Box, Button, Chip, PropsWithBox, Text, TextProps } from "@saleor/macaw-ui/next";
 import { useLocalStorage } from "usehooks-ts";
 import { TextLink } from "../../../ui/text-link/text-link";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const Paragraph = (props: TextProps) => <Text marginBottom={5} as="p" {...props} />;
 
@@ -10,11 +11,16 @@ const Heading = (props: TextProps) => (
   <Text as="h2" variant="heading" marginBottom={4} marginTop={12} {...props} />
 );
 
+const getGraphiqlExampleQueryPlaygroundUrl = (apiUrl = "https://demo.saleor.io/graphql/") =>
+  `https://graphiql.cloud/?endpoint=${apiUrl}#gql/N4IgjiBcILYK4BcCGCCWB7AdgAgMoFMEBZJVAGwGMALVGABwBUkBzACgBIK4BnBdGfACcAkgBFI2MQEIAlNmAAdHNjh0AJinwAFQagBumooSQbkrJdkvZUaiZx58BI0RaupMdRBOABrfAE8JBVhSShp6AH1kZm5ggBpsAzI4fCCQAG0FLJAmZmwARiz47CKclmwAJlKAXWCAX1c5RWVLIUF0QW55VytsAW5uFnwe7AblMbqQOJB0KBACYlDqWkYWEDqgA`;
+
 export const Instructions = (props: PropsWithBox<{}>) => {
   const [instructionsVisible, setInstructionsVisible] = useLocalStorage(
     "instructions-visible",
     true
   );
+
+  const { appBridgeState } = useAppBridge();
 
   return (
     <Section {...props}>
@@ -86,7 +92,7 @@ export const Instructions = (props: PropsWithBox<{}>) => {
         </Paragraph>
         <Paragraph>
           Check{" "}
-          <TextLink href="https://demo.saleor.io/graphql/#saleor/N4IgjiBcILYK4BcCGCCWB7AdgAgMoFMEBZJVAGwGMALVGABwBUkBzACgBIK4BnBdGfACcAkgBFI2MQEIAlNmAAdHNjh0AJinwAFQagBumooSQbkrJdkvZUaiZx58BI0RaupMdRBOABrfAE8JBVhSShp6AH1kZm5ggBpsAzI4fCCQAG0FLJAmZmwARiz47CKclmwAJlKAXWCAX1c5RWVLIUF0QW55VytsAW5uFnwe7AblMbqQOJB0KBACYlDqWkYWEDqgA">
+          <TextLink href={getGraphiqlExampleQueryPlaygroundUrl(appBridgeState?.saleorApiUrl)}>
             example query
           </TextLink>
         </Paragraph>

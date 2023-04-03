@@ -2,7 +2,6 @@ import { MailchimpAuthFrame } from "../../auth/mailchimp-auth-frame/mailchimp-au
 import React, { useEffect } from "react";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { createLogger } from "../../../../lib/logger";
-import { Box } from "@saleor/macaw-ui/next";
 
 const logger = createLogger({});
 

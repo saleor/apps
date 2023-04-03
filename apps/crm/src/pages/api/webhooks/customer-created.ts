@@ -2,8 +2,8 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { saleorApp } from "../../../saleor-app";
 import { logger as pinoLogger } from "../../../lib/logger";
 import {
-  CustomerCreatedPayloadFragment,
   CustomerCreatedDocument,
+  CustomerCreatedPayloadFragment,
 } from "../../../../generated/graphql";
 import { createClient } from "../../../lib/create-graphq-client";
 import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";

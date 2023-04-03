@@ -1,6 +1,6 @@
 import {
-  MetadataEntry,
   EncryptedMetadataManager,
+  MetadataEntry,
   SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";

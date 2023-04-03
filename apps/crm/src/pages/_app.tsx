@@ -3,7 +3,7 @@ import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement } from "react";
 import { AppProps } from "next/app";
 
 import { NoSSRWrapper } from "@saleor/apps-shared";

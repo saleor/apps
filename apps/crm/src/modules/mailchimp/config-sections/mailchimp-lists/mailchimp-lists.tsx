@@ -1,4 +1,4 @@
-import { Box, List, PropsWithBox, Text, Chip } from "@saleor/macaw-ui/next";
+import { Box, Chip, List, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { Section } from "../../../ui/section/section";
 

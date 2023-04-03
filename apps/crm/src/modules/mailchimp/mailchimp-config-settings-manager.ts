@@ -1,6 +1,6 @@
 import { Client } from "urql";
 import { createSettingsManager } from "../../lib/metadata-manager";
-import { EncryptedMetadataManager, SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 

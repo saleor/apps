@@ -1,17 +1,18 @@
-import { Box, Text, Button, WarningIcon } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { ComponentProps } from "react";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { DangerSection } from "../../../ui/danger-section/danger-section";
 import { TextLink } from "../../../ui/text-link/text-link";
 
 export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
-  const { mutateAsync } = trpcClient.mailchimp.config.removeToken.useMutation();
+  const { mutateAsync, isLoading, isSuccess } =
+    trpcClient.mailchimp.config.removeToken.useMutation();
   const { refetch, data } = trpcClient.mailchimp.config.getMailchimpConfigured.useQuery();
 
   if (!data || !data.configured) {
     return null;
   }
+
   return (
     <DangerSection>
       <Text color="textCriticalDefault" variant="title" size="small">
@@ -33,8 +34,9 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
           variant="secondary"
           borderColor="criticalDefault"
           color="textCriticalDefault"
+          disabled={isLoading ?? isSuccess}
         >
-          Disconnect Mailchimp
+          {isLoading ?? isSuccess ? "Disconnecting..." : "Disconnect Mailchimp"}
         </Button>
       </Box>
     </DangerSection>
