@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => {
       justifyContent: "flex-end",
       padding: theme.spacing(2, 4),
     },
+    form: {
+      border: `1px solid hsla(212, 44%, 13%, 0.08)`,
+      borderRadius: 8,
+    },
   };
 });
 
@@ -87,7 +91,7 @@ export const ChannelConfigurationForm = ({
   const errors = formState.errors;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       {!!Object.entries(errors).length && (
         <Typography variant="body1" color="error">
           Error validating form

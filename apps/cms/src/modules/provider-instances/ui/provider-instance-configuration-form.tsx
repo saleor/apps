@@ -68,7 +68,6 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
     });
 
     if (providerInstance && providerInstance.providerName === provider.name) {
-      console.log(providerInstance);
       reset(providerInstance as ProvidersSchema[TProvider]);
     }
   }, [provider, providerInstance]);

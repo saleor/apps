@@ -1,9 +1,9 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
+import { isInIframe } from "@saleor/apps-shared";
 
 /**
  * This is page publicly accessible from your app.
@@ -16,9 +16,13 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     if (isMounted() && appBridgeState?.ready) {
-      replace("/providers");
+      replace("/home");
     }
-  }, [isMounted, appBridgeState?.ready]);
+  }, [isMounted, appBridgeState?.ready, replace]);
+
+  if (isInIframe()) {
+    return null;
+  }
 
   return (
     <div>

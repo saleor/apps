@@ -10,13 +10,7 @@ code {
   border: 1px solid #eaeaea;
   border-radius: 5px;
   display: inline-block;
-  margin-top: 10px;
-  padding: 0.75rem;
+  padding: 0.2em 0.5em;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-code::before {
-  content: "$ ";
-  opacity: 0.6;
 }

@@ -55,6 +55,8 @@ export const useProviderInstancesFetch = () => {
   };
 
   const saveProviderInstance = async (instance: SingleProviderSchema) => {
+    console.log(instance);
+
     try {
       setIsSaving(true);
       const response = await fetch("/api/provider-instances", {

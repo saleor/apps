@@ -13,8 +13,6 @@ export const useProviderInstances = () => {
   } = useProviderInstancesFetch();
 
   const saveProviderInstance = async (providerInstanceToSave: SingleProviderSchema) => {
-    console.log("saveProviderInstance", providerInstanceToSave);
-
     return await saveProviderInstanceFetch(providerInstanceToSave);
   };
 
