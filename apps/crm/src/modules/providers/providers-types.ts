@@ -1,5 +1,5 @@
 export const ProvidersTypes = {
-  Mailchimp: "Mailchimp",
+  mailchimp: "mailchimp",
 } as const;
 
 export type ProviderType = keyof typeof ProvidersTypes;

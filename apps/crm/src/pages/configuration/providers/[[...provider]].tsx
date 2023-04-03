@@ -12,7 +12,7 @@ import {
 import { MailchimpConfigView } from "../../../modules/mailchimp/views/mailchimp-config-view/mailchimp-config-view";
 
 const views = {
-  Mailchimp: MailchimpConfigView,
+  mailchimp: MailchimpConfigView,
 } satisfies Record<ProviderType, React.ComponentType>;
 
 const ProvidersPage: NextPage = () => {
@@ -21,7 +21,7 @@ const ProvidersPage: NextPage = () => {
 
   useEffect(() => {
     if (!isValidProviderType(selectedProviderQuery)) {
-      router.push(`/configuration/providers/${ProvidersTypes.Mailchimp}`);
+      router.push(`/configuration/providers/${ProvidersTypes.mailchimp}`);
     }
     // todo show 404?
   }, [selectedProviderQuery, router]);
@@ -38,7 +38,7 @@ const ProvidersPage: NextPage = () => {
           onProviderClick={(provider) => {
             router.push(`/configuration/providers/${provider}`);
           }}
-          activeProvider="Mailchimp"
+          activeProvider="mailchimp"
         />
         <ProviderView />
       </AppColumnsLayout>

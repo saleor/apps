@@ -4,9 +4,9 @@ import { List, Text, TextProps, PropsWithBox, Box, Button, Chip } from "@saleor/
 import { useLocalStorage } from "usehooks-ts";
 import { TextLink } from "../../../ui/text-link/text-link";
 
-const P = (props: TextProps) => <Text marginBottom={5} as="p" {...props} />;
+const Paragraph = (props: TextProps) => <Text marginBottom={5} as="p" {...props} />;
 
-const H = (props: TextProps) => (
+const Heading = (props: TextProps) => (
   <Text as="h2" variant="heading" marginBottom={4} marginTop={12} {...props} />
 );
 
@@ -41,13 +41,15 @@ export const Instructions = (props: PropsWithBox<{}>) => {
         </Button>
       </Box>
       <Box hidden={!instructionsVisible}>
-        <P>Follow these guidelines to learn how to use the app. Useful resources:</P>
-        <P>
+        <Paragraph>
+          Follow these guidelines to learn how to use the app. Useful resources:
+        </Paragraph>
+        <Paragraph>
           <TextLink href="https://docs.saleor.io/docs/3.x/category/overview" size="small">
             - Saleor Docs
           </TextLink>
-        </P>
-        <P>
+        </Paragraph>
+        <Paragraph>
           <TextLink
             /* TODO link to actual readme in docs*/
             href="https://github.com/saleor/apps"
@@ -55,15 +57,15 @@ export const Instructions = (props: PropsWithBox<{}>) => {
           >
             - App Docs
           </TextLink>
-        </P>
-        <P>
+        </Paragraph>
+        <Paragraph>
           <TextLink href="https://github.com/saleor/apps/discussions" size="small">
             - Support
           </TextLink>
-        </P>
+        </Paragraph>
 
-        <H>Segment Tags</H>
-        <P>
+        <Heading>Segment Tags</Heading>
+        <Paragraph>
           Customer will be added to contacts list with{" "}
           <Box as="span" __display="inline-block">
             <Chip as="span">Saleor Import</Chip>
@@ -73,21 +75,21 @@ export const Instructions = (props: PropsWithBox<{}>) => {
             Private Metadata
           </TextLink>{" "}
           for the customer.
-        </P>
-        <P>
+        </Paragraph>
+        <Paragraph>
           Add{" "}
           <Text variant="bodyEmp">
             <code>mailchimp_tags</code> Private Metadata key with tags as a stringified array.
             <br />
             For example <code>mailchimp_tags: [&quot;Tag1&quot;, &quot;Tag2&quot;]</code>
           </Text>
-        </P>
-        <P>
+        </Paragraph>
+        <Paragraph>
           Check{" "}
           <TextLink href="https://demo.saleor.io/graphql/#saleor/N4IgjiBcILYK4BcCGCCWB7AdgAgMoFMEBZJVAGwGMALVGABwBUkBzACgBIK4BnBdGfACcAkgBFI2MQEIAlNmAAdHNjh0AJinwAFQagBumooSQbkrJdkvZUaiZx58BI0RaupMdRBOABrfAE8JBVhSShp6AH1kZm5ggBpsAzI4fCCQAG0FLJAmZmwARiz47CKclmwAJlKAXWCAX1c5RWVLIUF0QW55VytsAW5uFnwe7AblMbqQOJB0KBACYlDqWkYWEDqgA">
             example query
           </TextLink>
-        </P>
+        </Paragraph>
       </Box>
     </Section>
   );

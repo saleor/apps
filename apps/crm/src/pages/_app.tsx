@@ -24,6 +24,13 @@ if (typeof window !== "undefined" && !appBridgeInstance) {
   appBridgeInstance = new AppBridge();
 }
 
+/**
+ * Implementation of layout pattern
+ * https://nextjs.org/docs/basic-features/layouts#per-page-layouts
+ *
+ * In this app, there are pages inside the iframe, which will not use AppBridge etc, so they need
+ * to provider custom tree of wrappers
+ */
 export type NextPageWithLayoutOverwrite<P = {}, IP = P> = NextPage<P, IP> & {
   overwriteLayout?: (page: ReactElement) => ReactElement;
 };

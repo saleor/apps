@@ -6,7 +6,7 @@ export const ConnectionStatus = (props: PropsWithBox<{ status: "error" | "ok" }>
     <Text variant="title" size="small" as="p" marginBottom={4}>
       Connection status
     </Text>
-    {props.status === "ok" && <Text color="textBrandDefault">All good</Text>}
+    {props.status === "ok" && <Text color="textBrandDefault">Connected</Text>}
     {props.status === "error" && (
       <Text color="textCriticalDefault">
         Error connecting to Mailchimp. Please refresh the page or reinstall the app.

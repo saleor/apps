@@ -10,7 +10,7 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     if (appBridgeState?.ready) {
-      replace("/configuration/providers/Mailchimp");
+      replace("/configuration/providers/mailchimp");
     }
   }, [appBridgeState, appBridge]);
 

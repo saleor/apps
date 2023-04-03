@@ -4,4 +4,4 @@
   <h1>Saleor App CRM</h1>
 </div>
 
-WIP
+TODO - link docs page

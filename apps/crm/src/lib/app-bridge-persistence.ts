@@ -1,5 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export type AppBridgeStorageState = {
   token: string;
@@ -46,4 +46,10 @@ export const AppBridgeStorageSetter = () => {
   }, [appBridgeState?.saleorApiUrl, appBridgeState?.token]);
 
   return null;
+};
+
+export const useAppBridgePersistence = () => {
+  const value = useRef(AppBridgePersistence.get());
+
+  return value.current;
 };

@@ -5,7 +5,7 @@ import RudderstackLogo from "../../../assets/rudderstack.png";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
 import styles from "./providers-list.module.css";
-import { Text, Box, MarketplaceIcon } from "@saleor/macaw-ui/next";
+import { Text, Box, MarketplaceIcon, Avatar } from "@saleor/macaw-ui/next";
 import { TextLink } from "../../ui/text-link/text-link";
 
 type Props = {
@@ -18,14 +18,14 @@ export const ProvidersList = ({ className, onProviderClick, activeProvider, ...p
     <ul className={clsx(className, styles.list)}>
       <li
         className={clsx(styles.item, {
-          [styles.activeItem]: activeProvider === "Mailchimp",
+          [styles.activeItem]: activeProvider === "mailchimp",
         })}
         onClick={() => {
-          onProviderClick("Mailchimp");
+          onProviderClick("mailchimp");
         }}
       >
         <img alt="Mailchimp logo" className={styles.logo} src={MailchimpLogo.src} />
-        <Text>{ProvidersTypes.Mailchimp}</Text>
+        <Text>Mailchimp</Text>
       </li>
       <li className={clsx(styles.item, styles.disabled)}>
         <img alt="Segment.io Logo" className={styles.logo} src={SegmentLogo.src} />
