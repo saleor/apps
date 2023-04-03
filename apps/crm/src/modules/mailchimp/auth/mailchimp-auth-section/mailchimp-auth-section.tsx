@@ -16,7 +16,7 @@ export const MailchimpAuthSection = () => {
       <Text as="p" marginBottom={8}>
         You need to connect Mailchimp with Saleor CRM App. Click button below and authorize the App.
       </Text>
-      <form method="POST" action="/api/auth/mailchimp">
+      <form method="POST" action="/api/auth/mailchimp/oauth">
         <input hidden readOnly name="token" value={appBridgeContext.token} />
         <input hidden readOnly name="saleorApiUrl" value={appBridgeContext.saleorApiUrl} />
         <LoginWithMailchimpButton type="submit" />

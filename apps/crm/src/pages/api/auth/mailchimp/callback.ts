@@ -1,6 +1,6 @@
 import { NextApiHandler } from "next";
-import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
-import { createLogger } from "../../../lib/logger";
+import { MailchimpClientOAuth } from "../../../../modules/mailchimp/mailchimp-client";
+import { createLogger } from "../../../../lib/logger";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;
@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const code = req.query.code as string;
 
-  logger.debug({ baseUrl, code }, "auth/callback called");
+  logger.debug({ baseUrl, code }, "auth/mailchimp/callback called");
 
   const tokenResponse = await fetch("https://login.mailchimp.com/oauth2/token", {
     method: "POST",
@@ -22,7 +22,7 @@ const handler: NextApiHandler = async (req, res) => {
       grant_type: "authorization_code",
       client_id: process.env.MAILCHIMP_CLIENT_ID as string,
       client_secret: process.env.MAILCHIMP_CLIENT_SECRET as string,
-      redirect_uri: `${baseUrl}/api/auth/callback`,
+      redirect_uri: `${baseUrl}/api/auth/mailchimp/callback`,
       code,
     }),
   });

@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
-import { createLogger } from "../../../lib/logger";
+import { createLogger } from "../../../../lib/logger";
 import { processSaleorProtectedHandler } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "../../../../saleor-app";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
@@ -38,7 +38,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(401).send("Failed request validation");
   });
 
-  const redirectUri = `${getBaseUrl(req.headers)}/api/auth/callback`;
+  const redirectUri = `${getBaseUrl(req.headers)}/api/auth/mailchimp/callback`;
   logger.debug({ redirectUri }, "Resolved redirect uri");
 
   const qs = new URLSearchParams({
