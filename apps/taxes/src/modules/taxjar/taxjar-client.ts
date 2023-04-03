@@ -26,7 +26,7 @@ export class TaxJarClient {
     this.client = taxJarClient;
   }
 
-  async fetchTaxesForOrder(params: TaxParams) {
+  async fetchTaxForOrder(params: TaxParams) {
     this.logger.debug({ params }, "fetchTaxesForOrder called with:");
     const response: TaxForOrderRes = await this.client.taxForOrder(params);
     return response;

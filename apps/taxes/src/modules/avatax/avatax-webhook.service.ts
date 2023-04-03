@@ -26,8 +26,12 @@ export class AvataxWebhookService implements ProviderWebhookService {
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "Avatax calculate called with:");
     const model = avataxCalculate.preparePayload(payload, channel, this.config);
-    const result = await this.client.fetchTaxesForOrder(model);
+    const result = await this.client.createTransaction(model);
     this.logger.debug({ createOrderTransaction: result }, "Avatax createOrderTransaction response");
     return avataxCalculate.prepareResponse(result);
+  }
+
+  async createOrder() {
+    throw new Error("Method not implemented.");
   }
 }

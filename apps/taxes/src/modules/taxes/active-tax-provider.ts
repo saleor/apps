@@ -42,4 +42,10 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
     return this.client.calculateTaxes(payload, channel);
   }
+
+  async createOrder() {
+    this.logger.debug(".createOrder called");
+
+    return this.client.createOrder();
+  }
 }

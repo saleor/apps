@@ -53,7 +53,7 @@ export class AvataxClient {
     this.client = avataxClient;
   }
 
-  async fetchTaxesForOrder(model: CreateTransactionModel) {
+  async createTransaction(model: CreateTransactionModel) {
     this.logger.debug({ model }, "fetchTaxesForOrder called with:");
 
     return this.client.createTransaction({ model });

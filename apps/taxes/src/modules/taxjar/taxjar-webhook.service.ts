@@ -28,7 +28,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     );
     const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
     const taxParams = taxJarCalculate.preparePayload(payload, channel, linesWithDiscount);
-    const fetchedTaxes = await this.client.fetchTaxesForOrder(taxParams);
+    const fetchedTaxes = await this.client.fetchTaxForOrder(taxParams);
     this.logger.debug({ fetchedTaxes }, "TaxJar createOrderTransaction response");
 
     return taxJarCalculate.prepareResponse(
@@ -37,5 +37,9 @@ export class TaxJarWebhookService implements ProviderWebhookService {
       linesWithChargeTaxes,
       linesWithDiscount
     );
+  }
+
+  async createOrder() {
+    throw new Error("Method not implemented.");
   }
 }
