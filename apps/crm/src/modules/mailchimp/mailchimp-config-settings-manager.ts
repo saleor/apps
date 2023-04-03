@@ -1,6 +1,6 @@
 import { Client } from "urql";
 import { createSettingsManager } from "../../lib/metadata-manager";
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { EncryptedMetadataManager, SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 
@@ -32,16 +32,23 @@ const MetadataSchemaV1 = z.object({
  * todo save domain?
  * todo add test
  */
-class MailchimpConfigSettingsManagerV1 {
-  private settingsManager: EncryptedMetadataManager;
+export class MailchimpConfigSettingsManagerV1 {
+  private settingsManager: SettingsManager;
   private readonly metadataKey = "mailchimp_config_v1";
   private logger = createLogger({
     context: "MailchimpConfigSettingsManagerV1",
   });
 
-  constructor(private apiClient: Client) {
-    this.settingsManager = createSettingsManager(apiClient);
+  constructor(
+    private apiClient: Pick<Client, "query" | "mutation">,
+    metadataManagerFactory = createSettingsManager
+  ) {
+    this.settingsManager = metadataManagerFactory(apiClient);
   }
+
+  private parseEmptyResponse = (value?: string) => {
+    return value === "undefined" ? undefined : value;
+  };
 
   setConfig(config: z.infer<typeof ConfigV1>) {
     const configSchema = MetadataSchemaV1.parse({
@@ -65,7 +72,9 @@ class MailchimpConfigSettingsManagerV1 {
 
   async getConfig(): Promise<z.infer<typeof ConfigV1> | null> {
     this.logger.debug(`Will fetched metadata key: ${this.metadataKey}`);
-    const rawMetadata = await this.settingsManager.get(this.metadataKey);
+    const rawMetadata = await this.settingsManager
+      .get(this.metadataKey)
+      .then(this.parseEmptyResponse);
 
     this.logger.debug({ rawMetadata }, "Received raw metadata");
 
@@ -73,7 +82,7 @@ class MailchimpConfigSettingsManagerV1 {
      * Check for "undefined" string because after config is deleted, its actually set to "undefined" instead removing
      * TODO remove config instead setting it to "undefined"
      */
-    if (!rawMetadata || rawMetadata === "undefined") {
+    if (!rawMetadata) {
       this.logger.debug("Raw metadata is nullable");
 
       return null;

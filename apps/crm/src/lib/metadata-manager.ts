@@ -1,4 +1,8 @@
-import { MetadataEntry, EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import {
+  MetadataEntry,
+  EncryptedMetadataManager,
+  SettingsManager,
+} from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";
 import {
   FetchAppDetailsDocument,
@@ -31,7 +35,7 @@ gql`
   }
 `;
 
-export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
+export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
@@ -43,7 +47,10 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
+export async function mutateMetadata(
+  client: Pick<Client, "query" | "mutation">,
+  metadata: MetadataEntry[]
+) {
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client
     .query(FetchAppDetailsDocument, {})
@@ -80,7 +87,9 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
-export const createSettingsManager = (client: Client) => {
+export const createSettingsManager = (
+  client: Pick<Client, "query" | "mutation">
+): SettingsManager => {
   // EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
   // We recommend it for production, because all values are encrypted.
   // If your use case require plain text values, you can use MetadataManager.
