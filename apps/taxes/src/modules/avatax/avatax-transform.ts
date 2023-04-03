@@ -7,7 +7,7 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
 import { AvataxConfig } from "./avatax-config";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { ResponseTaxPayload } from "../taxes/tax-provider-webhook";
+import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -93,7 +93,7 @@ const prepareSalesInvoice = (
   };
 };
 
-const prepareCalculateTaxesResponse = (transaction: TransactionModel): ResponseTaxPayload => {
+const prepareCalculateTaxesResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
 
   const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);

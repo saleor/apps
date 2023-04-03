@@ -7,7 +7,7 @@ import {
 } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
-import { ResponseTaxPayload } from "../taxes/tax-provider-webhook";
+import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
@@ -59,7 +59,7 @@ const prepareCalculateTaxesResponse = (
   response: TaxForOrderRes,
   linesWithChargeTaxes: FetchTaxesLinePayload[],
   linesWithDiscount: FetchTaxesLinePayload[]
-): ResponseTaxPayload => {
+): CalculateTaxesResponse => {
   const taxResponse = linesWithChargeTaxes.length !== 0 ? response : undefined;
   const taxDetails = taxResponse?.tax.breakdown;
   // todo: investigate
