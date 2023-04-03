@@ -1,5 +1,5 @@
 import pino from "pino";
-import { TaxBaseFragment } from "../../../generated/graphql";
+import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
@@ -39,8 +39,8 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     );
   }
 
-  async createOrder(payload: TaxBaseFragment, channel: ChannelConfig) {
-    const params = taxJarTransform.prepareCreateOrderParams(payload, channel);
+  async createOrder(order: OrderSubscriptionFragment, channel: ChannelConfig) {
+    const params = taxJarTransform.prepareCreateOrderParams(order, channel);
     const result = await this.client.createOrder(params);
 
     this.logger.debug({ createOrder: result }, "createOrder response");

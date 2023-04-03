@@ -4,8 +4,13 @@ import { getAppConfig } from "../app-configuration/get-app-config";
 import { ActiveTaxProvider } from "./active-tax-provider";
 
 export class ActiveTaxProviderService {
-  async get(channelSlug: string, metadata: MetadataItem[]) {
+  async get(channelSlug: string | undefined, metadata: MetadataItem[]) {
     const logger = createLogger({ service: "getActiveTaxProvider" });
+
+    if (!channelSlug) {
+      logger.error("Channel slug is missing");
+      throw new Error("Channel slug is missing");
+    }
 
     const { providers, channels } = getAppConfig(metadata);
 

@@ -1,7 +1,7 @@
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { TaxBaseFragment } from "../../../generated/graphql";
+import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
 
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
@@ -78,18 +78,65 @@ const prepareSalesOrder = (
 ): CreateTransactionModel => {
   return {
     type: DocumentType.SalesOrder,
-    ...createCommonTransactionModel(taxBase, channel, config),
+    customerCode: "0", // todo: replace with customer code
+    companyCode: config.companyName,
+    // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
+    commit: config.isAutocommit,
+    addresses: {
+      shipFrom: {
+        line1: channel.address.street,
+        city: channel.address.city,
+        region: channel.address.state,
+        postalCode: channel.address.zip,
+        country: channel.address.country,
+      },
+      shipTo: {
+        line1: taxBase.address?.streetAddress1,
+        line2: taxBase.address?.streetAddress2,
+        city: taxBase.address?.city,
+        country: taxBase.address?.country.code,
+        postalCode: taxBase.address?.postalCode,
+        region: taxBase.address?.countryArea,
+      },
+    },
+    lines: prepareLines(taxBase),
+    // todo: replace date with order/checkout date
+    date: new Date(),
   };
 };
 
 const prepareSalesInvoice = (
-  taxBase: TaxBaseFragment,
+  order: OrderSubscriptionFragment,
   channel: ChannelConfig,
   config: AvataxConfig
 ): CreateTransactionModel => {
   return {
     type: DocumentType.SalesInvoice,
-    ...createCommonTransactionModel(taxBase, channel, config),
+    customerCode: "0", // todo: replace with customer code
+    companyCode: config.companyName,
+    // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
+    commit: config.isAutocommit,
+    addresses: {
+      shipFrom: {
+        line1: channel.address.street,
+        city: channel.address.city,
+        region: channel.address.state,
+        postalCode: channel.address.zip,
+        country: channel.address.country,
+      },
+      // billing or shipping address?
+      shipTo: {
+        line1: order.billingAddress?.streetAddress1,
+        line2: order.billingAddress?.streetAddress2,
+        city: order.billingAddress?.city,
+        country: order.billingAddress?.country.code,
+        postalCode: order.billingAddress?.postalCode,
+        region: order.billingAddress?.countryArea,
+      },
+    },
+    lines: [],
+    // todo: replace date with order/checkout date
+    date: new Date(),
   };
 };
 

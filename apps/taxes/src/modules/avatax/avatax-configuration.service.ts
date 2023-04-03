@@ -10,11 +10,11 @@ import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "
 
 const getSchema = avataxInstanceConfigSchema;
 export class AvataxConfigurationService {
-  private CrudSettingsManager: CrudSettingsManager;
+  private crudSettingsManager: CrudSettingsManager;
   private logger: pino.Logger;
   constructor(client: Client, saleorApiUrl: string) {
     const settingsManager = createSettingsManager(client);
-    this.CrudSettingsManager = new CrudSettingsManager(
+    this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
       TAX_PROVIDER_KEY
@@ -27,7 +27,7 @@ export class AvataxConfigurationService {
 
   async getAll(): Promise<AvataxInstanceConfig[]> {
     this.logger.debug(".getAll called");
-    const { data } = await this.CrudSettingsManager.readAll();
+    const { data } = await this.crudSettingsManager.readAll();
     const validation = providersSchema.safeParse(data);
 
     if (!validation.success) {
@@ -44,7 +44,7 @@ export class AvataxConfigurationService {
 
   async get(id: string): Promise<AvataxInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
-    const { data } = await this.CrudSettingsManager.read(id);
+    const { data } = await this.crudSettingsManager.read(id);
     this.logger.debug(`Fetched setting from CrudSettingsManager`);
 
     const validation = getSchema.safeParse(data);
@@ -67,7 +67,7 @@ export class AvataxConfigurationService {
       throw new Error(validation.error);
     }
 
-    const result = await this.CrudSettingsManager.create({
+    const result = await this.crudSettingsManager.create({
       provider: "avatax",
       config: config,
     });
@@ -81,7 +81,7 @@ export class AvataxConfigurationService {
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
 
-    return this.CrudSettingsManager.update(id, {
+    return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...setting.config, ...config },
     });
@@ -93,7 +93,7 @@ export class AvataxConfigurationService {
     const { id: _, ...setting } = data;
 
     this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
-    return this.CrudSettingsManager.update(id, {
+    return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...config },
     });
@@ -101,6 +101,6 @@ export class AvataxConfigurationService {
 
   async delete(id: string): Promise<void> {
     this.logger.debug(`.delete called with id: ${id}`);
-    return this.CrudSettingsManager.delete(id);
+    return this.crudSettingsManager.delete(id);
   }
 }

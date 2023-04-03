@@ -1,4 +1,4 @@
-import { TaxBaseFragment } from "../../../generated/graphql";
+import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderConfig } from "../providers-configuration/providers-config";
@@ -45,9 +45,9 @@ export class ActiveTaxProvider {
     return this.client.calculateTaxes(payload, this.channel);
   }
 
-  async createOrder(payload: TaxBaseFragment) {
+  async createOrder(order: OrderSubscriptionFragment) {
     this.logger.debug(".createOrder called");
 
-    return this.client.createOrder(payload, this.channel);
+    return this.client.createOrder(order, this.channel);
   }
 }

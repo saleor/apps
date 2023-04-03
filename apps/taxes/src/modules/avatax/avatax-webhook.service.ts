@@ -1,5 +1,5 @@
 import pino from "pino";
-import { TaxBaseFragment } from "../../../generated/graphql";
+import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
@@ -34,9 +34,9 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return avataxTransform.prepareCalculateTaxesResponse(result);
   }
 
-  async createOrder(payload: TaxBaseFragment, channel: ChannelConfig) {
-    this.logger.debug({ payload, channel }, "createOrder called with:");
-    const model = avataxTransform.prepareSalesInvoice(payload, channel, this.config);
+  async createOrder(order: OrderSubscriptionFragment, channel: ChannelConfig) {
+    this.logger.debug({ order, channel }, "createOrder called with:");
+    const model = avataxTransform.prepareSalesInvoice(order, channel, this.config);
     const result = await this.client.createTransaction(model);
     this.logger.debug({ createOrderTransaction: result }, "createTransaction response");
     return { ok: true };

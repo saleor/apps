@@ -52,6 +52,12 @@ fragment OrderCreatedEventSubscription on Event {
       ...OrderSubscription
     }
   }
+  recipient {
+    privateMetadata {
+      key
+      value
+    }
+  }
 }
 subscription OrderCreatedSubscription {
   event {

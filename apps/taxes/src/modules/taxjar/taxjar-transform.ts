@@ -1,6 +1,7 @@
 import { CreateOrderParams, TaxParams } from "taxjar/dist/types/paramTypes";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import {
+  OrderSubscriptionFragment,
   TaxBaseFragment,
   TaxBaseLineFragment,
   TaxDiscountFragment,
@@ -126,10 +127,28 @@ const preparePayload = (
 };
 
 const prepareCreateOrderParams = (
-  payload: TaxBaseFragment,
+  order: OrderSubscriptionFragment,
   channel: ChannelConfig
 ): CreateOrderParams => {
-  return {} as CreateOrderParams;
+  return {
+    from_country: channel.address.country,
+    from_zip: channel.address.zip,
+    from_state: channel.address.state,
+    from_city: channel.address.city,
+    from_street: channel.address.street,
+    to_country: order.shippingAddress!.country.code,
+    to_zip: order.shippingAddress!.postalCode,
+    to_state: order.shippingAddress!.countryArea,
+    to_city: order.shippingAddress!.city,
+    to_street: `${order.shippingAddress!.streetAddress1} ${order.shippingAddress!.streetAddress2}`,
+    shipping: order.shippingPrice.net.amount,
+    // todo: replace
+    line_items: [],
+    amount: 0,
+    sales_tax: 0,
+    transaction_date: "",
+    transaction_id: "",
+  };
 };
 
 export const taxJarTransform = {
