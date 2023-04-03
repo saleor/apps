@@ -5,9 +5,9 @@ import { TaxBaseFragment } from "../../../generated/graphql";
 
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
-import { ResponseTaxPayload } from "../taxes/types";
 import { AvataxConfig } from "./avatax-config";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { ResponseTaxPayload } from "../taxes/tax-provider-webhook";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 

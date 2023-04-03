@@ -7,7 +7,7 @@ import {
 } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
-import { ResponseTaxPayload } from "../taxes/types";
+import { ResponseTaxPayload } from "../taxes/tax-provider-webhook";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
