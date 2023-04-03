@@ -1,6 +1,6 @@
 import { ProvidersTypes, ProviderType } from "../providers-types";
 import MailchimpLogo from "../../../assets/mailchimp.svg";
-import SegmentLogo from "../../../assets/semgent.png";
+import SegmentLogo from "../../../assets/segment.png";
 import RudderstackLogo from "../../../assets/rudderstack.png";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
