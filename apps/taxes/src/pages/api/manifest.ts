@@ -4,6 +4,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import packageJson from "../../../package.json";
 import { checkoutCalculateTaxesSyncWebhook } from "./webhooks/checkout-calculate-taxes";
 import { orderCalculateTaxesSyncWebhook } from "./webhooks/order-calculate-taxes";
+import { orderCreatedAsyncWebhook } from "./webhooks/order-created";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -17,6 +18,7 @@ export default createManifestHandler({
       webhooks: [
         orderCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
         checkoutCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
+        orderCreatedAsyncWebhook.getWebhookManifest(context.appBaseUrl),
       ],
       extensions: [],
       homepageUrl: "https://github.com/saleor/apps",
