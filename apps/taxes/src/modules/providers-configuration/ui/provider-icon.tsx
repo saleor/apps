@@ -1,5 +1,5 @@
 import Image, { ImageProps } from "next/image";
-import { providerConfig, TaxProviderName } from "../../taxes/providers/config";
+import { providerConfig, TaxProviderName } from "../../taxes/provider-config";
 
 type Size = "small" | "medium" | "large" | "xlarge";
 

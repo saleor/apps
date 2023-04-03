@@ -1,4 +1,4 @@
-import { AvataxIcon, TaxJarIcon } from "../../../assets";
+import { AvataxIcon, TaxJarIcon } from "../../assets";
 
 export const providerConfig = {
   taxjar: {
