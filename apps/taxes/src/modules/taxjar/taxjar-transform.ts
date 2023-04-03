@@ -1,4 +1,4 @@
-import { TaxParams } from "taxjar/dist/types/paramTypes";
+import { CreateOrderParams, TaxParams } from "taxjar/dist/types/paramTypes";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import {
   TaxBaseFragment,
@@ -54,7 +54,7 @@ const prepareLinesWithDiscountPayload = (
   });
 };
 
-const prepareResponse = (
+const prepareCalculateTaxesResponse = (
   payload: TaxBaseFragment,
   response: TaxForOrderRes,
   linesWithChargeTaxes: FetchTaxesLinePayload[],
@@ -125,8 +125,16 @@ const preparePayload = (
   return taxParams;
 };
 
-export const taxJarCalculate = {
+const prepareCreateOrderParams = (
+  payload: TaxBaseFragment,
+  channel: ChannelConfig
+): CreateOrderParams => {
+  return {} as CreateOrderParams;
+};
+
+export const taxJarTransform = {
   prepareLinesWithDiscountPayload,
-  prepareResponse,
+  prepareCreateOrderParams,
+  prepareCalculateTaxesResponse,
   preparePayload,
 };

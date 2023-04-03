@@ -1,6 +1,6 @@
 import pino from "pino";
 import TaxJar from "taxjar";
-import { Config, TaxForOrderRes, TaxParams } from "taxjar/dist/util/types";
+import { Config, CreateOrderParams, TaxForOrderRes, TaxParams } from "taxjar/dist/util/types";
 import { createLogger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-config";
 
@@ -27,8 +27,8 @@ export class TaxJarClient {
   }
 
   async fetchTaxForOrder(params: TaxParams) {
-    this.logger.debug({ params }, "fetchTaxesForOrder called with:");
-    const response: TaxForOrderRes = await this.client.taxForOrder(params);
+    this.logger.debug({ params }, "fetchTaxForOrder called with:");
+    const response = await this.client.taxForOrder(params);
     return response;
   }
 
@@ -43,5 +43,11 @@ export class TaxJarClient {
         error: "TaxJar was not able to authenticate with the provided credentials.",
       };
     }
+  }
+
+  async createOrder(params: CreateOrderParams) {
+    this.logger.debug("createOrder called with:");
+
+    return this.client.createOrder(params);
   }
 }

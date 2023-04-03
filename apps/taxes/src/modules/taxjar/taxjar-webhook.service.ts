@@ -3,9 +3,10 @@ import { TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { taxJarCalculate } from "./taxjar-calculate";
+import { taxJarTransform } from "./taxjar-transform";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
+import { CreateOrderParams } from "taxjar/dist/types/paramTypes";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -22,16 +23,16 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "TaxJar calculate called with:");
-    const linesWithDiscount = taxJarCalculate.prepareLinesWithDiscountPayload(
+    const linesWithDiscount = taxJarTransform.prepareLinesWithDiscountPayload(
       payload.lines,
       payload.discounts
     );
     const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
-    const taxParams = taxJarCalculate.preparePayload(payload, channel, linesWithDiscount);
+    const taxParams = taxJarTransform.preparePayload(payload, channel, linesWithDiscount);
     const fetchedTaxes = await this.client.fetchTaxForOrder(taxParams);
     this.logger.debug({ fetchedTaxes }, "TaxJar createOrderTransaction response");
 
-    return taxJarCalculate.prepareResponse(
+    return taxJarTransform.prepareCalculateTaxesResponse(
       payload,
       fetchedTaxes,
       linesWithChargeTaxes,
@@ -39,7 +40,8 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     );
   }
 
-  async createOrder() {
-    throw new Error("Method not implemented.");
+  async createOrder(payload: TaxBaseFragment, channel: ChannelConfig) {
+    const params = taxJarTransform.prepareCreateOrderParams(payload, channel);
+    const result = await this.client.createOrder(params);
   }
 }

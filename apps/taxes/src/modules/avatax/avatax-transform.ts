@@ -93,7 +93,7 @@ const prepareSalesInvoice = (
   };
 };
 
-const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
+const prepareCalculateTaxesResponse = (transaction: TransactionModel): ResponseTaxPayload => {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
 
   const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
@@ -122,9 +122,8 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
   };
 };
 
-export const avataxCalculate = {
+export const avataxTransform = {
   prepareSalesOrder,
   prepareSalesInvoice,
-  prepareResponse,
-  prepareLines,
+  prepareCalculateTaxesResponse,
 };

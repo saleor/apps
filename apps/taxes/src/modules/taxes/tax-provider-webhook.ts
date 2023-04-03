@@ -4,5 +4,5 @@ import { ResponseTaxPayload } from "./types";
 
 export interface ProviderWebhookService {
   calculateTaxes: (payload: TaxBaseFragment, channel: ChannelConfig) => Promise<ResponseTaxPayload>;
-  createOrder: (...args: any) => Promise<any>;
+  createOrder: (payload: TaxBaseFragment, channel: ChannelConfig) => Promise<any>;
 }
