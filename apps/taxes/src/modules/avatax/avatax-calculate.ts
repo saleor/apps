@@ -7,6 +7,7 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
 import { ResponseTaxPayload } from "../taxes/types";
 import { AvataxConfig } from "./avatax-config";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -37,19 +38,13 @@ const prepareLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   return productLines;
 };
 
-const defaultAvataxTransactionModel = {
-  // todo: what is customerCode
-  customerCode: "0",
-  type: 0,
-};
-
-const preparePayload = (
+const createCommonTransactionModel = (
   taxBase: TaxBaseFragment,
   channel: ChannelConfig,
   config: AvataxConfig
-): CreateTransactionModel => {
+): Omit<CreateTransactionModel, "type"> => {
   return {
-    ...defaultAvataxTransactionModel,
+    customerCode: "0", // todo: replace with customer code
     companyCode: config.companyName,
     // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
     commit: config.isAutocommit,
@@ -73,6 +68,28 @@ const preparePayload = (
     lines: prepareLines(taxBase),
     // todo: replace date with order/checkout date
     date: new Date(),
+  };
+};
+
+const prepareSalesOrder = (
+  taxBase: TaxBaseFragment,
+  channel: ChannelConfig,
+  config: AvataxConfig
+): CreateTransactionModel => {
+  return {
+    type: DocumentType.SalesOrder,
+    ...createCommonTransactionModel(taxBase, channel, config),
+  };
+};
+
+const prepareSalesInvoice = (
+  taxBase: TaxBaseFragment,
+  channel: ChannelConfig,
+  config: AvataxConfig
+): CreateTransactionModel => {
+  return {
+    type: DocumentType.SalesInvoice,
+    ...createCommonTransactionModel(taxBase, channel, config),
   };
 };
 
@@ -106,7 +123,8 @@ const prepareResponse = (transaction: TransactionModel): ResponseTaxPayload => {
 };
 
 export const avataxCalculate = {
-  preparePayload,
+  prepareSalesOrder,
+  prepareSalesInvoice,
   prepareResponse,
   prepareLines,
 };
