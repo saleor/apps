@@ -2,14 +2,13 @@ import pino from "pino";
 import { TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
-import { TaxProvider } from "../taxes/tax-provider";
+import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { taxJarCalculate } from "./taxjar-calculate";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
 
-export class TaxJarProvider implements TaxProvider {
+export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
-  readonly name = "taxjar";
   private logger: pino.Logger;
 
   constructor(config: TaxJarConfig) {
@@ -21,7 +20,7 @@ export class TaxJarProvider implements TaxProvider {
     });
   }
 
-  async calculate(payload: TaxBaseFragment, channel: ChannelConfig) {
+  async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "TaxJar calculate called with:");
     const linesWithDiscount = taxJarCalculate.prepareLinesWithDiscountPayload(
       payload.lines,

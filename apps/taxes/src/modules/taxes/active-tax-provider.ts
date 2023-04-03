@@ -2,14 +2,14 @@ import { TaxBaseFragment } from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderConfig } from "../providers-configuration/providers-config";
-import { AvataxProvider } from "../avatax/avatax-provider";
-import { TaxJarProvider } from "../taxjar/taxjar-provider";
-import { TaxProvider } from "./tax-provider";
+import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
+import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
+import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
 
-export class ActiveTaxProvider {
-  private client: TaxProvider;
+export class ActiveTaxProvider implements ProviderWebhookService {
+  private client: ProviderWebhookService;
   private logger: pino.Logger;
 
   constructor(providerInstance: ProviderConfig) {
@@ -22,11 +22,11 @@ export class ActiveTaxProvider {
 
     switch (taxProviderName) {
       case "taxjar":
-        this.client = new TaxJarProvider(providerInstance.config);
+        this.client = new TaxJarWebhookService(providerInstance.config);
         break;
 
       case "avatax":
-        this.client = new AvataxProvider(providerInstance.config);
+        this.client = new AvataxWebhookService(providerInstance.config);
         break;
 
       default: {
@@ -37,9 +37,9 @@ export class ActiveTaxProvider {
     }
   }
 
-  async calculate(payload: TaxBaseFragment, channel: ChannelConfig) {
+  async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, ".calculate called");
 
-    return this.client.calculate(payload, channel);
+    return this.client.calculateTaxes(payload, channel);
   }
 }

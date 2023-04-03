@@ -60,7 +60,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     }
 
     const taxProvider = new ActiveTaxProvider(providerInstance);
-    const calculatedTaxes = await taxProvider.calculate(data.taxBase, channelConfig);
+    const calculatedTaxes = await taxProvider.calculateTaxes(data.taxBase, channelConfig);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return res.send(ctx.buildResponse(calculatedTaxes));
