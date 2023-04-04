@@ -8,6 +8,7 @@
 "saleor-app-search": patch
 "saleor-app-slack": patch
 "saleor-app-taxes": patch
+"saleor-app-cms": patch
 ---
 
 Replace "export default" with named exports

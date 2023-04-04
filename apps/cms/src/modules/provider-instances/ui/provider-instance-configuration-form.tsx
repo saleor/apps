@@ -35,7 +35,7 @@ interface ProviderInstanceConfigurationFormProps<TProvider extends CMSProviderSc
   loading: boolean;
 }
 
-const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>({
+export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>({
   provider,
   providerInstance,
   onSubmit,
@@ -165,5 +165,3 @@ const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderSchema>(
     </form>
   );
 };
-
-export default ProviderInstanceConfigurationForm;

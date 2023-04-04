@@ -1,8 +1,8 @@
-import useProviderInstancesFetch from "./useProviderInstancesFetch";
+import { useProviderInstancesFetch } from "./useProviderInstancesFetch";
 import { SingleProviderSchema } from "../../../../lib/cms/config";
 import { ProvidersErrors, ProvidersLoading } from "../types";
 
-const useProviderInstances = () => {
+export const useProviderInstances = () => {
   const {
     saveProviderInstance: saveProviderInstanceFetch,
     deleteProviderInstance: deleteProviderInstanceFetch,
@@ -43,5 +43,3 @@ const useProviderInstances = () => {
 
   return { providerInstances, saveProviderInstance, deleteProviderInstance, loading, errors };
 };
-
-export default useProviderInstances;

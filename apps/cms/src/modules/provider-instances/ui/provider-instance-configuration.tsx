@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { CMSProviderSchema, providersConfig, SingleProviderSchema } from "../../../lib/cms/config";
 import { AppPaper } from "../../ui/app-paper";
-import ProviderInstanceConfigurationForm from "./provider-instance-configuration-form";
+import { ProviderInstanceConfigurationForm } from "./provider-instance-configuration-form";
 import { Skeleton } from "@material-ui/lab";
 import { ProvidersErrors, ProvidersLoading } from "./types";
 import { getProviderByName, Provider } from "../../providers/config";
@@ -84,7 +84,7 @@ interface ProviderInstanceConfigurationProps {
   errors: ProvidersErrors;
 }
 
-const ProviderInstanceConfiguration = ({
+export const ProviderInstanceConfiguration = ({
   activeProviderInstance,
   newProviderInstance,
   saveProviderInstance,
@@ -187,5 +187,3 @@ const ProviderInstanceConfiguration = ({
     </AppPaper>
   );
 };
-
-export default ProviderInstanceConfiguration;

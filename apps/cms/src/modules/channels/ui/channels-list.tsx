@@ -3,7 +3,7 @@ import { Skeleton } from "@material-ui/lab";
 import { ChannelFragment } from "../../../../generated/graphql";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms";
 import { AppPaper } from "../../ui/app-paper";
-import ChannelsListItems from "./channels-list-items";
+import { ChannelsListItems } from "./channels-list-items";
 import { ChannelsErrors, ChannelsLoading } from "./types";
 
 const ChannelsListSkeleton = () => {
@@ -32,7 +32,7 @@ interface ChannelsListProps {
   errors: ChannelsErrors;
 }
 
-const ChannelsList = ({
+export const ChannelsList = ({
   channels,
   activeChannel,
   setActiveChannel,
@@ -55,5 +55,3 @@ const ChannelsList = ({
     />
   );
 };
-
-export default ChannelsList;

@@ -4,7 +4,7 @@ import { Skeleton } from "@material-ui/lab";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import { SingleProviderSchema } from "../../../lib/cms/config";
 import { AppPaper } from "../../ui/app-paper";
-import ProviderInstancesListItems, { ProviderItem } from "./provider-instances-list-items";
+import { ProviderInstancesListItems, ProviderItem } from "./provider-instances-list-items";
 import { ProvidersErrors, ProvidersLoading } from "./types";
 
 const useStyles = makeStyles((theme) => {
@@ -44,7 +44,7 @@ interface ProviderInstancesListProps {
   errors: ProvidersErrors;
 }
 
-const ProviderInstancesList = ({
+export const ProviderInstancesList = ({
   providerInstances,
   activeProviderInstance,
   newProviderInstance,
@@ -91,5 +91,3 @@ const ProviderInstancesList = ({
     </Grid>
   );
 };
-
-export default ProviderInstancesList;

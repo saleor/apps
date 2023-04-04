@@ -1,5 +1,5 @@
-import AppTabs from "../modules/ui/app-tabs";
-import Channels from "../modules/channels/ui/channels";
+import { AppTabs } from "../modules/ui/app-tabs";
+import { Channels } from "../modules/channels/ui/channels";
 import { AppContainer } from "../modules/ui/app-container";
 import { AppLayout } from "../modules/ui/app-layout";
 import { NextPageWithLayout } from "./_app";

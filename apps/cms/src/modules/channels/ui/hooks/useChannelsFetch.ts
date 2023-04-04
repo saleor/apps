@@ -8,7 +8,7 @@ import {
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ChannelsApiResponse } from "../../../../pages/api/channels";
 
-const useChannelsFetch = () => {
+export const useChannelsFetch = () => {
   const { appBridgeState } = useAppBridge();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState(false);
@@ -80,5 +80,3 @@ const useChannelsFetch = () => {
 
   return { saveChannel, isSaving, data: config, isFetching, error: validationError };
 };
-
-export default useChannelsFetch;

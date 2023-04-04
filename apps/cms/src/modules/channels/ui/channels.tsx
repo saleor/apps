@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms/config";
-import useProviderInstances from "../../provider-instances/ui/hooks/useProviderInstances";
+import { useState } from "react";
+import { MergedChannelSchema } from "../../../lib/cms/config";
+import { useProviderInstances } from "../../provider-instances/ui/hooks/useProviderInstances";
 import { Instructions } from "../../ui/instructions";
-import ChannelConfiguration from "./channel-configuration";
-import ChannelsList from "./channels-list";
-import useChannels from "./hooks/useChannels";
-import useSaveChannels from "./hooks/useChannelsFetch";
+import { ChannelConfiguration } from "./channel-configuration";
+import { ChannelsList } from "./channels-list";
+import { useChannels } from "./hooks/useChannels";
 
-const Channels = () => {
+export const Channels = () => {
   const { channels, saveChannel, loading, errors } = useChannels();
   const { providerInstances } = useProviderInstances();
 
@@ -41,4 +40,3 @@ const Channels = () => {
     </>
   );
 };
-export default Channels;

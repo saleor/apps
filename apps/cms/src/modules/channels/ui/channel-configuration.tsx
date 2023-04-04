@@ -1,7 +1,7 @@
 import { AppPaper } from "../../ui/app-paper";
 import { FormControlLabel, Grid, Paper, Radio, RadioGroup, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import ChannelConfigurationForm from "./channel-configuration-form";
+import { ChannelConfigurationForm } from "./channel-configuration-form";
 import {
   MergedChannelSchema,
   ProvidersSchema,
@@ -60,7 +60,7 @@ interface ChannelConfigurationProps {
   errors: ChannelsErrors;
 }
 
-const ChannelConfiguration = ({
+export const ChannelConfiguration = ({
   activeChannel,
   providerInstances,
   saveChannel,
@@ -117,5 +117,3 @@ const ChannelConfiguration = ({
     </Paper>
   );
 };
-
-export default ChannelConfiguration;

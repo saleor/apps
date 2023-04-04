@@ -156,4 +156,4 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   };
 };
 
-export default createProvider(contentfulOperations, contentfulConfigSchema);
+export const contentfulProvider = createProvider(contentfulOperations, contentfulConfigSchema);
