@@ -1,0 +1,17 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "globalDependencies": [".env"],
+  "globalEnv": [
+    "APL",
+    "APP_DEBUG",
+    "NODE_ENV",
+    "SECRET_KEY",
+    "TEMP_PDF_STORAGE_DIR",
+    "PORT",
+    "VERCEL_URL",
+    "ALLOWED_DOMAIN_PATTERN",
+    "NEXT_PUBLIC_VERCEL_ENV"
+  ],
+  "pipeline": {}
+}
