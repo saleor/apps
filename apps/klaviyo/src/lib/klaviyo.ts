@@ -2,7 +2,7 @@ interface EmailServiceProvider {
   send: (event: string, recipient: string, context: any) => Promise<Response>;
 }
 
-const Klaviyo = (token: string): EmailServiceProvider => ({
+export const Klaviyo = (token: string): EmailServiceProvider => ({
   send: async (event, recipient, context) => {
     const formParams = new URLSearchParams();
     formParams.append(
@@ -27,5 +27,3 @@ const Klaviyo = (token: string): EmailServiceProvider => ({
     return response;
   },
 });
-
-export default Klaviyo;

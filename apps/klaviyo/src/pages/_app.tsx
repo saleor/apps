@@ -1,4 +1,4 @@
-import "@saleor/apps-shared/src/globals.css";
+import "packages/shared/src/globals.css";
 
 import { StylesProvider, Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
@@ -11,7 +11,7 @@ import {
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
-import { AppLayoutProps } from "../types";
+import { AppLayoutProps } from "../../types";
 import { createGenerateClassName } from "@material-ui/core";
 
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;

@@ -3,7 +3,7 @@ import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
-import { saleorApp } from "../../saleor-app";
+import { saleorApp } from "../../../saleor-app";
 
 type ConfigurationKeysType =
   | "PUBLIC_TOKEN"

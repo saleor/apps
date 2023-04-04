@@ -6,11 +6,11 @@ import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@sale
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
-import AccessWarning from "../components/AccessWarning/AccessWarning";
-import useAppApi from "../hooks/useAppApi";
+import { AccessWarning } from "../components/AccessWarning/AccessWarning";
+import { useAppApi } from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
 
-import useDashboardNotifier from "../utils/useDashboardNotifier";
+import { useDashboardNotifier } from "../utils/useDashboardNotifier";
 
 interface ConfigurationField {
   key: string;

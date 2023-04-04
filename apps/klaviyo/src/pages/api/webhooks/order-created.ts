@@ -2,69 +2,45 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 
 import {
-  CustomerCreatedWebhookPayloadFragment,
-  UntypedCustomerCreatedDocument,
-} from "../../../generated/graphql";
+  OrderCreatedWebhookPayloadFragment,
+  UntypedOrderCreatedDocument,
+} from "../../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
-import Klaviyo from "../../../lib/klaviyo";
+import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "../../../../saleor-app";
 
-const CustomerCreatedWebhookPayload = gql`
-  fragment CustomerCreatedWebhookPayload on CustomerCreated {
-    user {
-      __typename
-      id
-      defaultShippingAddress {
-        ...AddressFragment
-      }
-      defaultBillingAddress {
-        ...AddressFragment
-      }
-      addresses {
-        ...AddressFragment
-      }
-      privateMetadata {
-        ...MetadataFragment
-      }
-      metadata {
-        ...MetadataFragment
-      }
-      email
-      firstName
-      lastName
-      isActive
-      dateJoined
-      languageCode
+const OrderCreatedWebhookPayload = gql`
+  fragment OrderCreatedWebhookPayload on OrderCreated {
+    order {
+      ...OrderFragment
     }
   }
 `;
 
-export const CustomerCreatedGraphqlSubscription = gql`
-  ${CustomerCreatedWebhookPayload}
-  subscription CustomerCreated {
+export const OrderCreatedGraphqlSubscription = gql`
+  ${OrderCreatedWebhookPayload}
+  subscription OrderCreated {
     event {
-      ...CustomerCreatedWebhookPayload
+      ...OrderCreatedWebhookPayload
     }
   }
 `;
 
-export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebhookPayloadFragment>(
-  {
-    name: "Customer Created",
-    webhookPath: "api/webhooks/customer-created",
-    event: "CUSTOMER_CREATED",
-    apl: saleorApp.apl,
-    query: UntypedCustomerCreatedDocument,
-  }
-);
+export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPayloadFragment>({
+  name: "Order Created",
+  webhookPath: "api/webhooks/order-created",
+  event: "ORDER_CREATED",
+  apl: saleorApp.apl,
+  query: UntypedOrderCreatedDocument,
+});
 
-const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = async (
+const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
   context
 ) => {
-  console.debug("customerCreatedWebhook handler called");
+  console.debug("orderCreatedWebhook handler called");
 
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
@@ -72,14 +48,14 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   const settings = createSettingsManager(client, appId);
 
   const klaviyoToken = await settings.get("PUBLIC_TOKEN");
-  const klaviyoMetric = await settings.get("CUSTOMER_CREATED_METRIC");
+  const klaviyoMetric = await settings.get("ORDER_CREATED_METRIC");
 
   if (!klaviyoToken || !klaviyoMetric) {
     console.debug("Request rejected - app not configured");
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
-  const userEmail = payload.user?.email;
+  const { userEmail } = payload.order || {};
 
   if (!userEmail) {
     console.debug("Request rejected - missing user email");
@@ -92,7 +68,6 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   if (klaviyoResponse.status !== 200) {
     const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
     console.debug("Klaviyo returned error: ", klaviyoMessage);
-
     return res.status(500).json({
       success: false,
       message: `Klaviyo API responded with status ${klaviyoResponse.status}.${klaviyoMessage}`,
@@ -103,7 +78,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 
-export default customerCreatedWebhook.createHandler(handler);
+export default orderCreatedWebhook.createHandler(handler);
 
 export const config = {
   api: {

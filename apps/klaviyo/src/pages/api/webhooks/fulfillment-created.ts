@@ -4,11 +4,11 @@ import { gql } from "urql";
 import {
   FulfillmentCreatedWebhookPayloadFragment,
   UntypedFulfillmentCreatedDocument,
-} from "../../../generated/graphql";
+} from "../../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
-import Klaviyo from "../../../lib/klaviyo";
+import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "../../../../saleor-app";
 
 const FulfillmentCreatedWebhookPayload = gql`
   fragment FulfillmentCreatedWebhookPayload on FulfillmentCreated {

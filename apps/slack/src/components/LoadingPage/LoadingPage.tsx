@@ -16,5 +16,3 @@ function LoadingPage() {
     </div>
   );
 }
-
-export default LoadingPage;

@@ -12,7 +12,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts"],
+      files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts", "generated/graphql.ts"],
       rules: {
         "import/no-default-export": "off",
       },

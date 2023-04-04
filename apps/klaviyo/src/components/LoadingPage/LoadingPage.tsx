@@ -3,7 +3,7 @@ import React from "react";
 
 import { useStyles } from "./styles";
 
-function LoadingPage() {
+export function LoadingPage() {
   const classes = useStyles();
 
   return (
@@ -16,5 +16,3 @@ function LoadingPage() {
     </div>
   );
 }
-
-export default LoadingPage;
