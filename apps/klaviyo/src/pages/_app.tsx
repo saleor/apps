@@ -1,4 +1,4 @@
-import "packages/shared/src/globals.css";
+import "@saleor/apps-shared/src/globals.css";
 
 import { StylesProvider, Theme } from "@material-ui/core/styles";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
