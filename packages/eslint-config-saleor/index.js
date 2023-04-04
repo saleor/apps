@@ -12,7 +12,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/pages/**/*", "src/pages/api/**/*"],
+      files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts"],
       rules: {
         "import/no-default-export": "off",
       },
