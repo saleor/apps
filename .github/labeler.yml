@@ -8,3 +8,4 @@
 "App: Taxes": "apps/taxes/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
 "App: CMS": "apps/cms/**/*"
+"App: CRM": "apps/crm/**/*"
