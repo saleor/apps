@@ -2,7 +2,7 @@ import {
   ProductVariantUpdatedWebhookPayloadFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { CmsClientOperations } from "../types";
+import { CmsClientBatchOperations, CmsClientOperations, ProductResponseSuccess } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
 import { logger as pinoLogger } from "../../logger";
 
@@ -100,6 +100,110 @@ const executeCmsClientOperation = async ({
       return {
         error: "Error creating item.",
       };
+    }
+  }
+};
+
+interface CmsClientBatchOperationResult {
+  createdCmsIds?: string[];
+  deletedCmsIds?: string[];
+  error?: string;
+}
+
+export const executeCmsClientBatchOperation = async ({
+  cmsClient,
+  productsVariants,
+}: {
+  cmsClient: CmsClientBatchOperations;
+  productsVariants: WebhookProductVariantFragment[];
+}): Promise<CmsClientBatchOperationResult | undefined> => {
+  const logger = pinoLogger.child({ cmsClient });
+  logger.debug("Execute CMS client operation called");
+  logger.debug({ operations: cmsClient.operations });
+
+  if (cmsClient.operationType === "createBatchProducts") {
+    const productsVariansToCreate = productsVariants.reduce<WebhookProductVariantFragment[]>(
+      (productsVariansToCreate, productVariant) => {
+        const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
+
+        if (!cmsId) {
+          return [...productsVariansToCreate, productVariant];
+        }
+
+        return productsVariansToCreate;
+      },
+      [] as WebhookProductVariantFragment[]
+    );
+
+    if (productsVariansToCreate.length) {
+      logger.debug("CMS creating batch items called");
+
+      try {
+        const createBatchProductsResponse = await cmsClient.operations.createBatchProducts({
+          input: productsVariansToCreate.map((productVariant) => ({
+            saleorId: productVariant.id,
+            sku: productVariant.sku,
+            name: productVariant.name,
+            image: productVariant.product.media?.[0]?.url ?? "",
+            productId: productVariant.product.id,
+            productName: productVariant.product.name,
+            productSlug: productVariant.product.slug,
+            channels: productVariant.channelListings?.map((cl) => cl.channel.slug) || [],
+          })),
+        });
+
+        return {
+          createdCmsIds:
+            createBatchProductsResponse
+              ?.filter((item) => item.ok && "data" in item)
+              .map((item) => (item as ProductResponseSuccess).data.id) || [],
+        };
+      } catch (error) {
+        logger.error("Error creating batch items");
+        logger.error({ error });
+
+        return {
+          error: "Error creating batch items.",
+        };
+      }
+    }
+  }
+
+  if (cmsClient.operationType === "deleteBatchProducts") {
+    const CMSIdsToRemove = productsVariants.reduce((CMSIdsToRemove, productVariant) => {
+      const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
+
+      const hasOther = true; // verifyIfHasOtherCMSIds(productVariant, cmsClient.cmsProviderInstanceId);
+
+      if (cmsId && !hasOther) {
+        return [...CMSIdsToRemove, cmsId];
+      }
+
+      return CMSIdsToRemove;
+    }, [] as string[]);
+
+    if (CMSIdsToRemove.length) {
+      logger.debug("CMS removing batch items called");
+
+      try {
+        const deleteBatchProductsResponse = await cmsClient.operations.deleteBatchProducts({
+          ids: CMSIdsToRemove,
+        });
+
+        return {
+          deletedCmsIds:
+            deleteBatchProductsResponse
+              ?.filter((item) => item.ok && "data" in item)
+              .map((item) => (item as ProductResponseSuccess).data.id) || [],
+        };
+      } catch (error) {
+        logger.error("Error removing batch items");
+        logger.error({ error });
+
+        return {
+          error: "Error removing batch items.",
+        };
+      }
     }
   }
 };

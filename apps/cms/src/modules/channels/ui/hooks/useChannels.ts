@@ -19,10 +19,33 @@ export const useChannels = () => {
     isFetching,
   } = useChannelsFetch();
 
-  const saveChannel = (channelToSave: SingleChannelSchema) => {
+  const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
 
-    saveChannelFetch(channelToSave).then(() => {
+    const currentlyEnabledProviderInstances =
+      settings?.[`${channelToSave.channelSlug}`]?.enabledProviderInstances || [];
+    const toEnableProviderInstances = channelToSave.enabledProviderInstances || [];
+
+    const changedSyncProviderInstances = [
+      ...currentlyEnabledProviderInstances.filter(
+        (instance) => !toEnableProviderInstances.includes(instance)
+      ),
+      ...toEnableProviderInstances.filter(
+        (instance) => !currentlyEnabledProviderInstances.includes(instance)
+      ),
+    ];
+
+    const fetchResult = await saveChannelFetch({
+      ...channelToSave,
+      requireSyncProviderInstances: [
+        ...(channelToSave.requireSyncProviderInstances || []),
+        ...changedSyncProviderInstances.filter(
+          (instance) => !(channelToSave.requireSyncProviderInstances || []).includes(instance)
+        ),
+      ],
+    });
+
+    if (fetchResult.success) {
       appBridge?.dispatch(
         actions.Notification({
           title: "Success",
@@ -30,7 +53,15 @@ export const useChannels = () => {
           text: "Configuration saved",
         })
       );
-    });
+    } else {
+      appBridge?.dispatch(
+        actions.Notification({
+          title: "Error",
+          status: "error",
+          text: "Error while saving configuration",
+        })
+      );
+    }
   };
 
   const loading: ChannelsLoading = {
@@ -50,6 +81,9 @@ export const useChannels = () => {
           channelSlug: channel.slug,
           enabledProviderInstances: settings
             ? settings[`${channel.slug}`]?.enabledProviderInstances
+            : [],
+          requireSyncProviderInstances: settings
+            ? settings[`${channel.slug}`]?.requireSyncProviderInstances
             : [],
           channel: channel,
         } as MergedChannelSchema)

@@ -6,6 +6,7 @@ import { ChannelsList } from "./channels-list";
 import { useChannels } from "./hooks/useChannels";
 import { AppTabs } from "../../ui/app-tabs";
 import { makeStyles } from "@saleor/macaw-ui";
+import { useProductsVariantsSync } from "../../cms/hooks/useProductsVariantsSync";
 
 const useStyles = makeStyles({
   wrapper: {
@@ -27,6 +28,8 @@ export const Channels = () => {
   const handleSetActiveChannel = (channel: MergedChannelSchema | null) => {
     setActiveChannelSlug(channel?.channelSlug || null);
   };
+
+  const { sync } = useProductsVariantsSync(activeChannelSlug);
 
   const activeChannel = channels.find((channel) => channel.channelSlug === activeChannelSlug);
 
@@ -52,6 +55,7 @@ export const Channels = () => {
           activeChannel={activeChannel}
           providerInstances={providerInstances}
           saveChannel={saveChannel}
+          syncChannelProviderInstance={sync}
           loading={loading}
           errors={errors}
         />

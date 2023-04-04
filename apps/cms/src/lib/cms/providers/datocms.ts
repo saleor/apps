@@ -1,5 +1,5 @@
 import { createProvider } from "./create";
-import { CreateOperations, CreateProductResponse } from "../types";
+import { CmsOperations, CreateOperations, ProductResponse } from "../types";
 import { logger as pinoLogger } from "../../logger";
 
 import { ApiError, buildClient, SimpleSchemaTypes } from "@datocms/cma-client-node";
@@ -18,7 +18,7 @@ const datocmsClient = (config: DatocmsConfig, options?: RequestInit) => {
   });
 };
 
-const transformResponseError = (error: unknown): CreateProductResponse => {
+const transformResponseError = (error: unknown): ProductResponse => {
   if (error instanceof ApiError) {
     return {
       ok: false,
@@ -32,7 +32,7 @@ const transformResponseError = (error: unknown): CreateProductResponse => {
   }
 };
 
-const transformResponseItem = (item: SimpleSchemaTypes.Item): CreateProductResponse => {
+const transformResponseItem = (item: SimpleSchemaTypes.Item): ProductResponse => {
   return {
     ok: true,
     data: {
@@ -86,6 +86,16 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
 
       const item = await client.items.destroy(id);
       logger.debug("deleteProduct response", { item });
+    },
+    createBatchProducts: async ({ input }) => {
+      // todo: implement function
+
+      return [];
+    },
+    deleteBatchProducts: async ({ ids }) => {
+      // todo: implement function
+
+      return [];
     },
   };
 };

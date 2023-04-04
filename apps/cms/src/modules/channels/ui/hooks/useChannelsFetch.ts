@@ -64,9 +64,19 @@ export const useChannelsFetch = () => {
         console.log("saveSettings config", config);
 
         setConfig(config);
+
+        return {
+          success: true,
+        };
+      } else {
+        throw new Error();
       }
     } catch (error) {
       console.log(error);
+
+      return {
+        success: false,
+      };
     }
   };
 

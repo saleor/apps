@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ContentfulConfig, contentfulConfigSchema } from "../config";
 import { logger as pinoLogger } from "../../logger";
 
-import { CreateOperations, CreateProductResponse, ProductInput } from "../types";
+import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
 
 const contentfulFetch = (endpoint: string, config: ContentfulConfig, options?: RequestInit) => {
@@ -64,7 +64,7 @@ const transformInputToBody = ({
   return body;
 };
 
-const transformCreateProductResponse = (response: ContentfulResponse): CreateProductResponse => {
+const transformCreateProductResponse = (response: ContentfulResponse): ProductResponse => {
   if (response.message) {
     return {
       ok: false,
@@ -114,8 +114,10 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         },
       });
       logger.debug("createProduct response", { response });
+      logger.debug({ response });
       const result = await response.json();
       logger.debug("createProduct result", { result });
+      logger.debug({ result });
 
       return transformCreateProductResponse(result);
     },
@@ -152,6 +154,16 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
       logger.debug("deleteProduct response", { response });
 
       return response;
+    },
+    createBatchProducts: async ({ input }) => {
+      // todo: implement function
+
+      return [];
+    },
+    deleteBatchProducts: async ({ ids }) => {
+      // todo: implement function
+
+      return [];
     },
   };
 };

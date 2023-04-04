@@ -55,6 +55,7 @@ interface ChannelConfigurationProps {
   activeChannel?: MergedChannelSchema | null;
   providerInstances: SingleProviderSchema[];
   saveChannel: (channel: SingleChannelSchema) => any;
+  syncChannelProviderInstance: (providerInstanceId: string) => any;
   loading: ChannelsLoading;
   errors: ChannelsErrors;
 }
@@ -63,6 +64,7 @@ export const ChannelConfiguration = ({
   activeChannel,
   providerInstances,
   saveChannel,
+  syncChannelProviderInstance,
   loading,
   errors,
 }: ChannelConfigurationProps) => {
@@ -112,6 +114,7 @@ export const ChannelConfiguration = ({
         providerInstances={providerInstances}
         loading={loading.saving}
         onSubmit={saveChannel}
+        onSync={syncChannelProviderInstance}
       />
     </Paper>
   );

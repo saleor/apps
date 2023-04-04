@@ -1,5 +1,5 @@
 import { StrapiConfig, strapiConfigSchema } from "../config";
-import { CmsOperations, CreateOperations, CreateProductResponse, ProductInput } from "../types";
+import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
 import { logger as pinoLogger } from "../../logger";
 
@@ -55,7 +55,7 @@ type StrapiResponse =
       error: null;
     };
 
-const transformCreateProductResponse = (response: StrapiResponse): CreateProductResponse => {
+const transformCreateProductResponse = (response: StrapiResponse): ProductResponse => {
   if (response.error) {
     return {
       ok: false,
@@ -73,7 +73,7 @@ const transformCreateProductResponse = (response: StrapiResponse): CreateProduct
 
 type CreateStrapiOperations = CreateOperations<StrapiConfig>;
 
-export const strapiOperations: CreateStrapiOperations = (config): CmsOperations => {
+export const strapiOperations: CreateStrapiOperations = (config) => {
   const logger = pinoLogger.child({ cms: "strapi" });
 
   const { contentTypeId } = config;
@@ -107,6 +107,16 @@ export const strapiOperations: CreateStrapiOperations = (config): CmsOperations 
       logger.debug("deleteProduct response", { response });
 
       return response;
+    },
+    createBatchProducts: async ({ input }) => {
+      // todo: implement function
+
+      return [];
+    },
+    deleteBatchProducts: async ({ ids }) => {
+      // todo: implement function
+
+      return [];
     },
   };
 };
