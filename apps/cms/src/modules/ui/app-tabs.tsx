@@ -22,7 +22,7 @@ interface AppTabsProps {
   activeTab: keyof typeof tabs;
 }
 
-const AppTabs = ({ activeTab }: AppTabsProps) => {
+export const AppTabs = ({ activeTab }: AppTabsProps) => {
   const styles = useStyles();
   const router = useRouter();
 
@@ -40,4 +40,3 @@ const AppTabs = ({ activeTab }: AppTabsProps) => {
     </div>
   );
 };
-export default AppTabs;

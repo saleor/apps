@@ -11,7 +11,7 @@ import clsx from "clsx";
 import React from "react";
 import { SingleProviderSchema } from "../../../lib/cms/config";
 import { getProviderByName } from "../../providers/config";
-import ProviderIcon from "./provider-icon";
+import { ProviderIcon } from "./provider-icon";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -59,7 +59,7 @@ interface ProviderInstancesListItemsProps {
   setActiveProviderInstance: (provider: SingleProviderSchema) => void;
 }
 
-const ProviderInstancesListItems = ({
+export const ProviderInstancesListItems = ({
   providerInstances,
   activeProviderInstance,
   setActiveProviderInstance,
@@ -92,5 +92,3 @@ const ProviderInstancesListItems = ({
     </OffsettedList>
   );
 };
-
-export default ProviderInstancesListItems;

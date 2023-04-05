@@ -111,4 +111,4 @@ export const strapiOperations: CreateStrapiOperations = (config): CmsOperations 
   };
 };
 
-export default createProvider(strapiOperations, strapiConfigSchema);
+export const strapiProvider = createProvider(strapiOperations, strapiConfigSchema);

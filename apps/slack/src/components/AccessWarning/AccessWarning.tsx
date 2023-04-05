@@ -18,7 +18,7 @@ const warnings: Record<WarningCause, string> = {
   unknown_cause: "Something went wrong.",
 };
 
-function AccessWarning({ cause = "unknown_cause" }: AccessWarningProps) {
+export function AccessWarning({ cause = "unknown_cause" }: AccessWarningProps) {
   return (
     <div suppressHydrationWarning>
       <Typography variant="subtitle1">
@@ -30,5 +30,3 @@ function AccessWarning({ cause = "unknown_cause" }: AccessWarningProps) {
     </div>
   );
 }
-
-export default AccessWarning;

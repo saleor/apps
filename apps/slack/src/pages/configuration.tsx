@@ -14,10 +14,10 @@ import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@sale
 import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
-import AccessWarning from "../components/AccessWarning/AccessWarning";
+import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
-import useAppApi from "../hooks/useAppApi";
-import useDashboardNotifier from "../utils/useDashboardNotifier";
+import { useAppApi } from "../hooks/useAppApi";
+import { useDashboardNotifier } from "../utils/useDashboardNotifier";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 
 interface ConfigurationField {

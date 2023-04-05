@@ -1,6 +1,6 @@
 import { actions, NotificationPayload, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
-const useDashboardNotifier = () => {
+export const useDashboardNotifier = () => {
   const { appBridgeState, appBridge } = useAppBridge();
 
   const notify = (payload: NotificationPayload) =>
@@ -8,5 +8,3 @@ const useDashboardNotifier = () => {
 
   return [notify];
 };
-
-export default useDashboardNotifier;

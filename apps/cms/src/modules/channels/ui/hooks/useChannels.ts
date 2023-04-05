@@ -1,10 +1,10 @@
-import useChannelsFetch from "./useChannelsFetch";
+import { useChannelsFetch } from "./useChannelsFetch";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/config";
 import { ChannelsErrors, ChannelsLoading } from "../types";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
 
-const useChannels = () => {
+export const useChannels = () => {
   const isMounted = useIsMounted();
   const [channelsQueryData, channelsQueryOpts] = useChannelsQuery({
     pause: !isMounted,
@@ -47,5 +47,3 @@ const useChannels = () => {
 
   return { channels, saveChannel, loading, errors };
 };
-
-export default useChannels;

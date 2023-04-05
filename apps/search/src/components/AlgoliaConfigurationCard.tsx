@@ -164,4 +164,3 @@ export const AlgoliaConfigurationCard = () => {
 /**
  * Export default for Next.dynamic
  */
-export default AlgoliaConfigurationCard;

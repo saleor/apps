@@ -4,7 +4,7 @@ import { Typography } from "@material-ui/core";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { appName } from "./const";
 
-const NotReadyPage = () => {
+export const NotReadyPage = () => {
   const { appBridge } = useAppBridge();
 
   return (
@@ -33,5 +33,3 @@ const NotReadyPage = () => {
     </div>
   );
 };
-
-export default NotReadyPage;

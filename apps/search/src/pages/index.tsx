@@ -1,5 +1,5 @@
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
-import ConfigurationView from "../components/ConfigurationView";
+import { ConfigurationView } from "../components/ConfigurationView";
 import { isInIframe } from "@saleor/apps-shared";
 import { LinearProgress } from "@material-ui/core";
 

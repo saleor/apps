@@ -27,7 +27,8 @@ export const Instructions = () => {
       </Typography>
       <Typography paragraph>
         Start by creating a new configuration for provider of your choice. You can create multiple
-        configurations and then assign them to channels. Navigate to the relevant tab to configure the provider.
+        configurations and then assign them to channels. Navigate to the relevant tab to configure
+        the provider.
       </Typography>
     </Paper>
   );

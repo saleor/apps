@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader } from "@material-ui/core";
 import { ImportProductsToAlgolia } from "./ImportProductsToAlgolia";
-import AlgoliaConfigurationCard from "./AlgoliaConfigurationCard";
-import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
+import { AlgoliaConfigurationCard } from "./AlgoliaConfigurationCard";
+import { makeStyles } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
-import Instructions from "./Instructions";
+import { Instructions } from "./Instructions";
 
 import { AppColumnsLayout } from "./AppColumnsLayout";
 
@@ -24,15 +24,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const ConfigurationView = () => {
   const styles = useStyles();
-  const router = useRouter();
 
-  const handleClick = (val: string) => router.push("/" + val);
   return (
     <div className={styles.wrapper}>
-      <PageTabs className={styles.tabs} value="" onChange={handleClick}>
-        <PageTab label={"Configuration"} value="" />
-        <PageTab label={"Preview"} value="search" />
-      </PageTabs>
       <AppColumnsLayout>
         <div />
         <div>
@@ -49,8 +43,3 @@ export const ConfigurationView = () => {
     </div>
   );
 };
-
-/**
- * Export default for Next.dynamic
- */
-export default ConfigurationView;

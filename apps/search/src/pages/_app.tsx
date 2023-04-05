@@ -10,7 +10,7 @@ import {
 } from "@saleor/macaw-ui";
 import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
-import GraphQLProvider from "../providers/GraphQLProvider";
+import { GraphQLProvider } from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";

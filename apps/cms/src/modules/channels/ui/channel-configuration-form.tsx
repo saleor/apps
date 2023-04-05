@@ -20,7 +20,7 @@ import {
   SingleChannelSchema,
   SingleProviderSchema,
 } from "../../../lib/cms/config";
-import ProviderIcon from "../../provider-instances/ui/provider-icon";
+import { ProviderIcon } from "../../provider-instances/ui/provider-icon";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -49,7 +49,7 @@ interface ChannelConfigurationFormProps {
   onSubmit: (channel: SingleChannelSchema) => any;
 }
 
-const ChannelConfigurationForm = ({
+export const ChannelConfigurationForm = ({
   channel,
   providerInstances,
   loading,
@@ -150,5 +150,3 @@ const ChannelConfigurationForm = ({
     </form>
   );
 };
-
-export default ChannelConfigurationForm;

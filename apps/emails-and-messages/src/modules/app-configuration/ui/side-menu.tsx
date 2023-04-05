@@ -107,5 +107,3 @@ export const SideMenu: React.FC<SideMenuProps> = ({
     </Card>
   );
 };
-
-export default SideMenu;

@@ -14,7 +14,7 @@ import { AppProps } from "next/app";
 
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
-import GraphQLProvider from "../graphql-provider";
+import { GraphQLProvider } from "../graphql-provider";
 
 const themeOverrides: Partial<Theme> = {
   /**

@@ -11,7 +11,7 @@ import {
 import React, { PropsWithChildren, useEffect } from "react";
 
 import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
-import { AppLayoutProps } from "../types";
+import { AppLayoutProps } from "../../types";
 import { createGenerateClassName } from "@material-ui/core";
 
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;

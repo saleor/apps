@@ -8,7 +8,7 @@ import {
   getProductVariantProviderInstancesToAlter,
 } from "./settings";
 import { providersSchemaSet } from "../config";
-import cmsProviders, { CMSProvider } from "../providers";
+import { cmsProviders, CMSProvider } from "../providers";
 import { CmsClientOperations } from "../types";
 import { logger as pinoLogger } from "../../logger";
 import { getCmsIdFromSaleorItemKey } from "./metadata";

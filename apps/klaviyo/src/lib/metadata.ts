@@ -5,8 +5,8 @@ import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
-} from "../generated/graphql";
-import { settingsManagerSecretKey } from "../saleor-app";
+} from "../../generated/graphql";
+import { settingsManagerSecretKey } from "../../saleor-app";
 
 // Function is using urql graphql client to fetch all available metadata.
 // Before returning query result, we are transforming response to list of objects with key and value fields
