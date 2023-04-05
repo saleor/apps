@@ -1,13 +1,11 @@
-import contentful from "./contentful";
-import strapi from "./strapi";
-import datocms from "./datocms";
+import { contentfulProvider } from "./contentful";
+import { strapiProvider } from "./strapi";
+import { datoCmsProvider } from "./datocms";
 
-const cmsProviders = {
-  contentful,
-  strapi,
-  datocms,
+export const cmsProviders = {
+  contentful: contentfulProvider,
+  strapi: strapiProvider,
+  datocms: datoCmsProvider,
 };
 
 export type CMSProvider = keyof typeof cmsProviders;
-
-export default cmsProviders;

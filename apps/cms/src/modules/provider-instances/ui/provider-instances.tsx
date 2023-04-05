@@ -1,11 +1,11 @@
-import ProviderInstancesList from "./provider-instances-list";
+import { ProviderInstancesList } from "./provider-instances-list";
 import { Instructions } from "../../ui/instructions";
-import ProviderInstanceConfiguration from "./provider-instance-configuration";
+import { ProviderInstanceConfiguration } from "./provider-instance-configuration";
 import { providersConfig, ProvidersSchema, SingleProviderSchema } from "../../../lib/cms/config";
 import { useEffect, useState } from "react";
-import useProviderInstances from "./hooks/useProviderInstances";
+import { useProviderInstances } from "./hooks/useProviderInstances";
 
-const ProviderInstances = () => {
+export const ProviderInstances = () => {
   const { providerInstances, saveProviderInstance, deleteProviderInstance, loading, errors } =
     useProviderInstances();
 
@@ -73,5 +73,3 @@ const ProviderInstances = () => {
     </>
   );
 };
-
-export default ProviderInstances;

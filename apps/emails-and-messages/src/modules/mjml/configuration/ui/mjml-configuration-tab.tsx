@@ -8,7 +8,7 @@ import { getDefaultEmptyConfiguration } from "../mjml-config-container";
 import { NextRouter, useRouter } from "next/router";
 import { mjmlUrls } from "../../urls";
 import { MjmlTemplatesCard } from "./mjml-templates-card";
-import SideMenu from "../../../app-configuration/ui/side-menu";
+import { SideMenu } from "../../../app-configuration/ui/side-menu";
 import { MjmlConfiguration } from "../mjml-config";
 import { LoadingIndicator } from "../../../ui/loading-indicator";
 import { Add } from "@material-ui/icons";

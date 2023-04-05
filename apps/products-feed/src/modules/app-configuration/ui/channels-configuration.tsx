@@ -8,8 +8,7 @@ import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
-import SideMenu from "./side-menu";
-import { CategoryMappingForm } from "../../category-mapping/ui/category-mapping-form";
+import { SideMenu } from "./side-menu";
 
 const useStyles = makeStyles((theme) => {
   return {

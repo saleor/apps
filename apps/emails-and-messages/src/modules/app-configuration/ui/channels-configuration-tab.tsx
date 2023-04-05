@@ -4,7 +4,7 @@ import { AppConfigurationForm } from "./app-configuration-form";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { trpcClient } from "../../trpc/trpc-client";
-import SideMenu from "./side-menu";
+import { SideMenu } from "./side-menu";
 import { LoadingIndicator } from "../../ui/loading-indicator";
 import { Instructions } from "./instructions";
 

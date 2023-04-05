@@ -9,7 +9,7 @@ import {
 import clsx from "clsx";
 import { ChannelFragment } from "../../../../generated/graphql";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms/config";
-import ProviderIcon from "../../provider-instances/ui/provider-icon";
+import { ProviderIcon } from "../../provider-instances/ui/provider-icon";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -40,7 +40,7 @@ interface ChannelsListItemsProps {
   setActiveChannel: (channel: MergedChannelSchema | null) => void;
 }
 
-const ChannelsListItems = ({
+export const ChannelsListItems = ({
   channels,
   activeChannel,
   setActiveChannel,
@@ -72,5 +72,3 @@ const ChannelsListItems = ({
     </OffsettedList>
   );
 };
-
-export default ChannelsListItems;

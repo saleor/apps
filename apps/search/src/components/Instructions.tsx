@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, List, ListItem, Typography, Link } from "@material-ui/core";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
-function Instructions() {
+export function Instructions() {
   const { appBridge } = useAppBridge();
 
   const algoliaDashboardUrl = "https://www.algolia.com/apps/dashboard";
@@ -70,5 +70,3 @@ function Instructions() {
     </Card>
   );
 }
-
-export default Instructions;

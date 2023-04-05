@@ -90,4 +90,4 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
   };
 };
 
-export default createProvider(datocmsOperations, datocmsConfigSchema);
+export const datoCmsProvider = createProvider(datocmsOperations, datocmsConfigSchema);

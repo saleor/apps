@@ -4,7 +4,7 @@ import { CMSSchemaProviderInstances, SingleProviderSchema } from "../../../../li
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ProviderInstancesApiResponse } from "../../../../pages/api/provider-instances";
 
-const useProviderInstancesFetch = () => {
+export const useProviderInstancesFetch = () => {
   const { appBridgeState } = useAppBridge();
   const [isSaving, setIsSaving] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState(false);
@@ -130,5 +130,3 @@ const useProviderInstancesFetch = () => {
     error: validationError,
   };
 };
-
-export default useProviderInstancesFetch;

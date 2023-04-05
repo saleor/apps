@@ -1,7 +1,7 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
-import pkg from "../../package.json";
+import pkg from "../../../package.json";
 import { customerCreatedWebhook } from "./webhooks/customer-created";
 import { fulfillmentCreatedWebhook } from "./webhooks/fulfillment-created";
 import { orderCreatedWebhook } from "./webhooks/order-created";

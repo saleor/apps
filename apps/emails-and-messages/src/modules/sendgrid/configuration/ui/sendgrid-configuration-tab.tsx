@@ -6,7 +6,7 @@ import { trpcClient } from "../../../trpc/trpc-client";
 import { SendgridConfigurationForm } from "./sendgrid-configuration-form";
 import { getDefaultEmptyConfiguration } from "../sendgrid-config-container";
 import { NextRouter, useRouter } from "next/router";
-import SideMenu from "../../../app-configuration/ui/side-menu";
+import { SideMenu } from "../../../app-configuration/ui/side-menu";
 import { SendgridConfiguration } from "../sendgrid-config";
 import { LoadingIndicator } from "../../../ui/loading-indicator";
 import { Add } from "@material-ui/icons";

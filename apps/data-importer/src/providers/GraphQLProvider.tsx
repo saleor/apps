@@ -4,7 +4,7 @@ import { Provider } from "urql";
 
 import { createClient } from "../lib/graphql";
 
-function GraphQLProvider(props: PropsWithChildren<{}>) {
+export function GraphQLProvider(props: PropsWithChildren<{}>) {
   const { appBridgeState } = useAppBridge();
 
   const client = createClient(appBridgeState?.saleorApiUrl!, async () =>
@@ -13,5 +13,3 @@ function GraphQLProvider(props: PropsWithChildren<{}>) {
 
   return <Provider value={client} {...props} />;
 }
-
-export default GraphQLProvider;

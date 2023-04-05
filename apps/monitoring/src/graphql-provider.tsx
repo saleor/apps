@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import { Provider } from "urql";
 import { createClient } from "./lib/create-graphq-client";
 
-function GraphQLProvider(props: PropsWithChildren<{}>) {
+export function GraphQLProvider(props: PropsWithChildren<{}>) {
   const { appBridgeState } = useAppBridge();
 
   const client = createClient(
@@ -14,5 +14,3 @@ function GraphQLProvider(props: PropsWithChildren<{}>) {
 
   return <Provider value={client} {...props} />;
 }
-
-export default GraphQLProvider;
