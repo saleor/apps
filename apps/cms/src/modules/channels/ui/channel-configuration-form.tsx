@@ -11,6 +11,7 @@ import {
   makeStyles,
   Notification,
   Alert,
+  IconButton,
 } from "@saleor/macaw-ui";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ import {
   SingleProviderSchema,
 } from "../../../lib/cms/config";
 import { ProviderIcon } from "../../provider-instances/ui/provider-icon";
+import { ChannelsLoading } from "./types";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -41,6 +43,10 @@ const useStyles = makeStyles((theme) => {
       justifyContent: "center",
       gap: theme.spacing(2),
     },
+    itemCellProgress: {
+      padding: theme.spacing(0, 4),
+      gridColumn: "1/5",
+    },
     footer: {
       display: "flex",
       justifyContent: "flex-end",
@@ -56,7 +62,7 @@ const useStyles = makeStyles((theme) => {
 interface ChannelConfigurationFormProps {
   channel?: MergedChannelSchema | null;
   providerInstances: SingleProviderSchema[];
-  loading: boolean;
+  loading: ChannelsLoading;
   onSubmit: (channel: SingleChannelSchema) => any;
   onSync: (providerInstanceId: string) => any;
 }
@@ -164,12 +170,26 @@ export const ChannelConfigurationForm = ({
                 <ListItemCell className={styles.itemCellCenter}>
                   <Button
                     variant="primary"
-                    disabled={!requireSync}
+                    disabled={!requireSync || loading.productsVariantsSync.importing}
                     onClick={() => onSync(providerInstance.id)}
                   >
                     Sync
                   </Button>
                 </ListItemCell>
+                {loading.productsVariantsSync.importing && (
+                  <ListItemCell className={styles.itemCellProgress}>
+                    Syncing products...
+                    <progress
+                      value={loading.productsVariantsSync.currentProductIndex}
+                      max={loading.productsVariantsSync.totalProductsCount}
+                      style={{
+                        height: "30px",
+                        width: "500px",
+                        maxWidth: "100%",
+                      }}
+                    />
+                  </ListItemCell>
+                )}
               </ListItem>
             );
           })}
@@ -178,8 +198,8 @@ export const ChannelConfigurationForm = ({
           /> */}
         </ListBody>
         <ListFooter className={styles.footer}>
-          <Button variant="primary" disabled={loading} type="submit">
-            {loading ? "..." : "Save"}
+          <Button variant="primary" disabled={loading.channels.saving} type="submit">
+            {loading.channels.saving ? "..." : "Save"}
           </Button>
         </ListFooter>
       </List>

@@ -64,7 +64,10 @@ const transformInputToBody = ({
   return body;
 };
 
-const transformCreateProductResponse = (response: ContentfulResponse): ProductResponse => {
+const transformCreateProductResponse = (
+  response: ContentfulResponse,
+  input: ProductInput
+): ProductResponse => {
   if (response.message) {
     return {
       ok: false,
@@ -76,6 +79,7 @@ const transformCreateProductResponse = (response: ContentfulResponse): ProductRe
     ok: true,
     data: {
       id: response.sys.id,
+      saleorId: input.saleorId,
     },
   };
 };
@@ -95,75 +99,100 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
   const { environment, spaceId, contentId, locale } = config;
 
+  const createProductInCMS = async (input: ProductInput): Promise<ContentfulResponse> => {
+    // Contentful API does not auto generate resource ID during creation, it has to be provided.
+    const resourceId = uuidv4();
+    const body = transformInputToBody({ input, locale });
+    const endpoint = getEntryEndpoint({
+      resourceId,
+      environment,
+      spaceId,
+    });
+    const response = await contentfulFetch(endpoint, config, {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {
+        "X-Contentful-Content-Type": contentId,
+      },
+    });
+    logger.debug("createProduct response", { response });
+    logger.debug({ response });
+    return await response.json();
+  };
+
+  const updateProductInCMS = async (id: string, input: ProductInput) => {
+    const body = transformInputToBody({ input, locale });
+    const endpoint = getEntryEndpoint({
+      resourceId: id,
+      environment,
+      spaceId,
+    });
+
+    const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
+    logger.debug("updateProduct getEntryResponse", { getEntryResponse });
+    const entry = await getEntryResponse.json();
+    logger.debug("updateProduct entry", { entry });
+
+    const response = await contentfulFetch(endpoint, config, {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {
+        "X-Contentful-Version": entry.sys.version,
+      },
+    });
+    logger.debug("updateProduct response", { response });
+    return await response.json();
+  };
+
+  const deleteProductInCMS = async (id: string) => {
+    const endpoint = getEntryEndpoint({ resourceId: id, environment, spaceId });
+
+    return await contentfulFetch(endpoint, config, { method: "DELETE" });
+  };
+
+  const createBatchProductsInCMS = async (input: ProductInput[]) => {
+    // Contentful doesn't support batch creation of items, so we need to create them one by one
+    return await Promise.all(
+      input.map(async (product) => ({
+        response: await createProductInCMS(product),
+        input: product,
+      }))
+    );
+  };
+
+  const deleteBatchProductsInCMS = async (ids: string[]) => {
+    // Contentful doesn't support batch deletion of items, so we need to delete them one by one
+    return await Promise.all(ids.map((id) => deleteProductInCMS(id)));
+  };
+
   return {
-    createProduct: async (params) => {
-      // Contentful API does not auto generate resource ID during creation, it has to be provided.
-      const resourceId = uuidv4();
-      const body = transformInputToBody({ input: params.input, locale });
-      const endpoint = getEntryEndpoint({
-        resourceId,
-        environment,
-        spaceId,
-      });
-
-      const response = await contentfulFetch(endpoint, config, {
-        method: "PUT",
-        body: JSON.stringify(body),
-        headers: {
-          "X-Contentful-Content-Type": contentId,
-        },
-      });
-      logger.debug("createProduct response", { response });
-      logger.debug({ response });
-      const result = await response.json();
+    createProduct: async ({ input }) => {
+      const result = await createProductInCMS(input);
       logger.debug("createProduct result", { result });
-      logger.debug({ result });
 
-      return transformCreateProductResponse(result);
+      return transformCreateProductResponse(result, input);
     },
     updateProduct: async ({ id, input }) => {
-      const body = transformInputToBody({ input, locale });
-      const endpoint = getEntryEndpoint({
-        resourceId: id,
-        environment,
-        spaceId,
-      });
-
-      const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
-      logger.debug("updateProduct getEntryResponse", { getEntryResponse });
-      const entry = await getEntryResponse.json();
-      logger.debug("updateProduct entry", { entry });
-
-      const response = await contentfulFetch(endpoint, config, {
-        method: "PUT",
-        body: JSON.stringify(body),
-        headers: {
-          "X-Contentful-Version": entry.sys.version,
-        },
-      });
-      logger.debug("updateProduct response", { response });
-      const result = await response.json();
+      const result = await updateProductInCMS(id, input);
       logger.debug("updateProduct result", { result });
 
       return result;
     },
     deleteProduct: async ({ id }) => {
-      const endpoint = getEntryEndpoint({ resourceId: id, environment, spaceId });
-
-      const response = await contentfulFetch(endpoint, config, { method: "DELETE" });
+      const response = await deleteProductInCMS(id);
       logger.debug("deleteProduct response", { response });
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
-      // todo: implement function
+      const results = await createBatchProductsInCMS(input);
+      logger.debug("createBatchProducts results", { results });
 
-      return [];
+      return results.map((result) => transformCreateProductResponse(result.response, result.input));
     },
     deleteBatchProducts: async ({ ids }) => {
-      // todo: implement function
-
-      return [];
+      const results = await deleteBatchProductsInCMS(ids);
+      logger.debug("deleteBatchProducts results", { results });
     },
   };
 };

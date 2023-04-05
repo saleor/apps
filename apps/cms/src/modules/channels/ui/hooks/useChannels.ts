@@ -1,9 +1,18 @@
 import { useChannelsFetch } from "./useChannelsFetch";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/config";
-import { ChannelsErrors, ChannelsLoading } from "../types";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+
+export interface ChannelsDataLoading {
+  fetching: boolean;
+  saving: boolean;
+}
+
+export interface ChannelsDataErrors {
+  fetching?: Error | null;
+  saving?: Error | null;
+}
 
 export const useChannels = () => {
   const { appBridge } = useAppBridge();
@@ -64,12 +73,12 @@ export const useChannels = () => {
     }
   };
 
-  const loading: ChannelsLoading = {
+  const loading: ChannelsDataLoading = {
     fetching: isFetching || channelsQueryData.fetching,
     saving: isSaving,
   };
 
-  const errors: ChannelsErrors = {
+  const errors: ChannelsDataErrors = {
     fetching: fetchingError ? Error(fetchingError) : null,
     saving: null,
   };

@@ -1,12 +1,16 @@
+import { makeStyles } from "@saleor/macaw-ui";
 import { useEffect, useState } from "react";
-import { MergedChannelSchema } from "../../../lib/cms/config";
+import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms/config";
+import {
+  useProductsVariantsSync,
+  ProductsVariantsSyncOperation,
+} from "../../cms/hooks/useProductsVariantsSync";
 import { useProviderInstances } from "../../provider-instances/ui/hooks/useProviderInstances";
+import { AppTabs } from "../../ui/app-tabs";
 import { ChannelConfiguration } from "./channel-configuration";
 import { ChannelsList } from "./channels-list";
 import { useChannels } from "./hooks/useChannels";
-import { AppTabs } from "../../ui/app-tabs";
-import { makeStyles } from "@saleor/macaw-ui";
-import { useProductsVariantsSync } from "../../cms/hooks/useProductsVariantsSync";
+import { ChannelsLoading } from "./types";
 
 const useStyles = makeStyles({
   wrapper: {
@@ -18,7 +22,7 @@ const useStyles = makeStyles({
 
 export const Channels = () => {
   const styles = useStyles();
-  const { channels, saveChannel, loading, errors } = useChannels();
+  const { channels, saveChannel, loading: loadingChannels, errors } = useChannels();
   const { providerInstances } = useProviderInstances();
 
   const [activeChannelSlug, setActiveChannelSlug] = useState<string | null>(
@@ -29,8 +33,6 @@ export const Channels = () => {
     setActiveChannelSlug(channel?.channelSlug || null);
   };
 
-  const { sync } = useProductsVariantsSync(activeChannelSlug);
-
   const activeChannel = channels.find((channel) => channel.channelSlug === activeChannelSlug);
 
   useEffect(() => {
@@ -38,6 +40,40 @@ export const Channels = () => {
       setActiveChannelSlug(channels[0].channelSlug);
     }
   }, [channels]);
+
+  const handleOnSyncCompleted = (providerInstanceId: string) => {
+    if (!activeChannel) {
+      return;
+    }
+
+    saveChannel({
+      ...activeChannel,
+      requireSyncProviderInstances: activeChannel.requireSyncProviderInstances?.filter(
+        (id) => id !== providerInstanceId
+      ),
+    });
+  };
+
+  const { sync, loading: loadingProductsVariantsSync } = useProductsVariantsSync(
+    activeChannelSlug,
+    handleOnSyncCompleted
+  );
+
+  const handleSync = async (providerInstanceId: string) => {
+    if (!activeChannel) {
+      return;
+    }
+
+    const operation: ProductsVariantsSyncOperation =
+      activeChannel.enabledProviderInstances.includes(providerInstanceId) ? "ADD" : "DELETE";
+
+    return sync(providerInstanceId, operation);
+  };
+
+  const loading: ChannelsLoading = {
+    channels: loadingChannels,
+    productsVariantsSync: loadingProductsVariantsSync,
+  };
 
   return (
     <>
@@ -55,7 +91,7 @@ export const Channels = () => {
           activeChannel={activeChannel}
           providerInstances={providerInstances}
           saveChannel={saveChannel}
-          syncChannelProviderInstance={sync}
+          syncChannelProviderInstance={handleSync}
           loading={loading}
           errors={errors}
         />

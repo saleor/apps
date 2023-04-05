@@ -105,17 +105,25 @@ const executeCmsClientOperation = async ({
 };
 
 interface CmsClientBatchOperationResult {
-  createdCmsIds?: string[];
-  deletedCmsIds?: string[];
+  createdCmsIds?: ProductResponseSuccess["data"][];
+  deletedCmsIds?: ProductResponseSuccess["data"][];
   error?: string;
 }
 
 export const executeCmsClientBatchOperation = async ({
   cmsClient,
   productsVariants,
+  verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance,
 }: {
   cmsClient: CmsClientBatchOperations;
   productsVariants: WebhookProductVariantFragment[];
+  /**
+   * Lookup function with purposely long name like in Java Spring ORM to verify condition against unintended deletion of product variant from CMS.
+   * On purpose passed as an argument, for inversion of control.
+   */
+  verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance: (
+    productVariant: WebhookProductVariantFragment
+  ) => boolean;
 }): Promise<CmsClientBatchOperationResult | undefined> => {
   const logger = pinoLogger.child({ cmsClient });
   logger.debug("Execute CMS client operation called");
@@ -156,7 +164,7 @@ export const executeCmsClientBatchOperation = async ({
           createdCmsIds:
             createBatchProductsResponse
               ?.filter((item) => item.ok && "data" in item)
-              .map((item) => (item as ProductResponseSuccess).data.id) || [],
+              .map((item) => (item as ProductResponseSuccess).data) || [],
         };
       } catch (error) {
         logger.error("Error creating batch items");
@@ -173,28 +181,34 @@ export const executeCmsClientBatchOperation = async ({
     const CMSIdsToRemove = productsVariants.reduce((CMSIdsToRemove, productVariant) => {
       const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
 
-      const hasOther = true; // verifyIfHasOtherCMSIds(productVariant, cmsClient.cmsProviderInstanceId);
+      const productVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance =
+        verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance(
+          productVariant
+        );
 
-      if (cmsId && !hasOther) {
-        return [...CMSIdsToRemove, cmsId];
+      if (cmsId && !productVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance) {
+        return [
+          ...CMSIdsToRemove,
+          {
+            id: cmsId,
+            saleorId: productVariant.id,
+          },
+        ];
       }
 
       return CMSIdsToRemove;
-    }, [] as string[]);
+    }, [] as ProductResponseSuccess["data"][]);
 
     if (CMSIdsToRemove.length) {
       logger.debug("CMS removing batch items called");
 
       try {
-        const deleteBatchProductsResponse = await cmsClient.operations.deleteBatchProducts({
-          ids: CMSIdsToRemove,
+        await cmsClient.operations.deleteBatchProducts({
+          ids: CMSIdsToRemove.map((item) => item.id),
         });
 
         return {
-          deletedCmsIds:
-            deleteBatchProductsResponse
-              ?.filter((item) => item.ok && "data" in item)
-              .map((item) => (item as ProductResponseSuccess).data.id) || [],
+          deletedCmsIds: CMSIdsToRemove,
         };
       } catch (error) {
         logger.error("Error removing batch items");

@@ -11,7 +11,7 @@ export type ProductInput = Record<string, any> & {
   image?: string;
 };
 
-export type ProductResponseSuccess = { ok: true; data: { id: string } };
+export type ProductResponseSuccess = { ok: true; data: { id: string; saleorId: string } };
 export type ProductResponseError = { ok: false; error: string };
 export type ProductResponse = ProductResponseSuccess | ProductResponseError;
 
@@ -25,7 +25,7 @@ export type CmsOperations = {
 export type CmsBatchOperations = {
   getAllProducts?: () => Promise<Response>;
   createBatchProducts: ({ input }: { input: ProductInput[] }) => Promise<ProductResponse[]>;
-  deleteBatchProducts: ({ ids }: { ids: string[] }) => Promise<ProductResponse[]>;
+  deleteBatchProducts: ({ ids }: { ids: string[] }) => Promise<Response[] | void>;
 };
 
 export type CmsClientOperations = {

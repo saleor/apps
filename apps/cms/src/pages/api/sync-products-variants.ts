@@ -3,24 +3,30 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
 import { executeCmsClientBatchOperation } from "../../lib/cms/client/clients-execution";
-import { getProviderInstancesSettings } from "../../lib/cms/client/settings";
+import { getChannelsSettings, getProviderInstancesSettings } from "../../lib/cms/client/settings";
 import { providersSchemaSet } from "../../lib/cms/config/providers";
 import cmsProviders, { CMSProvider } from "../../lib/cms/providers";
 import { logger as pinoLogger } from "../../lib/logger";
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
+import {
+  executeBatchMetadataUpdate,
+  MetadataRecord,
+} from "../../lib/cms/client/metadata-execution";
+import { CmsBatchOperations } from "../../lib/cms/types";
 
 export interface SyncProductsVariantsApiPayload {
   channelSlug: string;
   providerInstanceId: string;
   productsVariants: WebhookProductVariantFragment[];
+  operation: "ADD" | "DELETE";
 }
 
 export interface SyncProductsVariantsApiResponse {
   success: boolean;
   data?: {
-    createdCMSIds: string[];
-    deletedCMSIds: string[];
+    createdCMSIds: MetadataRecord[];
+    deletedCMSIds: MetadataRecord[];
   };
   error?: string;
 }
@@ -47,12 +53,37 @@ const handler: NextProtectedApiHandler = async (
     });
   }
 
-  // todo: add validation
-  const { providerInstanceId, productsVariants } = req.body as SyncProductsVariantsApiPayload;
+  // todo: change to zod validation
+  const { providerInstanceId, productsVariants, operation } =
+    req.body as SyncProductsVariantsApiPayload;
+
+  if (!providerInstanceId) {
+    return res.status(400).json({
+      success: false,
+      error: "The provider instance id is missing.",
+    });
+  }
+
+  if (!productsVariants || productsVariants?.length === 0) {
+    return res.status(400).json({
+      success: false,
+      error: "The products variants are missing.",
+    });
+  }
+
+  if (!operation || (operation !== "ADD" && operation !== "DELETE")) {
+    return res.status(400).json({
+      success: false,
+      error: "The operation is missing or invalid. Allowed operations: ADD, DELETE.",
+    });
+  }
+  const operationType: keyof CmsBatchOperations =
+    operation === "ADD" ? "createBatchProducts" : "deleteBatchProducts";
 
   const settingsManager = createSettingsManager(client);
   const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
   const providerInstanceSettings = providerInstancesSettingsParsed[providerInstanceId];
+  const channelsSettingsParsed = await getChannelsSettings(settingsManager);
 
   const provider = cmsProviders[
     providerInstanceSettings.providerName as CMSProvider
@@ -87,13 +118,49 @@ const handler: NextProtectedApiHandler = async (
     config,
   });
 
+  const enabledChannelsForSelectedProviderInstance = Object.entries(channelsSettingsParsed).reduce(
+    (enabledChannels, [channelSlug, channelSettingsParsed]) => {
+      if (channelSettingsParsed.enabledProviderInstances.includes(providerInstanceId)) {
+        return [...enabledChannels, channelSlug];
+      }
+      return enabledChannels;
+    },
+    [] as string[]
+  );
+
+  // todo: make it later a method of kinda ChannelsSettingsRepository instantiated only once
+  const verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance = (
+    productVariant: WebhookProductVariantFragment
+  ) => {
+    const variantAvailableChannels = productVariant.channelListings?.map((cl) => cl.channel.slug);
+    const isAvailable = variantAvailableChannels?.some((channel) =>
+      enabledChannelsForSelectedProviderInstance.includes(channel)
+    );
+    return !!isAvailable;
+  };
+
   const syncResult = await executeCmsClientBatchOperation({
     cmsClient: {
       cmsProviderInstanceId: providerInstanceId,
-      operationType: "createBatchProducts",
+      operationType,
       operations: provider.create(config as any),
     },
     productsVariants,
+    verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance,
+  });
+
+  await executeBatchMetadataUpdate({
+    context,
+    variantCMSProviderInstanceIdsToCreate:
+      syncResult?.createdCmsIds?.map((cmsId) => ({
+        id: cmsId.saleorId,
+        cmsProviderInstanceIds: { [providerInstanceId]: cmsId.id },
+      })) || [],
+    variantCMSProviderInstanceIdsToDelete:
+      syncResult?.deletedCmsIds?.map((cmsId) => ({
+        id: cmsId.saleorId,
+        cmsProviderInstanceIds: { [providerInstanceId]: cmsId.id },
+      })) || [],
   });
 
   return res.status(200).json({

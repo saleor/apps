@@ -1,5 +1,5 @@
 import { createProvider } from "./create";
-import { CmsOperations, CreateOperations, ProductResponse } from "../types";
+import { CreateOperations, ProductInput, ProductResponse } from "../types";
 import { logger as pinoLogger } from "../../logger";
 
 import { ApiError, buildClient, SimpleSchemaTypes } from "@datocms/cma-client-node";
@@ -32,11 +32,15 @@ const transformResponseError = (error: unknown): ProductResponse => {
   }
 };
 
-const transformResponseItem = (item: SimpleSchemaTypes.Item): ProductResponse => {
+const transformResponseItem = (
+  item: SimpleSchemaTypes.Item,
+  input: ProductInput
+): ProductResponse => {
   return {
     ok: true,
     data: {
       id: item.id,
+      saleorId: input.saleorId,
     },
   };
 };
@@ -44,58 +48,76 @@ const transformResponseItem = (item: SimpleSchemaTypes.Item): ProductResponse =>
 const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
   const logger = pinoLogger.child({ cms: "strapi" });
 
+  const client = datocmsClient(config);
+
+  const createProductInCMS = async (input: ProductInput) =>
+    client.items.create({
+      item_type: {
+        id: config.itemTypeId,
+        type: "item_type",
+      },
+      saleor_id: input.saleorId,
+      name: input.name,
+      channels: JSON.stringify(input.channels),
+      product_id: input.productId,
+      product_name: input.productName,
+      product_slug: input.productSlug,
+    });
+
+  const updateProductInCMS = async (id: string, input: ProductInput) =>
+    client.items.update(id, {
+      saleor_id: input.saleorId,
+      name: input.name,
+      channels: JSON.stringify(input.channels),
+      product_id: input.productId,
+      product_name: input.productName,
+      product_slug: input.productSlug,
+    });
+
+  const deleteProductInCMS = async (id: string) => client.items.destroy(id);
+
+  const createBatchProductsInCMS = async (input: ProductInput[]) =>
+    // DatoCMS doesn't support batch creation of items, so we need to create them one by one
+    Promise.all(
+      input.map(async (item) => ({
+        id: await createProductInCMS(item),
+        input: item,
+      }))
+    );
+
+  const deleteBatchProductsInCMS = async (ids: string[]) =>
+    client.items.bulkDestroy({
+      items: ids.map((id) => ({ id, type: "item" })),
+    });
+
   return {
     createProduct: async ({ input }) => {
-      const client = datocmsClient(config);
-
       try {
-        const item = await client.items.create({
-          item_type: {
-            id: config.itemTypeId,
-            type: "item_type",
-          },
-          saleor_id: input.saleorId,
-          name: input.name,
-          channels: JSON.stringify(input.channels),
-          product_id: input.productId,
-          product_name: input.productName,
-          product_slug: input.productSlug,
-        });
+        const item = await createProductInCMS(input);
         logger.debug("createProduct response", { item });
 
-        return transformResponseItem(item);
+        return transformResponseItem(item, input);
       } catch (error) {
         return transformResponseError(error);
       }
     },
     updateProduct: async ({ id, input }) => {
-      const client = datocmsClient(config);
-
-      const item = await client.items.update(id, {
-        saleor_id: input.saleorId,
-        name: input.name,
-        channels: JSON.stringify(input.channels),
-        product_id: input.productId,
-        product_name: input.productName,
-        product_slug: input.productSlug,
-      });
+      const item = await updateProductInCMS(id, input);
       logger.debug("updateProduct response", { item });
     },
     deleteProduct: async ({ id }) => {
-      const client = datocmsClient(config);
-
-      const item = await client.items.destroy(id);
+      const item = await deleteProductInCMS(id);
       logger.debug("deleteProduct response", { item });
     },
     createBatchProducts: async ({ input }) => {
-      // todo: implement function
+      const items = await createBatchProductsInCMS(input);
+      logger.debug("createBatchProducts response", { items });
 
-      return [];
+      return items.map((item) => transformResponseItem(item.id, item.input));
     },
     deleteBatchProducts: async ({ ids }) => {
-      // todo: implement function
-
-      return [];
+      const items = await deleteBatchProductsInCMS(ids);
+      logger.debug("deleteBatchProducts response", { items });
     },
   };
 };

@@ -17,13 +17,17 @@ export const useQueryAllProducts = (paused: boolean, channelSlug: string | null)
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
 
   const [products, setProducts] = useState<Products>([]);
+  const [fetchCompleted, setFetchCompleted] = useState(false);
 
   useEffect(() => {
-    if (paused || !channelSlug) {
-      return;
+    if (paused) {
+      setProducts([]);
+      setFetchCompleted(false);
     }
+  }, [paused]);
 
-    if (!appBridgeState?.token) {
+  useEffect(() => {
+    if (paused || !channelSlug || !appBridgeState?.token) {
       return;
     }
 
@@ -36,11 +40,17 @@ export const useQueryAllProducts = (paused: boolean, channelSlug: string | null)
 
     const getProducts = async (channelSlug: string, cursor: string): Promise<void> => {
       const response = await client
-        .query(ProductsDataForImportDocument, {
-          after: cursor,
-          first: PER_PAGE,
-          channel: channelSlug!,
-        })
+        .query(
+          ProductsDataForImportDocument,
+          {
+            after: cursor,
+            first: PER_PAGE,
+            channel: channelSlug!,
+          },
+          {
+            requestPolicy: "network-only", // Invalidate products data, because it could contain legacy products variants metadata that indicates these products variants existance in CMS providers
+          }
+        )
         .toPromise();
 
       const newProducts = response?.data?.products?.edges.map((e) => e.node) ?? [];
@@ -55,8 +65,7 @@ export const useQueryAllProducts = (paused: boolean, channelSlug: string | null)
         // get next page of products
         return getProducts(channelSlug, response.data.products?.pageInfo.endCursor);
       } else {
-        // do nothing
-        return;
+        setFetchCompleted(true);
       }
     };
 
@@ -65,5 +74,8 @@ export const useQueryAllProducts = (paused: boolean, channelSlug: string | null)
     })();
   }, [appBridgeState?.token, saleorApiUrl, paused, channelSlug]);
 
-  return products;
+  return {
+    products,
+    fetchCompleted,
+  };
 };
