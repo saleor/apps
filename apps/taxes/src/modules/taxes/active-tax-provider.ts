@@ -1,4 +1,5 @@
 import {
+  MetadataItem,
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
@@ -11,6 +12,38 @@ import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
+import { getAppConfig } from "../app-configuration/get-app-config";
+
+export function getActiveTaxProvider(channelSlug: string | undefined, metadata: MetadataItem[]) {
+  const logger = createLogger({ service: "getActiveTaxProvider" });
+
+  if (!channelSlug) {
+    logger.error("Channel slug is missing");
+    throw new Error("Channel slug is missing");
+  }
+
+  const { providers, channels } = getAppConfig(metadata);
+
+  const channelConfig = channels[channelSlug];
+
+  if (!channelConfig) {
+    logger.error(`Channel config not found for channel ${channelSlug}`);
+    throw new Error(`Channel config not found for channel ${channelSlug}`);
+  }
+
+  const providerInstance = providers.find(
+    (instance) => instance.id === channelConfig.providerInstanceId
+  );
+
+  if (!providerInstance) {
+    logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+    throw new Error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+  }
+
+  const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
+
+  return taxProvider;
+}
 
 export class ActiveTaxProvider implements ProviderWebhookService {
   private client: ProviderWebhookService;

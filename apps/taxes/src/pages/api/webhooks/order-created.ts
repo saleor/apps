@@ -1,12 +1,11 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { z } from "zod";
 import {
   OrderCreatedEventSubscriptionFragment,
   UntypedOrderCreatedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
-import { ActiveTaxProviderService } from "../../../modules/taxes/active-tax-provider.service";
+import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 
 export const config = {
   api: {
@@ -35,9 +34,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-
-    const activeTaxProviderService = new ActiveTaxProviderService();
-    const taxProvider = await activeTaxProviderService.get(channelSlug, appMetadata);
+    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
     logger.info({ taxProvider }, "Fetched activeTaxProvider");
 
     // todo: figure out what fields are needed and add validation
