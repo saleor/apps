@@ -5,7 +5,8 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
-import { taxJarTransform } from "./taxjar-transform";
+import { taxJarCalculateTaxes } from "./taxjar-calculate-taxes-transform";
+import { taxJarOrderCreated } from "./taxjar-order-created-transform";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -22,27 +23,17 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const linesWithDiscount = taxJarTransform.prepareLinesWithDiscountPayload(
-      payload.lines,
-      payload.discounts
-    );
-    const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
-    const taxParams = taxJarTransform.preparePayload(payload, channel, linesWithDiscount);
+    const taxParams = taxJarCalculateTaxes.transformPayload(payload, channel);
     const fetchedTaxes = await this.client.fetchTaxForOrder(taxParams);
     this.logger.debug({ fetchedTaxes }, "fetchTaxForOrder response");
 
-    return taxJarTransform.prepareCalculateTaxesResponse(
-      payload,
-      fetchedTaxes,
-      linesWithChargeTaxes,
-      linesWithDiscount
-    );
+    return taxJarCalculateTaxes.transformResponse(payload, fetchedTaxes);
   }
 
   async createOrder(order: OrderSubscriptionFragment, channel: ChannelConfig) {
-    const params = taxJarTransform.prepareCreateOrderParams(order, channel);
+    this.logger.debug({ order, channel }, "createOrder called with:");
+    const params = taxJarOrderCreated.transformPayload(order, channel);
     const result = await this.client.createOrder(params);
-
     this.logger.debug({ createOrder: result }, "createOrder response");
 
     return { ok: true };

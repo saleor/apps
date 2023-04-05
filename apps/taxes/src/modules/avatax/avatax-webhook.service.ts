@@ -3,9 +3,10 @@ import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/g
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { avataxTransform } from "./avatax-transform";
+import { avataxCalculateTaxes } from "./avatax-calculate-taxes-transform";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
+import { avataxOrderCreated } from "./avatax-order-created-transform";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -25,20 +26,17 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const model = avataxTransform.prepareSalesOrder(payload, channel, this.config);
+    const model = avataxCalculateTaxes.transformPayload(payload, channel, this.config);
     const result = await this.client.createTransaction(model);
-    this.logger.debug(
-      { createOrderTransaction: result },
-      "AvataxClient createTransaction response"
-    );
-    return avataxTransform.prepareCalculateTaxesResponse(result);
+    this.logger.debug({ createOrderTransaction: result }, "AvataxClient calculateTaxes response");
+    return avataxCalculateTaxes.transformResponse(result);
   }
 
   async createOrder(order: OrderSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
-    const model = avataxTransform.prepareSalesInvoice(order, channel, this.config);
+    const model = avataxOrderCreated.transformPayload(order, channel, this.config);
     const result = await this.client.createTransaction(model);
-    this.logger.debug({ createOrderTransaction: result }, "createTransaction response");
+    this.logger.debug({ createOrderTransaction: result }, "createOrder response");
     return { ok: true };
   }
 }

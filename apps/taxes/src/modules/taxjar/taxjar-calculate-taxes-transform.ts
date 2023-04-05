@@ -1,7 +1,6 @@
-import { CreateOrderParams, TaxParams } from "taxjar/dist/types/paramTypes";
+import { TaxParams } from "taxjar/dist/types/paramTypes";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import {
-  OrderSubscriptionFragment,
   TaxBaseFragment,
   TaxBaseLineFragment,
   TaxDiscountFragment,
@@ -55,12 +54,13 @@ const prepareLinesWithDiscountPayload = (
   });
 };
 
-const prepareCalculateTaxesResponse = (
+const transformResponse = (
   payload: TaxBaseFragment,
-  response: TaxForOrderRes,
-  linesWithChargeTaxes: FetchTaxesLinePayload[],
-  linesWithDiscount: FetchTaxesLinePayload[]
+  response: TaxForOrderRes
 ): CalculateTaxesResponse => {
+  const linesWithDiscount = prepareLinesWithDiscountPayload(payload.lines, payload.discounts);
+  const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
+
   const taxResponse = linesWithChargeTaxes.length !== 0 ? response : undefined;
   const taxDetails = taxResponse?.tax.breakdown;
   // todo: investigate
@@ -97,11 +97,10 @@ const prepareCalculateTaxesResponse = (
   };
 };
 
-const preparePayload = (
-  taxBase: TaxBaseFragment,
-  channel: ChannelConfig,
-  linesWithChargeTaxes: FetchTaxesLinePayload[]
-): TaxParams => {
+const transformPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): TaxParams => {
+  const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase.lines, taxBase.discounts);
+  const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
+
   const taxParams = {
     from_country: channel.address.country,
     from_zip: channel.address.zip,
@@ -126,34 +125,7 @@ const preparePayload = (
   return taxParams;
 };
 
-const prepareCreateOrderParams = (
-  order: OrderSubscriptionFragment,
-  channel: ChannelConfig
-): CreateOrderParams => {
-  return {
-    from_country: channel.address.country,
-    from_zip: channel.address.zip,
-    from_state: channel.address.state,
-    from_city: channel.address.city,
-    from_street: channel.address.street,
-    to_country: order.shippingAddress!.country.code,
-    to_zip: order.shippingAddress!.postalCode,
-    to_state: order.shippingAddress!.countryArea,
-    to_city: order.shippingAddress!.city,
-    to_street: `${order.shippingAddress!.streetAddress1} ${order.shippingAddress!.streetAddress2}`,
-    shipping: order.shippingPrice.net.amount,
-    // todo: replace
-    line_items: [],
-    amount: 0,
-    sales_tax: 0,
-    transaction_date: "",
-    transaction_id: "",
-  };
-};
-
-export const taxJarTransform = {
-  prepareLinesWithDiscountPayload,
-  prepareCreateOrderParams,
-  prepareCalculateTaxesResponse,
-  preparePayload,
+export const taxJarCalculateTaxes = {
+  transformPayload,
+  transformResponse,
 };
