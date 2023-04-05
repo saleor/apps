@@ -1,8 +1,8 @@
 import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
-import { OrderSubscriptionFragment } from "../../../generated/graphql";
+import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 
-const transformLines = (lines: OrderSubscriptionFragment["lines"]): LineItem[] => {
+const transformLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] => {
   return lines.map((line) => ({
     quantity: line.quantity,
     unit_price: line.unitPrice.net.amount,
@@ -13,7 +13,7 @@ const transformLines = (lines: OrderSubscriptionFragment["lines"]): LineItem[] =
 };
 
 const transformPayload = (
-  order: OrderSubscriptionFragment,
+  order: OrderCreatedSubscriptionFragment,
   channel: ChannelConfig
 ): CreateOrderParams => {
   const lineItems = transformLines(order.lines);

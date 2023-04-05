@@ -1,4 +1,8 @@
-import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
+import {
+  OrderCreatedSubscriptionFragment,
+  OrderFulfilledSubscriptionFragment,
+  TaxBaseFragment,
+} from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderConfig } from "../providers-configuration/providers-config";
@@ -8,7 +12,7 @@ import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
 
-export class ActiveTaxProvider {
+export class ActiveTaxProvider implements ProviderWebhookService {
   private client: ProviderWebhookService;
   private logger: pino.Logger;
   private channel: ChannelConfig;
@@ -45,9 +49,15 @@ export class ActiveTaxProvider {
     return this.client.calculateTaxes(payload, this.channel);
   }
 
-  async createOrder(order: OrderSubscriptionFragment) {
+  async createOrder(order: OrderCreatedSubscriptionFragment) {
     this.logger.debug(".createOrder called");
 
     return this.client.createOrder(order, this.channel);
+  }
+
+  async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
+    this.logger.debug(".fulfillOrder called");
+
+    return this.client.fulfillOrder(payload, this.channel);
   }
 }

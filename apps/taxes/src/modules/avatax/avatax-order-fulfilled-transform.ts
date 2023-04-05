@@ -1,11 +1,11 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
+import { OrderFulfilledSubscriptionFragment } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { AvataxConfig } from "./avatax-config";
 
-const transformLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
+const transformLines = (order: OrderFulfilledSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
     amount: line.unitPrice.net.amount,
     quantity: line.quantity,
@@ -16,7 +16,7 @@ const transformLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[
 };
 
 const transformPayload = (
-  order: OrderCreatedSubscriptionFragment,
+  order: OrderFulfilledSubscriptionFragment,
   channel: ChannelConfig,
   config: AvataxConfig
 ): CreateTransactionModel => {
@@ -24,8 +24,7 @@ const transformPayload = (
     type: DocumentType.SalesInvoice,
     customerCode: "0", // todo: replace with customer code
     companyCode: config.companyName,
-    // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
-    commit: config.isAutocommit,
+    commit: true, // * what about config.isAutocommit?
     addresses: {
       shipFrom: {
         line1: channel.address.street,
@@ -52,6 +51,6 @@ const transformPayload = (
   };
 };
 
-export const avataxOrderCreated = {
+export const avataxOrderFulfilled = {
   transformPayload,
 };

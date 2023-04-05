@@ -1,5 +1,9 @@
 import pino from "pino";
-import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
+import {
+  OrderCreatedSubscriptionFragment,
+  OrderFulfilledSubscriptionFragment,
+  TaxBaseFragment,
+} from "../../../generated/graphql";
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
@@ -7,6 +11,7 @@ import { avataxCalculateTaxes } from "./avatax-calculate-taxes-transform";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
 import { avataxOrderCreated } from "./avatax-order-created-transform";
+import { avataxOrderFulfilled } from "./avatax-order-fulfilled-transform";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -32,9 +37,17 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return avataxCalculateTaxes.transformResponse(result);
   }
 
-  async createOrder(order: OrderSubscriptionFragment, channel: ChannelConfig) {
+  async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
     const model = avataxOrderCreated.transformPayload(order, channel, this.config);
+    const result = await this.client.createTransaction(model);
+    this.logger.debug({ createOrderTransaction: result }, "createOrder response");
+    return { ok: true };
+  }
+
+  async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
+    this.logger.debug({ order, channel }, "fulfillOrder called with:");
+    const model = avataxOrderFulfilled.transformPayload(order, channel, this.config);
     const result = await this.client.createTransaction(model);
     this.logger.debug({ createOrderTransaction: result }, "createOrder response");
     return { ok: true };

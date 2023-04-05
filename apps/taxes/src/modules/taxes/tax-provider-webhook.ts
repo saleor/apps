@@ -1,5 +1,9 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
-import { OrderSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
+import {
+  OrderCreatedSubscriptionFragment,
+  OrderFulfilledSubscriptionFragment,
+  TaxBaseFragment,
+} from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
@@ -10,7 +14,11 @@ export interface ProviderWebhookService {
     channel: ChannelConfig
   ) => Promise<CalculateTaxesResponse>;
   createOrder: (
-    payload: OrderSubscriptionFragment,
+    payload: OrderCreatedSubscriptionFragment,
+    channel: ChannelConfig
+  ) => Promise<{ ok: boolean }>;
+  fulfillOrder: (
+    payload: OrderFulfilledSubscriptionFragment,
     channel: ChannelConfig
   ) => Promise<{ ok: boolean }>;
 }
