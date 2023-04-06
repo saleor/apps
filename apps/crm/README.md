@@ -4,4 +4,4 @@
   <h1>Saleor App CRM</h1>
 </div>
 
-TODO - link docs page
+Visit [CRM App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/crm) to learn how to configure and develop the app locally.
