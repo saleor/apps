@@ -1,0 +1,8 @@
+.root {
+  display: grid;
+  grid-template-columns: 280px auto 280px;
+  align-items: start;
+  gap: var(--mu-space-12);
+  height: 100%;
+  width: 100%;
+}
