@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "start": "turbo run start",
     "test": "turbo run test",
     "test:ci": "turbo run test:ci",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

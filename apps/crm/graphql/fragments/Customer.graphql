@@ -1,0 +1,10 @@
+fragment Customer on User {
+  id
+  email
+  lastName
+  firstName
+  privateMetadata {
+    key
+    value
+  }
+}
