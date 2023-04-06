@@ -4,6 +4,8 @@ import pino from "pino";
 import packageJson from "../../../package.json";
 import { createLogger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
+import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 type AvataxSettings = {
   appName: string;
@@ -38,6 +40,8 @@ const createAvataxSettings = (config: AvataxConfig): AvataxSettings => {
 export type CommitTransactionArgs = {
   companyCode: string;
   transactionCode: string;
+  model: CommitTransactionModel;
+  documentType: DocumentType;
 };
 
 export type CreateTransactionArgs = {
@@ -68,10 +72,10 @@ export class AvataxClient {
     return this.client.createTransaction({ model });
   }
 
-  async commitTransaction({ transactionCode, companyCode }: CommitTransactionArgs) {
-    this.logger.debug({ transactionCode, companyCode }, "commitTransaction called with:");
+  async commitTransaction(args: CommitTransactionArgs) {
+    this.logger.debug(args, "commitTransaction called with:");
 
-    return this.client.commitTransaction({ transactionCode, companyCode });
+    return this.client.commitTransaction(args);
   }
 
   async ping() {

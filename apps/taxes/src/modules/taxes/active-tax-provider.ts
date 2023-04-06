@@ -27,7 +27,8 @@ export function getActiveTaxProvider(channelSlug: string | undefined, metadata: 
   const channelConfig = channels[channelSlug];
 
   if (!channelConfig) {
-    logger.error(`Channel config not found for channel ${channelSlug}`);
+    // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
+    logger.info(`Channel config not found for channel ${channelSlug}`);
     throw new Error(`Channel config not found for channel ${channelSlug}`);
   }
 

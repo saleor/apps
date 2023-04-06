@@ -1,3 +1,4 @@
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderFulfilledSubscriptionFragment } from "../../../generated/graphql";
 import { EXTERNAL_ID_KEY } from "../../pages/api/webhooks/order-created";
 import { CommitTransactionArgs } from "./avatax-client";
@@ -22,6 +23,10 @@ const transformPayload = (
   return {
     transactionCode,
     companyCode: config.companyCode,
+    documentType: DocumentType.SalesInvoice,
+    model: {
+      commit: true,
+    },
   };
 };
 
