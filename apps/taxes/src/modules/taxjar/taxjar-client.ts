@@ -13,6 +13,14 @@ const createTaxJarSettings = (config: TaxJarConfig): Config => {
   return settings;
 };
 
+export type FetchTaxForOrderArgs = {
+  params: TaxParams;
+};
+
+export type CreateOrderArgs = {
+  params: CreateOrderParams;
+};
+
 export class TaxJarClient {
   private client: TaxJar;
   private logger: pino.Logger;
@@ -26,7 +34,7 @@ export class TaxJarClient {
     this.client = taxJarClient;
   }
 
-  async fetchTaxForOrder(params: TaxParams) {
+  async fetchTaxForOrder({ params }: FetchTaxForOrderArgs) {
     this.logger.debug({ params }, "fetchTaxForOrder called with:");
     const response = await this.client.taxForOrder(params);
     return response;
@@ -45,7 +53,7 @@ export class TaxJarClient {
     }
   }
 
-  async createOrder(params: CreateOrderParams) {
+  async createOrder({ params }: CreateOrderArgs) {
     this.logger.debug("createOrder called with:");
 
     return this.client.createOrder(params);

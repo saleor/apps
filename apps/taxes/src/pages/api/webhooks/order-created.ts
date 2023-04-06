@@ -1,6 +1,7 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import {
   OrderCreatedEventSubscriptionFragment,
+  OrderStatus,
   UntypedOrderCreatedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
@@ -40,6 +41,11 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       logger.error("Insufficient order data");
+      return res.status(400);
+    }
+
+    if (payload.order.status === OrderStatus.Fulfilled) {
+      logger.info("Skipping fulfilled order to prevent duplication");
       return res.status(400);
     }
 

@@ -42,7 +42,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
       return res.status(400);
     }
 
-    const fulfilledOrder = await taxProvider.createOrder(payload.order);
+    const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
     logger.info({ fulfilledOrder }, "Order fulfilled");
 
     return res.status(200);

@@ -1,4 +1,3 @@
-import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../generated/graphql";
@@ -7,6 +6,7 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { taxLineResolver } from "../taxes/tax-line-resolver";
 import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
+import { CreateTransactionArgs } from "./avatax-client";
 import { AvataxConfig } from "./avatax-config";
 
 const SHIPPING_ITEM_CODE = "Shipping";
@@ -42,35 +42,37 @@ const transformPayload = (
   taxBase: TaxBaseFragment,
   channel: ChannelConfig,
   config: AvataxConfig
-): CreateTransactionModel => {
+): CreateTransactionArgs => {
   return {
-    type: DocumentType.SalesOrder,
-    customerCode: "0", // todo: replace with customer code
-    companyCode: config.companyName,
-    // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
-    commit: config.isAutocommit,
-    addresses: {
-      shipFrom: {
-        line1: channel.address.street,
-        city: channel.address.city,
-        region: channel.address.state,
-        postalCode: channel.address.zip,
-        country: channel.address.country,
+    model: {
+      type: DocumentType.SalesOrder,
+      customerCode: "0", // todo: replace with customer code
+      companyCode: config.companyName,
+      // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
+      commit: config.isAutocommit,
+      addresses: {
+        shipFrom: {
+          line1: channel.address.street,
+          city: channel.address.city,
+          region: channel.address.state,
+          postalCode: channel.address.zip,
+          country: channel.address.country,
+        },
+        shipTo: {
+          line1: taxBase.address?.streetAddress1,
+          line2: taxBase.address?.streetAddress2,
+          city: taxBase.address?.city,
+          country: taxBase.address?.country.code,
+          postalCode: taxBase.address?.postalCode,
+          region: taxBase.address?.countryArea,
+        },
       },
-      shipTo: {
-        line1: taxBase.address?.streetAddress1,
-        line2: taxBase.address?.streetAddress2,
-        city: taxBase.address?.city,
-        country: taxBase.address?.country.code,
-        postalCode: taxBase.address?.postalCode,
-        region: taxBase.address?.countryArea,
-      },
+      // todo: add currency code
+      currencyCode: "",
+      lines: transformLines(taxBase),
+      // todo: replace date with order/checkout date
+      date: new Date(),
     },
-    // todo: add currency code
-    currencyCode: "",
-    lines: transformLines(taxBase),
-    // todo: replace date with order/checkout date
-    date: new Date(),
   };
 };
 

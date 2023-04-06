@@ -35,6 +35,15 @@ const createAvataxSettings = (config: AvataxConfig): AvataxSettings => {
   return settings;
 };
 
+export type CommitTransactionArgs = {
+  companyCode: string;
+  transactionCode: string;
+};
+
+export type CreateTransactionArgs = {
+  model: CreateTransactionModel;
+};
+
 export class AvataxClient {
   private client: Avatax;
   private logger: pino.Logger;
@@ -53,10 +62,16 @@ export class AvataxClient {
     this.client = avataxClient;
   }
 
-  async createTransaction(model: CreateTransactionModel) {
-    this.logger.debug({ model }, "fetchTaxesForOrder called with:");
+  async createTransaction({ model }: CreateTransactionArgs) {
+    this.logger.debug({ model }, "createTransaction called with:");
 
     return this.client.createTransaction({ model });
+  }
+
+  async commitTransaction({ transactionCode, companyCode }: CommitTransactionArgs) {
+    this.logger.debug({ transactionCode }, "updateTransaction called with:");
+
+    return this.client.commitTransaction({ transactionCode, companyCode });
   }
 
   async ping() {

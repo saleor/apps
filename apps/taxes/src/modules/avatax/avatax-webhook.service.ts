@@ -31,8 +31,8 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const model = avataxCalculateTaxes.transformPayload(payload, channel, this.config);
-    const result = await this.client.createTransaction(model);
+    const args = avataxCalculateTaxes.transformPayload(payload, channel, this.config);
+    const result = await this.client.createTransaction(args);
     this.logger.debug({ createOrderTransaction: result }, "AvataxClient calculateTaxes response");
     return avataxCalculateTaxes.transformResponse(result);
   }
@@ -40,6 +40,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
     const model = avataxOrderCreated.transformPayload(order, channel, this.config);
+    this.logger.debug({ model }, "will call createTransaction with");
     const result = await this.client.createTransaction(model);
     this.logger.debug({ createOrderTransaction: result }, "createOrder response");
     return { ok: true };
@@ -47,8 +48,9 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const model = avataxOrderFulfilled.transformPayload(order, channel, this.config);
-    const result = await this.client.createTransaction(model);
+    const args = avataxOrderFulfilled.transformPayload(order);
+    this.logger.debug({ args }, "will call commitTransaction with");
+    const result = await this.client.commitTransaction(args);
     this.logger.debug({ createOrderTransaction: result }, "createOrder response");
     return { ok: true };
   }

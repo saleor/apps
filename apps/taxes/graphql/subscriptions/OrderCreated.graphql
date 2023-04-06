@@ -18,6 +18,7 @@ fragment OrderCreatedSubscription on Order {
   id
   userEmail
   created
+  status
   channel {
     id
     slug
