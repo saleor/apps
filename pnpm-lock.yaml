@@ -38,6 +38,7 @@ importers:
       '@material-ui/icons': ^4.11.3
       '@material-ui/lab': 4.0.0-alpha.61
       '@saleor/app-sdk': 0.37.1
+      '@saleor/apps-shared': workspace:*
       '@saleor/macaw-ui': ^0.6.7
       '@sentry/nextjs': ^7.43.0
       '@testing-library/react': ^13.4.0
@@ -76,6 +77,7 @@ importers:
       '@material-ui/icons': 4.11.3_x54wk6dsnsxe7g7vvfmytp77te
       '@material-ui/lab': 4.0.0-alpha.61_x54wk6dsnsxe7g7vvfmytp77te
       '@saleor/app-sdk': 0.37.1_ld2jel3hspngo3u5lti2kgl2sq
+      '@saleor/apps-shared': link:../../packages/shared
       '@saleor/macaw-ui': 0.6.7_pmlnlm755hlzzzocw2qhf3a34e
       '@sentry/nextjs': 7.43.0_next@13.2.4+react@18.2.0
       '@urql/exchange-auth': 1.0.0_graphql@16.6.0

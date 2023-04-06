@@ -14,6 +14,7 @@ module.exports = {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
     disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
   },
+  transpilePackages: ["@saleor/apps-shared"],
 };
 
 module.exports = withSentryConfig(module.exports, { silent: true }, { hideSourcemaps: true });

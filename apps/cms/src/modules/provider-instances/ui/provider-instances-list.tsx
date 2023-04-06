@@ -1,20 +1,9 @@
-import { Grid } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { FormControl, Grid, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { Button, makeStyles } from "@saleor/macaw-ui";
 import { SingleProviderSchema } from "../../../lib/cms/config";
 import { AppPaper } from "../../ui/app-paper";
-import { ProviderInstancesListItems, ProviderItem } from "./provider-instances-list-items";
-import { ProvidersErrors, ProvidersLoading } from "./types";
 
-const useStyles = makeStyles((theme) => {
-  return {
-    button: {
-      padding: theme.spacing(1, 2),
-      justifyContent: "flex-start",
-    },
-  };
-});
+import { ProvidersErrors, ProvidersLoading } from "./types";
 
 const ProviderInstancesListSkeleton = () => {
   return (
@@ -44,7 +33,7 @@ interface ProviderInstancesListProps {
   errors: ProvidersErrors;
 }
 
-export const ProviderInstancesList = ({
+export const ProviderInstancesSelect = ({
   providerInstances,
   activeProviderInstance,
   newProviderInstance,
@@ -53,8 +42,6 @@ export const ProviderInstancesList = ({
   loading,
   errors,
 }: ProviderInstancesListProps) => {
-  const styles = useStyles();
-
   const handleSetActiveProviderInstance = (providerInstance: SingleProviderSchema) => {
     setActiveProviderInstance(providerInstance);
   };
@@ -67,27 +54,29 @@ export const ProviderInstancesList = ({
     return <div>Error loading providers</div>;
   }
 
+  if (providerInstances.length === 0 || !activeProviderInstance) {
+    return null;
+  }
+
   return (
-    <Grid container spacing={1}>
-      {!!providerInstances.length && (
-        <Grid item xs={12}>
-          <ProviderInstancesListItems
-            providerInstances={providerInstances}
-            activeProviderInstance={activeProviderInstance}
-            setActiveProviderInstance={handleSetActiveProviderInstance}
-          />
-        </Grid>
-      )}
-      <Grid item xs={12}>
-        <Button
-          startIcon={<Add />}
-          className={styles.button}
-          fullWidth
-          onClick={requestAddProviderInstance}
-        >
-          Add configuration
-        </Button>
-      </Grid>
-    </Grid>
+    <FormControl fullWidth>
+      <InputLabel id="provider-select">Select Provider to configure</InputLabel>
+
+      <Select
+        labelId="channel-select"
+        variant="outlined"
+        fullWidth
+        value={activeProviderInstance?.id}
+        onChange={(e, value) => {
+          handleSetActiveProviderInstance(providerInstances.find((p) => p.id === e.target.value)!);
+        }}
+      >
+        {providerInstances.map((p) => (
+          <MenuItem key={p.id} value={p.id}>
+            {p.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };

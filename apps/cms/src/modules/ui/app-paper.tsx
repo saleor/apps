@@ -1,6 +1,7 @@
-import { Paper } from "@material-ui/core";
+import { Paper, PaperProps } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
+import clsx from "clsx";
 
 const useStyles = makeStyles({
   root: {
@@ -8,10 +9,10 @@ const useStyles = makeStyles({
   },
 });
 
-export const AppPaper = ({ children }: { children: React.ReactNode }) => {
+export const AppPaper = ({ children, className, ...props }: PaperProps) => {
   const styles = useStyles();
   return (
-    <Paper elevation={0} className={styles.root}>
+    <Paper elevation={0} className={clsx(styles.root, className)} {...props}>
       {children}
     </Paper>
   );

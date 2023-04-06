@@ -3,8 +3,10 @@ import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/co
 import { ChannelsErrors, ChannelsLoading } from "../types";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 export const useChannels = () => {
+  const { appBridge } = useAppBridge();
   const isMounted = useIsMounted();
   const [channelsQueryData, channelsQueryOpts] = useChannelsQuery({
     pause: !isMounted,
@@ -20,7 +22,15 @@ export const useChannels = () => {
   const saveChannel = (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
 
-    saveChannelFetch(channelToSave);
+    saveChannelFetch(channelToSave).then(() => {
+      appBridge?.dispatch(
+        actions.Notification({
+          title: "Success",
+          status: "success",
+          text: "Configuration saved",
+        })
+      );
+    });
   };
 
   const loading: ChannelsLoading = {

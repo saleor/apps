@@ -1,10 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import React from "react";
-import {
-  CMSSchemaChannels,
-  cmsSchemaChannels,
-  SingleChannelSchema,
-} from "../../../../lib/cms/config";
+import { CMSSchemaChannels, SingleChannelSchema } from "../../../../lib/cms/config";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { ChannelsApiResponse } from "../../../../pages/api/channels";
 

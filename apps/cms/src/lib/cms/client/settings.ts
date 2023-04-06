@@ -1,6 +1,5 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { CMSSchemaChannels, CMSSchemaProviderInstances } from "../config";
-import { createCmsKeyForSaleorItem, getCmsIdFromSaleorItemKey } from "./metadata";
 
 export const getChannelsSettings = async (settingsManager: EncryptedMetadataManager) => {
   const channelsSettings = await settingsManager.get("channels");

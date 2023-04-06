@@ -1,5 +1,5 @@
 import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@material-ui/core";
-import { makeStyles } from "@saleor/macaw-ui";
+import { Button, makeStyles } from "@saleor/macaw-ui";
 import Image from "next/image";
 import React from "react";
 import { CMSProviderSchema, providersConfig, SingleProviderSchema } from "../../../lib/cms/config";
@@ -38,6 +38,18 @@ const useStyles = makeStyles((theme) => ({
   textHeader: {
     textAlign: "center",
     margin: theme.spacing(1, 0, 3, 0),
+  },
+  newProviderButton: {
+    margin: "30px auto",
+  },
+  newProviderContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  box: {
+    border: `1px solid hsla(212, 44%, 13%, 0.08)`,
+    borderRadius: 8,
+    padding: 20,
   },
 }));
 
@@ -82,6 +94,7 @@ interface ProviderInstanceConfigurationProps {
   deleteProviderInstance: (providerInstance: SingleProviderSchema) => any;
   loading: ProvidersLoading;
   errors: ProvidersErrors;
+  onNewProviderRequest(): void;
 }
 
 export const ProviderInstanceConfiguration = ({
@@ -90,6 +103,7 @@ export const ProviderInstanceConfiguration = ({
   saveProviderInstance,
   deleteProviderInstance,
   loading,
+  onNewProviderRequest,
   errors,
 }: ProviderInstanceConfigurationProps) => {
   const [selectedProvider, setSelectedProvider] = React.useState<Provider | undefined>(
@@ -120,70 +134,86 @@ export const ProviderInstanceConfiguration = ({
         <Typography variant="body1" className={styles.textCenter}>
           Please select a provider configuration or add new one.
         </Typography>
+        <div className={styles.newProviderContainer}>
+          <Button
+            onClick={onNewProviderRequest}
+            variant="primary"
+            className={styles.newProviderButton}
+          >
+            Create a Provider config
+          </Button>
+        </div>
       </AppPaper>
     );
   }
 
   return (
-    <AppPaper>
-      {errors.fetching && (
-        <Typography variant="body1" color="error">
-          Error fetching available providers
-        </Typography>
-      )}
-      {errors.saving && (
-        <Typography variant="body1" color="error">
-          Error saving provider configuration
-        </Typography>
-      )}
-      {!!newProviderInstance && (
-        <Typography variant="h3" className={styles.textHeader}>
-          Add new configuration
-        </Typography>
-      )}
-      <RadioGroup value={selectedProvider?.name ?? ""} onChange={handleProviderChange}>
-        <Grid container justifyContent="center">
-          {Object.entries(providersConfig).map(([name, config]) => (
-            <Grid className={styles.gridItem} item xs={4} key={name}>
-              <FormControlLabel
-                className={
-                  selectedProvider?.name === name
-                    ? `${styles.radioLabelActive} ${styles.radioLabel}`
-                    : styles.radioLabel
-                }
-                control={<Radio style={{ display: "none" }} name="provider" value={name} />}
-                label={
-                  <div className={styles.iconWithLabel}>
-                    <Image src={config.icon} alt={`${config.label} icon`} height={32} width={32} />
-                    <Typography variant="body1">{config.label}</Typography>
-                  </div>
-                }
-                labelPlacement="top"
-                aria-label={config.label}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </RadioGroup>
-      {selectedProvider ? (
-        <>
-          <br />
-          <ProviderInstanceConfigurationForm
-            provider={selectedProvider}
-            providerInstance={activeProviderInstance}
-            loading={loading.saving}
-            onSubmit={saveProviderInstance}
-            onDelete={deleteProviderInstance}
-          />
-        </>
-      ) : (
-        <>
-          <br />
-          <Typography variant="body1" className={styles.textCenter}>
-            Please select a provider.
+    <AppPaper className={styles.box}>
+      <div>
+        {errors.fetching && (
+          <Typography variant="body1" color="error">
+            Error fetching available providers
           </Typography>
-        </>
-      )}
+        )}
+        {errors.saving && (
+          <Typography variant="body1" color="error">
+            Error saving provider configuration
+          </Typography>
+        )}
+        {!!newProviderInstance && (
+          <Typography variant="h3" className={styles.textHeader}>
+            Add new configuration
+          </Typography>
+        )}
+        <RadioGroup value={selectedProvider?.name ?? ""} onChange={handleProviderChange}>
+          <Grid container justifyContent="center">
+            {Object.entries(providersConfig).map(([name, config]) => (
+              <Grid className={styles.gridItem} item xs={4} key={name}>
+                <FormControlLabel
+                  className={
+                    selectedProvider?.name === name
+                      ? `${styles.radioLabelActive} ${styles.radioLabel}`
+                      : styles.radioLabel
+                  }
+                  control={<Radio style={{ display: "none" }} name="provider" value={name} />}
+                  label={
+                    <div className={styles.iconWithLabel}>
+                      <Image
+                        src={config.icon}
+                        alt={`${config.label} icon`}
+                        height={32}
+                        width={32}
+                      />
+                      <Typography variant="body1">{config.label}</Typography>
+                    </div>
+                  }
+                  labelPlacement="top"
+                  aria-label={config.label}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </RadioGroup>
+        {selectedProvider ? (
+          <>
+            <br />
+            <ProviderInstanceConfigurationForm
+              provider={selectedProvider}
+              providerInstance={activeProviderInstance}
+              loading={loading.saving}
+              onSubmit={saveProviderInstance}
+              onDelete={deleteProviderInstance}
+            />
+          </>
+        ) : (
+          <>
+            <br />
+            <Typography variant="body1" className={styles.textCenter}>
+              Please select a provider.
+            </Typography>
+          </>
+        )}
+      </div>
     </AppPaper>
   );
 };

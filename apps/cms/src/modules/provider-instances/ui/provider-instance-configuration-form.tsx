@@ -2,16 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Grid, TextField, Typography } from "@material-ui/core";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import { Path, useForm } from "react-hook-form";
-import { z } from "zod";
 import {
-  providersConfig,
   CMSProviderSchema,
-  providersSchemaSet,
+  providersConfig,
   ProvidersSchema,
+  providersSchemaSet,
   SingleProviderSchema,
-  ProviderInstanceSchema,
 } from "../../../lib/cms/config";
 import { Provider } from "../../providers/config";
 import { AppMarkdownText } from "../../ui/app-markdown-text";
@@ -68,7 +65,6 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
     });
 
     if (providerInstance && providerInstance.providerName === provider.name) {
-      console.log(providerInstance);
       reset(providerInstance as ProvidersSchema[TProvider]);
     }
   }, [provider, providerInstance]);
