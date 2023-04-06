@@ -3,7 +3,7 @@ import { Client } from "urql";
 import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
-  UpdateAppMetadataDocument,
+  UpdateMetadataDocument,
 } from "../../../generated/graphql";
 import { logger as pinoLogger } from "../../lib/logger";
 
@@ -48,7 +48,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   }
 
   const { error: mutationError, data: mutationData } = await client
-    .mutation(UpdateAppMetadataDocument, {
+    .mutation(UpdateMetadataDocument, {
       id: appId,
       input: metadata,
     })
