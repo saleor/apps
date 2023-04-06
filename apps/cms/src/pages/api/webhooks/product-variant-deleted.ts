@@ -13,7 +13,6 @@ import {
 } from "../../../lib/cms/client";
 import { logger as pinoLogger } from "../../../lib/logger";
 import { createClient } from "../../../lib/graphql";
-import { fetchProductVariantMetadata } from "../../../lib/metadata";
 
 export const config = {
   api: {

@@ -1,14 +1,13 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
-import { createClient } from "../../graphql";
 import { createSettingsManager } from "../../metadata";
 import { getOperationType } from "./operations";
 import {
   getChannelsSettings,
-  getProviderInstancesSettings,
   getProductVariantProviderInstancesToAlter,
+  getProviderInstancesSettings,
 } from "./settings";
 import { providersSchemaSet } from "../config";
-import { cmsProviders, CMSProvider } from "../providers";
+import { CMSProvider, cmsProviders } from "../providers";
 import { CmsClientOperations } from "../types";
 import { logger as pinoLogger } from "../../logger";
 import { getCmsIdFromSaleorItemKey } from "./metadata";

@@ -1,10 +1,9 @@
 import { AppPaper } from "../../ui/app-paper";
-import { FormControlLabel, Grid, Paper, Radio, RadioGroup, Typography } from "@material-ui/core";
+import { Grid, Paper, Typography } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import { ChannelConfigurationForm } from "./channel-configuration-form";
 import {
   MergedChannelSchema,
-  ProvidersSchema,
   SingleChannelSchema,
   SingleProviderSchema,
 } from "../../../lib/cms/config";

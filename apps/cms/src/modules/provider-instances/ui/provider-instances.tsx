@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ProviderInstances = () => {
+export const ProviderInstances = () => {
   const styles = useStyles();
   const { appBridge } = useAppBridge();
   const { providerInstances, saveProviderInstance, deleteProviderInstance, loading, errors } =

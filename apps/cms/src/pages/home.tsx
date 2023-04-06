@@ -1,4 +1,4 @@
-import AppTabs from "../modules/ui/app-tabs";
+import { AppTabs } from "../modules/ui/app-tabs";
 import { AppLayout } from "../modules/ui/app-layout";
 import { NextPageWithLayout } from "./_app";
 import { ReactElement } from "react";

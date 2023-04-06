@@ -16,7 +16,6 @@ const useStyles = makeStyles({
 });
 
 export const Channels = () => {
-
   const styles = useStyles();
   const { channels, saveChannel, loading, errors } = useChannels();
   const { providerInstances } = useProviderInstances();
@@ -60,4 +59,3 @@ export const Channels = () => {
     </>
   );
 };
-export default Channels;

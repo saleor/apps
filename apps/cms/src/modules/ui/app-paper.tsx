@@ -1,6 +1,6 @@
 import { Paper, PaperProps } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import clsx from "clsx";
 
 const useStyles = makeStyles({

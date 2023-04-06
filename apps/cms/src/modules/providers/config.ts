@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { ContentfulIcon, DatocmsIcon, StrapiIcon } from "../../assets";
 
 export const CMS_ID_KEY = "cmsId";

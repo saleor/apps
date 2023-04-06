@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@material-ui/core";
+import { FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@material-ui/core";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import Image from "next/image";
 import React from "react";
