@@ -30,7 +30,7 @@
     "@trpc/server": "^10.9.0",
     "@urql/exchange-auth": "^1.0.0",
     "@urql/exchange-multipart-fetch": "^1.0.1",
-    "avatax": "^23.2.0",
+    "avatax": "^23.3.2",
     "clsx": "^1.2.1",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
