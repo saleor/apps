@@ -1,5 +1,5 @@
-import { makeStyles } from "@saleor/macaw-ui";
 import {
+  makeStyles,
   OffsettedList,
   OffsettedListBody,
   OffsettedListHeader,
@@ -7,9 +7,7 @@ import {
   OffsettedListItemCell,
 } from "@saleor/macaw-ui";
 import clsx from "clsx";
-import { ChannelFragment } from "../../../../generated/graphql";
-import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms/config";
-import { ProviderIcon } from "../../provider-instances/ui/provider-icon";
+import { MergedChannelSchema } from "../../../lib/cms/config";
 
 const useStyles = makeStyles((theme) => {
   return {

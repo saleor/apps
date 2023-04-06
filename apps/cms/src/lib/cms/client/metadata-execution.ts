@@ -1,8 +1,6 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import {
   DeleteMetadataDocument,
-  ProductVariantUpdatedWebhookPayloadFragment,
   UpdateMetadataDocument,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";

@@ -2,8 +2,7 @@ import { makeStyles } from "@saleor/macaw-ui";
 
 export const useStyles = makeStyles({
   root: {
-    maxWidth: 1180,
-    margin: "0 auto",
+    margin: "12px auto",
   },
 });
 

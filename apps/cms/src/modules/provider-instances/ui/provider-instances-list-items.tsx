@@ -6,11 +6,9 @@ import {
   OffsettedListItem,
   OffsettedListItemCell,
 } from "@saleor/macaw-ui";
-import Image from "next/image";
 import clsx from "clsx";
 import React from "react";
 import { SingleProviderSchema } from "../../../lib/cms/config";
-import { getProviderByName } from "../../providers/config";
 import { ProviderIcon } from "./provider-icon";
 
 const useStyles = makeStyles((theme) => {

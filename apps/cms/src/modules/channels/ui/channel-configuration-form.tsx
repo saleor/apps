@@ -1,18 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, FormControl, FormControlLabel, Switch, Typography } from "@material-ui/core";
+import { Checkbox, FormControl, Typography } from "@material-ui/core";
 import {
-  makeStyles,
+  Button,
   List,
   ListBody,
+  ListFooter,
   ListHeader,
   ListItem,
   ListItemCell,
-  ListFooter,
-  Button,
+  makeStyles,
 } from "@saleor/macaw-ui";
 import React from "react";
-import { Controller, useController, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import {
   channelSchema,
   ChannelSchema,
@@ -38,6 +37,10 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       justifyContent: "flex-end",
       padding: theme.spacing(2, 4),
+    },
+    form: {
+      border: `1px solid hsla(212, 44%, 13%, 0.08)`,
+      borderRadius: 8,
     },
   };
 });
@@ -87,7 +90,7 @@ export const ChannelConfigurationForm = ({
   const errors = formState.errors;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       {!!Object.entries(errors).length && (
         <Typography variant="body1" color="error">
           Error validating form

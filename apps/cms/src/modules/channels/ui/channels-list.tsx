@@ -1,25 +1,14 @@
-import { Grid } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { ChannelFragment } from "../../../../generated/graphql";
-import { MergedChannelSchema, SingleChannelSchema } from "../../../lib/cms";
+import { MergedChannelSchema } from "../../../lib/cms";
 import { AppPaper } from "../../ui/app-paper";
-import { ChannelsListItems } from "./channels-list-items";
+
 import { ChannelsErrors, ChannelsLoading } from "./types";
+import { ChannelsSelect } from "./channels-select";
 
 const ChannelsListSkeleton = () => {
   return (
     <AppPaper>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Skeleton variant="rect" width={"45%"} height={10} />
-        </Grid>
-        <Grid item xs={12}>
-          <Skeleton variant="rect" width={"100%"} height={30} />
-        </Grid>
-        <Grid item xs={12}>
-          <Skeleton variant="rect" width={"100%"} height={30} />
-        </Grid>
-      </Grid>
+      <Skeleton variant="rect" width={"100%"} height={30} />
     </AppPaper>
   );
 };
@@ -48,7 +37,7 @@ export const ChannelsList = ({
   }
 
   return (
-    <ChannelsListItems
+    <ChannelsSelect
       channels={channels}
       activeChannel={activeChannel}
       setActiveChannel={setActiveChannel}

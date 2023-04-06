@@ -1,13 +1,34 @@
-import { makeStyles, PageTab, PageTabs } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
+import clsx from "clsx";
+import { ButtonBase, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   tabs: {
-    margin: "16px 0",
+    display: "flex",
+    flexDirection: "column",
+  },
+  button: {
+    background: "#fff",
+    border: "none",
+    fontSize: 14,
+    height: 50,
+    textAlign: "left",
+    cursor: "pointer",
+    borderRadius: 8,
+    padding: "0 20px",
+
+    justifyContent: "flex-start",
+  },
+  active: {
+    border: `1px solid hsla(212, 14%, 77%, 1)`,
   },
 });
 
 const tabs = {
+  home: {
+    label: "Home",
+  },
   channels: {
     label: "Channels",
   },
@@ -32,11 +53,20 @@ export const AppTabs = ({ activeTab }: AppTabsProps) => {
 
   return (
     <div className={styles.tabs}>
-      <PageTabs value={activeTab} onChange={handleTabChange}>
-        {Object.entries(tabs).map(([key, config]) => (
-          <PageTab key={key} value={key} label={config.label} />
-        ))}
-      </PageTabs>
+      {Object.entries(tabs).map(([key, config]) => (
+        <ButtonBase
+          disableRipple
+          className={clsx(styles.button, {
+            [styles.active]: activeTab === key,
+          })}
+          key={key}
+          onClick={() => {
+            handleTabChange(key);
+          }}
+        >
+          <Typography>{config.label}</Typography>
+        </ButtonBase>
+      ))}
     </div>
   );
 };

@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MergedChannelSchema } from "../../../lib/cms/config";
 import { useProviderInstances } from "../../provider-instances/ui/hooks/useProviderInstances";
-import { Instructions } from "../../ui/instructions";
 import { ChannelConfiguration } from "./channel-configuration";
 import { ChannelsList } from "./channels-list";
 import { useChannels } from "./hooks/useChannels";
+import { AppTabs } from "../../ui/app-tabs";
+import { makeStyles } from "@saleor/macaw-ui";
+
+const useStyles = makeStyles({
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+});
 
 export const Channels = () => {
+  const styles = useStyles();
   const { channels, saveChannel, loading, errors } = useChannels();
   const { providerInstances } = useProviderInstances();
 
@@ -20,23 +30,32 @@ export const Channels = () => {
 
   const activeChannel = channels.find((channel) => channel.channelSlug === activeChannelSlug);
 
+  useEffect(() => {
+    if (!activeChannelSlug && channels.length > 0) {
+      setActiveChannelSlug(channels[0].channelSlug);
+    }
+  }, [channels]);
+
   return (
     <>
-      <ChannelsList
-        channels={channels}
-        activeChannel={activeChannel}
-        setActiveChannel={handleSetActiveChannel}
-        loading={loading}
-        errors={errors}
-      />
-      <ChannelConfiguration
-        activeChannel={activeChannel}
-        providerInstances={providerInstances}
-        saveChannel={saveChannel}
-        loading={loading}
-        errors={errors}
-      />
-      <Instructions />
+      <AppTabs activeTab="channels" />
+
+      <div className={styles.wrapper}>
+        <ChannelsList
+          channels={channels}
+          activeChannel={activeChannel}
+          setActiveChannel={handleSetActiveChannel}
+          loading={loading}
+          errors={errors}
+        />
+        <ChannelConfiguration
+          activeChannel={activeChannel}
+          providerInstances={providerInstances}
+          saveChannel={saveChannel}
+          loading={loading}
+          errors={errors}
+        />
+      </div>
     </>
   );
 };
