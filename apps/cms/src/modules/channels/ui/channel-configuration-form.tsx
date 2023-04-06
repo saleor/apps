@@ -1,18 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, FormControl, FormControlLabel, Switch, Typography } from "@material-ui/core";
+import { Checkbox, FormControl, Typography } from "@material-ui/core";
 import {
-  makeStyles,
+  Button,
   List,
   ListBody,
+  ListFooter,
   ListHeader,
   ListItem,
   ListItemCell,
-  ListFooter,
-  Button,
+  makeStyles,
 } from "@saleor/macaw-ui";
 import React from "react";
-import { Controller, useController, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import {
   channelSchema,
   ChannelSchema,

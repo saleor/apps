@@ -3,8 +3,10 @@ import { SingleProviderSchema } from "../../../lib/cms/config";
 import { useEffect, useState } from "react";
 import { useProviderInstances } from "./hooks/useProviderInstances";
 import { AppTabs } from "../../ui/app-tabs";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
+import { ProviderInstancesSelect } from "./provider-instances-list";
+import { Add } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   wrapper: {
