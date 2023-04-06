@@ -11,7 +11,7 @@ import { trpcClient } from "../modules/trpc/trpc-client";
 import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { NextPage } from "next";
-import GraphQLProvider from "../lib/graphql-provider";
+import { GraphQLProvider } from "../lib/graphql-provider";
 import { AppBridgeStorageSetter } from "../lib/app-bridge-persistence";
 
 /**
