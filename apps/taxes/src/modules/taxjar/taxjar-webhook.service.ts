@@ -36,7 +36,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     const result = await this.client.createOrder(args);
     this.logger.debug({ createOrder: result }, "createOrder response");
 
-    return { ok: true };
+    return taxJarOrderCreated.transformResponse(result);
   }
 
   async fulfillOrder() {

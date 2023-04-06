@@ -2,6 +2,8 @@ import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
 import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { CreateOrderArgs } from "./taxjar-client";
+import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
+import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
 
 const transformLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] => {
   return lines.map((line) => ({
@@ -50,6 +52,13 @@ const transformPayload = (
   };
 };
 
+const transformResponse = (response: CreateOrderRes): CreateOrderResponse => {
+  return {
+    id: response.order.transaction_id,
+  };
+};
+
 export const taxJarOrderCreated = {
   transformPayload,
+  transformResponse,
 };

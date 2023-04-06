@@ -3,10 +3,15 @@ import {
   OrderCreatedEventSubscriptionFragment,
   OrderStatus,
   UntypedOrderCreatedSubscriptionDocument,
+  UpdateMetadataDocument,
+  UpdateMetadataMutation,
+  UpdateMetadataMutationVariables,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { createClient } from "../../../lib/graphql";
+import { Client } from "urql";
 
 export const config = {
   api: {
@@ -27,9 +32,36 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<ExpectedWebhookPa
   webhookPath: "/api/webhooks/order-created",
 });
 
+export const EXTERNAL_ID_KEY = "externalId";
+
+async function updateOrderMetadataWithExternalId(
+  client: Client,
+  orderId: string,
+  externalId: string
+) {
+  const { error } = await client
+    .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, {
+      id: orderId,
+      input: [
+        {
+          key: EXTERNAL_ID_KEY,
+          value: externalId,
+        },
+      ],
+    } as UpdateMetadataMutationVariables)
+    .toPromise();
+
+  if (error) {
+    throw error;
+  }
+
+  return { ok: true };
+}
+
 export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
-  const { payload } = ctx;
+  const { payload, authData } = ctx;
+  const { saleorApiUrl, token } = authData;
   logger.info({ payload }, "Handler called with payload");
 
   try {
@@ -51,6 +83,9 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     const createdOrder = await taxProvider.createOrder(payload.order);
     logger.info({ createdOrder }, "Order created");
+    const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+    await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
+    logger.info("Updated order metadata with externalId");
 
     return res.status(200);
   } catch (error) {

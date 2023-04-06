@@ -5,6 +5,8 @@ import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { AvataxConfig } from "./avatax-config";
 import { CreateTransactionArgs } from "./avatax-client";
+import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
 const transformLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
@@ -25,7 +27,7 @@ const transformPayload = (
     model: {
       type: DocumentType.SalesInvoice,
       customerCode: "0", // todo: replace with customer code
-      companyCode: config.companyName,
+      companyCode: config.companyCode,
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {
@@ -55,6 +57,13 @@ const transformPayload = (
   };
 };
 
+const transformResponse = (response: TransactionModel): CreateOrderResponse => {
+  return {
+    id: response.code ?? "",
+  };
+};
+
 export const avataxOrderCreated = {
   transformPayload,
+  transformResponse,
 };

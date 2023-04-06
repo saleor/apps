@@ -47,7 +47,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     return res.status(200);
   } catch (error) {
-    logger.error({ error }, "Error while creating tax provider order");
+    logger.error({ error }, "Error while fulfilling tax provider order");
     // todo: add error message
     return res.status(400);
   }

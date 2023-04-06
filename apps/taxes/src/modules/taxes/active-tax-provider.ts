@@ -69,7 +69,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
         break;
 
       default: {
-        throw new TaxProviderError(`Tax provider ${taxProviderName} doesnt match`, {
+        throw new TaxProviderError(`Tax provider ${taxProviderName} doesn't match`, {
           cause: "TaxProviderNotFound",
         });
       }

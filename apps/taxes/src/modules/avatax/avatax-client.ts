@@ -69,7 +69,7 @@ export class AvataxClient {
   }
 
   async commitTransaction({ transactionCode, companyCode }: CommitTransactionArgs) {
-    this.logger.debug({ transactionCode }, "updateTransaction called with:");
+    this.logger.debug({ transactionCode, companyCode }, "commitTransaction called with:");
 
     return this.client.commitTransaction({ transactionCode, companyCode });
   }

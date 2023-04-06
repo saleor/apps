@@ -47,7 +47,7 @@ const transformPayload = (
     model: {
       type: DocumentType.SalesOrder,
       customerCode: "0", // todo: replace with customer code
-      companyCode: config.companyName,
+      companyCode: config.companyCode,
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {

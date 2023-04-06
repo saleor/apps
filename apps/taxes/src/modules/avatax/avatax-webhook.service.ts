@@ -43,12 +43,12 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.logger.debug({ model }, "will call createTransaction with");
     const result = await this.client.createTransaction(model);
     this.logger.debug({ createOrderTransaction: result }, "createOrder response");
-    return { ok: true };
+    return avataxOrderCreated.transformResponse(result);
   }
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const args = avataxOrderFulfilled.transformPayload(order);
+    const args = avataxOrderFulfilled.transformPayload(order, this.config);
     this.logger.debug({ args }, "will call commitTransaction with");
     const result = await this.client.commitTransaction(args);
     this.logger.debug({ createOrderTransaction: result }, "createOrder response");

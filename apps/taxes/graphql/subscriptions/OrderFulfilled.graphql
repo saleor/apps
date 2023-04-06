@@ -41,6 +41,10 @@ fragment OrderFulfilledSubscription on Order {
       amount
     }
   }
+  privateMetadata {
+    key
+    value
+  }
   lines {
     ...OrderLineFragment
   }
