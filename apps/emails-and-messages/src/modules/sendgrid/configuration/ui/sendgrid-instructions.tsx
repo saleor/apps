@@ -1,6 +1,8 @@
 import { Link, Paper, Typography } from "@material-ui/core";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { makeStyles } from "@saleor/macaw-ui";
+import { Button, makeStyles } from "@saleor/macaw-ui";
+import { useQuery } from "@tanstack/react-query";
+import { trpcClient } from "../../../trpc/trpc-client";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -10,6 +12,18 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
+const TestButton = () => {
+  const { mutate } = trpcClient.sendgridConfiguration.createWebhook.useMutation({
+    onSuccess: () => {
+      console.log("success");
+    },
+    onError: (err) => {
+      console.log("error", err);
+    },
+  });
+  return <button onClick={() => mutate()}>Test</button>;
+};
+
 export const SendgridInstructions = () => {
   const styles = useStyles();
 
@@ -17,6 +31,7 @@ export const SendgridInstructions = () => {
 
   return (
     <Paper elevation={0} className={styles.instructionsContainer}>
+      <TestButton />
       <Typography paragraph variant="h4">
         Sendgrid Provider
       </Typography>

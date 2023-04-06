@@ -303,40 +303,6 @@ export const SendgridConfigurationForm = (props: Props) => {
               </Typography>
             )}
           </FormControl>
-
-          <Controller
-            name="senderName"
-            control={control}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                label="Sender name"
-                disabled={true}
-                error={!!error}
-                helperText={error?.message}
-                value={value}
-                onChange={onChange}
-                {...CommonFieldProps}
-              />
-            )}
-          />
-
-          <Controller
-            name="senderEmail"
-            control={control}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <>
-                <TextField
-                  label="Sender email"
-                  value={value}
-                  disabled={true}
-                  helperText={error?.message}
-                  error={!!error}
-                  onChange={onChange}
-                  {...CommonFieldProps}
-                />
-              </>
-            )}
-          />
         </>
       )}
       <Button type="submit" fullWidth variant="primary">

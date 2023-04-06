@@ -12,6 +12,7 @@ import { SendgridConfigurationService } from "./get-sendgrid-configuration.servi
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { TRPCError } from "@trpc/server";
+import { createWebhookMutate, deleteWebhookMutate, getAllWebhooks } from "../../../lib/webhooks";
 
 // Allow access only for the dashboard users and attaches the
 // configuration service to the context
@@ -56,6 +57,21 @@ export const sendgridConfigurationRouter = router({
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "sendgridConfigurationRouter.create called");
       return await ctx.configurationService.createConfiguration(input);
+    }),
+  createWebhook: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    // .input(sendgridCreateConfigurationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+      logger.debug(input, "create webhook called");
+      const r = await getAllWebhooks(ctx.apiClient);
+      if (!r?.length) {
+        console.log("None found");
+        return;
+      }
+      const lastHook = r[r.length - 1];
+      const r2 = await deleteWebhookMutate(ctx.apiClient, lastHook.id);
+      return;
     }),
   deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
