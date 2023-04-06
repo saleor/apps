@@ -170,13 +170,15 @@ export const ChannelConfigurationForm = ({
                 <ListItemCell className={styles.itemCellCenter}>
                   <Button
                     variant="primary"
-                    disabled={!requireSync || loading.productsVariantsSync.importing}
+                    disabled={
+                      !requireSync || !!loading.productsVariantsSync.syncingProviderInstanceId
+                    }
                     onClick={() => onSync(providerInstance.id)}
                   >
                     Sync
                   </Button>
                 </ListItemCell>
-                {loading.productsVariantsSync.importing && (
+                {loading.productsVariantsSync.syncingProviderInstanceId === providerInstance.id && (
                   <ListItemCell className={styles.itemCellProgress}>
                     Syncing products...
                     <progress

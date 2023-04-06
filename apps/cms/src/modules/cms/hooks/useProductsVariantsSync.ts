@@ -5,7 +5,7 @@ import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 
 export interface ProductsVariantsSyncLoading {
-  importing: boolean;
+  syncingProviderInstanceId?: string;
   currentProductIndex?: number;
   totalProductsCount?: number;
 }
@@ -126,7 +126,7 @@ export const useProductsVariantsSync = (
   ]);
 
   const loading: ProductsVariantsSyncLoading = {
-    importing: !!startedProviderInstanceId,
+    syncingProviderInstanceId: startedProviderInstanceId,
     currentProductIndex,
     totalProductsCount: products.length,
   };

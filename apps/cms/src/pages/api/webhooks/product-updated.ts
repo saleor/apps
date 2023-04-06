@@ -120,7 +120,8 @@ export const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment
   if (!allCMSErrors.length) {
     return res.status(200).end();
   } else {
-    return res.status(500).json({ errors: allCMSErrors });
+    // Due to undesired webhook events deliveries retries on HTTP 500, we need to return 200 status code instead of 500.
+    return res.status(200).json({ errors: allCMSErrors });
   }
 };
 
