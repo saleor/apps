@@ -2,7 +2,7 @@ import pino from "pino";
 
 export const logger = pino({
   level: "debug",
-  // redact: ["token"],
+  redact: ["token"],
   transport:
     process.env.NODE_ENV === "development"
       ? {

@@ -8,17 +8,20 @@ type Props = PropsWithBox<{
 }>;
 
 export const MailchimpListPicker = ({ disabled, onChange, ...props }: Props) => {
-  const { isSuccess, data, isLoading } = trpcClient.mailchimp.audience.getLists.useQuery();
+  const { isSuccess, data, isLoading } = trpcClient.mailchimp.audience.getLists.useQuery(
+    undefined,
+    {
+      onSuccess: (data) => {
+        if (data?.length) {
+          onChange(null, data[0].id);
+        }
+      },
+    }
+  );
 
   if (isSuccess && !data) {
     console.error("Fetched empty audiences list, should not happen");
   }
-
-  useEffect(() => {
-    if (data?.length) {
-      onChange(null, data[0].id);
-    }
-  }, [data]);
 
   return (
     <Box {...props}>

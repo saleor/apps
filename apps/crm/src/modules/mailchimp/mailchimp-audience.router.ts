@@ -9,14 +9,14 @@ import { z } from "zod";
 const AddContactSchema = z.object({
   listId: z.string().min(1),
   contact: z.object({
-    email: z.string().min(2),
+    email: z.string().email().min(2),
   }),
 });
 
 const BulkAddContactsSchema = z.object({
   contacts: z.array(
     z.object({
-      email: z.string().min(2),
+      email: z.string().email().min(2),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       tags: z.array(z.string()).optional(),
