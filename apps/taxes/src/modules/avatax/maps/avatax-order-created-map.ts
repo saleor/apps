@@ -1,14 +1,14 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { AvataxConfig } from "./avatax-config";
-import { CreateTransactionArgs } from "./avatax-client";
-import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { AvataxConfig } from "../avatax-config";
+import { CreateTransactionArgs } from "../avatax-client";
+import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
-const transformLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
+const mapLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
     amount: line.unitPrice.net.amount,
     quantity: line.quantity,
@@ -18,7 +18,7 @@ const transformLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[
   return productLines;
 };
 
-const transformPayload = (
+const mapPayload = (
   order: OrderCreatedSubscriptionFragment,
   channel: ChannelConfig,
   config: AvataxConfig
@@ -50,20 +50,20 @@ const transformPayload = (
       },
       // todo: add currency code
       currencyCode: "",
-      lines: transformLines(order),
+      lines: mapLines(order),
       // todo: replace date with order/checkout date
       date: new Date(),
     },
   };
 };
 
-const transformResponse = (response: TransactionModel): CreateOrderResponse => {
+const mapResponse = (response: TransactionModel): CreateOrderResponse => {
   return {
     id: response.code ?? "",
   };
 };
 
 export const avataxOrderCreated = {
-  transformPayload,
-  transformResponse,
+  mapPayload,
+  mapResponse,
 };

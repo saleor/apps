@@ -1,13 +1,13 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { TaxBaseFragment } from "../../../generated/graphql";
+import { TaxBaseFragment } from "../../../../generated/graphql";
 
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { taxLineResolver } from "../taxes/tax-line-resolver";
-import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
-import { CreateTransactionArgs } from "./avatax-client";
-import { AvataxConfig } from "./avatax-config";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { taxLineResolver } from "../../taxes/tax-line-resolver";
+import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { CreateTransactionArgs } from "../avatax-client";
+import { AvataxConfig } from "../avatax-config";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -15,7 +15,7 @@ const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
 };
 
-const transformLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
+const mapLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
@@ -38,7 +38,7 @@ const transformLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   return productLines;
 };
 
-const transformPayload = (
+const mapPayload = (
   taxBase: TaxBaseFragment,
   channel: ChannelConfig,
   config: AvataxConfig
@@ -69,14 +69,14 @@ const transformPayload = (
       },
       // todo: add currency code
       currencyCode: "",
-      lines: transformLines(taxBase),
+      lines: mapLines(taxBase),
       // todo: replace date with order/checkout date
       date: new Date(),
     },
   };
 };
 
-const transformResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
+const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
   const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
   const shippingGrossAmount = shippingLine?.taxableAmount ?? 0;
@@ -104,6 +104,6 @@ const transformResponse = (transaction: TransactionModel): CalculateTaxesRespons
 };
 
 export const avataxCalculateTaxes = {
-  transformPayload,
-  transformResponse,
+  mapPayload,
+  mapResponse,
 };

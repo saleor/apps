@@ -1,8 +1,8 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { OrderFulfilledSubscriptionFragment } from "../../../generated/graphql";
-import { EXTERNAL_ID_KEY } from "../../pages/api/webhooks/order-created";
-import { CommitTransactionArgs } from "./avatax-client";
-import { AvataxConfig } from "./avatax-config";
+import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
+import { EXTERNAL_ID_KEY } from "../../../pages/api/webhooks/order-created";
+import { CommitTransactionArgs } from "../avatax-client";
+import { AvataxConfig } from "../avatax-config";
 
 function getTransactionCodeFromMetadata(
   metadata: OrderFulfilledSubscriptionFragment["privateMetadata"]
@@ -15,7 +15,7 @@ function getTransactionCodeFromMetadata(
   return transactionCode.value;
 }
 
-const transformPayload = (
+const mapPayload = (
   order: OrderFulfilledSubscriptionFragment,
   config: AvataxConfig
 ): CommitTransactionArgs => {
@@ -31,5 +31,5 @@ const transformPayload = (
 };
 
 export const avataxOrderFulfilled = {
-  transformPayload,
+  mapPayload,
 };

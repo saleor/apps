@@ -4,11 +4,11 @@ import {
   TaxBaseFragment,
   TaxBaseLineFragment,
   TaxDiscountFragment,
-} from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { taxLineResolver } from "../taxes/tax-line-resolver";
-import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
-import { FetchTaxForOrderArgs } from "./taxjar-client";
+} from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { taxLineResolver } from "../../taxes/tax-line-resolver";
+import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { FetchTaxForOrderArgs } from "../taxjar-client";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
@@ -55,7 +55,7 @@ const prepareLinesWithDiscountPayload = (
   });
 };
 
-const transformResponse = (
+const mapResponse = (
   payload: TaxBaseFragment,
   response: TaxForOrderRes
 ): CalculateTaxesResponse => {
@@ -98,10 +98,7 @@ const transformResponse = (
   };
 };
 
-const transformPayload = (
-  taxBase: TaxBaseFragment,
-  channel: ChannelConfig
-): FetchTaxForOrderArgs => {
+const mapPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): FetchTaxForOrderArgs => {
   const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase.lines, taxBase.discounts);
   const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
 
@@ -132,6 +129,6 @@ const transformPayload = (
 };
 
 export const taxJarCalculateTaxes = {
-  transformPayload,
-  transformResponse,
+  mapPayload,
+  mapResponse,
 };

@@ -1,11 +1,11 @@
 import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { CreateOrderArgs } from "./taxjar-client";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { CreateOrderArgs } from "../taxjar-client";
 import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
-import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
+import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 
-const transformLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] => {
+const mapLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] => {
   return lines.map((line) => ({
     quantity: line.quantity,
     unit_price: line.unitPrice.net.amount,
@@ -15,11 +15,11 @@ const transformLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineI
   }));
 };
 
-const transformPayload = (
+const mapPayload = (
   order: OrderCreatedSubscriptionFragment,
   channel: ChannelConfig
 ): CreateOrderArgs => {
-  const lineItems = transformLines(order.lines);
+  const lineItems = mapLines(order.lines);
   const lineSum = lineItems.reduce(
     (prev, next) => prev + (next.unit_price ?? 0) * (next.quantity ?? 0),
     0
@@ -52,13 +52,13 @@ const transformPayload = (
   };
 };
 
-const transformResponse = (response: CreateOrderRes): CreateOrderResponse => {
+const mapResponse = (response: CreateOrderRes): CreateOrderResponse => {
   return {
     id: response.order.transaction_id,
   };
 };
 
 export const taxJarOrderCreated = {
-  transformPayload,
-  transformResponse,
+  mapPayload,
+  mapResponse,
 };
