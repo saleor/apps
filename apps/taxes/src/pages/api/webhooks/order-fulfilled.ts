@@ -33,22 +33,31 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
-    logger.info({ taxProvider }, "Fetched activeTaxProvider");
+    const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+
+    if (!activeTaxProvider.ok) {
+      logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
+      logger.info("Returning no data");
+      return res.status(200).json({ success: false });
+    }
+
+    logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
+    const taxProvider = activeTaxProvider.data;
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       logger.error("Insufficient order data");
-      return res.status(400);
+      return res.status(200).json({ success: false, message: "Insufficient order data" });
     }
 
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
     logger.info({ fulfilledOrder }, "Order fulfilled");
 
-    return res.status(200);
+    return res.status(200).json({ success: true });
   } catch (error) {
     logger.error({ error }, "Error while fulfilling tax provider order");
-    // todo: add error message
-    return res.status(400);
+    return res
+      .status(400)
+      .json({ success: false, message: "Error while fulfilling tax provider order" });
   }
 });

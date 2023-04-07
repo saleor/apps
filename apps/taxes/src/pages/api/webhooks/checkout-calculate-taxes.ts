@@ -38,16 +38,22 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   try {
     const appMetadata = data.recipient?.privateMetadata ?? [];
     const channelSlug = data.taxBase.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
-    logger.info({ taxProvider }, "Fetched activeTaxProvider");
+    const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
+    if (!activeTaxProvider.ok) {
+      logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
+      logger.info("Returning no data");
+      return res.status(200).json({ success: false });
+    }
+
+    logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
+    const taxProvider = activeTaxProvider.data;
     const calculatedTaxes = await taxProvider.calculateTaxes(data.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return res.send(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
     logger.error({ error }, "Error while calculating taxes");
-    logger.info("Returning no data");
-    return res.send({});
+    return res.status(400).json({ success: false, message: "Error while calculating taxes" });
   }
 });

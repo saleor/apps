@@ -14,12 +14,19 @@ import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
 import { getAppConfig } from "../app-configuration/get-app-config";
 
-export function getActiveTaxProvider(channelSlug: string | undefined, metadata: MetadataItem[]) {
+type ActiveTaxProviderResult =
+  | { ok: true; data: ActiveTaxProvider }
+  | { ok: false; data: null; error: string };
+
+export function getActiveTaxProvider(
+  channelSlug: string | undefined,
+  metadata: MetadataItem[]
+): ActiveTaxProviderResult {
   const logger = createLogger({ service: "getActiveTaxProvider" });
 
   if (!channelSlug) {
     logger.error("Channel slug is missing");
-    throw new Error("Channel slug is missing");
+    return { error: "Channel slug is missing", data: null, ok: false };
   }
 
   const { providers, channels } = getAppConfig(metadata);
@@ -29,7 +36,7 @@ export function getActiveTaxProvider(channelSlug: string | undefined, metadata: 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
     logger.info(`Channel config not found for channel ${channelSlug}`);
-    throw new Error(`Channel config not found for channel ${channelSlug}`);
+    return { error: `Channel config not found for channel ${channelSlug}`, data: null, ok: false };
   }
 
   const providerInstance = providers.find(
@@ -38,12 +45,16 @@ export function getActiveTaxProvider(channelSlug: string | undefined, metadata: 
 
   if (!providerInstance) {
     logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
-    throw new Error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+    return {
+      error: `Channel (${channelSlug}) providerInstanceId does not match any providers`,
+      data: null,
+      ok: false,
+    };
   }
 
   const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
 
-  return taxProvider;
+  return { data: taxProvider, ok: true };
 }
 
 export class ActiveTaxProvider implements ProviderWebhookService {
