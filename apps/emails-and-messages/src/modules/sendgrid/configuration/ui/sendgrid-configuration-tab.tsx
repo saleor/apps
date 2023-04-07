@@ -1,6 +1,5 @@
 import React from "react";
 import { IconButton, makeStyles } from "@saleor/macaw-ui";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../../ui/app-columns-layout";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { SendgridConfigurationForm } from "./sendgrid-configuration-form";
@@ -14,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { sendgridUrls } from "../../urls";
 import { SendgridTemplatesCard } from "./sendgrid-templates-card";
 import { SendgridInstructions } from "./sendgrid-instructions";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -53,9 +53,9 @@ const navigateToFirstConfiguration = (
 
 export const SendgridConfigurationTab = ({ configurationId }: SendgridConfigurationTabProps) => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const {
     data: configurations,
@@ -75,13 +75,7 @@ export const SendgridConfigurationTab = ({ configurationId }: SendgridConfigurat
   const { mutate: deleteConfiguration } =
     trpcClient.sendgridConfiguration.deleteConfiguration.useMutation({
       onError: (error) => {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Could not remove the configuration",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Could not remove the configuration", error.message);
       },
       onSuccess: async (_data, variables) => {
         await queryClient.cancelQueries({
@@ -108,13 +102,8 @@ export const SendgridConfigurationTab = ({ configurationId }: SendgridConfigurat
         }
 
         refetchConfigurations();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Removed successfully",
-            status: "success",
-          })
-        );
+
+        notifySuccess("Success", "Removed successfully");
       },
     });
 

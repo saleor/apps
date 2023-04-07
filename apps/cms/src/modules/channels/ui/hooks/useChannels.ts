@@ -2,7 +2,7 @@ import { useChannelsFetch } from "./useChannelsFetch";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/config";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 export interface ChannelsDataLoading {
   fetching: boolean;
@@ -15,7 +15,6 @@ export interface ChannelsDataErrors {
 }
 
 export const useChannels = () => {
-  const { appBridge } = useAppBridge();
   const isMounted = useIsMounted();
   const [channelsQueryData, channelsQueryOpts] = useChannelsQuery({
     pause: !isMounted,
@@ -27,10 +26,14 @@ export const useChannels = () => {
     error: fetchingError,
     isFetching,
   } = useChannelsFetch();
+  const { notifySuccess } = useDashboardNotification();
 
   const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
 
+    saveChannelFetch(channelToSave).then(() => {
+      notifySuccess("Success", "Configuration saved");
+    });
     const currentlyEnabledProviderInstances =
       settings?.[`${channelToSave.channelSlug}`]?.enabledProviderInstances || [];
     const toEnableProviderInstances = channelToSave.enabledProviderInstances || [];

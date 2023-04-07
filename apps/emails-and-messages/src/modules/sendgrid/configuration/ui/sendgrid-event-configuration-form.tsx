@@ -5,7 +5,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
   TextFieldProps,
   Typography,
 } from "@material-ui/core";
@@ -26,9 +25,9 @@ import {
 import { trpcClient } from "../../../trpc/trpc-client";
 import { useRouter } from "next/router";
 import { sendgridUrls } from "../../urls";
-import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTemplates } from "../../sendgrid-api";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => ({
   viewContainer: {
@@ -79,7 +78,8 @@ export const EventConfigurationForm = ({
   configuration,
 }: EventConfigurationFormProps) => {
   const router = useRouter();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess, notifyError } = useDashboardNotification();
+
   const { handleSubmit, control, getValues, setError } = useForm<SendgridEventConfiguration>({
     defaultValues: initialData,
   });
@@ -100,12 +100,7 @@ export const EventConfigurationForm = ({
   const { mutate: updateEventConfiguration } =
     trpcClient.sendgridConfiguration.updateEventConfiguration.useMutation({
       onSuccess: (data) => {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Configuration saved",
-            status: "success",
-          })
-        );
+        notifySuccess("Configuration saved");
       },
       onError: (error) => {
         let isFieldErrorSet = false;
@@ -121,13 +116,10 @@ export const EventConfigurationForm = ({
         }
         const formErrors = error.data?.zodError?.formErrors || [];
         const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Could not save the configuration",
-            text: isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-            apiMessage: formErrorMessage,
-            status: "error",
-          })
+        notifyError(
+          "Could not save the configuration",
+          isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
+          formErrorMessage
         );
       },
     });

@@ -1,16 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
-import {
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextFieldProps,
-  Typography,
-} from "@material-ui/core";
+import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@material-ui/core";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SetCategoryMappingInputSchema,
@@ -19,6 +10,7 @@ import {
 import { CategoryWithMappingFragmentFragment } from "../../../../generated/graphql";
 import { GoogleProductCategories } from "../google-product-categories";
 import { trpcClient } from "../../trpc/trpc-client";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   field: {
@@ -39,7 +31,7 @@ type CategoryMappingFormProps = {
 
 export const CategoryMappingForm = ({ category }: CategoryMappingFormProps) => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { control, handleSubmit, formState } = useForm<SetCategoryMappingInputType>({
     defaultValues: {
@@ -50,20 +42,10 @@ export const CategoryMappingForm = ({ category }: CategoryMappingFormProps) => {
   });
   const { mutate, isLoading } = trpcClient.categoryMapping.setCategoryMapping.useMutation({
     onError() {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Could not save the category mapping",
-          status: "error",
-        })
-      );
+      notifyError("Could not save the category mapping");
     },
     onSuccess() {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          status: "success",
-        })
-      );
+      notifySuccess("Success");
     },
   });
 

@@ -6,6 +6,7 @@ import { MjmlConfiguration, smtpEncryptionTypes } from "../mjml-config";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => ({
   field: {
@@ -30,7 +31,7 @@ type Props = {
 
 export const MjmlConfigurationForm = (props: Props) => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { handleSubmit, control, reset, setError } = useForm<MjmlConfiguration>({
     defaultValues: props.initialData,
@@ -64,12 +65,7 @@ export const MjmlConfigurationForm = (props: Props) => {
 
         // Trigger refetch to make sure we have a fresh data
         props.onConfigurationSaved();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Configuration saved",
-            status: "success",
-          })
-        );
+        notifySuccess("Configuration saved");
       },
       onError(error) {
         let isFieldErrorSet = false;
@@ -85,13 +81,10 @@ export const MjmlConfigurationForm = (props: Props) => {
         }
         const formErrors = error.data?.zodError?.formErrors || [];
         const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Could not save the configuration",
-            text: isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-            apiMessage: formErrorMessage,
-            status: "error",
-          })
+        notifyError(
+          "Could not save the configuration",
+          isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
+          formErrorMessage
         );
       },
     });

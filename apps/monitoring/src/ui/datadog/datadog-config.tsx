@@ -28,8 +28,9 @@ import { gql, useMutation } from "urql";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { ArrowBack } from "@material-ui/icons";
 import { useRouter } from "next/router";
-import { useDashboardNotifications } from "../../lib/use-dashboard-notifications";
+
 import { API_KEYS_LINKS } from "../../datadog-urls";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   form: {
@@ -133,7 +134,7 @@ export const DatadogConfig = () => {
   const [, mutateCredentials] = useUpdateCredentialsMutation();
   const [, deleteCredentials] = useDeleteDatadogCredentialsMutation();
   const router = useRouter();
-  const { showSuccessNotification, showErrorNotification } = useDashboardNotifications();
+  const { notifyError, notifySuccess } = useDashboardNotification();
 
   const { register, handleSubmit, setValue, control, reset, watch } = useForm<
     DataDogCredentialsInput & {
@@ -213,14 +214,11 @@ export const DatadogConfig = () => {
               setValue("apiKey", buildMaskedKey(updatedConfig.credentials.apiKeyLast4));
               setValue("site", updatedConfig.credentials.site);
 
-              showSuccessNotification(
-                "Configuration updated",
-                "Successfully updated Datadog settings"
-              );
+              notifySuccess("Configuration updated", "Successfully updated Datadog settings");
             }
 
             if (errors?.length) {
-              showErrorNotification("Error configuring Datadog", errors[0].message);
+              notifyError("Error configuring Datadog", errors[0].message);
             }
           });
         })}
@@ -278,10 +276,7 @@ export const DatadogConfig = () => {
             deleteCredentials({}).then(() => {
               fetchConfig();
               reset();
-              showSuccessNotification(
-                "Configuration updated",
-                "Successfully deleted Datadog settings"
-              );
+              notifySuccess("Configuration updated", "Successfully deleted Datadog settings");
             });
           }}
         >

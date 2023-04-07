@@ -17,8 +17,8 @@ import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "
 import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
 import { useAppApi } from "../hooks/useAppApi";
-import { useDashboardNotifier } from "../utils/useDashboardNotifier";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 interface ConfigurationField {
   key: string;
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 function Configuration() {
   const classes = useStyles();
   const { appBridgeState } = useAppBridge();
-  const [notify] = useDashboardNotifier();
+  const { notifyError, notifySuccess } = useDashboardNotification();
   const [configuration, setConfiguration] = useState<ConfigurationField[]>();
   const [transitionState, setTransitionState] = useState<ConfirmButtonTransitionState>("default");
 
@@ -69,18 +69,11 @@ function Configuration() {
     })
       .then(async (response) => {
         setTransitionState(response.status === 200 ? "success" : "error");
-        await notify({
-          status: "success",
-          title: "Success",
-          text: "Configuration updated successfully",
-        });
+        notifySuccess("Success", "Configuration updated successfully");
       })
       .catch(async () => {
         setTransitionState("error");
-        await notify({
-          status: "error",
-          title: "Configuration update failed",
-        });
+        await notifyError("Configuration update failed");
       });
   };
 
