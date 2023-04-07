@@ -4,6 +4,7 @@ import { logger as pinoLogger } from "../../logger";
 
 import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
+import { fetchWithRateLimit } from "../data-sync";
 
 const contentfulFetch = (endpoint: string, config: ContentfulConfig, options?: RequestInit) => {
   const baseUrl = config.baseUrl || "https://api.contentful.com";
@@ -30,6 +31,8 @@ type ContentfulResponse = {
     id: string;
     version?: number;
   };
+  statusCode: number;
+  input: ProductInput;
 };
 
 const transformInputToBody = ({
@@ -64,10 +67,7 @@ const transformInputToBody = ({
   return body;
 };
 
-const transformCreateProductResponse = (
-  response: ContentfulResponse,
-  input: ProductInput
-): ProductResponse => {
+const transformCreateProductResponse = (response: ContentfulResponse): ProductResponse => {
   if (response.message) {
     return {
       ok: false,
@@ -79,7 +79,7 @@ const transformCreateProductResponse = (
     ok: true,
     data: {
       id: response.sys.id,
-      saleorId: input.saleorId,
+      saleorId: response.input.saleorId,
     },
   };
 };
@@ -97,7 +97,9 @@ const getEntryEndpoint = ({
 const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   const logger = pinoLogger.child({ cms: "strapi" });
 
-  const { environment, spaceId, contentId, locale } = config;
+  const { environment, spaceId, contentId, locale, apiRequestsPerSecond } = config;
+
+  const requestPerSecondLimit = Number(apiRequestsPerSecond || 7);
 
   const createProductInCMS = async (input: ProductInput): Promise<ContentfulResponse> => {
     // Contentful API does not auto generate resource ID during creation, it has to be provided.
@@ -115,9 +117,14 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Content-Type": contentId,
       },
     });
-    logger.debug("createProduct response", { response });
+    logger.debug("createProduct response");
     logger.debug({ response });
-    return await response.json();
+    const json = await response.json();
+    return {
+      ...json,
+      statusCode: response.status,
+      input,
+    };
   };
 
   const updateProductInCMS = async (id: string, input: ProductInput) => {
@@ -129,9 +136,11 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
     });
 
     const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
-    logger.debug("updateProduct getEntryResponse", { getEntryResponse });
+    logger.debug("updateProduct getEntryResponse");
+    logger.debug({ getEntryResponse });
     const entry = await getEntryResponse.json();
-    logger.debug("updateProduct entry", { entry });
+    logger.debug("updateProduct entry");
+    logger.debug({ entry });
 
     const response = await contentfulFetch(endpoint, config, {
       method: "PUT",
@@ -140,8 +149,13 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Version": entry.sys.version,
       },
     });
-    logger.debug("updateProduct response", { response });
-    return await response.json();
+    logger.debug("updateProduct response");
+    logger.debug({ response });
+    const json = await response.json();
+    return {
+      ...json,
+      statusCode: response.status,
+    };
   };
 
   const deleteProductInCMS = async (id: string) => {
@@ -152,47 +166,79 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
   const createBatchProductsInCMS = async (input: ProductInput[]) => {
     // Contentful doesn't support batch creation of items, so we need to create them one by one
-    return await Promise.all(
-      input.map(async (product) => ({
-        response: await createProductInCMS(product),
-        input: product,
-      }))
-    );
+
+    // Take into account rate limit
+    const firstResults = await fetchWithRateLimit(input, createProductInCMS, requestPerSecondLimit);
+    const failedWithLimitResults = firstResults.filter((result) => result.statusCode === 429);
+
+    // Retry with delay x2 if by any chance hit rate limit with HTTP 429
+    let secondResults: ContentfulResponse[] = [];
+    if (failedWithLimitResults.length > 0) {
+      logger.debug("createBatchProductsInCMS retrying failed by rate limit with delay x2");
+      secondResults = await fetchWithRateLimit(
+        failedWithLimitResults,
+        (result) => createProductInCMS(result.input),
+        requestPerSecondLimit / 2
+      );
+    }
+
+    return [...firstResults.filter((result) => result.statusCode !== 429), ...secondResults];
   };
 
   const deleteBatchProductsInCMS = async (ids: string[]) => {
     // Contentful doesn't support batch deletion of items, so we need to delete them one by one
-    return await Promise.all(ids.map((id) => deleteProductInCMS(id)));
+
+    // Take into account rate limit
+    const firstResults = await fetchWithRateLimit(ids, deleteProductInCMS, requestPerSecondLimit);
+    const failedWithLimitResults = firstResults.filter((result) => result.status === 429);
+
+    // Retry with delay x2 if by any chance hit rate limit with HTTP 429
+    let secondResults: Response[] = [];
+    if (failedWithLimitResults.length > 0) {
+      logger.debug("deleteBatchProductsInCMS retrying failed by rate limit with delay x2");
+      secondResults = await fetchWithRateLimit(
+        failedWithLimitResults,
+        (result) => deleteProductInCMS(result.url),
+        requestPerSecondLimit / 2
+      );
+    }
+
+    return [...firstResults.filter((result) => result.status !== 429), ...secondResults];
   };
 
   return {
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
-      logger.debug("createProduct result", { result });
+      logger.debug("createProduct result");
+      logger.debug({ result });
 
-      return transformCreateProductResponse(result, input);
+      return transformCreateProductResponse(result);
     },
     updateProduct: async ({ id, input }) => {
       const result = await updateProductInCMS(id, input);
-      logger.debug("updateProduct result", { result });
+      logger.debug("updateProduct result");
+      logger.debug({ result });
 
       return result;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
-      logger.debug("deleteProduct response", { response });
+      logger.debug("deleteProduct response");
+      logger.debug({ response });
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
-      logger.debug("createBatchProducts results", { results });
+      logger.debug("createBatchProducts results");
+      logger.debug({ results });
 
-      return results.map((result) => transformCreateProductResponse(result.response, result.input));
+      return results.map((result) => transformCreateProductResponse(result));
     },
     deleteBatchProducts: async ({ ids }) => {
       const results = await deleteBatchProductsInCMS(ids);
-      logger.debug("deleteBatchProducts results", { results });
+      logger.debug("deleteBatchProducts results");
+      logger.debug({ results });
     },
   };
 };
