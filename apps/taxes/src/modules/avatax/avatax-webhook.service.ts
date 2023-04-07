@@ -31,7 +31,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = avataxCalculateTaxes.mapPayload(payload, channel, this.config);
+    const args = avataxCalculateTaxes.mapPayload({
+      taxBase: payload,
+      channel,
+      config: this.config,
+    });
     const result = await this.client.createTransaction(args);
     this.logger.debug({ result }, "calculateTaxes response");
     return avataxCalculateTaxes.mapResponse(result);

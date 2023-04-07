@@ -38,11 +38,14 @@ const mapLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   return productLines;
 };
 
-const mapPayload = (
-  taxBase: TaxBaseFragment,
-  channel: ChannelConfig,
-  config: AvataxConfig
-): CreateTransactionArgs => {
+export type AvataxCalculateTaxesMapPayloadProps = {
+  taxBase: TaxBaseFragment;
+  channel: ChannelConfig;
+  config: AvataxConfig;
+};
+
+const mapPayload = (props: AvataxCalculateTaxesMapPayloadProps): CreateTransactionArgs => {
+  const { taxBase, channel, config } = props;
   return {
     model: {
       type: DocumentType.SalesOrder,
