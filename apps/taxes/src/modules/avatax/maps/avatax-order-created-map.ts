@@ -1,12 +1,12 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
-import { AvataxConfig } from "../avatax-config";
-import { CreateTransactionArgs } from "../avatax-client";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { CreateTransactionArgs } from "../avatax-client";
+import { AvataxConfig } from "../avatax-config";
+import { mapChannelAddressToAvataxAddress, mapSaleorAddressToAvataxAddress } from "./address-map";
 
 const mapLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
@@ -31,22 +31,9 @@ const mapPayload = (
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {
-        shipFrom: {
-          line1: channel.address.street,
-          city: channel.address.city,
-          region: channel.address.state,
-          postalCode: channel.address.zip,
-          country: channel.address.country,
-        },
+        shipFrom: mapChannelAddressToAvataxAddress(channel.address),
         // billing or shipping address?
-        shipTo: {
-          line1: order.billingAddress?.streetAddress1,
-          line2: order.billingAddress?.streetAddress2,
-          city: order.billingAddress?.city,
-          country: order.billingAddress?.country.code,
-          postalCode: order.billingAddress?.postalCode,
-          region: order.billingAddress?.countryArea,
-        },
+        shipTo: mapSaleorAddressToAvataxAddress(order.billingAddress!),
       },
       // todo: add currency code
       currencyCode: "",

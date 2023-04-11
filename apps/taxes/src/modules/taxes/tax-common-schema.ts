@@ -7,3 +7,5 @@ export const addressSchema = z.object({
   city: z.string(),
   street: z.string(),
 });
+
+export type ChannelAddress = z.infer<typeof addressSchema>;
