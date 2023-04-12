@@ -7,9 +7,10 @@ import {
   SingleChannelSchema,
   SingleProviderSchema,
 } from "../../../lib/cms/config";
-import { ChannelsErrors, ChannelsLoading } from "./types";
+import { ChannelsLoading } from "./types";
 import { makeStyles } from "@saleor/macaw-ui";
 import { AppTabNavButton } from "../../ui/app-tab-nav-button";
+import { ChannelsDataErrors } from "./hooks/useChannels";
 
 const useStyles = makeStyles((theme) => ({
   textCenter: {
@@ -55,20 +56,22 @@ interface ChannelConfigurationProps {
   activeChannel?: MergedChannelSchema | null;
   providerInstances: SingleProviderSchema[];
   saveChannel: (channel: SingleChannelSchema) => any;
+  syncChannelProviderInstance: (providerInstanceId: string) => any;
   loading: ChannelsLoading;
-  errors: ChannelsErrors;
+  errors: ChannelsDataErrors;
 }
 
 export const ChannelConfiguration = ({
   activeChannel,
   providerInstances,
   saveChannel,
+  syncChannelProviderInstance,
   loading,
   errors,
 }: ChannelConfigurationProps) => {
   const styles = useStyles();
 
-  if (loading.fetching || loading.saving) {
+  if (loading.channels.fetching || loading.channels.saving) {
     return <ChannelConfigurationSkeleton />;
   }
 
@@ -110,8 +113,9 @@ export const ChannelConfiguration = ({
       <ChannelConfigurationForm
         channel={activeChannel}
         providerInstances={providerInstances}
-        loading={loading.saving}
+        loading={loading}
         onSubmit={saveChannel}
+        onSync={syncChannelProviderInstance}
       />
     </Paper>
   );

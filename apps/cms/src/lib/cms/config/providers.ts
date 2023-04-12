@@ -67,6 +67,12 @@ export const providersConfig = {
         helpText:
           "Content management API URL of your Contentful project. If you leave this blank, default https://api.contentful.com will be used.",
       },
+      {
+        name: "apiRequestsPerSecond",
+        label: "API requests per second",
+        helpText:
+          "API rate limits. Default 7. Used in bulk products variants sync. Higher rate limits may speed up a little products variants bulk sync. Higher rate limit may apply depending on different Contentful plan, learn more at https://www.contentful.com/developers/docs/references/content-management-api/#/introduction/api-rate-limits.",
+      },
     ],
   },
   strapi: {
@@ -152,6 +158,7 @@ export const contentfulConfigSchema = z.object({
   locale: z.string().min(1),
   contentId: z.string().min(1),
   baseUrl: z.string(),
+  apiRequestsPerSecond: z.string(),
 });
 
 export const datocmsConfigSchema = z.object({

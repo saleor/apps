@@ -1,9 +1,18 @@
 import { useChannelsFetch } from "./useChannelsFetch";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/config";
-import { ChannelsErrors, ChannelsLoading } from "../types";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+
+export interface ChannelsDataLoading {
+  fetching: boolean;
+  saving: boolean;
+}
+
+export interface ChannelsDataErrors {
+  fetching?: Error | null;
+  saving?: Error | null;
+}
 
 export const useChannels = () => {
   const { appBridge } = useAppBridge();
@@ -19,10 +28,33 @@ export const useChannels = () => {
     isFetching,
   } = useChannelsFetch();
 
-  const saveChannel = (channelToSave: SingleChannelSchema) => {
+  const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
 
-    saveChannelFetch(channelToSave).then(() => {
+    const currentlyEnabledProviderInstances =
+      settings?.[`${channelToSave.channelSlug}`]?.enabledProviderInstances || [];
+    const toEnableProviderInstances = channelToSave.enabledProviderInstances || [];
+
+    const changedSyncProviderInstances = [
+      ...currentlyEnabledProviderInstances.filter(
+        (instance) => !toEnableProviderInstances.includes(instance)
+      ),
+      ...toEnableProviderInstances.filter(
+        (instance) => !currentlyEnabledProviderInstances.includes(instance)
+      ),
+    ];
+
+    const fetchResult = await saveChannelFetch({
+      ...channelToSave,
+      requireSyncProviderInstances: [
+        ...(channelToSave.requireSyncProviderInstances || []),
+        ...changedSyncProviderInstances.filter(
+          (instance) => !(channelToSave.requireSyncProviderInstances || []).includes(instance)
+        ),
+      ],
+    });
+
+    if (fetchResult.success) {
       appBridge?.dispatch(
         actions.Notification({
           title: "Success",
@@ -30,15 +62,23 @@ export const useChannels = () => {
           text: "Configuration saved",
         })
       );
-    });
+    } else {
+      appBridge?.dispatch(
+        actions.Notification({
+          title: "Error",
+          status: "error",
+          text: "Error while saving configuration",
+        })
+      );
+    }
   };
 
-  const loading: ChannelsLoading = {
+  const loading: ChannelsDataLoading = {
     fetching: isFetching || channelsQueryData.fetching,
     saving: isSaving,
   };
 
-  const errors: ChannelsErrors = {
+  const errors: ChannelsDataErrors = {
     fetching: fetchingError ? Error(fetchingError) : null,
     saving: null,
   };
@@ -50,6 +90,9 @@ export const useChannels = () => {
           channelSlug: channel.slug,
           enabledProviderInstances: settings
             ? settings[`${channel.slug}`]?.enabledProviderInstances
+            : [],
+          requireSyncProviderInstances: settings
+            ? settings[`${channel.slug}`]?.requireSyncProviderInstances
             : [],
           channel: channel,
         } as MergedChannelSchema)

@@ -10,6 +10,7 @@ export type ChannelCommonSchema = z.infer<typeof channelCommonSchema>;
 export const channelSchema = z
   .object({
     enabledProviderInstances: z.array(z.string()),
+    requireSyncProviderInstances: z.array(z.string()).optional(),
   })
   .merge(channelCommonSchema);
 
