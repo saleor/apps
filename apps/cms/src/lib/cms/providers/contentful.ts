@@ -117,8 +117,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Content-Type": contentId,
       },
     });
-    logger.debug("createProduct response");
-    logger.debug({ response });
+    logger.debug({ response }, "createProduct response");
     const json = await response.json();
     return {
       ...json,
@@ -136,11 +135,9 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
     });
 
     const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
-    logger.debug("updateProduct getEntryResponse");
-    logger.debug({ getEntryResponse });
+    logger.debug({ getEntryResponse }, "updateProduct getEntryResponse");
     const entry = await getEntryResponse.json();
-    logger.debug("updateProduct entry");
-    logger.debug({ entry });
+    logger.debug({ entry }, "updateProduct entry");
 
     const response = await contentfulFetch(endpoint, config, {
       method: "PUT",
@@ -149,8 +146,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Version": entry.sys.version,
       },
     });
-    logger.debug("updateProduct response");
-    logger.debug({ response });
+    logger.debug({ response }, "updateProduct response");
     const json = await response.json();
     return {
       ...json,
@@ -209,36 +205,31 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   return {
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
-      logger.debug("createProduct result");
-      logger.debug({ result });
+      logger.debug({ result }, "createProduct result");
 
       return transformCreateProductResponse(result);
     },
     updateProduct: async ({ id, input }) => {
       const result = await updateProductInCMS(id, input);
-      logger.debug("updateProduct result");
-      logger.debug({ result });
+      logger.debug({ result }, "updateProduct result");
 
       return result;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
-      logger.debug("deleteProduct response");
-      logger.debug({ response });
+      logger.debug({ response }, "deleteProduct response");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
-      logger.debug("createBatchProducts results");
-      logger.debug({ results });
+      logger.debug({ results }, "createBatchProducts results");
 
       return results.map((result) => transformCreateProductResponse(result));
     },
     deleteBatchProducts: async ({ ids }) => {
       const results = await deleteBatchProductsInCMS(ids);
-      logger.debug("deleteBatchProducts results");
-      logger.debug({ results });
+      logger.debug({ results }, "deleteBatchProducts results");
     },
   };
 };

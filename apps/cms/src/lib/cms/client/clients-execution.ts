@@ -126,8 +126,7 @@ export const executeCmsClientBatchOperation = async ({
   ) => boolean;
 }): Promise<CmsClientBatchOperationResult | undefined> => {
   const logger = pinoLogger.child({ cmsClient });
-  logger.debug("Execute CMS client operation called");
-  logger.debug({ operations: cmsClient.operations });
+  logger.debug({ operations: cmsClient.operations }, "Execute CMS client operation called");
 
   if (cmsClient.operationType === "createBatchProducts") {
     const productsVariansToCreate = productsVariants.reduce<WebhookProductVariantFragment[]>(
@@ -167,8 +166,7 @@ export const executeCmsClientBatchOperation = async ({
               .map((item) => (item as ProductResponseSuccess).data) || [],
         };
       } catch (error) {
-        logger.error("Error creating batch items");
-        logger.error({ error });
+        logger.error({ error }, "Error creating batch items");
 
         return {
           error: "Error creating batch items.",
@@ -211,8 +209,7 @@ export const executeCmsClientBatchOperation = async ({
           deletedCmsIds: CMSIdsToRemove,
         };
       } catch (error) {
-        logger.error("Error removing batch items");
-        logger.error({ error });
+        logger.error({ error }, "Error removing batch items");
 
         return {
           error: "Error removing batch items.",

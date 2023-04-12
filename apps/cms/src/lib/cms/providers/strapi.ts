@@ -88,8 +88,7 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
       method: "POST",
       body: JSON.stringify(body),
     });
-    logger.debug("createProduct response");
-    logger.debug({ response });
+    logger.debug({ response }, "createProduct response");
     return await response.json();
   };
 
@@ -123,36 +122,31 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
   return {
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
-      logger.debug("createProduct result");
-      logger.debug({ result });
+      logger.debug({ result }, "createProduct result");
 
       return transformCreateProductResponse(result, input);
     },
     updateProduct: async ({ id, input }) => {
       const response = await updateProductInCMS(id, input);
-      logger.debug("updateProduct response");
-      logger.debug({ response });
+      logger.debug({ response }, "updateProduct response");
 
       return response;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
-      logger.debug("deleteProduct response");
-      logger.debug({ response });
+      logger.debug({ response }, "deleteProduct response");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
-      logger.debug("createBatchProducts results");
-      logger.debug({ results });
+      logger.debug({ results }, "createBatchProducts results");
 
       return results.map((result) => transformCreateProductResponse(result.response, result.input));
     },
     deleteBatchProducts: async ({ ids }) => {
       const responses = await deleteBatchProductsInCMS(ids);
-      logger.debug("deleteBatchProducts responses");
-      logger.debug({ responses });
+      logger.debug({ responses }, "deleteBatchProducts responses");
 
       return responses;
     },

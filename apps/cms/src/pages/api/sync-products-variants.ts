@@ -92,18 +92,15 @@ const handler: NextProtectedApiHandler = async (
       providerInstanceSettings
     );
 
-  logger.debug("The provider instance settings provider.");
-  logger.debug({
-    provider,
-  });
+  logger.debug({ provider }, "The provider instance settings provider.");
 
   if (!validation.success) {
     // todo: use instead: throw new Error(validation.error.message);
     // continue with other provider instances
-    logger.error("The provider instance settings validation failed.");
-    logger.error({
-      error: validation.error.message,
-    });
+    logger.error(
+      { error: validation.error.message },
+      "The provider instance settings validation failed."
+    );
 
     return res.status(400).json({
       success: false,
@@ -112,10 +109,7 @@ const handler: NextProtectedApiHandler = async (
 
   const config = validation.data;
 
-  logger.debug("The provider instance settings validated config.");
-  logger.debug({
-    config,
-  });
+  logger.debug({ config }, "The provider instance settings validated config.");
 
   const enabledChannelsForSelectedProviderInstance = Object.entries(channelsSettingsParsed).reduce(
     (enabledChannels, [channelSlug, channelSettingsParsed]) => {
