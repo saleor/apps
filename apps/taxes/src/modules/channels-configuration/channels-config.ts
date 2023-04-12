@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { ChannelFragment } from "../../../generated/graphql";
-import { addressSchema } from "../taxes/tax-common-schema";
+
+const addressSchema = z.object({
+  country: z.string(),
+  zip: z.string(),
+  state: z.string(),
+  city: z.string(),
+  street: z.string(),
+});
+
+export type ChannelAddress = z.infer<typeof addressSchema>;
 
 export const channelSchema = z.object({
   providerInstanceId: z.string(),
