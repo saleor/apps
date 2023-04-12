@@ -12,12 +12,12 @@ export const config = {
   },
 };
 
-type ExpectedWebhookPayload = Extract<
+type OrderFulfilledPayload = Extract<
   OrderFulfilledEventSubscriptionFragment,
   { __typename: "OrderFulfilled" }
 >;
 
-export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<ExpectedWebhookPayload>({
+export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledPayload>({
   name: "OrderFulfilled",
   apl: saleorApp.apl,
   event: "ORDER_FULFILLED",

@@ -66,4 +66,16 @@ fragment TaxBase on TaxableObject {
   lines {
     ...TaxBaseLine
   }
+  sourceObject {
+    ... on Checkout {
+      user {
+        id
+      }
+    }
+    ... on Order {
+      user {
+        id
+      }
+    }
+  }
 }

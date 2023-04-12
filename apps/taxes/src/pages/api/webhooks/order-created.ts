@@ -19,12 +19,12 @@ export const config = {
   },
 };
 
-type ExpectedWebhookPayload = Extract<
+type OrderCreatedPayload = Extract<
   OrderCreatedEventSubscriptionFragment,
   { __typename: "OrderCreated" }
 >;
 
-export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<ExpectedWebhookPayload>({
+export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPayload>({
   name: "OrderCreated",
   apl: saleorApp.apl,
   event: "ORDER_CREATED",

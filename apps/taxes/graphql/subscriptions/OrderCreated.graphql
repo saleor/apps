@@ -16,7 +16,10 @@ fragment OrderLineFragment on OrderLine {
 
 fragment OrderCreatedSubscription on Order {
   id
-  userEmail
+  user {
+    id
+    email
+  }
   created
   status
   channel {
@@ -30,6 +33,7 @@ fragment OrderCreatedSubscription on Order {
     ...AddressFragment
   }
   total {
+    currency
     net {
       amount
     }

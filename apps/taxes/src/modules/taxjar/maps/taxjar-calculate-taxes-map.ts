@@ -1,4 +1,3 @@
-import { TaxParams } from "taxjar/dist/types/paramTypes";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import {
   TaxBaseFragment,
