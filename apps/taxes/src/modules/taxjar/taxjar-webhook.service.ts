@@ -32,7 +32,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
-    const args = taxJarOrderCreated.mapPayload(order, channel);
+    const args = taxJarOrderCreated.mapPayload({ order, channel });
     const result = await this.client.createOrder(args);
     this.logger.debug({ createOrder: result }, "createOrder response");
 

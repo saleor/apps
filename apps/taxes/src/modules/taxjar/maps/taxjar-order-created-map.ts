@@ -1,31 +1,40 @@
-import { CreateOrderParams, LineItem } from "taxjar/dist/types/paramTypes";
+import { LineItem } from "taxjar/dist/types/paramTypes";
+import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
-import { CreateOrderArgs } from "../taxjar-client";
-import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
+import { CreateOrderArgs } from "../taxjar-client";
+import { numbers } from "../../taxes/numbers";
 
-const mapLines = (lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] => {
+function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] {
   return lines.map((line) => ({
     quantity: line.quantity,
     unit_price: line.unitPrice.net.amount,
     product_identifier: line.productSku ?? "",
+    // todo: add from tax code matcher
     product_tax_code: "",
     sales_tax: line.totalPrice.tax.amount,
   }));
+}
+
+export function sumLines(lines: LineItem[]): number {
+  return numbers.roundFloatToTwoDecimals(
+    lines.reduce((prev, next) => prev + (next.unit_price ?? 0) * (next.quantity ?? 0), 0)
+  );
+}
+
+export type TaxJarOrderCreatedMapPayloadProps = {
+  order: OrderCreatedSubscriptionFragment;
+  channel: ChannelConfig;
 };
 
-const mapPayload = (
-  order: OrderCreatedSubscriptionFragment,
-  channel: ChannelConfig
-): CreateOrderArgs => {
+const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadProps): CreateOrderArgs => {
   const lineItems = mapLines(order.lines);
-  const lineSum = lineItems.reduce(
-    (prev, next) => prev + (next.unit_price ?? 0) * (next.quantity ?? 0),
-    0
-  );
+  const lineSum = sumLines(lineItems);
   const shippingAmount = order.shippingPrice.net.amount;
-  const orderAmount = shippingAmount + lineSum;
+  // * "The TaxJar API performs arbitrary-precision decimal arithmetic for accurately calculating sales tax."
+  // * but we want to round to 2 decimals for consistency
+  const orderAmount = numbers.roundFloatToTwoDecimals(shippingAmount + lineSum);
 
   return {
     params: {
@@ -43,10 +52,10 @@ const mapPayload = (
       }`,
       shipping: shippingAmount,
       line_items: lineItems,
-      transaction_date: order.created, // is this correct format?
+      transaction_date: order.created,
       transaction_id: order.id,
-      // todo: replace
-      amount: orderAmount,
+      amount: orderAmount, // Total amount of the order with shipping, excluding sales tax in dollars.
+      // todo: add sales_tax
       sales_tax: 0,
     },
   };

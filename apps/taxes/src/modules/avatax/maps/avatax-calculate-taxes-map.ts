@@ -9,20 +9,17 @@ import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
 import { mapChannelAddressToAvataxAddress, mapSaleorAddressToAvataxAddress } from "./address-map";
+import { numbers } from "../../taxes/numbers";
 
-const SHIPPING_ITEM_CODE = "Shipping";
+export const SHIPPING_ITEM_CODE = "Shipping";
 
-const formatCalculatedAmount = (amount: number) => {
-  return Number(amount.toFixed(2));
-};
-
-const mapLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
+export function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
+    // todo: get from tax code matcher
     taxCode: taxLineResolver.getLineTaxCode(line),
     quantity: line.quantity,
-    itemCode: "Product",
   }));
 
   if (taxBase.shippingPrice.amount !== 0) {
@@ -37,7 +34,7 @@ const mapLines = (taxBase: TaxBaseFragment): LineItemModel[] => {
   }
 
   return productLines;
-};
+}
 
 export type AvataxCalculateTaxesMapPayloadProps = {
   taxBase: TaxBaseFragment;
@@ -50,7 +47,7 @@ const mapPayload = (props: AvataxCalculateTaxesMapPayloadProps): CreateTransacti
   return {
     model: {
       type: DocumentType.SalesOrder,
-      customerCode: "0", // todo: replace with customer code
+      customerCode: taxBase.sourceObject.user?.id ?? "",
       companyCode: config.companyCode,
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
@@ -58,10 +55,8 @@ const mapPayload = (props: AvataxCalculateTaxesMapPayloadProps): CreateTransacti
         shipFrom: mapChannelAddressToAvataxAddress(channel.address),
         shipTo: mapSaleorAddressToAvataxAddress(taxBase.address!),
       },
-      // todo: add currency code
-      currencyCode: "",
+      currencyCode: taxBase.currency,
       lines: mapLines(taxBase),
-      // todo: replace date with order/checkout date
       date: new Date(),
     },
   };
@@ -72,7 +67,9 @@ const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
   const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
   const shippingGrossAmount = shippingLine?.taxableAmount ?? 0;
   const shippingTaxCalculated = shippingLine?.taxCalculated ?? 0;
-  const shippingNetAmount = formatCalculatedAmount(shippingGrossAmount - shippingTaxCalculated);
+  const shippingNetAmount = numbers.roundFloatToTwoDecimals(
+    shippingGrossAmount - shippingTaxCalculated
+  );
 
   return {
     shipping_price_gross_amount: shippingGrossAmount,
@@ -83,7 +80,9 @@ const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
       productLines?.map((line) => {
         const lineTaxCalculated = line.taxCalculated ?? 0;
         const lineTotalNetAmount = line.taxableAmount ?? 0;
-        const lineTotalGrossAmount = formatCalculatedAmount(lineTotalNetAmount + lineTaxCalculated);
+        const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
+          lineTotalNetAmount + lineTaxCalculated
+        );
         return {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,

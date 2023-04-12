@@ -12,7 +12,8 @@ const mapLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
     amount: line.unitPrice.net.amount,
     quantity: line.quantity,
-    itemCode: "Product",
+    // todo: get from tax code matcher
+    taxCode: "",
   }));
 
   return productLines;
@@ -26,7 +27,7 @@ const mapPayload = (
   return {
     model: {
       type: DocumentType.SalesInvoice,
-      customerCode: "0", // todo: replace with customer code
+      customerCode: order.user?.id ?? "",
       companyCode: config.companyCode,
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
@@ -35,11 +36,10 @@ const mapPayload = (
         // billing or shipping address?
         shipTo: mapSaleorAddressToAvataxAddress(order.billingAddress!),
       },
-      // todo: add currency code
-      currencyCode: "",
+      currencyCode: order.total.currency,
+      email: order.user?.email ?? "",
       lines: mapLines(order),
-      // todo: replace date with order/checkout date
-      date: new Date(),
+      date: new Date(order.created),
     },
   };
 };

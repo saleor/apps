@@ -1,5 +1,5 @@
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
-import { ChannelAddress } from "../../taxes/tax-common-schema";
+import { ChannelAddress } from "../../channels-configuration/channels-config";
 
 export type SaleorAddress = {
   streetAddress1: string;

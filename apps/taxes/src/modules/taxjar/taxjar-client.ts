@@ -1,6 +1,6 @@
 import pino from "pino";
 import TaxJar from "taxjar";
-import { Config, CreateOrderParams, TaxForOrderRes, TaxParams } from "taxjar/dist/util/types";
+import { Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
 import { createLogger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-config";
 
