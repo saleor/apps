@@ -137,7 +137,7 @@ export const ChannelConfigurationForm = ({
             );
 
             return (
-              <ListItem key={providerInstance.name} className={styles.item}>
+              <ListItem key={providerInstance.id} className={styles.item}>
                 <ListItemCell className={styles.itemCell}>
                   <ProviderIcon providerName={providerInstance.providerName} />
                   {providerInstance.name}
