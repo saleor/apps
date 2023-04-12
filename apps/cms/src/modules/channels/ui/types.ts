@@ -1,9 +1,7 @@
-export interface ChannelsLoading {
-  fetching: boolean;
-  saving: boolean;
-}
+import { ProductsVariantsSyncLoading } from "../../cms/hooks/useProductsVariantsSync";
+import { ChannelsDataLoading } from "./hooks/useChannels";
 
-export interface ChannelsErrors {
-  fetching?: Error | null;
-  saving?: Error | null;
+export interface ChannelsLoading {
+  channels: ChannelsDataLoading;
+  productsVariantsSync: ProductsVariantsSyncLoading;
 }

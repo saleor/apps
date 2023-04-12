@@ -81,7 +81,7 @@ const payloadOperations: CreateOperations<PayloadConfig> = (config) => {
 } // This is where you write logic for all the supported operations (e.g. creating a product). This function runs only if the config was successfully validated.
 
 
-export default createProvider(payloadOperations, payloadConfigSchema); // `createProvider` combines everything together.
+export const payloadProvider =  createProvider(payloadOperations, payloadConfigSchema); // `createProvider` combines everything together.
 ```
 
 5. Implement the operations:

@@ -2,8 +2,9 @@ import { Skeleton } from "@material-ui/lab";
 import { MergedChannelSchema } from "../../../lib/cms";
 import { AppPaper } from "../../ui/app-paper";
 
-import { ChannelsErrors, ChannelsLoading } from "./types";
+import { ChannelsLoading } from "./types";
 import { ChannelsSelect } from "./channels-select";
+import { ChannelsDataErrors } from "./hooks/useChannels";
 
 const ChannelsListSkeleton = () => {
   return (
@@ -18,7 +19,7 @@ interface ChannelsListProps {
   activeChannel?: MergedChannelSchema | null;
   setActiveChannel: (channel: MergedChannelSchema | null) => void;
   loading: ChannelsLoading;
-  errors: ChannelsErrors;
+  errors: ChannelsDataErrors;
 }
 
 export const ChannelsList = ({
@@ -28,7 +29,7 @@ export const ChannelsList = ({
   loading,
   errors,
 }: ChannelsListProps) => {
-  if (loading.fetching) {
+  if (loading.channels.fetching) {
     return <ChannelsListSkeleton />;
   }
 

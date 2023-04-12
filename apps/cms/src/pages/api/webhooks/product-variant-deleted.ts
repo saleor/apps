@@ -6,11 +6,7 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
-import {
-  createCmsOperations,
-  executeCmsOperations,
-  executeMetadataUpdate,
-} from "../../../lib/cms/client";
+import { createCmsOperations, executeCmsOperations, updateMetadata } from "../../../lib/cms/client";
 import { logger as pinoLogger } from "../../../lib/logger";
 import { createClient } from "../../../lib/graphql";
 
@@ -89,7 +85,7 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
     productVariant,
   });
 
-  await executeMetadataUpdate({
+  await updateMetadata({
     context,
     productVariant,
     cmsProviderInstanceIdsToCreate: cmsProviderInstanceProductVariantIdsToCreate,
@@ -99,7 +95,8 @@ export const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadF
   if (!cmsErrors.length) {
     return res.status(200).end();
   } else {
-    return res.status(500).json({ errors: cmsErrors });
+    // Due to undesired webhook events deliveries retries on HTTP 500, we need to return 200 status code instead of 500.
+    return res.status(200).json({ errors: cmsErrors });
   }
 };
 

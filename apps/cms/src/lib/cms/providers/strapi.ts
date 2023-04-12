@@ -1,5 +1,5 @@
 import { StrapiConfig, strapiConfigSchema } from "../config";
-import { CmsOperations, CreateOperations, CreateProductResponse, ProductInput } from "../types";
+import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
 import { logger as pinoLogger } from "../../logger";
 
@@ -20,7 +20,7 @@ type StrapiBody = {
   data: Record<string, any> & { saleor_id: string };
 };
 
-const transformInputToBody = ({ input }: { input: ProductInput }): StrapiBody => {
+const transformInputToBody = (input: ProductInput): StrapiBody => {
   const body = {
     data: {
       saleor_id: input.saleorId,
@@ -55,7 +55,10 @@ type StrapiResponse =
       error: null;
     };
 
-const transformCreateProductResponse = (response: StrapiResponse): CreateProductResponse => {
+const transformCreateProductResponse = (
+  response: StrapiResponse,
+  input: ProductInput
+): ProductResponse => {
   if (response.error) {
     return {
       ok: false,
@@ -67,46 +70,85 @@ const transformCreateProductResponse = (response: StrapiResponse): CreateProduct
     ok: true,
     data: {
       id: response.data.id,
+      saleorId: input.saleorId,
     },
   };
 };
 
 type CreateStrapiOperations = CreateOperations<StrapiConfig>;
 
-export const strapiOperations: CreateStrapiOperations = (config): CmsOperations => {
+export const strapiOperations: CreateStrapiOperations = (config) => {
   const logger = pinoLogger.child({ cms: "strapi" });
 
   const { contentTypeId } = config;
 
+  const createProductInCMS = async (input: ProductInput): Promise<StrapiResponse> => {
+    const body = transformInputToBody(input);
+    const response = await strapiFetch(`/${contentTypeId}`, config, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    logger.debug({ response }, "createProduct response");
+    return await response.json();
+  };
+
+  const updateProductInCMS = async (id: string, input: ProductInput) => {
+    const body = transformInputToBody(input);
+    return await strapiFetch(`/${contentTypeId}/${id}`, config, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    });
+  };
+
+  const deleteProductInCMS = async (id: string) => {
+    return await strapiFetch(`/${contentTypeId}/${id}`, config, { method: "DELETE" });
+  };
+
+  const createBatchProductsInCMS = async (input: ProductInput[]) => {
+    // Strapi doesn't support batch creation of items, so we need to create them one by one
+    return await Promise.all(
+      input.map(async (product) => ({
+        response: await createProductInCMS(product),
+        input: product,
+      }))
+    );
+  };
+
+  const deleteBatchProductsInCMS = async (ids: string[]) => {
+    // Strapi doesn't support batch deletion of items, so we need to delete them one by one
+    return await Promise.all(ids.map((id) => deleteProductInCMS(id)));
+  };
+
   return {
-    createProduct: async (params) => {
-      const body = transformInputToBody(params);
-      const response = await strapiFetch(`/${contentTypeId}`, config, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-      logger.debug("createProduct response", { response });
+    createProduct: async ({ input }) => {
+      const result = await createProductInCMS(input);
+      logger.debug({ result }, "createProduct result");
 
-      const result = await response.json();
-      logger.debug("createProduct result", { result });
-
-      return transformCreateProductResponse(result);
+      return transformCreateProductResponse(result, input);
     },
     updateProduct: async ({ id, input }) => {
-      const body = transformInputToBody({ input });
-      const response = await strapiFetch(`/${contentTypeId}/${id}`, config, {
-        method: "PUT",
-        body: JSON.stringify(body),
-      });
-      logger.debug("updateProduct response", { response });
+      const response = await updateProductInCMS(id, input);
+      logger.debug({ response }, "updateProduct response");
 
       return response;
     },
     deleteProduct: async ({ id }) => {
-      const response = await strapiFetch(`/${contentTypeId}/${id}`, config, { method: "DELETE" });
-      logger.debug("deleteProduct response", { response });
+      const response = await deleteProductInCMS(id);
+      logger.debug({ response }, "deleteProduct response");
 
       return response;
+    },
+    createBatchProducts: async ({ input }) => {
+      const results = await createBatchProductsInCMS(input);
+      logger.debug({ results }, "createBatchProducts results");
+
+      return results.map((result) => transformCreateProductResponse(result.response, result.input));
+    },
+    deleteBatchProducts: async ({ ids }) => {
+      const responses = await deleteBatchProductsInCMS(ids);
+      logger.debug({ responses }, "deleteBatchProducts responses");
+
+      return responses;
     },
   };
 };
