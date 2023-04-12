@@ -56,7 +56,6 @@ importers:
       graphql-tag: ^2.12.6
       jsdom: ^20.0.3
       next: '13.2'
-      next-urql: ^5.0.0
       pino: ^8.8.0
       pino-pretty: ^9.1.1
       prettier: ^2.7.1
@@ -86,7 +85,6 @@ importers:
       graphql: 16.6.0
       graphql-tag: 2.12.6_graphql@16.6.0
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
-      next-urql: 5.0.0_react@18.2.0+urql@3.0.3
       pino: 8.9.0
       pino-pretty: 9.1.1
       react: 18.2.0
@@ -13439,17 +13437,6 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
       urql: ^3.0.0
-    dependencies:
-      react: 18.2.0
-      react-ssr-prepass: 1.5.0_react@18.2.0
-      urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
-    dev: false
-
-  /next-urql/5.0.0_react@18.2.0+urql@3.0.3:
-    resolution: {integrity: sha512-sgsfGWlQezyDEV5XYV5WZwOY0V+IESpIh4E4Nhk1jqL0owSYnWiJeTUS/iFCR7tCTIGXxxFrBJIj8MB6iMBOrA==}
-    peerDependencies:
-      react: '>=16.8.0'
-      urql: ^4.0.0
     dependencies:
       react: 18.2.0
       react-ssr-prepass: 1.5.0_react@18.2.0

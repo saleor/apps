@@ -33,8 +33,10 @@ export const createCmsOperations = async ({
 
   const settingsManager = createSettingsManager(client);
 
-  const channelsSettingsParsed = await getChannelsSettings(settingsManager);
-  const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
+  const [channelsSettingsParsed, providerInstancesSettingsParsed] = await Promise.all([
+    getChannelsSettings(settingsManager),
+    getProviderInstancesSettings(settingsManager),
+  ]);
 
   const productVariantCmsProviderInstances = productVariantCmsKeys.map((cmsKey) =>
     getCmsIdFromSaleorItemKey(cmsKey)

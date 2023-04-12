@@ -7,11 +7,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
 import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
-import {
-  createCmsOperations,
-  executeCmsOperations,
-  executeMetadataUpdate,
-} from "../../../lib/cms/client";
+import { createCmsOperations, executeCmsOperations, updateMetadata } from "../../../lib/cms/client";
 import { logger as pinoLogger } from "../../../lib/logger";
 import { createClient } from "../../../lib/graphql";
 import { fetchProductVariantMetadata } from "../../../lib/metadata";
@@ -93,7 +89,7 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadF
     productVariant,
   });
 
-  await executeMetadataUpdate({
+  await updateMetadata({
     context,
     productVariant,
     cmsProviderInstanceIdsToCreate: cmsProviderInstanceProductVariantIdsToCreate,

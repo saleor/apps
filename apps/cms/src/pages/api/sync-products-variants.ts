@@ -9,10 +9,7 @@ import { cmsProviders, CMSProvider } from "../../lib/cms/providers";
 import { logger as pinoLogger } from "../../lib/logger";
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
-import {
-  executeBatchMetadataUpdate,
-  MetadataRecord,
-} from "../../lib/cms/client/metadata-execution";
+import { batchUpdateMetadata, MetadataRecord } from "../../lib/cms/client/metadata-execution";
 import { CmsBatchOperations } from "../../lib/cms/types";
 
 export interface SyncProductsVariantsApiPayload {
@@ -81,9 +78,11 @@ const handler: NextProtectedApiHandler = async (
     operation === "ADD" ? "createBatchProducts" : "deleteBatchProducts";
 
   const settingsManager = createSettingsManager(client);
-  const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
+  const [providerInstancesSettingsParsed, channelsSettingsParsed] = await Promise.all([
+    getProviderInstancesSettings(settingsManager),
+    getChannelsSettings(settingsManager),
+  ]);
   const providerInstanceSettings = providerInstancesSettingsParsed[providerInstanceId];
-  const channelsSettingsParsed = await getChannelsSettings(settingsManager);
 
   const provider = cmsProviders[
     providerInstanceSettings.providerName as CMSProvider
@@ -149,7 +148,7 @@ const handler: NextProtectedApiHandler = async (
     verifyIfProductVariantIsAvailableInOtherChannelEnabledForSelectedProviderInstance,
   });
 
-  await executeBatchMetadataUpdate({
+  await batchUpdateMetadata({
     context,
     variantCMSProviderInstanceIdsToCreate:
       syncResult?.createdCmsIds?.map((cmsId) => ({

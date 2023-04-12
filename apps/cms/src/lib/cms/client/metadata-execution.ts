@@ -48,7 +48,7 @@ const executeMetadataUpdateMutation = async ({
   }
 };
 
-export const executeMetadataUpdate = async ({
+export const updateMetadata = async ({
   context,
   productVariant,
   cmsProviderInstanceIdsToCreate,
@@ -75,7 +75,7 @@ type ItemMetadataRecord = {
   cmsProviderInstanceIds: MetadataRecord;
 };
 
-export const executeBatchMetadataUpdate = async ({
+export const batchUpdateMetadata = async ({
   context,
   variantCMSProviderInstanceIdsToCreate,
   variantCMSProviderInstanceIdsToDelete,
@@ -108,7 +108,7 @@ export const executeBatchMetadataUpdate = async ({
     {} as Record<string, MetadataRecord>
   );
 
-  await Promise.all(
+  const mutationsToExecute = [
     Object.entries(variantCMSProviderInstanceIdsToCreateMap).map(
       ([itemId, cmsProviderInstanceIdsToCreate]) =>
         executeMetadataUpdateMutation({
@@ -116,10 +116,7 @@ export const executeBatchMetadataUpdate = async ({
           itemId,
           cmsProviderInstanceIdsToCreate,
         })
-    )
-  );
-
-  await Promise.all(
+    ),
     Object.entries(variantCMSProviderInstanceIdsToDeleteMap).map(
       ([itemId, cmsProviderInstanceIdsToDelete]) =>
         executeMetadataUpdateMutation({
@@ -127,6 +124,8 @@ export const executeBatchMetadataUpdate = async ({
           itemId,
           cmsProviderInstanceIdsToDelete,
         })
-    )
-  );
+    ),
+  ];
+
+  await Promise.all(mutationsToExecute);
 };

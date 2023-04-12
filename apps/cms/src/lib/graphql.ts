@@ -1,4 +1,3 @@
-import { initUrqlClient } from "next-urql";
 import { AuthConfig, authExchange } from "@urql/exchange-auth";
 import {
   cacheExchange,
@@ -43,16 +42,6 @@ const getExchanges = (getAuth: AuthConfig<IAuthState>["getAuth"]) => [
   }),
   fetchExchange,
 ];
-
-export const nextClient = (url: string, getAuth: AuthConfig<IAuthState>["getAuth"]) => {
-  return initUrqlClient(
-    {
-      url,
-      exchanges: getExchanges(getAuth),
-    },
-    false
-  );
-};
 
 export const createClient = (url: string, getAuth: AuthConfig<IAuthState>["getAuth"]) =>
   urqlCreateClient({
