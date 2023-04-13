@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.4.3
+
+### Patch Changes
+
+- eca52ad: Replace "export default" with named exports
+  - @saleor/apps-shared@1.3.0
+
 ## 1.4.2
 
 ### Patch Changes

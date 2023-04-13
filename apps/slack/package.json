@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-slack",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "private": true,
   "scripts": {
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
