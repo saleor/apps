@@ -17,7 +17,7 @@ function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] 
   }));
 }
 
-export function sumLines(lines: LineItem[]): number {
+function sumLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
     lines.reduce((prev, next) => prev + (next.unit_price ?? 0) * (next.quantity ?? 0), 0)
   );
@@ -70,4 +70,5 @@ const mapResponse = (response: CreateOrderRes): CreateOrderResponse => {
 export const taxJarOrderCreated = {
   mapPayload,
   mapResponse,
+  sumLines,
 };

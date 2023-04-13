@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { OrderStatus } from "../../../../generated/graphql";
-import {
-  TaxJarOrderCreatedMapPayloadProps,
-  sumLines,
-  taxJarOrderCreated,
-} from "./taxjar-order-created-map";
+import { TaxJarOrderCreatedMapPayloadProps, taxJarOrderCreated } from "./taxjar-order-created-map";
 
 const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadProps = {
   order: {
@@ -101,7 +97,7 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadProps = {
 
 describe("sumLines", () => {
   it("returns the sum of all line items when items quantity = 1", () => {
-    const result = sumLines([
+    const result = taxJarOrderCreated.sumLines([
       {
         quantity: 1,
         unit_price: 90.45,
@@ -116,7 +112,7 @@ describe("sumLines", () => {
     expect(result).toBe(135.7);
   });
   it("returns the sum of all line items when items quantity > 1", () => {
-    const result = sumLines([
+    const result = taxJarOrderCreated.sumLines([
       {
         quantity: 3,
         unit_price: 90.45,
@@ -137,7 +133,7 @@ describe("sumLines", () => {
   });
 
   it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
-    const result = sumLines([
+    const result = taxJarOrderCreated.sumLines([
       {
         quantity: 3,
         unit_price: 10.256,
