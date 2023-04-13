@@ -12,7 +12,7 @@ export type SaleorAddress = {
   postalCode: string;
 };
 
-export function mapSaleorAddressToAvataxAddress(address: SaleorAddress): AvataxAddress {
+function mapSaleorAddressToAvataxAddress(address: SaleorAddress): AvataxAddress {
   return {
     line1: address.streetAddress1,
     line2: address.streetAddress2,
@@ -23,7 +23,7 @@ export function mapSaleorAddressToAvataxAddress(address: SaleorAddress): AvataxA
   };
 }
 
-export function mapChannelAddressToAvataxAddress(address: ChannelAddress): AvataxAddress {
+function mapChannelAddressToAvataxAddress(address: ChannelAddress): AvataxAddress {
   return {
     line1: address.street,
     city: address.city,
@@ -32,3 +32,8 @@ export function mapChannelAddressToAvataxAddress(address: ChannelAddress): Avata
     country: address.country,
   };
 }
+
+export const avataxAddressFactory = {
+  fromSaleorAddress: mapSaleorAddressToAvataxAddress,
+  fromChannelAddress: mapChannelAddressToAvataxAddress,
+};

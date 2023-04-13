@@ -39,6 +39,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     return taxJarOrderCreated.mapResponse(result);
   }
 
+  // * TaxJar doesn't require any action on order fulfillment
   async fulfillOrder() {
     return { ok: true };
   }

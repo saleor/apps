@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { mapChannelAddressToAvataxAddress, mapSaleorAddressToAvataxAddress } from "./address-map";
+import { avataxAddressFactory } from "./address-map";
 
 describe("mapChannelAddressToAvataxAddress", () => {
   it("returns fields in the expected format", () => {
-    const result = mapChannelAddressToAvataxAddress({
+    const result = avataxAddressFactory.fromChannelAddress({
       city: "LOS ANGELES",
       country: "US",
       state: "CA",
@@ -22,7 +22,7 @@ describe("mapChannelAddressToAvataxAddress", () => {
 
 describe("mapSaleorAddressToAvataxAddress", () => {
   it("returns fields in the expected format with line1", () => {
-    const result = mapSaleorAddressToAvataxAddress({
+    const result = avataxAddressFactory.fromSaleorAddress({
       streetAddress1: "123 Palm Grove Ln",
       city: "LOS ANGELES",
       country: {
@@ -42,7 +42,7 @@ describe("mapSaleorAddressToAvataxAddress", () => {
   });
 
   it("returns fields in the expected format with line1 and line2", () => {
-    const result = mapSaleorAddressToAvataxAddress({
+    const result = avataxAddressFactory.fromSaleorAddress({
       streetAddress1: "123 Palm",
       streetAddress2: "Grove Ln",
       city: "LOS ANGELES",

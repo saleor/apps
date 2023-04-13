@@ -6,7 +6,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
-import { mapChannelAddressToAvataxAddress, mapSaleorAddressToAvataxAddress } from "./address-map";
+import { avataxAddressFactory } from "./address-map";
 
 const mapLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
@@ -32,9 +32,9 @@ const mapPayload = (
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {
-        shipFrom: mapChannelAddressToAvataxAddress(channel.address),
+        shipFrom: avataxAddressFactory.fromChannelAddress(channel.address),
         // billing or shipping address?
-        shipTo: mapSaleorAddressToAvataxAddress(order.billingAddress!),
+        shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
       },
       currencyCode: order.total.currency,
       email: order.user?.email ?? "",
