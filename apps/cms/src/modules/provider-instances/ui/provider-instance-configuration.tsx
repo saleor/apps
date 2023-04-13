@@ -199,7 +199,7 @@ export const ProviderInstanceConfiguration = ({
             <br />
             <ProviderInstanceConfigurationForm
               provider={selectedProvider}
-              providerInstance={activeProviderInstance}
+              providerInstance={!newProviderInstance ? activeProviderInstance : null}
               loading={loading.saving}
               onSubmit={saveProviderInstance}
               onDelete={deleteProviderInstance}
