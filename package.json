@@ -20,13 +20,13 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "eslint-config-saleor": "workspace:*",
-    "prettier": "^2.8.4",
-    "turbo": "^1.8.3",
     "eslint": "^8.35.0",
+    "eslint-config-saleor": "workspace:*",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
-    "next": "^13.2.3"
+    "next": "^13.2.3",
+    "prettier": "^2.8.4",
+    "turbo": "^1.9.0"
   },
   "engines": {
     "node": ">=18.0.0"
