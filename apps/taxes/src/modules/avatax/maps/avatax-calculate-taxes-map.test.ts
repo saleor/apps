@@ -5,7 +5,8 @@ import {
   mapLines,
 } from "./avatax-calculate-taxes-map";
 
-const MOCKED_PAYLOAD: AvataxCalculateTaxesMapPayloadProps = {
+// * Mocked payload data, channel config and avatax config
+const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadProps = {
   taxBase: {
     currency: "PLN",
     channel: {
@@ -114,7 +115,7 @@ describe("avataxCalculateTaxes", () => {
   });
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
-      const lines = mapLines(MOCKED_PAYLOAD.taxBase);
+      const lines = mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
       expect(lines).toContainEqual({
         itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,
