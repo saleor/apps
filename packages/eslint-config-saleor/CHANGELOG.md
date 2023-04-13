@@ -1,5 +1,15 @@
 # eslint-config-saleor
 
+## 0.3.0
+
+### Minor Changes
+
+- eca52ad: Added "no-default-export" eslint rule (except Next.js page)
+
+### Patch Changes
+
+- eca52ad: Replace "export default" with named exports
+
 ## 0.2.1
 
 ### Patch Changes

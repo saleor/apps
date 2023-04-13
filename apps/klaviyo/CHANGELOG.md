@@ -1,5 +1,12 @@
 # saleor-app-klaviyo
 
+## 1.4.1
+
+### Patch Changes
+
+- eca52ad: Replace "export default" with named exports
+  - @saleor/apps-shared@1.3.0
+
 ## 1.4.0
 
 ### Minor Changes
