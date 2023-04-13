@@ -1,0 +1,19 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "PORT",
+        "VERCEL_URL",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "ALLOWED_DOMAIN_PATTERN"
+      ]
+    }
+  }
+}
