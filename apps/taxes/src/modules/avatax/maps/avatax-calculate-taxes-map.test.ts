@@ -101,11 +101,6 @@ const MOCKED_PAYLOAD: AvataxCalculateTaxesMapPayloadProps = {
   },
 };
 
-// What to test:
-// 1. Calculation of fields (e.g. sum of lines vs total)
-// 2. Formatting the API expects to be in a certain format
-// 3. Rounding of numbers
-
 describe("avataxCalculateTaxes", () => {
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
@@ -116,5 +111,9 @@ describe("avataxCalculateTaxes", () => {
         amount: 48.33,
       });
     });
+
+    it.todo("calculation of fields");
+    it.todo("formatting the fields");
+    it.todo("rounding of numbers");
   });
 });
