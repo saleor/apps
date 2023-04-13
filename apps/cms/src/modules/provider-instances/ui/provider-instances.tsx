@@ -26,7 +26,7 @@ export const ProviderInstances = () => {
   const [newProviderInstance, setNewProviderInstance] = useState<SingleProviderSchema | null>(null);
 
   useEffect(() => {
-    if (providerInstances.length) {
+    if (providerInstances.length && !activeProviderInstanceId) {
       setActiveProviderInstanceId(providerInstances[0].id);
     }
   }, [providerInstances]);

@@ -4,6 +4,8 @@ import { SingleProviderSchema } from "../../../lib/cms/config";
 import { AppPaper } from "../../ui/app-paper";
 
 import { ProvidersErrors, ProvidersLoading } from "./types";
+import { ProviderIcon } from "./provider-icon";
+import { makeStyles } from "@saleor/macaw-ui";
 
 const ProviderInstancesListSkeleton = () => {
   return (
@@ -22,6 +24,14 @@ const ProviderInstancesListSkeleton = () => {
     </AppPaper>
   );
 };
+
+const useStyles = makeStyles((theme) => ({
+  menuItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(2),
+  },
+}));
 
 interface ProviderInstancesListProps {
   providerInstances: SingleProviderSchema[];
@@ -42,6 +52,8 @@ export const ProviderInstancesSelect = ({
   loading,
   errors,
 }: ProviderInstancesListProps) => {
+  const styles = useStyles();
+
   const handleSetActiveProviderInstance = (providerInstance: SingleProviderSchema) => {
     setActiveProviderInstance(providerInstance);
   };
@@ -73,7 +85,10 @@ export const ProviderInstancesSelect = ({
       >
         {providerInstances.map((p) => (
           <MenuItem key={p.id} value={p.id}>
-            {p.name}
+            <div className={styles.menuItem}>
+              <ProviderIcon providerName={p.providerName} small />
+              {p.name}
+            </div>
           </MenuItem>
         ))}
       </Select>

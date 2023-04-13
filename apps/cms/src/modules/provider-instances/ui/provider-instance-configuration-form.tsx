@@ -57,8 +57,6 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
     resolver: zodResolver(schema),
   });
 
-  console.log("form", providerInstance);
-
   React.useEffect(() => {
     resetField("providerName" as Path<ProvidersSchema[TProvider]>, {
       defaultValue: provider.name,
@@ -89,11 +87,6 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
             Error validating form
           </Typography>
         )}
-        <input
-          type="hidden"
-          {...register("id" as Path<ProvidersSchema[TProvider]>)}
-          value={providerInstance?.id}
-        />
         <input
           type="hidden"
           {...register("providerName" as Path<ProvidersSchema[TProvider]>)}
@@ -147,6 +140,21 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
             />
           </Grid>
         ))}
+        {providerInstance ? (
+          <Grid item xs={12}>
+            <TextField
+              {...register("id" as Path<ProvidersSchema[TProvider]>)}
+              label="Configuration id"
+              type="text"
+              name="id"
+              fullWidth
+              helperText="Automatically generated unique identifier for the configuration instance."
+              disabled={true}
+            />
+          </Grid>
+        ) : (
+          <input type="hidden" {...register("id" as Path<ProvidersSchema[TProvider]>)} />
+        )}
         <Grid item xs={12} className={providerInstance ? styles.footerComplex : styles.footer}>
           {providerInstance && (
             <Button variant="secondary" disabled={loading} onClick={() => onDelete(getValues())}>
