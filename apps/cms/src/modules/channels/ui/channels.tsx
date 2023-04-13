@@ -41,8 +41,12 @@ export const Channels = () => {
     }
   }, [channels]);
 
-  const handleOnSyncCompleted = (providerInstanceId: string) => {
+  const handleOnSyncCompleted = (providerInstanceId: string, error?: string) => {
     if (!activeChannel) {
+      return;
+    }
+
+    if (error) {
       return;
     }
 

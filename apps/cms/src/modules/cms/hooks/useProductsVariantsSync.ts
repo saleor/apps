@@ -1,4 +1,4 @@
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { useCallback, useEffect, useState } from "react";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
@@ -21,9 +21,9 @@ interface UseProductsVariantsSyncHandlers {
 
 export const useProductsVariantsSync = (
   channelSlug: string | null,
-  onSyncCompleted: (providerInstanceId: string) => void
+  onSyncCompleted: (providerInstanceId: string, error?: string) => void
 ): UseProductsVariantsSyncHandlers => {
-  const { appBridgeState } = useAppBridge();
+  const { appBridge, appBridgeState } = useAppBridge();
 
   const [startedProviderInstanceId, setStartedProviderInstanceId] = useState<string>();
   const [startedOperation, setStartedOperation] = useState<ProductsVariantsSyncOperation>();
@@ -78,6 +78,33 @@ export const useProductsVariantsSync = (
     }
   };
 
+  const completeSync = (completedProviderInstanceIdSync: string, error?: string) => {
+    setStartedProviderInstanceId(undefined);
+    setStartedOperation(undefined);
+    setCurrentProductIndex(0);
+
+    onSyncCompleted(completedProviderInstanceIdSync, error);
+
+    if (error) {
+      appBridge?.dispatch(
+        actions.Notification({
+          title: "Error",
+          status: "error",
+          text: "Error syncing products variants",
+          apiMessage: error,
+        })
+      );
+    } else {
+      appBridge?.dispatch(
+        actions.Notification({
+          title: "Success",
+          status: "success",
+          text: "Products variants sync completed successfully",
+        })
+      );
+    }
+  };
+
   useEffect(() => {
     if (
       products.length <= currentProductIndex &&
@@ -85,13 +112,7 @@ export const useProductsVariantsSync = (
       startedProviderInstanceId &&
       startedOperation
     ) {
-      const completedProviderInstanceIdSync = startedProviderInstanceId;
-
-      setStartedProviderInstanceId(undefined);
-      setStartedOperation(undefined);
-      setCurrentProductIndex(0);
-
-      onSyncCompleted(completedProviderInstanceIdSync);
+      completeSync(startedProviderInstanceId);
     }
   }, [products.length, currentProductIndex, fetchCompleted]);
 
@@ -112,10 +133,19 @@ export const useProductsVariantsSync = (
       const productsBatch = products.slice(productsBatchStartIndex, productsBatchEndIndex);
 
       // temporary solution, cannot use directly backend methods without fetch, due to non-browser Node dependency, like await cmsProvider.updatedBatchProducts(productsBatch);
-      await syncFetch(startedProviderInstanceId, startedOperation, productsBatch);
+      const syncResult = await syncFetch(
+        startedProviderInstanceId,
+        startedOperation,
+        productsBatch
+      );
+
+      if (syncResult.error) {
+        completeSync(startedProviderInstanceId, syncResult.error);
+      } else {
+        setCurrentProductIndex(productsBatchEndIndex);
+      }
 
       setIsImporting(false);
-      setCurrentProductIndex(productsBatchEndIndex);
     })();
   }, [
     startedProviderInstanceId,

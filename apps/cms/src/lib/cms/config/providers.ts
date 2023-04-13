@@ -31,7 +31,7 @@ export const providersConfig = {
         name: "token",
         label: "Token",
         helpText:
-          'You can find this in your Contentful project, go to Settings > API keys > Content management tokens > Generate personal token. More instructions at [Contentful "Authentication" documentation](https://www.contentful.com/developers/docs/references/authentication/).',
+          'You can find this in your Contentful project, go to Settings > API Keys > Content Management Tokens > Generate Personal Token. More instructions at [Contentful "Authentication" documentation](https://www.contentful.com/developers/docs/references/authentication/).',
       },
       {
         required: true,
@@ -45,14 +45,14 @@ export const providersConfig = {
         name: "spaceId",
         label: "Space ID",
         helpText:
-          "You can find this in your Contentful project, go to settings > general settings.",
+          "You can find this in your Contentful project, go to Settings > General Settings.",
       },
       {
         required: true,
         name: "contentId",
         label: "Content ID",
         helpText:
-          "You can find this in your Contentful project, go to Content model > select model > Content type id.",
+          "You can find this in your Contentful project, go to Content Model > select Model > Content Type ID.",
       },
       {
         required: true,
@@ -71,7 +71,7 @@ export const providersConfig = {
         name: "apiRequestsPerSecond",
         label: "API requests per second",
         helpText:
-          "API rate limits. Default 7. Used in bulk products variants sync. Higher rate limits may speed up a little products variants bulk sync. Higher rate limit may apply depending on different Contentful plan, learn more at https://www.contentful.com/developers/docs/references/content-management-api/#/introduction/api-rate-limits.",
+          "API rate limits. The default is 7. Used in bulk products variants sync. Higher rate limits may speed up a little products variants bulk sync. Higher rate limit may apply depending on different Contentful plan, learn more at https://www.contentful.com/developers/docs/references/content-management-api/#/introduction/api-rate-limits.",
       },
     ],
   },
@@ -99,7 +99,7 @@ export const providersConfig = {
         name: "contentTypeId",
         label: "Content Type ID (plural)",
         helpText:
-          'You can find this in your Strapi project, go to Content-Type Builder > select content type > click Edit > use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
+          'You can find this in your Strapi project, go to Content-Type Builder > select Content Type > click Edit > Use API ID (Plural). More instructions at [Strapi "Editing content types" documentation](https://docs.strapi.io/user-docs/content-type-builder/managing-content-types#editing-content-types).',
       },
     ],
   },

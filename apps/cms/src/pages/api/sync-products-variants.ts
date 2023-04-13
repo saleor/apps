@@ -156,13 +156,25 @@ const handler: NextProtectedApiHandler = async (
       })) || [],
   });
 
+  if (syncResult?.error) {
+    logger.error({ error: syncResult.error }, "The sync result error.");
+    return res.status(500).json({
+      success: false,
+      data: {
+        createdCMSIds: syncResult?.createdCmsIds || [],
+        deletedCMSIds: syncResult?.deletedCmsIds || [],
+      },
+      error: syncResult?.error,
+    });
+  }
+
+  logger.debug("The sync result success.");
   return res.status(200).json({
     success: true,
     data: {
       createdCMSIds: syncResult?.createdCmsIds || [],
       deletedCMSIds: syncResult?.deletedCmsIds || [],
     },
-    error: syncResult?.error,
   });
 };
 
