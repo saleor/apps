@@ -29,6 +29,11 @@ export function getActiveTaxProvider(
     return { error: "Channel slug is missing", data: null, ok: false };
   }
 
+  if (!metadata.length) {
+    logger.error("App metadata is missing");
+    return { error: "App metadata is missing", data: null, ok: false };
+  }
+
   const { providers, channels } = getAppConfig(metadata);
 
   const channelConfig = channels[channelSlug];
