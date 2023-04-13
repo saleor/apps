@@ -15,7 +15,7 @@ import { numbers } from "../../taxes/numbers";
 // https://developer.avalara.com/avatax/dev-guide/shipping-and-handling/taxability-of-shipping-charges/
 export const SHIPPING_ITEM_CODE = "Shipping";
 
-export function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
+function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
@@ -101,4 +101,5 @@ const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
 export const avataxCalculateTaxes = {
   mapPayload,
   mapResponse,
+  mapLines,
 };
