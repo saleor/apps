@@ -11,6 +11,8 @@ import { AvataxConfig } from "../avatax-config";
 import { mapChannelAddressToAvataxAddress, mapSaleorAddressToAvataxAddress } from "./address-map";
 import { numbers } from "../../taxes/numbers";
 
+// * Shipping is a regular line item in Avatax
+// https://developer.avalara.com/avatax/dev-guide/shipping-and-handling/taxability-of-shipping-charges/
 export const SHIPPING_ITEM_CODE = "Shipping";
 
 export function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
@@ -27,6 +29,9 @@ export function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
     const shippingLine: LineItemModel = {
       amount: taxBase.shippingPrice.amount,
       itemCode: SHIPPING_ITEM_CODE,
+      // todo: add taxCode
+      // * Different shipping methods can have different tax codes
+      // https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/\
       quantity: 1,
     };
 
