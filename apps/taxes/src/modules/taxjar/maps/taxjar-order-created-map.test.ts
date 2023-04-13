@@ -155,9 +155,17 @@ describe("sumLines", () => {
 
 describe("taxJarOrderCreated", () => {
   describe("mapPayload", () => {
+    it.todo("calculation of fields");
+    it.todo("formatting the fields");
+    it.todo("rounding of numbers");
     it("returns the correct order amount", () => {
       const result = taxJarOrderCreated.mapPayload(MOCKED_ORDER);
       expect(result.params.amount).toBe(183.33);
     });
+  });
+  describe.todo("mapResponse", () => {
+    it.todo("calculation of fields");
+    it.todo("formatting the fields");
+    it.todo("rounding of numbers");
   });
 });

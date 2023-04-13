@@ -102,6 +102,16 @@ const MOCKED_PAYLOAD: AvataxCalculateTaxesMapPayloadProps = {
 };
 
 describe("avataxCalculateTaxes", () => {
+  describe.todo("mapResponse", () => {
+    it.todo("calculation of fields");
+    it.todo("formatting the fields");
+    it.todo("rounding of numbers");
+  });
+  describe.todo("mapPayload", () => {
+    it.todo("calculation of fields");
+    it.todo("formatting the fields");
+    it.todo("rounding of numbers");
+  });
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
       const lines = mapLines(MOCKED_PAYLOAD.taxBase);
@@ -111,9 +121,5 @@ describe("avataxCalculateTaxes", () => {
         amount: 48.33,
       });
     });
-
-    it.todo("calculation of fields");
-    it.todo("formatting the fields");
-    it.todo("rounding of numbers");
   });
 });
