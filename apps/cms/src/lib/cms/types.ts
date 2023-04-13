@@ -11,11 +11,13 @@ export type ProductInput = Record<string, any> & {
   image?: string;
 };
 
+export type BaseResponse = { ok: boolean };
 export type ProductResponseSuccess = { ok: true; data: { id: string; saleorId: string } };
 export type ProductResponseError = { ok: false; error: string };
 export type ProductResponse = ProductResponseSuccess | ProductResponseError;
 
 export type CmsOperations = {
+  ping: () => Promise<BaseResponse>;
   getProduct?: ({ id }: { id: string }) => Promise<Response>;
   createProduct: ({ input }: { input: ProductInput }) => Promise<ProductResponse>;
   updateProduct: ({ id, input }: { id: string; input: ProductInput }) => Promise<Response | void>;

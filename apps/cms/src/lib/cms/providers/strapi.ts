@@ -82,6 +82,14 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
 
   const { contentTypeId } = config;
 
+  const pingCMS = async () => {
+    const response = await strapiFetch(`/${contentTypeId}`, config, {
+      method: "GET",
+    });
+    logger.debug({ response }, "pingCMS response");
+    return { ok: response.ok };
+  };
+
   const createProductInCMS = async (input: ProductInput): Promise<StrapiResponse> => {
     const body = transformInputToBody(input);
     const response = await strapiFetch(`/${contentTypeId}`, config, {
@@ -120,6 +128,12 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
   };
 
   return {
+    ping: async () => {
+      const response = await pingCMS();
+      logger.debug({ response }, "ping response");
+
+      return response;
+    },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
       logger.debug({ result }, "createProduct result");

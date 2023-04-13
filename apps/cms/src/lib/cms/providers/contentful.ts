@@ -101,6 +101,15 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
   const requestPerSecondLimit = Number(apiRequestsPerSecond || 7);
 
+  const pingCMS = async () => {
+    const endpoint = `/spaces/${spaceId}`;
+    const response = await contentfulFetch(endpoint, config, { method: "GET" });
+    logger.debug({ response }, "pingCMS response");
+    return {
+      ok: response.ok,
+    };
+  };
+
   const createProductInCMS = async (input: ProductInput): Promise<ContentfulResponse> => {
     // Contentful API does not auto generate resource ID during creation, it has to be provided.
     const resourceId = uuidv4();
@@ -203,6 +212,12 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   };
 
   return {
+    ping: async () => {
+      const response = await pingCMS();
+      logger.debug({ response }, "ping response");
+
+      return response;
+    },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
       logger.debug({ result }, "createProduct result");

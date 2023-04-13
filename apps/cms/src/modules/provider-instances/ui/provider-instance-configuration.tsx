@@ -8,6 +8,8 @@ import { ProviderInstanceConfigurationForm } from "./provider-instance-configura
 import { Skeleton } from "@material-ui/lab";
 import { ProvidersErrors, ProvidersLoading } from "./types";
 import { getProviderByName, Provider } from "../../providers/config";
+import { ProviderInstancePingStatus } from "./hooks/usePingProviderInstance";
+import { ProviderInstancePing } from "./provider-instance-ping";
 
 const useStyles = makeStyles((theme) => ({
   radioLabel: {
@@ -50,6 +52,12 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid hsla(212, 44%, 13%, 0.08)`,
     borderRadius: 8,
     padding: 20,
+  },
+  successStatus: {
+    color: theme.palette.type === "dark" ? theme.palette.success.light : theme.palette.success.dark,
+  },
+  errorStatus: {
+    color: theme.palette.error.main,
   },
 }));
 
@@ -94,6 +102,7 @@ interface ProviderInstanceConfigurationProps {
   deleteProviderInstance: (providerInstance: SingleProviderSchema) => any;
   loading: ProvidersLoading;
   errors: ProvidersErrors;
+  providerInstancePingStatus: ProviderInstancePingStatus | null;
   onNewProviderRequest(): void;
 }
 
@@ -103,6 +112,7 @@ export const ProviderInstanceConfiguration = ({
   saveProviderInstance,
   deleteProviderInstance,
   loading,
+  providerInstancePingStatus,
   onNewProviderRequest,
   errors,
 }: ProviderInstanceConfigurationProps) => {
@@ -123,6 +133,9 @@ export const ProviderInstanceConfiguration = ({
 
     setSelectedProvider(provider);
   };
+
+  const isPingStatusLoading =
+    providerInstancePingStatus?.providerInstanceId !== activeProviderInstance?.id;
 
   if (loading.fetching || loading.saving) {
     return <ProviderInstanceConfigurationSkeleton />;
@@ -196,6 +209,15 @@ export const ProviderInstanceConfiguration = ({
         </RadioGroup>
         {selectedProvider ? (
           <>
+            {!newProviderInstance && (
+              <>
+                <br />
+                <ProviderInstancePing
+                  loading={isPingStatusLoading}
+                  status={providerInstancePingStatus}
+                />
+              </>
+            )}
             <br />
             <ProviderInstanceConfigurationForm
               provider={selectedProvider}
