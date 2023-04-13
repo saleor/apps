@@ -1,5 +1,17 @@
 # saleor-app-cms
 
+## 1.2.0
+
+### Minor Changes
+
+- 1da5163: Redesigned the app to better match new Dashboard
+
+### Patch Changes
+
+- 246b943: Provider configurations UI fixes
+- eca52ad: Replace "export default" with named exports
+  - @saleor/apps-shared@1.3.0
+
 ## 1.1.0
 
 ### Minor Changes

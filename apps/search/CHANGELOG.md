@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.5.0
+
+### Minor Changes
+
+- eca52ad: Removed search index preview page. It can be easily accessed at Algolia itself.
+
+### Patch Changes
+
+- eca52ad: Update Next and Sentry
+- eca52ad: Replace "export default" with named exports
+  - @saleor/apps-shared@1.3.0
+
 ## 1.4.0
 
 ### Minor Changes
