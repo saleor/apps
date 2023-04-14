@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { ComponentProps, useEffect, useState } from "react";
 import { Section } from "../../../ui/section/section";
-import { useDashboardNotification } from "../../../../lib/use-dashboard-notification";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { MailchimpListPicker } from "../../mailchimp-list-picker/mailchimp-list-picker";
 
 type EnabledState = {

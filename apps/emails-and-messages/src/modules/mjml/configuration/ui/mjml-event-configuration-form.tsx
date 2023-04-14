@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import { mjmlUrls } from "../../urls";
 import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
 import { examplePayloads } from "../../../event-handlers/default-payloads";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
@@ -71,6 +72,7 @@ export const EventConfigurationForm = ({
   configurationId,
   eventType,
 }: EventConfigurationFormProps) => {
+  const { notifySuccess, notifyError } = useDashboardNotification();
   const router = useRouter();
   const { appBridge } = useAppBridge();
   const { handleSubmit, control, getValues, setError } = useForm<MjmlEventConfiguration>({
@@ -113,12 +115,7 @@ export const EventConfigurationForm = ({
   const { mutate: updateEventConfiguration } =
     trpcClient.mjmlConfiguration.updateEventConfiguration.useMutation({
       onSuccess: (data) => {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Configuration saved",
-            status: "success",
-          })
-        );
+        notifySuccess("Success", "Configuration saved");
       },
       onError: (error) => {
         let isFieldErrorSet = false;
@@ -134,13 +131,11 @@ export const EventConfigurationForm = ({
         }
         const formErrors = error.data?.zodError?.formErrors || [];
         const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Could not save the configuration",
-            text: isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-            apiMessage: formErrorMessage,
-            status: "error",
-          })
+
+        notifyError(
+          "Could not save the configuration",
+          isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
+          formErrorMessage
         );
       },
     });

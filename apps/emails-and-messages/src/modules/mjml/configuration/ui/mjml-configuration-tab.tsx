@@ -1,6 +1,5 @@
 import React from "react";
 import { IconButton, makeStyles } from "@saleor/macaw-ui";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { AppColumnsLayout } from "../../../ui/app-columns-layout";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { MjmlConfigurationForm } from "./mjml-configuration-form";
@@ -14,6 +13,7 @@ import { LoadingIndicator } from "../../../ui/loading-indicator";
 import { Add } from "@material-ui/icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { MjmlInstructions } from "./mjml-instructions";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -50,7 +50,7 @@ const navigateToFirstConfiguration = (router: NextRouter, configurations?: MjmlC
 
 export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabProps) => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
+  const { notifyError, notifySuccess } = useDashboardNotification();
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -72,13 +72,7 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
   const { mutate: deleteConfiguration } =
     trpcClient.mjmlConfiguration.deleteConfiguration.useMutation({
       onError: (error) => {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Could not remove the configuration",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Could not remove the configuration", error.message);
       },
       onSuccess: async (_data, variables) => {
         await queryClient.cancelQueries({ queryKey: ["mjmlConfiguration", "getConfigurations"] });
@@ -103,13 +97,7 @@ export const MjmlConfigurationTab = ({ configurationId }: MjmlConfigurationTabPr
         }
 
         refetchConfigurations();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Removed successfully",
-            status: "success",
-          })
-        );
+        notifySuccess("Success", "Removed successfully");
       },
     });
 

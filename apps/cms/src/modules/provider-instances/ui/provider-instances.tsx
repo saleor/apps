@@ -7,6 +7,7 @@ import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import { ProviderInstancesSelect } from "./provider-instances-list";
 import { Add } from "@material-ui/icons";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles({
   wrapper: {
@@ -18,12 +19,13 @@ const useStyles = makeStyles({
 
 export const ProviderInstances = () => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
   const { providerInstances, saveProviderInstance, deleteProviderInstance, loading, errors } =
     useProviderInstances();
 
   const [activeProviderInstanceId, setActiveProviderInstanceId] = useState<string | null>(null);
   const [newProviderInstance, setNewProviderInstance] = useState<SingleProviderSchema | null>(null);
+
+  const { notifySuccess } = useDashboardNotification();
 
   useEffect(() => {
     if (providerInstances.length && !activeProviderInstanceId) {
@@ -48,13 +50,7 @@ export const ProviderInstances = () => {
   const handleSaveProviderInstance = async (providerInstance: SingleProviderSchema) => {
     const savedProviderInstance = await saveProviderInstance(providerInstance);
 
-    appBridge?.dispatch(
-      actions.Notification({
-        title: "Success",
-        status: "success",
-        text: "Configuration saved",
-      })
-    );
+    notifySuccess("Success", "Configuration saved");
 
     if (newProviderInstance) {
       setNewProviderInstance(null);

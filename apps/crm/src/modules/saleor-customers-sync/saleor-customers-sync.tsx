@@ -1,7 +1,7 @@
 import { ComponentProps, useEffect, useState } from "react";
 import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../trpc/trpc-client";
-import { useDashboardNotification } from "../../lib/use-dashboard-notification";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { useFetchAllCustomers } from "./use-fetch-all-customers";
 import { Section } from "../ui/section/section";
 import { MailchimpListPicker } from "../mailchimp/mailchimp-list-picker/mailchimp-list-picker";

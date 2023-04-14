@@ -17,6 +17,7 @@ import { trpcClient } from "../../../trpc/trpc-client";
 import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
 import { SendgridConfiguration } from "../sendgrid-config";
 import { sendgridUrls } from "../../urls";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -52,18 +53,13 @@ export const SendgridTemplatesCard = ({
 }: SendgridTemplatesCardProps) => {
   const classes = useStyles();
   const router = useRouter();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess } = useDashboardNotification();
 
   const { mutate: updateEventConfiguration } =
     trpcClient.sendgridConfiguration.updateEventConfiguration.useMutation({
       onSuccess(_data, variables) {
         onEventChanged();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: variables.active ? "Event enabled" : "Event disabled",
-            status: "success",
-          })
-        );
+        notifySuccess(variables.active ? "Event enabled" : "Event disabled");
       },
     });
 

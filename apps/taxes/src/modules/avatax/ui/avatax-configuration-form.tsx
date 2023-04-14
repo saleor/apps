@@ -8,7 +8,6 @@ import {
   TextFieldProps,
 } from "@material-ui/core";
 import { Delete, Save } from "@material-ui/icons";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -17,6 +16,7 @@ import { useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppLink } from "../../ui/app-link";
 import { avataxConfigSchema } from "../avatax-config";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -39,9 +39,9 @@ const defaultValues: FormValues = {
 };
 
 export const AvataxConfigurationForm = () => {
+  const { notifySuccess, notifyError } = useDashboardNotification();
   const [isWarningDialogOpen, setIsWarningDialogOpen] = React.useState(false);
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -50,13 +50,7 @@ export const AvataxConfigurationForm = () => {
   const { refetch: refetchChannelConfigurationData } =
     trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
   const { refetch: refetchProvidersConfigurationData } =
@@ -66,13 +60,7 @@ export const AvataxConfigurationForm = () => {
     {
       enabled: !!instanceId,
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     }
   );
@@ -95,22 +83,10 @@ export const AvataxConfigurationForm = () => {
       onSuccess({ id }) {
         setInstanceId(id);
         refetchProvidersConfigurationData();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Saved app configuration",
-            status: "success",
-          })
-        );
+        notifySuccess("Success", "Saved app configuration");
       },
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -118,22 +94,10 @@ export const AvataxConfigurationForm = () => {
     trpcClient.avataxConfiguration.patch.useMutation({
       onSuccess() {
         refetchProvidersConfigurationData();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Updated Avalara configuration",
-            status: "success",
-          })
-        );
+        notifySuccess("Success", "Updated Avalara configuration");
       },
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -142,22 +106,10 @@ export const AvataxConfigurationForm = () => {
       resetInstanceId();
       refetchProvidersConfigurationData();
       refetchChannelConfigurationData();
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          text: "Removed Avatax instance",
-          status: "success",
-        })
-      );
+      notifySuccess("Success", "Removed Avatax instance");
     },
     onError(error) {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Error",
-          text: error.message,
-          status: "error",
-        })
-      );
+      notifyError("Error", error.message);
     },
   });
 

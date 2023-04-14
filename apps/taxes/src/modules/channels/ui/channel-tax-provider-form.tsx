@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Save } from "@material-ui/icons";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 
 import React from "react";
@@ -25,6 +24,7 @@ import { ProvidersConfig } from "../../providers-configuration/providers-config"
 import { ProviderIcon } from "../../providers-configuration/ui/provider-icon";
 import { useChannelSlug } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 type ChannelTaxProviderFormValues = ChannelConfig;
 
@@ -70,23 +70,17 @@ const getDefaultFormValues = (
 // todo: rename because address is here
 export const ChannelTaxProviderForm = () => {
   const styles = useStyles();
-  const { appBridge } = useAppBridge();
   const { control, reset, handleSubmit } = useForm<ChannelTaxProviderFormValues>({
     resolver: zodResolver(channelSchema),
   });
+  const { notifyError, notifySuccess } = useDashboardNotification();
 
   const { channelSlug } = useChannelSlug();
 
   const { data: channelConfigurationData, refetch: refetchChannelConfigurationData } =
     trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -94,13 +88,7 @@ export const ChannelTaxProviderForm = () => {
     undefined,
     {
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     }
   );
@@ -109,22 +97,10 @@ export const ChannelTaxProviderForm = () => {
   const { mutate, isLoading } = trpcClient.channelsConfiguration.upsert.useMutation({
     onSuccess() {
       refetchChannelConfigurationData();
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          text: `Saved configuration of channel: ${channelSlug}`,
-          status: "success",
-        })
-      );
+      notifySuccess("Success", `Saved configuration of channel: ${channelSlug}`);
     },
     onError(error) {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Error",
-          text: error.message,
-          status: "error",
-        })
-      );
+      notifyError("Error", error.message);
     },
   });
 

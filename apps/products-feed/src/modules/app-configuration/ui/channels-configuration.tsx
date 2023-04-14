@@ -9,6 +9,7 @@ import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
 import { SideMenu } from "./side-menu";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -33,6 +34,7 @@ export const ChannelsConfiguration = () => {
   const styles = useStyles();
 
   const { appBridge } = useAppBridge();
+  const { notifySuccess } = useDashboardNotification();
 
   const { data: configurationData, refetch: refetchConfig } =
     trpcClient.appConfiguration.fetch.useQuery();
@@ -44,13 +46,7 @@ export const ChannelsConfiguration = () => {
   const { mutate, error: saveError } = trpcClient.appConfiguration.setAndReplace.useMutation({
     onSuccess() {
       refetchConfig();
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          text: "Saved app configuration",
-          status: "success",
-        })
-      );
+      notifySuccess("Success", "Saved app configuration");
     },
   });
 

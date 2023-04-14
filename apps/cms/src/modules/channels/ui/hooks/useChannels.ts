@@ -2,7 +2,7 @@ import { useChannelsFetch } from "./useChannelsFetch";
 import { MergedChannelSchema, SingleChannelSchema } from "../../../../lib/cms/config";
 import { useChannelsQuery } from "../../../../../generated/graphql";
 import { useIsMounted } from "usehooks-ts";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 export interface ChannelsDataLoading {
   fetching: boolean;
@@ -15,7 +15,6 @@ export interface ChannelsDataErrors {
 }
 
 export const useChannels = () => {
-  const { appBridge } = useAppBridge();
   const isMounted = useIsMounted();
   const [channelsQueryData, channelsQueryOpts] = useChannelsQuery({
     pause: !isMounted,
@@ -27,6 +26,7 @@ export const useChannels = () => {
     error: fetchingError,
     isFetching,
   } = useChannelsFetch();
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
@@ -55,21 +55,9 @@ export const useChannels = () => {
     });
 
     if (fetchResult.success) {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          status: "success",
-          text: "Configuration saved",
-        })
-      );
+      notifySuccess("Success", "Configuration saved");
     } else {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Error",
-          status: "error",
-          text: "Error while saving configuration",
-        })
-      );
+      notifyError("Error", "Error while saving configuration");
     }
   };
 
