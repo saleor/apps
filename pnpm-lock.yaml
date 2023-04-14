@@ -71,7 +71,7 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.6.0)
       next:
-        specifier: ~13.3.0
+        specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.8.0
