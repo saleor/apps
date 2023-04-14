@@ -47,8 +47,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -177,8 +177,8 @@ importers:
         specifier: ^3.0.80
         version: 3.0.80
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -331,8 +331,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -467,8 +467,8 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.37.1)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -651,8 +651,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -811,8 +811,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.14)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -929,8 +929,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1053,8 +1053,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1210,8 +1210,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1340,8 +1340,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1461,8 +1461,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.37.1
-        version: 0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1614,6 +1614,9 @@ importers:
 
   packages/eslint-config-saleor:
     dependencies:
+      '@saleor/app-sdk':
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       eslint:
         specifier: ^8.33.0
         version: 8.33.0
@@ -1649,8 +1652,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.26.1
-        version: 0.26.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.37.3
+        version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
         specifier: ^0.7.2
         version: 0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.27)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0)
@@ -1875,7 +1878,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@ampproject/remapping': 2.2.0
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       '@babel/generator': 7.20.14
       '@babel/helper-compilation-targets': 7.20.7(@babel/core@7.20.12)
       '@babel/helper-module-transforms': 7.20.11
@@ -2505,7 +2508,7 @@ packages:
     resolution: {integrity: sha512-kMJXfF0T6DIS9E8cgdLCSAL+cuCK+YEZHWiLK0SXpTo8YRj5lpJu3CDNKiIBCne4m9hhTIqUg6SYTAI39tAiVQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       '@babel/generator': 7.20.14
       '@babel/helper-environment-visitor': 7.18.9
       '@babel/helper-function-name': 7.19.0
@@ -5326,29 +5329,8 @@ packages:
   /@rushstack/eslint-patch@1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
 
-  /@saleor/app-sdk@0.26.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-gkNQusr8XrfLR7EcB5OKt2MV7og7g1TmdeGBTsdJwkRK18lhYz4fpTGqzoQ+3UrNq98TNuoM3dznr7oPi1QFUA==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.11.4
-      next: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
-      raw-body: 2.5.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@saleor/app-sdk@0.37.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Ff4gAIfzui11dc8+waPjHgs8hTqfVIIyxkJlxZLSJNXrk4dIesw8w97e3F5WD9net6YW/A7V6TOxsI7ZgEbL8Q==}
+  /@saleor/app-sdk@0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-DFAjiEFBFIDWDqZvaXar8860zDgSZih2n7gT3e+aOpLIfnmMZ0nL6+aNS3A7ym2IStx8oUoPI1RFZBIeuF9+hg==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -5367,7 +5349,6 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@saleor/macaw-ui@0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.14)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0):
     resolution: {integrity: sha512-Fli7fhTWuHu7q2CzxwTUpB4x9HYaxHSAzCLZLA23VY1ieIWbCxbsXadMiMGWp/nuYitswMr6JXMm+1SDe9K8LQ==}
@@ -13699,7 +13680,7 @@ packages:
     resolution: {integrity: sha512-ayCKvm/phCGxOkYRSCM82iDwct8/EonSEgCSxWxD7ve6jHggsFl4fZVQBPRNgQoKiuV/odhFrGzQXZwbifC8Rg==}
     engines: {node: '>=8'}
     dependencies:
-      '@babel/code-frame': 7.18.6
+      '@babel/code-frame': 7.21.4
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4

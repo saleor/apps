@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
-    "@saleor/app-sdk": "0.37.1",
+    "@saleor/app-sdk": "0.37.3",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.64",
     "@tanstack/react-query": "^4.28.0",
