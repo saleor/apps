@@ -18,28 +18,28 @@ type ActiveTaxProviderResult = { ok: true; data: ActiveTaxProvider } | { ok: fal
 
 export function getActiveTaxProvider(
   channelSlug: string | undefined,
-  metadata: MetadataItem[]
+  encryptedMetadata: MetadataItem[]
 ): ActiveTaxProviderResult {
   const logger = createLogger({ service: "getActiveTaxProvider" });
 
   if (!channelSlug) {
     logger.error("Channel slug is missing");
-    return { error: "Channel slug is missing", ok: false };
+    return { error: "channel_slug_missing", ok: false };
   }
 
-  if (!metadata.length) {
-    logger.error("App metadata is missing");
-    return { error: "App metadata is missing", ok: false };
+  if (!encryptedMetadata.length) {
+    logger.error("App encryptedMetadata is missing");
+    return { error: "app_encrypted_metadata_missing", ok: false };
   }
 
-  const { providers, channels } = getAppConfig(metadata);
+  const { providers, channels } = getAppConfig(encryptedMetadata);
 
   const channelConfig = channels[channelSlug];
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
     logger.info(`Channel config not found for channel ${channelSlug}`);
-    return { error: `Channel config not found for channel ${channelSlug}`, ok: false };
+    return { error: `channel_config_not_found`, ok: false };
   }
 
   const providerInstance = providers.find(
@@ -49,16 +49,18 @@ export function getActiveTaxProvider(
   if (!providerInstance) {
     logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
     return {
-      error: `Channel (${channelSlug}) providerInstanceId does not match any providers`,
+      error: `no_match_for_channel_provider_instance_id`,
       ok: false,
     };
   }
 
+  // todo: refactor so it doesnt create activeTaxProvider
   const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
 
   return { data: taxProvider, ok: true };
 }
 
+// todo: refactor to a factory
 export class ActiveTaxProvider implements ProviderWebhookService {
   private client: ProviderWebhookService;
   private logger: pino.Logger;
