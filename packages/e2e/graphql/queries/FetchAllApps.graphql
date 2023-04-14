@@ -1,0 +1,10 @@
+query FetchAllApps {
+  apps {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

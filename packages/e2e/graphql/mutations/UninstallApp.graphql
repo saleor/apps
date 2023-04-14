@@ -1,0 +1,10 @@
+mutation UninstallApp($appId: ID!) {
+  appDelete(id: $appId) {
+    app {
+      id
+    }
+    errors {
+      message
+    }
+  }
+}
