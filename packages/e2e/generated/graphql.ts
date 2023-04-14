@@ -21120,12 +21120,7 @@ export type UninstallAppMutation = { __typename?: 'Mutation', appDelete?: { __ty
 export type FetchAllAppsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchAllAppsQuery = { __typename?: 'Query', apps?: { __typename?: 'AppCountableConnection', edges: Array<{ __typename?: 'AppCountableEdge', node: { __typename?: 'App', id: string, name?: string | null } }> } | null };
-
-export type FetchAppDetailsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FetchAppDetailsQuery = { __typename?: 'Query', app?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null };
+export type FetchAllAppsQuery = { __typename?: 'Query', apps?: { __typename?: 'AppCountableConnection', edges: Array<{ __typename?: 'AppCountableEdge', node: { __typename?: 'App', id: string, name?: string | null, appUrl?: string | null } }> } | null };
 
 import { IntrospectionQuery } from 'graphql';
 export default {
@@ -72810,11 +72805,12 @@ export function useUninstallAppMutation() {
 };
 export const UntypedFetchAllAppsDocument = gql`
     query FetchAllApps {
-  apps {
+  apps(first: 100) {
     edges {
       node {
         id
         name
+        appUrl
       }
     }
   }
@@ -72824,23 +72820,7 @@ export const UntypedFetchAllAppsDocument = gql`
 export function useFetchAllAppsQuery(options?: Omit<Urql.UseQueryArgs<FetchAllAppsQueryVariables>, 'query'>) {
   return Urql.useQuery<FetchAllAppsQuery, FetchAllAppsQueryVariables>({ query: UntypedFetchAllAppsDocument, ...options });
 };
-export const UntypedFetchAppDetailsDocument = gql`
-    query FetchAppDetails {
-  app {
-    id
-    privateMetadata {
-      key
-      value
-    }
-  }
-}
-    `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 
 export const AuthorizeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authorize"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tokenCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<AuthorizeMutation, AuthorizeMutationVariables>;
 export const UninstallAppDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UninstallApp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"appId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appDelete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"appId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"app"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<UninstallAppMutation, UninstallAppMutationVariables>;
-export const FetchAllAppsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchAllApps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<FetchAllAppsQuery, FetchAllAppsQueryVariables>;
-export const FetchAppDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchAppDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"app"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"privateMetadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>;
+export const FetchAllAppsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchAllApps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apps"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"appUrl"}}]}}]}}]}}]}}]} as unknown as DocumentNode<FetchAllAppsQuery, FetchAllAppsQueryVariables>;

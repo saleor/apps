@@ -1,9 +1,10 @@
 query FetchAllApps {
-  apps {
+  apps(first: 100) {
     edges {
       node {
         id
         name
+        appUrl
       }
     }
   }
