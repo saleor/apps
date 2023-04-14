@@ -1,13 +1,11 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
+import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 import { gql } from "urql";
 import { createClient } from "../../lib/graphql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 
 import { createLogger } from "../../lib/logger";
-import { REQUIRED_SALEOR_VERSION } from "./manifest";
-
-const semver = require("semver");
+import { SaleorVersionCompatibilityValidator } from "../../lib/saleor-version-compatibility-validator";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -73,19 +71,9 @@ export default createAppRegisterHandler({
         throw new Error("Saleor Version couldnt be fetched from the API");
       }
 
-      const versionIsValid = semver.satisfies(
-        semver.coerce(saleorVersion),
-        REQUIRED_SALEOR_VERSION
+      new SaleorVersionCompatibilityValidator(REQUIRED_SALEOR_VERSION).validateOrThrow(
+        saleorVersion
       );
-
-      logger.debug(
-        { saleorVersion, REQUIRED_SALEOR_VERSION, coerced: semver.coerce(saleorVersion) },
-        "Semver validation failed"
-      );
-
-      if (!versionIsValid) {
-        throw new Error(`App requires Saleor matching semver: ${REQUIRED_SALEOR_VERSION}`);
-      }
     } catch (e: unknown) {
       const message = (e as Error)?.message ?? "Unknown error";
 

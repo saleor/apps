@@ -1,11 +1,10 @@
 const semver = require("semver");
-export const REQUIRED_SALEOR_VERSION = ">=3.10 <4";
 
 /**
  * TODO Extract to shared or even SDK
  */
 export class SaleorVersionCompatibilityValidator {
-  constructor(private appRequiredVersion: string = REQUIRED_SALEOR_VERSION) {}
+  constructor(private appRequiredVersion: string) {}
 
   validateOrThrow(saleorVersion: string) {
     const versionIsValid = semver.satisfies(semver.coerce(saleorVersion), this.appRequiredVersion);

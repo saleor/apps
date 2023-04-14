@@ -3,8 +3,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
 import { invoiceRequestedWebhook } from "./webhooks/invoice-requested";
-
-export const REQUIRED_SALEOR_VERSION = ">=3.10 <4";
+import { REQUIRED_SALEOR_VERSION } from "../../saleor-app";
 
 export default createManifestHandler({
   async manifestFactory(context) {

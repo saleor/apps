@@ -1,6 +1,6 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
-import { saleorApp } from "../../../../saleor-app";
+import { saleorApp } from "../../../saleor-app";
 import {
   InvoiceRequestedPayloadFragment,
   OrderPayloadFragment,
