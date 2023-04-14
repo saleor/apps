@@ -25,7 +25,6 @@ const handler: NextApiHandler = async (req, res) => {
   await processSaleorProtectedHandler({
     apl: saleorApp.apl,
     requiredPermissions: ["MANAGE_APPS"],
-    // @ts-ignore - todo - allow this in app-sdk, only these headers are required, not entire request
     req: {
       headers: {
         [SALEOR_API_URL_HEADER]: appBridgeContext.saleorApiUrl,
