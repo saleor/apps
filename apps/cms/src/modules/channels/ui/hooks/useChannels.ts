@@ -31,9 +31,6 @@ export const useChannels = () => {
   const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
 
-    saveChannelFetch(channelToSave).then(() => {
-      notifySuccess("Success", "Configuration saved");
-    });
     const currentlyEnabledProviderInstances =
       settings?.[`${channelToSave.channelSlug}`]?.enabledProviderInstances || [];
     const toEnableProviderInstances = channelToSave.enabledProviderInstances || [];
