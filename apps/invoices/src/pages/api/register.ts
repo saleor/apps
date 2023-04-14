@@ -5,6 +5,7 @@ import { createClient } from "../../lib/graphql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 
 import { createLogger } from "../../lib/logger";
+import { REQUIRED_SALEOR_VERSION } from "./manifest";
 
 const semver = require("semver");
 
@@ -17,12 +18,6 @@ const SaleorVersion = gql`
     }
   }
 `;
-
-/**
- * TODO: Move to Manifest, when implemented
- * @see https://github.com/saleor/saleor-app-sdk/pull/186
- */
-const APP_SEMVER_REQUIREMENTS = ">=3.10";
 
 /**
  * Required endpoint, called by Saleor to install app.
@@ -80,16 +75,16 @@ export default createAppRegisterHandler({
 
       const versionIsValid = semver.satisfies(
         semver.coerce(saleorVersion),
-        APP_SEMVER_REQUIREMENTS
+        REQUIRED_SALEOR_VERSION
       );
 
       logger.debug(
-        { saleorVersion, APP_SEMVER_REQUIREMENTS, coerced: semver.coerce(saleorVersion) },
+        { saleorVersion, REQUIRED_SALEOR_VERSION, coerced: semver.coerce(saleorVersion) },
         "Semver validation failed"
       );
 
       if (!versionIsValid) {
-        throw new Error(`App requires Saleor matching semver: ${APP_SEMVER_REQUIREMENTS}`);
+        throw new Error(`App requires Saleor matching semver: ${REQUIRED_SALEOR_VERSION}`);
       }
     } catch (e: unknown) {
       const message = (e as Error)?.message ?? "Unknown error";

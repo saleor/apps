@@ -4,6 +4,8 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import packageJson from "../../../package.json";
 import { invoiceRequestedWebhook } from "./webhooks/invoice-requested";
 
+export const REQUIRED_SALEOR_VERSION = ">=3.10 <4";
+
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
@@ -21,7 +23,7 @@ export default createManifestHandler({
       /**
        * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
        */
-      requiredSaleorVersion: ">=3.10 <4",
+      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
     };
 
     return manifest;
