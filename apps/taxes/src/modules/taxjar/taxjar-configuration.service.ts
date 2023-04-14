@@ -1,7 +1,7 @@
 import pino from "pino";
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app-configuration/metadata-manager";
+import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";

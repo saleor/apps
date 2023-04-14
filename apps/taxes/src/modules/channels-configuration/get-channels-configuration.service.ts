@@ -1,6 +1,6 @@
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app-configuration/metadata-manager";
+import { createSettingsManager } from "../app/metadata-manager";
 import { TaxChannelsConfigurator } from "./channels-configurator";
 
 export class GetChannelsConfigurationService {

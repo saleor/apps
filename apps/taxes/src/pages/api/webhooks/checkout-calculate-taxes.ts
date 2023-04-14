@@ -5,6 +5,7 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
+import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 
 export const config = {
@@ -38,6 +39,7 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
 export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
+  const webhookResponse = new WebhookResponseFactory(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -58,7 +60,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
     if (!activeTaxProvider.ok) {
       logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
-      return res.status(200).json({ success: false });
+      return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -66,9 +68,9 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
-    return res.send(ctx.buildResponse(calculatedTaxes));
+    return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
     logger.error({ error }, "Error while calculating taxes");
-    return res.status(400).json({ success: false, message: "Error while calculating taxes" });
+    return webhookResponse.failureRetry("Error while calculating taxes");
   }
 });

@@ -6,6 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
 export const config = {
   api: {
     bodyParser: false,
@@ -28,6 +29,7 @@ export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledP
 export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
+  const webhookResponse = new WebhookResponseFactory(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -39,7 +41,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     if (!activeTaxProvider.ok) {
       logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
-      return res.status(200).json({ success: false });
+      return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -48,18 +50,15 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       logger.error("Insufficient order data");
-      return res.status(200).json({ success: false, message: "Insufficient order data" });
+      return webhookResponse.failureNoRetry("Insufficient order data");
     }
-
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
 
     logger.info({ fulfilledOrder }, "Order fulfilled");
 
-    return res.status(200).json({ success: true });
+    return webhookResponse.success();
   } catch (error) {
     logger.error({ error }, "Error while fulfilling tax provider order");
-    return res
-      .status(400)
-      .json({ success: false, message: "Error while fulfilling tax provider order" });
+    return webhookResponse.failureRetry("Error while fulfilling tax provider order");
   }
 });

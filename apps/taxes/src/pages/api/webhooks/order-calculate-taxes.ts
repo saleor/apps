@@ -6,6 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
 
 export const config = {
   api: {
@@ -38,6 +39,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
+  const webhookResponse = new WebhookResponseFactory(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -47,7 +49,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
   } catch (error) {
     logger.error({ error: error }, "Payload is invalid");
     logger.info("Returning no data");
-    return res.send({});
+    return webhookResponse.failureNoRetry("Payload is invalid");
   }
 
   try {
@@ -58,7 +60,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     if (!activeTaxProvider.ok) {
       logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
-      return res.status(200).json({ success: false });
+      return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -66,9 +68,9 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
-    return res.send(ctx.buildResponse(calculatedTaxes));
+    return webhookResponse.success(calculatedTaxes);
   } catch (error) {
     logger.error({ error }, "Error while calculating taxes");
-    return res.status(400).json({ success: false, message: "Error while calculating taxes" });
+    return webhookResponse.failureRetry("Error while calculating taxes");
   }
 });

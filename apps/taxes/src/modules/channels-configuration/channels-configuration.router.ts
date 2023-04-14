@@ -1,5 +1,5 @@
 import { logger as pinoLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app-configuration/metadata-manager";
+import { createSettingsManager } from "../app/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { ChannelsConfig } from "./channels-config";

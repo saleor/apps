@@ -12,7 +12,7 @@ import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
-import { getAppConfig } from "../app-configuration/get-app-config";
+import { getAppConfig } from "../app/get-app-config";
 
 type ActiveTaxProviderResult = { ok: true; data: ActiveTaxProvider } | { ok: false; error: string };
 
