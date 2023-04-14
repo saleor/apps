@@ -7,6 +7,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { SideMenu } from "./side-menu";
 import { LoadingIndicator } from "../../ui/loading-indicator";
 import { Instructions } from "./instructions";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -26,6 +27,7 @@ export const ChannelsConfigurationTab = () => {
   const styles = useStyles();
   const { appBridge } = useAppBridge();
   const [activeChannelSlug, setActiveChannelSlug] = useState<string | null>(null);
+  const { notifySuccess } = useDashboardNotification();
 
   const { data: channelsData, isLoading: isChannelsDataLoading } =
     trpcClient.channels.fetch.useQuery(undefined, {
@@ -75,13 +77,8 @@ export const ChannelsConfigurationTab = () => {
     trpcClient.appConfiguration.setChannelConfiguration.useMutation({
       onSuccess() {
         refetchConfig();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Saved app configuration",
-            status: "success",
-          })
-        );
+
+        notifySuccess("Success", "Saved app configuration");
       },
     });
 

@@ -8,7 +8,6 @@ import {
   TextFieldProps,
 } from "@material-ui/core";
 import { Delete, Save } from "@material-ui/icons";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -16,6 +15,7 @@ import { z } from "zod";
 import { useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { taxJarConfigSchema } from "../taxjar-config";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => ({
   reverseRow: {
@@ -38,11 +38,11 @@ export const TaxJarConfigurationForm = () => {
   const [isWarningDialogOpen, setIsWarningDialogOpen] = React.useState(false);
   const styles = useStyles();
   const { instanceId, setInstanceId } = useInstanceId();
-  const { appBridge } = useAppBridge();
   const { handleSubmit, reset, control, formState } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues,
   });
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const resetInstanceId = () => {
     setInstanceId(null);
@@ -51,13 +51,7 @@ export const TaxJarConfigurationForm = () => {
   const { refetch: refetchChannelConfigurationData } =
     trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -68,13 +62,7 @@ export const TaxJarConfigurationForm = () => {
     {
       enabled: !!instanceId,
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     }
   );
@@ -85,22 +73,11 @@ export const TaxJarConfigurationForm = () => {
         setInstanceId(id);
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Saved TaxJar configuration",
-            status: "success",
-          })
-        );
+
+        notifySuccess("Success", "Saved TaxJar configuration");
       },
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -109,22 +86,10 @@ export const TaxJarConfigurationForm = () => {
       onSuccess() {
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Updated TaxJar configuration",
-            status: "success",
-          })
-        );
+        notifySuccess("Success", "Updated TaxJar configuration");
       },
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 
@@ -134,22 +99,11 @@ export const TaxJarConfigurationForm = () => {
         resetInstanceId();
         refetchProvidersConfigurationData();
         refetchChannelConfigurationData();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Success",
-            text: "Removed TaxJar instance",
-            status: "success",
-          })
-        );
+
+        notifySuccess("Success", "Removed TaxJar instance");
       },
       onError(error) {
-        appBridge?.dispatch(
-          actions.Notification({
-            title: "Error",
-            text: error.message,
-            status: "error",
-          })
-        );
+        notifyError("Error", error.message);
       },
     });
 

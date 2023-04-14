@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+  transpilePackages: ["@saleor/apps-shared"],
   reactStrictMode: true,
   rewrites() {
     /**

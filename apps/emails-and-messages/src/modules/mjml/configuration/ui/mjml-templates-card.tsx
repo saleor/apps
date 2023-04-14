@@ -16,7 +16,7 @@ import { mjmlUrls } from "../../urls";
 import { messageEventTypesLabels } from "../../../event-handlers/message-event-types";
 import { MjmlConfiguration } from "../mjml-config";
 import { trpcClient } from "../../../trpc/trpc-client";
-import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -52,18 +52,14 @@ export const MjmlTemplatesCard = ({
 }: MjmlTemplatesCardProps) => {
   const classes = useStyles();
   const router = useRouter();
-  const { appBridge } = useAppBridge();
+  const { notifySuccess } = useDashboardNotification();
 
   const { mutate: updateEventConfiguration } =
     trpcClient.mjmlConfiguration.updateEventConfiguration.useMutation({
       onSuccess(data, variables) {
         onEventChanged();
-        appBridge?.dispatch(
-          actions.Notification({
-            title: variables.active ? "Event enabled" : "Event disabled",
-            status: "success",
-          })
-        );
+
+        notifySuccess(variables.active ? "Event enabled" : "Event disabled");
       },
     });
 

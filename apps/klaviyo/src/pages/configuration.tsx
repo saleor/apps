@@ -9,8 +9,7 @@ import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 import { useAppApi } from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
-
-import { useDashboardNotifier } from "../utils/useDashboardNotifier";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 interface ConfigurationField {
   key: string;
@@ -124,7 +123,7 @@ function Instructions() {
 function Configuration() {
   const { appBridgeState } = useAppBridge();
   const classes = useStyles();
-  const [notify] = useDashboardNotifier();
+  const { notifySuccess, notifyError } = useDashboardNotification();
   const [configuration, setConfiguration] = useState<ConfigurationField[]>();
   const [transitionState, setTransitionState] = useState<ConfirmButtonTransitionState>("default");
 
@@ -160,19 +159,13 @@ function Configuration() {
         }
         setTransitionState("success");
 
-        await notify({
-          status: "success",
-          title: "Success",
-          text: "Configuration updated successfully",
-        });
+        notifySuccess("Success", "Configuration updated successfully");
       })
       .catch(async () => {
         setTransitionState("error");
-        await notify({
-          status: "error",
-          title:
-            "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission",
-        });
+        await notifyError(
+          "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission"
+        );
       });
   };
 
