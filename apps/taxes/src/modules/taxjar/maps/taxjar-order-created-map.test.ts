@@ -98,63 +98,6 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
   },
 };
 
-describe("sumLines", () => {
-  it("returns the sum of all line items when items quantity = 1", () => {
-    const result = taxJarOrderCreatedMaps.sumLines([
-      {
-        quantity: 1,
-        unit_price: 90.45,
-        product_identifier: "328223581",
-      },
-      {
-        quantity: 1,
-        unit_price: 45.25,
-        product_identifier: "328223580",
-      },
-    ]);
-
-    expect(result).toBe(135.7);
-  });
-  it("returns the sum of all line items when items quantity > 1", () => {
-    const result = taxJarOrderCreatedMaps.sumLines([
-      {
-        quantity: 3,
-        unit_price: 90.45,
-        product_identifier: "328223581",
-      },
-      {
-        quantity: 2,
-        unit_price: 45.25,
-        product_identifier: "328223580",
-      },
-      {
-        quantity: 1,
-        unit_price: 50.25,
-        product_identifier: "328223580",
-      },
-    ]);
-
-    expect(result).toBe(412.1);
-  });
-
-  it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
-    const result = taxJarOrderCreatedMaps.sumLines([
-      {
-        quantity: 3,
-        unit_price: 10.256,
-        product_identifier: "328223581",
-      },
-      {
-        quantity: 2,
-        unit_price: 50.512,
-        product_identifier: "328223580",
-      },
-    ]);
-
-    expect(result).toBe(131.79);
-  });
-});
-
 describe("taxJarOrderCreatedMaps", () => {
   describe("mapPayload", () => {
     it.todo("calculation of fields");
@@ -166,9 +109,67 @@ describe("taxJarOrderCreatedMaps", () => {
       expect(result.params.amount).toBe(183.33);
     });
   });
+
   describe.todo("mapResponse", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");
     it.todo("rounding of numbers");
+  });
+
+  describe("sumLines", () => {
+    it("returns the sum of all line items when items quantity = 1", () => {
+      const result = taxJarOrderCreatedMaps.sumLines([
+        {
+          quantity: 1,
+          unit_price: 90.45,
+          product_identifier: "328223581",
+        },
+        {
+          quantity: 1,
+          unit_price: 45.25,
+          product_identifier: "328223580",
+        },
+      ]);
+
+      expect(result).toBe(135.7);
+    });
+    it("returns the sum of all line items when items quantity > 1", () => {
+      const result = taxJarOrderCreatedMaps.sumLines([
+        {
+          quantity: 3,
+          unit_price: 90.45,
+          product_identifier: "328223581",
+        },
+        {
+          quantity: 2,
+          unit_price: 45.25,
+          product_identifier: "328223580",
+        },
+        {
+          quantity: 1,
+          unit_price: 50.25,
+          product_identifier: "328223580",
+        },
+      ]);
+
+      expect(result).toBe(412.1);
+    });
+
+    it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
+      const result = taxJarOrderCreatedMaps.sumLines([
+        {
+          quantity: 3,
+          unit_price: 10.256,
+          product_identifier: "328223581",
+        },
+        {
+          quantity: 2,
+          unit_price: 50.512,
+          product_identifier: "328223580",
+        },
+      ]);
+
+      expect(result).toBe(131.79);
+    });
   });
 });
