@@ -5,8 +5,8 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
-import { taxJarCalculateTaxes } from "./maps/taxjar-calculate-taxes-map";
-import { taxJarOrderCreated } from "./maps/taxjar-order-created-map";
+import { taxJarCalculateTaxesMaps } from "./maps/taxjar-calculate-taxes-map";
+import { taxJarOrderCreatedMaps } from "./maps/taxjar-order-created-map";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -23,22 +23,22 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = taxJarCalculateTaxes.mapPayload(payload, channel);
+    const args = taxJarCalculateTaxesMaps.mapPayload(payload, channel);
     const fetchedTaxes = await this.client.fetchTaxForOrder(args);
 
     this.logger.debug({ fetchedTaxes }, "fetchTaxForOrder response");
 
-    return taxJarCalculateTaxes.mapResponse(payload, fetchedTaxes);
+    return taxJarCalculateTaxesMaps.mapResponse(payload, fetchedTaxes);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
-    const args = taxJarOrderCreated.mapPayload({ order, channel });
+    const args = taxJarOrderCreatedMaps.mapPayload({ order, channel });
     const result = await this.client.createOrder(args);
 
     this.logger.debug({ createOrder: result }, "createOrder response");
 
-    return taxJarOrderCreated.mapResponse(result);
+    return taxJarOrderCreatedMaps.mapResponse(result);
   }
 
   // * TaxJar doesn't require any action on order fulfillment

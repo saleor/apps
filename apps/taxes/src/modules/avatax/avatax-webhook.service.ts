@@ -7,11 +7,11 @@ import {
 import { createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { avataxCalculateTaxes } from "./maps/avatax-calculate-taxes-map";
+import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
-import { avataxOrderCreated } from "./maps/avatax-order-created-map";
-import { avataxOrderFulfilled } from "./maps/avatax-order-fulfilled-map";
+import { avataxOrderCreatedMaps } from "./maps/avatax-order-created-map";
+import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -32,7 +32,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = avataxCalculateTaxes.mapPayload({
+    const args = avataxCalculateTaxesMaps.mapPayload({
       taxBase: payload,
       channel,
       config: this.config,
@@ -40,23 +40,23 @@ export class AvataxWebhookService implements ProviderWebhookService {
     const result = await this.client.createTransaction(args);
 
     this.logger.debug({ result }, "calculateTaxes response");
-    return avataxCalculateTaxes.mapResponse(result);
+    return avataxCalculateTaxesMaps.mapResponse(result);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
-    const model = avataxOrderCreated.mapPayload(order, channel, this.config);
+    const model = avataxOrderCreatedMaps.mapPayload(order, channel, this.config);
 
     this.logger.debug({ model }, "will call createTransaction with");
     const result = await this.client.createTransaction(model);
 
     this.logger.debug({ result }, "createOrder response");
-    return avataxOrderCreated.mapResponse(result);
+    return avataxOrderCreatedMaps.mapResponse(result);
   }
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const args = avataxOrderFulfilled.mapPayload(order, this.config);
+    const args = avataxOrderFulfilledMaps.mapPayload(order, this.config);
 
     this.logger.debug({ args }, "will call commitTransaction with");
     const result = await this.client.commitTransaction(args);

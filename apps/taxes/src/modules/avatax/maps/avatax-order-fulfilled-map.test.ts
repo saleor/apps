@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 
-describe.skip("avataxOrderFulfilled", () => {
+describe.skip("avataxOrderFulfilledMaps", () => {
   describe.todo("mapResponse", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");

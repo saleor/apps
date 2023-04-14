@@ -32,6 +32,6 @@ const mapPayload = (
   };
 };
 
-export const avataxOrderFulfilled = {
+export const avataxOrderFulfilledMaps = {
   mapPayload,
 };

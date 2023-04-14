@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { OrderStatus } from "../../../../generated/graphql";
-import { TaxJarOrderCreatedMapPayloadArgs, taxJarOrderCreated } from "./taxjar-order-created-map";
+import {
+  TaxJarOrderCreatedMapPayloadArgs,
+  taxJarOrderCreatedMaps,
+} from "./taxjar-order-created-map";
 
 const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
   order: {
@@ -97,7 +100,7 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
 
 describe("sumLines", () => {
   it("returns the sum of all line items when items quantity = 1", () => {
-    const result = taxJarOrderCreated.sumLines([
+    const result = taxJarOrderCreatedMaps.sumLines([
       {
         quantity: 1,
         unit_price: 90.45,
@@ -113,7 +116,7 @@ describe("sumLines", () => {
     expect(result).toBe(135.7);
   });
   it("returns the sum of all line items when items quantity > 1", () => {
-    const result = taxJarOrderCreated.sumLines([
+    const result = taxJarOrderCreatedMaps.sumLines([
       {
         quantity: 3,
         unit_price: 90.45,
@@ -135,7 +138,7 @@ describe("sumLines", () => {
   });
 
   it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
-    const result = taxJarOrderCreated.sumLines([
+    const result = taxJarOrderCreatedMaps.sumLines([
       {
         quantity: 3,
         unit_price: 10.256,
@@ -152,13 +155,13 @@ describe("sumLines", () => {
   });
 });
 
-describe("taxJarOrderCreated", () => {
+describe("taxJarOrderCreatedMaps", () => {
   describe("mapPayload", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");
     it.todo("rounding of numbers");
     it("returns the correct order amount", () => {
-      const result = taxJarOrderCreated.mapPayload(MOCKED_ORDER);
+      const result = taxJarOrderCreatedMaps.mapPayload(MOCKED_ORDER);
 
       expect(result.params.amount).toBe(183.33);
     });

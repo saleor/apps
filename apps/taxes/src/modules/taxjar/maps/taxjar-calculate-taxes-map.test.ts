@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 
-describe.skip("taxJarCalculateTaxes", () => {
+describe.skip("taxJarCalculateTaxesMaps", () => {
   describe.todo("mapResponse", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");

@@ -8,7 +8,7 @@ import { taxLineResolver } from "../../taxes/tax-line-resolver";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
-import { avataxAddressFactory } from "./address-map";
+import { avataxAddressFactory } from "./address-factory";
 import { numbers } from "../../taxes/numbers";
 
 // * Shipping is a regular line item in Avatax
@@ -100,7 +100,7 @@ const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
   };
 };
 
-export const avataxCalculateTaxes = {
+export const avataxCalculateTaxesMaps = {
   mapPayload,
   mapResponse,
   mapLines,

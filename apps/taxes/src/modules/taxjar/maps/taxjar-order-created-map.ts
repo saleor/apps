@@ -67,7 +67,7 @@ const mapResponse = (response: CreateOrderRes): CreateOrderResponse => {
   };
 };
 
-export const taxJarOrderCreated = {
+export const taxJarOrderCreatedMaps = {
   mapPayload,
   mapResponse,
   sumLines,

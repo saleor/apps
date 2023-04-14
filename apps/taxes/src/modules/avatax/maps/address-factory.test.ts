@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { avataxAddressFactory } from "./address-map";
+import { avataxAddressFactory } from "./address-factory";
 
 describe("avataxAddressFactory", () => {
   describe("fromChannelAddress", () => {

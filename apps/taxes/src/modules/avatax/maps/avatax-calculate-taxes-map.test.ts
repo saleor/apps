@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AvataxCalculateTaxesMapPayloadArgs,
-  avataxCalculateTaxes,
+  avataxCalculateTaxesMaps,
 } from "./avatax-calculate-taxes-map";
 
 // * Mocked payload data, channel config and avatax config
@@ -101,7 +101,7 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
   },
 };
 
-describe("avataxCalculateTaxes", () => {
+describe("avataxCalculateTaxesMaps", () => {
   describe.todo("mapResponse", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");
@@ -114,10 +114,10 @@ describe("avataxCalculateTaxes", () => {
   });
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
-      const lines = avataxCalculateTaxes.mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
+      const lines = avataxCalculateTaxesMaps.mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
 
       expect(lines).toContainEqual({
-        itemCode: avataxCalculateTaxes.shippingItemCode,
+        itemCode: avataxCalculateTaxesMaps.shippingItemCode,
         quantity: 1,
         amount: 48.33,
       });

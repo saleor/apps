@@ -129,7 +129,7 @@ const mapPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): FetchTaxF
   return taxParams;
 };
 
-export const taxJarCalculateTaxes = {
+export const taxJarCalculateTaxesMaps = {
   mapPayload,
   mapResponse,
 };

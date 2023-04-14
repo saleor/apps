@@ -6,7 +6,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
-import { avataxAddressFactory } from "./address-map";
+import { avataxAddressFactory } from "./address-factory";
 
 const mapLines = (order: OrderCreatedSubscriptionFragment): LineItemModel[] => {
   const productLines = order.lines.map((line) => ({
@@ -50,7 +50,7 @@ const mapResponse = (response: TransactionModel): CreateOrderResponse => {
   };
 };
 
-export const avataxOrderCreated = {
+export const avataxOrderCreatedMaps = {
   mapPayload,
   mapResponse,
 };
