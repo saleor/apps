@@ -1,11 +1,12 @@
 {
-  "name": "saleor-app-template",
+  "name": "e2e-toolkit",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "pnpm generate && tsup src/cli.ts --watch",
-    "build": "tsup src/cli.ts",
+    "build": "pnpm generate && tsup src/cli.ts",
+    "start": "node dist/cli.ts",
     "lint": "next lint",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
@@ -22,11 +23,9 @@
     "graphql-tag": "^2.12.6",
     "jsdom": "^20.0.3",
     "tsup": "^6.7.0",
-    "urql": "^3.0.3",
     "vite": "^4.0.4",
     "vitest": "^0.27.1",
-    "graphql-request": "^6.0.0",
-    "node-fetch": "^3.3.1"
+    "graphql-request": "^6.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.13.3",
@@ -34,11 +33,7 @@
     "@graphql-codegen/typed-document-node": "^2.3.3",
     "@graphql-codegen/typescript": "2.7.3",
     "@graphql-codegen/typescript-operations": "2.5.3",
-    "@graphql-codegen/typescript-urql": "^3.7.0",
-    "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-typed-document-node/core": "^3.1.1",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^18.11.18",
     "eslint": "8.31.0",
     "eslint-config-saleor": "workspace:*",
