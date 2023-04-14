@@ -41,13 +41,13 @@ function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
   return productLines;
 }
 
-export type AvataxCalculateTaxesMapPayloadProps = {
+export type AvataxCalculateTaxesMapPayloadArgs = {
   taxBase: TaxBaseFragment;
   channel: ChannelConfig;
   config: AvataxConfig;
 };
 
-const mapPayload = (props: AvataxCalculateTaxesMapPayloadProps): CreateTransactionArgs => {
+const mapPayload = (props: AvataxCalculateTaxesMapPayloadArgs): CreateTransactionArgs => {
   const { taxBase, channel, config } = props;
 
   return {

@@ -23,12 +23,12 @@ function sumLines(lines: LineItem[]): number {
   );
 }
 
-export type TaxJarOrderCreatedMapPayloadProps = {
+export type TaxJarOrderCreatedMapPayloadArgs = {
   order: OrderCreatedSubscriptionFragment;
   channel: ChannelConfig;
 };
 
-const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadProps): CreateOrderArgs => {
+const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadArgs): CreateOrderArgs => {
   const lineItems = mapLines(order.lines);
   const lineSum = sumLines(lineItems);
   const shippingAmount = order.shippingPrice.net.amount;

@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  AvataxCalculateTaxesMapPayloadProps,
+  AvataxCalculateTaxesMapPayloadArgs,
   avataxCalculateTaxes,
 } from "./avatax-calculate-taxes-map";
 
 // * Mocked payload data, channel config and avatax config
-const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadProps = {
+const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
   taxBase: {
     currency: "PLN",
     channel: {

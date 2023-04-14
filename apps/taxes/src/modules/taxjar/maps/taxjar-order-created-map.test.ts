@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { OrderStatus } from "../../../../generated/graphql";
-import { TaxJarOrderCreatedMapPayloadProps, taxJarOrderCreated } from "./taxjar-order-created-map";
+import { TaxJarOrderCreatedMapPayloadArgs, taxJarOrderCreated } from "./taxjar-order-created-map";
 
-const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadProps = {
+const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
   order: {
     id: "T3JkZXI6OTU4MDA5YjQtNDUxZC00NmQ1LThhMWUtMTRkMWRmYjFhNzI5",
     created: "2023-04-11T11:03:09.304109+00:00",
