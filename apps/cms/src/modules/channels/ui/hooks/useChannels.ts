@@ -26,7 +26,7 @@ export const useChannels = () => {
     error: fetchingError,
     isFetching,
   } = useChannelsFetch();
-  const { notifySuccess } = useDashboardNotification();
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const saveChannel = async (channelToSave: SingleChannelSchema) => {
     console.log("saveChannel", channelToSave);
@@ -58,21 +58,9 @@ export const useChannels = () => {
     });
 
     if (fetchResult.success) {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Success",
-          status: "success",
-          text: "Configuration saved",
-        })
-      );
+      notifySuccess("Success", "Configuration saved");
     } else {
-      appBridge?.dispatch(
-        actions.Notification({
-          title: "Error",
-          status: "error",
-          text: "Error while saving configuration",
-        })
-      );
+      notifyError("Error", "Error while saving configuration");
     }
   };
 
