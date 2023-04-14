@@ -14,9 +14,7 @@ import { TaxProviderError } from "./tax-provider-error";
 import pino from "pino";
 import { getAppConfig } from "../app-configuration/get-app-config";
 
-type ActiveTaxProviderResult =
-  | { ok: true; data: ActiveTaxProvider }
-  | { ok: false; data: null; error: string };
+type ActiveTaxProviderResult = { ok: true; data: ActiveTaxProvider } | { ok: false; error: string };
 
 export function getActiveTaxProvider(
   channelSlug: string | undefined,
@@ -26,12 +24,12 @@ export function getActiveTaxProvider(
 
   if (!channelSlug) {
     logger.error("Channel slug is missing");
-    return { error: "Channel slug is missing", data: null, ok: false };
+    return { error: "Channel slug is missing", ok: false };
   }
 
   if (!metadata.length) {
     logger.error("App metadata is missing");
-    return { error: "App metadata is missing", data: null, ok: false };
+    return { error: "App metadata is missing", ok: false };
   }
 
   const { providers, channels } = getAppConfig(metadata);
@@ -41,7 +39,7 @@ export function getActiveTaxProvider(
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
     logger.info(`Channel config not found for channel ${channelSlug}`);
-    return { error: `Channel config not found for channel ${channelSlug}`, data: null, ok: false };
+    return { error: `Channel config not found for channel ${channelSlug}`, ok: false };
   }
 
   const providerInstance = providers.find(
@@ -52,7 +50,6 @@ export function getActiveTaxProvider(
     logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
     return {
       error: `Channel (${channelSlug}) providerInstanceId does not match any providers`,
-      data: null,
       ok: false,
     };
   }
