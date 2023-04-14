@@ -4,6 +4,7 @@ module.exports = {
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
     "import/no-default-export": "error",
+    "newline-after-var": "warn",
   },
   parserOptions: {
     babelOptions: {
