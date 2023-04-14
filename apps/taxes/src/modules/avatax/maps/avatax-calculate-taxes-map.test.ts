@@ -116,6 +116,7 @@ describe("avataxCalculateTaxes", () => {
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
       const lines = avataxCalculateTaxes.mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
+
       expect(lines).toContainEqual({
         itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,

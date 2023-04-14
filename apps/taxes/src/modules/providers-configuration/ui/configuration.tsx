@@ -48,6 +48,7 @@ export const Configuration = () => {
 
   React.useEffect(() => {
     const instance = providersConfigurationData?.find((instance) => instance.id === instanceId);
+
     setProvider(instance?.provider ?? "taxjar");
   }, [instanceId, providersConfigurationData]);
 

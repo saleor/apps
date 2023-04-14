@@ -18,6 +18,7 @@ const patchInputSchema = z.object({
   id: z.string(),
   value: taxJarConfigSchema.partial().transform((c) => {
     const { apiKey, ...config } = c ?? {};
+
     return {
       ...config,
       ...(apiKey && !isObfuscated(apiKey) && { apiKey }),

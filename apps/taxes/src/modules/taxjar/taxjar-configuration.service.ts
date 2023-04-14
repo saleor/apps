@@ -15,6 +15,7 @@ export class TaxJarConfigurationService {
   private logger: pino.Logger;
   constructor(client: Client, saleorApiUrl: string) {
     const settingsManager = createSettingsManager(client);
+
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
@@ -29,6 +30,7 @@ export class TaxJarConfigurationService {
   async getAll(): Promise<TaxJarInstanceConfig[]> {
     this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsManager.readAll();
+
     this.logger.debug(`Fetched settings from CrudSettingsManager`);
     const validation = providersSchema.safeParse(data);
 
@@ -47,6 +49,7 @@ export class TaxJarConfigurationService {
   async get(id: string): Promise<TaxJarInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsManager.read(id);
+
     this.logger.debug(`Fetched setting from CrudSettingsManager`);
 
     const validation = getSchema.safeParse(data);

@@ -23,6 +23,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
       service: "AvataxWebhookService",
     });
     const avataxClient = new AvataxClient(config);
+
     this.logger.trace({ client: avataxClient }, "Internal Avatax client created");
 
     this.config = config;
@@ -37,6 +38,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
       config: this.config,
     });
     const result = await this.client.createTransaction(args);
+
     this.logger.debug({ result }, "calculateTaxes response");
     return avataxCalculateTaxes.mapResponse(result);
   }
@@ -44,8 +46,10 @@ export class AvataxWebhookService implements ProviderWebhookService {
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
     const model = avataxOrderCreated.mapPayload(order, channel, this.config);
+
     this.logger.debug({ model }, "will call createTransaction with");
     const result = await this.client.createTransaction(model);
+
     this.logger.debug({ result }, "createOrder response");
     return avataxOrderCreated.mapResponse(result);
   }
@@ -53,8 +57,10 @@ export class AvataxWebhookService implements ProviderWebhookService {
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
     const args = avataxOrderFulfilled.mapPayload(order, this.config);
+
     this.logger.debug({ args }, "will call commitTransaction with");
     const result = await this.client.commitTransaction(args);
+
     this.logger.debug({ result }, "fulfillOrder response");
     return { ok: true };
   }

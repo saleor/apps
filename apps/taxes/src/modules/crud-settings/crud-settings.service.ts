@@ -47,6 +47,7 @@ export class CrudSettingsManager {
     const { data: settings } = result;
 
     const item = settings.find((item) => item.id === id);
+
     if (!item) {
       this.logger.error({ id }, "Item not found");
       throw new Error("Item not found");
@@ -65,6 +66,7 @@ export class CrudSettingsManager {
 
     const id = createId();
     const newData = [...prevData, { ...data, id }];
+
     await this.metadataManager.set({
       key: this.metadataKey,
       value: JSON.stringify(newData),

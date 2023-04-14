@@ -62,6 +62,7 @@ export class AvataxClient {
     };
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(credentials);
+
     this.logger.trace({ client: avataxClient }, "External Avatax client created");
     this.client = avataxClient;
   }

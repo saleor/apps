@@ -65,6 +65,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
   const { saleorApiUrl, token } = authData;
+
   logger.info({ payload }, "Handler called with payload");
 
   try {
@@ -93,8 +94,10 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     }
 
     const createdOrder = await taxProvider.createOrder(payload.order);
+
     logger.info({ createdOrder }, "Order created");
     const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+
     await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
     logger.info("Updated order metadata with externalId");
 

@@ -30,6 +30,7 @@ export class TaxJarClient {
     this.logger.trace("TaxJarClient constructor");
     const settings = createTaxJarSettings(providerConfig);
     const taxJarClient = new TaxJar(settings);
+
     this.logger.trace({ client: taxJarClient }, "External TaxJar client created");
     this.client = taxJarClient;
   }
@@ -37,6 +38,7 @@ export class TaxJarClient {
   async fetchTaxForOrder({ params }: FetchTaxForOrderArgs) {
     this.logger.debug({ params }, "fetchTaxForOrder called with:");
     const response = await this.client.taxForOrder(params);
+
     return response;
   }
 

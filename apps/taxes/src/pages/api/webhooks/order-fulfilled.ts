@@ -28,6 +28,7 @@ export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledP
 export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
+
   logger.info({ payload }, "Handler called with payload");
 
   try {
@@ -51,6 +52,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     }
 
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
+
     logger.info({ fulfilledOrder }, "Order fulfilled");
 
     return res.status(200).json({ success: true });

@@ -10,6 +10,7 @@ describe("mapChannelAddressToAvataxAddress", () => {
       street: "123 Palm Grove Ln",
       zip: "90002",
     });
+
     expect(result).toEqual({
       line1: "123 Palm Grove Ln",
       city: "LOS ANGELES",
@@ -52,6 +53,7 @@ describe("mapSaleorAddressToAvataxAddress", () => {
       countryArea: "CA",
       postalCode: "90002",
     });
+
     expect(result).toEqual({
       line1: "123 Palm",
       line2: "Grove Ln",

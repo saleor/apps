@@ -9,11 +9,13 @@ import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
 
 const getSchema = avataxInstanceConfigSchema;
+
 export class AvataxConfigurationService {
   private crudSettingsManager: CrudSettingsManager;
   private logger: pino.Logger;
   constructor(client: Client, saleorApiUrl: string) {
     const settingsManager = createSettingsManager(client);
+
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
@@ -45,6 +47,7 @@ export class AvataxConfigurationService {
   async get(id: string): Promise<AvataxInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsManager.read(id);
+
     this.logger.debug(`Fetched setting from CrudSettingsManager`);
 
     const validation = getSchema.safeParse(data);

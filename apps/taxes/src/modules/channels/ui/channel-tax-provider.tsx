@@ -27,6 +27,7 @@ const NoDataPlaceholder = ({
   title: string;
 }>) => {
   const styles = useStyles();
+
   return (
     <AppPaper>
       <div>
@@ -45,6 +46,7 @@ const NoDataPlaceholder = ({
 
 const NoChannelPlaceholder = () => {
   const { redirect } = useAppRedirect();
+
   return (
     <NoDataPlaceholder title={"Channels not found"}>
       <Typography variant="body1">

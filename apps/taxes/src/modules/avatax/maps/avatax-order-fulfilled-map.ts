@@ -8,6 +8,7 @@ function getTransactionCodeFromMetadata(
   metadata: OrderFulfilledSubscriptionFragment["privateMetadata"]
 ) {
   const transactionCode = metadata.find((item) => item.key === PROVIDER_ORDER_ID_KEY);
+
   if (!transactionCode) {
     throw new Error("Transaction code not found");
   }
@@ -20,6 +21,7 @@ const mapPayload = (
   config: AvataxConfig
 ): CommitTransactionArgs => {
   const transactionCode = getTransactionCodeFromMetadata(order.privateMetadata);
+
   return {
     transactionCode,
     companyCode: config.companyCode,

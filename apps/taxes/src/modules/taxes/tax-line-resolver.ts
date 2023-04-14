@@ -10,6 +10,7 @@ const getLineDiscount = (
   }
   const lineTotalAmount = Number(line.totalPrice.amount);
   const discountAmount = (lineTotalAmount / allLinesTotal) * totalDiscount;
+
   if (discountAmount > lineTotalAmount) {
     return lineTotalAmount;
   }

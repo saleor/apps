@@ -75,6 +75,7 @@ const mapResponse = (
     : payload.shippingPrice.amount;
   const shippingTaxRate = shippingDetails ? shippingDetails.combined_tax_rate : 0;
   // ! It appears shippingTaxRate is always 0 from TaxJar.
+
   return {
     shipping_price_gross_amount: formatCalculatedAmount(shippingPriceGross),
     shipping_price_net_amount: formatCalculatedAmount(shippingPriceNet),
@@ -88,6 +89,7 @@ const mapResponse = (
         : line.totalAmount - line.discount;
       const totalNetAmount = lineTax ? lineTax.taxable_amount : line.totalAmount - line.discount;
       const taxRate = lineTax ? lineTax.combined_tax_rate : 0;
+
       return {
         total_gross_amount: formatCalculatedAmount(totalGrossAmount),
         total_net_amount: formatCalculatedAmount(totalNetAmount),

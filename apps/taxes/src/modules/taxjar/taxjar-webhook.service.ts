@@ -25,6 +25,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
     const args = taxJarCalculateTaxes.mapPayload(payload, channel);
     const fetchedTaxes = await this.client.fetchTaxForOrder(args);
+
     this.logger.debug({ fetchedTaxes }, "fetchTaxForOrder response");
 
     return taxJarCalculateTaxes.mapResponse(payload, fetchedTaxes);
@@ -34,6 +35,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.logger.debug({ order, channel }, "createOrder called with:");
     const args = taxJarOrderCreated.mapPayload({ order, channel });
     const result = await this.client.createOrder(args);
+
     this.logger.debug({ createOrder: result }, "createOrder response");
 
     return taxJarOrderCreated.mapResponse(result);

@@ -73,6 +73,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     });
 
     const taxProviderName = providerInstance.provider;
+
     this.logger.trace({ taxProviderName }, "Constructing tax provider: ");
     this.channel = channelConfig;
 

@@ -9,6 +9,7 @@ import { logger as pinoLogger } from "../../lib/logger";
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
   const logger = pinoLogger.child({ service: "fetchAllMetadata" });
+
   logger.debug("Fetching metadata from Saleor");
 
   const { error, data } = await client
@@ -27,6 +28,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 
 export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
   const logger = pinoLogger.child({ service: "mutateMetadata" });
+
   logger.debug({ metadata }, "Mutating metadata");
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client

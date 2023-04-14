@@ -109,6 +109,7 @@ describe("sumLines", () => {
         product_identifier: "328223580",
       },
     ]);
+
     expect(result).toBe(135.7);
   });
   it("returns the sum of all line items when items quantity > 1", () => {
@@ -129,6 +130,7 @@ describe("sumLines", () => {
         product_identifier: "328223580",
       },
     ]);
+
     expect(result).toBe(412.1);
   });
 
@@ -145,6 +147,7 @@ describe("sumLines", () => {
         product_identifier: "328223580",
       },
     ]);
+
     expect(result).toBe(131.79);
   });
 });
@@ -156,6 +159,7 @@ describe("taxJarOrderCreated", () => {
     it.todo("rounding of numbers");
     it("returns the correct order amount", () => {
       const result = taxJarOrderCreated.mapPayload(MOCKED_ORDER);
+
       expect(result.params.amount).toBe(183.33);
     });
   });

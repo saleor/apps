@@ -49,6 +49,7 @@ export type AvataxCalculateTaxesMapPayloadProps = {
 
 const mapPayload = (props: AvataxCalculateTaxesMapPayloadProps): CreateTransactionArgs => {
   const { taxBase, channel, config } = props;
+
   return {
     model: {
       type: DocumentType.SalesOrder,
@@ -88,6 +89,7 @@ const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
         const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
           lineTotalNetAmount + lineTaxCalculated
         );
+
         return {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,

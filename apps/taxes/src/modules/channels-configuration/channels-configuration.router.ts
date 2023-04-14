@@ -29,12 +29,14 @@ export const channelsConfigurationRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
         procedure: "channelsConfigurationRouter.upsert",
       });
+
       logger.debug(input, "channelsConfigurationRouter.upsert called with input");
 
       const config = await new GetChannelsConfigurationService({
         apiClient: ctx.apiClient,
         saleorApiUrl: ctx.saleorApiUrl,
       }).getConfiguration();
+
       logger.debug(config, "Fetched current channels config to update it");
 
       const taxChannelsConfigurator = new TaxChannelsConfigurator(

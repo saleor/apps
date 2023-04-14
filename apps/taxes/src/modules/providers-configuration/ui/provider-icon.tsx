@@ -18,6 +18,7 @@ type ProviderIconProps = {
 export const ProviderIcon = ({ provider, size = "medium", ...props }: ProviderIconProps) => {
   const { icon, label } = providerConfig[provider];
   const matchedSize = sizes[size];
+
   return (
     <Image src={icon} alt={`${label} icon`} width={matchedSize} height={matchedSize} {...props} />
   );
