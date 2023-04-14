@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@saleor/app-sdk": "0.37.3",
     "eslint": "^8.33.0",
     "eslint-config-next": "^13.3.0",
-    "eslint-config-turbo": "^1.9.0",
     "eslint-config-prettier": "^8.6.0",
+    "eslint-config-turbo": "^1.9.0",
     "eslint-plugin-react": "7.32.2",
     "typescript": "^4.9.5"
   },
