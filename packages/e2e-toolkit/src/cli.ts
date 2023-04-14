@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { request, gql, GraphQLClient } from "graphql-request";
+import { GraphQLClient } from "graphql-request";
 import {
   AuthorizeDocument,
   FetchAllAppsDocument,
@@ -19,12 +19,8 @@ program
   .requiredOption("--email <type>", "Email for user with MANAGE_APPS permission")
   .requiredOption("--password <type>", "Password for the user")
   .requiredOption("--saleor <type>", "saleor api URL ending with /graphql/")
-  .action(async (fields, options) => {
-    const { email, password, saleor } = fields as {
-      email: string;
-      password: string;
-      saleor: string;
-    };
+  .action(async (fields: { email: string; password: string; saleor: string }) => {
+    const { email, password, saleor } = fields;
 
     const client = new GraphQLClient(saleor);
 
