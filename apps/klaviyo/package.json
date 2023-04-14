@@ -26,7 +26,7 @@
     "clsx": "^1.2.1",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
-    "next": "13.1.6",
+    "next": "13.3.0",
     "node-fetch": "^3.2.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
