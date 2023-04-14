@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   AvataxCalculateTaxesMapPayloadProps,
-  SHIPPING_ITEM_CODE,
   avataxCalculateTaxes,
 } from "./avatax-calculate-taxes-map";
 
@@ -118,7 +117,7 @@ describe("avataxCalculateTaxes", () => {
       const lines = avataxCalculateTaxes.mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
 
       expect(lines).toContainEqual({
-        itemCode: SHIPPING_ITEM_CODE,
+        itemCode: avataxCalculateTaxes.shippingItemCode,
         quantity: 1,
         amount: 48.33,
       });

@@ -13,7 +13,7 @@ import { numbers } from "../../taxes/numbers";
 
 // * Shipping is a regular line item in Avatax
 // https://developer.avalara.com/avatax/dev-guide/shipping-and-handling/taxability-of-shipping-charges/
-export const SHIPPING_ITEM_CODE = "Shipping";
+const SHIPPING_ITEM_CODE = "Shipping";
 
 function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
@@ -104,4 +104,5 @@ export const avataxCalculateTaxes = {
   mapPayload,
   mapResponse,
   mapLines,
+  shippingItemCode: SHIPPING_ITEM_CODE,
 };
