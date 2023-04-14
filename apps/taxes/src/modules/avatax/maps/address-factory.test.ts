@@ -26,6 +26,7 @@ describe("avataxAddressFactory", () => {
     it("returns fields in the expected format with line1", () => {
       const result = avataxAddressFactory.fromSaleorAddress({
         streetAddress1: "123 Palm Grove Ln",
+        streetAddress2: "",
         city: "LOS ANGELES",
         country: {
           code: "US",

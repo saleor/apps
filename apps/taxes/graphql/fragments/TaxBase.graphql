@@ -51,14 +51,7 @@ fragment TaxBase on TaxableObject {
     ...TaxDiscount
   }
   address {
-    streetAddress1
-    streetAddress2
-    city
-    country {
-      code
-    }
-    countryArea
-    postalCode
+    ...AddressFragment
   }
   shippingPrice {
     amount
