@@ -38,4 +38,5 @@ manifest = Manifest(
     permissions=[SaleorPermissions.MANAGE_OBSERVABILITY],
     extensions=[],
     webhooks=[],
+    author="Saleor Commerce"
 )

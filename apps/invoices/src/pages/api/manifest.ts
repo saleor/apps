@@ -16,8 +16,9 @@ export default createManifestHandler({
       version: packageJson.version,
       webhooks: [invoiceRequestedWebhook.getWebhookManifest(context.appBaseUrl)],
       extensions: [],
-      homepageUrl: "https://github.com/saleor/apps",
       supportUrl: "https://github.com/saleor/apps/discussions",
+      homepageUrl: "https://github.com/saleor/apps",
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       author: "Saleor Commerce",
       /**
        * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
