@@ -5,6 +5,7 @@ interface EmailServiceProvider {
 export const Klaviyo = (token: string): EmailServiceProvider => ({
   send: async (event, recipient, context) => {
     const formParams = new URLSearchParams();
+
     formParams.append(
       "data",
       JSON.stringify({
