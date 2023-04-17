@@ -1,7 +1,7 @@
 import { createClient } from "../../lib/graphql";
 import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { middleware, procedure } from "./trpc-server";
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { logger } from "../../lib/logger";
