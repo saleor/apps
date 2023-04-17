@@ -10,6 +10,7 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
  */
 
 let apl: APL;
+
 switch (process.env.APL) {
   case "upstash":
     // Require `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables
@@ -30,12 +31,14 @@ switch (process.env.APL) {
     apl = new FileAPL();
 }
 
-// TODO: Investigate why no-ssr-wrapper does not prevent this code from execution during the build time
-// if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
-//   throw new Error(
-//     "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
-//   );
-// }
+/*
+ * TODO: Investigate why no-ssr-wrapper does not prevent this code from execution during the build time
+ * if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
+ *   throw new Error(
+ *     "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
+ *   );
+ * }
+ */
 
 // Use placeholder value for the development
 export const settingsManagerSecretKey = process.env.SECRET_KEY || "CHANGE_ME";

@@ -12,10 +12,12 @@ function _ThemeSynchronizer() {
   const { appBridgeState, appBridge } = useAppBridge();
   const { setTheme, themeType } = useTheme();
 
-  // todo - replace this hook to appBridge.subscribe and react only only on initial theme event
-  // useEffect(() =>{
-  //   appBridge?.subscribe('theme',console.log)
-  // },[appBridge])
+  /*
+   * todo - replace this hook to appBridge.subscribe and react only only on initial theme event
+   * useEffect(() =>{
+   *   appBridge?.subscribe('theme',console.log)
+   * },[appBridge])
+   */
 
   useEffect(() => {
     if (!setTheme || !appBridgeState?.theme) {
