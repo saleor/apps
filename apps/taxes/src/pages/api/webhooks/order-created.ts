@@ -45,16 +45,17 @@ async function updateOrderMetadataWithExternalId(
   orderId: string,
   externalId: string
 ) {
+  const variables: UpdateMetadataMutationVariables = {
+    id: orderId,
+    input: [
+      {
+        key: PROVIDER_ORDER_ID_KEY,
+        value: externalId,
+      },
+    ],
+  };
   const { error } = await client
-    .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, {
-      id: orderId,
-      input: [
-        {
-          key: PROVIDER_ORDER_ID_KEY,
-          value: externalId,
-        },
-      ],
-    } as UpdateMetadataMutationVariables)
+    .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, variables)
     .toPromise();
 
   if (error) {
