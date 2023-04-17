@@ -1,8 +1,8 @@
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { ChannelAddress } from "../../channels-configuration/channels-config";
-import { AddressFragmentFragment } from "../../../../generated/graphql";
+import { AddressFragment } from "../../../../generated/graphql";
 
-type SaleorAddress = AddressFragmentFragment;
+type SaleorAddress = AddressFragment;
 
 function mapSaleorAddressToAvataxAddress(address: SaleorAddress): AvataxAddress {
   return {
