@@ -13,4 +13,4 @@
 "saleor-app-crm": patch
 ---
 
-Add lint:fix script
+Added lint:fix script, so `eslint --fix` can be run deliberately
