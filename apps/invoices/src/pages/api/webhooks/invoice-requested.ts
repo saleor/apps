@@ -174,6 +174,7 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     );
 
     const hashedInvoiceName = hashInvoiceFilename(invoiceName, orderId);
+
     logger.debug({ hashedInvoiceName });
 
     const hashedInvoiceFileName = `${hashedInvoiceName}.pdf`;
