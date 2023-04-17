@@ -36,8 +36,10 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
 // * This is the key that we use to store the provider order id in the Saleor order metadata.
 export const PROVIDER_ORDER_ID_KEY = "externalId";
 
-// * We need to store the provider order id in the Saleor order metadata so that we can
-// * update the provider order when the Saleor order is fulfilled.
+/**
+ * We need to store the provider order id in the Saleor order metadata so that we can
+ * update the provider order when the Saleor order is fulfilled.
+ */
 async function updateOrderMetadataWithExternalId(
   client: Client,
   orderId: string,

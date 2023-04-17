@@ -63,8 +63,10 @@ const mapResponse = (
 
   const taxResponse = linesWithChargeTaxes.length !== 0 ? response : undefined;
   const taxDetails = taxResponse?.tax.breakdown;
-  // todo: investigate
-  // ! There is no shipping in tax.breakdown from TaxJar.
+  /**
+   * todo: investigate
+   * ! There is no shipping in tax.breakdown from TaxJar.
+   */
   const shippingDetails = taxDetails?.shipping;
 
   const shippingPriceGross = shippingDetails
@@ -80,8 +82,10 @@ const mapResponse = (
     shipping_price_gross_amount: formatCalculatedAmount(shippingPriceGross),
     shipping_price_net_amount: formatCalculatedAmount(shippingPriceNet),
     shipping_tax_rate: shippingTaxRate,
-    // lines order needs to be the same as for recieved payload.
-    // lines that have chargeTaxes === false will have returned default value
+    /**
+     * lines order needs to be the same as for received payload.
+     * lines that have chargeTaxes === false will have returned default value
+     */
     lines: linesWithDiscount.map((line) => {
       const lineTax = taxDetails?.line_items?.find((l) => l.id === line.id);
       const totalGrossAmount = lineTax
