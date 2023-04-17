@@ -7,7 +7,8 @@
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "build": "pnpm generate && next build",
     "start": "next start",
-    "lint": "pnpm generate && prettier --loglevel warn --write . && eslint --fix .",
+    "lint": "next lint",
+    "lint:fix": "eslint --fix .",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen"
   },
