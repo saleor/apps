@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { providersConfig } from "./config";
+import { ProvidersSchema, providersConfig } from "./config";
 
 export type ProductInput = Record<string, any> & {
   saleorId: string;
@@ -42,17 +42,14 @@ export type CmsClientBatchOperations = {
   operationType: keyof CmsBatchOperations;
 };
 
-export type GetProviderTokens<TProviderName extends keyof typeof providersConfig> =
-  (typeof providersConfig)[TProviderName]["tokens"][number];
-
 export type BaseConfig = {
   name: string;
 };
 
 // * Generates the config based on the data supplied in the `providersConfig` variable.
-export type CreateProviderConfig<TProviderName extends keyof typeof providersConfig> = Record<
-  GetProviderTokens<TProviderName>["name"],
-  string
+export type CreateProviderConfig<TProviderName extends keyof typeof providersConfig> = Omit<
+  ProvidersSchema[TProviderName],
+  "id" | "providerName"
 > &
   BaseConfig;
 

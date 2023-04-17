@@ -146,7 +146,7 @@ export type DatocmsConfig = CreateProviderConfig<"datocms">;
 export const strapiConfigSchema = z.object({
   name: z.string().min(1),
   token: z.string().min(1),
-  baseUrl: z.string().min(1),
+  baseUrl: z.string().url().min(1),
   contentTypeId: z.string().min(1),
 });
 
@@ -157,15 +157,15 @@ export const contentfulConfigSchema = z.object({
   spaceId: z.string().min(1),
   locale: z.string().min(1),
   contentId: z.string().min(1),
-  baseUrl: z.string(),
-  apiRequestsPerSecond: z.string(),
+  baseUrl: z.string().url().optional().or(z.literal("")),
+  apiRequestsPerSecond: z.number().optional().or(z.literal("")),
 });
 
 export const datocmsConfigSchema = z.object({
   name: z.string().min(1),
   token: z.string().min(1),
-  itemTypeId: z.string().min(1),
-  baseUrl: z.string(),
+  itemTypeId: z.number().min(1),
+  baseUrl: z.string().url().optional().or(z.literal("")),
   environment: z.string(),
 });
 

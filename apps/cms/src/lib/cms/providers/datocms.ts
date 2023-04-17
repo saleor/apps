@@ -55,7 +55,7 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
   const createProductInCMS = async (input: ProductInput) =>
     client.items.create({
       item_type: {
-        id: config.itemTypeId,
+        id: String(config.itemTypeId),
         type: "item_type",
       },
       saleor_id: input.saleorId,

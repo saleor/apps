@@ -12,6 +12,7 @@ import {
 } from "../../../lib/cms/config";
 import { Provider } from "../../providers/config";
 import { AppMarkdownText } from "../../ui/app-markdown-text";
+import { ZodNumber } from "zod";
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -68,8 +69,6 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
   }, [provider, providerInstance]);
 
   const submitHandler = (values: SingleProviderSchema) => {
-    console.log(values);
-
     onSubmit(values);
   };
 
@@ -111,35 +110,40 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
             }
           />
         </Grid>
-        {fields.map((token) => (
-          <Grid xs={12} item key={token.name}>
-            <TextField
-              {...register(token.name as Path<ProvidersSchema[TProvider]>, {
-                required: "required" in token && token.required,
-              })}
-              // required={"required" in token && token.required}
-              label={token.label}
-              type={token.secret ? "password" : "text"}
-              name={token.name}
-              InputLabelProps={{
-                shrink: !!watch(token.name as Path<ProvidersSchema[TProvider]>),
-              }}
-              fullWidth
-              // @ts-ignore TODO: fix errors typing
-              error={!!errors[token.name as Path<ProvidersSchema[TProvider]>]}
-              helperText={
-                <>
-                  {errors[token.name as Path<ProvidersSchema[TProvider]>]?.message ||
-                    ("helpText" in token && (
-                      <AppMarkdownText>{`${getOptionalText(token)}${
-                        token.helpText
-                      }`}</AppMarkdownText>
-                    ))}
-                </>
-              }
-            />
-          </Grid>
-        ))}
+        {fields.map((token) => {
+          const isSecret = token.secret ? { type: "password" } : {};
+
+          return (
+            <Grid xs={12} item key={token.name}>
+              <TextField
+                {...register(token.name as Path<ProvidersSchema[TProvider]>, {
+                  required: "required" in token && token.required,
+                  valueAsNumber:
+                    schema.shape[token.name as keyof typeof schema.shape] instanceof ZodNumber,
+                })}
+                {...isSecret}
+                label={token.label}
+                name={token.name}
+                InputLabelProps={{
+                  shrink: !!watch(token.name as Path<ProvidersSchema[TProvider]>),
+                }}
+                fullWidth
+                // @ts-ignore TODO: fix errors typing
+                error={!!errors[token.name as Path<ProvidersSchema[TProvider]>]}
+                helperText={
+                  <>
+                    {errors[token.name as Path<ProvidersSchema[TProvider]>]?.message ||
+                      ("helpText" in token && (
+                        <AppMarkdownText>{`${getOptionalText(token)}${
+                          token.helpText
+                        }`}</AppMarkdownText>
+                      ))}
+                  </>
+                }
+              />
+            </Grid>
+          );
+        })}
         {providerInstance ? (
           <Grid item xs={12}>
             <TextField
