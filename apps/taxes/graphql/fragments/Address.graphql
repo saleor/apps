@@ -1,4 +1,4 @@
-fragment AddressFragment on Address {
+fragment Address on Address {
   streetAddress1
   streetAddress2
   city

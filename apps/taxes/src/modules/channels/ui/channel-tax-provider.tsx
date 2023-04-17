@@ -5,7 +5,7 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
 import { useAppRedirect } from "../../../lib/app/redirect";
 import { ProviderIcon } from "../../providers-configuration/ui/provider-icon";
-import { providerConfig, TaxProviderName } from "../../taxes/providers/config";
+import { providerConfig, TaxProviderName } from "../../taxes/provider-config";
 import { useActiveTab, useChannelSlug, useInstanceId } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppLink } from "../../ui/app-link";
@@ -27,6 +27,7 @@ const NoDataPlaceholder = ({
   title: string;
 }>) => {
   const styles = useStyles();
+
   return (
     <AppPaper>
       <div>
@@ -45,6 +46,7 @@ const NoDataPlaceholder = ({
 
 const NoChannelPlaceholder = () => {
   const { redirect } = useAppRedirect();
+
   return (
     <NoDataPlaceholder title={"Channels not found"}>
       <Typography variant="body1">

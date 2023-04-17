@@ -1,10 +1,9 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
-import { ExpectedWebhookPayload } from "../../lib/saleor/schema";
+import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channels-configuration/channels-config";
 import { ProvidersConfig, providersSchema } from "../providers-configuration/providers-config";
 
-export const getAppConfig = (payload: ExpectedWebhookPayload) => {
-  const metadata = payload.recipient?.privateMetadata;
+export const getAppConfig = (metadata: MetadataItem[]) => {
   let providersConfig = [] as ProvidersConfig;
   let channelsConfig = {} as ChannelsConfig;
 
@@ -14,8 +13,10 @@ export const getAppConfig = (payload: ExpectedWebhookPayload) => {
     throw new Error("SECRET_KEY env variable is not set");
   }
 
-  // * The App Config contains two types of data: providers and channels.
-  // * We must recognize which one we are dealing with and parse it accordingly.
+  /**
+   * The App Config contains two types of data: providers and channels.
+   * We must recognize which one we are dealing with and parse it accordingly.
+   */
   metadata?.forEach((item) => {
     const decrypted = decrypt(item.value, secretKey);
     const parsed = JSON.parse(decrypted);

@@ -27,10 +27,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = avataxConfigSchema;
+
 type FormValues = z.infer<typeof schema>;
 
 const defaultValues: FormValues = {
-  companyName: "",
+  companyCode: "",
   isAutocommit: false,
   isSandbox: false,
   password: "",
@@ -72,6 +73,7 @@ export const AvataxConfigurationForm = () => {
   React.useEffect(() => {
     if (instance) {
       const { config } = instance;
+
       reset(config);
     } else {
       reset(defaultValues);
@@ -245,15 +247,15 @@ export const AvataxConfigurationForm = () => {
           </Grid>
           <Grid item xs={12}>
             <Controller
-              name="companyName"
+              name="companyCode"
               control={control}
-              defaultValue={defaultValues.companyName}
+              defaultValue={defaultValues.companyCode}
               render={({ field }) => (
-                <TextField type="text" {...field} label="Company name" {...textFieldProps} />
+                <TextField type="text" {...field} label="Company code" {...textFieldProps} />
               )}
             />
-            {formState.errors.companyName && (
-              <FormHelperText error>{formState.errors.companyName.message}</FormHelperText>
+            {formState.errors.companyCode && (
+              <FormHelperText error>{formState.errors.companyCode.message}</FormHelperText>
             )}
           </Grid>
         </Grid>

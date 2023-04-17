@@ -18,6 +18,7 @@ const patchInputSchema = z.object({
   id: z.string(),
   value: avataxConfigSchema.partial().transform((c) => {
     const { username, password, ...config } = c ?? {};
+
     return {
       ...config,
       ...(username && !isObfuscated(username) && { username }),

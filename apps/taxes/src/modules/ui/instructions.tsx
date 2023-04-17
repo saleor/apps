@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Instructions = () => {
   const styles = useStyles();
+
   return (
     <AppPaper>
       <div className={styles.root}>

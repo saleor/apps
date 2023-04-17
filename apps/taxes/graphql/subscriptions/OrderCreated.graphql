@@ -14,21 +14,26 @@ fragment OrderLineFragment on OrderLine {
   }
 }
 
-fragment OrderSubscription on Order {
+fragment OrderCreatedSubscription on Order {
   id
-  userEmail
+  user {
+    id
+    email
+  }
   created
+  status
   channel {
     id
     slug
   }
   shippingAddress {
-    ...AddressFragment
+    ...Address
   }
   billingAddress {
-    ...AddressFragment
+    ...Address
   }
   total {
+    currency
     net {
       amount
     }
@@ -49,7 +54,13 @@ fragment OrderCreatedEventSubscription on Event {
   __typename
   ... on OrderCreated {
     order {
-      ...OrderSubscription
+      ...OrderCreatedSubscription
+    }
+  }
+  recipient {
+    privateMetadata {
+      key
+      value
     }
   }
 }

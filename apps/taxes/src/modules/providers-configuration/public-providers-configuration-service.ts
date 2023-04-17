@@ -25,6 +25,7 @@ export class PublicTaxProvidersConfigurationService {
     this.logger.debug(".getAll called");
     const taxJar = await this.taxJarConfigurationService.getAll();
     const avatax = await this.avataxConfigurationService.getAll();
+
     return [...obfuscateTaxJarInstances(taxJar), ...obfuscateAvataxInstances(avatax)];
   }
 }

@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const DeleteProviderDialog = (p: DeleteProviderDialogProps) => {
   const styles = useStyles();
+
   return (
     <Dialog open={p.isOpen} onClose={p.onClose}>
       <DialogTitle>Delete provider instance?</DialogTitle>
