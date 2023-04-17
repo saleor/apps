@@ -12,7 +12,12 @@
         "VERCEL_URL",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "ALLOWED_DOMAIN_PATTERN"
+        "ALLOWED_DOMAIN_PATTERN",
+        "CI",
+        "E2E_TAXES_ADMIN_USER_EMAIL",
+        "E2E_TAXES_ADMIN_USER_PASSWORD",
+        "E2E_TAXES_TESTED_APP_MANIFEST",
+        "E2E_TAXES_SALEOR_API_URL"
       ]
     }
   }

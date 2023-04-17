@@ -1,0 +1,45 @@
+name: e2e Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      saleorApiUrl:
+        required: true
+        type: string
+      email:
+        required: true
+        type: string
+      password:
+        required: true
+        type: string
+      appManifestUrl:
+        required: true
+        type: string
+
+env:
+  E2E_TAXES_SALEOR_API_URL: ${{ inputs.saleorApiUrl }}
+  E2E_TAXES_ADMIN_USER_EMAIL: ${{ inputs.email }}
+  E2E_TAXES_ADMIN_USER_PASSWORD: ${{ inputs.password }}
+  E2E_TAXES_TESTED_APP_MANIFEST: ${{ inputs.appManifestUrl }}
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Install dependencies
+      run: pnpm install
+    - name: Install Playwright Browsers
+      run: pnpm exec playwright install --with-deps
+    - name: Run Playwright tests
+      run: pnpm run e2e
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

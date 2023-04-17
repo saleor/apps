@@ -1,0 +1,13 @@
+mutation InstallApp ($manifestUrl: String) {
+  appInstall(
+    input: { manifestUrl: $manifestUrl, appName: "E2E TEST APP", activateAfterInstallation: true }
+  ) {
+    errors {
+      code
+    }
+    appInstallation {
+      id
+      status
+    }
+  }
+}

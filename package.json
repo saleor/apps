@@ -16,7 +16,8 @@
     "test:ci": "turbo run test:ci",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo run generate",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "e2e": "turbo run e2e"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
