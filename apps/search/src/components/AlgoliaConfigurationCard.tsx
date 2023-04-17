@@ -49,8 +49,10 @@ export const AlgoliaConfigurationCard = () => {
         },
         body: JSON.stringify(conf),
       });
+
       if (resp.status >= 200 && resp.status < 300) {
         const data = (await resp.json()) as { data?: AlgoliaConfigurationFields };
+
         return data.data;
       }
       throw new Error(`Server responded with status code ${resp.status}`);

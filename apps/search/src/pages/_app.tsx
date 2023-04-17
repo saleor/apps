@@ -35,6 +35,7 @@ const queryClient = new QueryClient({
     },
   },
 });
+
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;
 
 /**
@@ -73,6 +74,7 @@ function NextApp({ Component, pageProps }: AppProps) {
    */
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
+
     if (jssStyles) {
       jssStyles?.parentElement?.removeChild(jssStyles);
     }
