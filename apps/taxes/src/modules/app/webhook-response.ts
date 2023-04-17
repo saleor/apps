@@ -9,7 +9,7 @@ export class WebhookResponse {
   }
 
   failureNoRetry(error: string) {
-    this.logger.error({ error }, "failureNoRetry called with:");
+    this.logger.debug({ error }, "failureNoRetry called with:");
     return this.res.status(200).json({ success: false, error });
   }
 
