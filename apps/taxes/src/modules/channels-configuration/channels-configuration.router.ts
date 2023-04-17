@@ -1,5 +1,5 @@
 import { logger as pinoLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app-configuration/metadata-manager";
+import { createSettingsManager } from "../app/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { ChannelsConfig } from "./channels-config";
@@ -29,12 +29,14 @@ export const channelsConfigurationRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
         procedure: "channelsConfigurationRouter.upsert",
       });
+
       logger.debug(input, "channelsConfigurationRouter.upsert called with input");
 
       const config = await new GetChannelsConfigurationService({
         apiClient: ctx.apiClient,
         saleorApiUrl: ctx.saleorApiUrl,
       }).getConfiguration();
+
       logger.debug(config, "Fetched current channels config to update it");
 
       const taxChannelsConfigurator = new TaxChannelsConfigurator(

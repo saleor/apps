@@ -3,12 +3,13 @@ import { Client } from "urql";
 import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
-  UpdateAppMetadataDocument,
+  UpdateMetadataDocument,
 } from "../../../generated/graphql";
 import { logger as pinoLogger } from "../../lib/logger";
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
   const logger = pinoLogger.child({ service: "fetchAllMetadata" });
+
   logger.debug("Fetching metadata from Saleor");
 
   const { error, data } = await client
@@ -27,6 +28,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 
 export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
   const logger = pinoLogger.child({ service: "mutateMetadata" });
+
   logger.debug({ metadata }, "Mutating metadata");
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client
@@ -48,7 +50,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   }
 
   const { error: mutationError, data: mutationData } = await client
-    .mutation(UpdateAppMetadataDocument, {
+    .mutation(UpdateMetadataDocument, {
       id: appId,
       input: metadata,
     })
@@ -67,9 +69,11 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
 }
 
 export const createSettingsManager = (client: Client) => {
-  // EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
-  // We recommend it for production, because all values are encrypted.
-  // If your use case require plain text values, you can use MetadataManager.
+  /**
+   * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
+   * We recommend it for production, because all values are encrypted.
+   * If your use case require plain text values, you can use MetadataManager.
+   */
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,

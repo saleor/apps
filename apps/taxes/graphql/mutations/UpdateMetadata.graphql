@@ -1,4 +1,4 @@
-mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
+mutation UpdateMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
     item {
       privateMetadata {

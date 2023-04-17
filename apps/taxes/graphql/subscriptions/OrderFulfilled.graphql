@@ -1,0 +1,70 @@
+fragment OrderLineFragment on OrderLine {
+  productSku
+  productName
+  quantity
+  unitPrice {
+    net {
+      amount
+    }
+  }
+  totalPrice {
+    tax {
+      amount
+    }
+  }
+}
+
+fragment OrderFulfilledSubscription on Order {
+  id
+  userEmail
+  created
+  channel {
+    id
+    slug
+  }
+  shippingAddress {
+    ...Address
+  }
+  billingAddress {
+    ...Address
+  }
+  total {
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+  }
+  shippingPrice {
+    net {
+      amount
+    }
+  }
+  privateMetadata {
+    key
+    value
+  }
+  lines {
+    ...OrderLineFragment
+  }
+}
+fragment OrderFulfilledEventSubscription on Event {
+  __typename
+  ... on OrderFulfilled {
+    order {
+      ...OrderFulfilledSubscription
+    }
+    recipient {
+      privateMetadata {
+        key
+        value
+      }
+    }
+  }
+}
+subscription OrderFulfilledSubscription {
+  event {
+    ...OrderFulfilledEventSubscription
+  }
+}

@@ -1,5 +1,5 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { PrivateMetadataAppConfigurator } from "../app-configuration/app-configurator";
+import { PrivateMetadataAppConfigurator } from "../app/app-configurator";
 import { ChannelsConfig } from "./channels-config";
 
 export class TaxChannelsConfigurator extends PrivateMetadataAppConfigurator<ChannelsConfig> {

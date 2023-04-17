@@ -106,6 +106,7 @@ export const ChannelTaxProviderForm = () => {
 
   React.useEffect(() => {
     const defaultValues = getDefaultFormValues(channelConfig, providerInstances);
+
     reset(defaultValues);
   }, [channelConfig, providerInstances, reset]);
 

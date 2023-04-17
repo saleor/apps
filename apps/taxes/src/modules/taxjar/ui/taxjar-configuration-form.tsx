@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = taxJarConfigSchema;
+
 type FormValues = z.infer<typeof schema>;
 
 const defaultValues: FormValues = {
@@ -110,6 +111,7 @@ export const TaxJarConfigurationForm = () => {
   React.useEffect(() => {
     if (instance) {
       const { config } = instance;
+
       reset(config);
     } else {
       reset({ ...defaultValues });

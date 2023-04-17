@@ -10,6 +10,7 @@ const useStyles = makeStyles({
 
 export const AppPaper = ({ children }: { children: React.ReactNode }) => {
   const styles = useStyles();
+
   return (
     <Paper elevation={0} className={styles.root}>
       {children}

@@ -51,19 +51,24 @@ fragment TaxBase on TaxableObject {
     ...TaxDiscount
   }
   address {
-    streetAddress1
-    streetAddress2
-    city
-    country {
-      code
-    }
-    countryArea
-    postalCode
+    ...Address
   }
   shippingPrice {
     amount
   }
   lines {
     ...TaxBaseLine
+  }
+  sourceObject {
+    ... on Checkout {
+      user {
+        id
+      }
+    }
+    ... on Order {
+      user {
+        id
+      }
+    }
   }
 }

@@ -4,6 +4,8 @@ import pino from "pino";
 import packageJson from "../../../package.json";
 import { createLogger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
+import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 type AvataxSettings = {
   appName: string;
@@ -35,6 +37,17 @@ const createAvataxSettings = (config: AvataxConfig): AvataxSettings => {
   return settings;
 };
 
+export type CommitTransactionArgs = {
+  companyCode: string;
+  transactionCode: string;
+  model: CommitTransactionModel;
+  documentType: DocumentType;
+};
+
+export type CreateTransactionArgs = {
+  model: CreateTransactionModel;
+};
+
 export class AvataxClient {
   private client: Avatax;
   private logger: pino.Logger;
@@ -49,14 +62,21 @@ export class AvataxClient {
     };
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(credentials);
+
     this.logger.trace({ client: avataxClient }, "External Avatax client created");
     this.client = avataxClient;
   }
 
-  async fetchTaxesForOrder(model: CreateTransactionModel) {
-    this.logger.debug({ model }, "fetchTaxesForOrder called with:");
+  async createTransaction({ model }: CreateTransactionArgs) {
+    this.logger.debug({ model }, "createTransaction called with:");
 
     return this.client.createTransaction({ model });
+  }
+
+  async commitTransaction(args: CommitTransactionArgs) {
+    this.logger.debug(args, "commitTransaction called with:");
+
+    return this.client.commitTransaction(args);
   }
 
   async ping() {

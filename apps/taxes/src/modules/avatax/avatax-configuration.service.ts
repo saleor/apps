@@ -1,20 +1,22 @@
 import pino from "pino";
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app-configuration/metadata-manager";
-import { CrudSettingsConfigurator } from "../crud-settings/crud-settings.service";
+import { createSettingsManager } from "../app/metadata-manager";
+import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
 
 const getSchema = avataxInstanceConfigSchema;
+
 export class AvataxConfigurationService {
-  private crudSettingsConfigurator: CrudSettingsConfigurator;
+  private crudSettingsManager: CrudSettingsManager;
   private logger: pino.Logger;
   constructor(client: Client, saleorApiUrl: string) {
     const settingsManager = createSettingsManager(client);
-    this.crudSettingsConfigurator = new CrudSettingsConfigurator(
+
+    this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
       TAX_PROVIDER_KEY
@@ -27,7 +29,7 @@ export class AvataxConfigurationService {
 
   async getAll(): Promise<AvataxInstanceConfig[]> {
     this.logger.debug(".getAll called");
-    const { data } = await this.crudSettingsConfigurator.readAll();
+    const { data } = await this.crudSettingsManager.readAll();
     const validation = providersSchema.safeParse(data);
 
     if (!validation.success) {
@@ -44,8 +46,9 @@ export class AvataxConfigurationService {
 
   async get(id: string): Promise<AvataxInstanceConfig> {
     this.logger.debug(`.get called with id: ${id}`);
-    const { data } = await this.crudSettingsConfigurator.read(id);
-    this.logger.debug(`Fetched setting from crudSettingsConfigurator`);
+    const { data } = await this.crudSettingsManager.read(id);
+
+    this.logger.debug(`Fetched setting from CrudSettingsManager`);
 
     const validation = getSchema.safeParse(data);
 
@@ -67,7 +70,7 @@ export class AvataxConfigurationService {
       throw new Error(validation.error);
     }
 
-    const result = await this.crudSettingsConfigurator.create({
+    const result = await this.crudSettingsManager.create({
       provider: "avatax",
       config: config,
     });
@@ -81,7 +84,7 @@ export class AvataxConfigurationService {
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
 
-    return this.crudSettingsConfigurator.update(id, {
+    return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...setting.config, ...config },
     });
@@ -93,7 +96,7 @@ export class AvataxConfigurationService {
     const { id: _, ...setting } = data;
 
     this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
-    return this.crudSettingsConfigurator.update(id, {
+    return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...config },
     });
@@ -101,6 +104,6 @@ export class AvataxConfigurationService {
 
   async delete(id: string): Promise<void> {
     this.logger.debug(`.delete called with id: ${id}`);
-    return this.crudSettingsConfigurator.delete(id);
+    return this.crudSettingsManager.delete(id);
   }
 }
