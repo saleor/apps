@@ -6,7 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
-import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
 
 export const config = {
   api: {
@@ -39,7 +39,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
-  const webhookResponse = new WebhookResponseFactory(res);
+  const webhookResponse = new WebhookResponse(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -47,7 +47,6 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     verifyCalculateTaxesPayload(payload);
     logger.info("Payload validated succesfully");
   } catch (error) {
-    logger.error({ error: error }, "Payload is invalid");
     logger.info("Returning no data");
     return webhookResponse.failureNoRetry("Payload is invalid");
   }
@@ -58,7 +57,6 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
     if (!activeTaxProvider.ok) {
-      logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
       return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
@@ -70,7 +68,6 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return webhookResponse.success(calculatedTaxes);
   } catch (error) {
-    logger.error({ error }, "Error while calculating taxes");
     return webhookResponse.failureRetry("Error while calculating taxes");
   }
 });

@@ -6,7 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
-import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
 export const config = {
   api: {
     bodyParser: false,
@@ -29,7 +29,7 @@ export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledP
 export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
-  const webhookResponse = new WebhookResponseFactory(res);
+  const webhookResponse = new WebhookResponse(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -39,7 +39,6 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
     if (!activeTaxProvider.ok) {
-      logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
       return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
@@ -49,7 +48,6 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
-      logger.error("Insufficient order data");
       return webhookResponse.failureNoRetry("Insufficient order data");
     }
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
@@ -58,7 +56,6 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     return webhookResponse.success();
   } catch (error) {
-    logger.error({ error }, "Error while fulfilling tax provider order");
     return webhookResponse.failureRetry("Error while fulfilling tax provider order");
   }
 });

@@ -12,7 +12,7 @@ import { createLogger } from "../../../lib/logger";
 import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
 import { createClient } from "../../../lib/graphql";
 import { Client } from "urql";
-import { WebhookResponseFactory } from "../../../modules/app/webhook-response-factory";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
 
 export const config = {
   api: {
@@ -66,7 +66,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
   const { saleorApiUrl, token } = authData;
-  const webhookResponse = new WebhookResponseFactory(res);
+  const webhookResponse = new WebhookResponse(res);
 
   logger.info({ payload }, "Handler called with payload");
 
@@ -76,7 +76,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
     if (!activeTaxProvider.ok) {
-      logger.error({ error: activeTaxProvider.error }, "getActiveTaxProvider error");
       logger.info("Returning no data");
       return webhookResponse.failureNoRetry(activeTaxProvider.error);
     }
@@ -86,13 +85,11 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
-      logger.error("Insufficient order data");
-      return res.status(200).json({ success: false });
+      return webhookResponse.failureNoRetry("Insufficient order data");
     }
 
     if (payload.order.status === OrderStatus.Fulfilled) {
-      logger.info("Skipping fulfilled order to prevent duplication");
-      return res.status(200).json({ success: false });
+      return webhookResponse.failureNoRetry("Skipping fulfilled order to prevent duplication");
     }
 
     const createdOrder = await taxProvider.createOrder(payload.order);
@@ -105,7 +102,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     return webhookResponse.success();
   } catch (error) {
-    logger.error({ error }, "Error while creating order in tax provider");
     return webhookResponse.failureRetry("Error while creating order in tax provider");
   }
 });
