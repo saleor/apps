@@ -37,6 +37,7 @@ describe("avataxAddressFactory", () => {
 
       expect(result).toEqual({
         line1: "123 Palm Grove Ln",
+        line2: "",
         city: "LOS ANGELES",
         region: "CA",
         postalCode: "90002",

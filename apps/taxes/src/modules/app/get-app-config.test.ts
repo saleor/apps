@@ -62,9 +62,10 @@ vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getAppConfig", () => {
   it("should return empty providers and channels config when no metadata", () => {
-    const result = getAppConfig([]);
+    const { providers, channels } = getAppConfig([]);
 
-    expect(result).toBeDefined();
+    expect(providers).toEqual([]);
+    expect(channels).toEqual({});
   });
 
   it("should return decrypted providers and channels config when metadata provided", () => {
