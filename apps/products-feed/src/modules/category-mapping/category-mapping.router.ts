@@ -38,6 +38,7 @@ export const categoryMappingRouter = router({
     .input(SetCategoryMappingInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
       logger.debug("categoriesRouter.setCategoryMapping called");
       const { error } = await ctx.apiClient
         .mutation(UpdateCategoryMappingDocument, {

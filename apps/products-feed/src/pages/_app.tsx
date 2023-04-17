@@ -63,6 +63,7 @@ const generateClassName = createGenerateClassName({
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
+
 export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
 /**
@@ -78,6 +79,7 @@ function NextApp({ Component, pageProps }: AppProps) {
    */
   useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
+
     if (jssStyles) {
       jssStyles?.parentElement?.removeChild(jssStyles);
     }
