@@ -26,6 +26,7 @@ export default createManifestHandler({
       homepageUrl: "https://github.com/saleor/apps",
       supportUrl: "https://github.com/saleor/apps/discussions",
       author: "Saleor Commerce",
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
     };
 
     return manifest;
