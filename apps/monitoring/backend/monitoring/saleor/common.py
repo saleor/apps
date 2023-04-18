@@ -114,6 +114,7 @@ class Manifest(BaseModel):
     id: str
     permissions: list[str]
     name: str
+    author: str
     version: str
     about: str
     extensions: list[Any] = []

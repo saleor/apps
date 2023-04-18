@@ -44,7 +44,9 @@ export default createManifestHandler({
          * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
          */
       ],
-      author: "Saleor Commerce",
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      homepageUrl: "https://github.com/saleor/apps",
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
     };
 
     return manifest;

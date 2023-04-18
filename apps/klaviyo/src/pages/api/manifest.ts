@@ -24,6 +24,10 @@ const handler = createManifestHandler({
         orderCreatedWebhook.getWebhookManifest(appBaseUrl),
         orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
       ],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      homepageUrl: "https://github.com/saleor/apps",
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      author: "Saleor Commerce",
     };
   },
 });
