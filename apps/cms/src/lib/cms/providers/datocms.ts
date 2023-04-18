@@ -50,10 +50,12 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
 
   const client = datocmsClient(config);
 
+  const pingCMS = async () => client.users.findMe();
+
   const createProductInCMS = async (input: ProductInput) =>
     client.items.create({
       item_type: {
-        id: config.itemTypeId,
+        id: String(config.itemTypeId),
         type: "item_type",
       },
       saleor_id: input.saleorId,
@@ -91,6 +93,20 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     });
 
   return {
+    ping: async () => {
+      try {
+        const response = await pingCMS();
+        logger.debug({ response }, "ping response");
+
+        if (!response.id) {
+          throw new Error();
+        }
+
+        return { ok: true };
+      } catch (error) {
+        return { ok: false };
+      }
+    },
     createProduct: async ({ input }) => {
       try {
         const item = await createProductInCMS(input);

@@ -8,6 +8,7 @@ import { Button, makeStyles } from "@saleor/macaw-ui";
 import { ProviderInstancesSelect } from "./provider-instances-list";
 import { Add } from "@material-ui/icons";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { usePingProviderInstance } from "./hooks/usePingProviderInstance";
 
 const useStyles = makeStyles({
   wrapper: {
@@ -26,6 +27,7 @@ export const ProviderInstances = () => {
   const [newProviderInstance, setNewProviderInstance] = useState<SingleProviderSchema | null>(null);
 
   const { notifySuccess } = useDashboardNotification();
+  const pingProviderInstanceOpts = usePingProviderInstance(activeProviderInstanceId);
 
   useEffect(() => {
     if (providerInstances.length && !activeProviderInstanceId) {
@@ -57,6 +59,9 @@ export const ProviderInstances = () => {
     }
     if (newProviderInstance && savedProviderInstance) {
       setActiveProviderInstanceId(savedProviderInstance.id);
+    }
+    if (!newProviderInstance) {
+      pingProviderInstanceOpts.refresh();
     }
   };
   const handleDeleteProviderInstance = async (providerInstance: SingleProviderSchema) => {
@@ -94,6 +99,7 @@ export const ProviderInstances = () => {
           deleteProviderInstance={handleDeleteProviderInstance}
           loading={loading}
           errors={errors}
+          providerInstancePingStatus={pingProviderInstanceOpts.result}
           onNewProviderRequest={handleAddNewProviderInstance}
         />
       </div>
