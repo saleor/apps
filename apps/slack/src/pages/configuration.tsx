@@ -79,6 +79,7 @@ function Configuration() {
 
   const onChange = (event: ChangeEvent) => {
     const { name, value } = event.target as HTMLInputElement;
+
     setConfiguration((prev) =>
       prev!.map((prevField) => (prevField.key === name ? { ...prevField, value } : prevField))
     );
@@ -129,6 +130,7 @@ function Instructions() {
   });
 
   const slackUrl = new URL("https://api.slack.com/apps");
+
   slackUrl.searchParams.append("new_app", "1");
   slackUrl.searchParams.append("manifest_json", JSON.stringify(data));
 

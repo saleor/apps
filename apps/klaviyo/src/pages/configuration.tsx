@@ -171,6 +171,7 @@ function Configuration() {
 
   const onChange = (event: ChangeEvent) => {
     const { name, value } = event.target as HTMLInputElement;
+
     setConfiguration((prev) =>
       prev!.map((prevField) => (prevField.key === name ? { ...prevField, value } : prevField))
     );

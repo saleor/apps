@@ -20,6 +20,7 @@ function Hit(props: { hit: any }) {
 
 export function Hits() {
   const { hits } = useHits();
+
   return (
     <div className={styles.hitsWrapper}>
       {hits.map((hit) => (

@@ -22,6 +22,7 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
   const debug = createDebug(`Webhook handler - ${webhookProductUpdated.event}`);
 
   const { event, authData } = context;
+
   debug(
     `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`
   );
@@ -43,6 +44,7 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
   });
 
   const { product } = context.payload;
+
   if (product) {
     await searchProvider.updateProduct(product);
   }

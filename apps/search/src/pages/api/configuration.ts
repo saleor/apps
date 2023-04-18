@@ -58,6 +58,7 @@ export const handler = async (
     const { appId, searchKey, secretKey, indexNamePrefix } = JSON.parse(
       req.body
     ) as AlgoliaConfigurationFields;
+
     await settings.set([
       { key: "secretKey", value: secretKey || "", domain },
       { key: "searchKey", value: searchKey || "", domain },

@@ -16,7 +16,11 @@
         "REST_APL_TOKEN",
         "NEXT_PUBLIC_VERCEL_ENV",
         "VERCEL_URL",
-        "PORT"
+        "PORT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG",
+        "SENTRY_DSN"
       ]
     }
   }

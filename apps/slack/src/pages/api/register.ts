@@ -8,6 +8,7 @@ const handler = createAppRegisterHandler({
     (url) => {
       if (allowedUrlsPattern) {
         const regex = new RegExp(allowedUrlsPattern);
+
         if (regex.test(url)) {
           console.debug(`Registration from the URL ${url} has been accepted`);
           return true;

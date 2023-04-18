@@ -21,6 +21,7 @@ export function channelListingToAlgoliaIndexId(
     channelListing.channel.currencyCode,
     "products",
   ];
+
   return nameSegments.filter(isNotNil).join(".");
 }
 
@@ -85,6 +86,7 @@ export function productAndVariantToAlgolia({
   const attributes = {
     ...product.attributes.reduce((acc, attr, idx) => {
       const preparedAttr = mapSelectedAttributesToRecord(attr);
+
       if (!preparedAttr) {
         return acc;
       }
@@ -95,6 +97,7 @@ export function productAndVariantToAlgolia({
     }, {}),
     ...variant.attributes.reduce((acc, attr, idx) => {
       const preparedAttr = mapSelectedAttributesToRecord(attr);
+
       if (!preparedAttr) {
         return acc;
       }
@@ -123,6 +126,7 @@ export function productAndVariantToAlgolia({
     collections: product.collections?.map((collection) => collection.name) || [],
     metadata: formatMetadata(variant),
   };
+
   return document;
 }
 

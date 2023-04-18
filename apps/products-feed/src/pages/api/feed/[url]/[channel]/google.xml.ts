@@ -22,6 +22,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channel,
     route: "api/feed/{url}/{channel}/google.xml",
   });
+
   logger.debug("Feed route visited");
 
   if (!url.length) {
@@ -59,8 +60,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let storefrontUrl: string;
   let productStorefrontUrl: string;
+
   try {
     const settings = await getGoogleFeedSettings({ authData, channel });
+
     storefrontUrl = settings.storefrontUrl;
     productStorefrontUrl = settings.productStorefrontUrl;
   } catch (error) {
@@ -72,8 +75,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let shopName: string;
   let shopDescription: string | undefined;
+
   try {
     const shopDetails = await fetchShopData({ client, channel });
+
     shopName = shopDetails.shopName;
     shopDescription = shopDetails.shopDescription;
   } catch (error) {

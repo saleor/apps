@@ -18,6 +18,7 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
 
   try {
     const secretKey = await settings.get("secretKey", authData.domain);
+
     if (!secretKey?.length) {
       return {
         errors: [
@@ -30,6 +31,7 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
     }
 
     const appId = await settings.get("appId", authData.domain);
+
     if (!appId?.length) {
       return {
         errors: [
@@ -41,6 +43,7 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
     }
 
     const indexNamePrefix = (await settings.get("indexNamePrefix", authData.domain)) || "";
+
     debug("Configuration fetched");
     return {
       settings: {

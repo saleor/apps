@@ -9,6 +9,7 @@ export const fetchConfiguration = async (saleorApiUrl: string, token: string) =>
     },
   });
   const data = (await res.json()) as { data?: AlgoliaConfigurationFields };
+
   return data.data;
 };
 

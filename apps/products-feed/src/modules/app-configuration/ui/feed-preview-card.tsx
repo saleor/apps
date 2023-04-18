@@ -36,6 +36,7 @@ export const FeedPreviewCard = ({ channelSlug }: FeedPreviewCardProps) => {
   const openUrlInNewTab = async (url: string) => {
     await appBridge?.dispatch(actions.Redirect({ to: url, newContext: true }));
   };
+
   return (
     <Paper elevation={0} className={styles.instructionsContainer}>
       <Typography paragraph variant="h3">

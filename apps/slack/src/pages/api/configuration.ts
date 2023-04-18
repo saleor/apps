@@ -34,6 +34,7 @@ export const handler = async (
     case "POST": {
       const reqBody = req.body as PostRequestBody;
       const newWebhookUrl = (await reqBody.data?.find((entry) => entry.key === WEBHOOK_URL))?.value;
+
       if (!newWebhookUrl) {
         console.error("New value for the webhook URL has not been found");
         res.status(400).json({

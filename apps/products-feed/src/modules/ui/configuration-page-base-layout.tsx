@@ -28,10 +28,12 @@ export const ConfigurationPageBaseLayout = ({ children }: Props) => {
 
   const navigateToTab = (value: string) => {
     const redirectionUrl = tabs.find((tab) => tab.key === value)?.url;
+
     if (redirectionUrl) {
       router.push(redirectionUrl);
     }
   };
+
   return (
     <div className={styles.appContainer}>
       <PageTabs value={activePath} onChange={navigateToTab}>
