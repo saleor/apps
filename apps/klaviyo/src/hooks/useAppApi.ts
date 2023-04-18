@@ -39,6 +39,7 @@ export const useAppApi = ({ url, options, skip }: UseFetchProps) => {
         }
 
         const json = await res.json();
+
         setData(json);
       } catch (e) {
         setError(e as unknown);

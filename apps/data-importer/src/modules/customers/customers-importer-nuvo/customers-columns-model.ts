@@ -86,8 +86,10 @@ const generateAddressColumns = (labelNamespace: string, keyNamespace: string): C
 // TODO - enable address columns when mapped
 const allColumns: ColumnAPI[] = [
   ...customerColumns,
-  // ...generateAddressColumns("Default Billing Address", "defaultBillingAddress"),
-  // ...generateAddressColumns("Default Shipping Address", "defaultShippingAddress"),
+  /*
+   * ...generateAddressColumns("Default Billing Address", "defaultBillingAddress"),
+   * ...generateAddressColumns("Default Shipping Address", "defaultShippingAddress"),
+   */
 ];
 
 export const getCustomersModelColumns = () => allColumns;
@@ -116,8 +118,10 @@ export const getResultModelSchema = () =>
       email: z.string(),
       note: z.string().nullish(),
       externalReference: z.string().nullish(),
-      // defaultBillingAddress: zodAddressSchema,
-      // defaultShippingAddress: zodAddressSchema,
+      /*
+       * defaultBillingAddress: zodAddressSchema,
+       * defaultShippingAddress: zodAddressSchema,
+       */
     }),
   });
 

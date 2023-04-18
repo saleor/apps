@@ -65,6 +65,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   const classes = useStyles();
 
   const isNoItems = !items || !items.length;
+
   return (
     <Card className={classes.menu}>
       <CardHeader title={title} action={headerToolbar} />

@@ -6,6 +6,7 @@ import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@sale
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;
+
   return `${protocol}://${host}`;
 };
 
@@ -38,6 +39,7 @@ const handler: NextApiHandler = async (req, res) => {
   });
 
   const redirectUri = `${getBaseUrl(req.headers)}/api/auth/mailchimp/callback`;
+
   logger.debug({ redirectUri }, "Resolved redirect uri");
 
   const qs = new URLSearchParams({

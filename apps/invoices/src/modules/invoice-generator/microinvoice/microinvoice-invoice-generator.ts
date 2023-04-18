@@ -19,13 +19,15 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
 
     const microinvoiceInstance = new Microinvoice({
       style: {
-        // header: {
-        //   image: {
-        //     path: "./examples/logo.png",
-        //     width: 50,
-        //     height: 19,
-        //   },
-        // },
+        /*
+         * header: {
+         *   image: {
+         *     path: "./examples/logo.png",
+         *     width: 50,
+         *     height: 19,
+         *   },
+         * },
+         */
       },
       data: {
         invoice: {
@@ -60,10 +62,12 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
                 order.billingAddress?.country.country,
               ],
             },
-            // {
-            //   label: "Tax Identifier",
-            //   value: "todo",
-            // },
+            /*
+             * {
+             *   label: "Tax Identifier",
+             *   value: "todo",
+             * },
+             */
           ],
 
           seller: [
@@ -79,23 +83,27 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
                 companyAddressData.countryArea,
               ],
             },
-            // {
-            //   label: "Tax Identifier",
-            //   value: "todo",
-            // },
+            /*
+             * {
+             *   label: "Tax Identifier",
+             *   value: "todo",
+             * },
+             */
           ],
 
           legal: [
-            // {
-            //   value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-            //   weight: "bold",
-            //   color: "primary",
-            // },
-            // {
-            //   value: "sed do eiusmod tempor incididunt ut labore et dolore magna.",
-            //   weight: "bold",
-            //   color: "secondary",
-            // },
+            /*
+             * {
+             *   value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+             *   weight: "bold",
+             *   color: "primary",
+             * },
+             * {
+             *   value: "sed do eiusmod tempor incididunt ut labore et dolore magna.",
+             *   weight: "bold",
+             *   color: "secondary",
+             * },
+             */
           ],
 
           details: {

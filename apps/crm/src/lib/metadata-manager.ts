@@ -90,9 +90,11 @@ export async function mutateMetadata(
 export const createSettingsManager = (
   client: Pick<Client, "query" | "mutation">
 ): SettingsManager => {
-  // EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
-  // We recommend it for production, because all values are encrypted.
-  // If your use case require plain text values, you can use MetadataManager.
+  /*
+   * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
+   * We recommend it for production, because all values are encrypted.
+   * If your use case require plain text values, you can use MetadataManager.
+   */
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,

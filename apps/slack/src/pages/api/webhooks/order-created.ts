@@ -107,6 +107,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   if (response.status !== 200) {
     const errorMessage = await response.text();
+
     console.error(`Slack API responded with code ${response.status}: ${errorMessage}`);
 
     return res.status(500).send({

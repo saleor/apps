@@ -34,6 +34,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
+
         return index.saveObjects(objects);
       })
     );
@@ -45,6 +46,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
+
         return index.deleteObjects(objects.map((o) => o.objectID));
       })
     );
@@ -57,6 +59,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
     });
+
     await this.saveGroupedByIndex(groupedByIndex);
   }
 
@@ -128,6 +131,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       visibleInListings: null,
       indexNamePrefix: this.#indexNamePrefix,
     });
+
     if (groupedByIndexToDelete) {
       await this.deleteGroupedByIndex(groupedByIndexToDelete);
     }
@@ -157,6 +161,7 @@ const groupVariantByIndexName = (
         variant: productVariant,
         channel: channelListing.channel.slug,
       });
+
       return {
         object,
         indexName: channelListingToAlgoliaIndexId(channelListing, indexNamePrefix),
@@ -190,5 +195,6 @@ const groupProductsByIndexName = (
     acc[indexName].push(...objects);
     return acc;
   }, {} as GroupedByIndex);
+
   return groupedByIndex;
 };

@@ -66,6 +66,7 @@ export const useQueryAllProducts = (paused: boolean) => {
     (async () => {
       const channels = await getChannels();
       // get all products for each channel
+
       await channels.data?.channels?.reduce(async (acc, channel) => {
         await acc;
         await getProducts(channel.slug, "");

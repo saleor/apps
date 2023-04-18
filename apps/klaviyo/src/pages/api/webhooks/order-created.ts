@@ -67,6 +67,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   if (klaviyoResponse.status !== 200) {
     const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+
     console.debug("Klaviyo returned error: ", klaviyoMessage);
     return res.status(500).json({
       success: false,

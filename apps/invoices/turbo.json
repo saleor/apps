@@ -14,7 +14,11 @@
         "ALLOWED_DOMAIN_PATTERN",
         "NEXT_PUBLIC_VERCEL_ENV",
         "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN"
+        "REST_APL_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_DSN",
+        "SENTRY_ORG",
+        "SENTRY_AUTH_TOKEN"
       ]
     }
   }

@@ -86,5 +86,6 @@ export const generateGoogleXmlFeed = ({
       },
     },
   ];
+
   return builder.build(data);
 };

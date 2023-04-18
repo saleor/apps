@@ -10,6 +10,7 @@ export function SearchBox() {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     refine(e.target.value);
   };
+
   return (
     <div className={styles.textFieldContainer}>
       <TextField
