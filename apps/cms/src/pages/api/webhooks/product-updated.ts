@@ -11,6 +11,7 @@ import { createCmsOperations, executeCmsOperations, updateMetadata } from "../..
 import { logger as pinoLogger } from "../../../lib/logger";
 import { createClient } from "../../../lib/graphql";
 import { fetchProductVariantMetadata } from "../../../lib/metadata";
+import { isAppWebhookIssuer } from "./_utils";
 
 export const config = {
   api: {
@@ -21,6 +22,11 @@ export const config = {
 export const ProductUpdatedWebhookPayload = gql`
   ${UntypedWebhookProductFragmentDoc}
   fragment ProductUpdatedWebhookPayload on ProductUpdated {
+    issuingPrincipal {
+      ... on App {
+        id
+      }
+    }
     product {
       ...WebhookProduct
     }
@@ -49,13 +55,19 @@ export const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment
   res,
   context
 ) => {
-  const { product } = context.payload;
-  const { saleorApiUrl, token } = context.authData;
+  const { product, issuingPrincipal } = context.payload;
+  const { saleorApiUrl, token, appId } = context.authData;
 
   const logger = pinoLogger.child({
     product,
   });
   logger.debug("Called webhook PRODUCT_UPDATED");
+  logger.debug({ issuingPrincipal }, "Issuing principal");
+
+  if (isAppWebhookIssuer(issuingPrincipal, appId)) {
+    logger.debug("Issuing principal is the same as the app. Skipping webhook processing.");
+    return res.status(200).end();
+  }
 
   if (!product) {
     return res.status(500).json({

@@ -2,9 +2,47 @@ import {
   ProductVariantUpdatedWebhookPayloadFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { CmsClientBatchOperations, CmsClientOperations, ProductResponseSuccess } from "../types";
+import {
+  BaseResponse,
+  CmsClientBatchOperations,
+  CmsClientOperations,
+  ProductResponseSuccess,
+} from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
 import { logger as pinoLogger } from "../../logger";
+import { CMSProvider, cmsProviders } from "../providers";
+import { ProviderInstanceSchema, providersSchemaSet } from "../config";
+
+export const pingProviderInstance = async (
+  providerInstanceSettings: ProviderInstanceSchema
+): Promise<BaseResponse> => {
+  const logger = pinoLogger.child({ providerInstanceSettings });
+  logger.debug("Ping provider instance called");
+
+  const provider = cmsProviders[
+    providerInstanceSettings.providerName as CMSProvider
+  ] as (typeof cmsProviders)[keyof typeof cmsProviders];
+
+  const validation =
+    providersSchemaSet[providerInstanceSettings.providerName as CMSProvider].safeParse(
+      providerInstanceSettings
+    );
+
+  if (!validation.success) {
+    logger.error("The provider instance settings validation failed.", {
+      error: validation.error.message,
+    });
+
+    return { ok: false };
+  }
+
+  const config = validation.data;
+
+  const client = provider.create(config as any); // config without validation = providerInstanceSettings as any
+  const pingResult = await client.ping();
+
+  return pingResult;
+};
 
 interface CmsClientOperationResult {
   createdCmsId?: string;

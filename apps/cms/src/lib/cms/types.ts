@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { providersConfig } from "./config";
+import { ProvidersSchema, providersConfig } from "./config";
 
 export type ProductInput = Record<string, any> & {
   saleorId: string;
@@ -11,11 +11,13 @@ export type ProductInput = Record<string, any> & {
   image?: string;
 };
 
+export type BaseResponse = { ok: boolean };
 export type ProductResponseSuccess = { ok: true; data: { id: string; saleorId: string } };
 export type ProductResponseError = { ok: false; error: string };
 export type ProductResponse = ProductResponseSuccess | ProductResponseError;
 
 export type CmsOperations = {
+  ping: () => Promise<BaseResponse>;
   getProduct?: ({ id }: { id: string }) => Promise<Response>;
   createProduct: ({ input }: { input: ProductInput }) => Promise<ProductResponse>;
   updateProduct: ({ id, input }: { id: string; input: ProductInput }) => Promise<Response | void>;
@@ -40,17 +42,14 @@ export type CmsClientBatchOperations = {
   operationType: keyof CmsBatchOperations;
 };
 
-export type GetProviderTokens<TProviderName extends keyof typeof providersConfig> =
-  (typeof providersConfig)[TProviderName]["tokens"][number];
-
 export type BaseConfig = {
   name: string;
 };
 
 // * Generates the config based on the data supplied in the `providersConfig` variable.
-export type CreateProviderConfig<TProviderName extends keyof typeof providersConfig> = Record<
-  GetProviderTokens<TProviderName>["name"],
-  string
+export type CreateProviderConfig<TProviderName extends keyof typeof providersConfig> = Omit<
+  ProvidersSchema[TProviderName],
+  "id" | "providerName"
 > &
   BaseConfig;
 
