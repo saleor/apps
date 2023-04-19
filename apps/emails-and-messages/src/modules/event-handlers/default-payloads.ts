@@ -8,6 +8,7 @@ import {
   OrderFullyPaidWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
 } from "../../../generated/graphql";
+import { EventPayload } from "../../pages/api/webhooks/notify";
 
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
@@ -136,6 +137,116 @@ const invoiceSentPayload: InvoiceSentWebhookPayloadFragment = {
   order: exampleOrderPayload,
 };
 
+const accountConfirmationPayload: EventPayload = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  confirm_url:
+    "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const accountPasswordResetPayload: EventPayload = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  reset_url:
+    "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const accountChangeEmailRequestPayload: EventPayload = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  old_email: "test@example.com1",
+  new_email: "new.email@example.com1",
+  redirect_url:
+    "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const accountChangeEmailConfirmPayload: EventPayload = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const accountDeletePayload: EventPayload = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  delete_url:
+    "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
 export const examplePayloads: Record<MessageEventTypes, any> = {
   ORDER_CREATED: orderCreatedPayload,
   ORDER_CONFIRMED: orderConfirmedPayload,
@@ -143,4 +254,9 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ORDER_FULFILLED: orderFulfilledPayload,
   ORDER_FULLY_PAID: orderFullyPaidPayload,
   INVOICE_SENT: invoiceSentPayload,
+  ACCOUNT_CONFIRMATION: accountConfirmationPayload,
+  ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
+  ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: accountChangeEmailConfirmPayload,
+  ACCOUNT_DELETE: accountDeletePayload,
 };

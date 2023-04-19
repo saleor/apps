@@ -1,5 +1,3 @@
-import { AsyncWebhookEventType } from "@saleor/app-sdk/types";
-
 export const messageEventTypes = [
   "ORDER_CREATED",
   "ORDER_FULFILLED",
@@ -7,11 +5,14 @@ export const messageEventTypes = [
   "ORDER_CANCELLED",
   "ORDER_FULLY_PAID",
   "INVOICE_SENT",
+  "ACCOUNT_CONFIRMATION",
+  "ACCOUNT_PASSWORD_RESET",
+  "ACCOUNT_CHANGE_EMAIL_REQUEST",
+  "ACCOUNT_CHANGE_EMAIL_CONFIRM",
+  "ACCOUNT_DELETE",
 ] as const;
 
-type Subset<K, T extends K> = T;
-
-export type MessageEventTypes = Subset<AsyncWebhookEventType, (typeof messageEventTypes)[number]>;
+export type MessageEventTypes = (typeof messageEventTypes)[number];
 
 export const messageEventTypesLabels: Record<MessageEventTypes, string> = {
   ORDER_CREATED: "Order created",
@@ -20,4 +21,9 @@ export const messageEventTypesLabels: Record<MessageEventTypes, string> = {
   ORDER_CANCELLED: "Order cancelled",
   ORDER_FULLY_PAID: "Order fully paid",
   INVOICE_SENT: "Invoice sent",
+  ACCOUNT_CONFIRMATION: "Customer account confirmation",
+  ACCOUNT_PASSWORD_RESET: "Customer account password reset",
+  ACCOUNT_CHANGE_EMAIL_REQUEST: "Customer account change email request",
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: "Customer account change email confirmation",
+  ACCOUNT_DELETE: "Customer account delete request",
 };
