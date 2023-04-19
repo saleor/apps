@@ -4,7 +4,7 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 export const sendgridConfigurationEventObjectSchema = z.object({
   active: z.boolean(),
   eventType: z.enum(messageEventTypes),
-  template: z.string().min(1),
+  template: z.string(),
 });
 
 export const sendgridConfigurationBaseObjectSchema = z.object({
