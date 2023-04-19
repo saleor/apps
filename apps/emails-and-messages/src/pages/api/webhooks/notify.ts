@@ -5,7 +5,8 @@ import { sendEventMessages } from "../../../modules/event-handlers/send-event-me
 import { createClient } from "../../../lib/create-graphql-client";
 import { MessageEventTypes } from "../../../modules/event-handlers/message-event-types";
 
-// Notify event handles multiple event types which are recognized b
+// Notify event handles multiple event types which are recognized based on payload field `notify_event`.
+// Handler recognizes if event is one of the supported typed and sends appropriate message.
 
 export interface NotifyPayload {
   notify_event: string;
