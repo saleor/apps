@@ -8,24 +8,24 @@ import { MessageEventTypes } from "../../../modules/event-handlers/message-event
 // Notify event handles multiple event types which are recognized based on payload field `notify_event`.
 // Handler recognizes if event is one of the supported typed and sends appropriate message.
 
-export interface NotifyPayload {
+interface NotifySubscriptionPayload {
   notify_event: string;
-  payload: EventPayload;
+  payload: NotifyEventPayload;
   meta: Meta;
 }
 
-export interface Meta {
+interface Meta {
   issued_at: Date;
   version: string;
   issuing_principal: IssuingPrincipal;
 }
 
-export interface IssuingPrincipal {
+interface IssuingPrincipal {
   id: null | string;
   type: null | string;
 }
 
-export interface EventPayload {
+export interface NotifyEventPayload {
   user: User;
   recipient_email: string;
   channel_slug: string;
@@ -41,21 +41,19 @@ export interface EventPayload {
   redirect_url?: string;
 }
 
-export interface User {
+interface User {
   id: string;
   email: string;
   first_name: string;
   last_name: string;
   is_staff: boolean;
   is_active: boolean;
-  private_metadata: Metadata;
-  metadata: Metadata;
+  private_metadata: Record<string, string>;
+  metadata: Record<string, string>;
   language_code: string;
 }
 
-export interface Metadata {}
-
-export const notifyWebhook = new SaleorAsyncWebhook<NotifyPayload>({
+export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   name: "notify",
   webhookPath: "api/webhooks/notify",
   asyncEvent: "NOTIFY_USER",
@@ -63,7 +61,7 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifyPayload>({
   query: "{}", // We are using the default payload instead of subscription
 });
 
-const handler: NextWebhookApiHandler<NotifyPayload> = async (req, res, context) => {
+const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   const logger = pinoLogger.child({
     webhook: notifyWebhook.name,
   });

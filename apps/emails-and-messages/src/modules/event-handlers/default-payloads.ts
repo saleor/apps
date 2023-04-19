@@ -8,7 +8,7 @@ import {
   OrderFullyPaidWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
 } from "../../../generated/graphql";
-import { EventPayload } from "../../pages/api/webhooks/notify";
+import { NotifyEventPayload } from "../../pages/api/webhooks/notify";
 
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
@@ -137,7 +137,7 @@ const invoiceSentPayload: InvoiceSentWebhookPayloadFragment = {
   order: exampleOrderPayload,
 };
 
-const accountConfirmationPayload: EventPayload = {
+const accountConfirmationPayload: NotifyEventPayload = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -159,7 +159,7 @@ const accountConfirmationPayload: EventPayload = {
   logo_url: "",
 };
 
-const accountPasswordResetPayload: EventPayload = {
+const accountPasswordResetPayload: NotifyEventPayload = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -181,7 +181,7 @@ const accountPasswordResetPayload: EventPayload = {
   logo_url: "",
 };
 
-const accountChangeEmailRequestPayload: EventPayload = {
+const accountChangeEmailRequestPayload: NotifyEventPayload = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -205,7 +205,7 @@ const accountChangeEmailRequestPayload: EventPayload = {
   logo_url: "",
 };
 
-const accountChangeEmailConfirmPayload: EventPayload = {
+const accountChangeEmailConfirmPayload: NotifyEventPayload = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -225,7 +225,7 @@ const accountChangeEmailConfirmPayload: EventPayload = {
   logo_url: "",
 };
 
-const accountDeletePayload: EventPayload = {
+const accountDeletePayload: NotifyEventPayload = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
