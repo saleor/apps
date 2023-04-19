@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       gap: 20,
-      maxWidth: 600,
+      maxWidth: 700,
     },
   };
 });

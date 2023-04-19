@@ -1,6 +1,10 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
 import { saleorApp } from "../../saleor-app";
+import { createClient } from "../../lib/create-graphql-client";
+import { logger } from "../../lib/logger";
+import { getBaseUrl } from "../../lib/get-base-url";
+import { registerNotifyWebhook } from "../../lib/register-notify-webhook";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -21,4 +25,18 @@ export default createAppRegisterHandler({
       return true;
     },
   ],
+  onAuthAplSaved: async (request, ctx) => {
+    // Subscribe to Notify using the mutation since it does not use subscriptions and can't be subscribed via manifest
+    logger.debug("onAuthAplSaved executing");
+
+    const baseUrl = getBaseUrl(request.headers);
+    const client = createClient(ctx.authData.saleorApiUrl, async () =>
+      Promise.resolve({ token: ctx.authData.token })
+    );
+    await registerNotifyWebhook({
+      client: client,
+      baseUrl: baseUrl,
+    });
+    logger.debug("Webhook registered");
+  },
 });
