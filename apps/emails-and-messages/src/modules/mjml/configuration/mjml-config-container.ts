@@ -2,6 +2,7 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { MjmlConfig as MjmlConfigurationRoot, MjmlConfiguration } from "./mjml-config";
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
 import { generateRandomId } from "../../../lib/generate-random-id";
+import { isAvailableInChannel } from "../../../lib/is-available-in-channel";
 
 export const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
   messageEventTypes.map((eventType) => ({
@@ -24,6 +25,10 @@ export const getDefaultEmptyConfiguration = (): MjmlConfiguration => {
     smtpPassword: "",
     encryption: "NONE",
     events: getDefaultEventsConfiguration(),
+    channels: {
+      excludedFrom: [],
+      restrictedTo: [],
+    },
   };
 
   return defaultConfig;
@@ -45,6 +50,7 @@ const getConfiguration =
 
 export interface FilterConfigurationsArgs {
   ids?: string[];
+  availableInChannel?: string;
   active?: boolean;
 }
 
@@ -57,12 +63,26 @@ const getConfigurations =
 
     let filtered = mjmlConfigRoot.configurations;
 
-    if (filter?.ids?.length) {
+    if (!filter) {
+      return filtered;
+    }
+
+    if (filter.ids?.length) {
       filtered = filtered.filter((c) => filter?.ids?.includes(c.id));
     }
 
-    if (filter?.active !== undefined) {
+    if (filter.active !== undefined) {
       filtered = filtered.filter((c) => c.active === filter.active);
+    }
+
+    if (filter.availableInChannel?.length) {
+      filtered = filtered.filter((c) =>
+        isAvailableInChannel({
+          channel: filter.availableInChannel!,
+          restrictedToChannels: c.channels.restrictedTo,
+          excludedChannels: c.channels.excludedFrom,
+        })
+      );
     }
 
     return filtered;
@@ -79,6 +99,7 @@ const createConfiguration =
       id: generateRandomId(),
       events: getDefaultEventsConfiguration(),
     };
+
     mjmlConfigNormalized.configurations.push(newConfiguration);
     return mjmlConfigNormalized;
   };

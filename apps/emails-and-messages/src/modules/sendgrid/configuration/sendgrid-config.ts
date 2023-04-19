@@ -15,6 +15,10 @@ export interface SendgridConfiguration {
   senderEmail?: string;
   apiKey: string;
   events: SendgridEventConfiguration[];
+  channels: {
+    excludedFrom: string[];
+    restrictedTo: string[];
+  };
 }
 
 export type SendgridConfig = {
