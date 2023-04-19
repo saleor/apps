@@ -19,6 +19,10 @@ export const mjmlConfigurationBaseObjectSchema = z.object({
   smtpUser: z.string(),
   smtpPassword: z.string(),
   encryption: z.enum(smtpEncryptionTypes),
+  channels: z.object({
+    excludedFrom: z.array(z.string()),
+    restrictedTo: z.array(z.string()),
+  }),
 });
 
 export const mjmlCreateConfigurationSchema = mjmlConfigurationBaseObjectSchema;
