@@ -15,6 +15,10 @@ export interface MjmlConfiguration {
   id: string;
   active: boolean;
   configurationName: string;
+  channels: {
+    excludedFrom: string[];
+    restrictedTo: string[];
+  };
   senderName: string;
   senderEmail: string;
   smtpHost: string;

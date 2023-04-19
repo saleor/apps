@@ -14,6 +14,10 @@ export const sendgridConfigurationBaseObjectSchema = z.object({
   apiKey: z.string().min(1),
   senderName: z.string().min(1).optional(),
   senderEmail: z.string().email().min(5).optional(),
+  channels: z.object({
+    excludedFrom: z.array(z.string()),
+    restrictedTo: z.array(z.string()),
+  }),
 });
 
 export const sendgridCreateConfigurationSchema = sendgridConfigurationBaseObjectSchema.omit({

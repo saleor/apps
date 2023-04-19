@@ -1,4 +1,5 @@
 import { generateRandomId } from "../../../lib/generate-random-id";
+import { isAvailableInChannel } from "../../../lib/is-available-in-channel";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import {
   SendgridConfig as SendgridConfigurationRoot,
@@ -22,6 +23,10 @@ export const getDefaultEmptyConfiguration = (): SendgridConfiguration => {
     apiKey: "",
     sandboxMode: false,
     events: getDefaultEventsConfiguration(),
+    channels: {
+      excludedFrom: [],
+      restrictedTo: [],
+    },
   };
 
   return defaultConfig;
@@ -44,6 +49,7 @@ const getConfiguration =
 export interface FilterConfigurationsArgs {
   ids?: string[];
   active?: boolean;
+  availableInChannel?: string;
 }
 
 const getConfigurations =
@@ -55,12 +61,26 @@ const getConfigurations =
 
     let filtered = sendgridConfigRoot.configurations;
 
-    if (filter?.ids?.length) {
+    if (!filter) {
+      return filtered;
+    }
+
+    if (filter.ids?.length) {
       filtered = filtered.filter((c) => filter?.ids?.includes(c.id));
     }
 
-    if (filter?.active !== undefined) {
+    if (filter.active !== undefined) {
       filtered = filtered.filter((c) => c.active === filter.active);
+    }
+
+    if (filter.availableInChannel?.length) {
+      filtered = filtered.filter((c) =>
+        isAvailableInChannel({
+          channel: filter.availableInChannel!,
+          restrictedToChannels: c.channels.restrictedTo,
+          excludedChannels: c.channels.excludedFrom,
+        })
+      );
     }
 
     return filtered;
@@ -77,6 +97,7 @@ const createConfiguration =
       id: generateRandomId(),
       events: getDefaultEventsConfiguration(),
     };
+
     sendgridConfigNormalized.configurations.push(newConfiguration);
     return sendgridConfigNormalized;
   };
