@@ -1,6 +1,6 @@
 import pino from "pino";
 import TaxJar from "taxjar";
-import { Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
+import { AddressParams, Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
 import { createLogger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-config";
 
@@ -19,6 +19,10 @@ export type FetchTaxForOrderArgs = {
 
 export type CreateOrderArgs = {
   params: CreateOrderParams;
+};
+
+export type ValidateAddressArgs = {
+  params: AddressParams;
 };
 
 export class TaxJarClient {
@@ -56,8 +60,14 @@ export class TaxJarClient {
   }
 
   async createOrder({ params }: CreateOrderArgs) {
-    this.logger.debug("createOrder called with:");
+    this.logger.debug({ params }, "createOrder called with:");
 
     return this.client.createOrder(params);
+  }
+
+  async validateAddress({ params }: ValidateAddressArgs) {
+    this.logger.debug({ params }, "validateAddress called with:");
+
+    return this.client.validateAddress(params);
   }
 }
