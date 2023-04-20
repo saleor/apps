@@ -13,6 +13,7 @@ import {
 import { Save } from "@material-ui/icons";
 import { Button, makeStyles } from "@saleor/macaw-ui";
 
+import { useDashboardNotification } from "@saleor/apps-shared";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -24,7 +25,7 @@ import { ProvidersConfig } from "../../providers-configuration/providers-config"
 import { ProviderIcon } from "../../providers-configuration/ui/provider-icon";
 import { useChannelSlug } from "../../taxes/tax-context";
 import { trpcClient } from "../../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { CountrySelect } from "../../ui/country-select/country-select";
 
 type ChannelTaxProviderFormValues = ChannelConfig;
 
@@ -67,7 +68,6 @@ const getDefaultFormValues = (
   return defaultChannelConfig;
 };
 
-// todo: rename because address is here
 export const ChannelTaxProviderForm = () => {
   const styles = useStyles();
   const { control, reset, handleSubmit } = useForm<ChannelTaxProviderFormValues>({
@@ -158,14 +158,10 @@ export const ChannelTaxProviderForm = () => {
 
               <Grid container spacing={2}>
                 <Grid item xs={8}>
-                  {/* // todo: add country select */}
                   <Controller
                     name="address.country"
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <TextField {...field} label="Country" {...textFieldProps} />
-                    )}
+                    render={({ field }) => <CountrySelect {...field} />}
                   />
                 </Grid>
                 <Grid item xs={4}>
