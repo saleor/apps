@@ -17,6 +17,12 @@ function getTaxBaseLineDiscount(
   return discountAmount;
 }
 
+/**
+ * * currently the CalculateTaxes subscription uses only the taxjar code (see: TaxBaseLine in TaxBase.graphql)
+ * todo: add ability to pass providers or get codes for all providers
+ * todo: add `getOrderLineTaxCode`
+ * todo: later, replace with tax code matcher
+ */
 function getTaxBaseLineTaxCode(line: TaxBaseLineFragment): string {
   if (line.sourceLine.__typename === "OrderLine") {
     return (

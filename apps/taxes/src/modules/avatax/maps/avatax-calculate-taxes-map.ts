@@ -4,12 +4,11 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
-import { taxLineResolver } from "../../taxes/tax-line-resolver";
+import { numbers } from "../../taxes/numbers";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "./address-factory";
-import { numbers } from "../../taxes/numbers";
 
 /**
  * * Shipping is a regular line item in Avatax
@@ -22,7 +21,7 @@ function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
     // todo: get from tax code matcher
-    taxCode: taxLineResolver.getTaxBaseLineTaxCode(line),
+    taxCode: "",
     quantity: line.quantity,
   }));
 

@@ -44,12 +44,12 @@ const prepareLinesWithDiscountPayload = (
       totalDiscount,
       allLinesTotal
     );
-    const taxCode = taxLineResolver.getTaxBaseLineTaxCode(line);
 
     return {
       id: line.sourceLine.id,
       chargeTaxes: line.chargeTaxes,
-      taxCode: taxCode,
+      // todo: get from tax code matcher
+      taxCode: "",
       quantity: line.quantity,
       totalAmount: Number(line.totalPrice.amount),
       unitAmount: Number(line.unitPrice.amount),
