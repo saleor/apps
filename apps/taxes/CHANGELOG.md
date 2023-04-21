@@ -1,5 +1,29 @@
 # saleor-app-taxes
 
+## 1.3.0
+
+### Minor Changes
+
+- 57f6d41: Updated Manifest to contain up to date support, privacy, homepage and author fields
+- 84e9ca5: Add `<CountrySelect />` and use it in the `channel-tax-provider-form.ts` to ensure the correct formatting of the country code.
+- 453baf7: Completed the order flow with new webhooks: `order_created` and `order_fulfilled`. In TaxJar, an order will be created on `order_created` with no actions on `order_fulfilled`. In Avatax, a transaction will be created on `order_created` and commited on `order_fulfilled`.
+
+### Patch Changes
+
+- 2c0df91: Added lint:fix script, so `eslint --fix` can be run deliberately
+- e167e72: Update next.js to 13.3.0
+- 74174c4: Updated @saleor/app-sdk to 0.37.3
+- 2e51890: Update next.js to 13.3.0
+- 2e51890: Update @saleor/app-sdk to 0.37.2
+- 2e51890: Use useDashboardNotification hook from shared package, instead of direct AppBridge usage
+- Updated dependencies [2c0df91]
+- Updated dependencies [e167e72]
+- Updated dependencies [74174c4]
+- Updated dependencies [2e51890]
+- Updated dependencies [2e51890]
+- Updated dependencies [2e51890]
+  - @saleor/apps-shared@1.4.0
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # eslint-config-saleor
 
+## 0.4.0
+
+### Minor Changes
+
+- 453baf7: Added new warn rules to eslint-config-saleor: `newline-after-var` and `multiline-comment-style`.
+
+### Patch Changes
+
+- e167e72: Update next.js to 13.3.0
+- 74174c4: Updated @saleor/app-sdk to 0.37.3
+- 2e51890: Update next.js to 13.3.0
+- 2e51890: Update @saleor/app-sdk to 0.37.2
+
 ## 0.3.0
 
 ### Minor Changes
