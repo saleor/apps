@@ -22,7 +22,7 @@ function mapLines(taxBase: TaxBaseFragment): LineItemModel[] {
     amount: line.unitPrice.amount,
     taxIncluded: line.chargeTaxes,
     // todo: get from tax code matcher
-    taxCode: taxLineResolver.getLineTaxCode(line),
+    taxCode: taxLineResolver.getTaxBaseLineTaxCode(line),
     quantity: line.quantity,
   }));
 

@@ -1,10 +1,10 @@
 import { TaxBaseLineFragment } from "../../../generated/graphql";
 
-const getLineDiscount = (
+function getTaxBaseLineDiscount(
   line: TaxBaseLineFragment,
   totalDiscount: number,
   allLinesTotal: number
-) => {
+) {
   if (totalDiscount === 0 || allLinesTotal === 0) {
     return 0;
   }
@@ -15,9 +15,9 @@ const getLineDiscount = (
     return lineTotalAmount;
   }
   return discountAmount;
-};
+}
 
-const getLineTaxCode = (line: TaxBaseLineFragment): string => {
+function getTaxBaseLineTaxCode(line: TaxBaseLineFragment): string {
   if (line.sourceLine.__typename === "OrderLine") {
     return (
       line.sourceLine.variant?.product.metafield ??
@@ -31,9 +31,9 @@ const getLineTaxCode = (line: TaxBaseLineFragment): string => {
       line.sourceLine.productVariant.product.productType.metafield) ??
     ""
   );
-};
+}
 
 export const taxLineResolver = {
-  getLineDiscount,
-  getLineTaxCode,
+  getTaxBaseLineDiscount,
+  getTaxBaseLineTaxCode,
 };

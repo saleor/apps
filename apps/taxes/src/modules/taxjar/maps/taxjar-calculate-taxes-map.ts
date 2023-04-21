@@ -39,8 +39,12 @@ const prepareLinesWithDiscountPayload = (
   const totalDiscount = discountsSum <= allLinesTotal ? discountsSum : allLinesTotal;
 
   return lines.map((line) => {
-    const discountAmount = taxLineResolver.getLineDiscount(line, totalDiscount, allLinesTotal);
-    const taxCode = taxLineResolver.getLineTaxCode(line);
+    const discountAmount = taxLineResolver.getTaxBaseLineDiscount(
+      line,
+      totalDiscount,
+      allLinesTotal
+    );
+    const taxCode = taxLineResolver.getTaxBaseLineTaxCode(line);
 
     return {
       id: line.sourceLine.id,
