@@ -20,9 +20,6 @@ export class WebhookResponse {
 
   success(data?: any) {
     this.logger.debug({ data }, "success called with:");
-    return this.res.status(200).json({
-      status: 200,
-      data,
-    });
+    return this.res.send(data);
   }
 }
