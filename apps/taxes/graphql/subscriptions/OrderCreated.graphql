@@ -1,4 +1,4 @@
-fragment OrderLineFragment on OrderLine {
+fragment OrderLine on OrderLine {
   productSku
   productName
   quantity
@@ -47,7 +47,7 @@ fragment OrderCreatedSubscription on Order {
     }
   }
   lines {
-    ...OrderLineFragment
+    ...OrderLine
   }
 }
 fragment OrderCreatedEventSubscription on Event {
