@@ -2,6 +2,11 @@ import { NextApiResponse } from "next";
 import { Logger } from "pino";
 import { createLogger } from "../../lib/logger";
 
+/*
+ * idea: distinguish between async and sync webhooks
+ * when sync webhooks, require passing the event and enforce the required response format using ctx.buildResponse
+ * when async webhooks, dont require anything
+ */
 export class WebhookResponse {
   private logger: Logger;
   constructor(private res: NextApiResponse) {
