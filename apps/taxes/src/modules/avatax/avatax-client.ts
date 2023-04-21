@@ -6,6 +6,7 @@ import { createLogger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 
 type AvataxSettings = {
   appName: string;
@@ -46,6 +47,10 @@ export type CommitTransactionArgs = {
 
 export type CreateTransactionArgs = {
   model: CreateTransactionModel;
+};
+
+export type ValidateAddressArgs = {
+  address: AvataxAddress;
 };
 
 export class AvataxClient {
@@ -96,5 +101,11 @@ export class AvataxClient {
         error: "Avatax was not able to authenticate with the provided credentials.",
       };
     }
+  }
+
+  async validateAddress({ address }: ValidateAddressArgs) {
+    this.logger.debug({ address }, "validateAddress called with:");
+
+    return this.client.resolveAddress(address);
   }
 }
