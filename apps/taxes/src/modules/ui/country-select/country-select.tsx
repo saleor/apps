@@ -37,7 +37,17 @@ export const CountrySelect = React.forwardRef((p: CountrySelectProps, ref) => {
         }) ?? null
       }
       getOptionLabel={(option) => option.label}
-      renderInput={(params) => <TextField {...params} inputRef={ref} placeholder={"Country"} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          inputRef={ref}
+          placeholder={"Country"}
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: "new-password", // disable autocomplete and autofill
+          }}
+        />
+      )}
     />
   );
 });
