@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 1.3.1
+
+### Patch Changes
+
+- fc06648: CMS visual fixes
+
 ## 1.3.0
 
 ### Minor Changes
