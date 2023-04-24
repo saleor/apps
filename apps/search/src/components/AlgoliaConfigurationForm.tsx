@@ -18,12 +18,12 @@ export const AlgoliaConfigurationForm = () => {
   const [credentialsValidationError, setCredentialsValidationError] = useState(false);
 
   const { handleSubmit, trigger, setValue, control } = useForm<AlgoliaConfigurationFields>({
-    defaultValues: { appId: "", indexNamePrefix: "", searchKey: "", secretKey: "" },
+    defaultValues: { appId: "", indexNamePrefix: "", secretKey: "" },
     resolver: zodResolver(
       z.object({
         appId: z.string().min(3),
         indexNamePrefix: z.string(),
-        searchKey: z.string().min(3),
+
         secretKey: z.string().min(3),
       })
     ),
@@ -37,7 +37,6 @@ export const AlgoliaConfigurationForm = () => {
     queryKey: ["configuration"],
     onSuccess(data) {
       setValue("secretKey", data?.secretKey || "");
-      setValue("searchKey", data?.searchKey || "");
       setValue("appId", data?.appId || "");
       setValue("indexNamePrefix", data?.indexNamePrefix || "");
     },
@@ -74,7 +73,7 @@ export const AlgoliaConfigurationForm = () => {
   const onFormSubmit = handleSubmit(async (conf) => {
     const client = new AlgoliaSearchProvider({
       appId: conf.appId ?? "",
-      apiKey: conf.searchKey ?? "",
+      apiKey: conf.secretKey ?? "",
       indexNamePrefix: conf.indexNamePrefix,
     });
 
@@ -110,22 +109,6 @@ export const AlgoliaConfigurationForm = () => {
                 />
               );
             }}
-          />
-        </Box>
-        <Box marginBottom={8}>
-          <Controller
-            name="searchKey"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                error={fieldState.invalid}
-                required
-                disabled={isFormDisabled}
-                label="Search-Only API Key"
-                helperText={fieldState.error?.message}
-                {...field}
-              />
-            )}
           />
         </Box>
         <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>

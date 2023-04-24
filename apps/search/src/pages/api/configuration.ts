@@ -26,7 +26,6 @@ const sendResponse = async (
     success: statusCode === 200,
     data: {
       secretKey: (await settings.get("secretKey", domain)) || "",
-      searchKey: (await settings.get("searchKey", domain)) || "",
       appId: (await settings.get("appId", domain)) || "",
       indexNamePrefix: (await settings.get("indexNamePrefix", domain)) || "",
     },
@@ -55,13 +54,12 @@ export const handler = async (
     return;
   } else if (req.method === "POST") {
     debug("Updating the configuration");
-    const { appId, searchKey, secretKey, indexNamePrefix } = JSON.parse(
+    const { appId, secretKey, indexNamePrefix } = JSON.parse(
       req.body
     ) as AlgoliaConfigurationFields;
 
     await settings.set([
       { key: "secretKey", value: secretKey || "", domain },
-      { key: "searchKey", value: searchKey || "", domain },
       { key: "appId", value: appId || "", domain },
       { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
     ]);
