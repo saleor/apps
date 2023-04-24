@@ -1,0 +1,28 @@
+import { Box, Text } from "@saleor/macaw-ui/next";
+import { AppSection } from "../../components/AppSection";
+import { AlgoliaConfigurationCard } from "../../components/AlgoliaConfigurationCard";
+import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
+
+export const ConfigurationView = () => {
+  return (
+    <Box>
+      <Text variant={"hero"} size={"medium"} as={"h1"}>
+        Configuration
+      </Text>
+      <Text as="p" marginTop={4} __marginBottom={"100px"}>
+        Configure the App - fill your Algolia settings to allow products indexing
+      </Text>
+      <AppSection
+        heading="Algolia settings"
+        mainContent={<AlgoliaConfigurationCard />}
+        sideContent={<div>Provide Algolia settings. </div>}
+      />
+      <AppSection
+        marginTop={13}
+        heading="Index products"
+        mainContent={<ImportProductsToAlgolia />}
+        sideContent={<div>Provide Algolia settings. </div>}
+      />
+    </Box>
+  );
+};

@@ -1,32 +1,23 @@
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Button, makeStyles } from "@saleor/macaw-ui";
-import { Card, CardActions, CardHeader, TextField } from "@material-ui/core";
+import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+
 import { Controller, useForm } from "react-hook-form";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    margin: theme.spacing(2),
-  },
-  confirmButton: {
-    marginLeft: "auto",
-  },
-  fieldContainer: {
-    marginBottom: theme.spacing(2),
-  },
-}));
+import { Box, Button, Input } from "@saleor/macaw-ui/next";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 export const AlgoliaConfigurationCard = () => {
-  const { appBridge, appBridgeState } = useAppBridge();
+  const { notifyError, notifySuccess } = useDashboardNotification();
+  const fetch = useAuthenticatedFetch();
   const { handleSubmit, setValue, control } = useForm<AlgoliaConfigurationFields>({
     defaultValues: { appId: "", indexNamePrefix: "", searchKey: "", secretKey: "" },
   });
-  const classes = useStyles();
-  const { token, saleorApiUrl } = appBridgeState || {};
 
   const reactQueryClient = useQueryClient();
+  /**
+   * TODO Extract to hook
+   */
   const { isLoading: isQueryLoading } = useQuery({
     queryKey: ["configuration"],
     onSuccess(data) {
@@ -35,18 +26,13 @@ export const AlgoliaConfigurationCard = () => {
       setValue("appId", data?.appId || "");
       setValue("indexNamePrefix", data?.indexNamePrefix || "");
     },
-    queryFn: async () => fetchConfiguration(saleorApiUrl!, token!),
-    enabled: !!token && !!saleorApiUrl,
+    queryFn: async () => fetchConfiguration(fetch),
   });
 
   const { mutate, isLoading: isMutationLoading } = useMutation(
     async (conf: AlgoliaConfigurationFields) => {
       const resp = await fetch("/api/configuration", {
         method: "POST",
-        headers: {
-          "saleor-api-url": saleorApiUrl!,
-          "authorization-bearer": token!,
-        },
         body: JSON.stringify(conf),
       });
 
@@ -62,104 +48,78 @@ export const AlgoliaConfigurationCard = () => {
         reactQueryClient.refetchQueries({
           queryKey: ["configuration"],
         });
-        appBridge?.dispatch({
-          type: "notification",
-          payload: {
-            status: "success",
-            title: "Configuration saved!",
-            actionId: "message-from-app",
-          },
-        });
+        notifySuccess("Configuration saved!");
       },
       onError: async (data: Error) => {
-        appBridge?.dispatch({
-          type: "notification",
-          payload: {
-            status: "error",
-            title: "Could not save the configuration",
-            text: data.message,
-            actionId: "message-from-app",
-          },
-        });
+        notifyError("Could not save the configuration", data.message);
       },
     }
   );
 
   const onFormSubmit = handleSubmit(async (conf) => mutate(conf));
 
-  const isFormDisabled = isMutationLoading || isQueryLoading || !token || !saleorApiUrl;
+  const isFormDisabled = isMutationLoading || isQueryLoading;
 
   return (
-    <Card>
+    <div>
       <form onSubmit={onFormSubmit}>
-        <CardHeader title="Configure Algolia settings"></CardHeader>
-
-        <div className={classes.form}>
+        <Box marginBottom={4}>
           <Controller
             name="appId"
             control={control}
-            render={({ field }) => (
-              <TextField
-                className={classes.fieldContainer}
-                disabled={isFormDisabled}
-                label="Application ID"
-                helperText="Usually 10 characters, e.g. XYZAAABB00"
-                {...field}
-                fullWidth
-              />
-            )}
-          />
-          <Controller
-            name="searchKey"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                className={classes.fieldContainer}
-                disabled={isFormDisabled}
-                label="Search-Only API Key"
-                {...field}
-                fullWidth
-              />
-            )}
-          />
-          <div key="secret" className={classes.fieldContainer}>
-            <Controller
-              name="secretKey"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  helperText="In Algolia dashboard it's a masked field"
+            render={({ field }) => {
+              return (
+                <Input
                   disabled={isFormDisabled}
-                  label="Admin API Key"
+                  label="Application ID"
+                  helperText="Usually 10 characters, e.g. XYZAAABB00"
                   {...field}
-                  fullWidth
                 />
-              )}
-            />
-          </div>
-
+              );
+            }}
+          />
+        </Box>
+        <Controller
+          name="searchKey"
+          control={control}
+          render={({ field }) => (
+            <Input disabled={isFormDisabled} label="Search-Only API Key" {...field} />
+          )}
+        />
+        <div key="secret">
           <Controller
-            name="indexNamePrefix"
+            name="secretKey"
             control={control}
             render={({ field }) => (
-              <TextField
-                className={classes.fieldContainer}
+              <Input
+                helperText="In Algolia dashboard it's a masked field"
                 disabled={isFormDisabled}
-                label="Index name prefix"
-                helperText='Optional prefix, you can add "test" or "staging" to test the app'
+                label="Admin API Key"
                 {...field}
-                fullWidth
               />
             )}
           />
-          <CardActions style={{ padding: "30px 0 0 0" }}>
-            <Button disabled={isFormDisabled} type="submit" variant="primary" fullWidth>
-              {isFormDisabled ? "Loading..." : "Save"}
-            </Button>
-          </CardActions>
         </div>
+
+        <Controller
+          name="indexNamePrefix"
+          control={control}
+          render={({ field }) => (
+            <Input
+              disabled={isFormDisabled}
+              label="Index name prefix"
+              helperText='Optional prefix, you can add "test" or "staging" to test the app'
+              {...field}
+            />
+          )}
+        />
+        <Box marginTop={8} display={"flex"} justifyContent={"flex-end"}>
+          <Button disabled={isFormDisabled} type="submit" variant="primary">
+            {isFormDisabled ? "Loading..." : "Save"}
+          </Button>
+        </Box>
       </form>
-    </Card>
+    </div>
   );
 };
 
