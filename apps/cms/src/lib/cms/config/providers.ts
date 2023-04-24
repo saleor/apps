@@ -121,7 +121,7 @@ export const providersConfig = {
         name: "itemTypeId",
         label: "Item Type ID (number)",
         helpText:
-          'You can find this as Model ID in your DatoCMS product variant model settings, by clicking "Edit model".',
+          "To find your Model ID go into Models -> Your product variant Model -> Edit Model button. The Model ID is in the right corner.",
       },
       {
         name: "baseUrl",
