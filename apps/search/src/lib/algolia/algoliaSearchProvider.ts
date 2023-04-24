@@ -136,6 +136,10 @@ export class AlgoliaSearchProvider implements SearchProvider {
       await this.deleteGroupedByIndex(groupedByIndexToDelete);
     }
   }
+
+  async ping() {
+    return this.#algolia.listIndices().then(() => undefined);
+  }
 }
 
 type GroupedByIndex = Record<string, AlgoliaObject[]>;

@@ -1,6 +1,6 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../../components/AppSection";
-import { AlgoliaConfigurationCard } from "../../components/AlgoliaConfigurationCard";
+import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
 
 export const ConfigurationView = () => {
@@ -14,14 +14,18 @@ export const ConfigurationView = () => {
       </Text>
       <AppSection
         heading="Algolia settings"
-        mainContent={<AlgoliaConfigurationCard />}
-        sideContent={<div>Provide Algolia settings. </div>}
+        mainContent={<AlgoliaConfigurationForm />}
+        sideContent={<Text>Provide Algolia settings. </Text>}
       />
       <AppSection
         marginTop={13}
         heading="Index products"
         mainContent={<ImportProductsToAlgolia />}
-        sideContent={<div>Provide Algolia settings. </div>}
+        sideContent={
+          <Box>
+            <Text>Perform initial index of all products in your Saleor database</Text>
+          </Box>
+        }
       />
     </Box>
   );

@@ -4,14 +4,29 @@ import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
-import { Box, Button, Input } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
 
-export const AlgoliaConfigurationCard = () => {
+export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const fetch = useAuthenticatedFetch();
-  const { handleSubmit, setValue, control } = useForm<AlgoliaConfigurationFields>({
+
+  const [credentialsValidationError, setCredentialsValidationError] = useState(false);
+
+  const { handleSubmit, trigger, setValue, control } = useForm<AlgoliaConfigurationFields>({
     defaultValues: { appId: "", indexNamePrefix: "", searchKey: "", secretKey: "" },
+    resolver: zodResolver(
+      z.object({
+        appId: z.string().min(3),
+        indexNamePrefix: z.string(),
+        searchKey: z.string().min(3),
+        secretKey: z.string().min(3),
+      })
+    ),
   });
 
   const reactQueryClient = useQueryClient();
@@ -56,63 +71,107 @@ export const AlgoliaConfigurationCard = () => {
     }
   );
 
-  const onFormSubmit = handleSubmit(async (conf) => mutate(conf));
+  const onFormSubmit = handleSubmit(async (conf) => {
+    const client = new AlgoliaSearchProvider({
+      appId: conf.appId ?? "",
+      apiKey: conf.searchKey ?? "",
+      indexNamePrefix: conf.indexNamePrefix,
+    });
+
+    try {
+      await client.ping();
+      setCredentialsValidationError(false);
+
+      mutate(conf);
+    } catch (e) {
+      trigger();
+      setCredentialsValidationError(true);
+    }
+  });
 
   const isFormDisabled = isMutationLoading || isQueryLoading;
 
   return (
     <div>
       <form onSubmit={onFormSubmit}>
-        <Box marginBottom={4}>
+        <Box marginBottom={8}>
           <Controller
             name="appId"
             control={control}
-            render={({ field }) => {
+            render={({ field, fieldState }) => {
               return (
                 <Input
                   disabled={isFormDisabled}
+                  required
                   label="Application ID"
-                  helperText="Usually 10 characters, e.g. XYZAAABB00"
+                  error={fieldState.invalid}
+                  helperText={fieldState.error?.message ?? "Usually 10 characters, e.g. XYZAAABB00"}
                   {...field}
                 />
               );
             }}
           />
         </Box>
-        <Controller
-          name="searchKey"
-          control={control}
-          render={({ field }) => (
-            <Input disabled={isFormDisabled} label="Search-Only API Key" {...field} />
-          )}
-        />
-        <div key="secret">
+        <Box marginBottom={8}>
           <Controller
-            name="secretKey"
+            name="searchKey"
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Input
-                helperText="In Algolia dashboard it's a masked field"
+                error={fieldState.invalid}
+                required
                 disabled={isFormDisabled}
-                label="Admin API Key"
+                label="Search-Only API Key"
+                helperText={fieldState.error?.message}
                 {...field}
               />
             )}
           />
-        </div>
+        </Box>
+        <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>
+          <Controller
+            name="secretKey"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Input
+                helperText={fieldState.error?.message ?? "In Algolia dashboard it's a masked field"}
+                disabled={isFormDisabled}
+                required
+                label="Admin API Key"
+                error={fieldState.invalid}
+                {...field}
+              />
+            )}
+          />
+        </Box>
 
         <Controller
           name="indexNamePrefix"
           control={control}
-          render={({ field }) => (
-            <Input
-              disabled={isFormDisabled}
-              label="Index name prefix"
-              helperText='Optional prefix, you can add "test" or "staging" to test the app'
-              {...field}
-            />
-          )}
+          render={({ field, fieldState }) => {
+            return (
+              <Input
+                disabled={isFormDisabled}
+                error={fieldState.invalid}
+                label="Index name prefix"
+                helperText={
+                  fieldState.error?.message ??
+                  'Optional prefix, you can add "test" or "staging" to test the app'
+                }
+                {...field}
+              />
+            );
+          }}
         />
+
+        {credentialsValidationError && (
+          <Box marginTop={8}>
+            <Text color={"textCriticalDefault"}>
+              Could not connect to Algolia. Please verify your credentials
+            </Text>
+          </Box>
+        )}
+
         <Box marginTop={8} display={"flex"} justifyContent={"flex-end"}>
           <Button disabled={isFormDisabled} type="submit" variant="primary">
             {isFormDisabled ? "Loading..." : "Save"}
@@ -122,7 +181,3 @@ export const AlgoliaConfigurationCard = () => {
     </div>
   );
 };
-
-/**
- * Export default for Next.dynamic
- */

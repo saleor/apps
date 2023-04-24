@@ -9,12 +9,11 @@ export const fetchConfiguration = async (fetch: typeof window.fetch) => {
   return data.data;
 };
 
-export const useConfiguration = (saleorApiUrl?: string | undefined, token?: string | undefined) => {
+export const useConfiguration = () => {
   const fetch = useAuthenticatedFetch();
 
   return useQuery({
     queryKey: ["configuration"],
     queryFn: () => fetchConfiguration(fetch),
-    enabled: !!token && !!saleorApiUrl,
   });
 };
