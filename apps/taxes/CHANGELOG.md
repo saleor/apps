@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.3.1
+
+### Patch Changes
+
+- 56b27b2: Fix invalid response format in `order-calculate-taxes`.
+
 ## 1.3.0
 
 ### Minor Changes
