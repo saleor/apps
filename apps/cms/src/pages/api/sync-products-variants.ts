@@ -38,6 +38,7 @@ const handler: NextProtectedApiHandler = async (
   const logger = pinoLogger.child({
     endpoint: "sync-products-variants",
   });
+
   logger.debug("Called endpoint sync-products-variants");
 
   const client = createClient(authData.saleorApiUrl, async () => ({
@@ -95,8 +96,10 @@ const handler: NextProtectedApiHandler = async (
   logger.debug({ provider }, "The provider instance settings provider.");
 
   if (!validation.success) {
-    // todo: use instead: throw new Error(validation.error.message);
-    // continue with other provider instances
+    /*
+     * todo: use instead: throw new Error(validation.error.message);
+     * continue with other provider instances
+     */
     logger.error(
       { error: validation.error.message },
       "The provider instance settings validation failed."
@@ -104,6 +107,7 @@ const handler: NextProtectedApiHandler = async (
 
     return res.status(400).json({
       success: false,
+      error: validation.error.message,
     });
   }
 
@@ -129,6 +133,7 @@ const handler: NextProtectedApiHandler = async (
     const isAvailable = variantAvailableChannels?.some((channel) =>
       enabledChannelsForSelectedProviderInstance.includes(channel)
     );
+
     return !!isAvailable;
   };
 
