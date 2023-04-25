@@ -1,11 +1,8 @@
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Button } from "@saleor/macaw-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
-import { WarningOutlined, WarningRounded } from "@material-ui/icons";
-import { Typography } from "@material-ui/core";
 
 const BATCH_SIZE = 100;
 
@@ -16,11 +13,7 @@ export const ImportProductsToAlgolia = () => {
 
   const products = useQueryAllProducts(!started);
 
-  const { appBridgeState } = useAppBridge();
-  const algoliaConfiguration = useConfiguration(
-    appBridgeState?.saleorApiUrl,
-    appBridgeState?.token
-  );
+  const algoliaConfiguration = useConfiguration();
 
   const searchProvider = useMemo(() => {
     if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
@@ -59,26 +52,31 @@ export const ImportProductsToAlgolia = () => {
   }, [searchProvider, currentProductIndex, isAlgoliaImporting, products]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingBottom: 32,
-        cursor: started ? "wait" : "auto",
-      }}
-    >
+    <Box __cursor={started ? "wait" : "auto"}>
       {searchProvider ? (
-        <Button disabled={started || !searchProvider} onClick={importProducts} fullWidth>
-          Start importing products and variants to Algolia
-        </Button>
+        <Box>
+          <Text variant={"heading"} as={"p"} marginBottom={4}>
+            Importing products & variants
+          </Text>
+          <Text as={"p"}>
+            Trigger initial indexing for products catalogue. It can take few minutes.{" "}
+          </Text>
+          <Text marginBottom={8} variant={"bodyStrong"}>
+            Do not close the app - its running client-side
+          </Text>
+          <Box display={"flex"} justifyContent={"flex-end"}>
+            <Button disabled={started || !searchProvider} onClick={importProducts}>
+              Start importing
+            </Button>
+          </Box>
+        </Box>
       ) : (
-        <div>
-          <Typography align="center">
-            <WarningRounded />
-          </Typography>
-          <Typography>Ensure Algolia is configured</Typography>
-        </div>
+        <Box>
+          <Text variant={"heading"} as={"p"} color={"textCriticalDefault"} marginBottom={4}>
+            App not configured
+          </Text>
+          <Text>Configure Algolia first</Text>
+        </Box>
       )}
 
       {started && (
@@ -103,7 +101,7 @@ export const ImportProductsToAlgolia = () => {
           />
         </div>
       )}
-    </div>
+    </Box>
   );
 };
 

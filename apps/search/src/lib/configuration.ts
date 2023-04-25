@@ -1,21 +1,23 @@
 import { useQuery } from "react-query";
-import { AlgoliaConfigurationFields } from "./algolia/types";
+import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+import { AppConfigurationFields } from "../domain/configuration";
 
-export const fetchConfiguration = async (saleorApiUrl: string, token: string) => {
-  const res = await fetch("/api/configuration", {
-    headers: {
-      "authorization-bearer": token,
-      "saleor-api-url": saleorApiUrl,
-    },
-  });
-  const data = (await res.json()) as { data?: AlgoliaConfigurationFields };
+export const fetchConfiguration = async (fetch: typeof window.fetch) => {
+  try {
+    const res = await fetch("/api/configuration");
+    const data = (await res.json()) as { data?: AppConfigurationFields };
 
-  return data.data;
+    return data.data;
+  } catch (e) {
+    throw e;
+  }
 };
 
-export const useConfiguration = (saleorApiUrl?: string | undefined, token?: string | undefined) =>
-  useQuery({
+export const useConfiguration = () => {
+  const fetch = useAuthenticatedFetch();
+
+  return useQuery({
     queryKey: ["configuration"],
-    queryFn: () => fetchConfiguration(saleorApiUrl!, token!),
-    enabled: !!token && !!saleorApiUrl,
+    queryFn: () => fetchConfiguration(fetch),
   });
+};

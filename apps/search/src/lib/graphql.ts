@@ -5,7 +5,6 @@ import {
   createClient as urqlCreateClient,
   dedupExchange,
   fetchExchange,
-  ssrExchange,
 } from "urql";
 
 interface IAuthState {

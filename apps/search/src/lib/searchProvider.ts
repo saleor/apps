@@ -1,8 +1,6 @@
 import {
-  ProductWebhookPayloadFragment,
-  Product,
   ProductVariantWebhookPayloadFragment,
-  ProductVariant,
+  ProductWebhookPayloadFragment,
 } from "../../generated/graphql";
 
 export interface SearchProvider {
