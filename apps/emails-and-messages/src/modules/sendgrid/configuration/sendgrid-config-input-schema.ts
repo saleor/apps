@@ -20,10 +20,15 @@ export const sendgridConfigurationBaseObjectSchema = z.object({
   }),
 });
 
-export const sendgridCreateConfigurationSchema = sendgridConfigurationBaseObjectSchema.omit({
-  senderEmail: true,
-  senderName: true,
+export const sendgridCreateConfigurationSchema = sendgridConfigurationBaseObjectSchema.pick({
+  configurationName: true,
+  apiKey: true,
 });
+
+export type SendgridCreateConfigurationSchemaType = z.infer<
+  typeof sendgridCreateConfigurationSchema
+>;
+
 export const sendgridUpdateOrCreateConfigurationSchema =
   sendgridConfigurationBaseObjectSchema.merge(
     z.object({
@@ -53,3 +58,10 @@ export const sendgridGetEventConfigurationInputSchema = z.object({
   configurationId: z.string(),
   eventType: z.enum(messageEventTypes),
 });
+
+export const sendgridUpdateBasicInformationSchema = sendgridConfigurationBaseObjectSchema
+  .pick({
+    configurationName: true,
+    active: true,
+  })
+  .merge(z.object({ id: z.string() }));

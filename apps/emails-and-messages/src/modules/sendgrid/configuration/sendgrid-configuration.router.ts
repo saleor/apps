@@ -5,6 +5,7 @@ import {
   sendgridGetConfigurationInputSchema,
   sendgridGetConfigurationsInputSchema,
   sendgridGetEventConfigurationInputSchema,
+  sendgridUpdateBasicInformationSchema,
   sendgridUpdateEventConfigurationInputSchema,
   sendgridUpdateOrCreateConfigurationSchema,
 } from "./sendgrid-config-input-schema";
@@ -154,6 +155,24 @@ export const sendgridConfigurationRouter = router({
         template: input.template,
       };
       await ctx.configurationService.updateConfiguration(configuration);
+      return configuration;
+    }),
+  updateBasicInformation: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateBasicInformationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
       return configuration;
     }),
 });
