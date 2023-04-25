@@ -40,8 +40,6 @@ export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<M
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
 
-  console.log(error);
-
   if (error) {
     return [];
   }
