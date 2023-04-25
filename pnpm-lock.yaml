@@ -101,8 +101,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       zod:
         specifier: ^3.19.1
         version: 3.20.2
@@ -148,7 +148,7 @@ importers:
         version: 8.3.4
       '@vitejs/plugin-react':
         specifier: ^3.1.0
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       eslint:
         specifier: 8.25.0
         version: 8.25.0
@@ -205,7 +205,7 @@ importers:
         version: 1.0.0(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: ^3.0.1
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -249,8 +249,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -347,7 +347,7 @@ importers:
         version: 1.0.0(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: ^3.1.0
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -385,8 +385,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -501,7 +501,7 @@ importers:
         version: 1.0.0(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: ^3.0.1
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -560,8 +560,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -776,7 +776,7 @@ importers:
         version: 7.3.13
       '@vitejs/plugin-react':
         specifier: ^3.0.0
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       '@vitest/coverage-c8':
         specifier: ^0.28.4
         version: 0.28.4(jsdom@20.0.3)
@@ -796,8 +796,8 @@ importers:
         specifier: 4.9.5
         version: 4.9.5
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -855,6 +855,12 @@ importers:
       urql:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
+      vite:
+        specifier: 4.3.1
+        version: 4.3.1(@types/node@18.0.1)
+      vitest:
+        specifier: 0.30.1
+        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -945,7 +951,7 @@ importers:
         version: 1.0.0(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: ^3.0.1
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -974,8 +980,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -1084,7 +1090,7 @@ importers:
         version: 1.0.0(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: ^3.0.1
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -1131,8 +1137,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -1393,6 +1399,12 @@ importers:
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
+      vite:
+        specifier: 4.3.1
+        version: 4.3.1(@types/node@18.13.0)
+      vitest:
+        specifier: 0.30.1
+        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -1545,8 +1557,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
-        specifier: ^4.2.1
-        version: 4.2.1(@types/node@18.13.0)
+        specifier: ^4.3.1
+        version: 4.3.1(@types/node@18.13.0)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1(jsdom@20.0.3)
@@ -1598,7 +1610,7 @@ importers:
         version: 18.0.10
       '@vitejs/plugin-react':
         specifier: ^3.1.0
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.1)
       eslint:
         specifier: 8.25.0
         version: 8.25.0
@@ -1644,12 +1656,25 @@ importers:
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
+      vite:
+        specifier: 4.3.1
+        version: 4.3.1(@types/node@18.0.1)
+      vitest:
+        specifier: 0.30.1
+        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       next:
         specifier: ^13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
 
   packages/shared:
+    dependencies:
+      vite:
+        specifier: 4.3.1
+        version: 4.3.1(@types/node@18.0.1)
+      vitest:
+        specifier: 0.30.1
+        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       '@material-ui/core':
         specifier: ^4.12.4
@@ -6754,7 +6779,6 @@ packages:
 
   /@types/node@18.0.1:
     resolution: {integrity: sha512-CmR8+Tsy95hhwtZBKJBs0/FFq4XX7sDZHlGGf+0q+BRZfMbOTkzkj0AFAuTyXbObDIoanaBBW0+KEW+m3N16Wg==}
-    dev: true
 
   /@types/node@18.13.0:
     resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
@@ -7206,7 +7230,7 @@ packages:
     resolution: {integrity: sha512-PZAcHROlgtCUGI2y0JntdNwvPwCNyeVnkQu6KTYKdmxBbK3w72XJUmLFYapfaFfgami4I9CTLnrJTPdtmS3gpw==}
     dev: false
 
-  /@vitejs/plugin-react@3.1.0(vite@4.2.1):
+  /@vitejs/plugin-react@3.1.0(vite@4.3.1):
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -7217,7 +7241,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.20.12)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.2.1(@types/node@18.13.0)
+      vite: 4.3.1(@types/node@18.13.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -16460,8 +16484,8 @@ packages:
       - supports-color
       - terser
 
-  /vite@4.2.1(@types/node@18.13.0):
-    resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
+  /vite@4.3.1(@types/node@18.0.1):
+    resolution: {integrity: sha512-EPmfPLAI79Z/RofuMvkIS0Yr091T2ReUoXQqc5ppBX/sjFRhHKiPPF/R46cTdoci/XgeQpB23diiJxq5w30vdg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -16485,13 +16509,13 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.13.0
+      '@types/node': 18.0.1
       esbuild: 0.17.17
       postcss: 8.4.21
-      resolve: 1.22.1
       rollup: 3.20.5
     optionalDependencies:
       fsevents: 2.3.2
+    dev: false
 
   /vite@4.3.1(@types/node@18.13.0):
     resolution: {integrity: sha512-EPmfPLAI79Z/RofuMvkIS0Yr091T2ReUoXQqc5ppBX/sjFRhHKiPPF/R46cTdoci/XgeQpB23diiJxq5w30vdg==}
