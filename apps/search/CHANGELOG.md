@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.7.0
+
+### Minor Changes
+
+- fc7a70f: Redesigned app to Macaw 2.0. Removed legacy code and unused libraries. Introduced Pino logger and Vitest. Bumped Macaw to 0.8.0 pre-release
+
 ## 1.6.0
 
 ### Minor Changes
