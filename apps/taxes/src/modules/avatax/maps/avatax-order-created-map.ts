@@ -21,6 +21,7 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
     taxCode: "",
     quantity: line.quantity,
     description: line.productName,
+    itemCode: line.productSku ?? "",
   }));
 
   if (order.shippingPrice.net.amount !== 0) {
