@@ -85,5 +85,6 @@ const mapResponse = (response: TransactionModel): CreateOrderResponse => {
 export const avataxOrderCreatedMaps = {
   mapPayload,
   mapResponse,
+  mapLines,
   shippingItemCode: SHIPPING_ITEM_CODE,
 };

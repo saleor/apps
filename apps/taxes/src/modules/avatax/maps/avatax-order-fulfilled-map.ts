@@ -16,10 +16,12 @@ function getTransactionCodeFromMetadata(
   return transactionCode.value;
 }
 
-const mapPayload = (
-  order: OrderFulfilledSubscriptionFragment,
-  config: AvataxConfig
-): CommitTransactionArgs => {
+export type CommitTransactionMapPayloadArgs = {
+  order: OrderFulfilledSubscriptionFragment;
+  config: AvataxConfig;
+};
+
+const mapPayload = ({ order, config }: CommitTransactionMapPayloadArgs): CommitTransactionArgs => {
   const transactionCode = getTransactionCodeFromMetadata(order.privateMetadata);
 
   return {
@@ -34,4 +36,6 @@ const mapPayload = (
 
 export const avataxOrderFulfilledMaps = {
   mapPayload,
+  getTransactionCodeFromMetadata,
+  providerOrderIdKey: PROVIDER_ORDER_ID_KEY,
 };

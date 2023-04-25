@@ -70,7 +70,7 @@ const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
       },
       {
         productSku: "328223580",
-        productName: "Monospace Tee",
+        productName: "Polyspace Tee",
         quantity: 1,
         unitPrice: {
           net: {
@@ -106,24 +106,45 @@ const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
   },
 };
 
-describe.skip("avataxOrderCreatedMaps", () => {
+describe("avataxOrderCreatedMaps", () => {
   describe.todo("mapResponse", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");
     it.todo("rounding of numbers");
   });
-  describe.todo("mapPayload", () => {
-    it("adds shipping as a separate line", () => {
-      const result = avataxOrderCreatedMaps.mapPayload(MOCKED_ORDER);
-
-      expect(result.model.lines).toContain({
-        amount: 48.33,
-        itemCode: avataxOrderCreatedMaps.shippingItemCode,
-        quantity: 1,
-      });
-    });
+  describe("mapPayload", () => {
     it.todo("calculation of fields");
     it.todo("formatting the fields");
     it.todo("rounding of numbers");
+  });
+  describe("mapLines", () => {
+    const lines = avataxOrderCreatedMaps.mapLines(MOCKED_ORDER.order);
+
+    it("includes shipping as a line", () => {
+      expect(lines).toContainEqual({
+        itemCode: avataxOrderCreatedMaps.shippingItemCode,
+        quantity: 1,
+        amount: 48.33,
+      });
+    });
+
+    it("includes products as lines", () => {
+      const [first, second] = lines;
+
+      expect(first).toEqual({
+        itemCode: "328223581",
+        description: "Monospace Tee",
+        quantity: 1,
+        amount: 90,
+        taxCode: "",
+      });
+      expect(second).toEqual({
+        taxCode: "",
+        itemCode: "328223580",
+        description: "Polyspace Tee",
+        quantity: 1,
+        amount: 45,
+      });
+    });
   });
 });
