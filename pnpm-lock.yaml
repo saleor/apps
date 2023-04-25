@@ -1656,25 +1656,12 @@ importers:
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
-      vite:
-        specifier: 4.3.1
-        version: 4.3.1(@types/node@18.0.1)
-      vitest:
-        specifier: 0.30.1
-        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       next:
         specifier: ^13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
 
   packages/shared:
-    dependencies:
-      vite:
-        specifier: 4.3.1
-        version: 4.3.1(@types/node@18.0.1)
-      vitest:
-        specifier: 0.30.1
-        version: 0.30.1(jsdom@20.0.3)
     devDependencies:
       '@material-ui/core':
         specifier: ^4.12.4
