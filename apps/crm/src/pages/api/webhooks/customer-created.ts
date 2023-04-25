@@ -18,7 +18,8 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayl
   query: CustomerCreatedDocument,
 });
 
-const handler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
+// todo - fetch metadata with event
+export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
   req,
   res,
   context
@@ -62,7 +63,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default customerCreatedWebhook.createHandler(handler);
+export default customerCreatedWebhook.createHandler(customerCreatedHandler);
 
 export const config = {
   api: {
