@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
-import { AlgoliaConfigurationFields } from "./algolia/types";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+import { AppConfigurationFields } from "../domain/configuration";
 
 export const fetchConfiguration = async (fetch: typeof window.fetch) => {
   try {
     const res = await fetch("/api/configuration");
-    const data = (await res.json()) as { data?: AlgoliaConfigurationFields };
+    const data = (await res.json()) as { data?: AppConfigurationFields };
 
     return data.data;
   } catch (e) {

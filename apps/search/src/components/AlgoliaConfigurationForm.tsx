@@ -2,20 +2,13 @@ import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
 import { Box, Button, Divider, Input, Text } from "@saleor/macaw-ui/next";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useState } from "react";
-
-const formSchema = z.object({
-  appId: z.string().min(3),
-  indexNamePrefix: z.string().optional(),
-  secretKey: z.string().min(3),
-});
+import { AppConfigurationFields, AppConfigurationSchema } from "../domain/configuration";
 
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -23,10 +16,10 @@ export const AlgoliaConfigurationForm = () => {
 
   const [credentialsValidationError, setCredentialsValidationError] = useState(false);
 
-  const { handleSubmit, trigger, setValue, control } = useForm<AlgoliaConfigurationFields>({
+  const { handleSubmit, trigger, setValue, control } = useForm<AppConfigurationFields>({
     defaultValues: { appId: "", indexNamePrefix: "", secretKey: "" },
     // @ts-ignore - todo - some strange TS error happens here
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(AppConfigurationSchema),
   });
 
   const reactQueryClient = useQueryClient();
@@ -44,14 +37,14 @@ export const AlgoliaConfigurationForm = () => {
   });
 
   const { mutate, isLoading: isMutationLoading } = useMutation(
-    async (conf: AlgoliaConfigurationFields) => {
+    async (conf: AppConfigurationFields) => {
       const resp = await fetch("/api/configuration", {
         method: "POST",
         body: JSON.stringify(conf),
       });
 
       if (resp.status >= 200 && resp.status < 300) {
-        const data = (await resp.json()) as { data?: AlgoliaConfigurationFields };
+        const data = (await resp.json()) as { data?: AppConfigurationFields };
 
         return data.data;
       }
