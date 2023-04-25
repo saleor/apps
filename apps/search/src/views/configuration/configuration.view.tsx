@@ -18,6 +18,7 @@ export const ConfigurationView = () => {
         sideContent={<Text>Provide Algolia settings. </Text>}
       />
       <AppSection
+        includePadding
         marginTop={13}
         heading="Index products"
         mainContent={<ImportProductsToAlgolia />}

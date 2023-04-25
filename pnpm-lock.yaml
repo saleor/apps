@@ -1213,8 +1213,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.73
-        version: 0.8.0-pre.73(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.75
+        version: 0.8.0-pre.75(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.46.0
         version: 7.46.0(next@13.3.0)(react@18.2.0)
@@ -5292,8 +5292,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@saleor/macaw-ui@0.8.0-pre.73(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-7+bFDATTV8ZjX3dpU20z5QMUMSZHoNgidLWEzUBkHWk6EgiDf+V5Mn2t8Eexd34uLOIKCQ0j4f/mVG+slRsj/w==}
+  /@saleor/macaw-ui@0.8.0-pre.75(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-YarpphAYGwJfQsVQ8+PJCTohQSFPUz6uGgNfZEYB/3cm06x3aNdiZrFnF6tJe9Ev3Fl558i4SlC3+AbWWrhj/g==}
     engines: {node: '>=16 <19', pnpm: '>=8'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

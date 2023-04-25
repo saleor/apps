@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, Text, Divider } from "@saleor/macaw-ui/next";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -91,76 +91,84 @@ export const AlgoliaConfigurationForm = () => {
   const isFormDisabled = isMutationLoading || isQueryLoading;
 
   return (
-    <div>
+    <Box>
       <form onSubmit={onFormSubmit}>
-        <Box marginBottom={8}>
+        <Box padding={8}>
+          <Box marginBottom={8}>
+            <Controller
+              name="appId"
+              control={control}
+              render={({ field, fieldState }) => {
+                return (
+                  <Input
+                    disabled={isFormDisabled}
+                    required
+                    label="Application ID"
+                    error={fieldState.invalid}
+                    helperText={
+                      fieldState.error?.message ?? "Usually 10 characters, e.g. XYZAAABB00"
+                    }
+                    {...field}
+                  />
+                );
+              }}
+            />
+          </Box>
+          <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>
+            <Controller
+              name="secretKey"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Input
+                  helperText={
+                    fieldState.error?.message ?? "In Algolia dashboard it's a masked field"
+                  }
+                  disabled={isFormDisabled}
+                  required
+                  label="Admin API Key"
+                  error={fieldState.invalid}
+                  {...field}
+                />
+              )}
+            />
+          </Box>
+
           <Controller
-            name="appId"
+            name="indexNamePrefix"
             control={control}
             render={({ field, fieldState }) => {
               return (
                 <Input
                   disabled={isFormDisabled}
-                  required
-                  label="Application ID"
                   error={fieldState.invalid}
-                  helperText={fieldState.error?.message ?? "Usually 10 characters, e.g. XYZAAABB00"}
+                  label="Index name prefix"
+                  helperText={
+                    fieldState.error?.message ??
+                    'Optional prefix, you can add "test" or "staging" to test the app'
+                  }
                   {...field}
                 />
               );
             }}
           />
-        </Box>
-        <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>
-          <Controller
-            name="secretKey"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                helperText={fieldState.error?.message ?? "In Algolia dashboard it's a masked field"}
-                disabled={isFormDisabled}
-                required
-                label="Admin API Key"
-                error={fieldState.invalid}
-                {...field}
-              />
-            )}
-          />
+
+          {credentialsValidationError && (
+            <Box marginTop={8}>
+              <Text color={"textCriticalDefault"}>
+                Could not connect to Algolia. Please verify your credentials
+              </Text>
+            </Box>
+          )}
         </Box>
 
-        <Controller
-          name="indexNamePrefix"
-          control={control}
-          render={({ field, fieldState }) => {
-            return (
-              <Input
-                disabled={isFormDisabled}
-                error={fieldState.invalid}
-                label="Index name prefix"
-                helperText={
-                  fieldState.error?.message ??
-                  'Optional prefix, you can add "test" or "staging" to test the app'
-                }
-                {...field}
-              />
-            );
-          }}
-        />
+        <Divider margin={0} marginTop={8} />
 
-        {credentialsValidationError && (
-          <Box marginTop={8}>
-            <Text color={"textCriticalDefault"}>
-              Could not connect to Algolia. Please verify your credentials
-            </Text>
-          </Box>
-        )}
-
-        <Box marginTop={8} display={"flex"} justifyContent={"flex-end"}>
+        <Box paddingX={8} paddingY={6} display={"flex"} justifyContent={"flex-end"}>
           <Button disabled={isFormDisabled} type="submit" variant="primary">
             {isFormDisabled ? "Loading..." : "Save"}
           </Button>
         </Box>
       </form>
-    </div>
+    </Box>
   );
 };
