@@ -136,6 +136,10 @@ export class AlgoliaSearchProvider implements SearchProvider {
       await this.deleteGroupedByIndex(groupedByIndexToDelete);
     }
   }
+
+  async ping() {
+    return this.#algolia.listIndices().then(() => undefined);
+  }
 }
 
 type GroupedByIndex = Record<string, AlgoliaObject[]>;
@@ -190,9 +194,11 @@ const groupProductsByIndexName = (
     .map((p) => groupVariantByIndexName(p, { visibleInListings, indexNamePrefix }))
     .filter(isNotNil)
     .flatMap((x) => Object.entries(x));
+
   const groupedByIndex = batchesAndIndices.reduce((acc, [indexName, objects]) => {
     acc[indexName] = acc[indexName] ?? [];
     acc[indexName].push(...objects);
+
     return acc;
   }, {} as GroupedByIndex);
 

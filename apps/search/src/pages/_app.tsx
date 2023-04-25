@@ -1,26 +1,14 @@
 import "../styles/globals.css";
-
-import { Theme } from "@material-ui/core/styles";
+import "@saleor/macaw-ui/next/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import {
-  dark,
-  light,
-  SaleorThemeColors,
-  ThemeProvider as MacawUIThemeProvider,
-} from "@saleor/macaw-ui";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from "react";
 import { AppProps } from "next/app";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
-import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
-
-const themeOverrides: Partial<Theme> = {
-  /**
-   * You can override MacawUI theme here
-   */
-};
+import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { NoSSRWrapper } from "@saleor/apps-shared";
 
 /**
  * Ensure instance is a singleton.
@@ -35,38 +23,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
-type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;
-
-/**
- * Temporary override of colors, to match new dashboard palette.
- * Long term this will be replaced with Macaw UI 2.x with up to date design tokens
- */
-const palettes: PalettesOverride = {
-  light: {
-    ...light,
-    background: {
-      default: "#fff",
-      paper: "#fff",
-    },
-  },
-  dark: {
-    ...dark,
-    background: {
-      default: "hsla(211, 42%, 14%, 1)",
-      paper: "hsla(211, 42%, 14%, 1)",
-    },
-  },
-};
-
-/**
- * That's a hack required by Macaw-UI incompatibility with React@18
- *
- * TODO: use from packages/shared
- */
-const ThemeProvider = MacawUIThemeProvider as React.FC<
-  PropsWithChildren<{ overrides?: Partial<Theme>; ssr: boolean; palettes: PalettesOverride }>
->;
 
 function NextApp({ Component, pageProps }: AppProps) {
   /**
@@ -84,11 +40,13 @@ function NextApp({ Component, pageProps }: AppProps) {
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <GraphQLProvider>
-          <ThemeProvider palettes={palettes} overrides={themeOverrides} ssr>
+          <ThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
             <QueryClientProvider client={queryClient}>
-              <Component {...pageProps} />
+              <Box padding={13}>
+                <Component {...pageProps} />
+              </Box>
             </QueryClientProvider>
           </ThemeProvider>
         </GraphQLProvider>
