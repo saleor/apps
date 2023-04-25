@@ -26,13 +26,17 @@ const MetadataSchemaV1 = z.object({
   config: ConfigV1,
 });
 
+export interface IMailchimpConfigSettingsManagerV1 {
+  getConfig(): Promise<z.infer<typeof ConfigV1> | null>;
+}
+
 /**
  * V1 config. In case of changing config, create another instance and perform migration
  *
  * todo save domain?
  * todo add test
  */
-export class MailchimpConfigSettingsManagerV1 {
+export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSettingsManagerV1 {
   private settingsManager: SettingsManager;
   private readonly metadataKey = "mailchimp_config_v1";
   private logger = createLogger({
@@ -71,7 +75,7 @@ export class MailchimpConfigSettingsManagerV1 {
   }
 
   async getConfig(): Promise<z.infer<typeof ConfigV1> | null> {
-    this.logger.debug(`Will fetched metadata key: ${this.metadataKey}`);
+    this.logger.debug(`Will fetch metadata key: ${this.metadataKey}`);
     const rawMetadata = await this.settingsManager
       .get(this.metadataKey)
       .then(this.parseEmptyResponse);
@@ -112,3 +116,4 @@ export class MailchimpConfigSettingsManagerV1 {
 
 export const MailchimpConfigSettingsManager = MailchimpConfigSettingsManagerV1;
 export const MailchimpConfig = ConfigV1;
+export type MailchimpConfigType = z.infer<typeof MailchimpConfig>;
