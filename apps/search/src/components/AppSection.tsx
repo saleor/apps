@@ -6,13 +6,13 @@ export const AppSection = ({
   heading,
   sideContent,
   mainContent,
-  includePadding,
+  includePadding = false,
   ...props
 }: PropsWithBox<{
   heading: string;
   sideContent?: ReactNode;
   mainContent: ReactNode;
-  includePadding: boolean;
+  includePadding?: boolean;
 }>) => {
   return (
     <Box as="section" __gridTemplateColumns={"400px auto"} display={"grid"} gap={13} {...props}>

@@ -1,4 +1,3 @@
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";

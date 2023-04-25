@@ -1,10 +1,10 @@
-import { useAppBridge, useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AlgoliaConfigurationFields } from "../lib/algolia/types";
 import { fetchConfiguration } from "../lib/configuration";
-import { Box, Button, Input, Text, Divider } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Input, Text } from "@saleor/macaw-ui/next";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,7 @@ export const AlgoliaConfigurationForm = () => {
 
   const { handleSubmit, trigger, setValue, control } = useForm<AlgoliaConfigurationFields>({
     defaultValues: { appId: "", indexNamePrefix: "", secretKey: "" },
+    // @ts-ignore - todo - some strange TS error happens here
     resolver: zodResolver(formSchema),
   });
 

@@ -1,6 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useTheme } from "@saleor/macaw-ui/next";
-import { memo, useEffect } from "react";
+import { useEffect } from "react";
 
 // todo move to shared
 export function ThemeSynchronizer() {
