@@ -4,10 +4,10 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
-import { AlgoliaConfigurationFields } from "../../lib/algolia/types";
 
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 import { createLogger } from "../../lib/logger";
+import { AppConfigurationFields } from "../../domain/configuration";
 
 const logger = createLogger({
   handler: "api/configuration",
@@ -15,7 +15,7 @@ const logger = createLogger({
 
 export interface SettingsApiResponse {
   success: boolean;
-  data?: AlgoliaConfigurationFields;
+  data?: AppConfigurationFields;
 }
 
 const sendResponse = async (
@@ -63,9 +63,7 @@ export const handler = async (
   } else if (req.method === "POST") {
     logger.debug("Updating the configuration");
 
-    const { appId, secretKey, indexNamePrefix } = JSON.parse(
-      req.body
-    ) as AlgoliaConfigurationFields;
+    const { appId, secretKey, indexNamePrefix } = JSON.parse(req.body) as AppConfigurationFields;
 
     await settings.set([
       { key: "secretKey", value: secretKey || "", domain },
