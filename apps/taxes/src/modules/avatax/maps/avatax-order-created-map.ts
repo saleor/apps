@@ -20,6 +20,7 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,
+    description: line.productName,
   }));
 
   if (order.shippingPrice.net.amount !== 0) {
