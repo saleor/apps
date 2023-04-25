@@ -56,7 +56,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const args = avataxOrderFulfilledMaps.mapPayload(order, this.config);
+    const args = avataxOrderFulfilledMaps.mapPayload({ order, config: this.config });
 
     this.logger.debug({ args }, "will call commitTransaction with");
     const result = await this.client.commitTransaction(args);

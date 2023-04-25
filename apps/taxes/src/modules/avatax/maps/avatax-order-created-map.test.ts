@@ -84,6 +84,20 @@ const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
         },
       },
     ],
+    discounts: [
+      {
+        amount: {
+          amount: 10,
+        },
+        id: "RGlzY291bnREaXNjb3VudDox",
+      },
+      {
+        amount: {
+          amount: 21.45,
+        },
+        id: "RGlzY291bnREaXNjb3VudDoy",
+      },
+    ],
   },
   channel: {
     providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
@@ -113,6 +127,14 @@ describe("avataxOrderCreatedMaps", () => {
     it.todo("rounding of numbers");
   });
   describe("mapPayload", () => {
+    it("returns lines with discounted: true when there are discounts", () => {
+      const payload = avataxOrderCreatedMaps.mapPayload(MOCKED_ORDER);
+
+      const linesWithoutShipping = payload.model.lines.slice(0, -1);
+      const check = linesWithoutShipping.every((line) => line.discounted === true);
+
+      expect(check).toBeTruthy();
+    });
     it.todo("calculation of fields");
     it.todo("formatting the fields");
     it.todo("rounding of numbers");
@@ -120,9 +142,13 @@ describe("avataxOrderCreatedMaps", () => {
   describe("mapLines", () => {
     const lines = avataxOrderCreatedMaps.mapLines(MOCKED_ORDER.order);
 
+    it("returns the correct number of lines", () => {
+      expect(lines).toHaveLength(3);
+    });
+
     it("includes shipping as a line", () => {
       expect(lines).toContainEqual({
-        itemCode: avataxOrderCreatedMaps.shippingItemCode,
+        itemCode: avataxOrderCreatedMaps.consts.shippingItemCode,
         quantity: 1,
         amount: 48.33,
       });
@@ -131,20 +157,31 @@ describe("avataxOrderCreatedMaps", () => {
     it("includes products as lines", () => {
       const [first, second] = lines;
 
-      expect(first).toEqual({
+      expect(first).toContain({
         itemCode: "328223581",
         description: "Monospace Tee",
         quantity: 1,
         amount: 90,
-        taxCode: "",
       });
-      expect(second).toEqual({
-        taxCode: "",
+      expect(second).toContain({
         itemCode: "328223580",
         description: "Polyspace Tee",
         quantity: 1,
         amount: 45,
       });
+    });
+  });
+  describe("mapDiscounts", () => {
+    it("sums up all discounts", () => {
+      const discounts = avataxOrderCreatedMaps.mapDiscounts(MOCKED_ORDER.order.discounts);
+
+      expect(discounts).toEqual(31.45);
+    });
+
+    it("returns 0 if there are no discounts", () => {
+      const discounts = avataxOrderCreatedMaps.mapDiscounts([]);
+
+      expect(discounts).toEqual(0);
     });
   });
 });

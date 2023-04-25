@@ -49,6 +49,12 @@ fragment OrderCreatedSubscription on Order {
   lines {
     ...OrderLine
   }
+  discounts {
+    id
+    amount {
+      amount
+    }
+  }
 }
 fragment OrderCreatedEventSubscription on Event {
   __typename

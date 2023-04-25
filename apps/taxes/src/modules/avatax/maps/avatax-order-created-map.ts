@@ -15,13 +15,15 @@ import { avataxAddressFactory } from "./address-factory";
 const SHIPPING_ITEM_CODE = "Shipping";
 
 function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
-  const productLines = order.lines.map((line) => ({
+  const productLines: LineItemModel[] = order.lines.map((line) => ({
     amount: line.unitPrice.net.amount,
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,
     description: line.productName,
     itemCode: line.productSku ?? "",
+    // todo: add valid discounted logic; change the amount to the discounted amount (?)
+    discounted: order.discounts.length > 0,
   }));
 
   if (order.shippingPrice.net.amount !== 0) {
@@ -41,6 +43,10 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
   }
 
   return productLines;
+}
+
+function mapDiscounts(discounts: OrderCreatedSubscriptionFragment["discounts"]): number {
+  return discounts.reduce((total, current) => total + Number(current.amount.amount), 0);
 }
 
 export type CreateTransactionMapPayloadArgs = {
@@ -72,6 +78,7 @@ const mapPayload = ({
       email: order.user?.email ?? "",
       lines: mapLines(order),
       date: new Date(order.created),
+      discount: mapDiscounts(order.discounts),
     },
   };
 };
@@ -86,5 +93,8 @@ export const avataxOrderCreatedMaps = {
   mapPayload,
   mapResponse,
   mapLines,
-  shippingItemCode: SHIPPING_ITEM_CODE,
+  mapDiscounts,
+  consts: {
+    shippingItemCode: SHIPPING_ITEM_CODE,
+  },
 };
