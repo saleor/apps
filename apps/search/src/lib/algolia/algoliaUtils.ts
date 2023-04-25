@@ -15,8 +15,13 @@ export function channelListingToAlgoliaIndexId(
   channelListing: PartialChannelListing,
   indexNamePrefix: string | undefined
 ) {
+  /**
+   * Index name should not start with . (dot)
+   */
+  const normalizedPrefix = indexNamePrefix === "" ? undefined : indexNamePrefix;
+
   const nameSegments = [
-    indexNamePrefix,
+    normalizedPrefix,
     channelListing.channel.slug,
     channelListing.channel.currencyCode,
     "products",

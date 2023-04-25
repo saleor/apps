@@ -1,4 +1,4 @@
-import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+import { useAppBridge, useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -11,6 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 
+const formSchema = z.object({
+  appId: z.string().min(3),
+  indexNamePrefix: z.string().optional(),
+  secretKey: z.string().min(3),
+});
+
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const fetch = useAuthenticatedFetch();
@@ -19,14 +25,7 @@ export const AlgoliaConfigurationForm = () => {
 
   const { handleSubmit, trigger, setValue, control } = useForm<AlgoliaConfigurationFields>({
     defaultValues: { appId: "", indexNamePrefix: "", secretKey: "" },
-    resolver: zodResolver(
-      z.object({
-        appId: z.string().min(3),
-        indexNamePrefix: z.string(),
-
-        secretKey: z.string().min(3),
-      })
-    ),
+    resolver: zodResolver(formSchema),
   });
 
   const reactQueryClient = useQueryClient();

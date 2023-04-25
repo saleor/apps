@@ -5,11 +5,13 @@ import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 import { AlgoliaConfigurationFields } from "../../lib/algolia/types";
-import { createDebug } from "../../lib/debug";
 
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
+import { createLogger } from "../../lib/logger";
 
-const debug = createDebug("/api/configuration");
+const logger = createLogger({
+  handler: "api/configuration",
+});
 
 export interface SettingsApiResponse {
   success: boolean;
@@ -22,13 +24,17 @@ const sendResponse = async (
   settings: SettingsManager,
   domain: string
 ) => {
+  const data = {
+    secretKey: (await settings.get("secretKey", domain)) || "",
+    appId: (await settings.get("appId", domain)) || "",
+    indexNamePrefix: (await settings.get("indexNamePrefix", domain)) || "",
+  };
+
+  logger.debug(data, "Will return following settings");
+
   res.status(statusCode).json({
     success: statusCode === 200,
-    data: {
-      secretKey: (await settings.get("secretKey", domain)) || "",
-      appId: (await settings.get("appId", domain)) || "",
-      indexNamePrefix: (await settings.get("indexNamePrefix", domain)) || "",
-    },
+    data,
   });
 };
 
@@ -37,11 +43,12 @@ export const handler = async (
   res: NextApiResponse,
   ctx: ProtectedHandlerContext
 ) => {
-  debug("Configuration handler received request");
-
   const {
     authData: { token, saleorApiUrl },
   } = ctx;
+
+  logger.debug({ saleorApiUrl }, "handler called");
+
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
 
   const settings = createSettingsManager(client);
@@ -49,11 +56,13 @@ export const handler = async (
   const domain = new URL(saleorApiUrl).host;
 
   if (req.method === "GET") {
-    debug("Returning configuration");
+    logger.debug("Returning configuration");
+
     await sendResponse(res, 200, settings, domain);
     return;
   } else if (req.method === "POST") {
-    debug("Updating the configuration");
+    logger.debug("Updating the configuration");
+
     const { appId, secretKey, indexNamePrefix } = JSON.parse(
       req.body
     ) as AlgoliaConfigurationFields;
@@ -66,7 +75,8 @@ export const handler = async (
     await sendResponse(res, 200, settings, domain);
     return;
   }
-  debug("Method not supported");
+  logger.error("Method not supported");
+
   res.status(405).end();
 };
 
