@@ -5,7 +5,7 @@ import {
   avataxOrderCreatedMaps,
 } from "./avatax-order-created-map";
 
-const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
+const MOCKED_ARGS: CreateTransactionMapPayloadArgs = {
   order: {
     id: "T3JkZXI6OTU4MDA5YjQtNDUxZC00NmQ1LThhMWUtMTRkMWRmYjFhNzI5",
     created: "2023-04-11T11:03:09.304109+00:00",
@@ -120,6 +120,7 @@ const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
     name: "Avatax-1",
     password: "user-password",
     username: "user-name",
+    shippingTaxCode: "FR000000",
   },
 };
 
@@ -131,7 +132,7 @@ describe("avataxOrderCreatedMaps", () => {
   });
   describe("mapPayload", () => {
     it("returns lines with discounted: true when there are discounts", () => {
-      const payload = avataxOrderCreatedMaps.mapPayload(MOCKED_ORDER);
+      const payload = avataxOrderCreatedMaps.mapPayload(MOCKED_ARGS);
 
       const linesWithoutShipping = payload.model.lines.slice(0, -1);
       const check = linesWithoutShipping.every((line) => line.discounted === true);
@@ -143,7 +144,7 @@ describe("avataxOrderCreatedMaps", () => {
     it.todo("rounding of numbers");
   });
   describe("mapLines", () => {
-    const lines = avataxOrderCreatedMaps.mapLines(MOCKED_ORDER.order);
+    const lines = avataxOrderCreatedMaps.mapLines(MOCKED_ARGS.order, MOCKED_ARGS.config);
 
     it("returns the correct number of lines", () => {
       expect(lines).toHaveLength(3);
@@ -152,6 +153,7 @@ describe("avataxOrderCreatedMaps", () => {
     it("includes shipping as a line", () => {
       expect(lines).toContainEqual({
         itemCode: avataxOrderCreatedMaps.consts.shippingItemCode,
+        taxCode: MOCKED_ARGS.config.shippingTaxCode,
         quantity: 1,
         amount: 48.33,
       });
@@ -176,7 +178,7 @@ describe("avataxOrderCreatedMaps", () => {
   });
   describe("mapDiscounts", () => {
     it("sums up all discounts", () => {
-      const discounts = avataxOrderCreatedMaps.mapDiscounts(MOCKED_ORDER.order.discounts);
+      const discounts = avataxOrderCreatedMaps.mapDiscounts(MOCKED_ARGS.order.discounts);
 
       expect(discounts).toEqual(31.45);
     });

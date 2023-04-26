@@ -37,6 +37,7 @@ const defaultValues: FormValues = {
   password: "",
   username: "",
   name: "",
+  shippingTaxCode: "",
 };
 
 export const AvataxConfigurationForm = () => {
@@ -159,7 +160,13 @@ export const AvataxConfigurationForm = () => {
               control={control}
               defaultValue={defaultValues.name}
               render={({ field }) => (
-                <TextField type="text" {...field} label="Instance name" {...textFieldProps} />
+                <TextField
+                  required
+                  type="text"
+                  {...field}
+                  label="Instance name"
+                  {...textFieldProps}
+                />
               )}
             />
             {formState.errors.name && (
@@ -227,7 +234,7 @@ export const AvataxConfigurationForm = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <TextField type="text" {...field} label="Username" {...textFieldProps} />
+                <TextField required type="text" {...field} label="Username" {...textFieldProps} />
               )}
             />
             {formState.errors.username && (
@@ -239,7 +246,9 @@ export const AvataxConfigurationForm = () => {
               name="password"
               control={control}
               defaultValue={defaultValues.password}
-              render={({ field }) => <TextField label="Password" {...field} {...textFieldProps} />}
+              render={({ field }) => (
+                <TextField required label="Password" {...field} {...textFieldProps} />
+              )}
             />
             {formState.errors.password && (
               <FormHelperText error>{formState.errors.password.message}</FormHelperText>
@@ -251,11 +260,36 @@ export const AvataxConfigurationForm = () => {
               control={control}
               defaultValue={defaultValues.companyCode}
               render={({ field }) => (
-                <TextField type="text" {...field} label="Company code" {...textFieldProps} />
+                <TextField
+                  required
+                  type="text"
+                  {...field}
+                  label="Company code"
+                  {...textFieldProps}
+                />
               )}
             />
             {formState.errors.companyCode && (
               <FormHelperText error>{formState.errors.companyCode.message}</FormHelperText>
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <Controller
+              name="shippingTaxCode"
+              control={control}
+              defaultValue={defaultValues.shippingTaxCode}
+              render={({ field }) => (
+                <TextField type="text" {...field} label="Shipping tax code" {...textFieldProps} />
+              )}
+            />
+            <FormHelperText>
+              {"Tax code that for the shipping line sent to Avatax. "}
+              <AppLink href="https://taxcode.avatax.avalara.com">
+                Must match Avatax tax codes format.
+              </AppLink>
+            </FormHelperText>
+            {formState.errors.shippingTaxCode && (
+              <FormHelperText error>{formState.errors.shippingTaxCode.message}</FormHelperText>
             )}
           </Grid>
         </Grid>

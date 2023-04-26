@@ -95,6 +95,7 @@ const MOCKED_MAP_PAYLOAD_ARGS: CommitTransactionMapPayloadArgs = {
     name: "Avatax-1",
     password: "user-password",
     username: "user-name",
+    shippingTaxCode: "FR000000",
   },
 };
 

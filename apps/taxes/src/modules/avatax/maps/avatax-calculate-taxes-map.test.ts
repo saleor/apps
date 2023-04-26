@@ -98,6 +98,7 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
     name: "Avatax-1",
     password: "password",
     username: "username",
+    shippingTaxCode: "FR000000",
   },
 };
 
@@ -114,12 +115,16 @@ describe("avataxCalculateTaxesMaps", () => {
   });
   describe("mapLines", () => {
     it("includes shipping as a line", () => {
-      const lines = avataxCalculateTaxesMaps.mapLines(MOCKED_CALCULATE_TAXES_ARGS.taxBase);
+      const lines = avataxCalculateTaxesMaps.mapLines(
+        MOCKED_CALCULATE_TAXES_ARGS.taxBase,
+        MOCKED_CALCULATE_TAXES_ARGS.config
+      );
 
       expect(lines).toContainEqual({
         itemCode: avataxCalculateTaxesMaps.shippingItemCode,
         quantity: 1,
         amount: 48.33,
+        taxCode: MOCKED_CALCULATE_TAXES_ARGS.config.shippingTaxCode,
       });
     });
   });
