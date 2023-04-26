@@ -1,8 +1,11 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
-import { PROVIDER_ORDER_ID_KEY } from "../../../pages/api/webhooks/order-created";
+
 import { CommitTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
+
+// * This is the key that we use to store the provider order id in the Saleor order metadata.
+export const PROVIDER_ORDER_ID_KEY = "externalId";
 
 function getTransactionCodeFromMetadata(
   metadata: OrderFulfilledSubscriptionFragment["privateMetadata"]
@@ -16,10 +19,12 @@ function getTransactionCodeFromMetadata(
   return transactionCode.value;
 }
 
-const mapPayload = (
-  order: OrderFulfilledSubscriptionFragment,
-  config: AvataxConfig
-): CommitTransactionArgs => {
+export type CommitTransactionMapPayloadArgs = {
+  order: OrderFulfilledSubscriptionFragment;
+  config: AvataxConfig;
+};
+
+const mapPayload = ({ order, config }: CommitTransactionMapPayloadArgs): CommitTransactionArgs => {
   const transactionCode = getTransactionCodeFromMetadata(order.privateMetadata);
 
   return {
@@ -34,4 +39,6 @@ const mapPayload = (
 
 export const avataxOrderFulfilledMaps = {
   mapPayload,
+  getTransactionCodeFromMetadata,
+  providerOrderIdKey: PROVIDER_ORDER_ID_KEY,
 };
