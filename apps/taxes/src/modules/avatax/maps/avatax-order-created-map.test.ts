@@ -48,8 +48,11 @@ const MOCKED_ORDER: CreateTransactionMapPayloadArgs = {
       currency: "USD",
     },
     shippingPrice: {
-      net: {
+      gross: {
         amount: 48.33,
+      },
+      net: {
+        amount: 43.74,
       },
     },
     lines: [

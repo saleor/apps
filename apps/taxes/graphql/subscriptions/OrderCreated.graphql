@@ -42,6 +42,9 @@ fragment OrderCreatedSubscription on Order {
     }
   }
   shippingPrice {
+    gross {
+      amount
+    }
     net {
       amount
     }

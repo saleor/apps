@@ -28,7 +28,8 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
   if (order.shippingPrice.net.amount !== 0) {
     // * In Avatax, shipping is a regular line
     const shippingLine: LineItemModel = {
-      amount: order.shippingPrice.net.amount,
+      amount: order.shippingPrice.gross.amount,
+      taxIncluded: true,
       itemCode: SHIPPING_ITEM_CODE,
       /**
        * todo: add taxCode
