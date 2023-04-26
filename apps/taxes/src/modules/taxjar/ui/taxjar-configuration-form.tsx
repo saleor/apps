@@ -162,7 +162,13 @@ export const TaxJarConfigurationForm = () => {
               control={control}
               defaultValue={defaultValues.name}
               render={({ field }) => (
-                <TextField type="text" {...field} label="Instance name" {...textFieldProps} />
+                <TextField
+                  required
+                  type="text"
+                  {...field}
+                  label="Instance name"
+                  {...textFieldProps}
+                />
               )}
             />
             {formState.errors.name && (
@@ -174,7 +180,9 @@ export const TaxJarConfigurationForm = () => {
               name="apiKey"
               control={control}
               defaultValue={defaultValues.apiKey}
-              render={({ field }) => <TextField label="API Key" {...field} {...textFieldProps} />}
+              render={({ field }) => (
+                <TextField required label="API Key" {...field} {...textFieldProps} />
+              )}
             />
             {formState.errors?.apiKey && (
               <FormHelperText error>{formState.errors?.apiKey.message}</FormHelperText>
