@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.7.1
+
+### Patch Changes
+
+- b33da7a: Improved helping description - added supported events and links to docs
+
 ## 1.7.0
 
 ### Minor Changes
