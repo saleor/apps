@@ -8,6 +8,7 @@ export const avataxConfigSchema = z.object({
   isSandbox: z.boolean(),
   companyCode: z.string().min(1, { message: "Company code requires at least one character." }),
   isAutocommit: z.boolean(),
+  shippingTaxCode: z.string().optional(),
 });
 
 export type AvataxConfig = z.infer<typeof avataxConfigSchema>;
@@ -19,6 +20,7 @@ export const defaultAvataxConfig: AvataxConfig = {
   companyCode: "",
   isSandbox: true,
   isAutocommit: false,
+  shippingTaxCode: "",
 };
 
 export const avataxInstanceConfigSchema = z.object({

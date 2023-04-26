@@ -14,7 +14,7 @@ import { avataxAddressFactory } from "./address-factory";
  */
 const SHIPPING_ITEM_CODE = "Shipping";
 
-function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
+function mapLines(order: OrderCreatedSubscriptionFragment, config: AvataxConfig): LineItemModel[] {
   const productLines: LineItemModel[] = order.lines.map((line) => ({
     amount: line.unitPrice.net.amount,
     // todo: get from tax code matcher
@@ -32,10 +32,10 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
       taxIncluded: true,
       itemCode: SHIPPING_ITEM_CODE,
       /**
-       * todo: add taxCode
        * * Different shipping methods can have different tax codes.
        * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/\
        */
+      taxCode: config.shippingTaxCode,
       quantity: 1,
     };
 
@@ -76,7 +76,7 @@ const mapPayload = ({
       },
       currencyCode: order.total.currency,
       email: order.user?.email ?? "",
-      lines: mapLines(order),
+      lines: mapLines(order, config),
       date: new Date(order.created),
       discount: mapDiscounts(order.discounts),
     },

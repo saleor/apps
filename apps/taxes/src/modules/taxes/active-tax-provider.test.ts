@@ -26,6 +26,7 @@ const mockedProviders: ProvidersConfig = [
       name: "avatax-1",
       password: "avatax-password",
       username: "avatax-username",
+      shippingTaxCode: "FR000000",
     },
   },
   {
