@@ -13,6 +13,7 @@ import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider
 import { createClient } from "../../../lib/graphql";
 import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/maps/avatax-order-fulfilled-map";
 
 export const config = {
   api: {
@@ -32,9 +33,6 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
   query: UntypedOrderCreatedSubscriptionDocument,
   webhookPath: "/api/webhooks/order-created",
 });
-
-// * This is the key that we use to store the provider order id in the Saleor order metadata.
-export const PROVIDER_ORDER_ID_KEY = "externalId";
 
 /**
  * We need to store the provider order id in the Saleor order metadata so that we can
@@ -105,6 +103,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     return webhookResponse.success();
   } catch (error) {
+    logger.error({ error });
     return webhookResponse.failureRetry("Error while creating order in tax provider");
   }
 });

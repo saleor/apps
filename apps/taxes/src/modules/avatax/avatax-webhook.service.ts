@@ -45,7 +45,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "createOrder called with:");
-    const model = avataxOrderCreatedMaps.mapPayload(order, channel, this.config);
+    const model = avataxOrderCreatedMaps.mapPayload({ order, channel, config: this.config });
 
     this.logger.debug({ model }, "will call createTransaction with");
     const result = await this.client.createTransaction(model);
@@ -56,7 +56,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
     this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const args = avataxOrderFulfilledMaps.mapPayload(order, this.config);
+    const args = avataxOrderFulfilledMaps.mapPayload({ order, config: this.config });
 
     this.logger.debug({ args }, "will call commitTransaction with");
     const result = await this.client.commitTransaction(args);

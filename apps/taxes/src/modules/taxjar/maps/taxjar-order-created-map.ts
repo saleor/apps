@@ -14,6 +14,7 @@ function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] 
     // todo: add from tax code matcher
     product_tax_code: "",
     sales_tax: line.totalPrice.tax.amount,
+    description: line.productName,
   }));
 }
 

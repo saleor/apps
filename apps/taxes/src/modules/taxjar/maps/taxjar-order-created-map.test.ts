@@ -48,8 +48,11 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
       currency: "USD",
     },
     shippingPrice: {
-      net: {
+      gross: {
         amount: 48.33,
+      },
+      net: {
+        amount: 43.74,
       },
     },
     lines: [
@@ -82,6 +85,14 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
             amount: 4.28,
           },
         },
+      },
+    ],
+    discounts: [
+      {
+        amount: {
+          amount: 10,
+        },
+        id: "RGlzY291bnREaXNjb3VudDox",
       },
     ],
   },

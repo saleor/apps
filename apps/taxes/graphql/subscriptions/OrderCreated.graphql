@@ -1,4 +1,4 @@
-fragment OrderLineFragment on OrderLine {
+fragment OrderLine on OrderLine {
   productSku
   productName
   quantity
@@ -42,12 +42,21 @@ fragment OrderCreatedSubscription on Order {
     }
   }
   shippingPrice {
+    gross {
+      amount
+    }
     net {
       amount
     }
   }
   lines {
-    ...OrderLineFragment
+    ...OrderLine
+  }
+  discounts {
+    id
+    amount {
+      amount
+    }
   }
 }
 fragment OrderCreatedEventSubscription on Event {

@@ -68,6 +68,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
+    logger.error({ error });
     return webhookResponse.failureRetry("Error while calculating taxes");
   }
 });
