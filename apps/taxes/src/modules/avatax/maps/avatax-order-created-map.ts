@@ -22,7 +22,6 @@ function mapLines(order: OrderCreatedSubscriptionFragment): LineItemModel[] {
     quantity: line.quantity,
     description: line.productName,
     itemCode: line.productSku ?? "",
-    // todo: add valid discounted logic; change the amount to the discounted amount (?)
     discounted: order.discounts.length > 0,
   }));
 
