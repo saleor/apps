@@ -1,0 +1,26 @@
+fragment OwnWebhook on Webhook {
+  id
+  isActive
+  asyncEvents {
+    name
+    eventType
+  }
+  eventDeliveries {
+    edges {
+      node {
+        id
+        status
+        attempts {
+          edges {
+            node {
+              status
+              id
+              createdAt
+              responseStatusCode
+            }
+          }
+        }
+      }
+    }
+  }
+}
