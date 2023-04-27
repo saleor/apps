@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
+import { AppLayout } from "../modules/ui/app-layout";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 
 /**
@@ -37,7 +38,9 @@ function NextApp({ Component, pageProps }: AppProps) {
           <ThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
-            <Component {...pageProps} />
+            <AppLayout>
+              <Component {...pageProps} />
+            </AppLayout>
           </ThemeProvider>
         </GraphQLProvider>
       </AppBridgeProvider>
