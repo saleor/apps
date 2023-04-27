@@ -41,7 +41,6 @@ const mockedChannels: ChannelsConfig = {
       street: "123 Main St",
       zip: "10001",
     },
-    enabled: true,
     providerInstanceId: "1",
   },
 };

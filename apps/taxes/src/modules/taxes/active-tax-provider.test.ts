@@ -50,7 +50,6 @@ const mockedChannelsWithInvalidProviderInstanceId: ChannelsConfig = {
       street: "123 Main St",
       zip: "10001",
     },
-    enabled: true,
     providerInstanceId: "3",
   },
 };
@@ -64,7 +63,6 @@ const mockedValidChannels: ChannelsConfig = {
       street: "123 Main St",
       zip: "10001",
     },
-    enabled: true,
     providerInstanceId: "1",
   },
 };

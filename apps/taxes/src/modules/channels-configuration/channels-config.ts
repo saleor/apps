@@ -13,7 +13,6 @@ export type ChannelAddress = z.infer<typeof addressSchema>;
 
 export const channelSchema = z.object({
   providerInstanceId: z.string(),
-  enabled: z.boolean(),
   address: addressSchema,
 });
 export type ChannelConfig = z.infer<typeof channelSchema>;
@@ -30,7 +29,6 @@ export const defaultChannelConfig: ChannelConfig = {
     street: "",
     zip: "",
   },
-  enabled: false,
 };
 
 export const createDefaultChannelsConfig = (channels: ChannelFragment[]): ChannelsConfig => {
