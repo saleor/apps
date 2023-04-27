@@ -1516,7 +1516,11 @@ importers:
         version: link:../../packages/shared
       '@saleor/macaw-ui':
         specifier: ^0.8.0-pre.72
+<<<<<<< HEAD
         version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+=======
+        version: 0.8.0-pre.76(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+>>>>>>> e847449 (refactor: :recycle: replace material-ui with macaw-ui; remove all views)
       '@sentry/nextjs':
         specifier: ^7.45.0
         version: 7.45.0(next@13.3.0)(react@18.2.0)
@@ -1640,7 +1644,11 @@ importers:
         version: 18.0.10
       '@vitejs/plugin-react':
         specifier: ^4.0.0
+<<<<<<< HEAD
         version: 4.0.0(vite@4.3.6)
+=======
+        version: 4.0.0(vite@4.3.1)
+>>>>>>> e847449 (refactor: :recycle: replace material-ui with macaw-ui; remove all views)
       eslint:
         specifier: 8.25.0
         version: 8.25.0
