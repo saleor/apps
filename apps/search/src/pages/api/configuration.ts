@@ -74,7 +74,10 @@ export const handler = async (
     });
 
     try {
+      logger.debug("Will ping Algolia");
       await algoliaClient.ping();
+
+      logger.debug("Algolia connection is ok. Will save settings");
 
       await settings.set([
         { key: "secretKey", value: secretKey || "", domain },
@@ -82,9 +85,13 @@ export const handler = async (
         { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
       ]);
 
+      logger.debug("Settings set");
+
       const webhooksToggler = new WebhookActivityTogglerService(ctx.authData.appId, client);
 
       await webhooksToggler.enableOwnWebhooks();
+
+      logger.debug("Webhooks enabled");
     } catch (e) {
       return res.status(400).end();
     }

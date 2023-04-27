@@ -5,12 +5,12 @@ fragment OwnWebhook on Webhook {
     name
     eventType
   }
-  eventDeliveries {
+  eventDeliveries(first: 100) {
     edges {
       node {
         id
         status
-        attempts {
+        attempts(first: 100) {
           edges {
             node {
               status

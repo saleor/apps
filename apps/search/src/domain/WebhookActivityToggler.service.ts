@@ -57,6 +57,8 @@ export class WebhookActivityTogglerService {
   async disableOwnWebhooks() {
     const webhooksIds = await this.fetchOwnWebhooks();
 
+    logger.info(webhooksIds, "Disabling own webhooks");
+
     if (!webhooksIds) {
       throw new Error("Failed fetching webhooks");
     }
@@ -68,6 +70,8 @@ export class WebhookActivityTogglerService {
   // todo allow passing them, so webhook can deliver without extra call
   async enableOwnWebhooks() {
     const webhooksIds = await this.fetchOwnWebhooks();
+
+    logger.info(webhooksIds, "Enabling own webhooks");
 
     if (!webhooksIds) {
       throw new Error("Failed fetching webhooks");

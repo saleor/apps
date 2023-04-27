@@ -2,6 +2,7 @@ import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { createClient } from "../../lib/graphql";
 import { FetchOwnWebhooksDocument } from "../../../generated/graphql";
+import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 
 export default createProtectedHandler(
   async (req, res, ctx) => {
@@ -9,6 +10,8 @@ export default createProtectedHandler(
     const client = createClient(authData.saleorApiUrl, async () => ({
       token: authData.token,
     }));
+
+    // todo fetch settings, call algolia, disable webhooks if needed
 
     try {
       const webhooks = await client
