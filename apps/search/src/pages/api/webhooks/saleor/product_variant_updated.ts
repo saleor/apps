@@ -19,6 +19,10 @@ export const webhookProductVariantUpdated = new SaleorAsyncWebhook<ProductVarian
   event: "PRODUCT_VARIANT_UPDATED",
   apl: saleorApp.apl,
   query: ProductVariantUpdatedDocument,
+  /**
+   * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+   */
+  isActive: false,
 });
 
 export const handler: NextWebhookApiHandler<ProductVariantUpdated> = async (req, res, context) => {

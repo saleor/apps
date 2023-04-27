@@ -16,6 +16,10 @@ export const webhookProductCreated = new SaleorAsyncWebhook<ProductCreated>({
   event: "PRODUCT_CREATED",
   apl: saleorApp.apl,
   query: ProductCreatedDocument,
+  /**
+   * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+   */
+  isActive: false,
 });
 
 export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, context) => {

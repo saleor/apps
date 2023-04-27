@@ -16,6 +16,10 @@ export const webhookProductDeleted = new SaleorAsyncWebhook<ProductDeleted>({
   event: "PRODUCT_DELETED",
   apl: saleorApp.apl,
   query: ProductDeletedDocument,
+  /**
+   * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+   */
+  isActive: false,
 });
 
 export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, context) => {
