@@ -7,6 +7,9 @@ import { saleorApp } from "../../../../../saleor-app";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../../../../lib/algolia/getAlgoliaConfiguration";
 import { createDebug } from "../../../../lib/debug";
+import { createLogger } from "../../../../lib/logger";
+import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
+import { createClient } from "../../../../lib/graphql";
 
 export const config = {
   api: {
@@ -25,20 +28,23 @@ export const webhookProductVariantDeleted = new SaleorAsyncWebhook<ProductVarian
   isActive: false,
 });
 
-export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req, res, context) => {
-  const debug = createDebug(`Webhook handler - ${webhookProductVariantDeleted.event}`);
+const logger = createLogger({
+  service: "webhookProductVariantDeletedWebhookHandler",
+});
 
+export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req, res, context) => {
   const { event, authData } = context;
 
-  debug(
+  logger.debug(
     `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`
   );
 
   const { settings, errors } = await getAlgoliaConfiguration({ authData });
 
   if (errors?.length || !settings) {
-    debug("Aborting due to lack of settings");
-    debug(errors);
+    logger.warn("Aborting due to lack of settings");
+    logger.debug(errors);
+
     return res.status(400).json({
       message: errors[0].message,
     });
@@ -53,8 +59,26 @@ export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req,
   const { productVariant } = context.payload;
 
   if (productVariant) {
-    await searchProvider.deleteProductVariant(productVariant);
+    try {
+      await searchProvider.deleteProductVariant(productVariant);
+    } catch (e) {
+      logger.info(e, "Algolia deleteProductVariant failed. Webhooks will be disabled");
+
+      const webhooksToggler = new WebhookActivityTogglerService(
+        authData.appId,
+        createClient(authData.saleorApiUrl, async () => ({ token: authData.token }))
+      );
+
+      logger.trace("Will disable webhooks");
+
+      await webhooksToggler.disableOwnWebhooks();
+
+      logger.trace("Webhooks disabling operation finished");
+
+      return res.status(500).send("Operation failed, webhooks are disabled");
+    }
   }
+
   res.status(200).end();
   return;
 };
