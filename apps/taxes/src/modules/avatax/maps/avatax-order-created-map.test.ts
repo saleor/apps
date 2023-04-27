@@ -111,7 +111,6 @@ const MOCKED_ARGS: CreateTransactionMapPayloadArgs = {
   },
   channel: {
     providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-    enabled: false,
     address: {
       country: "US",
       zip: "92093",
