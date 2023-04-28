@@ -4,30 +4,24 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 import {
   SendgridConfig as SendgridConfigurationRoot,
   SendgridConfiguration,
-} from "./sendgrid-config";
+  sendgridConfigurationEventSchema,
+  sendgridConfigurationSchema,
+} from "./sendgrid-config-schema";
 
 export const getDefaultEventsConfiguration = (): SendgridConfiguration["events"] =>
-  messageEventTypes.map((eventType) => ({
-    active: true,
-    eventType: eventType,
-    template: "",
-  }));
+  messageEventTypes.map((eventType) => sendgridConfigurationEventSchema.parse({ eventType }));
 
 export const getDefaultEmptyConfiguration = (): SendgridConfiguration => {
-  const defaultConfig: SendgridConfiguration = {
-    id: "",
-    active: true,
-    configurationName: "",
-    senderName: undefined,
-    senderEmail: undefined,
-    apiKey: "",
-    sandboxMode: false,
-    events: getDefaultEventsConfiguration(),
+  const defaultConfig: SendgridConfiguration = sendgridConfigurationSchema.parse({
+    id: "id",
+    name: "name",
+    apiKey: "key",
     channels: {
       excludedFrom: [],
       restrictedTo: [],
     },
-  };
+    events: getDefaultEventsConfiguration(),
+  });
 
   return defaultConfig;
 };

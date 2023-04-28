@@ -1,37 +1,95 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
-import { Breadcrumbs } from "../../../../components/breadcrumbs";
 import { trpcClient } from "../../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { BasicInformationSection } from "../../../../modules/sendgrid/ui/basic-information-section";
 import { DangerousSection } from "../../../../modules/sendgrid/ui/dangrous-section";
-import { SectionWithDescription } from "../../../../components/section-with-description";
 import { ApiConnectionSection } from "../../../../modules/sendgrid/ui/api-connection-section";
 import { SenderSection } from "../../../../modules/sendgrid/ui/sender-section";
+import { EventsSection } from "../../../../modules/sendgrid/ui/events-section";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { BasicLayout } from "../../../../components/basic-layout";
+import { ChannelsSection } from "../../../../modules/sendgrid/ui/channels-section";
+
+const LoadingView = () => {
+  return (
+    <BasicLayout
+      breadcrumbs={[
+        { name: "Configuration", href: "/" },
+        { name: "Sendgrid provider" },
+        { name: "..." },
+      ]}
+    >
+      <Text variant="hero">Loading...</Text>
+    </BasicLayout>
+  );
+};
+
+const NotFoundView = () => {
+  return (
+    <BasicLayout
+      breadcrumbs={[
+        { name: "Configuration", href: "/" },
+        { name: "Sendgrid provider" },
+        { name: "Not found" },
+      ]}
+    >
+      <Text variant="hero">Could not find the requested configuration.</Text>
+    </BasicLayout>
+  );
+};
 
 const EditSendgridConfigurationPage: NextPage = () => {
+  const { notifyError } = useDashboardNotification();
   const router = useRouter();
   const { id } = router.query;
+  const { data: configuration, isLoading } =
+    trpcClient.sendgridConfiguration.getConfiguration.useQuery(
+      {
+        id: id as string,
+      },
+      {
+        enabled: !!id,
+        onSettled(data, error) {
+          if (error) {
+            console.log("Error: ", error);
+          }
+          if (error?.data?.code === "NOT_FOUND" || !data) {
+            notifyError("The requested configuration does not exist.");
+            router.replace("/configuration");
+          }
+        },
+      }
+    );
 
-  const { data: configuration } = trpcClient.sendgridConfiguration.getConfiguration.useQuery({
-    id: id as string,
-  });
+  if (isLoading) {
+    return <LoadingView />;
+  }
+
+  if (!configuration) {
+    return <NotFoundView />;
+  }
 
   return (
-    <Box padding={10} display={"grid"} gap={13}>
-      <Breadcrumbs
-        items={[{ name: "Configuration", href: "/" }, { name: "Sendgrid" }, { name: "Sendgrid" }]}
-      />
+    <BasicLayout
+      breadcrumbs={[
+        { name: "Configuration", href: "/configuration" },
+        { name: "Sendgrid provider" },
+        { name: configuration.name },
+      ]}
+    >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Connect Sendgrid with Saleor.</Text>
         </Box>
       </Box>
-      {!!configuration && <BasicInformationSection configuration={configuration} />}
-      {!!configuration && <ApiConnectionSection configuration={configuration} />}
-      {!!configuration && <SenderSection configuration={configuration} />}
-      {!!configuration && <DangerousSection configuration={configuration} />}
-    </Box>
+      <BasicInformationSection configuration={configuration} />
+      <ApiConnectionSection configuration={configuration} />
+      <SenderSection configuration={configuration} />
+      <EventsSection configuration={configuration} />
+      <ChannelsSection configuration={configuration} />
+      <DangerousSection configuration={configuration} />
+    </BasicLayout>
   );
 };
 

@@ -1,5 +1,5 @@
 import { logger as pinoLogger } from "../../lib/logger";
-import { SendgridConfiguration } from "./configuration/sendgrid-config";
+import { SendgridConfiguration } from "./configuration/sendgrid-config-schema";
 import { MailService } from "@sendgrid/mail";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 

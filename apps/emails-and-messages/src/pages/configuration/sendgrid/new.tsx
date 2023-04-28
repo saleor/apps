@@ -1,6 +1,5 @@
 import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
-import { Breadcrumbs } from "../../../components/breadcrumbs";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { defaultPadding } from "../../../components/ui-defaults";
@@ -8,18 +7,21 @@ import { BoxFooter } from "../../../components/box-footer";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared/src/use-dashboard-notification";
 import { Controller, useForm } from "react-hook-form";
-import { SendgridCreateConfigurationSchemaType } from "../../../modules/sendgrid/configuration/sendgrid-config-input-schema";
+import { SendgridCreateConfigurationInput } from "../../../modules/sendgrid/configuration/sendgrid-config-input-schema";
+import { BasicLayout } from "../../../components/basic-layout";
+import { useRouter } from "next/router";
 
 const NewSendgridConfigurationPage: NextPage = () => {
+  const router = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { handleSubmit, control, setError } = useForm<SendgridCreateConfigurationSchemaType>();
+  const { handleSubmit, control, setError } = useForm<SendgridCreateConfigurationInput>();
 
   const { mutate: createConfiguration } =
     trpcClient.sendgridConfiguration.createConfiguration.useMutation({
       onSuccess: async (data, variables) => {
         notifySuccess("Configuration saved");
-        // TODO: redirect to configuration details based on id
+        router.push(`/configuration/sendgrid/edit/${data.id}`);
       },
       onError(error) {
         let isFieldErrorSet = false;
@@ -27,7 +29,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
         for (const fieldName in fieldErrors) {
           for (const message of fieldErrors[fieldName] || []) {
             isFieldErrorSet = true;
-            setError(fieldName as keyof SendgridCreateConfigurationSchemaType, {
+            setError(fieldName as keyof SendgridCreateConfigurationInput, {
               type: "manual",
               message,
             });
@@ -45,14 +47,13 @@ const NewSendgridConfigurationPage: NextPage = () => {
     });
 
   return (
-    <Box padding={10} display={"grid"} gap={13}>
-      <Breadcrumbs
-        items={[
-          { name: "Configuration", href: "/" },
-          { name: "Add provider" },
-          { name: "Sendgrid" },
-        ]}
-      />
+    <BasicLayout
+      breadcrumbs={[
+        { name: "Configuration", href: "/" },
+        { name: "Add provider" },
+        { name: "Sendgrid" },
+      ]}
+    >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Connect Sendgrid with Saleor.</Text>
@@ -77,7 +78,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
           >
             <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
               <Controller
-                name="configurationName"
+                name="name"
                 control={control}
                 render={({
                   field: { onChange, value },
@@ -123,7 +124,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
           </form>
         </BoxWithBorder>
       </SectionWithDescription>
-    </Box>
+    </BasicLayout>
   );
 };
 
