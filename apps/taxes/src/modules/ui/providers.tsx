@@ -1,55 +1,6 @@
 import { Box, BoxProps, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { trpcClient } from "../trpc/trpc-client";
-import { ProvidersConfig } from "../providers-configuration/providers-config";
-
-const AddProvider = () => {
-  const router = useRouter();
-
-  return (
-    <Box
-      display={"flex"}
-      flexDirection={"column"}
-      gap={6}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <Text variant="body" __fontWeight={"400"}>
-        No providers configured yet
-      </Text>
-      <Button onClick={() => router.push("/providers/new")}>Add first provider</Button>
-    </Box>
-  );
-};
-
-const ProvidersSkeleton = () => {
-  return (
-    <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      Skeleton...
-    </Box>
-  );
-};
-
-const MOCKED_PROVIDERS: ProvidersConfig = [
-  {
-    provider: "taxjar",
-    config: {
-      name: "taxjar-1",
-      isSandbox: true,
-      credentials: {
-        apiKey: "1234",
-      },
-      address: {
-        city: "New York",
-        country: "US",
-        state: "NY",
-        street: "123 Main St",
-        zip: "10001",
-      },
-    },
-    id: "1",
-  },
-];
 
 const Table = {
   Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
@@ -62,8 +13,36 @@ const Table = {
   TD: (props: BoxProps) => <Box fontSize="bodyMedium" {...props} as="td" />,
 };
 
-const ProvidersList = () => {
-  const providers = MOCKED_PROVIDERS;
+const AddProvider = () => {
+  const router = useRouter();
+
+  return (
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      gap={6}
+      alignItems={"center"}
+      height={"100%"}
+      justifyContent={"center"}
+    >
+      <Text variant="body" __fontWeight={"400"}>
+        No providers configured yet
+      </Text>
+      <Button onClick={() => router.push("/providers/new")}>Add first provider</Button>
+    </Box>
+  );
+};
+
+const Skeleton = () => {
+  return (
+    <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
+      Skeleton...
+    </Box>
+  );
+};
+
+const ProvidersTable = () => {
+  const { data } = trpcClient.providersConfiguration.getAll.useQuery();
 
   return (
     <Table.Container>
@@ -75,11 +54,11 @@ const ProvidersList = () => {
         </Table.TR>
       </Table.THead>
       <Table.TBody>
-        {providers.map((provider) => (
+        {data?.map((item) => (
           <Table.TR>
-            <Table.TD>{provider.config.name}</Table.TD>
-            <Table.TD>{provider.provider}</Table.TD>
-            <Table.TD>Active</Table.TD>
+            <Table.TD>{item.config.name}</Table.TD>
+            <Table.TD>{item.provider}</Table.TD>
+            <Table.TD>{"Status"}</Table.TD>
           </Table.TR>
         ))}
       </Table.TBody>
@@ -88,8 +67,12 @@ const ProvidersList = () => {
 };
 
 export const Providers = () => {
-  const { data, isFetching } = trpcClient.providersConfiguration.getAll.useQuery();
+  const { data, isFetching, isFetched } = trpcClient.providersConfiguration.getAll.useQuery();
+  const router = useRouter();
+
   const isProvider = (data?.length ?? 0) > 0;
+  const isResult = isFetched && isProvider;
+  const isNoResult = isFetched && !isProvider;
 
   return (
     <Box
@@ -99,12 +82,17 @@ export const Providers = () => {
       borderStyle={"solid"}
       padding={8}
       __minHeight={"320px"}
+      height="100%"
     >
-      {isFetching ? (
-        <ProvidersSkeleton />
-      ) : (
-        // <>{!isProvider ? <AddProvider /> : <ProvidersList />}</>
-        <ProvidersList />
+      {isFetching && <Skeleton />}
+      {isNoResult && <AddProvider />}
+      {isResult && (
+        <>
+          <ProvidersTable />
+          <Box>
+            <Button onClick={() => router.push("/providers/new")}>Add new</Button>
+          </Box>
+        </>
       )}
     </Box>
   );
