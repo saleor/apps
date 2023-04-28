@@ -5,6 +5,7 @@ import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgoli
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { MainInstructions } from "../../components/MainInstructions";
+import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
@@ -21,11 +22,7 @@ export const ConfigurationView = () => {
       <AppSection
         includePadding
         heading="Webhooks status"
-        sideContent={
-          <Text>
-            Check status of registered webhooks. If they fail, please revisit configuration
-          </Text>
-        }
+        sideContent={<WebhooksStatusInstructions />}
         mainContent={<WebhooksStatus />}
       />
 

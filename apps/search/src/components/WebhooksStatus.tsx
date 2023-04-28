@@ -3,10 +3,10 @@ import { EventDeliveryStatusEnum } from "../../generated/graphql";
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 
 export const WebhooksStatus = () => {
-  const { data: webhooksData, isRefetching } = useWebhooksStatus();
+  const { data: webhooksData } = useWebhooksStatus();
 
   if (!webhooksData) {
-    return null;
+    return <Text>Loading...</Text>;
   }
 
   return (
