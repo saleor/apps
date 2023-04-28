@@ -17,11 +17,15 @@ const deleteInputSchema = z.object({
 const patchInputSchema = z.object({
   id: z.string(),
   value: taxJarConfigSchema.partial().transform((c) => {
-    const { apiKey, ...config } = c ?? {};
+    const { credentials, ...config } = c ?? {};
+    const { apiKey } = credentials ?? {};
 
     return {
       ...config,
-      ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
+      credentials: {
+        ...credentials,
+        ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
+      },
     };
   }),
 });

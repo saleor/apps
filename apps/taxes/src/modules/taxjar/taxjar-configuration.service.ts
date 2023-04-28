@@ -6,6 +6,7 @@ import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "./taxjar-config";
+import { DeepPartial } from "@trpc/server";
 
 const getSchema = taxJarInstanceConfigSchema;
 
@@ -78,7 +79,7 @@ export class TaxJarConfigurationService {
     return result.data;
   }
 
-  async patch(id: string, config: Partial<TaxJarConfig>): Promise<void> {
+  async patch(id: string, config: DeepPartial<TaxJarConfig>): Promise<void> {
     this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
     const data = await this.get(id);
     // omit the key "id"  from the result

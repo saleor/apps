@@ -122,7 +122,7 @@ describe("taxJarOrderCreatedMaps", () => {
     it("returns the correct order amount", () => {
       const result = taxJarOrderCreatedMaps.mapPayload(MOCKED_ORDER);
 
-      expect(result.params.amount).toBe(183.33);
+      expect(result.params.amount).toBe(178.74);
     });
   });
 

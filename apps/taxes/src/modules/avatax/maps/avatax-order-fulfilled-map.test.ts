@@ -99,9 +99,11 @@ const MOCKED_MAP_PAYLOAD_ARGS: CommitTransactionMapPayloadArgs = {
     isAutocommit: true,
     isSandbox: true,
     name: "Avatax-1",
-    password: "user-password",
-    username: "user-name",
     shippingTaxCode: "FR000000",
+    credentials: {
+      password: "user-password",
+      username: "user-name",
+    },
   },
 };
 

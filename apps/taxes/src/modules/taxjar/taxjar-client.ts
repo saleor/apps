@@ -5,7 +5,7 @@ import { TaxJarConfig } from "./taxjar-config";
 
 const createTaxJarSettings = (config: TaxJarConfig): Config => {
   const settings: Config = {
-    apiKey: config.apiKey,
+    apiKey: config.credentials.apiKey,
     apiUrl: config.isSandbox ? TaxJar.SANDBOX_API_URL : TaxJar.DEFAULT_API_URL,
   };
 

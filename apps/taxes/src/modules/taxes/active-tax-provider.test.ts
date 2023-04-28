@@ -24,9 +24,11 @@ const mockedProviders: ProvidersConfig = [
       isAutocommit: false,
       isSandbox: true,
       name: "avatax-1",
-      password: "avatax-password",
-      username: "avatax-username",
       shippingTaxCode: "FR000000",
+      credentials: {
+        password: "avatax-password",
+        username: "avatax-username",
+      },
     },
   },
   {
@@ -34,8 +36,10 @@ const mockedProviders: ProvidersConfig = [
     id: "2",
     config: {
       name: "taxjar-1",
-      apiKey: "taxjar-api-key",
       isSandbox: true,
+      credentials: {
+        apiKey: "taxjar-api-key",
+      },
     },
   },
 ];
