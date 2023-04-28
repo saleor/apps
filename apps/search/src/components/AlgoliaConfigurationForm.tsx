@@ -52,9 +52,14 @@ export const AlgoliaConfigurationForm = () => {
     },
     {
       onSuccess: async () => {
-        reactQueryClient.refetchQueries({
-          queryKey: ["configuration"],
-        });
+        await Promise.all([
+          reactQueryClient.refetchQueries({
+            queryKey: ["configuration"],
+          }),
+          reactQueryClient.refetchQueries({
+            queryKey: ["webhooks-status"],
+          }),
+        ]);
         notifySuccess("Configuration saved!");
       },
       onError: async (data: Error) => {
