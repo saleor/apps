@@ -16,13 +16,16 @@ const deleteInputSchema = z.object({
 
 const patchInputSchema = z.object({
   id: z.string(),
-  value: avataxConfigSchema.partial().transform((c) => {
-    const { username, password, ...config } = c ?? {};
+  value: avataxConfigSchema.partial().transform((config) => {
+    const { username, password } = config.credentials ?? {};
 
     return {
       ...config,
-      ...(username && !isObfuscated(username) && { username }),
-      ...(password && !isObfuscated(password) && { password }),
+      credentials: {
+        ...config.credentials,
+        ...(username && !isObfuscated(username) && { username }),
+        ...(password && !isObfuscated(password) && { password }),
+      },
     };
   }),
 });
