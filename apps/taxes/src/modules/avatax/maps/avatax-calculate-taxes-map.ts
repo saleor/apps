@@ -58,7 +58,7 @@ const mapPayload = (props: AvataxCalculateTaxesMapPayloadArgs): CreateTransactio
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {
-        shipFrom: avataxAddressFactory.fromChannelAddress(channel.address),
+        shipFrom: avataxAddressFactory.fromChannelAddress(config.address),
         shipTo: avataxAddressFactory.fromSaleorAddress(taxBase.address!),
       },
       currencyCode: taxBase.currency,

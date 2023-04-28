@@ -4,6 +4,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { taxLineResolver } from "../../taxes/tax-line-resolver";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs } from "../taxjar-client";
+import { TaxJarConfig } from "../taxjar-config";
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
@@ -103,17 +104,17 @@ const mapResponse = (
   };
 };
 
-const mapPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): FetchTaxForOrderArgs => {
+const mapPayload = (taxBase: TaxBaseFragment, config: TaxJarConfig): FetchTaxForOrderArgs => {
   const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase);
   const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
 
   const taxParams = {
     params: {
-      from_country: channel.address.country,
-      from_zip: channel.address.zip,
-      from_state: channel.address.state,
-      from_city: channel.address.city,
-      from_street: channel.address.street,
+      from_country: config.address.country,
+      from_zip: config.address.zip,
+      from_state: config.address.state,
+      from_city: config.address.city,
+      from_street: config.address.street,
       to_country: taxBase.address!.country.code,
       to_zip: taxBase.address!.postalCode,
       to_state: taxBase.address!.countryArea,

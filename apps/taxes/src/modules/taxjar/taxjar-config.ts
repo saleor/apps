@@ -1,23 +1,39 @@
 import { z } from "zod";
 import { obfuscateSecret } from "../../lib/utils";
 
-const credentials = z.object({
+const addressSchema = z.object({
+  country: z.string(),
+  zip: z.string(),
+  state: z.string(),
+  city: z.string(),
+  street: z.string(),
+});
+
+const taxJarCredentialsSchema = z.object({
   apiKey: z.string().min(1, { message: "API Key requires at least one character." }),
 });
 
 export const taxJarConfigSchema = z.object({
   name: z.string().min(1, { message: "Name requires at least one character." }),
   isSandbox: z.boolean(),
-  credentials,
+  credentials: taxJarCredentialsSchema,
+  address: addressSchema,
 });
 export type TaxJarConfig = z.infer<typeof taxJarConfigSchema>;
 
 export const defaultTaxJarConfig: TaxJarConfig = {
   name: "",
+  isSandbox: false,
   credentials: {
     apiKey: "",
   },
-  isSandbox: false,
+  address: {
+    city: "",
+    country: "",
+    state: "",
+    street: "",
+    zip: "",
+  },
 };
 
 export const taxJarInstanceConfigSchema = z.object({

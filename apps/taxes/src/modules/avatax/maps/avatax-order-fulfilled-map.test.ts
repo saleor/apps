@@ -104,6 +104,13 @@ const MOCKED_MAP_PAYLOAD_ARGS: CommitTransactionMapPayloadArgs = {
       password: "user-password",
       username: "user-name",
     },
+    address: {
+      city: "",
+      country: "",
+      state: "",
+      street: "",
+      zip: "",
+    },
   },
 };
 

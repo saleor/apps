@@ -5,6 +5,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { CreateOrderArgs } from "../taxjar-client";
 import { numbers } from "../../taxes/numbers";
+import { TaxJarConfig } from "../taxjar-config";
 
 function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] {
   return lines.map((line) => ({
@@ -26,10 +27,10 @@ function sumLines(lines: LineItem[]): number {
 
 export type TaxJarOrderCreatedMapPayloadArgs = {
   order: OrderCreatedSubscriptionFragment;
-  channel: ChannelConfig;
+  config: TaxJarConfig;
 };
 
-const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadArgs): CreateOrderArgs => {
+const mapPayload = ({ order, config }: TaxJarOrderCreatedMapPayloadArgs): CreateOrderArgs => {
   const lineItems = mapLines(order.lines);
   const lineSum = sumLines(lineItems);
   const shippingAmount = order.shippingPrice.gross.amount;
@@ -41,11 +42,11 @@ const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadArgs): Creat
 
   return {
     params: {
-      from_country: channel.address.country,
-      from_zip: channel.address.zip,
-      from_state: channel.address.state,
-      from_city: channel.address.city,
-      from_street: channel.address.street,
+      from_country: config.address.country,
+      from_zip: config.address.zip,
+      from_state: config.address.state,
+      from_city: config.address.city,
+      from_street: config.address.street,
       to_country: order.shippingAddress!.country.code,
       to_zip: order.shippingAddress!.postalCode,
       to_state: order.shippingAddress!.countryArea,

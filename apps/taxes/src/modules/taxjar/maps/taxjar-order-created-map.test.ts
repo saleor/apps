@@ -102,14 +102,18 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
       },
     ],
   },
-  channel: {
-    providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
+  config: {
+    isSandbox: true,
+    name: "taxjar-1",
+    credentials: {
+      apiKey: "avatax-api-key",
+    },
     address: {
+      city: "New York",
       country: "US",
-      zip: "92093",
-      state: "CA",
-      city: "La Jolla",
-      street: "9500 Gilman Drive",
+      state: "NY",
+      street: "123 Main St",
+      zip: "10001",
     },
   },
 };

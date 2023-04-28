@@ -74,7 +74,7 @@ const mapPayload = ({
       // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
       commit: config.isAutocommit,
       addresses: {
-        shipFrom: avataxAddressFactory.fromChannelAddress(channel.address),
+        shipFrom: avataxAddressFactory.fromChannelAddress(config.address),
         // billing or shipping address?
         shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
       },
