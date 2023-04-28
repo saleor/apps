@@ -35,8 +35,10 @@ const MOCKED_PROVIDERS: ProvidersConfig = [
     provider: "taxjar",
     config: {
       name: "taxjar-1",
-      apiKey: "1234",
       isSandbox: true,
+      credentials: {
+        apiKey: "1234",
+      },
     },
     id: "1",
   },
