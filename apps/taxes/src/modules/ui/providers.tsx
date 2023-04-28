@@ -39,6 +39,13 @@ const MOCKED_PROVIDERS: ProvidersConfig = [
       credentials: {
         apiKey: "1234",
       },
+      address: {
+        city: "New York",
+        country: "US",
+        state: "NY",
+        street: "123 Main St",
+        zip: "10001",
+      },
     },
     id: "1",
   },

@@ -29,6 +29,13 @@ const mockedProviders: ProvidersConfig = [
         password: "avatax-password",
         username: "avatax-username",
       },
+      address: {
+        city: "New York",
+        country: "US",
+        state: "NY",
+        street: "123 Main St",
+        zip: "10001",
+      },
     },
   },
   {
@@ -40,6 +47,13 @@ const mockedProviders: ProvidersConfig = [
       credentials: {
         apiKey: "taxjar-api-key",
       },
+      address: {
+        city: "New York",
+        country: "US",
+        state: "NY",
+        street: "123 Main St",
+        zip: "10001",
+      },
     },
   },
 ];
@@ -47,26 +61,12 @@ const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), mocked
 
 const mockedChannelsWithInvalidProviderInstanceId: ChannelsConfig = {
   "default-channel": {
-    address: {
-      city: "New York",
-      country: "US",
-      state: "NY",
-      street: "123 Main St",
-      zip: "10001",
-    },
     providerInstanceId: "3",
   },
 };
 
 const mockedValidChannels: ChannelsConfig = {
   "default-channel": {
-    address: {
-      city: "New York",
-      country: "US",
-      state: "NY",
-      street: "123 Main St",
-      zip: "10001",
-    },
     providerInstanceId: "1",
   },
 };
