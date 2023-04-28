@@ -1,7 +1,15 @@
 import { z } from "zod";
 import { obfuscateSecret } from "../../lib/utils";
 
-const avataxCredentials = z.object({
+const addressSchema = z.object({
+  country: z.string(),
+  zip: z.string(),
+  state: z.string(),
+  city: z.string(),
+  street: z.string(),
+});
+
+const avataxCredentialsSchema = z.object({
   username: z.string().min(1, { message: "Username requires at least one character." }),
   password: z.string().min(1, { message: "Password requires at least one character." }),
 });
@@ -12,7 +20,8 @@ export const avataxConfigSchema = z.object({
   companyCode: z.string().optional(),
   isAutocommit: z.boolean(),
   shippingTaxCode: z.string().optional(),
-  credentials: avataxCredentials,
+  credentials: avataxCredentialsSchema,
+  address: addressSchema,
 });
 
 export type AvataxConfig = z.infer<typeof avataxConfigSchema>;
@@ -26,6 +35,13 @@ export const defaultAvataxConfig: AvataxConfig = {
   credentials: {
     username: "",
     password: "",
+  },
+  address: {
+    city: "",
+    country: "",
+    state: "",
+    street: "",
+    zip: "",
   },
 };
 

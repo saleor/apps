@@ -9,8 +9,8 @@ import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
-  config: TaxJarConfig;
   private logger: Logger;
+  private config: TaxJarConfig;
 
   constructor(config: TaxJarConfig) {
     const taxJarClient = new TaxJarClient(config);
