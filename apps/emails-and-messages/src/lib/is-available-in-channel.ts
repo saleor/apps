@@ -1,7 +1,8 @@
+import { SendgridConfigurationChannels } from "../modules/sendgrid/configuration/sendgrid-config-schema";
+
 interface IsAvailableInChannelArgs {
   channel: string;
-  restrictedToChannels: string[];
-  excludedChannels: string[];
+  channelConfiguration: SendgridConfigurationChannels;
 }
 
 /**
@@ -14,14 +15,13 @@ interface IsAvailableInChannelArgs {
  */
 export const isAvailableInChannel = ({
   channel,
-  restrictedToChannels,
-  excludedChannels,
+  channelConfiguration,
 }: IsAvailableInChannelArgs): boolean => {
-  if (channel in excludedChannels) {
-    return false;
+  if (!channelConfiguration.override) {
+    return true;
   }
-  if (restrictedToChannels.length > 0 && !(channel in restrictedToChannels)) {
-    return false;
+  if (channelConfiguration.mode === "restrict") {
+    return channel in channelConfiguration.channels;
   }
-  return true;
+  return !(channel in channelConfiguration.channels);
 };

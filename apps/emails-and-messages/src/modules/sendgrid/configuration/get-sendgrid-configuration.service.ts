@@ -1,7 +1,7 @@
 import { SendgridConfigurator, PrivateMetadataSendgridConfigurator } from "./sendgrid-configurator";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../../lib/logger";
-import { SendgridConfig, SendgridConfiguration } from "./sendgrid-config";
+import { SendgridConfig, SendgridConfiguration } from "./sendgrid-config-schema";
 import { FilterConfigurationsArgs, SendgridConfigContainer } from "./sendgrid-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
 

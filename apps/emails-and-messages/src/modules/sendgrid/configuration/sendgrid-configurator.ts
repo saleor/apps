@@ -1,4 +1,4 @@
-import { SendgridConfig } from "./sendgrid-config";
+import { SendgridConfig } from "./sendgrid-config-schema";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
 export interface SendgridConfigurator {

@@ -1,99 +1,101 @@
-import { useRouter } from "next/router";
-import { SendgridConfiguration } from "../configuration/sendgrid-config";
+import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Combobox, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Combobox } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { sendgridUpdateBasicInformationSchema } from "../configuration/sendgrid-config-input-schema";
-import { z } from "zod";
+import { SendgridUpdateSender } from "../configuration/sendgrid-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import { fetchSenders } from "../sendgrid-api";
+import { useQuery } from "@tanstack/react-query";
 
 interface SenderSectionProps {
-  configuration?: SendgridConfiguration;
+  configuration: SendgridConfiguration;
 }
 
 export const SenderSection = ({ configuration }: SenderSectionProps) => {
-  const { replace } = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { handleSubmit, control, setError } = useForm<
-    z.infer<typeof sendgridUpdateBasicInformationSchema>
-  >({
+  const { data: sendersChoices, isLoading: isSendersChoicesLoading } = useQuery({
+    queryKey: ["sendgridSenders"],
+    queryFn: fetchSenders({ apiKey: configuration.apiKey }),
+    enabled: !!configuration.apiKey?.length,
+  });
+
+  const { handleSubmit, control, setError } = useForm<SendgridUpdateSender>({
     defaultValues: {
-      configurationName: configuration?.configurationName,
-      active: configuration?.active,
+      id: configuration.id,
+      sender: configuration.sender,
     },
   });
 
-  const { mutate: createConfiguration } =
-    trpcClient.sendgridConfiguration.updateBasicInformation.useMutation({
-      onSuccess: async (data, variables) => {
-        notifySuccess("Configuration saved");
-        // TODO: redirect to configuration details based on id
-      },
-      onError(error) {
-        let isFieldErrorSet = false;
-        const fieldErrors = error.data?.zodError?.fieldErrors || {};
-        for (const fieldName in fieldErrors) {
-          for (const message of fieldErrors[fieldName] || []) {
-            isFieldErrorSet = true;
-            setError(fieldName as keyof z.infer<typeof sendgridUpdateBasicInformationSchema>, {
-              type: "manual",
-              message,
-            });
-          }
+  const trpcContext = trpcClient.useContext();
+  const { mutate } = trpcClient.sendgridConfiguration.updateSender.useMutation({
+    onSuccess: async (data, variables) => {
+      notifySuccess("Configuration saved");
+      trpcContext.sendgridConfiguration.invalidate();
+    },
+    onError(error) {
+      let isFieldErrorSet = false;
+      const fieldErrors = error.data?.zodError?.fieldErrors || {};
+      for (const fieldName in fieldErrors) {
+        for (const message of fieldErrors[fieldName] || []) {
+          isFieldErrorSet = true;
+          setError(fieldName as keyof SendgridUpdateSender, {
+            type: "manual",
+            message,
+          });
         }
-        const formErrors = error.data?.zodError?.formErrors || [];
-        const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
+      }
+      const formErrors = error.data?.zodError?.formErrors || [];
+      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
 
-        notifyError(
-          "Could not save the configuration",
-          isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-          formErrorMessage
-        );
-      },
-    });
-
-  if (!configuration) {
-    return (
-      <BoxWithBorder padding={10} display={"grid"} alignItems={"center"} justifyContent={"center"}>
-        <Text>Loading</Text>
-      </BoxWithBorder>
-    );
-  }
+      notifyError(
+        "Could not save the configuration",
+        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
+        formErrorMessage
+      );
+    },
+  });
 
   return (
     <SectionWithDescription title="Sender">
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {
-            createConfiguration({
+            mutate({
               ...data,
             });
           })}
         >
           <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
-            <Controller
-              name="sender"
-              control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Combobox
-                  label="Sender"
-                  value={value}
-                  options={[
-                    { label: "test", value: "test" },
-                    { label: "test", value: "test" },
-                  ]}
-                />
-              )}
-            />
+            {sendersChoices?.length ? (
+              <Controller
+                name="sender"
+                control={control}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                  formState: { errors },
+                }) => (
+                  <Combobox
+                    label="Sender"
+                    value={value}
+                    defaultValue={configuration.sender}
+                    onChange={(event) => onChange(event?.value)}
+                    options={sendersChoices.map((sender) => ({
+                      label: sender.label,
+                      value: sender.value,
+                    }))}
+                    error={!!error}
+                  />
+                )}
+              />
+            ) : (
+              <Combobox label="Sender" options={[]} disabled={true} />
+            )}
           </Box>
           <BoxFooter>
             <Button type="submit">Save provider</Button>
