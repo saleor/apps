@@ -10,42 +10,20 @@ const logger = createLogger({
   service: "WebhookActivityTogglerService",
 });
 
-export class WebhookActivityTogglerService {
-  constructor(private ownAppId: string, private client: Client) {}
+export interface IWebhooksClient {
+  fetchAppWebhooksIDs(id: string): Promise<string[]>;
+  disableSingleWebhook(id: string): Promise<void>;
+  enableSingleWebhook(id: string): Promise<void>;
+}
 
-  private fetchOwnWebhooks() {
-    return this.client
-      .query(FetchOwnWebhooksDocument, { id: this.ownAppId })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
-
-        return r.data?.app?.webhooks?.map((w) => w.id);
-      });
-  }
-
-  private disableSingleWebhook(webhookId: string) {
-    return this.client
-      .mutation(DisableWebhookDocument, {
-        id: webhookId,
-      })
-      .toPromise();
-  }
-
-  private enableSingleWebhook(webhookId: string) {
-    return this.client
-      .mutation(EnableWebhookDocument, {
-        id: webhookId,
-      })
-      .toPromise();
-  }
+export class WebhooksClient implements IWebhooksClient {
+  constructor(private client: Client) {}
 
   private handleOperationFailure(r: OperationResult) {
     if (r.error || !r.data) {
       logger.error(
         {
           error: r.error,
-          appId: this.ownAppId,
         },
         "Error disabling webhook"
       );
@@ -53,11 +31,70 @@ export class WebhookActivityTogglerService {
     }
   }
 
+  fetchAppWebhooksIDs(id: string) {
+    return this.client
+      .query(FetchOwnWebhooksDocument, { id })
+      .toPromise()
+      .then((r) => {
+        this.handleOperationFailure(r);
+
+        if (!r.data?.app?.webhooks) {
+          throw new Error("Webhooks not registered for app, something is wrong");
+        }
+
+        return r.data?.app?.webhooks?.map((w) => w.id);
+      });
+  }
+
+  disableSingleWebhook(id: string): Promise<void> {
+    return this.client
+      .mutation(DisableWebhookDocument, {
+        id,
+      })
+      .toPromise()
+      .then((r) => {
+        this.handleOperationFailure(r);
+
+        return undefined;
+      });
+  }
+
+  enableSingleWebhook(id: string): Promise<void> {
+    return this.client
+      .mutation(EnableWebhookDocument, {
+        id,
+      })
+      .toPromise()
+      .then((r) => {
+        this.handleOperationFailure(r);
+
+        return undefined;
+      });
+  }
+}
+
+export class WebhookActivityTogglerService {
+  /**
+   * Extracted separate client for easier testing without touching graphQL
+   */
+  private webhooksClient: IWebhooksClient;
+
+  constructor(
+    private ownAppId: string,
+    private client: Client,
+    options?: {
+      WebhooksClient: IWebhooksClient;
+    }
+  ) {
+    this.webhooksClient = options?.WebhooksClient ?? new WebhooksClient(this.client);
+  }
+
   /**
    * Disable webhooks with provided IDs. If not provided, it will fetch them from Saleor
    */
   async disableOwnWebhooks(webhooksIdsParam?: string[]) {
-    const webhooksIds = webhooksIdsParam ?? (await this.fetchOwnWebhooks());
+    const webhooksIds =
+      webhooksIdsParam ?? (await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId));
 
     logger.info(webhooksIds, "Disabling own webhooks");
 
@@ -65,13 +102,11 @@ export class WebhookActivityTogglerService {
       throw new Error("Failed fetching webhooks");
     }
 
-    return Promise.all(
-      webhooksIds.map((id) => this.disableSingleWebhook(id).then(this.handleOperationFailure))
-    );
+    return Promise.all(webhooksIds.map((id) => this.webhooksClient.disableSingleWebhook(id)));
   }
 
   async enableOwnWebhooks() {
-    const webhooksIds = await this.fetchOwnWebhooks();
+    const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
 
     logger.info(webhooksIds, "Enabling own webhooks");
 
@@ -79,8 +114,6 @@ export class WebhookActivityTogglerService {
       throw new Error("Failed fetching webhooks");
     }
 
-    return Promise.all(
-      webhooksIds.map((id) => this.enableSingleWebhook(id).then(this.handleOperationFailure))
-    );
+    return Promise.all(webhooksIds.map((id) => this.webhooksClient.enableSingleWebhook(id)));
   }
 }
