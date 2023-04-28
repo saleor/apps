@@ -1,4 +1,8 @@
-import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
+import {
+  EncryptedMetadataManager,
+  MetadataEntry,
+  SettingsManager,
+} from "@saleor/app-sdk/settings-manager";
 import { Client } from "urql";
 
 import {
@@ -72,7 +76,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
-export const createSettingsManager = (client: Client) => {
+export const createSettingsManager = (client: Client): SettingsManager => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.

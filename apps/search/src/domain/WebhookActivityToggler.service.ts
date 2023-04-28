@@ -16,6 +16,11 @@ export interface IWebhooksClient {
   enableSingleWebhook(id: string): Promise<void>;
 }
 
+export interface IWebhookActivityTogglerService {
+  disableOwnWebhooks(webhooksIdsParam?: string[]): Promise<void>;
+  enableOwnWebhooks(): Promise<void>;
+}
+
 export class WebhooksClient implements IWebhooksClient {
   constructor(private client: Client) {}
 
@@ -73,7 +78,7 @@ export class WebhooksClient implements IWebhooksClient {
   }
 }
 
-export class WebhookActivityTogglerService {
+export class WebhookActivityTogglerService implements IWebhookActivityTogglerService {
   /**
    * Extracted separate client for easier testing without touching graphQL
    */
@@ -102,7 +107,7 @@ export class WebhookActivityTogglerService {
       throw new Error("Failed fetching webhooks");
     }
 
-    return Promise.all(webhooksIds.map((id) => this.webhooksClient.disableSingleWebhook(id)));
+    await Promise.all(webhooksIds.map((id) => this.webhooksClient.disableSingleWebhook(id)));
   }
 
   async enableOwnWebhooks() {
@@ -114,6 +119,6 @@ export class WebhookActivityTogglerService {
       throw new Error("Failed fetching webhooks");
     }
 
-    return Promise.all(webhooksIds.map((id) => this.webhooksClient.enableSingleWebhook(id)));
+    await Promise.all(webhooksIds.map((id) => this.webhooksClient.enableSingleWebhook(id)));
   }
 }
