@@ -3,10 +3,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
+import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 
 const BATCH_SIZE = 100;
 
 export const ImportProductsToAlgolia = () => {
+  const [algoliaConfigured, setAlgoliaConfigured] = useState<null | boolean>(null);
   const [started, setStarted] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
@@ -35,6 +37,15 @@ export const ImportProductsToAlgolia = () => {
   }, []);
 
   useEffect(() => {
+    if (searchProvider) {
+      searchProvider
+        .ping()
+        .then(() => setAlgoliaConfigured(true))
+        .catch(() => setAlgoliaConfigured(false));
+    }
+  }, [searchProvider]);
+
+  useEffect(() => {
     if (!searchProvider || isAlgoliaImporting || products.length <= currentProductIndex) {
       return;
     }
@@ -53,7 +64,7 @@ export const ImportProductsToAlgolia = () => {
 
   return (
     <Box __cursor={started ? "wait" : "auto"}>
-      {searchProvider ? (
+      {searchProvider && algoliaConfigured ? (
         <Box>
           <Text variant={"heading"} as={"p"} marginBottom={4}>
             Importing products & variants

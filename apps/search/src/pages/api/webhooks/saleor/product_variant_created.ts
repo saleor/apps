@@ -70,7 +70,9 @@ export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req,
 
       logger.trace("Will disable webhooks");
 
-      await webhooksToggler.disableOwnWebhooks();
+      await webhooksToggler.disableOwnWebhooks(
+        context.payload.recipient?.webhooks?.map((w) => w.id)
+      );
 
       logger.trace("Webhooks disabling operation finished");
 

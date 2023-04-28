@@ -53,9 +53,11 @@ export class WebhookActivityTogglerService {
     }
   }
 
-  // todo allow passing them, so webhook can deliver without extra call
-  async disableOwnWebhooks() {
-    const webhooksIds = await this.fetchOwnWebhooks();
+  /**
+   * Disable webhooks with provided IDs. If not provided, it will fetch them from Saleor
+   */
+  async disableOwnWebhooks(webhooksIdsParam?: string[]) {
+    const webhooksIds = webhooksIdsParam ?? (await this.fetchOwnWebhooks());
 
     logger.info(webhooksIds, "Disabling own webhooks");
 
@@ -67,7 +69,7 @@ export class WebhookActivityTogglerService {
       webhooksIds.map((id) => this.disableSingleWebhook(id).then(this.handleOperationFailure))
     );
   }
-  // todo allow passing them, so webhook can deliver without extra call
+
   async enableOwnWebhooks() {
     const webhooksIds = await this.fetchOwnWebhooks();
 
