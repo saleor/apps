@@ -1,82 +1,123 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { createClient } from "../../lib/graphql";
+import { createClient, SimpleGraphqlClient } from "../../lib/graphql";
 import { FetchOwnWebhooksDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
-import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import {
+  IWebhookActivityTogglerService,
+  WebhookActivityTogglerService,
+} from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
+import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { Client } from "urql";
+import { SearchProvider } from "../../lib/searchProvider";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
 });
 
-export const webhooksStatusHandler: NextProtectedApiHandler = async (req, res, ctx) => {
-  const { authData } = ctx;
-  const client = createClient(authData.saleorApiUrl, async () => ({
-    token: authData.token,
-  }));
-  const webhooksToggler = new WebhookActivityTogglerService(authData.appId, client);
-
-  const settingsManager = createSettingsManager(client);
-  const domain = new URL(authData.saleorApiUrl).host;
-
-  const [secretKey, appId] = await Promise.all([
-    settingsManager.get("secretKey", domain),
-    settingsManager.get("appId", domain),
-  ]);
-
-  const settings = { secretKey, appId };
-
-  logger.debug(settings, "fetched settings");
-
-  /**
-   * If settings are incomplete, disable webhooks
-   *
-   * TODO Extract config operations to domain/
-   */
-  if (!settings.appId || !settings.secretKey) {
-    logger.debug("Settings not set, will disable webhooks");
-
-    await webhooksToggler.disableOwnWebhooks();
-  } else {
-    /**
-     * Otherwise, if settings are set, check in Algolia if tokens are valid
-     */
-    const algoliaService = new AlgoliaSearchProvider({
-      appId: settings.appId,
-      apiKey: settings.secretKey,
-    });
-
-    try {
-      logger.debug("Settings set, will ping Algolia");
-
-      await algoliaService.ping();
-    } catch (e) {
-      logger.debug("Algolia ping failed, will disable webhooks");
-      /**
-       * If credentials are invalid, also disable webhooks
-       */
-      await webhooksToggler.disableOwnWebhooks();
-    }
-  }
-
-  try {
-    logger.debug("Settings and Algolia are correct, will fetch Webhooks from Saleor");
-
-    const webhooks = await client
-      .query(FetchOwnWebhooksDocument, { id: authData.appId })
-      .toPromise()
-      .then((r) => r.data?.app?.webhooks);
-
-    if (!webhooks) {
-      return res.status(500).end();
-    }
-
-    return res.status(200).json(webhooks);
-  } catch (e) {
-    return res.status(500).end();
-  }
+/**
+ * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
+ */
+type FactoryProps = {
+  settingsManagerFactory: (client: SimpleGraphqlClient) => SettingsManager;
+  webhookActivityTogglerFactory: (
+    appId: string,
+    client: SimpleGraphqlClient
+  ) => IWebhookActivityTogglerService;
+  algoliaSearchProviderFactory: (appId: string, apiKey: string) => Pick<SearchProvider, "ping">;
+  graphqlClientFactory: (saleorApiUrl: string, token: string) => SimpleGraphqlClient;
 };
 
-export default createProtectedHandler(webhooksStatusHandler, saleorApp.apl, []);
+export const webhooksStatusHandlerFactory =
+  ({
+    settingsManagerFactory,
+    webhookActivityTogglerFactory,
+    algoliaSearchProviderFactory,
+    graphqlClientFactory,
+  }: FactoryProps): NextProtectedApiHandler =>
+  async (req, res, { authData }) => {
+    /**
+     * Initialize services
+     */
+    const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
+    const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
+    const settingsManager = settingsManagerFactory(client);
+
+    const domain = new URL(authData.saleorApiUrl).host;
+
+    const [secretKey, appId] = await Promise.all([
+      settingsManager.get("secretKey", domain),
+      settingsManager.get("appId", domain),
+    ]);
+
+    const settings = { secretKey, appId };
+
+    logger.debug(settings, "fetched settings");
+
+    /**
+     * If settings are incomplete, disable webhooks
+     *
+     * TODO Extract config operations to domain/
+     */
+    if (!settings.appId || !settings.secretKey) {
+      logger.debug("Settings not set, will disable webhooks");
+
+      await webhooksToggler.disableOwnWebhooks();
+    } else {
+      /**
+       * Otherwise, if settings are set, check in Algolia if tokens are valid
+       */
+      const algoliaService = algoliaSearchProviderFactory(settings.appId, settings.secretKey);
+
+      try {
+        logger.debug("Settings set, will ping Algolia");
+
+        await algoliaService.ping();
+      } catch (e) {
+        logger.debug("Algolia ping failed, will disable webhooks");
+        /**
+         * If credentials are invalid, also disable webhooks
+         */
+        await webhooksToggler.disableOwnWebhooks();
+      }
+    }
+
+    try {
+      logger.debug("Settings and Algolia are correct, will fetch Webhooks from Saleor");
+
+      const webhooks = await client
+        .query(FetchOwnWebhooksDocument, { id: authData.appId })
+        .toPromise()
+        .then((r) => r.data?.app?.webhooks);
+
+      if (!webhooks) {
+        return res.status(500).end();
+      }
+
+      return res.status(200).json(webhooks);
+    } catch (e) {
+      console.error(e);
+      return res.status(500).end();
+    }
+  };
+
+export default createProtectedHandler(
+  webhooksStatusHandlerFactory({
+    settingsManagerFactory: createSettingsManager,
+    webhookActivityTogglerFactory: function (appId, client) {
+      return new WebhookActivityTogglerService(appId, client);
+    },
+    algoliaSearchProviderFactory(appId, apiKey) {
+      return new AlgoliaSearchProvider({ appId, apiKey });
+    },
+    graphqlClientFactory(saleorApiUrl: string, token: string) {
+      return createClient(saleorApiUrl, async () => ({
+        token,
+      }));
+    },
+  }),
+  saleorApp.apl,
+  []
+);

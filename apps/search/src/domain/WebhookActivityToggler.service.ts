@@ -10,7 +10,7 @@ const logger = createLogger({
   service: "WebhookActivityTogglerService",
 });
 
-export interface IWebhooksClient {
+export interface IWebhooksActivityClient {
   fetchAppWebhooksIDs(id: string): Promise<string[]>;
   disableSingleWebhook(id: string): Promise<void>;
   enableSingleWebhook(id: string): Promise<void>;
@@ -21,8 +21,8 @@ export interface IWebhookActivityTogglerService {
   enableOwnWebhooks(): Promise<void>;
 }
 
-export class WebhooksClient implements IWebhooksClient {
-  constructor(private client: Client) {}
+export class WebhooksActivityClient implements IWebhooksActivityClient {
+  constructor(private client: Pick<Client, "query" | "mutation">) {}
 
   private handleOperationFailure(r: OperationResult) {
     if (r.error || !r.data) {
@@ -82,16 +82,16 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
   /**
    * Extracted separate client for easier testing without touching graphQL
    */
-  private webhooksClient: IWebhooksClient;
+  private webhooksClient: IWebhooksActivityClient;
 
   constructor(
     private ownAppId: string,
-    private client: Client,
+    private client: Pick<Client, "query" | "mutation">,
     options?: {
-      WebhooksClient: IWebhooksClient;
+      WebhooksClient: IWebhooksActivityClient;
     }
   ) {
-    this.webhooksClient = options?.WebhooksClient ?? new WebhooksClient(this.client);
+    this.webhooksClient = options?.WebhooksClient ?? new WebhooksActivityClient(this.client);
   }
 
   /**

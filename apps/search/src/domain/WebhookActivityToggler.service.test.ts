@@ -1,9 +1,9 @@
 import { Client } from "urql";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { IWebhooksClient, WebhookActivityTogglerService } from "./WebhookActivityToggler.service";
+import { IWebhooksActivityClient, WebhookActivityTogglerService } from "./WebhookActivityToggler.service";
 
 describe("WebhookActivityTogglerService", function () {
-  let mockWebhooksClient: IWebhooksClient;
+  let mockWebhooksClient: IWebhooksActivityClient;
   let service: WebhookActivityTogglerService;
 
   beforeEach(() => {
