@@ -9,7 +9,8 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "test": "vitest"
   },
   "saleor": {
     "schemaVersion": "3.7"

@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, beforeEach, afterEach, Mock } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import { createMocks } from "node-mocks-http";
 import { webhooksStatusHandler } from "../../pages/api/webhooks-status";
 import * as SettingsManagerFactory from "../../lib/metadata";
@@ -8,7 +8,14 @@ import {
   IWebhookActivityTogglerService,
   WebhookActivityTogglerService,
 } from "../../domain/WebhookActivityToggler.service";
-import { Client } from "urql";
+
+const mockAlgoliaPing = vi.fn();
+
+vi.doMock("../../lib/algolia/algoliaSearchProvider", () => ({
+  AlgoliaSearchProvider: {
+    ping: mockAlgoliaPing,
+  },
+}));
 
 describe("webhooksStatusHandler", () => {
   const settingsManagerMock: SettingsManager = {
@@ -56,11 +63,11 @@ describe("webhooksStatusHandler", () => {
   });
 
   it("Disables webhooks if Algolia credentials are invalid", async function () {
-    (settingsManagerMock.get as Mock).mockImplementation(async (key) => {
-      console.log(key);
-      // todo secret key not returned
-      return key + "_value";
+    mockAlgoliaPing.mockImplementationOnce(async () => {
+      throw new Error("ping invalid");
     });
+
+    (settingsManagerMock.get as Mock).mockReturnValue("metadata-value");
 
     const { req, res } = createMocks({});
 
@@ -73,6 +80,8 @@ describe("webhooksStatusHandler", () => {
       },
       baseUrl: "localhost:3000",
     });
+
+    expect(mockAlgoliaPing).toHaveBeenCalled();
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
   });

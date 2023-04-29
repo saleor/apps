@@ -21,10 +21,12 @@ export const webhooksStatusHandler: NextProtectedApiHandler = async (req, res, c
   const settingsManager = createSettingsManager(client);
   const domain = new URL(authData.saleorApiUrl).host;
 
-  const settings = {
-    secretKey: await settingsManager.get("secretKey", domain),
-    appId: await settingsManager.get("appId", domain),
-  };
+  const [secretKey, appId] = await Promise.all([
+    settingsManager.get("secretKey", domain),
+    settingsManager.get("appId", domain),
+  ]);
+
+  const settings = { secretKey, appId };
 
   logger.debug(settings, "fetched settings");
 
