@@ -73,12 +73,6 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.8.0
-        version: 8.9.0
-      pino-pretty:
-        specifier: ^9.1.1
-        version: 9.1.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1668,6 +1662,13 @@ importers:
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
 
   packages/shared:
+    dependencies:
+      pino:
+        specifier: ^8.8.0
+        version: 8.9.0
+      pino-pretty:
+        specifier: ^9.1.1
+        version: 9.1.1
     devDependencies:
       '@material-ui/core':
         specifier: ^4.12.4
