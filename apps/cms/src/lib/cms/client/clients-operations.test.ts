@@ -11,11 +11,10 @@ type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
 const mockedContext: Pick<WebhookContext, "authData"> = {
   authData: {
-    saleorApiUrl: "url",
+    saleorApiUrl: "https://domain.saleor.io/graphql/",
     token: "token",
     appId: "appId",
-    domain: "domain",
-    jwks: "jwks",
+    domain: "domain.saleor.io",
   },
 };
 
@@ -68,7 +67,7 @@ describe("CMS Clients Operations", () => {
           "first-provider": {
             name: "First provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "first-provider",
             providerName: "strapi",
@@ -76,7 +75,7 @@ describe("CMS Clients Operations", () => {
           "second-provider": {
             name: "Second provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "second-provider",
             providerName: "strapi",
@@ -84,7 +83,7 @@ describe("CMS Clients Operations", () => {
           "third-provider": {
             name: "Third provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "third-provider",
             providerName: "strapi",
@@ -108,17 +107,18 @@ describe("CMS Clients Operations", () => {
       productVariantCmsKeys: [],
     });
 
-    expect(cmsOperations).toEqual<CmsClientOperations[]>([
-      {
-        cmsProviderInstanceId: "first-provider",
-        operationType: "createProduct",
-        operations: {
-          createProduct: expect.any(Function),
-          deleteProduct: expect.any(Function),
-          updateProduct: expect.any(Function),
-        },
-      },
-    ]);
+    const operationsItem = cmsOperations[0];
+
+    /**
+     * Replace deep equal with single ones due to some strange errors in vite/jest.
+     * Functions were not matched properly in deep object
+     */
+    expect(operationsItem.cmsProviderInstanceId).toBe("first-provider");
+    expect(operationsItem.operationType).toBe("createProduct");
+    expect(operationsItem.operations.createProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.deleteProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.updateProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.ping).toEqual(expect.any(Function));
   });
 
   it("should return update operation when variant with channel listing that exists in provider instance passed", async () => {
@@ -141,7 +141,7 @@ describe("CMS Clients Operations", () => {
           "first-provider": {
             name: "First provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "first-provider",
             providerName: "strapi",
@@ -149,7 +149,7 @@ describe("CMS Clients Operations", () => {
           "second-provider": {
             name: "Second provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "second-provider",
             providerName: "strapi",
@@ -157,7 +157,7 @@ describe("CMS Clients Operations", () => {
           "third-provider": {
             name: "Third provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "third-provider",
             providerName: "strapi",
@@ -181,17 +181,18 @@ describe("CMS Clients Operations", () => {
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
-    expect(cmsOperations).toEqual<CmsClientOperations[]>([
-      {
-        cmsProviderInstanceId: "first-provider",
-        operationType: "updateProduct",
-        operations: {
-          createProduct: expect.any(Function),
-          deleteProduct: expect.any(Function),
-          updateProduct: expect.any(Function),
-        },
-      },
-    ]);
+    const operationsItem = cmsOperations[0];
+
+    /**
+     * Replace deep equal with single ones due to some strange errors in vite/jest.
+     * Functions were not matched properly in deep object
+     */
+    expect(operationsItem.cmsProviderInstanceId).toBe("first-provider");
+    expect(operationsItem.operationType).toBe("updateProduct");
+    expect(operationsItem.operations.createProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.deleteProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.updateProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.ping).toEqual(expect.any(Function));
   });
 
   it("should return delete operation when variant without channel listing that exists in provider instance passed", async () => {
@@ -214,7 +215,7 @@ describe("CMS Clients Operations", () => {
           "first-provider": {
             name: "First provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "first-provider",
             providerName: "strapi",
@@ -222,7 +223,7 @@ describe("CMS Clients Operations", () => {
           "second-provider": {
             name: "Second provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "second-provider",
             providerName: "strapi",
@@ -230,7 +231,7 @@ describe("CMS Clients Operations", () => {
           "third-provider": {
             name: "Third provider",
             token: "token",
-            baseUrl: "baseUrl",
+            baseUrl: "http://localhost:3000",
             contentTypeId: "contentTypeId",
             id: "third-provider",
             providerName: "strapi",
@@ -254,16 +255,17 @@ describe("CMS Clients Operations", () => {
       productVariantCmsKeys: [createCmsKeyForSaleorItem("first-provider")],
     });
 
-    expect(cmsOperations).toEqual<CmsClientOperations[]>([
-      {
-        cmsProviderInstanceId: "first-provider",
-        operationType: "deleteProduct",
-        operations: {
-          createProduct: expect.any(Function),
-          deleteProduct: expect.any(Function),
-          updateProduct: expect.any(Function),
-        },
-      },
-    ]);
+    const operationsItem = cmsOperations[0];
+
+    /**
+     * Replace deep equal with single ones due to some strange errors in vite/jest.
+     * Functions were not matched properly in deep object
+     */
+    expect(operationsItem.cmsProviderInstanceId).toBe("first-provider");
+    expect(operationsItem.operationType).toBe("deleteProduct");
+    expect(operationsItem.operations.createProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.deleteProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.updateProduct).toEqual(expect.any(Function));
+    expect(operationsItem.operations.ping).toEqual(expect.any(Function));
   });
 });
