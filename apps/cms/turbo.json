@@ -5,7 +5,7 @@
     "build": {
       "env": [
         "APL",
-        "APP_DEBUG",
+        "APP_LOG_LEVEL",
         "NODE_ENV",
         "SECRET_KEY",
         "PORT",

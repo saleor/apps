@@ -9,14 +9,15 @@ import {
   ProductResponseSuccess,
 } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
-import { logger as pinoLogger } from "../../logger";
+import { createLogger } from "@saleor/apps-shared";
 import { CMSProvider, cmsProviders } from "../providers";
 import { ProviderInstanceSchema, providersSchemaSet } from "../config";
 
 export const pingProviderInstance = async (
   providerInstanceSettings: ProviderInstanceSchema
 ): Promise<BaseResponse> => {
-  const logger = pinoLogger.child({ providerInstanceSettings });
+  const logger = createLogger({ providerInstanceSettings });
+
   logger.debug("Ping provider instance called");
 
   const provider = cmsProviders[
@@ -57,7 +58,8 @@ const executeCmsClientOperation = async ({
   cmsClient: CmsClientOperations;
   productVariant: WebhookProductVariantFragment;
 }): Promise<CmsClientOperationResult | undefined> => {
-  const logger = pinoLogger.child({ cmsClient });
+  const logger = createLogger({ cmsClient });
+
   logger.debug("Execute CMS client operation called");
 
   const cmsId = getCmsIdFromSaleorItem(productVariant, cmsClient.cmsProviderInstanceId);
@@ -84,9 +86,11 @@ const executeCmsClientOperation = async ({
 
     try {
       await cmsClient.operations.updateProduct({
-        // todo: change params of product methods because of below:
-        // * In some CMSes, cmsId may be productId. Perhaps it's better to just pass everything as one big object
-        // * and decide on the id on the provider level.
+        /*
+         * todo: change params of product methods because of below:
+         * * In some CMSes, cmsId may be productId. Perhaps it's better to just pass everything as one big object
+         * * and decide on the id on the provider level.
+         */
         id: cmsId,
         input: {
           saleorId: productVariant.id,
@@ -163,7 +167,8 @@ export const executeCmsClientBatchOperation = async ({
     productVariant: WebhookProductVariantFragment
   ) => boolean;
 }): Promise<CmsClientBatchOperationResult | undefined> => {
-  const logger = pinoLogger.child({ cmsClient });
+  const logger = createLogger({ cmsClient });
+
   logger.debug({ operations: cmsClient.operations }, "Execute CMS client operation called");
 
   if (cmsClient.operationType === "createBatchProducts") {

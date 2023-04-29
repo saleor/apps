@@ -9,9 +9,10 @@ import {
 import { providersSchemaSet } from "../config";
 import { CMSProvider, cmsProviders } from "../providers";
 import { CmsClientOperations } from "../types";
-import { logger as pinoLogger } from "../../logger";
+
 import { getCmsIdFromSaleorItemKey } from "./metadata";
 import { type Client } from "urql";
+import { createLogger } from "@saleor/apps-shared";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
@@ -26,7 +27,7 @@ export const createCmsOperations = async ({
   productVariantChannels: string[];
   productVariantCmsKeys: string[];
 }) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     productVariantChannels,
     productVariantCmsKeys,
   });
@@ -54,8 +55,10 @@ export const createCmsOperations = async ({
   ];
 
   if (!allProductVariantProviderInstancesToAlter.length) {
-    // todo: use instead: throw new Error("The channel settings were not found.");
-    // continue with other provider instances
+    /*
+     * todo: use instead: throw new Error("The channel settings were not found.");
+     * continue with other provider instances
+     */
     return [];
   }
 
@@ -75,8 +78,10 @@ export const createCmsOperations = async ({
         );
 
       if (!validation.success) {
-        // todo: use instead: throw new Error(validation.error.message);
-        // continue with other provider instances
+        /*
+         * todo: use instead: throw new Error(validation.error.message);
+         * continue with other provider instances
+         */
         logger.error("The provider instance settings validation failed.", {
           error: validation.error.message,
         });
