@@ -1,10 +1,11 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { createLogger } from "../../lib/logger";
+
 import { MailchimpClientOAuth } from "./mailchimp-client";
 import { MailchimpConfigSettingsManager } from "./mailchimp-config-settings-manager";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createLogger } from "@saleor/apps-shared";
 
 const AddContactSchema = z.object({
   listId: z.string().min(1),
