@@ -9,7 +9,8 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen"
+    "generate": "graphql-codegen",
+    "test": "vitest"
   },
   "saleor": {
     "schemaVersion": "3.7"
@@ -60,6 +61,7 @@
     "prettier": "^2.7.1",
     "typescript": "4.8.4",
     "vite": "^4.3.1",
-    "vitest": "^0.30.1"
+    "vitest": "^0.30.1",
+    "node-mocks-http": "^1.12.2"
   }
 }

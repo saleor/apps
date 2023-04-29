@@ -1,12 +1,9 @@
-import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
+import { EncryptedMetadataManager, MetadataEntry, SettingsManager } from "@saleor/app-sdk/settings-manager";
 
-import {
-  FetchAppDetailsDocument,
-  FetchAppDetailsQuery,
-  UpdateAppMetadataDocument,
-} from "../../generated/graphql";
+import { FetchAppDetailsDocument, FetchAppDetailsQuery, UpdateAppMetadataDocument } from "../../generated/graphql";
 import { settingsManagerSecretKey } from "../../saleor-app";
+import { SimpleGraphqlClient } from "./graphql";
+
 
 /*
  * Function is using urql graphql client to fetch all available metadata.
@@ -14,7 +11,7 @@ import { settingsManagerSecretKey } from "../../saleor-app";
  * which can be used by the manager.
  * Result of this query is cached by the manager.
  */
-export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
+export async function fetchAllMetadata(client: SimpleGraphqlClient): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
@@ -32,7 +29,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
  * Before data are send, additional query for required App ID is made.
  * The manager will use updated entries returned by this mutation to update it's cache.
  */
-export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
+export async function mutateMetadata(client: SimpleGraphqlClient, metadata: MetadataEntry[]) {
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client
     .query(FetchAppDetailsDocument, {})
@@ -72,7 +69,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
-export const createSettingsManager = (client: Client) => {
+export const createSettingsManager = (client: SimpleGraphqlClient): SettingsManager => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.

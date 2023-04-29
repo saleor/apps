@@ -7,5 +7,10 @@ subscription ProductDeleted {
         ...ProductWebhookPayload
       }
     }
+    recipient {
+      webhooks {
+        id
+      }
+    }
   }
 }

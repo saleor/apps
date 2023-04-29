@@ -7,5 +7,10 @@ subscription ProductVariantUpdated {
         ...ProductVariantWebhookPayload
       }
     }
+    recipient {
+      webhooks {
+        id
+      }
+    }
   }
 }

@@ -1,0 +1,7 @@
+query FetchOwnWebhooks($id: ID!) {
+  app(id: $id) {
+    webhooks {
+      ...OwnWebhook
+    }
+  }
+}
