@@ -8,6 +8,8 @@ import { saleorApp } from "../../../saleor-app";
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 import { createLogger } from "../../lib/logger";
 import { AppConfigurationFields } from "../../domain/configuration";
+import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 
 const logger = createLogger({
   handler: "api/configuration",
@@ -65,12 +67,37 @@ export const handler = async (
 
     const { appId, secretKey, indexNamePrefix } = JSON.parse(req.body) as AppConfigurationFields;
 
-    await settings.set([
-      { key: "secretKey", value: secretKey || "", domain },
-      { key: "appId", value: appId || "", domain },
-      { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
-    ]);
+    const algoliaClient = new AlgoliaSearchProvider({
+      appId,
+      apiKey: secretKey,
+      indexNamePrefix: indexNamePrefix,
+    });
+
+    try {
+      logger.debug("Will ping Algolia");
+      await algoliaClient.ping();
+
+      logger.debug("Algolia connection is ok. Will save settings");
+
+      await settings.set([
+        { key: "secretKey", value: secretKey || "", domain },
+        { key: "appId", value: appId || "", domain },
+        { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
+      ]);
+
+      logger.debug("Settings set");
+
+      const webhooksToggler = new WebhookActivityTogglerService(ctx.authData.appId, client);
+
+      await webhooksToggler.enableOwnWebhooks();
+
+      logger.debug("Webhooks enabled");
+    } catch (e) {
+      return res.status(400).end();
+    }
+
     await sendResponse(res, 200, settings, domain);
+
     return;
   }
   logger.error("Method not supported");

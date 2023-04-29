@@ -10,4 +10,5 @@ export interface SearchProvider {
   createProductVariant(productVariant: ProductVariantWebhookPayloadFragment): Promise<void>;
   updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment): Promise<void>;
   deleteProductVariant(productId: ProductVariantWebhookPayloadFragment): Promise<void>;
+  ping(): Promise<void>;
 }

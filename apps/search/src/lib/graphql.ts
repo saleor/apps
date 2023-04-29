@@ -1,10 +1,10 @@
 import { initUrqlClient } from "next-urql";
 import { AuthConfig, authExchange } from "@urql/exchange-auth";
 import {
-  cacheExchange,
+  cacheExchange, Client,
   createClient as urqlCreateClient,
   dedupExchange,
-  fetchExchange,
+  fetchExchange
 } from "urql";
 
 interface IAuthState {
@@ -59,3 +59,5 @@ export const createClient = (url: string, getAuth: AuthConfig<IAuthState>["getAu
     url,
     exchanges: getExchanges(getAuth),
   });
+
+export type SimpleGraphqlClient = Pick<Client, "query" | "mutation">;
