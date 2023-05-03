@@ -1,5 +1,5 @@
-import { MjmlConfig } from "./mjml-config";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { MjmlConfig } from "./mjml-config-schema";
 
 export interface MjmlConfigurator {
   setConfig(config: MjmlConfig): Promise<void>;

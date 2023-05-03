@@ -1,36 +1,37 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
-import { MjmlConfig as MjmlConfigurationRoot, MjmlConfiguration } from "./mjml-config";
+
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { isAvailableInChannel } from "../../../lib/is-available-in-channel";
+import {
+  MjmlConfiguration,
+  mjmlConfigurationSchema,
+  mjmlConfigurationEventSchema,
+  MjmlConfig,
+} from "./mjml-config-schema";
 
 export const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
-  messageEventTypes.map((eventType) => ({
-    active: true,
-    eventType: eventType,
-    template: defaultMjmlTemplates[eventType],
-    subject: defaultMjmlSubjectTemplates[eventType],
-  }));
+  messageEventTypes.map((eventType) =>
+    mjmlConfigurationEventSchema.parse({
+      eventType: eventType,
+      template: defaultMjmlTemplates[eventType],
+      subject: defaultMjmlSubjectTemplates[eventType],
+    })
+  );
 
 export const getDefaultEmptyConfiguration = (): MjmlConfiguration => {
-  const defaultConfig: MjmlConfiguration = {
-    id: "",
+  const defaultConfig: MjmlConfiguration = mjmlConfigurationSchema.parse({
+    id: "id",
+    name: "name",
     active: true,
-    configurationName: "",
-    senderName: "",
-    senderEmail: "",
-    smtpHost: "",
-    smtpPort: "",
-    smtpUser: "",
-    smtpPassword: "",
-    encryption: "NONE",
-    events: getDefaultEventsConfiguration(),
+    smtpHost: "host",
+    smtpPort: "1024",
     channels: {
       excludedFrom: [],
       restrictedTo: [],
     },
-  };
-
+    events: getDefaultEventsConfiguration(),
+  });
   return defaultConfig;
 };
 
@@ -39,7 +40,7 @@ interface GetConfigurationArgs {
 }
 
 const getConfiguration =
-  (mjmlConfigRoot: MjmlConfigurationRoot | null | undefined) =>
+  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
   ({ id }: GetConfigurationArgs) => {
     if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
       return;
@@ -55,7 +56,7 @@ export interface FilterConfigurationsArgs {
 }
 
 const getConfigurations =
-  (mjmlConfigRoot: MjmlConfigurationRoot | null | undefined) =>
+  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
   (filter: FilterConfigurationsArgs | undefined): MjmlConfiguration[] => {
     if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
       return [];
@@ -89,7 +90,7 @@ const getConfigurations =
   };
 
 const createConfiguration =
-  (mjmlConfigRoot: MjmlConfigurationRoot | null | undefined) =>
+  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
   (mjmlConfiguration: Omit<MjmlConfiguration, "id" | "events">) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfigRoot) ?? { configurations: [] };
 
@@ -105,8 +106,7 @@ const createConfiguration =
   };
 
 const updateConfiguration =
-  (mjmlConfig: MjmlConfigurationRoot | null | undefined) =>
-  (mjmlConfiguration: MjmlConfiguration) => {
+  (mjmlConfig: MjmlConfig | null | undefined) => (mjmlConfiguration: MjmlConfiguration) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
 
     const configurationIndex = mjmlConfigNormalized.configurations.findIndex(
@@ -122,7 +122,7 @@ interface DeleteConfigurationArgs {
 }
 
 const deleteConfiguration =
-  (mjmlConfig: MjmlConfigurationRoot | null | undefined) =>
+  (mjmlConfig: MjmlConfig | null | undefined) =>
   ({ id }: DeleteConfigurationArgs) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
 

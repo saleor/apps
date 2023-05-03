@@ -8,6 +8,7 @@ import { TextLink } from "./text-link";
 import { ChipText } from "./chip-text";
 import Image from "next/image";
 import sendgrid from "../public/sendgrid.png";
+import smtp from "../public/smtp.svg";
 
 const NoExistingConfigurations = () => {
   const { replace } = useRouter();
@@ -24,8 +25,15 @@ const NoExistingConfigurations = () => {
   );
 };
 
+type ConfigurationListItem = {
+  id: string;
+  name: string;
+  active: boolean;
+  provider: "sendgrid" | "mjml";
+};
+
 interface MessagingProvidersSectionProps {
-  configurations: SendgridConfiguration[];
+  configurations: ConfigurationListItem[];
   isLoading: boolean;
 }
 
@@ -51,8 +59,22 @@ export const MessagingProvidersBox = ({
     replace("/configuration/choose-provider");
   };
 
-  const redirectToEditConfiguration = (configurationId: string) => {
-    replace(`/configuration/sendgrid/edit/${configurationId}`);
+  const getEditLink = (configuration: ConfigurationListItem) => {
+    switch (configuration.provider) {
+      case "mjml":
+        return `/configuration/mjml/edit/${configuration.id}`;
+      case "sendgrid":
+        return `/configuration/sendgrid/edit/${configuration.id}`;
+    }
+  };
+
+  const getProviderLogo = (configuration: ConfigurationListItem) => {
+    switch (configuration.provider) {
+      case "mjml":
+        return <Image alt="SMTP logo" src={smtp} height={20} width={20} />;
+      case "sendgrid":
+        return <Image alt="Sendgrid logo" src={sendgrid} height={20} width={20} />;
+    }
   };
 
   return (
@@ -71,8 +93,8 @@ export const MessagingProvidersBox = ({
         {configurations.map((configuration) => (
           <>
             <Box display="flex" gap={defaultPadding}>
-              <Image alt="Sendgrid logo" src={sendgrid} height={20} width={20} />
-              <Text>Sendgrid</Text>
+              {getProviderLogo(configuration)}
+              <Text>{configuration.provider}</Text>
             </Box>
 
             <Text>{configuration.name}</Text>
@@ -81,7 +103,7 @@ export const MessagingProvidersBox = ({
               variant={configuration.active ? "success" : "error"}
             />
             <Box display="flex" justifyContent={"flex-end"}>
-              <TextLink href={`/configuration/sendgrid/edit/${configuration.id}`}>Edit</TextLink>
+              <TextLink href={getEditLink(configuration)}>Edit</TextLink>
             </Box>
           </>
         ))}

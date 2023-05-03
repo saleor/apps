@@ -1,9 +1,9 @@
 import { MjmlConfigurator, PrivateMetadataMjmlConfigurator } from "./mjml-configurator";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../../lib/logger";
-import { MjmlConfig, MjmlConfiguration } from "./mjml-config";
 import { FilterConfigurationsArgs, MjmlConfigContainer } from "./mjml-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
+import { MjmlConfig, MjmlConfiguration } from "./mjml-config-schema";
 
 const logger = pinoLogger.child({
   service: "MjmlConfigurationService",

@@ -2,11 +2,35 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { Breadcrumbs } from "../../components/breadcrumbs";
 import { SectionWithDescription } from "../../components/section-with-description";
-import { MessagingProvidersBox } from "../../components/messaging-providers-box";
+import {
+  ConfigurationListItem,
+  MessagingProvidersBox,
+} from "../../components/messaging-providers-box";
 import { trpcClient } from "../../modules/trpc/trpc-client";
 
 const ConfigurationPage: NextPage = () => {
-  const { data, isLoading } = trpcClient.sendgridConfiguration.getConfigurations.useQuery();
+  const { data: dataSendgrid, isLoading: isLoadingSendgrid } =
+    trpcClient.sendgridConfiguration.getConfigurations.useQuery();
+
+  const { data: dataMjml, isLoading: isLoadingMjml } =
+    trpcClient.mjmlConfiguration.getConfigurations.useQuery();
+
+  const data: ConfigurationListItem[] = [
+    ...(dataSendgrid?.map((configuration) => ({
+      name: configuration.name,
+      provider: "sendgrid",
+      id: configuration.id,
+      active: configuration.active,
+    })) || []),
+    ...(dataMjml?.map((configuration) => ({
+      name: configuration.name,
+      provider: "mjml",
+      id: configuration.id,
+      active: configuration.active,
+    })) || []),
+  ];
+
+  const isLoading = isLoadingSendgrid || isLoadingMjml;
 
   return (
     <Box padding={10} display={"grid"} gap={13}>

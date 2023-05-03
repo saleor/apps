@@ -1,42 +1,25 @@
 import { z } from "zod";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { smtpEncryptionTypes } from "./mjml-config";
+import { mjmlConfigurationSchema } from "./mjml-config-schema";
 
-export const mjmlConfigurationEventObjectSchema = z.object({
-  active: z.boolean(),
-  eventType: z.enum(messageEventTypes),
-  template: z.string().min(1),
-  subject: z.string().min(1),
-});
-
-export const mjmlConfigurationBaseObjectSchema = z.object({
-  active: z.boolean(),
-  configurationName: z.string().min(1),
-  senderName: z.string().min(1),
-  senderEmail: z.string().email().min(5),
-  smtpHost: z.string().min(1),
-  smtpPort: z.string(),
-  smtpUser: z.string(),
-  smtpPassword: z.string(),
-  encryption: z.enum(smtpEncryptionTypes),
-  channels: z.object({
-    excludedFrom: z.array(z.string()),
-    restrictedTo: z.array(z.string()),
-  }),
+export const mjmlCreateConfigurationInputSchema = mjmlConfigurationSchema.pick({
+  name: true,
+  smtpHost: true,
+  smtpPort: true,
+  smtpUser: true,
+  smtpPassword: true,
+  encryption: true,
 });
 
-export const mjmlCreateConfigurationSchema = mjmlConfigurationBaseObjectSchema;
-export const mjmlUpdateOrCreateConfigurationSchema = mjmlConfigurationBaseObjectSchema.merge(
-  z.object({
-    id: z.string().optional(),
-  })
-);
-export const mjmlGetConfigurationInputSchema = z.object({
-  id: z.string(),
+export type MjmlCreateConfigurationInput = z.infer<typeof mjmlCreateConfigurationInputSchema>;
+
+export const mjmlConfigurationIdInputSchema = mjmlConfigurationSchema.pick({
+  id: true,
 });
-export const mjmlDeleteConfigurationInputSchema = z.object({
-  id: z.string(),
-});
+
+export type MjmlGetConfigurationIdInput = z.infer<typeof mjmlConfigurationIdInputSchema>;
+
 export const mjmlGetConfigurationsInputSchema = z
   .object({
     ids: z.array(z.string()).optional(),
@@ -44,13 +27,12 @@ export const mjmlGetConfigurationsInputSchema = z
   })
   .optional();
 
-export const mjmlUpdateEventConfigurationInputSchema = z
-  .object({
-    configurationId: z.string(),
-  })
-  .merge(mjmlConfigurationEventObjectSchema);
+export type MjmlGetConfigurationsInput = z.infer<typeof mjmlGetConfigurationsInputSchema>;
 
-export const mjmlGetEventConfigurationInputSchema = z.object({
-  configurationId: z.string(),
-  eventType: z.enum(messageEventTypes),
+export const mjmlUpdateBasicInformationSchema = mjmlConfigurationSchema.pick({
+  id: true,
+  name: true,
+  active: true,
 });
+
+export type MjmlUpdateBasicInformation = z.infer<typeof mjmlUpdateBasicInformationSchema>;
