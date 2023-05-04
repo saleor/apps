@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -33,7 +33,7 @@ const postInputSchema = z.object({
 
 export const avataxConfigurationRouter = router({
   get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.get",
     });
@@ -51,7 +51,7 @@ export const avataxConfigurationRouter = router({
     return { ...result, config: obfuscateAvataxConfig(result.config) };
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.post",
     });
@@ -68,7 +68,7 @@ export const avataxConfigurationRouter = router({
     return result;
   }),
   delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.delete",
     });
@@ -85,7 +85,7 @@ export const avataxConfigurationRouter = router({
     return result;
   }),
   patch: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.patch",
     });

@@ -18,3 +18,5 @@ export const logger = pino({
 });
 
 export const createLogger = logger.child.bind(logger);
+
+export type Logger = typeof logger;

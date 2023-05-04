@@ -5,10 +5,10 @@ import {
   FetchAppDetailsQuery,
   UpdateMetadataDocument,
 } from "../../../generated/graphql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
-  const logger = pinoLogger.child({ service: "fetchAllMetadata" });
+  const logger = createLogger({ service: "fetchAllMetadata" });
 
   logger.debug("Fetching metadata from Saleor");
 
@@ -27,7 +27,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 }
 
 export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
-  const logger = pinoLogger.child({ service: "mutateMetadata" });
+  const logger = createLogger({ service: "mutateMetadata" });
 
   logger.debug({ metadata }, "Mutating metadata");
   // to update the metadata, ID is required

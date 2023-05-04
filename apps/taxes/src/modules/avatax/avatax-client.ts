@@ -1,8 +1,7 @@
 import Avatax from "avatax";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
-import pino from "pino";
 import packageJson from "../../../package.json";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { AvataxConfig } from "./avatax-config";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
@@ -55,7 +54,7 @@ export type ValidateAddressArgs = {
 
 export class AvataxClient {
   private client: Avatax;
-  private logger: pino.Logger;
+  private logger: Logger;
 
   constructor(config: AvataxConfig) {
     this.logger = createLogger({ service: "AvataxClient" });

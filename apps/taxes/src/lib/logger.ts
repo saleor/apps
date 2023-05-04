@@ -1,4 +1,4 @@
-import { createLogger as _createLogger } from "@saleor/apps-shared";
+import { createLogger as _createLogger, Logger } from "@saleor/apps-shared";
 
 export const logger = _createLogger({
   redact: [
@@ -10,3 +10,5 @@ export const logger = _createLogger({
 });
 
 export const createLogger = logger.child.bind(logger);
+
+export type { Logger };

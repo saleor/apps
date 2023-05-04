@@ -1,6 +1,5 @@
-import pino from "pino";
 import { Client } from "urql";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
@@ -12,7 +11,7 @@ const getSchema = taxJarInstanceConfigSchema;
 
 export class TaxJarConfigurationService {
   private crudSettingsManager: CrudSettingsManager;
-  private logger: pino.Logger;
+  private logger: Logger;
   constructor(client: Client, saleorApiUrl: string) {
     const settingsManager = createSettingsManager(client);
 

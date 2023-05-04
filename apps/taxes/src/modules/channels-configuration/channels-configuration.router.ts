@@ -1,4 +1,4 @@
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -10,7 +10,7 @@ import { GetChannelsConfigurationService } from "./get-channels-configuration.se
 // todo: refactor with crud-settings
 export const channelsConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "channelsConfigurationRouter.fetch",
     });
@@ -25,7 +25,7 @@ export const channelsConfigurationRouter = router({
   upsert: protectedClientProcedure
     .input(setAndReplaceChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = pinoLogger.child({
+      const logger = createLogger({
         saleorApiUrl: ctx.saleorApiUrl,
         procedure: "channelsConfigurationRouter.upsert",
       });

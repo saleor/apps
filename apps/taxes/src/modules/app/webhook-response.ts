@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
-import { Logger } from "pino";
-import { createLogger } from "../../lib/logger";
+
+import { createLogger, Logger } from "../../lib/logger";
 
 /*
  * idea: distinguish between async and sync webhooks
