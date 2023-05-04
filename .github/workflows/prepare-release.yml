@@ -32,6 +32,7 @@ jobs:
         with:
           title: Release apps
           commit: Release apps
+          publish: echo "stub release"
         env:
           # Use private access token so Github can trigger another workflow from this one
           GITHUB_TOKEN: ${{ secrets.PAT }}
