@@ -1,6 +1,6 @@
 import { url } from "inspector";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../logger";
+import { createLogger } from "@saleor/apps-shared";
 import { ShopDetailsDocument } from "../../../generated/graphql";
 
 interface FetchShopDataArgs {
@@ -9,7 +9,7 @@ interface FetchShopDataArgs {
 }
 
 export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
-  const logger = pinoLogger.child({ saleorApiUrl: url, channel, route: "Google Product Feed" });
+  const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
 
   const result = await client.query(ShopDetailsDocument, {}).toPromise();
   const shopDetails = result.data?.shop;
