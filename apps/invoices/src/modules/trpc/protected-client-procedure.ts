@@ -4,7 +4,7 @@ import { middleware, procedure } from "./trpc-server";
 import { saleorApp } from "../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");

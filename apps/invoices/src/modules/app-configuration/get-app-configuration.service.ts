@@ -4,7 +4,7 @@ import { ChannelsFetcher } from "../channels/channels-fetcher";
 import { ShopInfoFetcher } from "../shop-info/shop-info-fetcher";
 import { FallbackAppConfig } from "./fallback-app-config";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
 // todo test
 export class GetAppConfigurationService {
@@ -16,7 +16,7 @@ export class GetAppConfigurationService {
   ) {}
 
   async getConfiguration() {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       service: "GetAppConfigurationService",
       saleorApiUrl: this.settings.saleorApiUrl,
     });
