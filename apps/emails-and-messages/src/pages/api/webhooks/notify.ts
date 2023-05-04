@@ -1,12 +1,14 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { logger as pinoLogger } from "../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { createClient } from "../../../lib/create-graphql-client";
 import { MessageEventTypes } from "../../../modules/event-handlers/message-event-types";
 
-// Notify event handles multiple event types which are recognized based on payload field `notify_event`.
-// Handler recognizes if event is one of the supported typed and sends appropriate message.
+/*
+ * Notify event handles multiple event types which are recognized based on payload field `notify_event`.
+ * Handler recognizes if event is one of the supported typed and sends appropriate message.
+ */
 
 interface NotifySubscriptionPayload {
   notify_event: string;
@@ -62,7 +64,7 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
 });
 
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     webhook: notifyWebhook.name,
   });
 
@@ -89,6 +91,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
   };
 
   const event = notifyEventMapping[payload.notify_event];
+
   if (!event) {
     logger.error(`The type of received notify event (${payload.notify_event}) is not supported.`);
     return res

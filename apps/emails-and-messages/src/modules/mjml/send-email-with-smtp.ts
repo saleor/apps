@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   fn: "sendEmailWithSmtp",
 });
 
@@ -33,6 +33,7 @@ export const sendEmailWithSmtp = async ({ smtpSettings, mailData }: SendMailArgs
     const response = await transporter.sendMail({
       ...mailData,
     });
+
     logger.debug("An email has been sent");
     return { response };
   } catch (error) {

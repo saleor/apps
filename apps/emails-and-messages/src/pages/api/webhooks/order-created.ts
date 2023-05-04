@@ -2,7 +2,7 @@ import { OrderDetailsFragmentDoc } from "./../../../../generated/graphql";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { logger as pinoLogger } from "../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { OrderCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { createClient } from "../../../lib/create-graphql-client";
@@ -38,7 +38,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   res,
   context
 ) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     webhook: orderCreatedWebhook.name,
   });
 
@@ -53,6 +53,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   }
 
   const recipientEmail = order.userEmail || order.user?.email;
+
   if (!recipientEmail?.length) {
     logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
     return res
