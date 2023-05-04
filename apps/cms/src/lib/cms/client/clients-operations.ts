@@ -38,6 +38,8 @@ export const createCmsOperations = async ({
     getProviderInstancesSettings(settingsManager),
   ]);
 
+  logger.debug({ channelsSettingsParsed, providerInstancesSettingsParsed }, "Fetched settings");
+
   const productVariantCmsProviderInstances = productVariantCmsKeys.map((cmsKey) =>
     getCmsIdFromSaleorItemKey(cmsKey)
   );
@@ -54,8 +56,10 @@ export const createCmsOperations = async ({
   ];
 
   if (!allProductVariantProviderInstancesToAlter.length) {
-    // todo: use instead: throw new Error("The channel settings were not found.");
-    // continue with other provider instances
+    /*
+     * todo: use instead: throw new Error("The channel settings were not found.");
+     * continue with other provider instances
+     */
     return [];
   }
 
@@ -75,8 +79,10 @@ export const createCmsOperations = async ({
         );
 
       if (!validation.success) {
-        // todo: use instead: throw new Error(validation.error.message);
-        // continue with other provider instances
+        /*
+         * todo: use instead: throw new Error(validation.error.message);
+         * continue with other provider instances
+         */
         logger.error("The provider instance settings validation failed.", {
           error: validation.error.message,
         });
