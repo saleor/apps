@@ -1,16 +1,6 @@
-import pino from "pino";
+import { createLogger as _createLogger } from "@saleor/apps-shared";
 
-export const logger = pino({
-  level: process.env.APP_DEBUG ?? "silent",
-  transport:
-    process.env.NODE_ENV === "development"
-      ? {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-          },
-        }
-      : undefined,
+export const logger = _createLogger({
   redact: [
     "metadata",
     "providerInstance.config.username",
