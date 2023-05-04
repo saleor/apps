@@ -39,6 +39,8 @@ export const createCmsOperations = async ({
     getProviderInstancesSettings(settingsManager),
   ]);
 
+  logger.debug({ channelsSettingsParsed, providerInstancesSettingsParsed }, "Fetched settings");
+
   const productVariantCmsProviderInstances = productVariantCmsKeys.map((cmsKey) =>
     getCmsIdFromSaleorItemKey(cmsKey)
   );
