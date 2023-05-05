@@ -16,8 +16,11 @@ import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-
 import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
 import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
 import { createLogger } from "@saleor/apps-shared";
-import { GetAppConfigurationService } from "../../../modules/app-configuration/schema-v1/get-app-configuration.service";
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
+import { GetAppConfigurationV2Service } from "../../../modules/app-configuration/schema-v2/get-app-configuration.v2.service";
+import { ShopInfoFetcher } from "../../../modules/shop-info/shop-info-fetcher";
+import { z } from "zod";
+import { AddressV2Schema } from "../../../modules/app-configuration/schema-v2/app-config-schema.v2";
 
 const OrderPayload = gql`
   fragment Address on Address {
@@ -136,6 +139,13 @@ export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPa
 
 const invoiceNumberGenerator = new InvoiceNumberGenerator();
 
+/**
+ * TODO
+ * Refactor - extract smaller pieces
+ * Test
+ * More logs
+ * Extract service
+ */
 export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = async (
   req,
   res,
@@ -160,14 +170,6 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
 
   logger.debug({ invoiceName }, "Generated invoice name");
 
-  if (!authData) {
-    logger.error("Auth data not found");
-
-    return res.status(403).json({
-      error: `Could not find auth data. Check if app is installed.`,
-    });
-  }
-
   try {
     const client = createClient(authData.saleorApiUrl, async () =>
       Promise.resolve({ token: authData.token })
@@ -182,17 +184,43 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
 
     logger.debug({ tempPdfLocation }, "Resolved PDF location for temporary files");
 
-    const appConfig = await new GetAppConfigurationService({
+    const config = await new GetAppConfigurationV2Service({
       saleorApiUrl: authData.saleorApiUrl,
       apiClient: client,
     }).getConfiguration();
+
+    // todo extract
+    const address: z.infer<typeof AddressV2Schema> | null =
+      config.getChannelsOverrides()[order.channel.slug] ??
+      (await new ShopInfoFetcher(client).fetchShopInfo().then((r) => {
+        if (!r?.companyAddress) {
+          return null;
+        }
+
+        return {
+          city: r.companyAddress.city,
+          cityArea: r.companyAddress.cityArea,
+          companyName: r.companyAddress.companyName,
+          country: r.companyAddress.country.country,
+          countryArea: r.companyAddress.countryArea,
+          postalCode: r.companyAddress.postalCode,
+          streetAddress1: r.companyAddress.streetAddress1,
+          streetAddress2: r.companyAddress.streetAddress2,
+        } satisfies z.infer<typeof AddressV2Schema>;
+      }));
+
+    if (!address) {
+      // todo disable webhook
+
+      return res.status(200).end("App not configured");
+    }
 
     await new MicroinvoiceInvoiceGenerator()
       .generate({
         order,
         invoiceNumber: invoiceName,
         filename: tempPdfLocation,
-        companyAddressData: appConfig.shopConfigPerChannel[order.channel.slug]?.address,
+        companyAddressData: address,
       })
       .catch((err) => {
         logger.error(err, "Error generating invoice");
