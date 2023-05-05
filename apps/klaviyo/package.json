@@ -2,7 +2,6 @@
   "name": "saleor-app-klaviyo",
   "version": "1.5.0",
   "private": true,
-  "packageManager": "pnpm@7.18.1",
   "scripts": {
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "build": "pnpm generate && next build",
