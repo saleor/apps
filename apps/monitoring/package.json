@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-monitoring",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
