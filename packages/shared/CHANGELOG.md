@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.5.0
+
+### Minor Changes
+
+- 830cfe9: Add Pino logger and renamed required env to be APP_LOG_LEVEL
+
 ## 1.4.0
 
 ### Minor Changes

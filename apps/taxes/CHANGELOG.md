@@ -1,5 +1,19 @@
 # saleor-app-taxes
 
+## 1.4.0
+
+### Minor Changes
+
+- 9eacc88: Map new fields from Saleor to Avatax (e.g. discounts, itemCode, description).
+- 830cfe9: Changed APP_DEBUG env to APP_LOG_LEVEL
+- 3347a30: Add "Shipping tax code" field to Avatax configuration form. Allows to customize the tax code set on the "shipping" item.
+
+### Patch Changes
+
+- 830cfe9: Replaced internal logger implementation with shared logger
+- Updated dependencies [830cfe9]
+  - @saleor/apps-shared@1.5.0
+
 ## 1.3.1
 
 ### Patch Changes

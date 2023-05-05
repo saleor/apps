@@ -1,5 +1,17 @@
 # saleor-app-invoices
 
+## 1.12.0
+
+### Minor Changes
+
+- 830cfe9: Changed APP_DEBUG env to APP_LOG_LEVEL
+
+### Patch Changes
+
+- 830cfe9: Replaced internal logger implementation with shared logger
+- Updated dependencies [830cfe9]
+  - @saleor/apps-shared@1.5.0
+
 ## 1.11.0
 
 ### Minor Changes
