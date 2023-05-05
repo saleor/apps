@@ -46,4 +46,22 @@ export const appConfigurationRouterV2 = router({
 
       return mm.set(appConfig.serialize());
     }),
+  removeChannelOverride: protectedClientProcedure
+    .meta({
+      requiredClientPermissions: ["MANAGE_APPS"],
+    })
+    .input(
+      z.object({
+        channelSlug: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const appConfig = await new GetAppConfigurationV2Service(ctx).getConfiguration();
+
+      appConfig.removeOverride(input.channelSlug);
+
+      const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
+
+      return mm.set(appConfig.serialize());
+    }),
 });

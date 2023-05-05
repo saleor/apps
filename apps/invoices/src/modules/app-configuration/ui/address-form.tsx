@@ -1,9 +1,7 @@
-import { SellerShopConfig } from "../schema-v1/app-config";
 import { Controller, useForm } from "react-hook-form";
 
 import React, { useEffect } from "react";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Input, InputProps, Text, Button, Box } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 import { SellerAddress } from "../address";
 import { trpcClient } from "../../trpc/trpc-client";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -2,11 +2,17 @@ import { Box, ChevronRightIcon, Text, Button } from "@saleor/macaw-ui/next";
 import { AppSection } from "../../ui/AppSection";
 import { useRouter } from "next/router";
 import { AddressForm } from "../ui/address-form";
+import { trpcClient } from "../../trpc/trpc-client";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 export const ChannelConfigView = () => {
   const {
+    push,
     query: { channel },
   } = useRouter();
+
+  const { mutateAsync } = trpcClient.appConfigurationV2.removeChannelOverride.useMutation();
+  const { notifySuccess } = useDashboardNotification();
 
   if (!channel) {
     return null;
@@ -35,7 +41,10 @@ export const ChannelConfigView = () => {
             <Button
               variant={"secondary"}
               onClick={() => {
-                throw new Error("not implemented");
+                mutateAsync({ channelSlug: channel as string }).then(() => {
+                  notifySuccess("Success", "Custom address configuration removed");
+                  push("/configuration");
+                });
               }}
             >
               Remove and set to default
