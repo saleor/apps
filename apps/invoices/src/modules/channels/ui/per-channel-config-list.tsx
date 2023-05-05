@@ -1,4 +1,4 @@
-import { Box, Text, Chip } from "@saleor/macaw-ui/next";
+import { Box, Text, Chip, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 
 const defaultAddressChip = (
@@ -11,10 +11,41 @@ const defaultAddressChip = (
 
 export const PerChannelConfigList = () => {
   const shopChannelsQuery = trpcClient.channels.fetch.useQuery();
+  const channelsOverridesQuery = trpcClient.appConfigurationV2.fetchChannelsOverrides.useQuery();
 
-  if (shopChannelsQuery.isLoading) {
+  if (shopChannelsQuery.isLoading || channelsOverridesQuery.isLoading) {
     return <Text color={"textNeutralSubdued"}>Loading...</Text>;
   }
+
+  const renderChannelAddress = (slug: string) => {
+    const overridesDataRecord = channelsOverridesQuery.data;
+
+    if (!overridesDataRecord) {
+      return null; // todo should throw
+    }
+
+    if (overridesDataRecord[slug]) {
+      return <div>todo</div>;
+    } else {
+      return defaultAddressChip;
+    }
+  };
+
+  const renderActionButtonAddress = (slug: string) => {
+    const overridesDataRecord = channelsOverridesQuery.data;
+
+    if (!overridesDataRecord) {
+      return null; // todo should throw
+    }
+
+    return (
+      <Button variant={"tertiary"}>
+        <Text color={"textNeutralSubdued"} size={"small"}>
+          {overridesDataRecord[slug] ? "Edit" : "Set custom"}
+        </Text>
+      </Button>
+    );
+  };
 
   return (
     <Box>
@@ -36,7 +67,8 @@ export const PerChannelConfigList = () => {
           borderColor={"neutralHighlight"}
         >
           <Text variant={"bodyStrong"}>{channel.name}</Text>
-          <Box>{defaultAddressChip}</Box>
+          <Box>{renderChannelAddress(channel.slug)}</Box>
+          <Box marginLeft={"auto"}> {renderActionButtonAddress(channel.slug)}</Box>
         </Box>
       ))}
     </Box>
