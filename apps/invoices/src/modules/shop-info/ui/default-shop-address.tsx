@@ -63,7 +63,21 @@ export const DefaultShopAddress = () => {
   if (data && data.companyAddress) {
     return (
       <Wrapper>
-        <Text>{data.companyAddress.streetAddress1}</Text>
+        <Text size={"small"} as={"p"}>
+          {data.companyAddress.companyName}
+        </Text>
+        <Text size={"small"} as={"p"}>
+          {data.companyAddress.streetAddress1}
+        </Text>
+        <Text size={"small"} as={"p"}>
+          {data.companyAddress.streetAddress2}
+        </Text>
+        <Text size={"small"}>
+          {data.companyAddress.postalCode} {data.companyAddress.city}
+        </Text>
+        <Text size={"small"} as={"p"}>
+          {data.companyAddress.country.country}
+        </Text>
       </Wrapper>
     );
   }
