@@ -1,5 +1,6 @@
 import { Box, Text, Chip, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
+import { useRouter } from "next/router";
 
 const defaultAddressChip = (
   <Chip __display={"inline-block"} size={"large"}>
@@ -12,6 +13,8 @@ const defaultAddressChip = (
 export const PerChannelConfigList = () => {
   const shopChannelsQuery = trpcClient.channels.fetch.useQuery();
   const channelsOverridesQuery = trpcClient.appConfigurationV2.fetchChannelsOverrides.useQuery();
+
+  const { push } = useRouter();
 
   if (shopChannelsQuery.isLoading || channelsOverridesQuery.isLoading) {
     return <Text color={"textNeutralSubdued"}>Loading...</Text>;
@@ -62,7 +65,12 @@ export const PerChannelConfigList = () => {
     }
 
     return (
-      <Button variant={"tertiary"}>
+      <Button
+        variant={"tertiary"}
+        onClick={() => {
+          push(`/configuration/${slug}`);
+        }}
+      >
         <Text color={"textNeutralSubdued"} size={"small"}>
           {overridesDataRecord[slug] ? "Edit" : "Set custom"}
         </Text>

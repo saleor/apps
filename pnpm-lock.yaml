@@ -626,6 +626,9 @@ importers:
 
   apps/invoices:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.1.0
+        version: 3.1.0(react-hook-form@7.43.1)
       '@saleor/app-sdk':
         specifier: 0.37.3
         version: 0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
@@ -4076,6 +4079,14 @@ packages:
 
   /@hookform/resolvers@2.9.11(react-hook-form@7.43.1):
     resolution: {integrity: sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.43.1(react@18.2.0)
+    dev: false
+
+  /@hookform/resolvers@3.1.0(react-hook-form@7.43.1):
+    resolution: {integrity: sha512-z0A8K+Nxq+f83Whm/ajlwE6VtQlp/yPHZnXw7XWVPIGm1Vx0QV8KThU3BpbBRfAZ7/dYqCKKBNnQh85BkmBKkA==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
