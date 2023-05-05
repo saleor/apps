@@ -3,8 +3,8 @@ import { MicroinvoiceInvoiceGenerator } from "./microinvoice-invoice-generator";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import rimraf from "rimraf";
-import { mockOrder } from "../../../fixtures/mock-order";
-import { getMockAddress } from "../../../fixtures/mock-address";
+import { mockOrder } from "../../../../fixtures/mock-order";
+import { getMockAddress } from "../../../../fixtures/mock-address";
 
 const dirToSet = process.env.TEMP_PDF_STORAGE_DIR as string;
 const filePath = join(dirToSet, "test-invoice.pdf");

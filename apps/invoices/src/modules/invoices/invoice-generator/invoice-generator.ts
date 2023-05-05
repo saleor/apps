@@ -1,5 +1,5 @@
-import { OrderPayloadFragment } from "../../../generated/graphql";
-import { SellerShopConfig } from "../app-configuration/app-config";
+import { OrderPayloadFragment } from "../../../../generated/graphql";
+import { SellerShopConfig } from "../../app-configuration/app-config";
 
 export interface InvoiceGenerator {
   generate(input: {

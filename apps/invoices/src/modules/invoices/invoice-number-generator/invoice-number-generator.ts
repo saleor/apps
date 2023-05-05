@@ -1,4 +1,4 @@
-import { OrderPayloadFragment } from "../../../generated/graphql";
+import { OrderPayloadFragment } from "../../../../generated/graphql";
 
 interface IInvoiceNumberGenerationStrategy {
   (order: OrderPayloadFragment): string;

@@ -1,5 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { DefaultShopAddress } from "../../shop-info/ui/default-shop-address";
+import { AppSection } from "../../ui/AppSection";
+import { PerChannelConfigList } from "../../channels/ui/per-channel-config-list";
 
 export const AppConfigView = () => {
   return (
@@ -9,6 +11,7 @@ export const AppConfigView = () => {
         justifyContent={"space-between"}
         __gridTemplateColumns={"400px 400px"}
         gap={13}
+        __marginBottom={"200px"}
       >
         <Box>
           <Text as={"h1"} variant={"hero"} marginBottom={8}>
@@ -27,6 +30,17 @@ export const AppConfigView = () => {
           <DefaultShopAddress />
         </Box>
       </Box>
+      <AppSection
+        includePadding={true}
+        heading={"Shop address per channel"}
+        mainContent={<PerChannelConfigList />}
+        sideContent={
+          <Text>
+            Configure custom billing address for each channel. If not set, default shop address will
+            be used
+          </Text>
+        }
+      />
     </Box>
   );
 };

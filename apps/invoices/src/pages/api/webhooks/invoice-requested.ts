@@ -6,15 +6,15 @@ import {
   OrderPayloadFragment,
 } from "../../../../generated/graphql";
 import { createClient } from "../../../lib/graphql";
-import { SaleorInvoiceUploader } from "../../../modules/invoice-uploader/saleor-invoice-uploader";
-import { InvoiceCreateNotifier } from "../../../modules/invoice-create-notifier/invoice-create-notifier";
+import { SaleorInvoiceUploader } from "../../../modules/invoices/invoice-uploader/saleor-invoice-uploader";
+import { InvoiceCreateNotifier } from "../../../modules/invoices/invoice-create-notifier/invoice-create-notifier";
 import {
   InvoiceNumberGenerationStrategy,
   InvoiceNumberGenerator,
-} from "../../../modules/invoice-number-generator/invoice-number-generator";
-import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoice-generator/microinvoice/microinvoice-invoice-generator";
-import { hashInvoiceFilename } from "../../../modules/invoice-file-name/hash-invoice-filename";
-import { resolveTempPdfFileLocation } from "../../../modules/invoice-file-name/resolve-temp-pdf-file-location";
+} from "../../../modules/invoices/invoice-number-generator/invoice-number-generator";
+import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-generator/microinvoice/microinvoice-invoice-generator";
+import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
+import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
 import { createLogger } from "@saleor/apps-shared";
 import { GetAppConfigurationService } from "../../../modules/app-configuration/get-app-configuration.service";
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";

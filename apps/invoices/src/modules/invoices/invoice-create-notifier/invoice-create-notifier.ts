@@ -1,5 +1,5 @@
 import { Client, gql } from "urql";
-import { InvoiceCreateDocument } from "../../../generated/graphql";
+import { InvoiceCreateDocument } from "../../../../generated/graphql";
 import { logger } from "@saleor/apps-shared";
 
 gql`

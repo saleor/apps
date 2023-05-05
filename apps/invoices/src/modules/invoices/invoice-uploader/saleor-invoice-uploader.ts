@@ -1,7 +1,7 @@
 import { InvoiceUploader } from "./invoice-uploader";
 import { Client, gql } from "urql";
 import { readFile } from "fs/promises";
-import { FileUploadMutation } from "../../../generated/graphql";
+import { FileUploadMutation } from "../../../../generated/graphql";
 /**
  * Polyfill file because Node doesn't have it yet
  * https://github.com/nodejs/node/commit/916af4ef2d63fe936a369bcf87ee4f69ec7c67ce
