@@ -1,12 +1,12 @@
-import { router } from "../trpc/trpc-server";
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../../trpc/trpc-server";
+import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "./metadata-manager";
+import { createSettingsManager } from "../metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
 import { appConfigInputSchema } from "./app-config-input-schema";
 import { GetAppConfigurationService } from "./get-app-configuration.service";
 
-export const appConfigurationRouter = router({
+export const appConfigurationRouterV1 = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 

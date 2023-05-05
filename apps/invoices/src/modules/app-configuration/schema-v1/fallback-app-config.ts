@@ -1,6 +1,6 @@
 import { AppConfig } from "./app-config";
 import { AppConfigContainer } from "./app-config-container";
-import { ChannelFragment, ShopInfoFragment } from "../../../generated/graphql";
+import { ChannelFragment, ShopInfoFragment } from "../../../../generated/graphql";
 
 /**
  * TODO Test

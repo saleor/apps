@@ -1,4 +1,4 @@
-import { SellerShopConfig } from "../app-config";
+import { SellerShopConfig } from "../schema-v1/app-config";
 import { useForm } from "react-hook-form";
 
 import React from "react";

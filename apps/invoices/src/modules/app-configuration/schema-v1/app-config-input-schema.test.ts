@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { appConfigInputSchema } from "./app-config-input-schema";
 import { AppConfig, SellerShopConfig } from "./app-config";
-import { getMockAddress } from "../../fixtures/mock-address";
+import { getMockAddress } from "../../../fixtures/mock-address";
 
 describe("appConfigInputSchema", () => {
   it("Passes with no channels at all", () => {

@@ -1,4 +1,4 @@
-import { SellerAddress } from "./address";
+import { SellerAddress } from "../address";
 
 export interface SellerShopConfig {
   address: SellerAddress;

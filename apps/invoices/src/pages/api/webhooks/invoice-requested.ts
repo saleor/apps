@@ -16,7 +16,7 @@ import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-
 import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
 import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
 import { createLogger } from "@saleor/apps-shared";
-import { GetAppConfigurationService } from "../../../modules/app-configuration/get-app-configuration.service";
+import { GetAppConfigurationService } from "../../../modules/app-configuration/schema-v1/get-app-configuration.service";
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 
 const OrderPayload = gql`
