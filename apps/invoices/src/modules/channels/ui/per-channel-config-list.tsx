@@ -90,6 +90,7 @@ export const PerChannelConfigList = () => {
       </Box>
       {shopChannelsQuery.data?.map((channel) => (
         <Box
+          key={channel.id}
           display={"grid"}
           gridTemplateColumns={3}
           paddingY={4}

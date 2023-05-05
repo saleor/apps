@@ -1,7 +1,7 @@
 import { SellerShopConfig } from "../schema-v1/app-config";
 import { Controller, useForm } from "react-hook-form";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Input, InputProps, Text, Button, Box } from "@saleor/macaw-ui/next";
 import { SellerAddress } from "../address";
@@ -21,7 +21,7 @@ const FormSchema = z.object({
   companyName: z.string().min(1),
   country: z.string().min(1),
   streetAddress1: z.string().min(1),
-  streetAddress2: z.string().min(1),
+  streetAddress2: z.string(),
   countryArea: z.string(),
   postalCode: z.string().min(1),
 });
@@ -55,8 +55,9 @@ export const AddressForm = (props: Props) => {
 
   const upsertConfigMutation = trpcClient.appConfigurationV2.upsertChannelOverride.useMutation();
 
-  const { handleSubmit, formState, control, setValue } = useForm<SellerAddress>({
-    defaultValues: channelOverrideConfigQuery.data ?? {
+  const { handleSubmit, formState, control, reset } = useForm<SellerAddress>({
+    defaultValues: (channelOverrideConfigQuery.data &&
+      channelOverrideConfigQuery.data[props.channelSlug]) ?? {
       city: "",
       postalCode: "",
       country: "",
@@ -70,6 +71,25 @@ export const AddressForm = (props: Props) => {
   });
 
   const { notifySuccess } = useDashboardNotification();
+
+  useEffect(() => {
+    if (channelOverrideConfigQuery.data) {
+      /**
+       * "Hacky" way to re-render form with new data (from API). Initially it renders empty, because data is not set
+       * Here it re-renders form, but data from API is set, so its provided to defaultValues
+       *
+       * Alternative way will be fetching data in parent and set them in props (and dont render component if data is not set).
+       * This is caused by react hooks that are eager
+       *
+       * TODO it doesnt work with initial render (cmd+r)
+       */
+      reset();
+    }
+  }, [channelOverrideConfigQuery.data, reset, props.channelSlug]);
+
+  if (channelOverrideConfigQuery.isLoading) {
+    return <Text color={"textNeutralSubdued"}>Loading</Text>;
+  }
 
   return (
     <form
