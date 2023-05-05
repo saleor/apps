@@ -1,6 +1,6 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { createLogger } from "../../lib/logger";
+
 import { MailchimpClientOAuth } from "./mailchimp-client";
 import {
   CustomerCreatedEventConfig,
@@ -9,6 +9,7 @@ import {
 } from "./mailchimp-config-settings-manager";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { createLogger } from "@saleor/apps-shared";
 
 const setTokenInput = MailchimpConfig;
 

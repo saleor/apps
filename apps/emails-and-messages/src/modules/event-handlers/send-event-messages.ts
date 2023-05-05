@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { AppConfigurationService } from "../app-configuration/get-app-configuration.service";
 import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
 import { sendMjml } from "../mjml/send-mjml";
@@ -25,7 +25,7 @@ export const sendEventMessages = async ({
   payload,
   client,
 }: SendEventMessagesArgs) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     fn: "sendEventMessages",
   });
 
@@ -60,6 +60,7 @@ export const sendEventMessages = async ({
     const mjmlConfiguration = await mjmlConfigurationService.getConfiguration({
       id: channelAppConfiguration.mjmlConfigurationId,
     });
+
     if (mjmlConfiguration) {
       const mjmlStatus = await sendMjml({
         event,
@@ -86,6 +87,7 @@ export const sendEventMessages = async ({
     const sendgridConfiguration = await sendgridConfigurationService.getConfiguration({
       id: channelAppConfiguration.sendgridConfigurationId,
     });
+
     if (sendgridConfiguration) {
       const sendgridStatus = await sendSendgrid({
         event,

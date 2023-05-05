@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { ContentfulConfig, contentfulConfigSchema } from "../config";
-import { logger as pinoLogger } from "../../logger";
 
 import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
 import { fetchWithRateLimit } from "../data-sync";
+import { createLogger } from "@saleor/apps-shared";
 
 const contentfulFetch = (endpoint: string, config: ContentfulConfig, options?: RequestInit) => {
   const baseUrl = config.baseUrl || "https://api.contentful.com";
@@ -64,6 +64,7 @@ const transformInputToBody = ({
       },
     },
   };
+
   return body;
 };
 
@@ -95,7 +96,7 @@ const getEntryEndpoint = ({
 }): string => `/spaces/${spaceId}/environments/${environment}/entries/${resourceId}`;
 
 const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
-  const logger = pinoLogger.child({ cms: "strapi" });
+  const logger = createLogger({ cms: "strapi" });
 
   const { environment, spaceId, contentId, locale, apiRequestsPerSecond } = config;
 
@@ -104,6 +105,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   const pingCMS = async () => {
     const endpoint = `/spaces/${spaceId}`;
     const response = await contentfulFetch(endpoint, config, { method: "GET" });
+
     logger.debug({ response }, "pingCMS response");
     return {
       ok: response.ok,
@@ -126,8 +128,10 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Content-Type": contentId,
       },
     });
+
     logger.debug({ response }, "createProduct response");
     const json = await response.json();
+
     return {
       ...json,
       statusCode: response.status,
@@ -144,8 +148,10 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
     });
 
     const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
+
     logger.debug({ getEntryResponse }, "updateProduct getEntryResponse");
     const entry = await getEntryResponse.json();
+
     logger.debug({ entry }, "updateProduct entry");
 
     const response = await contentfulFetch(endpoint, config, {
@@ -155,8 +161,10 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
         "X-Contentful-Version": entry.sys.version,
       },
     });
+
     logger.debug({ response }, "updateProduct response");
     const json = await response.json();
+
     return {
       ...json,
       statusCode: response.status,
@@ -178,6 +186,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
     // Retry with delay x2 if by any chance hit rate limit with HTTP 429
     let secondResults: ContentfulResponse[] = [];
+
     if (failedWithLimitResults.length > 0) {
       logger.debug("createBatchProductsInCMS retrying failed by rate limit with delay x2");
       secondResults = await fetchWithRateLimit(
@@ -199,6 +208,7 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
     // Retry with delay x2 if by any chance hit rate limit with HTTP 429
     let secondResults: Response[] = [];
+
     if (failedWithLimitResults.length > 0) {
       logger.debug("deleteBatchProductsInCMS retrying failed by rate limit with delay x2");
       secondResults = await fetchWithRateLimit(
@@ -214,36 +224,42 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   return {
     ping: async () => {
       const response = await pingCMS();
+
       logger.debug({ response }, "ping response");
 
       return response;
     },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
+
       logger.debug({ result }, "createProduct result");
 
       return transformCreateProductResponse(result);
     },
     updateProduct: async ({ id, input }) => {
       const result = await updateProductInCMS(id, input);
+
       logger.debug({ result }, "updateProduct result");
 
       return result;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
+
       logger.debug({ response }, "deleteProduct response");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
+
       logger.debug({ results }, "createBatchProducts results");
 
       return results.map((result) => transformCreateProductResponse(result));
     },
     deleteBatchProducts: async ({ ids }) => {
       const results = await deleteBatchProductsInCMS(ids);
+
       logger.debug({ results }, "deleteBatchProducts results");
     },
   };

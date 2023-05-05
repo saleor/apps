@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -32,7 +32,7 @@ const postInputSchema = z.object({
 
 export const taxjarConfigurationRouter = router({
   get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "taxjarConfigurationRouter.get",
     });
@@ -49,7 +49,7 @@ export const taxjarConfigurationRouter = router({
     return { ...result, config: obfuscateTaxJarConfig(result.config) };
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "taxjarConfigurationRouter.post",
     });
@@ -66,7 +66,7 @@ export const taxjarConfigurationRouter = router({
     return result;
   }),
   delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "taxjarConfigurationRouter.delete",
     });
@@ -83,7 +83,7 @@ export const taxjarConfigurationRouter = router({
     return result;
   }),
   patch: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "taxjarConfigurationRouter.patch",
     });

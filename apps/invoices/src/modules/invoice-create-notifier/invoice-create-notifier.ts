@@ -1,6 +1,6 @@
 import { Client, gql } from "urql";
 import { InvoiceCreateDocument } from "../../../generated/graphql";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 
 gql`
   mutation InvoiceCreate($orderId: ID!, $invoiceInput: InvoiceCreateInput!) {

@@ -1,7 +1,6 @@
-import pino from "pino";
 import TaxJar from "taxjar";
 import { AddressParams, Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-config";
 
 const createTaxJarSettings = (config: TaxJarConfig): Config => {
@@ -27,7 +26,7 @@ export type ValidateAddressArgs = {
 
 export class TaxJarClient {
   private client: TaxJar;
-  private logger: pino.Logger;
+  private logger: Logger;
 
   constructor(providerConfig: TaxJarConfig) {
     this.logger = createLogger({ service: "TaxJarClient" });

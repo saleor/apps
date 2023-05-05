@@ -1,6 +1,6 @@
 import { NextApiHandler } from "next";
 import { MailchimpClientOAuth } from "../../../../modules/mailchimp/mailchimp-client";
-import { createLogger } from "../../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;

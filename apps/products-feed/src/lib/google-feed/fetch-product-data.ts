@@ -1,6 +1,6 @@
 import { url } from "inspector";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import {
   FetchProductDataForFeedDocument,
   GoogleFeedProductVariantFragment,
@@ -12,7 +12,7 @@ interface FetchProductDataArgs {
 }
 
 export const fetchProductData = async ({ client, channel }: FetchProductDataArgs) => {
-  const logger = pinoLogger.child({ saleorApiUrl: url, channel, route: "Google Product Feed" });
+  const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
 
   let result = await client
     .query(FetchProductDataForFeedDocument, { channel: channel as string, first: 100 })

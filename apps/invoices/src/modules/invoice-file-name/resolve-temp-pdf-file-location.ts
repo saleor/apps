@@ -1,7 +1,7 @@
 import { join } from "path";
 import invariant from "tiny-invariant";
 import { mkdir, access, constants } from "fs/promises";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 
 /**
  * Path will be relative to built file, in dev its inside .next/server

@@ -1,10 +1,9 @@
-import pino from "pino";
 import {
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
@@ -16,7 +15,7 @@ import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
   client: AvataxClient;
-  private logger: pino.Logger;
+  private logger: Logger;
 
   constructor(config: AvataxConfig) {
     this.logger = createLogger({

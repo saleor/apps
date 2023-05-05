@@ -1,7 +1,7 @@
 import { StrapiConfig, strapiConfigSchema } from "../config";
 import { CreateOperations, ProductResponse, ProductInput } from "../types";
 import { createProvider } from "./create";
-import { logger as pinoLogger } from "../../logger";
+import { createLogger } from "@saleor/apps-shared";
 
 const strapiFetch = async (endpoint: string, config: StrapiConfig, options?: RequestInit) => {
   const { baseUrl, token } = config;
@@ -31,6 +31,7 @@ const transformInputToBody = (input: ProductInput): StrapiBody => {
       product_slug: input.productSlug,
     },
   };
+
   return body;
 };
 
@@ -78,7 +79,7 @@ const transformCreateProductResponse = (
 type CreateStrapiOperations = CreateOperations<StrapiConfig>;
 
 export const strapiOperations: CreateStrapiOperations = (config) => {
-  const logger = pinoLogger.child({ cms: "strapi" });
+  const logger = createLogger({ cms: "strapi" });
 
   const { contentTypeId } = config;
 
@@ -86,6 +87,7 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
     const response = await strapiFetch(`/${contentTypeId}`, config, {
       method: "GET",
     });
+
     logger.debug({ response }, "pingCMS response");
     return { ok: response.ok };
   };
@@ -96,12 +98,14 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
       method: "POST",
       body: JSON.stringify(body),
     });
+
     logger.debug({ response }, "createProduct response");
     return await response.json();
   };
 
   const updateProductInCMS = async (id: string, input: ProductInput) => {
     const body = transformInputToBody(input);
+
     return await strapiFetch(`/${contentTypeId}/${id}`, config, {
       method: "PUT",
       body: JSON.stringify(body),
@@ -130,36 +134,42 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
   return {
     ping: async () => {
       const response = await pingCMS();
+
       logger.debug({ response }, "ping response");
 
       return response;
     },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
+
       logger.debug({ result }, "createProduct result");
 
       return transformCreateProductResponse(result, input);
     },
     updateProduct: async ({ id, input }) => {
       const response = await updateProductInCMS(id, input);
+
       logger.debug({ response }, "updateProduct response");
 
       return response;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
+
       logger.debug({ response }, "deleteProduct response");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
+
       logger.debug({ results }, "createBatchProducts results");
 
       return results.map((result) => transformCreateProductResponse(result.response, result.input));
     },
     deleteBatchProducts: async ({ ids }) => {
       const responses = await deleteBatchProductsInCMS(ids);
+
       logger.debug({ responses }, "deleteBatchProducts responses");
 
       return responses;

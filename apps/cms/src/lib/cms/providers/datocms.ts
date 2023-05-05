@@ -1,9 +1,9 @@
 import { createProvider } from "./create";
 import { CreateOperations, ProductInput, ProductResponse } from "../types";
-import { logger as pinoLogger } from "../../logger";
 
 import { ApiError, buildClient, SimpleSchemaTypes } from "@datocms/cma-client-node";
 import { DatocmsConfig, datocmsConfigSchema } from "../config";
+import { createLogger } from "@saleor/apps-shared";
 
 const datocmsClient = (config: DatocmsConfig, options?: RequestInit) => {
   const { baseUrl, token, environment } = config;
@@ -46,7 +46,7 @@ const transformResponseItem = (
 };
 
 const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
-  const logger = pinoLogger.child({ cms: "strapi" });
+  const logger = createLogger({ cms: "strapi" });
 
   const client = datocmsClient(config);
 
@@ -96,6 +96,7 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     ping: async () => {
       try {
         const response = await pingCMS();
+
         logger.debug({ response }, "ping response");
 
         if (!response.id) {
@@ -110,6 +111,7 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     createProduct: async ({ input }) => {
       try {
         const item = await createProductInCMS(input);
+
         logger.debug({ item }, "createProduct response");
 
         return transformResponseItem(item, input);
@@ -119,20 +121,24 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     },
     updateProduct: async ({ id, input }) => {
       const item = await updateProductInCMS(id, input);
+
       logger.debug({ item }, "updateProduct response");
     },
     deleteProduct: async ({ id }) => {
       const item = await deleteProductInCMS(id);
+
       logger.debug({ item }, "deleteProduct response");
     },
     createBatchProducts: async ({ input }) => {
       const items = await createBatchProductsInCMS(input);
+
       logger.debug({ items }, "createBatchProducts response");
 
       return items.map((item) => transformResponseItem(item.id, item.input));
     },
     deleteBatchProducts: async ({ ids }) => {
       const items = await deleteBatchProductsInCMS(ids);
+
       logger.debug({ items }, "deleteBatchProducts response");
     },
   };

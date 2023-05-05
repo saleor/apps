@@ -1,6 +1,6 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
 import {
   FetchCategoriesWithMappingDocument,
@@ -13,7 +13,7 @@ export const categoryMappingRouter = router({
    * Get all the category mappings to Google categories from its public metadata
    */
   getCategoryMappings: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("categoriesRouter.getCategoryMappings called");
 
@@ -37,7 +37,7 @@ export const categoryMappingRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(SetCategoryMappingInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug("categoriesRouter.setCategoryMapping called");
       const { error } = await ctx.apiClient

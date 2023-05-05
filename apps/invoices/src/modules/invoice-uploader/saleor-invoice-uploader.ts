@@ -9,7 +9,7 @@ import { FileUploadMutation } from "../../../generated/graphql";
  * Use File instead of Blob so Saleor can understand name
  */
 import { File } from "@web-std/file";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 
 const fileUpload = gql`
   mutation FileUpload($file: Upload!) {

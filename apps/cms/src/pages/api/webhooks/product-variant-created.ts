@@ -7,10 +7,11 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
 import { createCmsOperations, executeCmsOperations, updateMetadata } from "../../../lib/cms/client";
-import { logger as pinoLogger } from "../../../lib/logger";
+
 import { createClient } from "../../../lib/graphql";
 import { fetchProductVariantMetadata } from "../../../lib/metadata";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
+import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -53,9 +54,10 @@ export const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadF
   const { productVariant } = context.payload;
   const { saleorApiUrl, token } = context.authData;
 
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     productVariant,
   });
+
   logger.debug("Called webhook PRODUCT_VARIANT_CREATED");
 
   if (!productVariant) {

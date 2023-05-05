@@ -1,11 +1,12 @@
 import { NextProtectedApiHandler, createProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { logger as pinoLogger } from "../../lib/logger";
+
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { getProviderInstancesSettings } from "../../lib/cms/client/settings";
 import { pingProviderInstance } from "../../lib/cms/client/clients-execution";
+import { createLogger } from "@saleor/apps-shared";
 
 export interface ProviderInstancePingApiPayload {
   providerInstanceId: string;
@@ -23,9 +24,10 @@ const handler: NextProtectedApiHandler = async (
   const { authData } = context;
   const { providerInstanceId } = req.body as ProviderInstancePingApiPayload;
 
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     endpoint: "ping-provider-instance",
   });
+
   logger.debug({ providerInstanceId }, "Called endpoint ping-provider-instance");
 
   if (req.method !== "POST") {

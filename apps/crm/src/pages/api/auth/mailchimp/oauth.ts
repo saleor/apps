@@ -1,8 +1,9 @@
 import { NextApiHandler } from "next";
-import { createLogger } from "../../../../lib/logger";
+
 import { processSaleorProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../../saleor-app";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
+import { createLogger } from "@saleor/apps-shared";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;

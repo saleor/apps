@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   fn: "compileMjml",
 });
 

@@ -4,7 +4,8 @@ import pino from "pino";
  * TODO Set up log drain etc
  */
 export const logger = pino({
-  level: "debug",
+  level: process.env.APP_LOG_LEVEL ?? "silent",
+  redact: ["token", "apiKey"],
   transport:
     process.env.NODE_ENV === "development"
       ? {
@@ -17,3 +18,5 @@ export const logger = pino({
 });
 
 export const createLogger = logger.child.bind(logger);
+
+export type Logger = typeof logger;

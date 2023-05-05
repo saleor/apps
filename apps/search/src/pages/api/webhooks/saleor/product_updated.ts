@@ -3,7 +3,6 @@ import { ProductUpdated, ProductUpdatedDocument } from "../../../../../generated
 import { saleorApp } from "../../../../../saleor-app";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../../../../lib/algolia/getAlgoliaConfiguration";
-import { createDebug } from "../../../../lib/debug";
 import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
 import { createClient } from "../../../../lib/graphql";
 import { createLogger } from "../../../../lib/logger";

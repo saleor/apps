@@ -1,7 +1,7 @@
 import { convert } from "html-to-text";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   fn: "htmlToPlaintext",
 });
 
@@ -9,6 +9,7 @@ export const htmlToPlaintext = (html: string) => {
   logger.debug("Converting HTML template to plaintext");
   try {
     const plaintext = convert(html);
+
     logger.debug("Converted successfully");
     return {
       plaintext,
