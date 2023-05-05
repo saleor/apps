@@ -1,5 +1,16 @@
 # saleor-app-slack
 
+## 1.6.0
+
+### Minor Changes
+
+- 830cfe9: Changed APP_DEBUG env to APP_LOG_LEVEL
+
+### Patch Changes
+
+- Updated dependencies [830cfe9]
+  - @saleor/apps-shared@1.5.0
+
 ## 1.5.0
 
 ### Minor Changes

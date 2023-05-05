@@ -1,5 +1,17 @@
 # saleor-app-klaviyo
 
+## 1.6.0
+
+### Minor Changes
+
+- 830cfe9: Changed APP_DEBUG env to APP_LOG_LEVEL
+
+### Patch Changes
+
+- 830cfe9: Bumped Typescript version to 5.0.4
+- Updated dependencies [830cfe9]
+  - @saleor/apps-shared@1.5.0
+
 ## 1.5.0
 
 ### Minor Changes
