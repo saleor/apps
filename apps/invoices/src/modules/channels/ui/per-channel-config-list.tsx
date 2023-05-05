@@ -25,7 +25,30 @@ export const PerChannelConfigList = () => {
     }
 
     if (overridesDataRecord[slug]) {
-      return <div>todo</div>;
+      const address = overridesDataRecord[slug];
+
+      /**
+       * TODO extract address rendering
+       */
+      return (
+        <Box>
+          <Text size={"small"} as={"p"}>
+            {address.companyName}
+          </Text>
+          <Text size={"small"} as={"p"}>
+            {address.streetAddress1}
+          </Text>
+          <Text size={"small"} as={"p"}>
+            {address.streetAddress2}
+          </Text>
+          <Text size={"small"}>
+            {address.postalCode} {address.city}
+          </Text>
+          <Text size={"small"} as={"p"}>
+            {address.country}
+          </Text>
+        </Box>
+      );
     } else {
       return defaultAddressChip;
     }
