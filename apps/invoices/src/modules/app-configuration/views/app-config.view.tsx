@@ -2,8 +2,11 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { DefaultShopAddress } from "../../shop-info/ui/default-shop-address";
 import { AppSection } from "../../ui/AppSection";
 import { PerChannelConfigList } from "../../channels/ui/per-channel-config-list";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 export const AppConfigView = () => {
+  const { appBridge } = useAppBridge();
+
   return (
     <Box>
       <Box
@@ -22,8 +25,20 @@ export const AppConfigView = () => {
             <code>INVOICE_REQUESTED</code> event will be triggered
           </Text>
           <Text as={"p"} marginBottom={4}>
-            By default it will use <a href={"todo"}>site settings</a> address, but each channel can
-            be configured separately
+            By default it will use{" "}
+            <a
+              href={"#"}
+              onClick={() => {
+                appBridge?.dispatch(
+                  actions.Redirect({
+                    to: "/site-settings",
+                  })
+                );
+              }}
+            >
+              site settings
+            </a>{" "}
+            address, but each channel can be configured separately
           </Text>
         </Box>
         <Box>

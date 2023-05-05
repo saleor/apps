@@ -15,7 +15,7 @@ const upsertAddressSchema = z.object({
     companyName: z.string().min(1),
     country: z.string().min(1),
     streetAddress1: z.string().min(1),
-    streetAddress2: z.string().min(1),
+    streetAddress2: z.string(),
     countryArea: z.string(),
     postalCode: z.string().min(1),
   }),
