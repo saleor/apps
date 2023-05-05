@@ -1,23 +1,9 @@
 import { SellerShopConfig } from "../app-config";
 import { useForm } from "react-hook-form";
-import { TextField, TextFieldProps, Typography } from "@material-ui/core";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+
 import React from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-
-const useStyles = makeStyles((theme) => ({
-  field: {
-    marginBottom: 20,
-  },
-  form: {
-    padding: 20,
-    paddingTop: 0,
-  },
-  channelName: {
-    cursor: "pointer",
-    borderBottom: `2px solid ${theme.palette.secondary.main}`,
-  },
-}));
+import { Input, InputProps, Text, Button } from "@saleor/macaw-ui/next";
 
 type Props = {
   channelSlug: string;
@@ -31,11 +17,10 @@ export const AddressForm = (props: Props) => {
   const { register, handleSubmit } = useForm<SellerShopConfig["address"]>({
     defaultValues: props.initialData ?? undefined,
   });
-  const styles = useStyles();
+
   const { appBridge } = useAppBridge();
 
-  const CommonFieldProps: TextFieldProps = {
-    className: styles.field,
+  const CommonFieldProps: InputProps = {
     fullWidth: true,
   };
 
@@ -52,26 +37,23 @@ export const AddressForm = (props: Props) => {
       onSubmit={handleSubmit((data, event) => {
         props.onSubmit(data);
       })}
-      className={styles.form}
     >
-      <Typography component="h3" variant="h3" paragraph>
+      <Text as="h3">
         Configure
-        <span onClick={handleChannelNameClick} className={styles.channelName}>
-          {` ${props.channelName} `}
-        </span>
+        <span onClick={handleChannelNameClick}>{` ${props.channelName} `}</span>
         channel:
-      </Typography>
-      <TextField label="Company Name" {...CommonFieldProps} {...register("companyName")} />
-      <TextField label="Street Address 1" {...CommonFieldProps} {...register("streetAddress1")} />
-      <TextField {...CommonFieldProps} label="Street Address 2" {...register("streetAddress2")} />
+      </Text>
+      <Input label="Company Name" {...CommonFieldProps} {...register("companyName")} />
+      <Input label="Street Address 1" {...CommonFieldProps} {...register("streetAddress1")} />
+      <Input {...CommonFieldProps} label="Street Address 2" {...register("streetAddress2")} />
       <div style={{ display: "grid", gap: 20, gridTemplateColumns: "1fr 2fr" }}>
-        <TextField {...CommonFieldProps} label="Postal Code" {...register("postalCode")} />
-        <TextField {...CommonFieldProps} label="City" {...register("city")} />
+        <Input {...CommonFieldProps} label="Postal Code" {...register("postalCode")} />
+        <Input {...CommonFieldProps} label="City" {...register("city")} />
       </div>
-      <TextField {...CommonFieldProps} label="City Area" {...register("cityArea")} />
-      <TextField {...CommonFieldProps} label="Country" {...register("country")} />
-      <TextField label="Country Area" {...CommonFieldProps} {...register("countryArea")} />
-      <Button type="submit" fullWidth variant="primary">
+      <Input {...CommonFieldProps} label="City Area" {...register("cityArea")} />
+      <Input {...CommonFieldProps} label="Country" {...register("country")} />
+      <Input label="Country Area" {...CommonFieldProps} {...register("countryArea")} />
+      <Button type="submit" variant="primary">
         Save channel configuration
       </Button>
     </form>
