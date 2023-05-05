@@ -1,7 +1,7 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { logger as pinoLogger } from "../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import {
   OrderCancelledWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
@@ -40,7 +40,7 @@ const handler: NextWebhookApiHandler<OrderCancelledWebhookPayloadFragment> = asy
   res,
   context
 ) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     webhook: orderCancelledWebhook.name,
   });
 
@@ -55,6 +55,7 @@ const handler: NextWebhookApiHandler<OrderCancelledWebhookPayloadFragment> = asy
   }
 
   const recipientEmail = order.userEmail || order.user?.email;
+
   if (!recipientEmail?.length) {
     logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
     return res

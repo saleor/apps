@@ -2,7 +2,7 @@ import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
 import { saleorApp } from "../../saleor-app";
 import { createClient } from "../../lib/create-graphql-client";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 import { getBaseUrl } from "../../lib/get-base-url";
 import { registerNotifyWebhook } from "../../lib/register-notify-webhook";
 
@@ -33,6 +33,7 @@ export default createAppRegisterHandler({
     const client = createClient(ctx.authData.saleorApiUrl, async () =>
       Promise.resolve({ token: ctx.authData.token })
     );
+
     await registerNotifyWebhook({
       client: client,
       baseUrl: baseUrl,

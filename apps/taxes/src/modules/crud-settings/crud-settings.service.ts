@@ -1,14 +1,14 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import pino from "pino";
+
 import { z } from "zod";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { createId } from "../../lib/utils";
 
 const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
 export class CrudSettingsManager {
-  private logger: pino.Logger;
+  private logger: Logger;
 
   constructor(
     private metadataManager: SettingsManager,

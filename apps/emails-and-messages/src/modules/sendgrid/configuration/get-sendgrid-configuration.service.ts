@@ -1,11 +1,11 @@
 import { SendgridConfigurator, PrivateMetadataSendgridConfigurator } from "./sendgrid-configurator";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { SendgridConfig, SendgridConfiguration } from "./sendgrid-config";
 import { FilterConfigurationsArgs, SendgridConfigContainer } from "./sendgrid-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   service: "SendgridConfigurationService",
 });
 
@@ -29,6 +29,7 @@ export class SendgridConfigurationService {
     logger.debug("Fetch configuration from Saleor API");
 
     const config = await this.metadataConfigurator.getConfig();
+
     this.configurationData = config;
   }
 
@@ -82,6 +83,7 @@ export class SendgridConfigurationService {
     const updatedConfigurationRoot = SendgridConfigContainer.createConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     await this.setConfigurationRoot(updatedConfigurationRoot);
 
     return updatedConfigurationRoot.configurations[
@@ -94,6 +96,7 @@ export class SendgridConfigurationService {
     const updatedConfigurationRoot = SendgridConfigContainer.updateConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 
@@ -102,6 +105,7 @@ export class SendgridConfigurationService {
     const updatedConfigurationRoot = SendgridConfigContainer.deleteConfiguration(
       await this.getConfigurationRoot()
     )({ id });
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 }

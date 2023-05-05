@@ -1,4 +1,4 @@
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { compileMjml } from "./compile-mjml";
 import { compileHandlebarsTemplate } from "./compile-handlebars-template";
 import { sendEmailWithSmtp, SendMailArgs } from "./send-email-with-smtp";
@@ -26,12 +26,13 @@ export const sendMjml = async ({
   event,
   mjmlConfiguration,
 }: SendMjmlArgs) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     fn: "sendMjml",
     event,
   });
 
   const eventSettings = mjmlConfiguration.events.find((e) => e.eventType === event);
+
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
     return {

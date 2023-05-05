@@ -1,6 +1,5 @@
-import pino from "pino";
 import { Client } from "urql";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { obfuscateAvataxInstances } from "../avatax/avatax-config";
 import { AvataxConfigurationService } from "../avatax/avatax-configuration.service";
 import { obfuscateTaxJarInstances } from "../taxjar/taxjar-config";
@@ -11,7 +10,7 @@ export const TAX_PROVIDER_KEY = "tax-providers";
 export class PublicTaxProvidersConfigurationService {
   private avataxConfigurationService: AvataxConfigurationService;
   private taxJarConfigurationService: TaxJarConfigurationService;
-  private logger: pino.Logger;
+  private logger: Logger;
   constructor(client: Client, saleorApiUrl: string) {
     this.avataxConfigurationService = new AvataxConfigurationService(client, saleorApiUrl);
     this.taxJarConfigurationService = new TaxJarConfigurationService(client, saleorApiUrl);

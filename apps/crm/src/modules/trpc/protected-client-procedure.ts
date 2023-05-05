@@ -3,8 +3,11 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { logger } from "../../lib/logger";
+
 import { createClient } from "../../lib/create-graphq-client";
+import { createLogger } from "@saleor/apps-shared";
+
+const logger = createLogger({ service: "protected-client-procedure" });
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");

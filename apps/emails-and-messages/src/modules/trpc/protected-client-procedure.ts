@@ -3,7 +3,7 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { logger } from "../../lib/logger";
+import { logger } from "@saleor/apps-shared";
 import { createClient } from "../../lib/create-graphql-client";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {

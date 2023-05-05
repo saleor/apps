@@ -8,10 +8,11 @@ import { saleorApp } from "../../../../saleor-app";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
 import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
 import { createCmsOperations, executeCmsOperations, updateMetadata } from "../../../lib/cms/client";
-import { logger as pinoLogger } from "../../../lib/logger";
+
 import { createClient } from "../../../lib/graphql";
 import { fetchProductVariantMetadata } from "../../../lib/metadata";
 import { isAppWebhookIssuer } from "./_utils";
+import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -58,9 +59,10 @@ export const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment
   const { product, issuingPrincipal } = context.payload;
   const { saleorApiUrl, token, appId } = context.authData;
 
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     product,
   });
+
   logger.debug("Called webhook PRODUCT_UPDATED");
   logger.debug({ issuingPrincipal }, "Issuing principal");
 
@@ -99,9 +101,11 @@ export const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment
       productVariantChannels: productVariantChannels,
       productVariantCmsKeys: productVariantCmsKeys,
     });
-    // Do not touch product variants which are not created or should be deleted.
-    // These operations should and will be performed by PRODUCT_VARIANT_CREATED and PRODUCT_VARIANT_DELETED webhooks.
-    // Otherwise we will end up with duplicated product variants in CMS providers! (or failed variant delete operations).
+    /*
+     * Do not touch product variants which are not created or should be deleted.
+     * These operations should and will be performed by PRODUCT_VARIANT_CREATED and PRODUCT_VARIANT_DELETED webhooks.
+     * Otherwise we will end up with duplicated product variants in CMS providers! (or failed variant delete operations).
+     */
     const cmsUpdateOperations = cmsOperations.filter(
       (operation) => operation.operationType === "updateProduct"
     );

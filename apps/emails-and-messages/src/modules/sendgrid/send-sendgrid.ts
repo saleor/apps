@@ -1,4 +1,4 @@
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { SendgridConfiguration } from "./configuration/sendgrid-config";
 import { MailService } from "@sendgrid/mail";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
@@ -23,10 +23,11 @@ export const sendSendgrid = async ({
   event,
   sendgridConfiguration,
 }: SendSendgridArgs) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     fn: "sendSendgrid",
     event,
   });
+
   if (!sendgridConfiguration.senderEmail) {
     logger.debug("Sender email has not been specified, skipping");
     return {
@@ -39,6 +40,7 @@ export const sendSendgrid = async ({
   }
 
   const eventSettings = sendgridConfiguration.events.find((e) => e.eventType === event);
+
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
     return {
@@ -74,6 +76,7 @@ export const sendSendgrid = async ({
 
   try {
     const mailService = new MailService();
+
     mailService.setApiKey(sendgridConfiguration.apiKey);
 
     await mailService.send({

@@ -1,6 +1,5 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { logger as pinoLogger } from "../../../lib/logger";
 import {
   CustomerCreatedDocument,
   CustomerCreatedPayloadFragment,
@@ -9,6 +8,7 @@ import { createClient } from "../../../lib/create-graphq-client";
 import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 import { metadataToMailchimpTags } from "../../../modules/saleor-customers-sync/metadata-to-mailchimp-tags";
+import { createLogger } from "@saleor/apps-shared";
 
 export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayloadFragment>({
   name: "Customer Created in Saleor",
@@ -24,7 +24,7 @@ export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloa
   res,
   context
 ) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     webhook: customerCreatedWebhook.name,
   });
 

@@ -1,6 +1,5 @@
-import pino from "pino";
 import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarClient } from "./taxjar-client";
@@ -10,7 +9,7 @@ import { taxJarOrderCreatedMaps } from "./maps/taxjar-order-created-map";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
-  private logger: pino.Logger;
+  private logger: Logger;
 
   constructor(config: TaxJarConfig) {
     const avataxClient = new TaxJarClient(config);

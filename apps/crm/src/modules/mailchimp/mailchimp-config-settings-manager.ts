@@ -2,7 +2,7 @@ import { Client } from "urql";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
-import { createLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
 export const CustomerCreatedEventConfig = z
   .object({

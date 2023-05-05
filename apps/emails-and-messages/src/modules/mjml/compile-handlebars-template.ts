@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   fn: "compileHandlebarsTemplate",
 });
 
@@ -10,6 +10,7 @@ export const compileHandlebarsTemplate = (template: string, variables: any) => {
   try {
     const templateDelegate = Handlebars.compile(template);
     const htmlTemplate = templateDelegate(variables);
+
     logger.debug("Template successfully compiled");
     return {
       template: htmlTemplate,

@@ -1,11 +1,11 @@
 import { MjmlConfigurator, PrivateMetadataMjmlConfigurator } from "./mjml-configurator";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { MjmlConfig, MjmlConfiguration } from "./mjml-config";
 import { FilterConfigurationsArgs, MjmlConfigContainer } from "./mjml-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   service: "MjmlConfigurationService",
 });
 
@@ -29,6 +29,7 @@ export class MjmlConfigurationService {
     logger.debug("Fetch configuration from Saleor API");
 
     const config = await this.metadataConfigurator.getConfig();
+
     this.configurationData = config;
   }
 
@@ -82,6 +83,7 @@ export class MjmlConfigurationService {
     const updatedConfigurationRoot = MjmlConfigContainer.createConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     await this.setConfigurationRoot(updatedConfigurationRoot);
 
     return updatedConfigurationRoot.configurations[
@@ -94,6 +96,7 @@ export class MjmlConfigurationService {
     const updatedConfigurationRoot = MjmlConfigContainer.updateConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 
@@ -102,6 +105,7 @@ export class MjmlConfigurationService {
     const updatedConfigurationRoot = MjmlConfigContainer.deleteConfiguration(
       await this.getConfigurationRoot()
     )({ id });
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 }

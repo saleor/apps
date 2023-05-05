@@ -9,9 +9,10 @@ import {
 import { providersSchemaSet } from "../config";
 import { CMSProvider, cmsProviders } from "../providers";
 import { CmsClientOperations } from "../types";
-import { logger as pinoLogger } from "../../logger";
+
 import { getCmsIdFromSaleorItemKey } from "./metadata";
 import { type Client } from "urql";
+import { createLogger } from "@saleor/apps-shared";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
@@ -26,7 +27,7 @@ export const createCmsOperations = async ({
   productVariantChannels: string[];
   productVariantCmsKeys: string[];
 }) => {
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     productVariantChannels,
     productVariantCmsKeys,
   });

@@ -4,14 +4,14 @@ import {
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
-import { createLogger } from "../../lib/logger";
+import { createLogger, Logger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderConfig } from "../providers-configuration/providers-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { TaxProviderError } from "./tax-provider-error";
-import pino from "pino";
+
 import { getAppConfig } from "../app/get-app-config";
 
 type ActiveTaxProviderResult = { ok: true; data: ActiveTaxProvider } | { ok: false; error: string };
@@ -63,7 +63,7 @@ export function getActiveTaxProvider(
 // todo: refactor to a factory
 export class ActiveTaxProvider implements ProviderWebhookService {
   private client: ProviderWebhookService;
-  private logger: pino.Logger;
+  private logger: Logger;
   private channel: ChannelConfig;
 
   constructor(providerInstance: ProviderConfig, channelConfig: ChannelConfig) {

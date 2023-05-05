@@ -1,5 +1,5 @@
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 import { TaxChannelsConfigurator } from "./channels-configurator";
 
@@ -12,7 +12,7 @@ export class GetChannelsConfigurationService {
   ) {}
 
   async getConfiguration() {
-    const logger = pinoLogger.child({
+    const logger = createLogger({
       service: "GetChannelsConfigurationService",
       saleorApiUrl: this.settings.saleorApiUrl,
     });

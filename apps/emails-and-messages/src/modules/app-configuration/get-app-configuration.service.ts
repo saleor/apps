@@ -1,11 +1,11 @@
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
 import { Client } from "urql";
-import { logger as pinoLogger } from "../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
 import { AppConfig, AppConfigurationPerChannel } from "./app-config";
 import { getDefaultEmptyAppConfiguration } from "./app-config-container";
 import { createSettingsManager } from "../../lib/metadata-manager";
 
-const logger = pinoLogger.child({
+const logger = createLogger({
   service: "AppConfigurationService",
 });
 
@@ -25,6 +25,7 @@ export class AppConfigurationService {
     logger.debug("Fetch configuration from Saleor API");
 
     const config = await this.metadataConfigurator.getConfig();
+
     this.configurationData = config;
   }
 
@@ -64,11 +65,13 @@ export class AppConfigurationService {
   async getChannelConfiguration(channel: string) {
     logger.debug("Get channel configuration");
     const configurations = await this.getConfiguration();
+
     if (!configurations) {
       return getDefaultEmptyAppConfiguration();
     }
 
     const channelConfiguration = configurations.configurationsPerChannel[channel];
+
     return channelConfiguration || getDefaultEmptyAppConfiguration();
   }
 
@@ -81,6 +84,7 @@ export class AppConfigurationService {
   }) {
     logger.debug("Set channel configuration");
     let configurations = await this.getConfiguration();
+
     if (!configurations) {
       configurations = { configurationsPerChannel: {} };
     }

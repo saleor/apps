@@ -6,11 +6,12 @@ import { executeCmsClientBatchOperation } from "../../lib/cms/client/clients-exe
 import { getChannelsSettings, getProviderInstancesSettings } from "../../lib/cms/client/settings";
 import { providersSchemaSet } from "../../lib/cms/config/providers";
 import { cmsProviders, CMSProvider } from "../../lib/cms/providers";
-import { logger as pinoLogger } from "../../lib/logger";
+
 import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { batchUpdateMetadata, MetadataRecord } from "../../lib/cms/client/metadata-execution";
 import { CmsBatchOperations } from "../../lib/cms/types";
+import { createLogger } from "@saleor/apps-shared";
 
 export interface SyncProductsVariantsApiPayload {
   channelSlug: string;
@@ -35,7 +36,7 @@ const handler: NextProtectedApiHandler = async (
 ) => {
   const { authData } = context;
 
-  const logger = pinoLogger.child({
+  const logger = createLogger({
     endpoint: "sync-products-variants",
   });
 
