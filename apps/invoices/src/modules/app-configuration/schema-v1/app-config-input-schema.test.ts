@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { appConfigInputSchema } from "./app-config-input-schema";
-import { AppConfig, SellerShopConfig } from "./app-config";
+import { AppConfigV1, SellerShopConfig } from "./app-config-v1";
 import { getMockAddress } from "../../../fixtures/mock-address";
 
 describe("appConfigInputSchema", () => {
@@ -8,7 +8,7 @@ describe("appConfigInputSchema", () => {
     expect(() =>
       appConfigInputSchema.parse({
         shopConfigPerChannel: {},
-      } satisfies AppConfig)
+      } satisfies AppConfigV1)
     ).not.to.throw();
   });
 
@@ -29,7 +29,7 @@ describe("appConfigInputSchema", () => {
             },
           },
         },
-      } satisfies AppConfig)
+      } satisfies AppConfigV1)
     ).not.to.throw();
   });
 
@@ -41,7 +41,7 @@ describe("appConfigInputSchema", () => {
             address: getMockAddress(),
           },
         },
-      } satisfies AppConfig)
+      } satisfies AppConfigV1)
     ).not.to.throw();
   });
 });

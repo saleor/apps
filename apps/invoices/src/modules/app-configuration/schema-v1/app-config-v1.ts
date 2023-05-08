@@ -6,6 +6,6 @@ export interface SellerShopConfig {
 
 export type ShopConfigPerChannelSlug = Record<string, SellerShopConfig>;
 
-export type AppConfig = {
+export type AppConfigV1 = {
   shopConfigPerChannel: ShopConfigPerChannelSlug;
 };

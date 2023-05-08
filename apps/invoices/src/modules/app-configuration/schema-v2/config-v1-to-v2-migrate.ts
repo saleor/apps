@@ -1,8 +1,8 @@
-import { AppConfig } from "../schema-v1/app-config";
+import { AppConfigV1 } from "../schema-v1/app-config-v1";
 import { AppConfigV2 } from "./app-config";
 
 export class ConfigV1ToV2Migrate {
-  transform(v1Config: AppConfig): AppConfigV2 {
+  transform(v1Config: AppConfigV1): AppConfigV2 {
     const configV2 = new AppConfigV2();
 
     if (!v1Config || !v1Config.shopConfigPerChannel) {

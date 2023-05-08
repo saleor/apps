@@ -28,7 +28,11 @@ export class GetAppConfigurationV2Service {
     if (stringMetadata) {
       return AppConfigV2.parse(stringMetadata);
     } else {
-      return new AppConfigV2();
+      return null;
     }
+  }
+
+  getEmptyConfiguration() {
+    return new AppConfigV2();
   }
 }

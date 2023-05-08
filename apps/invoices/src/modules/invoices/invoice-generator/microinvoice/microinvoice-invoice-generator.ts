@@ -1,6 +1,6 @@
 import { InvoiceGenerator } from "../invoice-generator";
 import { Order, OrderPayloadFragment } from "../../../../../generated/graphql";
-import { SellerShopConfig } from "../../../app-configuration/schema-v1/app-config";
+import { SellerShopConfig } from "../../../app-configuration/schema-v1/app-config-v1";
 const Microinvoice = require("microinvoice");
 
 export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
