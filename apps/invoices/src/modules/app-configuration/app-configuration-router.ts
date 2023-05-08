@@ -11,6 +11,7 @@ import { ConfigV1ToV2Transformer } from "./schema-v2/config-v1-to-v2-transformer
 import { AppConfigV1 } from "./schema-v1/app-config-v1";
 import { Client } from "urql";
 import { ConfigV1ToV2MigrationService } from "./schema-v2/config-v1-to-v2-migration.service";
+import { trpcClient } from "../trpc/trpc-client";
 
 // todo unify
 const upsertAddressSchema = z.object({
