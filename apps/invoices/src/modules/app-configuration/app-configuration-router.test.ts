@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { appConfigurationRouter } from "./app-configuration-router";
+import { getMockAddress } from "../../fixtures/mock-address";
+import { mockMetadataManager } from "./__mocks__/metadata-manager";
 
-import { SaleorApp } from "@saleor/app-sdk/saleor-app";
+vi.mock("./metadata-manager");
 
 vi.mock("../../saleor-app", () => {
   const apl = {
@@ -43,19 +45,24 @@ vi.mock("@saleor/app-sdk/verify-jwt", () => {
   };
 });
 
-// todo __mocks__ dont work
-describe.skip("appConfigurationRouter", function () {
-  it("works", async () => {
-    const resp = await appConfigurationRouter
-      .createCaller({
-        token: "TOKEN",
-        saleorApiUrl: "http://localhost:8000/graphql/",
-        appId: "app",
-      })
-      .fetchChannelsOverrides();
+describe("appConfigurationRouter", function () {
+  describe("upsertChannelOverride", function () {
+    it("Calls metadata manager with proper value to save", async () => {
+      await appConfigurationRouter
+        .createCaller({
+          token: "TOKEN",
+          saleorApiUrl: "http://localhost:8000/graphql/",
+          appId: "app",
+        })
+        .upsertChannelOverride({
+          channelSlug: "test",
+          address: getMockAddress(),
+        });
 
-    console.log(resp);
-
-    expect(resp).toEqual({});
+      expect(mockMetadataManager.set).toHaveBeenCalledWith({
+        key: "app-config-v2",
+        value: expect.any(String),
+      });
+    });
   });
 });

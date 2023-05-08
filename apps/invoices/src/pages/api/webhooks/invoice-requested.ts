@@ -1,5 +1,5 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { Client, gql } from "urql";
+import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
 import {
   InvoiceRequestedPayloadFragment,
@@ -20,14 +20,12 @@ import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { GetAppConfigurationV2Service } from "../../../modules/app-configuration/schema-v2/get-app-configuration.v2.service";
 import { ShopInfoFetcher } from "../../../modules/shop-info/shop-info-fetcher";
 import { z } from "zod";
-import { AddressV2Schema } from "../../../modules/app-configuration/schema-v2/app-config-schema.v2";
-import { PrivateMetadataAppConfiguratorV1 } from "../../../modules/app-configuration/schema-v1/app-configurator";
-import { createSettingsManager } from "../../../modules/app-configuration/metadata-manager";
-import { AppConfigV2 } from "../../../modules/app-configuration/schema-v2/app-config";
-import { AppConfigV2MetadataManager } from "../../../modules/app-configuration/schema-v2/app-config-v2-metadata-manager";
-import { AppConfigV1 } from "../../../modules/app-configuration/schema-v1/app-config-v1";
-import { ConfigV1ToV2Transformer } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-transformer";
+import {
+  AddressV2Schema,
+  AddressV2Shape,
+} from "../../../modules/app-configuration/schema-v2/app-config-schema.v2";
 import { ConfigV1ToV2MigrationService } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-migration.service";
+import { shopInfoQueryToAddressShape } from "../../../modules/shop-info/shop-info-query-to-address-shape";
 
 const OrderPayload = gql`
   fragment Address on Address {
@@ -146,19 +144,6 @@ export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPa
 
 const invoiceNumberGenerator = new InvoiceNumberGenerator();
 
-const migrate = async (v1Config: AppConfigV1, apiClient: Client) => {
-  const settingsManager = createSettingsManager(apiClient);
-
-  const transformer = new ConfigV1ToV2Transformer();
-  const appConfigV2FromV1 = transformer.transform(v1Config);
-
-  const mm = new AppConfigV2MetadataManager(settingsManager);
-
-  await mm.set(appConfigV2FromV1.serialize());
-
-  return appConfigV2FromV1;
-};
-
 /**
  * TODO
  * Refactor - extract smaller pieces
@@ -215,33 +200,15 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     if (!appConfigV2) {
       const migrationService = new ConfigV1ToV2MigrationService(client, authData.saleorApiUrl);
 
-      await migrationService.migrate();
-
-      return;
+      appConfigV2 = await migrationService.migrate();
     }
     /**
      * MIGRATION CODE END
      */
 
-    // todo extract
-    const address: z.infer<typeof AddressV2Schema> | null =
+    const address: AddressV2Shape | null =
       appConfigV2.getChannelsOverrides()[order.channel.slug] ??
-      (await new ShopInfoFetcher(client).fetchShopInfo().then((r) => {
-        if (!r?.companyAddress) {
-          return null;
-        }
-
-        return {
-          city: r.companyAddress.city,
-          cityArea: r.companyAddress.cityArea,
-          companyName: r.companyAddress.companyName,
-          country: r.companyAddress.country.country,
-          countryArea: r.companyAddress.countryArea,
-          postalCode: r.companyAddress.postalCode,
-          streetAddress1: r.companyAddress.streetAddress1,
-          streetAddress2: r.companyAddress.streetAddress2,
-        } satisfies z.infer<typeof AddressV2Schema>;
-      }));
+      (await new ShopInfoFetcher(client).fetchShopInfo().then(shopInfoQueryToAddressShape));
 
     if (!address) {
       // todo disable webhook

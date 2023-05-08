@@ -18,3 +18,4 @@ export const AppConfigV2Schema = z.object({
 });
 
 export type AppConfigV2Shape = z.infer<typeof AppConfigV2Schema>;
+export type AddressV2Shape = z.infer<typeof AddressV2Schema>;

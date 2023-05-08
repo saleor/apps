@@ -28,7 +28,6 @@ const upsertAddressSchema = z.object({
   channelSlug: z.string(),
 });
 
-// todo test
 export const appConfigurationRouter = router({
   fetchChannelsOverrides: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
