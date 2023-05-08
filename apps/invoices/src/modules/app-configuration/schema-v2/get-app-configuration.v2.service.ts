@@ -31,8 +31,4 @@ export class GetAppConfigurationV2Service {
       return null;
     }
   }
-
-  getEmptyConfiguration() {
-    return new AppConfigV2();
-  }
 }

@@ -26,7 +26,8 @@ import { createSettingsManager } from "../../../modules/app-configuration/metada
 import { AppConfigV2 } from "../../../modules/app-configuration/schema-v2/app-config";
 import { AppConfigV2MetadataManager } from "../../../modules/app-configuration/schema-v2/app-config-v2-metadata-manager";
 import { AppConfigV1 } from "../../../modules/app-configuration/schema-v1/app-config-v1";
-import { ConfigV1ToV2Migrate } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-migrate";
+import { ConfigV1ToV2Transformer } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-transformer";
+import { ConfigV1ToV2MigrationService } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-migration.service";
 
 const OrderPayload = gql`
   fragment Address on Address {
@@ -148,38 +149,10 @@ const invoiceNumberGenerator = new InvoiceNumberGenerator();
 const migrate = async (v1Config: AppConfigV1, apiClient: Client) => {
   const settingsManager = createSettingsManager(apiClient);
 
-  const transformer = new ConfigV1ToV2Migrate();
+  const transformer = new ConfigV1ToV2Transformer();
   const appConfigV2FromV1 = transformer.transform(v1Config);
 
   const mm = new AppConfigV2MetadataManager(settingsManager);
-
-  await mm.set(appConfigV2FromV1.serialize());
-
-  return appConfigV2FromV1;
-};
-
-const getV2ConfigWithMigration = async (
-  client: Client,
-  saleorApiUrl: string
-): Promise<AppConfigV2> => {
-  const v1Config = await new PrivateMetadataAppConfiguratorV1(
-    createSettingsManager(client),
-    saleorApiUrl
-  ).getConfig();
-
-  if (!v1Config) {
-    const appConfigV2 = new AppConfigV2();
-
-    const mm = new AppConfigV2MetadataManager(createSettingsManager(client));
-
-    await mm.set(appConfigV2.serialize());
-
-    return appConfigV2;
-  }
-
-  const appConfigV2FromV1 = await migrate(v1Config, client);
-
-  const mm = new AppConfigV2MetadataManager(createSettingsManager(client));
 
   await mm.set(appConfigV2FromV1.serialize());
 
@@ -237,10 +210,14 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     }).getConfiguration();
 
     /**
-     * MIGRATION CODE START
+     * MIGRATION CODE START - remove when metadata migrated
      */
     if (!appConfigV2) {
-      appConfigV2 = await getV2ConfigWithMigration(client, authData.saleorApiUrl);
+      const migrationService = new ConfigV1ToV2MigrationService(client, authData.saleorApiUrl);
+
+      await migrationService.migrate();
+
+      return;
     }
     /**
      * MIGRATION CODE END

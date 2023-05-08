@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { ConfigV1ToV2Migrate } from "./config-v1-to-v2-migrate";
+import { ConfigV1ToV2Transformer } from "./config-v1-to-v2-transformer";
 import { getMockAddress } from "../../../fixtures/mock-address";
 
-describe("ConfigV1ToV2Migrate", function () {
+describe("ConfigV1ToV2Transformer", function () {
   it("Returns empty V2 instance if config is null", () => {
     // @ts-expect-error
-    const v2 = new ConfigV1ToV2Migrate().transform(null);
+    const v2 = new ConfigV1ToV2Transformer().transform(null);
 
     expect(v2.serialize()).toMatchInlineSnapshot('"{\\"channelsOverrides\\":{}}"');
   });
 
   it("Maps V1 address overrides to V2 - single channel override", () => {
-    const v2 = new ConfigV1ToV2Migrate().transform({
+    const v2 = new ConfigV1ToV2Transformer().transform({
       shopConfigPerChannel: {
         "default-channel": {
           address: getMockAddress(),
@@ -27,7 +27,7 @@ describe("ConfigV1ToV2Migrate", function () {
   });
 
   it("Maps V1 address overrides to V2 - multiple channels override", () => {
-    const v2 = new ConfigV1ToV2Migrate().transform({
+    const v2 = new ConfigV1ToV2Transformer().transform({
       shopConfigPerChannel: {
         "default-channel": {
           address: getMockAddress(),
@@ -52,7 +52,7 @@ describe("ConfigV1ToV2Migrate", function () {
     // @ts-expect-error
     delete addressMock.city;
 
-    const v2 = new ConfigV1ToV2Migrate().transform({
+    const v2 = new ConfigV1ToV2Transformer().transform({
       shopConfigPerChannel: {
         "default-channel": {
           address: addressMock,

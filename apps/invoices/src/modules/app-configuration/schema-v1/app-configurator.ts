@@ -6,6 +6,10 @@ export interface AppConfigurator {
   getConfig(): Promise<AppConfigV1 | undefined>;
 }
 
+/**
+ * @deprecated
+ * Remove when SchemaV1 is migrated to SchemaV2
+ */
 export class PrivateMetadataAppConfiguratorV1 implements AppConfigurator {
   private metadataKey = "app-config";
 

@@ -35,7 +35,9 @@ gql`
   }
 `;
 
-export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
+export type SimpleGraphqlClient = Pick<Client, "mutation" | "query">;
+
+export async function fetchAllMetadata(client: SimpleGraphqlClient): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
@@ -47,7 +49,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
+export async function mutateMetadata(client: SimpleGraphqlClient, metadata: MetadataEntry[]) {
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client
     .query(FetchAppDetailsDocument, {})
@@ -84,7 +86,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
-export const createSettingsManager = (client: Client): SettingsManager => {
+export const createSettingsManager = (client: SimpleGraphqlClient): SettingsManager => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.

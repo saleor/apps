@@ -7,9 +7,10 @@ import { AppConfigV2MetadataManager } from "./schema-v2/app-config-v2-metadata-m
 import { GetAppConfigurationV2Service } from "./schema-v2/get-app-configuration.v2.service";
 import { PrivateMetadataAppConfiguratorV1 } from "./schema-v1/app-configurator";
 import { AppConfigV2 } from "./schema-v2/app-config";
-import { ConfigV1ToV2Migrate } from "./schema-v2/config-v1-to-v2-migrate";
+import { ConfigV1ToV2Transformer } from "./schema-v2/config-v1-to-v2-transformer";
 import { AppConfigV1 } from "./schema-v1/app-config-v1";
 import { Client } from "urql";
+import { ConfigV1ToV2MigrationService } from "./schema-v2/config-v1-to-v2-migration.service";
 
 // todo unify
 const upsertAddressSchema = z.object({
@@ -26,21 +27,7 @@ const upsertAddressSchema = z.object({
   channelSlug: z.string(),
 });
 
-// extract todo
-const migrate = async (v1Config: AppConfigV1, apiClient: Client) => {
-  const settingsManager = createSettingsManager(apiClient);
-
-  const transformer = new ConfigV1ToV2Migrate();
-  const appConfigV2FromV1 = transformer.transform(v1Config);
-
-  const mm = new AppConfigV2MetadataManager(settingsManager);
-
-  await mm.set(appConfigV2FromV1.serialize());
-
-  return appConfigV2FromV1;
-};
-
-// todo extract migration
+// todo test
 export const appConfigurationRouter = router({
   fetchChannelsOverrides: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -50,21 +37,12 @@ export const appConfigurationRouter = router({
     const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
 
     /**
-     * MIGRATION CODE START
+     * MIGRATION CODE START - remove when metadata migrated
      */
     if (!appConfigV2) {
-      const v1Config = await new PrivateMetadataAppConfiguratorV1(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      ).getConfig();
+      const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
 
-      if (!v1Config) {
-        return new AppConfigV2().getChannelsOverrides();
-      }
-
-      const appConfigV2FromV1 = await migrate(v1Config, ctx.apiClient);
-
-      return appConfigV2FromV1.getChannelsOverrides();
+      return migrationService.migrate().then((config) => config.getChannelsOverrides());
     }
     /**
      * MIGRATION CODE END
@@ -81,31 +59,16 @@ export const appConfigurationRouter = router({
       const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
 
       /**
-       * MIGRATION CODE START
+       * MIGRATION CODE START - remove when metadata migrated
        */
       if (!appConfigV2) {
-        const v1Config = await new PrivateMetadataAppConfiguratorV1(
-          createSettingsManager(ctx.apiClient),
-          ctx.saleorApiUrl
-        ).getConfig();
+        const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
 
-        if (!v1Config) {
-          const appConfig = new AppConfigV2();
+        await migrationService.migrate((config) =>
+          config.upsertOverride(input.channelSlug, input.address)
+        );
 
-          appConfig.upsertOverride(input.channelSlug, input.address);
-
-          const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
-
-          return mm.set(appConfig.serialize());
-        }
-
-        const appConfigV2FromV1 = await migrate(v1Config, ctx.apiClient);
-
-        appConfigV2FromV1.upsertOverride(input.channelSlug, input.address);
-
-        const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
-
-        return mm.set(appConfigV2FromV1.serialize());
+        return;
       }
       /**
        * MIGRATION CODE END
@@ -115,7 +78,7 @@ export const appConfigurationRouter = router({
 
       const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
 
-      return mm.set(appConfigV2.serialize());
+      await mm.set(appConfigV2.serialize());
     }),
   removeChannelOverride: protectedClientProcedure
     .meta({
@@ -130,31 +93,14 @@ export const appConfigurationRouter = router({
       const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
 
       /**
-       * MIGRATION CODE START
+       * MIGRATION CODE START - remove when metadata migrated
        */
       if (!appConfigV2) {
-        const v1Config = await new PrivateMetadataAppConfiguratorV1(
-          createSettingsManager(ctx.apiClient),
-          ctx.saleorApiUrl
-        ).getConfig();
+        const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
 
-        if (!v1Config) {
-          const appConfigV2 = new AppConfigV2();
+        await migrationService.migrate((config) => config.removeOverride(input.channelSlug));
 
-          appConfigV2.removeOverride(input.channelSlug);
-
-          const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
-
-          return mm.set(appConfigV2.serialize());
-        }
-
-        const appConfigV2FromV1 = await migrate(v1Config, ctx.apiClient);
-
-        appConfigV2FromV1.removeOverride(input.channelSlug);
-
-        const mm = new AppConfigV2MetadataManager(createSettingsManager(ctx.apiClient));
-
-        return mm.set(appConfigV2FromV1.serialize());
+        return;
       }
       /**
        * MIGRATION CODE END
