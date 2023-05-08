@@ -11,7 +11,7 @@ export const ChannelConfigView = () => {
     query: { channel },
   } = useRouter();
 
-  const { mutateAsync } = trpcClient.appConfigurationV2.removeChannelOverride.useMutation();
+  const { mutateAsync } = trpcClient.appConfiguration.removeChannelOverride.useMutation();
   const { notifySuccess } = useDashboardNotification();
 
   if (!channel) {

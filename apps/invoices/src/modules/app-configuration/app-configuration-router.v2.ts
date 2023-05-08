@@ -1,11 +1,10 @@
-import { router } from "../../trpc/trpc-server";
-import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
-
-import { createSettingsManager } from "../metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
-import { GetAppConfigurationV2Service } from "./get-app-configuration.v2.service";
 import { z } from "zod";
-import { AppConfigV2MetadataManager } from "./app-config-v2-metadata-manager";
+import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../trpc/trpc-server";
+import { createSettingsManager } from "./metadata-manager";
+import { AppConfigV2MetadataManager } from "./schema-v2/app-config-v2-metadata-manager";
+import { GetAppConfigurationV2Service } from "./schema-v2/get-app-configuration.v2.service";
 
 // todo unify
 const upsertAddressSchema = z.object({
@@ -22,7 +21,7 @@ const upsertAddressSchema = z.object({
   channelSlug: z.string(),
 });
 
-export const appConfigurationRouterV2 = router({
+export const appConfigurationRouter = router({
   fetchChannelsOverrides: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 

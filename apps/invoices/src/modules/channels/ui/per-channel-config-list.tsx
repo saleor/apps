@@ -12,7 +12,7 @@ const defaultAddressChip = (
 
 export const PerChannelConfigList = () => {
   const shopChannelsQuery = trpcClient.channels.fetch.useQuery();
-  const channelsOverridesQuery = trpcClient.appConfigurationV2.fetchChannelsOverrides.useQuery();
+  const channelsOverridesQuery = trpcClient.appConfiguration.fetchChannelsOverrides.useQuery();
 
   const { push } = useRouter();
 

@@ -48,10 +48,9 @@ const fieldLabels: Record<keyof FormSchemaType, string> = {
 export const AddressForm = (props: Props) => {
   const { push } = useRouter();
 
-  const channelOverrideConfigQuery =
-    trpcClient.appConfigurationV2.fetchChannelsOverrides.useQuery();
+  const channelOverrideConfigQuery = trpcClient.appConfiguration.fetchChannelsOverrides.useQuery();
 
-  const upsertConfigMutation = trpcClient.appConfigurationV2.upsertChannelOverride.useMutation();
+  const upsertConfigMutation = trpcClient.appConfiguration.upsertChannelOverride.useMutation();
 
   const { handleSubmit, formState, control, reset } = useForm<SellerAddress>({
     defaultValues: (channelOverrideConfigQuery.data &&
