@@ -1,7 +1,7 @@
 import { AddressV2Schema, AppConfigV2Schema, AppConfigV2Shape } from "./app-config-schema.v2";
 import { z } from "zod";
 
-// todo test + migration
+// todo test
 export class AppConfigV2 {
   private rootData: AppConfigV2Shape = { channelsOverrides: {} };
 
