@@ -1,6 +1,10 @@
 import { AppConfigV1 } from "./app-config-v1";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
+/**
+ * @deprecated
+ * Remove when SchemaV1 is migrated to SchemaV2
+ */
 export interface AppConfigurator {
   setConfig(config: AppConfigV1): Promise<void>;
   getConfig(): Promise<AppConfigV1 | undefined>;
