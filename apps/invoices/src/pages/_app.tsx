@@ -1,41 +1,58 @@
-import "@saleor/apps-shared/src/globals.css";
+import "@saleor/macaw-ui/next/style";
 import "../styles/globals.css";
+
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import React, { useEffect } from "react";
+import React, { ReactElement } from "react";
 import { AppProps } from "next/app";
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
-import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
+
+import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { MacawThemeProvider } from "@saleor/apps-shared";
+import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+
+import { NextPage } from "next";
+import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 
 /**
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
-export const appBridgeInstance =
-  typeof window !== "undefined" ? new AppBridge({ autoNotifyReady: false }) : undefined;
+export let appBridgeInstance: AppBridge | undefined;
 
-function NextApp({ Component, pageProps }: AppProps) {
-  /**
-   * Configure JSS (used by MacawUI) for SSR. If Macaw is not used, can be removed.
-   */
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
+if (typeof window !== "undefined" && !appBridgeInstance) {
+  appBridgeInstance = new AppBridge();
+}
 
-    if (jssStyles) {
-      jssStyles?.parentElement?.removeChild(jssStyles);
-    }
-  }, []);
+/**
+ * Implementation of layout pattern
+ * https://nextjs.org/docs/basic-features/layouts#per-page-layouts
+ *
+ * In this app, there are pages inside the iframe, which will not use AppBridge etc, so they need
+ * to provider custom tree of wrappers
+ */
+export type NextPageWithLayoutOverwrite<P = {}, IP = P> = NextPage<P, IP> & {
+  overwriteLayout?: (page: ReactElement) => ReactElement;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayoutOverwrite;
+};
+
+function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLayout) {
+  if (Component.overwriteLayout) {
+    return Component.overwriteLayout(<Component {...pageProps} />);
+  }
 
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <MacawThemeProvider>
+        <ThemeProvider defaultTheme="defaultLight">
           <ThemeSynchronizer />
           <RoutePropagator />
-          <Component {...pageProps} />
-        </MacawThemeProvider>
+          <Box padding={8} __maxWidth={1440}>
+            <Component {...pageProps} />
+          </Box>
+        </ThemeProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
   );

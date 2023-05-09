@@ -1,79 +1,196 @@
-import { SellerShopConfig } from "../app-config";
-import { useForm } from "react-hook-form";
-import { TextField, TextFieldProps, Typography } from "@material-ui/core";
-import { Button, makeStyles } from "@saleor/macaw-ui";
-import React from "react";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Controller, useForm } from "react-hook-form";
 
-const useStyles = makeStyles((theme) => ({
-  field: {
-    marginBottom: 20,
-  },
-  form: {
-    padding: 20,
-    paddingTop: 0,
-  },
-  channelName: {
-    cursor: "pointer",
-    borderBottom: `2px solid ${theme.palette.secondary.main}`,
-  },
-}));
+import React, { useCallback, useEffect } from "react";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { SellerAddress } from "../address";
+import { trpcClient } from "../../trpc/trpc-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { useRouter } from "next/router";
+import { AddressV2Schema, AddressV2Shape } from "../schema-v2/app-config-schema.v2";
 
 type Props = {
   channelSlug: string;
-  channelName: string;
-  channelID: string;
-  onSubmit(data: SellerShopConfig["address"]): Promise<void>;
-  initialData?: SellerShopConfig["address"] | null;
 };
 
-export const AddressForm = (props: Props) => {
-  const { register, handleSubmit } = useForm<SellerShopConfig["address"]>({
-    defaultValues: props.initialData ?? undefined,
+type InnerFormProps = {
+  address: AddressV2Shape;
+  onSubmit(fields: AddressV2Shape): Promise<void>;
+  onCancel(): void;
+};
+
+/**
+ * Use the same form structure as metadata to avoid mapping and distributed validation.
+ * If extra rules are needed, it can be separated and mapped
+ */
+const FormSchema = AddressV2Schema;
+
+type FormSchemaType = z.infer<typeof FormSchema>;
+
+/**
+ * Divide fields into blocks to make it easier to create a form layout
+ */
+const fieldsBlock1: Array<keyof FormSchemaType> = [
+  "companyName",
+  "streetAddress1",
+  "streetAddress2",
+];
+const fieldsBlock2: Array<keyof FormSchemaType> = ["postalCode", "city"];
+const fieldsBlock3: Array<keyof FormSchemaType> = ["cityArea", "country", "countryArea"];
+
+const fieldLabels: Record<keyof FormSchemaType, string> = {
+  countryArea: "Country Area",
+  country: "Country",
+  cityArea: "City Area",
+  streetAddress2: "Street Address 2",
+  streetAddress1: "Street Address 1",
+  companyName: "Company Name",
+  city: "City",
+  postalCode: "Postal Code",
+};
+
+export const AddressForm = (props: Props & InnerFormProps) => {
+  const { handleSubmit, formState, control, reset } = useForm<SellerAddress>({
+    defaultValues: props.address,
+    resolver: zodResolver(FormSchema),
   });
-  const styles = useStyles();
-  const { appBridge } = useAppBridge();
-
-  const CommonFieldProps: TextFieldProps = {
-    className: styles.field,
-    fullWidth: true,
-  };
-
-  const handleChannelNameClick = () => {
-    appBridge?.dispatch(
-      actions.Redirect({
-        to: `/channels/${props.channelID}`,
-      })
-    );
-  };
 
   return (
     <form
       onSubmit={handleSubmit((data, event) => {
-        props.onSubmit(data);
+        return props.onSubmit(data);
       })}
-      className={styles.form}
     >
-      <Typography component="h3" variant="h3" paragraph>
-        Configure
-        <span onClick={handleChannelNameClick} className={styles.channelName}>
-          {` ${props.channelName} `}
-        </span>
-        channel:
-      </Typography>
-      <TextField label="Company Name" {...CommonFieldProps} {...register("companyName")} />
-      <TextField label="Street Address 1" {...CommonFieldProps} {...register("streetAddress1")} />
-      <TextField {...CommonFieldProps} label="Street Address 2" {...register("streetAddress2")} />
-      <div style={{ display: "grid", gap: 20, gridTemplateColumns: "1fr 2fr" }}>
-        <TextField {...CommonFieldProps} label="Postal Code" {...register("postalCode")} />
-        <TextField {...CommonFieldProps} label="City" {...register("city")} />
-      </div>
-      <TextField {...CommonFieldProps} label="City Area" {...register("cityArea")} />
-      <TextField {...CommonFieldProps} label="Country" {...register("country")} />
-      <TextField label="Country Area" {...CommonFieldProps} {...register("countryArea")} />
-      <Button type="submit" fullWidth variant="primary">
-        Save channel configuration
-      </Button>
+      <Box display={"grid"} gap={6} marginBottom={12}>
+        {fieldsBlock1.map((fieldName) => (
+          <Controller
+            key={fieldName}
+            control={control}
+            render={({ field: { onChange, onBlur, value, name, ref } }) => {
+              return (
+                <Input
+                  onChange={onChange}
+                  value={value}
+                  error={!!formState.errors[fieldName]}
+                  label={fieldLabels[fieldName]}
+                  onBlur={onBlur}
+                  name={name}
+                  ref={ref}
+                />
+              );
+            }}
+            name={fieldName}
+          />
+        ))}
+
+        <Box display={"grid"} gridTemplateColumns={2} gap={6}>
+          {fieldsBlock2.map((fieldName) => (
+            <Controller
+              key={fieldName}
+              control={control}
+              render={({ field: { onChange, onBlur, value, name, ref } }) => {
+                return (
+                  <Input
+                    onChange={onChange}
+                    value={value}
+                    error={!!formState.errors[fieldName]}
+                    label={fieldLabels[fieldName]}
+                    onBlur={onBlur}
+                    name={name}
+                    ref={ref}
+                  />
+                );
+              }}
+              name={fieldName}
+            />
+          ))}
+        </Box>
+
+        {fieldsBlock3.map((fieldName) => (
+          <Controller
+            key={fieldName}
+            control={control}
+            render={({ field: { onChange, onBlur, value, name, ref } }) => {
+              return (
+                <Input
+                  onChange={onChange}
+                  value={value}
+                  error={!!formState.errors[fieldName]}
+                  label={fieldLabels[fieldName]}
+                  onBlur={onBlur}
+                  name={name}
+                  ref={ref}
+                />
+              );
+            }}
+            name={fieldName}
+          />
+        ))}
+      </Box>
+      <Box display={"grid"} justifyContent={"flex-end"} gap={4} gridAutoFlow={"column"}>
+        <Button
+          variant="tertiary"
+          onClick={(e) => {
+            e.stopPropagation();
+            props.onCancel();
+          }}
+        >
+          <Text color={"textNeutralSubdued"}>Cancel</Text>
+        </Button>
+        <Button type="submit" variant="primary">
+          Save
+        </Button>
+      </Box>
     </form>
+  );
+};
+
+export const ConnectedAddressForm = (props: Props) => {
+  const { notifySuccess, notifyError } = useDashboardNotification();
+
+  const channelOverrideConfigQuery = trpcClient.appConfiguration.fetchChannelsOverrides.useQuery();
+
+  const upsertConfigMutation = trpcClient.appConfiguration.upsertChannelOverride.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Updated channel configuration");
+
+      push("/configuration");
+    },
+    onError() {
+      notifyError("Error", "Failed to save configuration");
+    },
+  });
+
+  const { push } = useRouter();
+
+  const addressData =
+    channelOverrideConfigQuery.data && channelOverrideConfigQuery.data[props.channelSlug];
+
+  const submitHandler = useCallback(
+    async (data: AddressV2Shape) => {
+      return upsertConfigMutation.mutate({
+        address: data,
+        channelSlug: props.channelSlug,
+      });
+    },
+    [props.channelSlug, upsertConfigMutation]
+  );
+
+  const onCancelHandler = useCallback(() => {
+    push("/configuration");
+  }, [push]);
+
+  if (channelOverrideConfigQuery.isLoading || !addressData) {
+    return <Text color={"textNeutralSubdued"}>Loading</Text>;
+  }
+
+  return (
+    <AddressForm
+      onCancel={onCancelHandler}
+      onSubmit={submitHandler}
+      address={channelOverrideConfigQuery.data[props.channelSlug]}
+      channelSlug={props.channelSlug}
+    />
   );
 };
