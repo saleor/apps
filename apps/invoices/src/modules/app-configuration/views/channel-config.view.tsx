@@ -1,7 +1,7 @@
 import { Box, ChevronRightIcon, Text, Button } from "@saleor/macaw-ui/next";
 import { AppSection } from "../../ui/AppSection";
 import { useRouter } from "next/router";
-import { AddressForm } from "../ui/address-form";
+import { ConnectedAddressForm } from "../ui/address-form";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 
@@ -32,7 +32,7 @@ export const ChannelConfigView = () => {
       <AppSection
         includePadding={true}
         heading={"Shop address per channel"}
-        mainContent={<AddressForm channelSlug={channel as string} />}
+        mainContent={<ConnectedAddressForm channelSlug={channel as string} />}
         sideContent={
           <Box>
             <Text marginBottom={8} as={"p"}>
