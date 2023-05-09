@@ -8,21 +8,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
+import { AddressV2Schema } from "../schema-v2/app-config-schema.v2";
 
 type Props = {
   channelSlug: string;
 };
 
-const FormSchema = z.object({
-  city: z.string().min(1),
-  cityArea: z.string(),
-  companyName: z.string().min(1),
-  country: z.string().min(1),
-  streetAddress1: z.string().min(1),
-  streetAddress2: z.string(),
-  countryArea: z.string(),
-  postalCode: z.string().min(1),
-});
+/**
+ * Use the same form structure as metadata to avoid mapping and distributed validation.
+ * If extra rules are needed, it can be separated and mapped
+ */
+const FormSchema = AddressV2Schema;
 
 type FormSchemaType = z.infer<typeof FormSchema>;
 
