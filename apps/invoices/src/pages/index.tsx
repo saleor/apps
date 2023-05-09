@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
 import { isInIframe } from "@saleor/apps-shared";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -21,11 +22,16 @@ const IndexPage: NextPage = () => {
   }
 
   return (
-    <div>
-      <h1>Saleor Invoices</h1>
-      <p>This is Saleor App that allows invoices generation</p>
-      <p>Install app in your Saleor instance and open in with Dashboard</p>
-    </div>
+    <Box>
+      <Text as={"h1"} variant={"hero"}>
+        Saleor Invoices
+      </Text>
+      <Text as={"p"}>This is Saleor App that allows invoices generation</Text>
+      <Text as={"p"}>
+        Install app in your Saleor instance and open in with Dashboard{" "}
+        <a href={"https://github.com/saleor/apps"}>or check it on Github</a>
+      </Text>
+    </Box>
   );
 };
 
