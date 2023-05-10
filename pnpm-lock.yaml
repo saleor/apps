@@ -73,6 +73,12 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -218,6 +224,12 @@ importers:
       next-urql:
         specifier: ^4.0.2
         version: 4.0.3(react@18.2.0)(urql@3.0.3)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -363,6 +375,12 @@ importers:
       nuvo-react:
         specifier: ^1.22.1
         version: 1.22.1(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -523,6 +541,12 @@ importers:
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -680,6 +704,12 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -816,6 +846,12 @@ importers:
       node-fetch:
         specifier: ^3.2.6
         version: 3.3.0
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -940,6 +976,12 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1085,6 +1127,12 @@ importers:
       next-urql:
         specifier: ^4.0.2
         version: 4.0.3(react@18.2.0)(urql@3.0.3)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1218,6 +1266,12 @@ importers:
       next-urql:
         specifier: 4.0.0
         version: 4.0.0(react@18.2.0)(urql@3.0.3)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1348,6 +1402,12 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1499,6 +1559,12 @@ importers:
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1622,11 +1688,11 @@ importers:
   packages/shared:
     dependencies:
       pino:
-        specifier: ^8.8.0
-        version: 8.9.0
+        specifier: ^8.14.1
+        version: 8.14.1
       pino-pretty:
-        specifier: ^9.1.1
-        version: 9.1.1
+        specifier: ^10.0.0
+        version: 10.0.0
     devDependencies:
       '@material-ui/core':
         specifier: ^4.12.4
@@ -14042,8 +14108,8 @@ packages:
       split2: 4.1.0
     dev: false
 
-  /pino-pretty@9.1.1:
-    resolution: {integrity: sha512-iJrnjgR4FWQIXZkUF48oNgoRI9BpyMhaEmihonHeCnZ6F50ZHAS4YGfGBT/ZVNsPmd+hzkIPGzjKdY08+/yAXw==}
+  /pino-pretty@10.0.0:
+    resolution: {integrity: sha512-zKFjYXBzLaLTEAN1ayKpHXtL5UeRQC7R3lvhKe7fWs7hIVEjKGG/qIXwQt9HmeUp71ogUd/YcW+LmMwRp4KT6Q==}
     hasBin: true
     dependencies:
       colorette: 2.0.19
@@ -14066,8 +14132,8 @@ packages:
     resolution: {integrity: sha512-KO0m2f1HkrPe9S0ldjx7za9BJjeHqBku5Ch8JyxETxT8dEFGz1PwgrHaOQupVYitpzbFSYm7nnljxD8dik2c+g==}
     dev: false
 
-  /pino@8.9.0:
-    resolution: {integrity: sha512-/x9qSrFW4wh+7OL5bLIbfl06aK/8yCSIldhD3VmVGiVYWSdFFpXvJh/4xWKENs+DhG1VkJnnpWxMF6fZ2zGXeg==}
+  /pino@8.14.1:
+    resolution: {integrity: sha512-8LYNv7BKWXSfS+k6oEc6occy5La+q2sPwU3q2ljTX5AZk7v+5kND2o5W794FyRaqha6DJajmkNRsWtPpFyMUdw==}
     hasBin: true
     dependencies:
       atomic-sleep: 1.0.0
