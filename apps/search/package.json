@@ -30,6 +30,8 @@
     "graphql-tag": "^2.12.6",
     "next": "13.3.0",
     "next-urql": "4.0.0",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
@@ -56,10 +58,10 @@
     "eslint-config-next": "13.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-saleor": "workspace:*",
+    "node-mocks-http": "^1.12.2",
     "prettier": "^2.7.1",
     "typescript": "4.8.4",
     "vite": "^4.3.1",
-    "vitest": "^0.30.1",
-    "node-mocks-http": "^1.12.2"
+    "vitest": "^0.30.1"
   }
 }

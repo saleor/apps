@@ -37,6 +37,8 @@
     "jsdom": "^20.0.3",
     "next": "13.3.0",
     "next-urql": "^4.0.2",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.0",
