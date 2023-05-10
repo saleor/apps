@@ -1,17 +1,23 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
-import { trpcClient } from "../../../../modules/trpc/trpc-client";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { BasicLayout } from "../../../../components/basic-layout";
-import { BasicInformationSection } from "../../../../modules/mjml/ui/basic-information-section";
+import { BasicLayout } from "../../../components/basic-layout";
+import { BasicInformationSection } from "../../../modules/smtp/ui/basic-information-section";
+import { SmtpSection } from "../../../modules/smtp/ui/smtp-section";
+import { SenderSection } from "../../../modules/smtp/ui/sender-section";
+import { DangerousSection } from "../../../modules/smtp/ui/dangrous-section";
+import { ChannelsSection } from "../../../modules/smtp/ui/channels-section";
+import { EventsSection } from "../../../modules/smtp/ui/events-section";
+import { appUrls } from "../../../modules/app-configuration/urls";
 
 const LoadingView = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
-        { name: "Mjml provider" },
+        { name: "Configuration", href: appUrls.configuration() },
+        { name: "SMTP provider" },
         { name: "..." },
       ]}
     >
@@ -24,8 +30,8 @@ const NotFoundView = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
-        { name: "Mjml provider" },
+        { name: "Configuration", href: appUrls.configuration() },
+        { name: "SMTP provider" },
         { name: "Not found" },
       ]}
     >
@@ -37,13 +43,15 @@ const NotFoundView = () => {
 const EditMjmlConfigurationPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
   const router = useRouter();
-  const { id } = router.query;
+  const configurationId = router.query.configurationId
+    ? (router.query.configurationId as string)
+    : undefined;
   const { data: configuration, isLoading } = trpcClient.mjmlConfiguration.getConfiguration.useQuery(
     {
-      id: id as string,
+      id: configurationId!,
     },
     {
-      enabled: !!id,
+      enabled: !!configurationId,
       onSettled(data, error) {
         if (error) {
           console.log("Error: ", error);
@@ -67,17 +75,22 @@ const EditMjmlConfigurationPage: NextPage = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/configuration" },
-        { name: "Mjml provider" },
+        { name: "Configuration", href: appUrls.configuration() },
+        { name: "SMTP provider" },
         { name: configuration.name },
       ]}
     >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
-          <Text>Connect Mjml with Saleor.</Text>
+          <Text>Connect SMTP with Saleor.</Text>
         </Box>
       </Box>
       <BasicInformationSection configuration={configuration} />
+      <SmtpSection configuration={configuration} />
+      <SenderSection configuration={configuration} />
+      <EventsSection configuration={configuration} />
+      <ChannelsSection configuration={configuration} />
+      <DangerousSection configuration={configuration} />
     </BasicLayout>
   );
 };

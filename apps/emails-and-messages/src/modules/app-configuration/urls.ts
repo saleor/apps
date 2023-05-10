@@ -1,4 +1,4 @@
-export const channelUrls = {
-  configuration: (id?: string) =>
-    id ? `/configuration/channels/${id}` : "/configuration/channels",
+export const appUrls = {
+  configuration: () => "/configuration/",
+  chooseProvider: () => "/configuration/choose-provider",
 };

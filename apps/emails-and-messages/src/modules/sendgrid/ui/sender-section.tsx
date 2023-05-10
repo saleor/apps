@@ -1,15 +1,20 @@
 import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Combobox } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateSender } from "../configuration/sendgrid-config-input-schema";
-import { Controller, useForm } from "react-hook-form";
+import {
+  SendgridUpdateSender,
+  sendgridUpdateSenderSchema,
+} from "../configuration/sendgrid-config-input-schema";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { fetchSenders } from "../sendgrid-api";
 import { useQuery } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
 
 interface SenderSectionProps {
   configuration: SendgridConfiguration;
@@ -29,11 +34,12 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
       id: configuration.id,
       sender: configuration.sender,
     },
+    resolver: zodResolver(sendgridUpdateSenderSchema),
   });
 
   const trpcContext = trpcClient.useContext();
   const { mutate } = trpcClient.sendgridConfiguration.updateSender.useMutation({
-    onSuccess: async (data, variables) => {
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.sendgridConfiguration.invalidate();
     },
@@ -72,29 +78,17 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
         >
           <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
             {sendersChoices?.length ? (
-              <Controller
+              <Combobox
                 name="sender"
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Combobox
-                    label="Sender"
-                    value={value}
-                    defaultValue={configuration.sender}
-                    onChange={(event) => onChange(event?.value)}
-                    options={sendersChoices.map((sender) => ({
-                      label: sender.label,
-                      value: sender.value,
-                    }))}
-                    error={!!error}
-                  />
-                )}
+                label="Sender"
+                options={sendersChoices.map((sender) => ({
+                  label: sender.label,
+                  value: sender.value,
+                }))}
               />
             ) : (
-              <Combobox label="Sender" options={[]} disabled={true} />
+              <Combobox name="sender" control={control} label="Sender" options={[]} />
             )}
           </Box>
           <BoxFooter>

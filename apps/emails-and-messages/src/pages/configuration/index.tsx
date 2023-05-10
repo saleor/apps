@@ -5,8 +5,10 @@ import { SectionWithDescription } from "../../components/section-with-descriptio
 import {
   ConfigurationListItem,
   MessagingProvidersBox,
-} from "../../components/messaging-providers-box";
+} from "../../modules/app-configuration/ui/messaging-providers-box";
 import { trpcClient } from "../../modules/trpc/trpc-client";
+import { appUrls } from "../../modules/app-configuration/urls";
+import { BasicLayout } from "../../components/basic-layout";
 
 const ConfigurationPage: NextPage = () => {
   const { data: dataSendgrid, isLoading: isLoadingSendgrid } =
@@ -18,13 +20,13 @@ const ConfigurationPage: NextPage = () => {
   const data: ConfigurationListItem[] = [
     ...(dataSendgrid?.map((configuration) => ({
       name: configuration.name,
-      provider: "sendgrid",
+      provider: "sendgrid" as const,
       id: configuration.id,
       active: configuration.active,
     })) || []),
     ...(dataMjml?.map((configuration) => ({
       name: configuration.name,
-      provider: "mjml",
+      provider: "smtp" as const,
       id: configuration.id,
       active: configuration.active,
     })) || []),
@@ -33,8 +35,7 @@ const ConfigurationPage: NextPage = () => {
   const isLoading = isLoadingSendgrid || isLoadingMjml;
 
   return (
-    <Box padding={10} display={"grid"} gap={13}>
-      <Breadcrumbs items={[{ name: "Configuration", href: "/" }]} />
+    <BasicLayout breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }]}>
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>
@@ -53,7 +54,7 @@ const ConfigurationPage: NextPage = () => {
       >
         <MessagingProvidersBox configurations={data || []} isLoading={isLoading} />
       </SectionWithDescription>
-    </Box>
+    </BasicLayout>
   );
 };
 

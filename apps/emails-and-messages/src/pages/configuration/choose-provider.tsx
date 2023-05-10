@@ -4,13 +4,21 @@ import { Breadcrumbs } from "../../components/breadcrumbs";
 import { SectionWithDescription } from "../../components/section-with-description";
 import { ProviderSelectionBox } from "../../modules/app-configuration/ui/provider-selection-box";
 import { useRouter } from "next/router";
+import { sendgridUrls } from "../../modules/sendgrid/urls";
+import { mjmlUrls } from "../../modules/smtp/urls";
+import { appUrls } from "../../modules/app-configuration/urls";
+import { BasicLayout } from "../../components/basic-layout";
 
 const ChooseProviderPage: NextPage = () => {
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   return (
-    <Box padding={10} display={"grid"} gap={13}>
-      <Breadcrumbs items={[{ name: "Configuration", href: "/" }, { name: "Add provider" }]} />
+    <BasicLayout
+      breadcrumbs={[
+        { name: "Configuration", href: appUrls.configuration() },
+        { name: "Add provider" },
+      ]}
+    >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Select and configure providers to connect Saleor with selected services.</Text>
@@ -21,17 +29,17 @@ const ChooseProviderPage: NextPage = () => {
           <ProviderSelectionBox
             providerName="Sendgrid"
             providerDescription="Use dynamic templates created in Sendgrid dashboard to send messages. Event data will be forwarded to Sendgrid."
-            onClick={() => replace("/configuration/sendgrid/new")}
+            onClick={() => push(sendgridUrls.newConfiguration())}
           />
 
           <ProviderSelectionBox
-            providerName="SMTP & MJML"
+            providerName="SMTP"
             providerDescription="Provide your own SMTP credentials and map Saleor event to custom MJML templates."
-            onClick={() => replace("/configuration/mjml/new")}
+            onClick={() => push(mjmlUrls.newConfiguration())}
           />
         </Box>
       </SectionWithDescription>
-    </Box>
+    </BasicLayout>
   );
 };
 

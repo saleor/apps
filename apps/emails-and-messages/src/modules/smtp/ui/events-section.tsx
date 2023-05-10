@@ -1,45 +1,38 @@
-import {
-  SendgridConfiguration,
-  SendgridEventConfiguration,
-} from "../configuration/sendgrid-config-schema";
+import { SmtpConfiguration, SmtpEventConfiguration } from "../configuration/mjml-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Combobox, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateEvent } from "../configuration/sendgrid-config-input-schema";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
-import { useQuery } from "@tanstack/react-query";
-import { fetchTemplates } from "../sendgrid-api";
+import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/mjml-config-input-schema";
+import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface EventBoxProps {
-  configuration: SendgridConfiguration;
-  event: SendgridEventConfiguration;
+  configuration: SmtpConfiguration;
+  event: SmtpEventConfiguration;
 }
 
 const EventBox = ({ event, configuration }: EventBoxProps) => {
+  const router = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { data: templatesChoices } = useQuery({
-    queryKey: ["sendgridTemplates"],
-    queryFn: fetchTemplates({ apiKey: configuration.apiKey }),
-    enabled: !!configuration.apiKey?.length,
-  });
-
-  const { handleSubmit, control, setError, register } = useForm<SendgridUpdateEvent>({
+  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateEvent>({
     defaultValues: {
       id: configuration.id,
       ...event,
     },
+    resolver: zodResolver(smtpUpdateEventSchema),
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.sendgridConfiguration.updateEvent.useMutation({
-    onSuccess: async (data, variables) => {
+  const { mutate } = trpcClient.mjmlConfiguration.updateEvent.useMutation({
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.sendgridConfiguration.invalidate();
+      trpcContext.mjmlConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
@@ -47,7 +40,7 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridUpdateEvent, {
+          setError(fieldName as keyof SmtpUpdateEvent, {
             type: "manual",
             message,
           });
@@ -79,30 +72,14 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
           gap={defaultPadding}
         >
           <Text variant="heading">{event.eventType}</Text>
-          {!templatesChoices ? (
-            <Combobox label="Template" disabled options={[]} />
-          ) : (
-            <Controller
-              name="template"
-              control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Combobox
-                  label="Template"
-                  value={value}
-                  onChange={(event) => onChange(event?.value)}
-                  options={templatesChoices.map((sender) => ({
-                    label: sender.label,
-                    value: sender.value,
-                  }))}
-                  error={!!error}
-                />
-              )}
-            />
-          )}
+          <Button
+            variant="secondary"
+            onClick={() => {
+              router.push(`/configuration/mjml/${configuration.id}/event/${event.eventType}`);
+            }}
+          >
+            Edit template
+          </Button>
 
           <label>
             <input type="checkbox" placeholder="Enabled" {...register("active")} />
@@ -118,7 +95,7 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
 };
 
 interface EventsSectionProps {
-  configuration: SendgridConfiguration;
+  configuration: SmtpConfiguration;
 }
 
 export const EventsSection = ({ configuration }: EventsSectionProps) => {

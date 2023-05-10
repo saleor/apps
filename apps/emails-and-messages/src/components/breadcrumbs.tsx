@@ -1,9 +1,32 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
-import Link from "next/link";
+import { Box, Text, TextProps } from "@saleor/macaw-ui/next";
 import { TextLink } from "./text-link";
+import icon from "../public/breadcrumb-separator.svg";
+import Image from "next/image";
+
+type BreadcrumbItem = { name: string; href?: string };
+
+interface BreadcrumbProps extends BreadcrumbItem {
+  isLast?: boolean;
+}
+
+const Breadcrumb = ({ name, href, isLast }: BreadcrumbProps) => {
+  const textProps: TextProps = {
+    variant: "hero",
+    display: isLast ? "block" : { mobile: "none", desktop: "block" },
+  };
+
+  if (!!href) {
+    return (
+      <TextLink href={href} {...textProps}>
+        {name}
+      </TextLink>
+    );
+  }
+  return <Text {...textProps}>{name}</Text>;
+};
 
 interface BreadcrumbsProps {
-  items: Array<{ name: string; href?: string }>;
+  items: Array<BreadcrumbItem>;
 }
 
 /**
@@ -21,38 +44,12 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   return (
     <Box display={"flex"} gap={6}>
       {items.map((item) => (
-        <Box key={`${item.name}`} display={{ mobile: "none", desktop: "flex" }} gap={6}>
-          {!item.href ? (
-            <Text
-              key={`${item.name}_name`}
-              variant="hero"
-              display={{ mobile: "none", desktop: "block" }}
-            >
-              {item.name}
-            </Text>
-          ) : (
-            <TextLink
-              key={`${item.name}_name`}
-              href={item.href}
-              variant="hero"
-              display={{ mobile: "none", desktop: "block" }}
-            >
-              {item.name}
-            </TextLink>
-          )}
-
-          <Text
-            key={`${item.name}_separator`}
-            variant="hero"
-            display={{ mobile: "none", desktop: "block" }}
-          >
-            {">"}
-          </Text>
+        <Box key={item.name} display={{ mobile: "none", desktop: "flex" }} gap={6}>
+          <Breadcrumb {...item} key={item.name} />
+          <Image alt="Separator icon" src={icon} height={32} width={32} />
         </Box>
       ))}
-      <Text key={`${lastItem.name}_name`} variant="hero" display="block">
-        {lastItem.name}
-      </Text>
+      <Breadcrumb isLast={true} {...lastItem} />
     </Box>
   );
 };

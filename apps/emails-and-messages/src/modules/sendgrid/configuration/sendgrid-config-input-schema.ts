@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import {
-  sendgridConfigurationChannelsSchema,
   sendgridConfigurationEventSchema,
   sendgridConfigurationSchema,
 } from "./sendgrid-config-schema";
+import { channelConfigurationSchema } from "../../../lib/channel-assignment/channel-configuration-schema";
 
 export const sendgridCreateConfigurationInputSchema = sendgridConfigurationSchema.pick({
   name: true,
@@ -71,7 +71,7 @@ export const sendgridUpdateSenderSchema = sendgridConfigurationSchema.pick({
 });
 export type SendgridUpdateSender = z.infer<typeof sendgridUpdateSenderSchema>;
 
-export const sendgridUpdateChannelsSchema = sendgridConfigurationChannelsSchema.merge(
+export const sendgridUpdateChannelsSchema = channelConfigurationSchema.merge(
   sendgridConfigurationSchema.pick({
     id: true,
   })

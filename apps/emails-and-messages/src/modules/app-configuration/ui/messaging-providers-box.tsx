@@ -1,14 +1,17 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { BoxWithBorder } from "./box-with-border";
-import { BoxFooter } from "./box-footer";
-import { defaultPadding } from "./ui-defaults";
+import { BoxWithBorder } from "../../../components/box-with-border";
+import { BoxFooter } from "../../../components/box-footer";
+import { defaultPadding } from "../../../components/ui-defaults";
 import { useRouter } from "next/router";
-import { SendgridConfiguration } from "../modules/sendgrid/configuration/sendgrid-config-schema";
-import { TextLink } from "./text-link";
-import { ChipText } from "./chip-text";
+import { TextLink } from "../../../components/text-link";
+import { ChipText } from "../../../components/chip-text";
 import Image from "next/image";
-import sendgrid from "../public/sendgrid.png";
-import smtp from "../public/smtp.svg";
+import sendgrid from "../../../public/sendgrid.png";
+import smtp from "../../../public/smtp.svg";
+import { mjmlUrls } from "../../smtp/urls";
+import { sendgridUrls } from "../../sendgrid/urls";
+import { appUrls } from "../urls";
+import React from "react";
 
 const NoExistingConfigurations = () => {
   const { replace } = useRouter();
@@ -25,11 +28,18 @@ const NoExistingConfigurations = () => {
   );
 };
 
-type ConfigurationListItem = {
+type ProviderType = "sendgrid" | "smtp";
+
+const providerLabels: Record<ProviderType, string> = {
+  sendgrid: "Sendgrid",
+  smtp: "SMTP",
+};
+
+export type ConfigurationListItem = {
   id: string;
   name: string;
   active: boolean;
-  provider: "sendgrid" | "mjml";
+  provider: ProviderType;
 };
 
 interface MessagingProvidersSectionProps {
@@ -41,7 +51,7 @@ export const MessagingProvidersBox = ({
   configurations,
   isLoading: loading,
 }: MessagingProvidersSectionProps) => {
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   if (loading) {
     return (
@@ -56,21 +66,21 @@ export const MessagingProvidersBox = ({
   }
 
   const redirectToProvidersSelection = () => {
-    replace("/configuration/choose-provider");
+    push(appUrls.chooseProvider());
   };
 
   const getEditLink = (configuration: ConfigurationListItem) => {
     switch (configuration.provider) {
-      case "mjml":
-        return `/configuration/mjml/edit/${configuration.id}`;
+      case "smtp":
+        return mjmlUrls.configuration(configuration.id);
       case "sendgrid":
-        return `/configuration/sendgrid/edit/${configuration.id}`;
+        return sendgridUrls.configuration(configuration.id);
     }
   };
 
   const getProviderLogo = (configuration: ConfigurationListItem) => {
     switch (configuration.provider) {
-      case "mjml":
+      case "smtp":
         return <Image alt="SMTP logo" src={smtp} height={20} width={20} />;
       case "sendgrid":
         return <Image alt="Sendgrid logo" src={sendgrid} height={20} width={20} />;
@@ -91,10 +101,10 @@ export const MessagingProvidersBox = ({
         </Text>
         <Box />
         {configurations.map((configuration) => (
-          <>
+          <React.Fragment key={configuration.id}>
             <Box display="flex" gap={defaultPadding}>
               {getProviderLogo(configuration)}
-              <Text>{configuration.provider}</Text>
+              <Text>{providerLabels[configuration.provider]}</Text>
             </Box>
 
             <Text>{configuration.name}</Text>
@@ -105,7 +115,7 @@ export const MessagingProvidersBox = ({
             <Box display="flex" justifyContent={"flex-end"}>
               <TextLink href={getEditLink(configuration)}>Edit</TextLink>
             </Box>
-          </>
+          </React.Fragment>
         ))}
       </Box>
       <BoxFooter>

@@ -1,34 +1,39 @@
-import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
+import { SmtpConfiguration } from "../configuration/mjml-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateApiConnection } from "../configuration/sendgrid-config-input-schema";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import {
+  SmtpUpdateSender,
+  smtpUpdateSenderSchema,
+} from "../configuration/mjml-config-input-schema";
+import { Input } from "../../../components/react-hook-form-macaw/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface ApiConnectionSectionProps {
-  configuration: SendgridConfiguration;
+interface SenderSectionProps {
+  configuration: SmtpConfiguration;
 }
 
-export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProps) => {
+export const SenderSection = ({ configuration }: SenderSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-
-  const { handleSubmit, control, setError, register } = useForm<SendgridUpdateApiConnection>({
+  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateSender>({
     defaultValues: {
       id: configuration.id,
-      apiKey: configuration.apiKey,
-      sandboxMode: configuration.sandboxMode,
+      senderName: configuration.senderName,
+      senderEmail: configuration.senderEmail,
     },
+    resolver: zodResolver(smtpUpdateSenderSchema),
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.sendgridConfiguration.updateApiConnection.useMutation({
-    onSuccess: async (data, variables) => {
+  const { mutate } = trpcClient.mjmlConfiguration.updateSender.useMutation({
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.sendgridConfiguration.invalidate();
+      trpcContext.mjmlConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
@@ -36,7 +41,7 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridUpdateApiConnection, {
+          setError(fieldName as keyof SmtpUpdateSender, {
             type: "manual",
             message,
           });
@@ -54,7 +59,7 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
   });
 
   return (
-    <SectionWithDescription title="API Connection">
+    <SectionWithDescription title="Sender">
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {
@@ -64,31 +69,18 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
           })}
         >
           <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
-            <Controller
-              name="apiKey"
+            <Input
+              label="Email"
+              name="senderEmail"
               control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Input
-                  label="API Key"
-                  value={value}
-                  onChange={onChange}
-                  error={!!error}
-                  helperText={
-                    error?.message ||
-                    "Name of the configuration, for example 'Production' or 'Test'"
-                  }
-                />
-              )}
+              helperText={"Email address that will be used as sender"}
             />
-
-            <label>
-              <input type="checkbox" {...register("sandboxMode")} />
-              <Text paddingLeft={defaultPadding}>Sandbox mode</Text>
-            </label>
+            <Input
+              label="Name"
+              name="senderName"
+              control={control}
+              helperText={"Name that will be used as sender"}
+            />
           </Box>
           <BoxFooter>
             <Button type="submit">Save provider</Button>

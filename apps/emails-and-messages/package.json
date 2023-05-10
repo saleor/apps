@@ -16,10 +16,11 @@
     "schemaVersion": "3.11.7"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.10",
     "@monaco-editor/react": "^4.4.6",
     "@saleor/app-sdk": "0.37.3",
     "@saleor/apps-shared": "workspace:*",
-    "@saleor/macaw-ui": "0.8.0-pre.79",
+    "@saleor/macaw-ui": "0.8.0-pre.81",
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
     "@tanstack/react-query": "^4.24.4",

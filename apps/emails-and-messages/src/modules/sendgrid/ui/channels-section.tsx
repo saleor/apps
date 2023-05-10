@@ -1,7 +1,4 @@
-import {
-  SendgridConfiguration,
-  SendgridConfigurationChannels,
-} from "../configuration/sendgrid-config-schema";
+import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
@@ -11,6 +8,8 @@ import { SendgridUpdateChannels } from "../configuration/sendgrid-config-input-s
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChannelConfiguration } from "../../../lib/channel-assignment/channel-configuration-schema";
 
 interface ChannelsSectionProps {
   configuration: SendgridConfiguration;
@@ -18,7 +17,7 @@ interface ChannelsSectionProps {
 
 interface OverrideMessageArgs {
   availableChannels: string[];
-  channelConfiguration: SendgridConfigurationChannels;
+  channelConfiguration: ChannelConfiguration;
 }
 
 // TODO: Move to a separate component

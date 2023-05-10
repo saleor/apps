@@ -3,17 +3,17 @@ import { Client } from "urql";
 import { logger as pinoLogger } from "../../../lib/logger";
 import { FilterConfigurationsArgs, MjmlConfigContainer } from "./mjml-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { MjmlConfig, MjmlConfiguration } from "./mjml-config-schema";
+import { SmtpConfig, SmtpConfiguration } from "./mjml-config-schema";
 
 const logger = pinoLogger.child({
   service: "MjmlConfigurationService",
 });
 
 export class MjmlConfigurationService {
-  private configurationData?: MjmlConfig;
+  private configurationData?: SmtpConfig;
   private metadataConfigurator: MjmlConfigurator;
 
-  constructor(args: { apiClient: Client; saleorApiUrl: string; initialData?: MjmlConfig }) {
+  constructor(args: { apiClient: Client; saleorApiUrl: string; initialData?: SmtpConfig }) {
     this.metadataConfigurator = new PrivateMetadataMjmlConfigurator(
       createSettingsManager(args.apiClient),
       args.saleorApiUrl
@@ -60,7 +60,7 @@ export class MjmlConfigurationService {
   }
 
   // Saves configuration to Saleor API and cache it
-  async setConfigurationRoot(config: MjmlConfig) {
+  async setConfigurationRoot(config: SmtpConfig) {
     logger.debug("Set configuration root");
 
     this.configurationData = config;
@@ -77,7 +77,7 @@ export class MjmlConfigurationService {
     return MjmlConfigContainer.getConfigurations(await this.getConfigurationRoot())(filter);
   }
 
-  async createConfiguration(config: Omit<MjmlConfiguration, "id" | "events">) {
+  async createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
     logger.debug("Create configuration");
     const updatedConfigurationRoot = MjmlConfigContainer.createConfiguration(
       await this.getConfigurationRoot()
@@ -89,7 +89,7 @@ export class MjmlConfigurationService {
     ];
   }
 
-  async updateConfiguration(config: MjmlConfiguration) {
+  async updateConfiguration(config: SmtpConfiguration) {
     logger.debug("Update configuration");
     const updatedConfigurationRoot = MjmlConfigContainer.updateConfiguration(
       await this.getConfigurationRoot()

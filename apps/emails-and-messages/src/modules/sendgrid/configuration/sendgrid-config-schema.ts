@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
+import { channelConfigurationSchema } from "../../../lib/channel-assignment/channel-configuration-schema";
 
 export const sendgridConfigurationEventSchema = z.object({
   active: z.boolean().default(false),
@@ -9,14 +10,6 @@ export const sendgridConfigurationEventSchema = z.object({
 
 export type SendgridEventConfiguration = z.infer<typeof sendgridConfigurationEventSchema>;
 
-export const sendgridConfigurationChannelsSchema = z.object({
-  override: z.boolean().default(false),
-  channels: z.array(z.string()).default([]),
-  mode: z.enum(["exclude", "restrict"]).default("restrict"),
-});
-
-export type SendgridConfigurationChannels = z.infer<typeof sendgridConfigurationChannelsSchema>;
-
 export const sendgridConfigurationSchema = z.object({
   id: z.string().min(1),
   active: z.boolean().default(true),
@@ -24,7 +17,7 @@ export const sendgridConfigurationSchema = z.object({
   sandboxMode: z.boolean().default(false),
   apiKey: z.string().min(1),
   sender: z.string().min(1).optional(),
-  channels: sendgridConfigurationChannelsSchema,
+  channels: channelConfigurationSchema,
   events: z.array(sendgridConfigurationEventSchema),
 });
 

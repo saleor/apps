@@ -1,6 +1,6 @@
 import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Input, RadioGroup, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -12,6 +12,8 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import { Input } from "../../../components/react-hook-form-macaw/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface BasicInformationSectionProps {
   configuration: SendgridConfiguration;
@@ -25,11 +27,12 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
       name: configuration.name,
       active: configuration.active,
     },
+    resolver: zodResolver(sendgridUpdateBasicInformationSchema),
   });
 
   const trpcContext = trpcClient.useContext();
   const { mutate } = trpcClient.sendgridConfiguration.updateBasicInformation.useMutation({
-    onSuccess: async (data, variables) => {
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.sendgridConfiguration.invalidate();
     },
@@ -75,25 +78,11 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
           })}
         >
           <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
-            <Controller
-              name="name"
+            <Input
+              label="Configuration name"
               control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Input
-                  label="Configuration name"
-                  value={value}
-                  onChange={onChange}
-                  error={!!error}
-                  helperText={
-                    error?.message ||
-                    "Name of the configuration, for example 'Production' or 'Test'"
-                  }
-                />
-              )}
+              name="name"
+              helperText={"Name of the configuration, for example 'Production' or 'Test'"}
             />
             <label>
               <input type="checkbox" placeholder="Enabled" {...register("active")} />

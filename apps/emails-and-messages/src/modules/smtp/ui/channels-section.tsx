@@ -1,24 +1,26 @@
-import {
-  SendgridConfiguration,
-  SendgridConfigurationChannels,
-} from "../configuration/sendgrid-config-schema";
+import { SmtpConfiguration } from "../configuration/mjml-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateChannels } from "../configuration/sendgrid-config-input-schema";
+import {
+  SmtpUpdateChannels,
+  smtpUpdateChannelsSchema,
+} from "../configuration/mjml-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ChannelConfiguration } from "../../../lib/channel-assignment/channel-configuration-schema";
 
 interface ChannelsSectionProps {
-  configuration: SendgridConfiguration;
+  configuration: SmtpConfiguration;
 }
 
 interface OverrideMessageArgs {
   availableChannels: string[];
-  channelConfiguration: SendgridConfigurationChannels;
+  channelConfiguration: ChannelConfiguration;
 }
 
 // TODO: Move to a separate component
@@ -58,20 +60,21 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { handleSubmit, control, setError, setValue, getValues, register } =
-    useForm<SendgridUpdateChannels>({
+    useForm<SmtpUpdateChannels>({
       defaultValues: {
         id: configuration.id,
         ...configuration.channels,
       },
+      resolver: zodResolver(smtpUpdateChannelsSchema),
     });
 
   const { data: channels } = trpcClient.channels.fetch.useQuery();
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.sendgridConfiguration.updateChannels.useMutation({
-    onSuccess: async (data, variables) => {
+  const { mutate } = trpcClient.mjmlConfiguration.updateChannels.useMutation({
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.sendgridConfiguration.invalidate();
+      trpcContext.mjmlConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
@@ -79,7 +82,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridUpdateChannels, {
+          setError(fieldName as keyof SmtpUpdateChannels, {
             type: "manual",
             message,
           });

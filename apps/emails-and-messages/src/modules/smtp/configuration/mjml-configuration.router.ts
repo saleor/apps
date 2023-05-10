@@ -8,10 +8,15 @@ import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
 import { getDefaultEmptyConfiguration } from "./mjml-config-container";
 import {
-  mjmlConfigurationIdInputSchema,
-  mjmlCreateConfigurationInputSchema,
-  mjmlGetConfigurationsInputSchema,
-  mjmlUpdateBasicInformationSchema,
+  smtpConfigurationIdInputSchema,
+  smtpCreateConfigurationInputSchema,
+  smtpGetConfigurationsInputSchema,
+  smtpGetEventConfigurationInputSchema,
+  smtpUpdateBasicInformationSchema,
+  smtpUpdateChannelsSchema,
+  smtpUpdateEventSchema,
+  smtpUpdateSenderSchema,
+  smtpUpdateSmtpSchema,
 } from "./mjml-config-input-schema";
 
 // Allow access only for the dashboard users and attaches the
@@ -36,7 +41,7 @@ export const mjmlConfigurationRouter = router({
   }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(mjmlConfigurationIdInputSchema)
+    .input(smtpConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.get called");
@@ -44,7 +49,7 @@ export const mjmlConfigurationRouter = router({
     }),
   getConfigurations: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(mjmlGetConfigurationsInputSchema)
+    .input(smtpGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.getConfigurations called");
@@ -52,7 +57,7 @@ export const mjmlConfigurationRouter = router({
     }),
   createConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(mjmlCreateConfigurationInputSchema)
+    .input(smtpCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
       logger.debug(input, "mjmlConfigurationRouter.create called");
@@ -63,22 +68,22 @@ export const mjmlConfigurationRouter = router({
       console.log(newConfiguration, "this is newConfiguration");
       return await ctx.configurationService.createConfiguration(newConfiguration);
     }),
-  // deleteConfiguration: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(mjmlDeleteConfigurationInputSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-  //     logger.debug(input, "mjmlConfigurationRouter.delete called");
-  //     const existingConfiguration = await ctx.configurationService.getConfiguration(input);
-  //     if (!existingConfiguration) {
-  //       throw new TRPCError({
-  //         code: "BAD_REQUEST",
-  //         message: "Configuration not found",
-  //       });
-  //     }
-  //     await ctx.configurationService.deleteConfiguration(input);
-  //     return null;
-  //   }),
+  deleteConfiguration: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpConfigurationIdInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+      logger.debug(input, "mjmlConfigurationRouter.delete called");
+      const existingConfiguration = await ctx.configurationService.getConfiguration(input);
+      if (!existingConfiguration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+      await ctx.configurationService.deleteConfiguration(input);
+      return null;
+    }),
   // updateOrCreateConfiguration: protectedWithConfigurationService
   //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
   //   .input(mjmlUpdateOrCreateConfigurationSchema)
@@ -106,34 +111,34 @@ export const mjmlConfigurationRouter = router({
   //       return configuration;
   //     }
   //   }),
-  // getEventConfiguration: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(mjmlGetEventConfigurationInputSchema)
-  //   .query(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+  getEventConfiguration: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpGetEventConfigurationInputSchema)
+    .query(async ({ ctx, input }) => {
+      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
 
-  //     logger.debug(input, "mjmlConfigurationRouter.getEventConfiguration or create called");
+      logger.debug(input, "mjmlConfigurationRouter.getEventConfiguration or create called");
 
-  //     const configuration = await ctx.configurationService.getConfiguration({
-  //       id: input.configurationId,
-  //     });
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
 
-  //     if (!configuration) {
-  //       throw new TRPCError({
-  //         code: "BAD_REQUEST",
-  //         message: "Configuration not found",
-  //       });
-  //     }
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
 
-  //     const event = configuration.events.find((e) => e.eventType === input.eventType);
-  //     if (!event) {
-  //       throw new TRPCError({
-  //         code: "BAD_REQUEST",
-  //         message: "Event configuration not found",
-  //       });
-  //     }
-  //     return event;
-  //   }),
+      const event = configuration.events.find((e) => e.eventType === input.eventType);
+      if (!event) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Event configuration not found",
+        });
+      }
+      return event;
+    }),
   // updateEventConfiguration: protectedWithConfigurationService
   //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
   //   .input(mjmlUpdateEventConfigurationInputSchema)
@@ -206,7 +211,7 @@ export const mjmlConfigurationRouter = router({
 
   updateBasicInformation: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(mjmlUpdateBasicInformationSchema)
+    .input(smtpUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
       const configuration = await ctx.configurationService.getConfiguration({
         id: input.id,
@@ -220,6 +225,97 @@ export const mjmlConfigurationRouter = router({
       }
 
       await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+      return configuration;
+    }),
+
+  updateSmtp: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateSmtpSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+      return configuration;
+    }),
+
+  updateSender: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateSenderSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+      return configuration;
+    }),
+
+  updateChannels: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateChannelsSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+      configuration.channels = {
+        override: input.override,
+        channels: input.channels,
+        mode: input.mode,
+      };
+      await ctx.configurationService.updateConfiguration(configuration);
+      return configuration;
+    }),
+
+  updateEvent: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateEventSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+      const event = configuration.events.find((e) => e.eventType === input.eventType);
+
+      if (!event) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration event not found",
+        });
+      }
+
+      event.template = input.template;
+      event.active = input.active;
+
+      await ctx.configurationService.updateConfiguration(configuration);
       return configuration;
     }),
 });

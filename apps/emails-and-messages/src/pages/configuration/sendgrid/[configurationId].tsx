@@ -1,15 +1,15 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
-import { trpcClient } from "../../../../modules/trpc/trpc-client";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
-import { BasicInformationSection } from "../../../../modules/sendgrid/ui/basic-information-section";
-import { DangerousSection } from "../../../../modules/sendgrid/ui/dangrous-section";
-import { ApiConnectionSection } from "../../../../modules/sendgrid/ui/api-connection-section";
-import { SenderSection } from "../../../../modules/sendgrid/ui/sender-section";
-import { EventsSection } from "../../../../modules/sendgrid/ui/events-section";
+import { BasicInformationSection } from "../../../modules/sendgrid/ui/basic-information-section";
+import { DangerousSection } from "../../../modules/sendgrid/ui/dangrous-section";
+import { ApiConnectionSection } from "../../../modules/sendgrid/ui/api-connection-section";
+import { SenderSection } from "../../../modules/sendgrid/ui/sender-section";
+import { EventsSection } from "../../../modules/sendgrid/ui/events-section";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { BasicLayout } from "../../../../components/basic-layout";
-import { ChannelsSection } from "../../../../modules/sendgrid/ui/channels-section";
+import { BasicLayout } from "../../../components/basic-layout";
+import { ChannelsSection } from "../../../modules/sendgrid/ui/channels-section";
 
 const LoadingView = () => {
   return (
@@ -42,14 +42,16 @@ const NotFoundView = () => {
 const EditSendgridConfigurationPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
   const router = useRouter();
-  const { id } = router.query;
+  const configurationId = router.query.configurationId
+    ? (router.query.configurationId as string)
+    : undefined;
   const { data: configuration, isLoading } =
     trpcClient.sendgridConfiguration.getConfiguration.useQuery(
       {
-        id: id as string,
+        id: configurationId!,
       },
       {
-        enabled: !!id,
+        enabled: !!configurationId,
         onSettled(data, error) {
           if (error) {
             console.log("Error: ", error);

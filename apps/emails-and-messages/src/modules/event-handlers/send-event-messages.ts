@@ -1,8 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../lib/logger";
-import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
-import { sendMjml } from "../mjml/send-mjml";
+import { MjmlConfigurationService } from "../smtp/configuration/get-mjml-configuration.service";
+import { sendSmtp } from "../smtp/send-mjml";
 import { SendgridConfigurationService } from "../sendgrid/configuration/get-sendgrid-configuration.service";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
 import { MessageEventTypes } from "./message-event-types";
@@ -41,7 +41,7 @@ export const sendEventMessages = async ({
   });
 
   for (const mjmlConfiguration of availableMjmlConfigurations) {
-    const mjmlStatus = await sendMjml({
+    const mjmlStatus = await sendSmtp({
       event,
       payload,
       recipientEmail,

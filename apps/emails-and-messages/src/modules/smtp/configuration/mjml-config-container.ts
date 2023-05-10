@@ -2,25 +2,25 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
 import { generateRandomId } from "../../../lib/generate-random-id";
-import { isAvailableInChannel } from "../../../lib/is-available-in-channel";
+import { isAvailableInChannel } from "../../../lib/channel-assignment/is-available-in-channel";
 import {
-  MjmlConfiguration,
-  mjmlConfigurationSchema,
-  mjmlConfigurationEventSchema,
-  MjmlConfig,
+  SmtpConfiguration,
+  smtpConfigurationSchema,
+  smtpConfigurationEventSchema,
+  SmtpConfig,
 } from "./mjml-config-schema";
 
-export const getDefaultEventsConfiguration = (): MjmlConfiguration["events"] =>
+export const getDefaultEventsConfiguration = (): SmtpConfiguration["events"] =>
   messageEventTypes.map((eventType) =>
-    mjmlConfigurationEventSchema.parse({
+    smtpConfigurationEventSchema.parse({
       eventType: eventType,
       template: defaultMjmlTemplates[eventType],
       subject: defaultMjmlSubjectTemplates[eventType],
     })
   );
 
-export const getDefaultEmptyConfiguration = (): MjmlConfiguration => {
-  const defaultConfig: MjmlConfiguration = mjmlConfigurationSchema.parse({
+export const getDefaultEmptyConfiguration = (): SmtpConfiguration => {
+  const defaultConfig: SmtpConfiguration = smtpConfigurationSchema.parse({
     id: "id",
     name: "name",
     active: true,
@@ -40,7 +40,7 @@ interface GetConfigurationArgs {
 }
 
 const getConfiguration =
-  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
+  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
   ({ id }: GetConfigurationArgs) => {
     if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
       return;
@@ -56,8 +56,8 @@ export interface FilterConfigurationsArgs {
 }
 
 const getConfigurations =
-  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
-  (filter: FilterConfigurationsArgs | undefined): MjmlConfiguration[] => {
+  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
+  (filter: FilterConfigurationsArgs | undefined): SmtpConfiguration[] => {
     if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
       return [];
     }
@@ -80,8 +80,7 @@ const getConfigurations =
       filtered = filtered.filter((c) =>
         isAvailableInChannel({
           channel: filter.availableInChannel!,
-          restrictedToChannels: c.channels.restrictedTo,
-          excludedChannels: c.channels.excludedFrom,
+          channelConfiguration: c.channels,
         })
       );
     }
@@ -90,8 +89,8 @@ const getConfigurations =
   };
 
 const createConfiguration =
-  (mjmlConfigRoot: MjmlConfig | null | undefined) =>
-  (mjmlConfiguration: Omit<MjmlConfiguration, "id" | "events">) => {
+  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
+  (mjmlConfiguration: Omit<SmtpConfiguration, "id" | "events">) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfigRoot) ?? { configurations: [] };
 
     // for creating a new configurations, the ID has to be generated
@@ -106,7 +105,7 @@ const createConfiguration =
   };
 
 const updateConfiguration =
-  (mjmlConfig: MjmlConfig | null | undefined) => (mjmlConfiguration: MjmlConfiguration) => {
+  (mjmlConfig: SmtpConfig | null | undefined) => (mjmlConfiguration: SmtpConfiguration) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
 
     const configurationIndex = mjmlConfigNormalized.configurations.findIndex(
@@ -122,7 +121,7 @@ interface DeleteConfigurationArgs {
 }
 
 const deleteConfiguration =
-  (mjmlConfig: MjmlConfig | null | undefined) =>
+  (mjmlConfig: SmtpConfig | null | undefined) =>
   ({ id }: DeleteConfigurationArgs) => {
     const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
 

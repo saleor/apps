@@ -1,35 +1,38 @@
-import { MjmlConfiguration } from "../configuration/mjml-config-schema";
+import { SmtpConfiguration } from "../configuration/mjml-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Input, RadioGroup, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import {
-  MjmlUpdateBasicInformation,
-  mjmlUpdateBasicInformationSchema,
+  SmtpUpdateBasicInformation,
+  smtpUpdateBasicInformationSchema,
 } from "../configuration/mjml-config-input-schema";
+import { Input } from "../../../components/react-hook-form-macaw/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface BasicInformationSectionProps {
-  configuration: MjmlConfiguration;
+  configuration: SmtpConfiguration;
 }
 
 export const BasicInformationSection = ({ configuration }: BasicInformationSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const { handleSubmit, control, setError, register } = useForm<MjmlUpdateBasicInformation>({
+  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateBasicInformation>({
     defaultValues: {
       id: configuration.id,
       name: configuration.name,
       active: configuration.active,
     },
+    resolver: zodResolver(smtpUpdateBasicInformationSchema),
   });
 
   const trpcContext = trpcClient.useContext();
   const { mutate } = trpcClient.mjmlConfiguration.updateBasicInformation.useMutation({
-    onSuccess: async (data, variables) => {
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.mjmlConfiguration.invalidate();
     },
@@ -39,7 +42,7 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
-          setError(fieldName as keyof z.infer<typeof mjmlUpdateBasicInformationSchema>, {
+          setError(fieldName as keyof z.infer<typeof smtpUpdateBasicInformationSchema>, {
             type: "manual",
             message,
           });
@@ -58,7 +61,7 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
 
   return (
     <SectionWithDescription
-      title="Connect Mjml"
+      title="Connect SMTP"
       description={
         <Text>
           Provide unique name for your configuration - you can create more than one. For example -
@@ -75,25 +78,11 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
           })}
         >
           <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
-            <Controller
+            <Input
               name="name"
+              label="Configuration name"
               control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Input
-                  label="Configuration name"
-                  value={value}
-                  onChange={onChange}
-                  error={!!error}
-                  helperText={
-                    error?.message ||
-                    "Name of the configuration, for example 'Production' or 'Test'"
-                  }
-                />
-              )}
+              helperText={"Name of the configuration, for example 'Production' or 'Test'"}
             />
             <label>
               <input type="checkbox" placeholder="Enabled" {...register("active")} />

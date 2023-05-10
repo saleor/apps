@@ -3,16 +3,21 @@ import {
   SendgridEventConfiguration,
 } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Combobox, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateEvent } from "../configuration/sendgrid-config-input-schema";
-import { Controller, useForm } from "react-hook-form";
+import {
+  SendgridUpdateEvent,
+  sendgridUpdateEventSchema,
+} from "../configuration/sendgrid-config-input-schema";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTemplates } from "../sendgrid-api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
 
 interface EventBoxProps {
   configuration: SendgridConfiguration;
@@ -33,11 +38,12 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       id: configuration.id,
       ...event,
     },
+    resolver: zodResolver(sendgridUpdateEventSchema),
   });
 
   const trpcContext = trpcClient.useContext();
   const { mutate } = trpcClient.sendgridConfiguration.updateEvent.useMutation({
-    onSuccess: async (data, variables) => {
+    onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.sendgridConfiguration.invalidate();
     },
@@ -79,29 +85,18 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
           gap={defaultPadding}
         >
           <Text variant="heading">{event.eventType}</Text>
-          {!templatesChoices ? (
-            <Combobox label="Template" disabled options={[]} />
-          ) : (
-            <Controller
+          {templatesChoices?.length ? (
+            <Combobox
               name="template"
               control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState: { errors },
-              }) => (
-                <Combobox
-                  label="Template"
-                  value={value}
-                  onChange={(event) => onChange(event?.value)}
-                  options={templatesChoices.map((sender) => ({
-                    label: sender.label,
-                    value: sender.value,
-                  }))}
-                  error={!!error}
-                />
-              )}
+              label="Template"
+              options={templatesChoices.map((sender) => ({
+                label: sender.label,
+                value: sender.value,
+              }))}
             />
+          ) : (
+            <Combobox name="template" control={control} label="Template" options={[]} />
           )}
 
           <label>

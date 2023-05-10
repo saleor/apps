@@ -322,10 +322,11 @@ importers:
       '@graphql-codegen/typescript-urql': ^3.7.3
       '@graphql-codegen/urql-introspection': 2.2.1
       '@graphql-typed-document-node/core': ^3.1.2
+      '@hookform/resolvers': ^2.9.10
       '@monaco-editor/react': ^4.4.6
       '@saleor/app-sdk': 0.37.3
       '@saleor/apps-shared': workspace:*
-      '@saleor/macaw-ui': 0.8.0-pre.79
+      '@saleor/macaw-ui': 0.8.0-pre.81
       '@sendgrid/client': ^7.7.0
       '@sendgrid/mail': ^7.7.0
       '@tanstack/react-query': ^4.24.4
@@ -372,10 +373,11 @@ importers:
       vitest: ^0.30.1
       zod: ^3.20.2
     dependencies:
+      '@hookform/resolvers': 2.9.11_react-hook-form@7.43.1
       '@monaco-editor/react': 4.4.6_biqbaboplfbrettd7655fr4n2y
       '@saleor/app-sdk': 0.37.3_yucv4tfv7v7nrkw2uguegj6e7e
       '@saleor/apps-shared': link:../../packages/shared
-      '@saleor/macaw-ui': 0.8.0-pre.79_5ndqzdd6t4rivxsukjv3i3ak2q
+      '@saleor/macaw-ui': 0.8.0-pre.81_5ndqzdd6t4rivxsukjv3i3ak2q
       '@sendgrid/client': 7.7.0
       '@sendgrid/mail': 7.7.0
       '@tanstack/react-query': 4.24.4_biqbaboplfbrettd7655fr4n2y
@@ -4804,8 +4806,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@saleor/macaw-ui/0.8.0-pre.79_5ndqzdd6t4rivxsukjv3i3ak2q:
-    resolution: {integrity: sha512-E+kqNPPyD5QR+DHLIrhbfN++g7DC+LyrINYeSnDXYad03BZz1AXcY9tagNMIt8ie4qrmQ/gMrsEQpN0yMUlNgg==}
+  /@saleor/macaw-ui/0.8.0-pre.81_5ndqzdd6t4rivxsukjv3i3ak2q:
+    resolution: {integrity: sha512-6s15zUyn82492DwMDNm0yI6uAzik8t/OlI+LrH23L3EgzcyzprbA7DYzwcV4C7vlCEiMxywLnfS/0b1RYnhM1w==}
     engines: {node: '>=16 <19', pnpm: '>=8'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

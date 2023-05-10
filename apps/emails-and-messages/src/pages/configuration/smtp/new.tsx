@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { BoxWithBorder } from "../../../components/box-with-border";
@@ -6,21 +6,31 @@ import { defaultPadding } from "../../../components/ui-defaults";
 import { BoxFooter } from "../../../components/box-footer";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared/src/use-dashboard-notification";
-import { Controller, useForm } from "react-hook-form";
-import { MjmlCreateConfigurationInput } from "../../../modules/mjml/configuration/mjml-config-input-schema";
+import { useForm } from "react-hook-form";
+import {
+  SmtpCreateConfigurationInput,
+  smtpCreateConfigurationInputSchema,
+} from "../../../modules/smtp/configuration/mjml-config-input-schema";
 import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
+import { Input } from "../../../components/react-hook-form-macaw/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { appUrls } from "../../../modules/app-configuration/urls";
+import { mjmlUrls } from "../../../modules/smtp/urls";
 
 const NewMjmlConfigurationPage: NextPage = () => {
   const router = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { handleSubmit, control, setError, register } = useForm<MjmlCreateConfigurationInput>();
+  const { handleSubmit, control, setError, register } = useForm<SmtpCreateConfigurationInput>({
+    defaultValues: { encryption: "NONE" },
+    resolver: zodResolver(smtpCreateConfigurationInputSchema),
+  });
 
   const { mutate } = trpcClient.mjmlConfiguration.createConfiguration.useMutation({
     onSuccess: async (data, variables) => {
       notifySuccess("Configuration saved");
-      router.push(`/configuration/mjml/edit/${data.id}`);
+      router.push(mjmlUrls.configuration(data.id));
     },
     onError(error) {
       let isFieldErrorSet = false;
@@ -28,7 +38,7 @@ const NewMjmlConfigurationPage: NextPage = () => {
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
-          setError(fieldName as keyof MjmlCreateConfigurationInput, {
+          setError(fieldName as keyof SmtpCreateConfigurationInput, {
             type: "manual",
             message,
           });
@@ -48,18 +58,18 @@ const NewMjmlConfigurationPage: NextPage = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
+        { name: "Configuration", href: appUrls.configuration() },
         { name: "Add provider" },
-        { name: "Mjml" },
+        { name: "SMTP" },
       ]}
     >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
-          <Text>Connect Mjml with Saleor.</Text>
+          <Text>Connect SMTP with Saleor.</Text>
         </Box>
       </Box>
       <SectionWithDescription
-        title="Connect Mjml"
+        title="Connect SMTP"
         description={
           <Text>
             Provide unique name for your configuration - you can create more than one. For example -
@@ -76,96 +86,39 @@ const NewMjmlConfigurationPage: NextPage = () => {
             })}
           >
             <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
-              <Controller
+              <Input
                 name="name"
+                label="Configuration name"
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="Configuration name"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={
-                      error?.message ||
-                      "Name of the configuration, for example 'Production' or 'Test'"
-                    }
-                  />
-                )}
+                helperText={"Name of the configuration, for example 'Production' or 'Test'"}
               />
               <Divider />
               <Text variant="heading">SMTP server connection</Text>
-              <Controller
+              <Input
+                label="Host"
+                helperText={"Server host that will be connected."}
+                control={control}
                 name="smtpHost"
-                control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="Host"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={error?.message || "Server host that will be connected."}
-                  />
-                )}
               />
-              <Controller
-                name="smtpPort"
+              <Input
+                label="Port"
+                name={"smtpPort"}
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="Port"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                )}
+                helperText={"Port that will be used"}
               />
-              <Controller
-                name="smtpUser"
+              <Input
+                label="User"
+                name={"smtpUser"}
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="User"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                )}
+                helperText={"User for the SMTP server connection"}
               />
-              <Controller
-                name="smtpPassword"
+              <Input
+                label="Password"
+                name={"smtpPassword"}
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="Password"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={error?.message}
-                  />
-                )}
+                helperText={"Password for the SMTP server connection"}
               />
+
               <Box display="flex" gap={defaultPadding}>
                 <label>
                   <input {...register("encryption")} type="radio" value="NONE" />

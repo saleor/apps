@@ -81,33 +81,6 @@ export const sendgridConfigurationRouter = router({
       await ctx.configurationService.deleteConfiguration(input);
       return null;
     }),
-  // updateOrCreateConfiguration: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(sendgridUpdateOrCreateConfigurationSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-  //     logger.debug(input, "sendgridConfigurationRouter.update or create called");
-
-  //     const { id } = input;
-  //     if (!id) {
-  //       return await ctx.configurationService.createConfiguration(input);
-  //     } else {
-  //       const existingConfiguration = await ctx.configurationService.getConfiguration({ id });
-  //       if (!existingConfiguration) {
-  //         throw new TRPCError({
-  //           code: "BAD_REQUEST",
-  //           message: "Configuration not found",
-  //         });
-  //       }
-  //       const configuration = {
-  //         id,
-  //         ...input,
-  //         events: existingConfiguration.events,
-  //       };
-  //       await ctx.configurationService.updateConfiguration(configuration);
-  //       return configuration;
-  //     }
-  //   }),
   getEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetEventConfigurationInputSchema)

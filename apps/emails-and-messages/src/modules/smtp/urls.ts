@@ -1,7 +1,8 @@
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 
 export const mjmlUrls = {
-  configuration: (id?: string) => (!id ? "/configuration/mjml" : `/configuration/mjml/${id}`),
+  newConfiguration: () => `/configuration/smtp/new`,
+  configuration: (id: string) => `/configuration/smtp/${id}`,
   eventConfiguration: (id: string, event: MessageEventTypes) =>
-    `/configuration/mjml/${id}/event/${event}`,
+    `/configuration/smtp/${id}/event/${event}`,
 };

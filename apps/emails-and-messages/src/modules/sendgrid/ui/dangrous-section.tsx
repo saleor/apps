@@ -9,6 +9,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { useForm } from "react-hook-form";
 import { SendgridGetConfigurationIdInput } from "../configuration/sendgrid-config-input-schema";
 import { useRouter } from "next/router";
+import { appUrls } from "../../app-configuration/urls";
 
 interface DangerousSectionProps {
   configuration: SendgridConfiguration;
@@ -24,9 +25,9 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
   });
 
   const { mutate } = trpcClient.sendgridConfiguration.deleteConfiguration.useMutation({
-    onSuccess: async (data, variables) => {
-      notifySuccess("Configuration saved");
-      replace("/configuration");
+    onSuccess: async () => {
+      notifySuccess("Configuration removed");
+      replace(appUrls.configuration());
     },
     onError(error) {
       let isFieldErrorSet = false;

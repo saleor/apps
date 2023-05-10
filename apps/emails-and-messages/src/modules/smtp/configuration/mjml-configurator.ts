@@ -1,9 +1,9 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { MjmlConfig } from "./mjml-config-schema";
+import { SmtpConfig } from "./mjml-config-schema";
 
 export interface MjmlConfigurator {
-  setConfig(config: MjmlConfig): Promise<void>;
-  getConfig(): Promise<MjmlConfig | undefined>;
+  setConfig(config: SmtpConfig): Promise<void>;
+  getConfig(): Promise<SmtpConfig | undefined>;
 }
 
 export class PrivateMetadataMjmlConfigurator implements MjmlConfigurator {
@@ -11,7 +11,7 @@ export class PrivateMetadataMjmlConfigurator implements MjmlConfigurator {
 
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
 
-  getConfig(): Promise<MjmlConfig | undefined> {
+  getConfig(): Promise<SmtpConfig | undefined> {
     return this.metadataManager.get(this.metadataKey, this.saleorApiUrl).then((data) => {
       if (!data) {
         return data;
@@ -25,7 +25,7 @@ export class PrivateMetadataMjmlConfigurator implements MjmlConfigurator {
     });
   }
 
-  setConfig(config: MjmlConfig): Promise<void> {
+  setConfig(config: SmtpConfig): Promise<void> {
     return this.metadataManager.set({
       key: this.metadataKey,
       value: JSON.stringify(config),

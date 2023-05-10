@@ -1,8 +1,8 @@
-import { SendgridConfigurationChannels } from "../modules/sendgrid/configuration/sendgrid-config-schema";
+import { ChannelConfiguration } from "./channel-configuration-schema";
 
 interface IsAvailableInChannelArgs {
   channel: string;
-  channelConfiguration: SendgridConfigurationChannels;
+  channelConfiguration: ChannelConfiguration;
 }
 
 /**
@@ -21,7 +21,7 @@ export const isAvailableInChannel = ({
     return true;
   }
   if (channelConfiguration.mode === "restrict") {
-    return channel in channelConfiguration.channels;
+    return channelConfiguration.channels.includes(channel);
   }
-  return !(channel in channelConfiguration.channels);
+  return !channelConfiguration.channels.includes(channel);
 };
