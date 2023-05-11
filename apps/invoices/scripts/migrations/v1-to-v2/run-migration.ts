@@ -19,31 +19,30 @@ const runMigration = async () => {
   const allEnvs = await fetchCloudAplEnvs();
 
   const results = await Promise.all(
-    // @ts-ignore todo fix APL typings
-    allEnvs.results.map((env) => {
-      const metadataManager = getMetadataManagerForEnv(env.saleor_api_url, env.token);
+    allEnvs.map((env) => {
+      const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token);
 
       return Promise.all([
-        metadataManager.get("app-config", env.saleor_api_url),
+        metadataManager.get("app-config", env.saleorApiUrl),
         metadataManager.get("app-config-v2"),
       ])
         .then(([v1, v2]) => {
           if (v2) {
-            console.log("▶️ v2 already exists for ", env.saleor_api_url);
+            console.log("▶️ v2 already exists for ", env.saleorApiUrl);
             return;
           }
 
           if (!v1) {
-            console.log("🚫 v1 does not exist for ", env.saleor_api_url);
+            console.log("🚫 v1 does not exist for ", env.saleorApiUrl);
 
             return new AppConfigV2MetadataManager(metadataManager)
               .set(new AppConfigV2().serialize())
               .then((r) => {
-                console.log(`✅ created empty config for ${env.saleor_api_url}`);
+                console.log(`✅ created empty config for ${env.saleorApiUrl}`);
               })
               .catch((e) => {
                 console.log(
-                  `🚫 failed to create empty config for ${env.saleor_api_url}. Env may not exist.`,
+                  `🚫 failed to create empty config for ${env.saleorApiUrl}. Env may not exist.`,
                   e.message
                 );
               });
@@ -54,11 +53,11 @@ const runMigration = async () => {
           return new AppConfigV2MetadataManager(metadataManager)
             .set(v2Config.serialize())
             .then((r) => {
-              console.log(`✅ migrated ${env.saleor_api_url}`);
+              console.log(`✅ migrated ${env.saleorApiUrl}`);
             });
         })
         .catch((e) => {
-          console.error("🚫 Failed to migrate ", env.saleor_api_url, e);
+          console.error("🚫 Failed to migrate ", env.saleorApiUrl, e);
         });
     })
   );

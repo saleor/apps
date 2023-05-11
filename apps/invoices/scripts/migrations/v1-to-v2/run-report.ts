@@ -16,12 +16,11 @@ const runReport = async () => {
   const allEnvs = await fetchCloudAplEnvs();
 
   const results = await Promise.all(
-    // @ts-ignore todo fix APL typings
-    allEnvs.results.map((env) => {
-      const metadataManager = getMetadataManagerForEnv(env.saleor_api_url, env.token);
+    allEnvs.map((env) => {
+      const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token);
 
       return Promise.all([
-        metadataManager.get("app-config", env.saleor_api_url),
+        metadataManager.get("app-config", env.saleorApiUrl),
         metadataManager.get("app-config-v2"),
       ])
         .then(([v1, v2]) => {
@@ -32,7 +31,7 @@ const runReport = async () => {
         })
         .then((metadata) => ({
           metadata: metadata,
-          env: env.saleor_api_url,
+          env: env.saleorApiUrl,
         }));
     })
   );
