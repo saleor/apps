@@ -23,7 +23,7 @@ const safeParse = (json?: string) => {
 };
 
 const run = async () => {
-  console.log(process.env.SALEOR_CLOUD_TOKEN);
+  console.log("RUN");
 
   const saleorAPL = new SaleorCloudAPL({
     token: process.env.SALEOR_CLOUD_TOKEN!,
@@ -33,8 +33,9 @@ const run = async () => {
   const allEnvs = await saleorAPL.getAll();
 
   const results = await Promise.all(
-    allEnvs.map((env) => {
-      const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token);
+    // @ts-ignore todo fix APL typings
+    allEnvs.results.map((env) => {
+      const metadataManager = getMetadataManagerForEnv(env.saleor_api_url, env.token);
 
       return Promise.all([
         metadataManager.get("app-config"),
