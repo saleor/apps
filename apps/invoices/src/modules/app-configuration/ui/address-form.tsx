@@ -181,7 +181,9 @@ export const ConnectedAddressForm = (props: Props) => {
     push("/configuration");
   }, [push]);
 
-  if (channelOverrideConfigQuery.isLoading || !addressData) {
+  console.log(addressData);
+
+  if (channelOverrideConfigQuery.isLoading) {
     return <Text color={"textNeutralSubdued"}>Loading</Text>;
   }
 
@@ -189,7 +191,7 @@ export const ConnectedAddressForm = (props: Props) => {
     <AddressForm
       onCancel={onCancelHandler}
       onSubmit={submitHandler}
-      address={channelOverrideConfigQuery.data[props.channelSlug]}
+      address={channelOverrideConfigQuery.data![props.channelSlug]}
       channelSlug={props.channelSlug}
     />
   );
