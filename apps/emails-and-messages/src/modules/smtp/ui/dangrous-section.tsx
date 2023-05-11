@@ -7,8 +7,8 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import { SmtpConfiguration } from "../configuration/mjml-config-schema";
-import { SmtpGetConfigurationIdInput } from "../configuration/mjml-config-input-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
 
 interface DangerousSectionProps {
   configuration: SmtpConfiguration;
@@ -23,7 +23,7 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
     },
   });
 
-  const { mutate } = trpcClient.mjmlConfiguration.deleteConfiguration.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.deleteConfiguration.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration removed");
       replace("/configuration");
@@ -31,6 +31,7 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;

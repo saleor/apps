@@ -1,4 +1,4 @@
-import { SmtpConfiguration } from "../configuration/mjml-config-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
@@ -7,7 +7,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 import {
   SmtpUpdateChannels,
   smtpUpdateChannelsSchema,
-} from "../configuration/mjml-config-input-schema";
+} from "../configuration/smtp-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
@@ -38,6 +38,7 @@ const overrideMessage = ({
 
   if (mode === "exclude") {
     const leftChannels = availableChannels.filter((channel) => !channels.includes(channel));
+
     if (!leftChannels.length) {
       return <Text>Theres no channel which will be used with this configuration.</Text>;
     }
@@ -71,14 +72,15 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
   const { data: channels } = trpcClient.channels.fetch.useQuery();
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.mjmlConfiguration.updateChannels.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateChannels.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.mjmlConfiguration.invalidate();
+      trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
@@ -106,7 +108,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
         <>
           <Text display="block">
             By default, provider will work for every channel. You can change this behavior with
-            "excluding" or "including" strategy.
+            excluding or including strategy.
           </Text>
           <Text display="block">
             <Text variant="bodyStrong">Excluding</Text> - all current channels and new created

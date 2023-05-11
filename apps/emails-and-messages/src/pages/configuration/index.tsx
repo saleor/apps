@@ -14,8 +14,8 @@ const ConfigurationPage: NextPage = () => {
   const { data: dataSendgrid, isLoading: isLoadingSendgrid } =
     trpcClient.sendgridConfiguration.getConfigurations.useQuery();
 
-  const { data: dataMjml, isLoading: isLoadingMjml } =
-    trpcClient.mjmlConfiguration.getConfigurations.useQuery();
+  const { data: dataSmtp, isLoading: isLoadingSmtp } =
+    trpcClient.smtpConfiguration.getConfigurations.useQuery();
 
   const data: ConfigurationListItem[] = [
     ...(dataSendgrid?.map((configuration) => ({
@@ -24,7 +24,7 @@ const ConfigurationPage: NextPage = () => {
       id: configuration.id,
       active: configuration.active,
     })) || []),
-    ...(dataMjml?.map((configuration) => ({
+    ...(dataSmtp?.map((configuration) => ({
       name: configuration.name,
       provider: "smtp" as const,
       id: configuration.id,
@@ -32,7 +32,7 @@ const ConfigurationPage: NextPage = () => {
     })) || []),
   ];
 
-  const isLoading = isLoadingSendgrid || isLoadingMjml;
+  const isLoading = isLoadingSendgrid || isLoadingSmtp;
 
   return (
     <BasicLayout breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }]}>

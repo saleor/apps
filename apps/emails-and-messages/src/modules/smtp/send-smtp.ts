@@ -4,7 +4,7 @@ import { compileHandlebarsTemplate } from "./compile-handlebars-template";
 import { sendEmailWithSmtp, SendMailArgs } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
-import { SmtpConfiguration } from "./configuration/mjml-config";
+import { SmtpConfiguration } from "./configuration/smtp-config-schema";
 
 interface SendSmtpArgs {
   smtpConfiguration: SmtpConfiguration;
@@ -32,6 +32,7 @@ export const sendSmtp = async ({
   });
 
   const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
+
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
     return {

@@ -5,7 +5,7 @@ import { SectionWithDescription } from "../../components/section-with-descriptio
 import { ProviderSelectionBox } from "../../modules/app-configuration/ui/provider-selection-box";
 import { useRouter } from "next/router";
 import { sendgridUrls } from "../../modules/sendgrid/urls";
-import { mjmlUrls } from "../../modules/smtp/urls";
+import { smtpUrls } from "../../modules/smtp/urls";
 import { appUrls } from "../../modules/app-configuration/urls";
 import { BasicLayout } from "../../components/basic-layout";
 
@@ -35,7 +35,7 @@ const ChooseProviderPage: NextPage = () => {
           <ProviderSelectionBox
             providerName="SMTP"
             providerDescription="Provide your own SMTP credentials and map Saleor event to custom MJML templates."
-            onClick={() => push(mjmlUrls.newConfiguration())}
+            onClick={() => push(smtpUrls.newConfiguration())}
           />
         </Box>
       </SectionWithDescription>

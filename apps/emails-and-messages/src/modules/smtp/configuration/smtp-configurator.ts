@@ -1,13 +1,13 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpConfig } from "./mjml-config-schema";
+import { SmtpConfig } from "./smtp-config-schema";
 
-export interface MjmlConfigurator {
+export interface SmtpConfigurator {
   setConfig(config: SmtpConfig): Promise<void>;
   getConfig(): Promise<SmtpConfig | undefined>;
 }
 
-export class PrivateMetadataMjmlConfigurator implements MjmlConfigurator {
-  private metadataKey = "mjml-config";
+export class PrivateMetadataSmtpConfigurator implements SmtpConfigurator {
+  private metadataKey = "smtp-config";
 
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
 

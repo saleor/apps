@@ -1,20 +1,20 @@
-import { MjmlConfigurator, PrivateMetadataMjmlConfigurator } from "./mjml-configurator";
+import { SmtpConfigurator, PrivateMetadataSmtpConfigurator } from "./smtp-configurator";
 import { Client } from "urql";
 import { logger as pinoLogger } from "../../../lib/logger";
-import { FilterConfigurationsArgs, MjmlConfigContainer } from "./mjml-config-container";
+import { FilterConfigurationsArgs, SmtpConfigContainer } from "./smtp-config-container";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { SmtpConfig, SmtpConfiguration } from "./mjml-config-schema";
+import { SmtpConfig, SmtpConfiguration } from "./smtp-config-schema";
 
 const logger = pinoLogger.child({
-  service: "MjmlConfigurationService",
+  service: "SmtpConfigurationService",
 });
 
-export class MjmlConfigurationService {
+export class SmtpConfigurationService {
   private configurationData?: SmtpConfig;
-  private metadataConfigurator: MjmlConfigurator;
+  private metadataConfigurator: SmtpConfigurator;
 
   constructor(args: { apiClient: Client; saleorApiUrl: string; initialData?: SmtpConfig }) {
-    this.metadataConfigurator = new PrivateMetadataMjmlConfigurator(
+    this.metadataConfigurator = new PrivateMetadataSmtpConfigurator(
       createSettingsManager(args.apiClient),
       args.saleorApiUrl
     );
@@ -29,6 +29,7 @@ export class MjmlConfigurationService {
     logger.debug("Fetch configuration from Saleor API");
 
     const config = await this.metadataConfigurator.getConfig();
+
     this.configurationData = config;
   }
 
@@ -69,19 +70,20 @@ export class MjmlConfigurationService {
 
   async getConfiguration({ id }: { id: string }) {
     logger.debug("Get configuration");
-    return MjmlConfigContainer.getConfiguration(await this.getConfigurationRoot())({ id });
+    return SmtpConfigContainer.getConfiguration(await this.getConfigurationRoot())({ id });
   }
 
   async getConfigurations(filter?: FilterConfigurationsArgs) {
     logger.debug("Get configuration");
-    return MjmlConfigContainer.getConfigurations(await this.getConfigurationRoot())(filter);
+    return SmtpConfigContainer.getConfigurations(await this.getConfigurationRoot())(filter);
   }
 
   async createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
     logger.debug("Create configuration");
-    const updatedConfigurationRoot = MjmlConfigContainer.createConfiguration(
+    const updatedConfigurationRoot = SmtpConfigContainer.createConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     await this.setConfigurationRoot(updatedConfigurationRoot);
 
     return updatedConfigurationRoot.configurations[
@@ -91,17 +93,19 @@ export class MjmlConfigurationService {
 
   async updateConfiguration(config: SmtpConfiguration) {
     logger.debug("Update configuration");
-    const updatedConfigurationRoot = MjmlConfigContainer.updateConfiguration(
+    const updatedConfigurationRoot = SmtpConfigContainer.updateConfiguration(
       await this.getConfigurationRoot()
     )(config);
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 
   async deleteConfiguration({ id }: { id: string }) {
     logger.debug("Delete configuration");
-    const updatedConfigurationRoot = MjmlConfigContainer.deleteConfiguration(
+    const updatedConfigurationRoot = SmtpConfigContainer.deleteConfiguration(
       await this.getConfigurationRoot()
     )({ id });
+
     this.setConfigurationRoot(updatedConfigurationRoot);
   }
 }

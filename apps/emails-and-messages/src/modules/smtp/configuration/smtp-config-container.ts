@@ -8,7 +8,7 @@ import {
   smtpConfigurationSchema,
   smtpConfigurationEventSchema,
   SmtpConfig,
-} from "./mjml-config-schema";
+} from "./smtp-config-schema";
 
 export const getDefaultEventsConfiguration = (): SmtpConfiguration["events"] =>
   messageEventTypes.map((eventType) =>
@@ -32,6 +32,7 @@ export const getDefaultEmptyConfiguration = (): SmtpConfiguration => {
     },
     events: getDefaultEventsConfiguration(),
   });
+
   return defaultConfig;
 };
 
@@ -40,13 +41,13 @@ interface GetConfigurationArgs {
 }
 
 const getConfiguration =
-  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
+  (smtpConfigRoot: SmtpConfig | null | undefined) =>
   ({ id }: GetConfigurationArgs) => {
-    if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
+    if (!smtpConfigRoot || !smtpConfigRoot.configurations) {
       return;
     }
 
-    return mjmlConfigRoot.configurations.find((c) => c.id === id);
+    return smtpConfigRoot.configurations.find((c) => c.id === id);
   };
 
 export interface FilterConfigurationsArgs {
@@ -56,13 +57,13 @@ export interface FilterConfigurationsArgs {
 }
 
 const getConfigurations =
-  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
+  (smtpConfigRoot: SmtpConfig | null | undefined) =>
   (filter: FilterConfigurationsArgs | undefined): SmtpConfiguration[] => {
-    if (!mjmlConfigRoot || !mjmlConfigRoot.configurations) {
+    if (!smtpConfigRoot || !smtpConfigRoot.configurations) {
       return [];
     }
 
-    let filtered = mjmlConfigRoot.configurations;
+    let filtered = smtpConfigRoot.configurations;
 
     if (!filter) {
       return filtered;
@@ -89,31 +90,31 @@ const getConfigurations =
   };
 
 const createConfiguration =
-  (mjmlConfigRoot: SmtpConfig | null | undefined) =>
-  (mjmlConfiguration: Omit<SmtpConfiguration, "id" | "events">) => {
-    const mjmlConfigNormalized = structuredClone(mjmlConfigRoot) ?? { configurations: [] };
+  (smtpConfigRoot: SmtpConfig | null | undefined) =>
+  (smtpConfiguration: Omit<SmtpConfiguration, "id" | "events">) => {
+    const configNormalized = structuredClone(smtpConfigRoot) ?? { configurations: [] };
 
     // for creating a new configurations, the ID has to be generated
     const newConfiguration = {
-      ...mjmlConfiguration,
+      ...smtpConfiguration,
       id: generateRandomId(),
       events: getDefaultEventsConfiguration(),
     };
 
-    mjmlConfigNormalized.configurations.push(newConfiguration);
-    return mjmlConfigNormalized;
+    configNormalized.configurations.push(newConfiguration);
+    return configNormalized;
   };
 
 const updateConfiguration =
-  (mjmlConfig: SmtpConfig | null | undefined) => (mjmlConfiguration: SmtpConfiguration) => {
-    const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
+  (smtpConfig: SmtpConfig | null | undefined) => (smtpConfiguration: SmtpConfiguration) => {
+    const configNormalized = structuredClone(smtpConfig) ?? { configurations: [] };
 
-    const configurationIndex = mjmlConfigNormalized.configurations.findIndex(
-      (configuration) => configuration.id === mjmlConfiguration.id
+    const configurationIndex = configNormalized.configurations.findIndex(
+      (configuration) => configuration.id === smtpConfiguration.id
     );
 
-    mjmlConfigNormalized.configurations[configurationIndex] = mjmlConfiguration;
-    return mjmlConfigNormalized;
+    configNormalized.configurations[configurationIndex] = smtpConfiguration;
+    return configNormalized;
   };
 
 interface DeleteConfigurationArgs {
@@ -121,18 +122,18 @@ interface DeleteConfigurationArgs {
 }
 
 const deleteConfiguration =
-  (mjmlConfig: SmtpConfig | null | undefined) =>
+  (smtpConfig: SmtpConfig | null | undefined) =>
   ({ id }: DeleteConfigurationArgs) => {
-    const mjmlConfigNormalized = structuredClone(mjmlConfig) ?? { configurations: [] };
+    const configNormalized = structuredClone(smtpConfig) ?? { configurations: [] };
 
-    mjmlConfigNormalized.configurations = mjmlConfigNormalized.configurations.filter(
+    configNormalized.configurations = configNormalized.configurations.filter(
       (configuration) => configuration.id !== id
     );
 
-    return mjmlConfigNormalized;
+    return configNormalized;
   };
 
-export const MjmlConfigContainer = {
+export const SmtpConfigContainer = {
   createConfiguration,
   getConfiguration,
   updateConfiguration,

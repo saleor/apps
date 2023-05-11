@@ -40,13 +40,13 @@ const NotFoundView = () => {
   );
 };
 
-const EditMjmlConfigurationPage: NextPage = () => {
+const EditSmtpConfigurationPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
   const router = useRouter();
   const configurationId = router.query.configurationId
     ? (router.query.configurationId as string)
     : undefined;
-  const { data: configuration, isLoading } = trpcClient.mjmlConfiguration.getConfiguration.useQuery(
+  const { data: configuration, isLoading } = trpcClient.smtpConfiguration.getConfiguration.useQuery(
     {
       id: configurationId!,
     },
@@ -95,4 +95,4 @@ const EditMjmlConfigurationPage: NextPage = () => {
   );
 };
 
-export default EditMjmlConfigurationPage;
+export default EditSmtpConfigurationPage;

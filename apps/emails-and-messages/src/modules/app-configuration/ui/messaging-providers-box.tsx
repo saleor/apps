@@ -8,7 +8,7 @@ import { ChipText } from "../../../components/chip-text";
 import Image from "next/image";
 import sendgrid from "../../../public/sendgrid.png";
 import smtp from "../../../public/smtp.svg";
-import { mjmlUrls } from "../../smtp/urls";
+import { smtpUrls } from "../../smtp/urls";
 import { sendgridUrls } from "../../sendgrid/urls";
 import { appUrls } from "../urls";
 import React from "react";
@@ -72,7 +72,7 @@ export const MessagingProvidersBox = ({
   const getEditLink = (configuration: ConfigurationListItem) => {
     switch (configuration.provider) {
       case "smtp":
-        return mjmlUrls.configuration(configuration.id);
+        return smtpUrls.configuration(configuration.id);
       case "sendgrid":
         return sendgridUrls.configuration(configuration.id);
     }

@@ -1,4 +1,4 @@
-import { SmtpConfiguration, SmtpEventConfiguration } from "../configuration/mjml-config-schema";
+import { SmtpConfiguration, SmtpEventConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
@@ -7,9 +7,10 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
-import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/mjml-config-input-schema";
+import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { smtpUrls } from "../urls";
 
 interface EventBoxProps {
   configuration: SmtpConfiguration;
@@ -29,14 +30,15 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.mjmlConfiguration.updateEvent.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateEvent.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.mjmlConfiguration.invalidate();
+      trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
@@ -56,6 +58,7 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       );
     },
   });
+
   return (
     <form
       onSubmit={handleSubmit((data, event) => {
@@ -75,7 +78,7 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
           <Button
             variant="secondary"
             onClick={() => {
-              router.push(`/configuration/mjml/${configuration.id}/event/${event.eventType}`);
+              router.push(smtpUrls.eventConfiguration(configuration.id, event.eventType));
             }}
           >
             Edit template

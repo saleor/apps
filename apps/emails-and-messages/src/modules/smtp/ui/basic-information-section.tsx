@@ -1,4 +1,4 @@
-import { SmtpConfiguration } from "../configuration/mjml-config-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
@@ -11,7 +11,7 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import {
   SmtpUpdateBasicInformation,
   smtpUpdateBasicInformationSchema,
-} from "../configuration/mjml-config-input-schema";
+} from "../configuration/smtp-config-input-schema";
 import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -31,14 +31,15 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.mjmlConfiguration.updateBasicInformation.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateBasicInformation.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.mjmlConfiguration.invalidate();
+      trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;

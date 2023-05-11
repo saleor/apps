@@ -37,7 +37,7 @@ const NotFoundView = () => {
   );
 };
 
-const EditMjmlEventPage: NextPage = () => {
+const EditSmtpEventPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
   const router = useRouter();
 
@@ -46,11 +46,13 @@ const EditMjmlEventPage: NextPage = () => {
   const eventType = parseMessageEventType(eventTypeFromQuery);
 
   const { data: configuration, isLoading } =
-    trpcClient.mjmlConfiguration.getEventConfiguration.useQuery(
+    trpcClient.smtpConfiguration.getEventConfiguration.useQuery(
       {
         id: configurationId,
-        // if event type is not valid, it calling the query will not be enabled
-        // so we can safely cast it
+        /*
+         * if event type is not valid, it calling the query will not be enabled
+         * so we can safely cast it
+         */
         eventType: eventType!,
       },
       {
@@ -91,11 +93,11 @@ const EditMjmlEventPage: NextPage = () => {
     >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
-          <Text>Connect Mjml with Saleor.</Text>
+          <Text>Connect Smtp with Saleor.</Text>
         </Box>
       </Box>
     </BasicLayout>
   );
 };
 
-export default EditMjmlEventPage;
+export default EditSmtpEventPage;

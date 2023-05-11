@@ -1,12 +1,12 @@
 import { logger as pinoLogger } from "../../../lib/logger";
-import { MjmlConfigurationService } from "./get-mjml-configuration.service";
+import { SmtpConfigurationService } from "./get-smtp-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { z } from "zod";
 import { compileMjml } from "../compile-mjml";
 import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
-import { getDefaultEmptyConfiguration } from "./mjml-config-container";
+import { getDefaultEmptyConfiguration } from "./smtp-config-container";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,
@@ -17,15 +17,17 @@ import {
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
-} from "./mjml-config-input-schema";
+} from "./smtp-config-input-schema";
 
-// Allow access only for the dashboard users and attaches the
-// configuration service to the context
+/*
+ * Allow access only for the dashboard users and attaches the
+ * configuration service to the context
+ */
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
       ...ctx,
-      configurationService: new MjmlConfigurationService({
+      configurationService: new SmtpConfigurationService({
         apiClient: ctx.apiClient,
         saleorApiUrl: ctx.saleorApiUrl,
       }),
@@ -33,10 +35,11 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   })
 );
 
-export const mjmlConfigurationRouter = router({
+export const smtpConfigurationRouter = router({
   fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-    logger.debug("mjmlConfigurationRouter.fetch called");
+
+    logger.debug("smtpConfigurationRouter.fetch called");
     return ctx.configurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationService
@@ -44,7 +47,8 @@ export const mjmlConfigurationRouter = router({
     .input(smtpConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-      logger.debug(input, "mjmlConfigurationRouter.get called");
+
+      logger.debug(input, "smtp.get called");
       return ctx.configurationService.getConfiguration(input);
     }),
   getConfigurations: protectedWithConfigurationService
@@ -52,7 +56,8 @@ export const mjmlConfigurationRouter = router({
     .input(smtpGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-      logger.debug(input, "mjmlConfigurationRouter.getConfigurations called");
+
+      logger.debug(input, "smtpConfigurationRouter.getConfigurations called");
       return ctx.configurationService.getConfigurations(input);
     }),
   createConfiguration: protectedWithConfigurationService
@@ -60,11 +65,13 @@ export const mjmlConfigurationRouter = router({
     .input(smtpCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-      logger.debug(input, "mjmlConfigurationRouter.create called");
+
+      logger.debug(input, "smtpConfigurationRouter.create called");
       const newConfiguration = {
         ...getDefaultEmptyConfiguration(),
         ...input,
       };
+
       console.log(newConfiguration, "this is newConfiguration");
       return await ctx.configurationService.createConfiguration(newConfiguration);
     }),
@@ -73,8 +80,10 @@ export const mjmlConfigurationRouter = router({
     .input(smtpConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-      logger.debug(input, "mjmlConfigurationRouter.delete called");
+
+      logger.debug(input, "smtpConfigurationRouter.delete called");
       const existingConfiguration = await ctx.configurationService.getConfiguration(input);
+
       if (!existingConfiguration) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -84,40 +93,13 @@ export const mjmlConfigurationRouter = router({
       await ctx.configurationService.deleteConfiguration(input);
       return null;
     }),
-  // updateOrCreateConfiguration: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(mjmlUpdateOrCreateConfigurationSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-  //     logger.debug(input, "mjmlConfigurationRouter.update or create called");
-
-  //     const { id } = input;
-  //     if (!id) {
-  //       return await ctx.configurationService.createConfiguration(input);
-  //     } else {
-  //       const existingConfiguration = await ctx.configurationService.getConfiguration({ id });
-  //       if (!existingConfiguration) {
-  //         throw new TRPCError({
-  //           code: "BAD_REQUEST",
-  //           message: "Configuration not found",
-  //         });
-  //       }
-  //       const configuration = {
-  //         id,
-  //         ...input,
-  //         events: existingConfiguration.events,
-  //       };
-  //       await ctx.configurationService.updateConfiguration(configuration);
-  //       return configuration;
-  //     }
-  //   }),
   getEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
 
-      logger.debug(input, "mjmlConfigurationRouter.getEventConfiguration or create called");
+      logger.debug(input, "smtpConfigurationRouter.getEventConfiguration or create called");
 
       const configuration = await ctx.configurationService.getConfiguration({
         id: input.id,
@@ -131,6 +113,7 @@ export const mjmlConfigurationRouter = router({
       }
 
       const event = configuration.events.find((e) => e.eventType === input.eventType);
+
       if (!event) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -139,75 +122,93 @@ export const mjmlConfigurationRouter = router({
       }
       return event;
     }),
-  // updateEventConfiguration: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(mjmlUpdateEventConfigurationInputSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+  /*
+   * updateEventConfiguration: protectedWithConfigurationService
+   *   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+   *   .input(mjmlUpdateEventConfigurationInputSchema)
+   *   .mutation(async ({ ctx, input }) => {
+   *     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+   */
 
   //     logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
 
-  //     const configuration = await ctx.configurationService.getConfiguration({
-  //       id: input.configurationId,
-  //     });
+  /*
+   *     const configuration = await ctx.configurationService.getConfiguration({
+   *       id: input.configurationId,
+   *     });
+   */
 
-  //     if (!configuration) {
-  //       throw new TRPCError({
-  //         code: "BAD_REQUEST",
-  //         message: "Configuration not found",
-  //       });
-  //     }
+  /*
+   *     if (!configuration) {
+   *       throw new TRPCError({
+   *         code: "BAD_REQUEST",
+   *         message: "Configuration not found",
+   *       });
+   *     }
+   */
 
-  //     const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
-  //     configuration.events[eventIndex] = {
-  //       active: input.active,
-  //       eventType: input.eventType,
-  //       template: input.template,
-  //       subject: input.subject,
-  //     };
-  //     await ctx.configurationService.updateConfiguration(configuration);
-  //     return configuration;
-  //   }),
+  /*
+   *     const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
+   *     configuration.events[eventIndex] = {
+   *       active: input.active,
+   *       eventType: input.eventType,
+   *       template: input.template,
+   *       subject: input.subject,
+   *     };
+   *     await ctx.configurationService.updateConfiguration(configuration);
+   *     return configuration;
+   *   }),
+   */
 
-  // renderTemplate: protectedWithConfigurationService
-  //   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-  //   .input(
-  //     z.object({
-  //       template: z.string().optional(),
-  //       subject: z.string().optional(),
-  //       payload: z.string(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-  //     logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
+  /*
+   * renderTemplate: protectedWithConfigurationService
+   *   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+   *   .input(
+   *     z.object({
+   *       template: z.string().optional(),
+   *       subject: z.string().optional(),
+   *       payload: z.string(),
+   *     })
+   *   )
+   *   .mutation(async ({ ctx, input }) => {
+   *     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+   *     logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
+   */
 
   //     let renderedSubject = "";
 
   //     const payload = JSON.parse(input.payload);
 
-  //     if (input.subject) {
-  //       const compiledSubjectTemplate = Handlebars.compile(input.subject);
-  //       logger.warn("subject part");
-  //       renderedSubject = compiledSubjectTemplate(payload);
-  //     }
+  /*
+   *     if (input.subject) {
+   *       const compiledSubjectTemplate = Handlebars.compile(input.subject);
+   *       logger.warn("subject part");
+   *       renderedSubject = compiledSubjectTemplate(payload);
+   *     }
+   */
 
-  //     let renderedEmail = "";
-  //     if (input.template) {
-  //       const compiledSubjectTemplate = Handlebars.compile(input.template);
-  //       const templatedEmail = compiledSubjectTemplate(payload);
+  /*
+   *     let renderedEmail = "";
+   *     if (input.template) {
+   *       const compiledSubjectTemplate = Handlebars.compile(input.template);
+   *       const templatedEmail = compiledSubjectTemplate(payload);
+   */
 
-  //       const { html: rawHtml } = compileMjml(templatedEmail);
-  //       if (rawHtml) {
-  //         renderedEmail = rawHtml;
-  //       }
-  //     }
+  /*
+   *       const { html: rawHtml } = compileMjml(templatedEmail);
+   *       if (rawHtml) {
+   *         renderedEmail = rawHtml;
+   *       }
+   *     }
+   */
 
-  //     return {
-  //       renderedSubject,
-  //       renderedEmailBody: renderedEmail,
-  //     };
-  //   }),
+  /*
+   *     return {
+   *       renderedSubject,
+   *       renderedEmailBody: renderedEmail,
+   *     };
+   *   }),
+   */
 
   updateBasicInformation: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })

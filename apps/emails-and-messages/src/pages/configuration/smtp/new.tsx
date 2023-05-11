@@ -10,15 +10,15 @@ import { useForm } from "react-hook-form";
 import {
   SmtpCreateConfigurationInput,
   smtpCreateConfigurationInputSchema,
-} from "../../../modules/smtp/configuration/mjml-config-input-schema";
+} from "../../../modules/smtp/configuration/smtp-config-input-schema";
 import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
 import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { appUrls } from "../../../modules/app-configuration/urls";
-import { mjmlUrls } from "../../../modules/smtp/urls";
+import { smtpUrls } from "../../../modules/smtp/urls";
 
-const NewMjmlConfigurationPage: NextPage = () => {
+const NewSmtpConfigurationPage: NextPage = () => {
   const router = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
@@ -27,14 +27,15 @@ const NewMjmlConfigurationPage: NextPage = () => {
     resolver: zodResolver(smtpCreateConfigurationInputSchema),
   });
 
-  const { mutate } = trpcClient.mjmlConfiguration.createConfiguration.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.createConfiguration.useMutation({
     onSuccess: async (data, variables) => {
       notifySuccess("Configuration saved");
-      router.push(mjmlUrls.configuration(data.id));
+      router.push(smtpUrls.configuration(data.id));
     },
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
@@ -144,4 +145,4 @@ const NewMjmlConfigurationPage: NextPage = () => {
   );
 };
 
-export default NewMjmlConfigurationPage;
+export default NewSmtpConfigurationPage;
