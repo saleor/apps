@@ -3,9 +3,32 @@
   "version": "1.0.0",
   "dependencies": {
     "@saleor/app-sdk": "^0.37.4",
-    "tsup": "^6.7.0"
+    "@urql/exchange-auth": "^1.0.0",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "tsup": "^6.7.0",
+    "urql": "^3.0.3",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "3.2.2",
+    "@graphql-codegen/introspection": "3.0.1",
+    "@graphql-codegen/schema-ast": "^3.0.1",
+    "@graphql-codegen/typed-document-node": "3.0.2",
+    "@graphql-codegen/typescript": "3.0.2",
+    "@graphql-codegen/typescript-operations": "3.0.2",
+    "@graphql-codegen/typescript-urql": "^3.7.3",
+    "@graphql-codegen/urql-introspection": "2.2.1",
+    "@graphql-typed-document-node/core": "^3.1.2",
+    "@types/node": "^18.15.3",
+    "typescript": "^5.0.4",
+    "eslint-config-saleor": "workspace:*"
   },
   "scripts": {
-    "dev": "tsup src/index.ts --format cjs --dts-resolve --watch"
+    "dev": "tsup src/index.ts --format cjs --dts-resolve --watch",
+    "build": "tsup src/index.ts --format cjs --dts-resolve",
+    "start": "node -r dotenv/config dist/index.js",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/3.10/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "generate": "graphql-codegen"
   }
 }
