@@ -4,14 +4,14 @@ export const AddressV2Schema = z.object({
   /**
    * min() to allow empty strings
    */
-  companyName: z.string().min(0),
-  cityArea: z.string().min(0),
-  countryArea: z.string().min(0),
-  streetAddress1: z.string().min(0),
-  streetAddress2: z.string().min(0),
-  postalCode: z.string().min(0),
-  city: z.string().min(0),
-  country: z.string().min(0),
+  companyName: z.string().optional(),
+  cityArea: z.string().optional(),
+  countryArea: z.string().optional(),
+  streetAddress1: z.string().optional(),
+  streetAddress2: z.string().optional(),
+  postalCode: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
 });
 export const AppConfigV2Schema = z.object({
   channelsOverrides: z.record(AddressV2Schema),
