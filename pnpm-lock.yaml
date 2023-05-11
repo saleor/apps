@@ -1696,6 +1696,9 @@ importers:
       '@urql/exchange-auth':
         specifier: ^1.0.0
         version: 1.0.0(graphql@16.6.0)
+      '@urql/exchange-multipart-fetch':
+        specifier: ^1.0.1
+        version: 1.0.1(graphql@16.6.0)
       dotenv:
         specifier: ^16.0.3
         version: 16.0.3
@@ -1707,7 +1710,7 @@ importers:
         version: 2.12.6(graphql@16.6.0)
       tsup:
         specifier: ^6.7.0
-        version: 6.7.0(typescript@5.0.4)
+        version: 6.7.0(typescript@4.9.5)
       urql:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
@@ -1746,8 +1749,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       typescript:
-        specifier: ^5.0.4
-        version: 5.0.4
+        specifier: 4.9.5
+        version: 4.9.5
 
   packages/shared:
     dependencies:
@@ -16439,7 +16442,7 @@ packages:
   /tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
-  /tsup@6.7.0(typescript@5.0.4):
+  /tsup@6.7.0(typescript@4.9.5):
     resolution: {integrity: sha512-L3o8hGkaHnu5TdJns+mCqFsDBo83bJ44rlK7e6VdanIvpea4ArPcU3swWGsLVbXak1PqQx/V+SSmFPujBK+zEQ==}
     engines: {node: '>=14.18'}
     hasBin: true
@@ -16469,7 +16472,7 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.32.0
       tree-kill: 1.2.2
-      typescript: 5.0.4
+      typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -16692,6 +16695,7 @@ packages:
     resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
     engines: {node: '>=12.20'}
     hasBin: true
+    dev: true
 
   /ua-parser-js@0.7.33:
     resolution: {integrity: sha512-s8ax/CeZdK9R/56Sui0WM6y9OFREJarMRHqLB2EwkovemBxNQ+Bqu8GAsUnVcXKgphb++ghr/B2BZx4mahujPw==}

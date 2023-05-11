@@ -1,6 +1,7 @@
 import { AuthConfig, authExchange } from "@urql/exchange-auth";
 import { cacheExchange, createClient as urqlCreateClient, dedupExchange } from "urql";
 
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 
 interface IAuthState {
   token: string;
@@ -39,5 +40,6 @@ export const createClient = (url: string, getAuth: AuthConfig<IAuthState>["getAu
         },
         getAuth,
       }),
+      multipartFetchExchange,
     ],
   });
