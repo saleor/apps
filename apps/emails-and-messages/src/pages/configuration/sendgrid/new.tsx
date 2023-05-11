@@ -10,6 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 import { SendgridCreateConfigurationInput } from "../../../modules/sendgrid/configuration/sendgrid-config-input-schema";
 import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
+import { sendgridUrls } from "../../../modules/sendgrid/urls";
 
 const NewSendgridConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -21,11 +22,12 @@ const NewSendgridConfigurationPage: NextPage = () => {
     trpcClient.sendgridConfiguration.createConfiguration.useMutation({
       onSuccess: async (data, variables) => {
         notifySuccess("Configuration saved");
-        router.push(`/configuration/sendgrid/edit/${data.id}`);
+        router.push(sendgridUrls.configuration(data.id));
       },
       onError(error) {
         let isFieldErrorSet = false;
         const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
         for (const fieldName in fieldErrors) {
           for (const message of fieldErrors[fieldName] || []) {
             isFieldErrorSet = true;
