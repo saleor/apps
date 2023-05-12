@@ -11,6 +11,7 @@ import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-co
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { smtpUrls } from "../urls";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface EventBoxProps {
   configuration: SmtpConfiguration;
@@ -36,26 +37,11 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpUpdateEvent, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpUpdateEvent>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface DangerousSectionProps {
   configuration: SmtpConfiguration;
@@ -29,26 +30,11 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
       replace("/configuration");
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpGetConfigurationIdInput, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpGetConfigurationIdInput>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

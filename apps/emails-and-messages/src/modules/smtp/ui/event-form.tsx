@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { examplePayloads } from "../../event-handlers/default-payloads";
 import { MjmlPreview } from "./mjml-preview";
 import { defaultPadding } from "../../../components/ui-defaults";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
 interface EventFormProps {
@@ -47,26 +48,11 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpUpdateEventConfigurationInput, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpUpdateEventConfigurationInput>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

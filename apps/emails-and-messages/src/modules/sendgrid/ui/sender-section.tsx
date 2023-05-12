@@ -15,6 +15,7 @@ import { fetchSenders } from "../sendgrid-api";
 import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface SenderSectionProps {
   configuration: SendgridConfiguration;
@@ -44,26 +45,7 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
       trpcContext.sendgridConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridUpdateSender, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SendgridUpdateSender>({ error, setError, notifyError });
     },
   });
 

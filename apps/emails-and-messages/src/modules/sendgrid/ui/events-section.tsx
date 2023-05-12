@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTemplates } from "../sendgrid-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface EventBoxProps {
   configuration: SendgridConfiguration;
@@ -48,27 +49,10 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       trpcContext.sendgridConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridUpdateEvent, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SendgridUpdateEvent>({ error, setError, notifyError });
     },
   });
+
   return (
     <form
       onSubmit={handleSubmit((data, event) => {

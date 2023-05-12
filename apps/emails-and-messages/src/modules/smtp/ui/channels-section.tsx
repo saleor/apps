@@ -13,6 +13,7 @@ import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChannelConfiguration } from "../../../lib/channel-assignment/channel-configuration-schema";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface ChannelsSectionProps {
   configuration: SmtpConfiguration;
@@ -78,26 +79,11 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpUpdateChannels, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpUpdateChannels>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

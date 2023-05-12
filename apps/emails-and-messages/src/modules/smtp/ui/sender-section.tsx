@@ -13,6 +13,7 @@ import {
 } from "../configuration/smtp-config-input-schema";
 import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface SenderSectionProps {
   configuration: SmtpConfiguration;
@@ -36,26 +37,11 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpUpdateSender, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpUpdateSender>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

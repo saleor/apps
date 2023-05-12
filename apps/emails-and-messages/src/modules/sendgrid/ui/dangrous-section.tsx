@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { SendgridGetConfigurationIdInput } from "../configuration/sendgrid-config-input-schema";
 import { useRouter } from "next/router";
 import { appUrls } from "../../app-configuration/urls";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface DangerousSectionProps {
   configuration: SendgridConfiguration;
@@ -30,25 +31,7 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
       replace(appUrls.configuration());
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SendgridGetConfigurationIdInput, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SendgridGetConfigurationIdInput>({ error, setError, notifyError });
     },
   });
 
