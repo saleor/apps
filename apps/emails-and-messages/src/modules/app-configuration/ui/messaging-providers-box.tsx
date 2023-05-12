@@ -3,7 +3,6 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { BoxFooter } from "../../../components/box-footer";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useRouter } from "next/router";
-import { TextLink } from "../../../components/text-link";
 import { ChipText } from "../../../components/chip-text";
 import Image from "next/image";
 import sendgrid from "../../../public/sendgrid.png";
@@ -113,7 +112,15 @@ export const MessagingProvidersBox = ({
               variant={configuration.active ? "success" : "error"}
             />
             <Box display="flex" justifyContent={"flex-end"}>
-              <TextLink href={getEditLink(configuration)}>Edit</TextLink>
+              <Button
+                variant="tertiary"
+                size="small"
+                onClick={() => {
+                  push(getEditLink(configuration));
+                }}
+              >
+                Edit
+              </Button>
             </Box>
           </React.Fragment>
         ))}
