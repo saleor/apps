@@ -34,12 +34,12 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
     lines: [
       {
         chargeTaxes: true,
-        quantity: 1,
+        quantity: 3,
         unitPrice: {
           amount: 84,
         },
         totalPrice: {
-          amount: 84,
+          amount: 252,
         },
         sourceLine: {
           __typename: "OrderLine",
@@ -114,17 +114,36 @@ describe("avataxCalculateTaxesMaps", () => {
     it.todo("rounding of numbers");
   });
   describe("mapLines", () => {
-    it("includes shipping as a line", () => {
-      const lines = avataxCalculateTaxesMaps.mapLines(
-        MOCKED_CALCULATE_TAXES_ARGS.taxBase,
-        MOCKED_CALCULATE_TAXES_ARGS.config
-      );
+    const lines = avataxCalculateTaxesMaps.mapLines(
+      MOCKED_CALCULATE_TAXES_ARGS.taxBase,
+      MOCKED_CALCULATE_TAXES_ARGS.config
+    );
 
+    it("includes shipping as a line", () => {
       expect(lines).toContainEqual({
         itemCode: avataxCalculateTaxesMaps.shippingItemCode,
         quantity: 1,
         amount: 48.33,
         taxCode: MOCKED_CALCULATE_TAXES_ARGS.config.shippingTaxCode,
+        taxIncluded: true,
+      });
+    });
+
+    it("returns the correct quantity of individual lines", () => {
+      expect(lines).toContainEqual({
+        quantity: 3,
+        amount: 252,
+        taxCode: "",
+        taxIncluded: true,
+      });
+    });
+
+    it("returns the correct quantity of individual lines", () => {
+      expect(lines).toContainEqual({
+        quantity: 3,
+        amount: 252,
+        taxCode: "",
+        taxIncluded: true,
       });
     });
   });

@@ -8,6 +8,9 @@ fragment OrderLine on OrderLine {
     }
   }
   totalPrice {
+    net {
+      amount
+    }
     tax {
       amount
     }

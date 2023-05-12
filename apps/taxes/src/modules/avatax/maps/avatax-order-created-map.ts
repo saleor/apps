@@ -16,7 +16,7 @@ const SHIPPING_ITEM_CODE = "Shipping";
 
 function mapLines(order: OrderCreatedSubscriptionFragment, config: AvataxConfig): LineItemModel[] {
   const productLines: LineItemModel[] = order.lines.map((line) => ({
-    amount: line.unitPrice.net.amount,
+    amount: line.totalPrice.net.amount,
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,

@@ -18,7 +18,7 @@ const SHIPPING_ITEM_CODE = "Shipping";
 
 function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
-    amount: line.unitPrice.amount,
+    amount: line.totalPrice.amount,
     taxIncluded: line.chargeTaxes,
     // todo: get from tax code matcher
     taxCode: "",
@@ -32,6 +32,7 @@ function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel
       itemCode: SHIPPING_ITEM_CODE,
       taxCode: config.shippingTaxCode,
       quantity: 1,
+      taxIncluded: true,
     };
 
     return [...productLines, shippingLine];
