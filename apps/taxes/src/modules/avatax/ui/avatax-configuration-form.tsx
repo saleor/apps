@@ -250,6 +250,7 @@ export const AvataxConfigurationForm = () => {
                 <TextField required label="Password" {...field} {...textFieldProps} />
               )}
             />
+
             {formState.errors.password && (
               <FormHelperText error>{formState.errors.password.message}</FormHelperText>
             )}
@@ -260,15 +261,16 @@ export const AvataxConfigurationForm = () => {
               control={control}
               defaultValue={defaultValues.companyCode}
               render={({ field }) => (
-                <TextField
-                  required
-                  type="text"
-                  {...field}
-                  label="Company code"
-                  {...textFieldProps}
-                />
+                <TextField type="text" {...field} label="Company code" {...textFieldProps} />
               )}
             />
+            <FormHelperText>
+              {"When not provided, the default company will be used. "}
+              <AppLink href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/">
+                Read more
+              </AppLink>{" "}
+              about company codes.
+            </FormHelperText>
             {formState.errors.companyCode && (
               <FormHelperText error>{formState.errors.companyCode.message}</FormHelperText>
             )}
