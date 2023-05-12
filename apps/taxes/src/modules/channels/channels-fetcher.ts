@@ -10,7 +10,11 @@ export class ChannelsFetcher {
   fetchChannels() {
     return this.client
       .query(TaxConfigurationsListDocument, {
-        first: 10,
+        /**
+         * todo: add pagination
+         * * arbitrary limit
+         */
+        first: 100,
       } as TaxConfigurationsListQueryVariables)
       .toPromise()
       .then((r) => {
