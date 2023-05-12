@@ -40,7 +40,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     if (!activeTaxProvider.ok) {
       logger.info("Returning no data");
-      return webhookResponse.failureNoRetry(activeTaxProvider.error);
+      return webhookResponse.failure(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -48,7 +48,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
-      return webhookResponse.failureNoRetry("Insufficient order data");
+      return webhookResponse.failure("Insufficient order data");
     }
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
 
@@ -56,6 +56,6 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     return webhookResponse.success();
   } catch (error) {
-    return webhookResponse.failureRetry("Error while fulfilling tax provider order");
+    return webhookResponse.failure("Error while fulfilling tax provider order");
   }
 });

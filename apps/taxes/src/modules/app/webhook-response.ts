@@ -13,14 +13,9 @@ export class WebhookResponse {
     this.logger = createLogger({ event: "WebhookResponse" });
   }
 
-  failureNoRetry(error: string) {
-    this.logger.debug({ error }, "failureNoRetry called with:");
+  failure(error: string) {
+    this.logger.debug({ error }, "failure called with:");
     return this.res.status(200).json({ success: false, error });
-  }
-
-  failureRetry(error: string) {
-    this.logger.error({ error }, "failureRetry called with:");
-    return this.res.status(500).json({ success: false, error });
   }
 
   success(data?: any) {
