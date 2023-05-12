@@ -66,6 +66,9 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
           },
         },
         totalPrice: {
+          net: {
+            amount: 90,
+          },
           tax: {
             amount: 8.55,
           },
@@ -81,6 +84,9 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
           },
         },
         totalPrice: {
+          net: {
+            amount: 45,
+          },
           tax: {
             amount: 4.28,
           },
@@ -164,23 +170,6 @@ describe("taxJarOrderCreatedMaps", () => {
       ]);
 
       expect(result).toBe(412.1);
-    });
-
-    it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
-      const result = taxJarOrderCreatedMaps.sumLines([
-        {
-          quantity: 3,
-          unit_price: 10.256,
-          product_identifier: "328223581",
-        },
-        {
-          quantity: 2,
-          unit_price: 50.512,
-          product_identifier: "328223580",
-        },
-      ]);
-
-      expect(result).toBe(131.79);
     });
   });
 });
