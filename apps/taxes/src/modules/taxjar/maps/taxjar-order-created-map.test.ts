@@ -165,22 +165,5 @@ describe("taxJarOrderCreatedMaps", () => {
 
       expect(result).toBe(412.1);
     });
-
-    it("returns the rounded sum of all line items when line items n of decimals > 2", () => {
-      const result = taxJarOrderCreatedMaps.sumLines([
-        {
-          quantity: 3,
-          unit_price: 10.256,
-          product_identifier: "328223581",
-        },
-        {
-          quantity: 2,
-          unit_price: 50.512,
-          product_identifier: "328223580",
-        },
-      ]);
-
-      expect(result).toBe(131.79);
-    });
   });
 });

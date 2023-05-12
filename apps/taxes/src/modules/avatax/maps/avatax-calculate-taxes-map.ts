@@ -32,6 +32,7 @@ function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel
       itemCode: SHIPPING_ITEM_CODE,
       taxCode: config.shippingTaxCode,
       quantity: 1,
+      taxIncluded: true,
     };
 
     return [...productLines, shippingLine];

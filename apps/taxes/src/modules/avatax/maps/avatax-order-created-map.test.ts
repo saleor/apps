@@ -156,6 +156,7 @@ describe("avataxOrderCreatedMaps", () => {
         taxCode: MOCKED_ARGS.config.shippingTaxCode,
         quantity: 1,
         amount: 48.33,
+        taxIncluded: true,
       });
     });
 

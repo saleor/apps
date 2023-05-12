@@ -32,7 +32,7 @@ export type TaxJarOrderCreatedMapPayloadArgs = {
 const mapPayload = ({ order, channel }: TaxJarOrderCreatedMapPayloadArgs): CreateOrderArgs => {
   const lineItems = mapLines(order.lines);
   const lineSum = sumLines(lineItems);
-  const shippingAmount = order.shippingPrice.net.amount;
+  const shippingAmount = order.shippingPrice.gross.amount;
   /**
    * "The TaxJar API performs arbitrary-precision decimal arithmetic for accurately calculating sales tax."
    * but we want to round to 2 decimals for consistency
