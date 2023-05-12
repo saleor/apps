@@ -14,6 +14,7 @@ import {
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
   smtpUpdateChannelsSchema,
+  smtpUpdateEventConfigurationInputSchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
@@ -122,93 +123,80 @@ export const smtpConfigurationRouter = router({
       }
       return event;
     }),
-  /*
-   * updateEventConfiguration: protectedWithConfigurationService
-   *   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-   *   .input(mjmlUpdateEventConfigurationInputSchema)
-   *   .mutation(async ({ ctx, input }) => {
-   *     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-   */
+  updateEventConfiguration: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateEventConfigurationInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
 
-  //     logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
+      logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
 
-  /*
-   *     const configuration = await ctx.configurationService.getConfiguration({
-   *       id: input.configurationId,
-   *     });
-   */
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
 
-  /*
-   *     if (!configuration) {
-   *       throw new TRPCError({
-   *         code: "BAD_REQUEST",
-   *         message: "Configuration not found",
-   *       });
-   *     }
-   */
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
 
-  /*
-   *     const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
-   *     configuration.events[eventIndex] = {
-   *       active: input.active,
-   *       eventType: input.eventType,
-   *       template: input.template,
-   *       subject: input.subject,
-   *     };
-   *     await ctx.configurationService.updateConfiguration(configuration);
-   *     return configuration;
-   *   }),
-   */
+      const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
 
-  /*
-   * renderTemplate: protectedWithConfigurationService
-   *   .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-   *   .input(
-   *     z.object({
-   *       template: z.string().optional(),
-   *       subject: z.string().optional(),
-   *       payload: z.string(),
-   *     })
-   *   )
-   *   .mutation(async ({ ctx, input }) => {
-   *     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
-   *     logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
-   */
+      configuration.events[eventIndex] = {
+        active: input.active,
+        eventType: input.eventType,
+        template: input.template,
+        subject: input.subject,
+      };
+      await ctx.configurationService.updateConfiguration(configuration);
+      return configuration;
+    }),
 
-  //     let renderedSubject = "";
+  renderTemplate: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(
+      z.object({
+        template: z.string().optional(),
+        subject: z.string().optional(),
+        payload: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
 
-  //     const payload = JSON.parse(input.payload);
+      logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
 
-  /*
-   *     if (input.subject) {
-   *       const compiledSubjectTemplate = Handlebars.compile(input.subject);
-   *       logger.warn("subject part");
-   *       renderedSubject = compiledSubjectTemplate(payload);
-   *     }
-   */
+      let renderedSubject = "";
 
-  /*
-   *     let renderedEmail = "";
-   *     if (input.template) {
-   *       const compiledSubjectTemplate = Handlebars.compile(input.template);
-   *       const templatedEmail = compiledSubjectTemplate(payload);
-   */
+      const payload = JSON.parse(input.payload);
 
-  /*
-   *       const { html: rawHtml } = compileMjml(templatedEmail);
-   *       if (rawHtml) {
-   *         renderedEmail = rawHtml;
-   *       }
-   *     }
-   */
+      if (input.subject) {
+        const compiledSubjectTemplate = Handlebars.compile(input.subject);
 
-  /*
-   *     return {
-   *       renderedSubject,
-   *       renderedEmailBody: renderedEmail,
-   *     };
-   *   }),
-   */
+        logger.warn("subject part");
+        renderedSubject = compiledSubjectTemplate(payload);
+      }
+
+      let renderedEmail = "";
+
+      if (input.template) {
+        const compiledSubjectTemplate = Handlebars.compile(input.template);
+        const templatedEmail = compiledSubjectTemplate(payload);
+
+        const { html: rawHtml } = compileMjml(templatedEmail);
+
+        if (rawHtml) {
+          renderedEmail = rawHtml;
+        }
+      }
+
+      return {
+        renderedSubject,
+        renderedEmailBody: renderedEmail,
+      };
+    }),
 
   updateBasicInformation: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })

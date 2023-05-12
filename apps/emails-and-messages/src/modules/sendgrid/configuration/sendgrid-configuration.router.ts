@@ -16,9 +16,12 @@ import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { TRPCError } from "@trpc/server";
 import { getDefaultEmptyConfiguration } from "./sendgrid-config-container";
+import { fetchSenders } from "../sendgrid-api";
 
-// Allow access only for the dashboard users and attaches the
-// configuration service to the context
+/*
+ * Allow access only for the dashboard users and attaches the
+ * configuration service to the context
+ */
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
@@ -34,6 +37,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 export const sendgridConfigurationRouter = router({
   fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
     const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
     logger.debug("sendgridConfigurationRouter.fetch called");
     return ctx.configurationService.getConfigurationRoot();
   }),
@@ -42,6 +46,7 @@ export const sendgridConfigurationRouter = router({
     .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
       logger.debug(input, "sendgridConfigurationRouter.get called");
       return ctx.configurationService.getConfiguration(input);
     }),
@@ -50,6 +55,7 @@ export const sendgridConfigurationRouter = router({
     .input(sendgridGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
       logger.debug(input, "sendgridConfigurationRouter.getConfigurations called");
       return ctx.configurationService.getConfigurations(input);
     }),
@@ -58,11 +64,13 @@ export const sendgridConfigurationRouter = router({
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
       logger.debug(input, "sendgridConfigurationRouter.create called");
       const newConfiguration = {
         ...getDefaultEmptyConfiguration(),
         ...input,
       };
+
       return await ctx.configurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationService
@@ -70,8 +78,10 @@ export const sendgridConfigurationRouter = router({
     .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = pinoLogger.child({ saleorApiUrl: ctx.saleorApiUrl });
+
       logger.debug(input, "sendgridConfigurationRouter.delete called");
       const existingConfiguration = await ctx.configurationService.getConfiguration(input);
+
       if (!existingConfiguration) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -101,6 +111,7 @@ export const sendgridConfigurationRouter = router({
       }
 
       const event = configuration.events.find((e) => e.eventType === input.eventType);
+
       if (!event) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -129,6 +140,7 @@ export const sendgridConfigurationRouter = router({
       }
 
       const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
+
       configuration.events[eventIndex] = {
         active: input.active,
         eventType: input.eventType,
@@ -188,7 +200,25 @@ export const sendgridConfigurationRouter = router({
           message: "Configuration not found",
         });
       }
-      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+
+      // Pull fresh sender data from the API
+      const senders = await fetchSenders({ apiKey: configuration.apiKey })();
+
+      const chosenSender = senders.find((s) => s.value === input.sender);
+
+      if (!chosenSender) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Sender does not exist",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({
+        ...configuration,
+        ...input,
+        senderEmail: chosenSender.from_email,
+        senderName: chosenSender.label,
+      });
       return configuration;
     }),
   updateChannels: protectedWithConfigurationService

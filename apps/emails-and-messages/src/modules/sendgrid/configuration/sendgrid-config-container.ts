@@ -71,8 +71,7 @@ const getConfigurations =
       filtered = filtered.filter((c) =>
         isAvailableInChannel({
           channel: filter.availableInChannel!,
-          restrictedToChannels: c.channels.restrictedTo,
-          excludedChannels: c.channels.excludedFrom,
+          channelConfiguration: c.channels,
         })
       );
     }

@@ -17,6 +17,8 @@ export const sendgridConfigurationSchema = z.object({
   sandboxMode: z.boolean().default(false),
   apiKey: z.string().min(1),
   sender: z.string().min(1).optional(),
+  senderEmail: z.string().email().optional(),
+  senderName: z.string().optional(),
   channels: channelConfigurationSchema,
   events: z.array(sendgridConfigurationEventSchema),
 });

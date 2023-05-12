@@ -27,6 +27,7 @@ export const sendSendgrid = async ({
     fn: "sendSendgrid",
     event,
   });
+
   if (!sendgridConfiguration.senderEmail) {
     logger.debug("Sender email has not been specified, skipping");
     return {
@@ -39,6 +40,7 @@ export const sendSendgrid = async ({
   }
 
   const eventSettings = sendgridConfiguration.events.find((e) => e.eventType === event);
+
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
     return {
@@ -74,6 +76,7 @@ export const sendSendgrid = async ({
 
   try {
     const mailService = new MailService();
+
     mailService.setApiKey(sendgridConfiguration.apiKey);
 
     await mailService.send({

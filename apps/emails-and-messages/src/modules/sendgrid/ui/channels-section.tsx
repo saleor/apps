@@ -35,6 +35,7 @@ const overrideMessage = ({
 
   if (mode === "exclude") {
     const leftChannels = availableChannels.filter((channel) => !channels.includes(channel));
+
     if (!leftChannels.length) {
       return <Text>Theres no channel which will be used with this configuration.</Text>;
     }
@@ -75,6 +76,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
@@ -100,15 +102,15 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
       title="Channels"
       description={
         <>
-          <Text display="block">
+          <Text as="p">
             By default, provider will work for every channel. You can change this behavior with
-            "excluding" or "including" strategy.
+            excluding or including strategy.
           </Text>
-          <Text display="block">
+          <Text as="p">
             <Text variant="bodyStrong">Excluding</Text> - all current channels and new created
             channels will work, excluding selected
           </Text>
-          <Text display="block">
+          <Text as="p">
             <Text variant="bodyStrong">Including</Text> - only selected channels will work, new
             created channels will not work
           </Text>

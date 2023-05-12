@@ -79,3 +79,11 @@ export const smtpGetEventConfigurationInputSchema = smtpConfigurationIdInputSche
 );
 
 export type SmtpGetEventConfigurationInput = z.infer<typeof smtpGetEventConfigurationInputSchema>;
+
+export const smtpUpdateEventConfigurationInputSchema = smtpConfigurationIdInputSchema.merge(
+  smtpConfigurationEventSchema
+);
+
+export type SmtpUpdateEventConfigurationInput = z.infer<
+  typeof smtpUpdateEventConfigurationInputSchema
+>;

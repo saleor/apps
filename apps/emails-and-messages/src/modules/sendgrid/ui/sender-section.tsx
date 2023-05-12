@@ -23,7 +23,7 @@ interface SenderSectionProps {
 export const SenderSection = ({ configuration }: SenderSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { data: sendersChoices, isLoading: isSendersChoicesLoading } = useQuery({
+  const { data: sendersChoices } = useQuery({
     queryKey: ["sendgridSenders"],
     queryFn: fetchSenders({ apiKey: configuration.apiKey }),
     enabled: !!configuration.apiKey?.length,
@@ -46,6 +46,7 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
     onError(error) {
       let isFieldErrorSet = false;
       const fieldErrors = error.data?.zodError?.fieldErrors || {};
+
       for (const fieldName in fieldErrors) {
         for (const message of fieldErrors[fieldName] || []) {
           isFieldErrorSet = true;
