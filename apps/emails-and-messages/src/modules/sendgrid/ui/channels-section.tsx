@@ -4,13 +4,17 @@ import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateChannels } from "../configuration/sendgrid-config-input-schema";
+import {
+  SendgridUpdateChannels,
+  sendgridUpdateChannelsSchema,
+} from "../configuration/sendgrid-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChannelConfiguration } from "../../../lib/channel-assignment/channel-configuration-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Multiselect } from "../../../components/react-hook-form-macaw/Multiselect";
 
 interface ChannelsSectionProps {
   configuration: SendgridConfiguration;
@@ -64,6 +68,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
         id: configuration.id,
         ...configuration.channels,
       },
+      resolver: zodResolver(sendgridUpdateChannelsSchema),
     });
 
   const { data: channels } = trpcClient.channels.fetch.useQuery();
@@ -124,7 +129,6 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
                 <input type="checkbox" {...register("override")} />
                 <Text paddingLeft={defaultPadding}>Override channels</Text>
               </label>
-
               <Controller
                 name="mode"
                 control={control}
@@ -149,26 +153,18 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
                   </Switch>
                 )}
               />
-
-              {channels?.map((channel) => (
-                <label key={channel.slug}>
-                  <input
-                    type="checkbox"
-                    defaultChecked={!!getValues("channels").includes(channel.slug)}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setValue("channels", [...getValues("channels"), channel.slug]);
-                      } else {
-                        setValue(
-                          "channels",
-                          getValues("channels").filter((slug) => slug !== channel.slug)
-                        );
-                      }
-                    }}
-                  />
-                  <Text paddingLeft={defaultPadding}>{channel.name}</Text>
-                </label>
-              ))}
+              <Multiselect
+                control={control}
+                label="Channels"
+                size="large"
+                name={"channels"}
+                options={
+                  channels?.map((channel) => ({
+                    label: channel.name,
+                    value: channel.slug,
+                  })) || []
+                }
+              />
             </Box>
           </Box>
           <BoxFooter>

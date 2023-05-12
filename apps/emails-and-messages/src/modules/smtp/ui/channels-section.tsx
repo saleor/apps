@@ -14,6 +14,7 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChannelConfiguration } from "../../../lib/channel-assignment/channel-configuration-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Multiselect } from "../../../components/react-hook-form-macaw/Multiselect";
 
 interface ChannelsSectionProps {
   configuration: SmtpConfiguration;
@@ -157,26 +158,18 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
                   </Switch>
                 )}
               />
-
-              {channels?.map((channel) => (
-                <label key={channel.slug}>
-                  <input
-                    type="checkbox"
-                    defaultChecked={!!getValues("channels").includes(channel.slug)}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setValue("channels", [...getValues("channels"), channel.slug]);
-                      } else {
-                        setValue(
-                          "channels",
-                          getValues("channels").filter((slug) => slug !== channel.slug)
-                        );
-                      }
-                    }}
-                  />
-                  <Text paddingLeft={defaultPadding}>{channel.name}</Text>
-                </label>
-              ))}
+              <Multiselect
+                control={control}
+                label="Channels"
+                size="large"
+                name={"channels"}
+                options={
+                  channels?.map((channel) => ({
+                    label: channel.name,
+                    value: channel.slug,
+                  })) || []
+                }
+              />
             </Box>
           </Box>
           <BoxFooter>
