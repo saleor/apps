@@ -29,7 +29,7 @@ const mapPayload = ({ order, config }: CommitTransactionMapPayloadArgs): CommitT
 
   return {
     transactionCode,
-    companyCode: config.companyCode,
+    companyCode: config.companyCode ?? "",
     documentType: DocumentType.SalesInvoice,
     model: {
       commit: true,
