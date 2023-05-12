@@ -1,3 +1,4 @@
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { TextProps, Text } from "@saleor/macaw-ui/next";
 import Link from "next/link";
 
@@ -6,17 +7,29 @@ interface TextLinkProps extends TextProps {
   openNewTab?: boolean;
 }
 
-export const TextLink = (props: TextLinkProps) => {
-  // TODO: FIXME: For some reason the link is not opened in a new tab, investigate
+export const TextLink = ({ href, openNewTab, children, props }: TextLinkProps) => {
+  const { appBridge } = useAppBridge();
+
+  const onClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+
+    appBridge?.dispatch(
+      actions.Redirect({
+        to: href,
+        newContext: true,
+      })
+    );
+  };
+
   return (
     <Text textDecoration={"underline"} variant="bodyStrong" {...props}>
-      {props.openNewTab ? (
-        <a href={props.href} target="_blank" rel="noopener noreferrer">
-          {props.children}
+      {openNewTab ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
+          {children}
         </a>
       ) : (
-        <Link href={props.href}>{props.children}</Link>
-      )}{" "}
+        <Link href={href}>{children}</Link>
+      )}
     </Text>
   );
 };
