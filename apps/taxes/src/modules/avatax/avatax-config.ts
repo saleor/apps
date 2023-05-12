@@ -6,7 +6,7 @@ export const avataxConfigSchema = z.object({
   username: z.string().min(1, { message: "Username requires at least one character." }),
   password: z.string().min(1, { message: "Password requires at least one character." }),
   isSandbox: z.boolean(),
-  companyCode: z.string().min(1, { message: "Company code requires at least one character." }),
+  companyCode: z.string().optional(),
   isAutocommit: z.boolean(),
   shippingTaxCode: z.string().optional(),
 });
