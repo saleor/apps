@@ -10,6 +10,7 @@ import { EventsSection } from "../../../modules/sendgrid/ui/events-section";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { BasicLayout } from "../../../components/basic-layout";
 import { ChannelsSection } from "../../../modules/sendgrid/ui/channels-section";
+import { sendgridUrls } from "../../../modules/sendgrid/urls";
 
 const LoadingView = () => {
   return (
@@ -76,7 +77,7 @@ const EditSendgridConfigurationPage: NextPage = () => {
     <BasicLayout
       breadcrumbs={[
         { name: "Configuration", href: "/configuration" },
-        { name: "Sendgrid provider" },
+        { name: "Sendgrid: ", href: sendgridUrls.configuration(configuration.id) },
         { name: configuration.name },
       ]}
     >

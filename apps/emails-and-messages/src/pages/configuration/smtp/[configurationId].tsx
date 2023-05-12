@@ -76,8 +76,7 @@ const EditSmtpConfigurationPage: NextPage = () => {
     <BasicLayout
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
-        { name: "SMTP provider" },
-        { name: configuration.name },
+        { name: `SMTP: ${configuration.name}` },
       ]}
     >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>

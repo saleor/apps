@@ -7,16 +7,13 @@ import { BasicLayout } from "../../../../../components/basic-layout";
 import { parseMessageEventType } from "../../../../../modules/event-handlers/parse-message-event-type";
 import { appUrls } from "../../../../../modules/app-configuration/urls";
 import { EventForm } from "../../../../../modules/smtp/ui/event-form";
+import { smtpUrls } from "../../../../../modules/smtp/urls";
+import { TextLink } from "../../../../../components/text-link";
 
 const LoadingView = () => {
   return (
     <BasicLayout
-      breadcrumbs={[
-        { name: "Configuration", href: appUrls.configuration() },
-        { name: "SMTP provider" },
-        { name: "Event configuration" },
-        { name: "..." },
-      ]}
+      breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }, { name: "..." }]}
     >
       <Text variant="hero">Loading...</Text>
     </BasicLayout>
@@ -29,7 +26,6 @@ const NotFoundView = () => {
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         { name: "SMTP provider" },
-        { name: "Event configuration" },
         { name: "Not found" },
       ]}
     >
@@ -86,14 +82,17 @@ const EditSmtpEventPage: NextPage = () => {
     <BasicLayout
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
-        { name: "SMTP provider" },
-        { name: "Event configuration" },
+        { name: `SMTP:  ${configuration.name}`, href: smtpUrls.configuration(configurationId) },
         { name: eventType },
       ]}
     >
       <Box display="flex" flexDirection="column" gap={13}>
-        <Text>
-          Edit template for configuration.eventType event You can learn more about MJML here
+        <Text as="p">
+          Edit template for {eventType} event. You can learn more about MJML{" "}
+          <TextLink href="https://mjml.io/" openNewTab={true}>
+            here
+          </TextLink>
+          .
         </Text>
         <EventForm configuration={configuration} eventType={eventType} />
       </Box>
