@@ -27,7 +27,7 @@ export const sendSmtp = async ({
   smtpConfiguration,
 }: SendSmtpArgs) => {
   const logger = pinoLogger.child({
-    fn: "sendMjml",
+    fn: "sendSmtp",
     event,
   });
 
