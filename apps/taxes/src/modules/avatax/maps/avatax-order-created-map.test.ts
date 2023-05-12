@@ -59,13 +59,16 @@ const MOCKED_ARGS: CreateTransactionMapPayloadArgs = {
       {
         productSku: "328223581",
         productName: "Monospace Tee",
-        quantity: 1,
+        quantity: 3,
         unitPrice: {
           net: {
             amount: 90,
           },
         },
         totalPrice: {
+          net: {
+            amount: 270,
+          },
           tax: {
             amount: 8.55,
           },
@@ -80,7 +83,11 @@ const MOCKED_ARGS: CreateTransactionMapPayloadArgs = {
             amount: 45,
           },
         },
+
         totalPrice: {
+          net: {
+            amount: 45,
+          },
           tax: {
             amount: 4.28,
           },
@@ -166,8 +173,8 @@ describe("avataxOrderCreatedMaps", () => {
       expect(first).toContain({
         itemCode: "328223581",
         description: "Monospace Tee",
-        quantity: 1,
-        amount: 90,
+        quantity: 3,
+        amount: 270,
       });
       expect(second).toContain({
         itemCode: "328223580",

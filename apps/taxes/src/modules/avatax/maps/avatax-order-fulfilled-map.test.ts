@@ -66,6 +66,9 @@ const MOCKED_MAP_PAYLOAD_ARGS: CommitTransactionMapPayloadArgs = {
           },
         },
         totalPrice: {
+          net: {
+            amount: 90,
+          },
           tax: {
             amount: 8.55,
           },
@@ -81,6 +84,9 @@ const MOCKED_MAP_PAYLOAD_ARGS: CommitTransactionMapPayloadArgs = {
           },
         },
         totalPrice: {
+          net: {
+            amount: 45,
+          },
           tax: {
             amount: 4.28,
           },

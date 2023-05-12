@@ -34,12 +34,12 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
     lines: [
       {
         chargeTaxes: true,
-        quantity: 1,
+        quantity: 3,
         unitPrice: {
           amount: 84,
         },
         totalPrice: {
-          amount: 84,
+          amount: 252,
         },
         sourceLine: {
           __typename: "OrderLine",
@@ -125,6 +125,15 @@ describe("avataxCalculateTaxesMaps", () => {
         quantity: 1,
         amount: 48.33,
         taxCode: MOCKED_CALCULATE_TAXES_ARGS.config.shippingTaxCode,
+        taxIncluded: true,
+      });
+    });
+
+    it("returns the correct quantity of individual lines", () => {
+      expect(lines).toContainEqual({
+        quantity: 3,
+        amount: 252,
+        taxCode: "",
         taxIncluded: true,
       });
     });
