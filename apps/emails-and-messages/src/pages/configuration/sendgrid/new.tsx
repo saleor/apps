@@ -11,6 +11,7 @@ import { SendgridCreateConfigurationInput } from "../../../modules/sendgrid/conf
 import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
 import { sendgridUrls } from "../../../modules/sendgrid/urls";
+import { appUrls } from "../../../modules/app-configuration/urls";
 
 const NewSendgridConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -51,7 +52,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
+        { name: "Configuration", href: appUrls.configuration() },
         { name: "Add provider" },
         { name: "Sendgrid" },
       ]}

@@ -10,13 +10,13 @@ import { EventsSection } from "../../../modules/sendgrid/ui/events-section";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { BasicLayout } from "../../../components/basic-layout";
 import { ChannelsSection } from "../../../modules/sendgrid/ui/channels-section";
-import { sendgridUrls } from "../../../modules/sendgrid/urls";
+import { appUrls } from "../../../modules/app-configuration/urls";
 
 const LoadingView = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
+        { name: "Configuration", href: appUrls.configuration() },
         { name: "Sendgrid provider" },
         { name: "..." },
       ]}
@@ -30,7 +30,7 @@ const NotFoundView = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/" },
+        { name: "Configuration", href: appUrls.configuration() },
         { name: "Sendgrid provider" },
         { name: "Not found" },
       ]}
@@ -76,9 +76,10 @@ const EditSendgridConfigurationPage: NextPage = () => {
   return (
     <BasicLayout
       breadcrumbs={[
-        { name: "Configuration", href: "/configuration" },
-        { name: "Sendgrid: ", href: sendgridUrls.configuration(configuration.id) },
-        { name: configuration.name },
+        { name: "Configuration", href: appUrls.configuration() },
+        {
+          name: `Sendgrid: ${configuration.name}`,
+        },
       ]}
     >
       <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
