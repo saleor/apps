@@ -1,5 +1,21 @@
 # saleor-app-invoices
 
+## 1.13.0
+
+### Minor Changes
+
+- ccd8250: Major update of the App UI and behavior:
+
+  - Replaced old Macaw/MUI with @saleor/macaw-ui/next (new UI, new look)
+  - Changed App behavior how settings are stored. Before - it cloned shop data and stored it per-channel in App settings (metadata). Now it uses Shop data by default + overrides per channel
+
+  App includes migration code, it should work seamlessly and update its settings/schema automatically.
+
+### Patch Changes
+
+- 8b22b1c: Restored Pino logger packages to each app, to fix failing logs in development. Also updated .env.example to contain up to date APP_LOG_LEVEL variable
+- ee1a4af: Fixed address form not loading if not data was set before
+
 ## 1.12.0
 
 ### Minor Changes

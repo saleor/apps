@@ -1,5 +1,17 @@
 # saleor-app-taxes
 
+## 1.5.0
+
+### Minor Changes
+
+- 0c039f5: Make companyCode optional in Avatax.
+
+### Patch Changes
+
+- b4ddb02: Fix quantity not respected when calculating taxes.
+- 9ecb629: Fix channels not showing in the channels list if there are too many of them.
+- 8b22b1c: Restored Pino logger packages to each app, to fix failing logs in development. Also updated .env.example to contain up to date APP_LOG_LEVEL variable
+
 ## 1.4.0
 
 ### Minor Changes

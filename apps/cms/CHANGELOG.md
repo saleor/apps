@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 1.4.1
+
+### Patch Changes
+
+- 8b22b1c: Restored Pino logger packages to each app, to fix failing logs in development. Also updated .env.example to contain up to date APP_LOG_LEVEL variable
+
 ## 1.4.0
 
 ### Minor Changes
