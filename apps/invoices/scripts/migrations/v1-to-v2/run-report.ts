@@ -13,7 +13,11 @@ dotenv.config();
 const runReport = async () => {
   verifyRequireEnvs();
 
-  const allEnvs = await fetchCloudAplEnvs();
+  const allEnvs = await fetchCloudAplEnvs().catch((r) => {
+    console.error(r);
+
+    process.exit(1);
+  });
 
   const results = await Promise.all(
     allEnvs.map((env) => {

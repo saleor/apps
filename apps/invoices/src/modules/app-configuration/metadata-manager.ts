@@ -35,6 +35,16 @@ gql`
   }
 `;
 
+gql`
+  mutation RemoveMetadata($id: ID!, $keys: [String!]!) {
+    deletePrivateMetadata(id: $id, keys: $keys) {
+      errors {
+        message
+      }
+    }
+  }
+`;
+
 export type SimpleGraphqlClient = Pick<Client, "mutation" | "query">;
 
 export async function fetchAllMetadata(client: SimpleGraphqlClient): Promise<MetadataEntry[]> {

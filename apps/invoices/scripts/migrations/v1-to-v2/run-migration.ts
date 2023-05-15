@@ -27,7 +27,7 @@ const runMigration = async () => {
         metadataManager.get("app-config-v2"),
       ])
         .then(([v1, v2]) => {
-          if (v2) {
+          if (v2 && v2 !== "undefined") {
             console.log("▶️ v2 already exists for ", env.saleorApiUrl);
             return;
           }
