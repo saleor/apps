@@ -10,6 +10,7 @@ import {
 import { ConfigV1ToV2Transformer } from "../../../src/modules/app-configuration/schema-v2/config-v1-to-v2-transformer";
 import { AppConfigV2MetadataManager } from "../../../src/modules/app-configuration/schema-v2/app-config-v2-metadata-manager";
 import { AppConfigV2 } from "../../../src/modules/app-configuration/schema-v2/app-config";
+import { MigrationV1toV2Consts } from "./const";
 
 dotenv.config();
 
@@ -23,8 +24,8 @@ const runMigration = async () => {
       const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token);
 
       return Promise.all([
-        metadataManager.get("app-config", env.saleorApiUrl),
-        metadataManager.get("app-config-v2"),
+        metadataManager.get(MigrationV1toV2Consts.appConfigV1metadataKey, env.saleorApiUrl),
+        metadataManager.get(MigrationV1toV2Consts.appConfigV2metadataKey),
       ])
         .then(([v1, v2]) => {
           if (v2 && v2 !== "undefined") {

@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { fetchCloudAplEnvs, verifyRequireEnvs } from "../migration-utils";
 import { createClient } from "../../../src/lib/graphql";
 import { RemoveMetadataDocument } from "../../../generated/graphql";
+import { MigrationV1toV2Consts } from "./const";
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ const runMigration = async () => {
       return client
         .mutation(RemoveMetadataDocument, {
           id: env.appId,
-          keys: ["app-config-v2"],
+          keys: [MigrationV1toV2Consts.appConfigV2metadataKey],
         })
         .toPromise()
         .then((r) => {

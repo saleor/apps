@@ -7,6 +7,7 @@ import {
   safeParse,
   verifyRequireEnvs,
 } from "../migration-utils";
+import { MigrationV1toV2Consts } from "./const";
 
 dotenv.config();
 
@@ -24,8 +25,8 @@ const runReport = async () => {
       const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token);
 
       return Promise.all([
-        metadataManager.get("app-config", env.saleorApiUrl),
-        metadataManager.get("app-config-v2"),
+        metadataManager.get(MigrationV1toV2Consts.appConfigV1metadataKey, env.saleorApiUrl),
+        metadataManager.get(MigrationV1toV2Consts.appConfigV2metadataKey),
       ])
         .then(([v1, v2]) => {
           return {
