@@ -10,8 +10,7 @@
     "lint:fix": "eslint --fix .",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
-    "test": "vitest",
-    "test:ci": "CI=true vitest --coverage"
+    "test": "vitest"
   },
   "saleor": {
     "schemaVersion": "3.10"

@@ -13,7 +13,6 @@
     "lint": "turbo run lint",
     "start": "turbo run start",
     "test": "turbo run test",
-    "test:ci": "turbo run test:ci",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo run generate",
     "prepare": "husky install"
