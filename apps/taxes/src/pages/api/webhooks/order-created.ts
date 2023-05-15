@@ -78,7 +78,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     if (!activeTaxProvider.ok) {
       logger.info("Returning no data");
-      return webhookResponse.failureNoRetry(activeTaxProvider.error);
+      return webhookResponse.failure(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -86,11 +86,11 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
-      return webhookResponse.failureNoRetry("Insufficient order data");
+      return webhookResponse.failure("Insufficient order data");
     }
 
     if (payload.order.status === OrderStatus.Fulfilled) {
-      return webhookResponse.failureNoRetry("Skipping fulfilled order to prevent duplication");
+      return webhookResponse.failure("Skipping fulfilled order to prevent duplication");
     }
 
     const createdOrder = await taxProvider.createOrder(payload.order);
@@ -104,6 +104,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     return webhookResponse.success();
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.failureRetry("Error while creating order in tax provider");
+    return webhookResponse.failure("Error while creating order in tax provider");
   }
 });

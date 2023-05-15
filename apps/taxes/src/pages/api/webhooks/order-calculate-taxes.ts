@@ -48,7 +48,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     logger.info("Payload validated succesfully");
   } catch (error) {
     logger.info("Returning no data");
-    return webhookResponse.failureNoRetry("Payload is invalid");
+    return webhookResponse.failure("Payload is invalid");
   }
 
   try {
@@ -58,7 +58,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
 
     if (!activeTaxProvider.ok) {
       logger.info("Returning no data");
-      return webhookResponse.failureNoRetry(activeTaxProvider.error);
+      return webhookResponse.failure(activeTaxProvider.error);
     }
 
     logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
@@ -69,6 +69,6 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.failureRetry("Error while calculating taxes");
+    return webhookResponse.failure("Error while calculating taxes");
   }
 });
