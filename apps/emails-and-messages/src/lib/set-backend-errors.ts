@@ -4,7 +4,7 @@ import { FieldValues, UseFormSetError } from "react-hook-form";
 
 type SetBackendErrorsProps<T extends FieldValues = FieldValues> = {
   error: TRPCClientErrorLike<AppRouter>;
-  setError: UseFormSetError<T>;
+  setError?: UseFormSetError<T>;
   notifyError: (title: string, text?: string, apiMessage?: string) => void;
 };
 
@@ -19,10 +19,12 @@ export function setBackendErrors<T extends FieldValues = FieldValues>({
   for (const fieldName in fieldErrors) {
     for (const message of fieldErrors[fieldName] || []) {
       isFieldErrorSet = true;
-      setError(fieldName as keyof UseFormSetError<T>, {
-        type: "manual",
-        message,
-      });
+      if (!!setError) {
+        setError(fieldName as keyof UseFormSetError<T>, {
+          type: "manual",
+          message,
+        });
+      }
     }
   }
   const formErrors = error.data?.zodError?.formErrors || [];
