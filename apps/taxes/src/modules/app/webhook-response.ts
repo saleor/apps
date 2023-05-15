@@ -15,7 +15,7 @@ export class WebhookResponse {
 
   failure(error: string) {
     this.logger.debug({ error }, "failure called with:");
-    return this.res.status(200).json({ success: false, error });
+    return this.res.status(500).json({ error });
   }
 
   success(data?: any) {
