@@ -19,7 +19,7 @@ jobs:
       - name: Generate schema
         run: pnpm generate
       - name: Test
-        run: pnpm test:ci
+        run: pnpm test
 # TODO: Add coverage - crawl through every package
 #      - name: Generate coverage report
 #        uses: irongut/CodeCoverageSummary@v1.3.0
