@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.6.1
+
+### Patch Changes
+
+- 8b22b1c: Restored Pino logger packages to each app, to fix failing logs in development. Also updated .env.example to contain up to date APP_LOG_LEVEL variable
+
 ## 1.6.0
 
 ### Minor Changes
