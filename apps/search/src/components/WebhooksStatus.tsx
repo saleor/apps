@@ -1,6 +1,7 @@
 import { Accordion, Box, Chip, Text } from "@saleor/macaw-ui/next";
 import { EventDeliveryStatusEnum } from "../../generated/graphql";
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
+import { SemanticChip } from "@saleor/apps-ui";
 
 export const WebhooksStatus = () => {
   const { data: webhooksData } = useWebhooksStatus();
@@ -13,7 +14,7 @@ export const WebhooksStatus = () => {
     <Box>
       <Accordion display={"grid"} gap={4}>
         {webhooksData.map((webhook) => {
-          const Trigger = webhook.isActive ? Box : Accordion.Item.Trigger;
+          const Trigger = webhook.isActive ? Box : Accordion.Trigger;
 
           const failedEventDeliveries = webhook.eventDeliveries?.edges?.filter(
             (e) => e.node.status === EventDeliveryStatusEnum.Failed
@@ -38,26 +39,18 @@ export const WebhooksStatus = () => {
                   alignItems={"center"}
                 >
                   <Text size={"small"}>{webhook.asyncEvents[0].name}</Text>
-                  <Chip
-                    padding={2}
-                    marginLeft={"auto"}
-                    size={"small"}
-                    backgroundColor={
-                      webhook.isActive ? "decorativeSurfaceSubdued2" : "surfaceCriticalSubdued"
-                    }
-                  >
-                    <Text
-                      color={webhook.isActive ? "text2Decorative" : "textCriticalSubdued"}
-                      textTransform={"uppercase"}
-                      margin={3}
-                      variant={"caption"}
-                    >
-                      {webhook.isActive ? "Active" : "Disabled"}
-                    </Text>
-                  </Chip>
+                  {webhook.isActive ? (
+                    <SemanticChip marginLeft={"auto"} size={"small"} variant={"success"}>
+                      ACTIVE
+                    </SemanticChip>
+                  ) : (
+                    <SemanticChip marginLeft={"auto"} size={"small"} variant={"error"}>
+                      DISABLED
+                    </SemanticChip>
+                  )}
                 </Box>
               </Trigger>
-              <Accordion.Item.Content>
+              <Accordion.Content>
                 <Box marginY={6}>
                   <Text variant={"bodyStrong"}>Delivery attempts</Text>
                   {!hasFailedDeliveries ? (
@@ -94,7 +87,7 @@ export const WebhooksStatus = () => {
                     ))}
                   </Box>
                 </Box>
-              </Accordion.Item.Content>
+              </Accordion.Content>
             </Accordion.Item>
           );
         })}
