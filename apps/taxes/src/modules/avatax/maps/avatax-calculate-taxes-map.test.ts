@@ -7,6 +7,7 @@ import {
 // * Mocked payload data, channel config and avatax config
 const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
   taxBase: {
+    pricesEnteredWithTax: false,
     currency: "PLN",
     channel: {
       slug: "channel-pln",
@@ -33,7 +34,6 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
     },
     lines: [
       {
-        chargeTaxes: true,
         quantity: 3,
         unitPrice: {
           amount: 84,
@@ -56,7 +56,6 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
         },
       },
       {
-        chargeTaxes: true,
         quantity: 1,
         unitPrice: {
           amount: 5.99,
@@ -125,7 +124,7 @@ describe("avataxCalculateTaxesMaps", () => {
         quantity: 1,
         amount: 48.33,
         taxCode: MOCKED_CALCULATE_TAXES_ARGS.config.shippingTaxCode,
-        taxIncluded: true,
+        taxIncluded: false,
       });
     });
 
@@ -134,16 +133,7 @@ describe("avataxCalculateTaxesMaps", () => {
         quantity: 3,
         amount: 252,
         taxCode: "",
-        taxIncluded: true,
-      });
-    });
-
-    it("returns the correct quantity of individual lines", () => {
-      expect(lines).toContainEqual({
-        quantity: 3,
-        amount: 252,
-        taxCode: "",
-        taxIncluded: true,
+        taxIncluded: false,
       });
     });
   });

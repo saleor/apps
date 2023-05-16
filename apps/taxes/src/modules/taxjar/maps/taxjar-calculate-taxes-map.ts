@@ -1,9 +1,5 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
-import {
-  TaxBaseFragment,
-  TaxBaseLineFragment,
-  TaxDiscountFragment,
-} from "../../../../generated/graphql";
+import { TaxBaseFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { taxLineResolver } from "../../taxes/tax-line-resolver";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
@@ -25,9 +21,9 @@ type FetchTaxesLinePayload = {
 };
 
 const prepareLinesWithDiscountPayload = (
-  lines: Array<TaxBaseLineFragment>,
-  discounts: Array<TaxDiscountFragment>
+  taxBase: TaxBaseFragment
 ): Array<FetchTaxesLinePayload> => {
+  const { lines, discounts } = taxBase;
   const allLinesTotal = lines.reduce(
     (total, current) => total + Number(current.totalPrice.amount),
     0
@@ -47,7 +43,7 @@ const prepareLinesWithDiscountPayload = (
 
     return {
       id: line.sourceLine.id,
-      chargeTaxes: line.chargeTaxes,
+      chargeTaxes: taxBase.pricesEnteredWithTax,
       // todo: get from tax code matcher
       taxCode: "",
       quantity: line.quantity,
@@ -62,7 +58,7 @@ const mapResponse = (
   payload: TaxBaseFragment,
   response: TaxForOrderRes
 ): CalculateTaxesResponse => {
-  const linesWithDiscount = prepareLinesWithDiscountPayload(payload.lines, payload.discounts);
+  const linesWithDiscount = prepareLinesWithDiscountPayload(payload);
   const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
 
   const taxResponse = linesWithChargeTaxes.length !== 0 ? response : undefined;
@@ -108,7 +104,7 @@ const mapResponse = (
 };
 
 const mapPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): FetchTaxForOrderArgs => {
-  const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase.lines, taxBase.discounts);
+  const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase);
   const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
 
   const taxParams = {

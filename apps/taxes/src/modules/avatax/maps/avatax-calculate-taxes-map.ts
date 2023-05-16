@@ -19,7 +19,7 @@ const SHIPPING_ITEM_CODE = "Shipping";
 function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.totalPrice.amount,
-    taxIncluded: line.chargeTaxes,
+    taxIncluded: taxBase.pricesEnteredWithTax,
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,
@@ -32,7 +32,7 @@ function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel
       itemCode: SHIPPING_ITEM_CODE,
       taxCode: config.shippingTaxCode,
       quantity: 1,
-      taxIncluded: true,
+      taxIncluded: taxBase.pricesEnteredWithTax,
     };
 
     return [...productLines, shippingLine];
@@ -70,12 +70,14 @@ const mapPayload = (props: AvataxCalculateTaxesMapPayloadArgs): CreateTransactio
 
 const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
+
   const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
-  const shippingGrossAmount = shippingLine?.taxableAmount ?? 0;
   const shippingTaxCalculated = shippingLine?.taxCalculated ?? 0;
-  const shippingNetAmount = numbers.roundFloatToTwoDecimals(
-    shippingGrossAmount - shippingTaxCalculated
+  const shippingTaxableAmount = shippingLine?.taxableAmount ?? 0;
+  const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
+    shippingTaxableAmount + shippingTaxCalculated
   );
+  const shippingNetAmount = shippingGrossAmount;
 
   return {
     shipping_price_gross_amount: shippingGrossAmount,
