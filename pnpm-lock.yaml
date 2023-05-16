@@ -1233,8 +1233,11 @@ importers:
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@saleor/apps-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
+        specifier: ^0.8.0-pre.84
         version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.46.0
