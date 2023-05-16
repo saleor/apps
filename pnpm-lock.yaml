@@ -5559,6 +5559,28 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /@saleor/app-sdk@0.38.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-JS/E3YODFHc+1DI+PczbV8jB09nLwzdQcwNs681RlwvR3JUC892hdBYYRdBKG5lauAcr4IxKw1IbrsxJKngtWA==}
+    peerDependencies:
+      next: '>=12'
+      react: '>=17'
+      react-dom: '>=17'
+    dependencies:
+      '@changesets/cli': 2.26.0
+      debug: 4.3.4
+      fast-glob: 3.2.12
+      graphql: 16.6.0
+      jose: 4.11.4
+      next: 13.3.0(@babel/core@7.21.4)(react-dom@18.2.0)(react@18.2.0)
+      raw-body: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      retes: 0.33.0
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@saleor/macaw-ui@0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.14)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0):
     resolution: {integrity: sha512-Fli7fhTWuHu7q2CzxwTUpB4x9HYaxHSAzCLZLA23VY1ieIWbCxbsXadMiMGWp/nuYitswMr6JXMm+1SDe9K8LQ==}
     engines: {node: '>=16 <19'}
