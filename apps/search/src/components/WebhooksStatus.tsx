@@ -13,7 +13,7 @@ export const WebhooksStatus = () => {
     <Box>
       <Accordion display={"grid"} gap={4}>
         {webhooksData.map((webhook) => {
-          const Trigger = webhook.isActive ? Box : Accordion.Item.Trigger;
+          const Trigger = webhook.isActive ? Box : Accordion.Trigger;
 
           const failedEventDeliveries = webhook.eventDeliveries?.edges?.filter(
             (e) => e.node.status === EventDeliveryStatusEnum.Failed
@@ -57,7 +57,7 @@ export const WebhooksStatus = () => {
                   </Chip>
                 </Box>
               </Trigger>
-              <Accordion.Item.Content>
+              <Accordion.Content>
                 <Box marginY={6}>
                   <Text variant={"bodyStrong"}>Delivery attempts</Text>
                   {!hasFailedDeliveries ? (
@@ -94,7 +94,7 @@ export const WebhooksStatus = () => {
                     ))}
                   </Box>
                 </Box>
-              </Accordion.Item.Content>
+              </Accordion.Content>
             </Accordion.Item>
           );
         })}
