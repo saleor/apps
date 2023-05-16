@@ -7,6 +7,7 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "./address-factory";
+import { numbers } from "../../taxes/numbers";
 
 /**
  * * Shipping is a regular line item in Avatax
@@ -16,7 +17,10 @@ const SHIPPING_ITEM_CODE = "Shipping";
 
 function mapLines(order: OrderCreatedSubscriptionFragment, config: AvataxConfig): LineItemModel[] {
   const productLines: LineItemModel[] = order.lines.map((line) => ({
-    amount: line.totalPrice.net.amount,
+    taxIncluded: true,
+    amount: numbers.roundFloatToTwoDecimals(
+      line.totalPrice.net.amount + line.totalPrice.tax.amount
+    ),
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,

@@ -174,13 +174,13 @@ describe("avataxOrderCreatedMaps", () => {
         itemCode: "328223581",
         description: "Monospace Tee",
         quantity: 3,
-        amount: 270,
+        amount: 278.55,
       });
       expect(second).toContain({
         itemCode: "328223580",
         description: "Polyspace Tee",
         quantity: 1,
-        amount: 45,
+        amount: 49.28,
       });
     });
   });
