@@ -1,3 +1,1 @@
-/*
- * * export components from here
- */
+export * from "./src/semantic-chip";
