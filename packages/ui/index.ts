@@ -1,1 +1,1 @@
-export * from "./src/app-grid";
+export * from "./src/example";
