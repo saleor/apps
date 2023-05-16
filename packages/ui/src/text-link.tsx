@@ -31,7 +31,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
   const { appBridge } = useAppBridge();
   const { push } = useRouter();
 
-  const onExternalClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const onNewTabClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
 
     if (!appBridge) {
@@ -64,7 +64,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
 
   if (newTab) {
     return (
-      <BaseTextLink href={href} onClick={onExternalClick} {...props}>
+      <BaseTextLink href={href} onClick={onNewTabClick} {...props}>
         {children}
       </BaseTextLink>
     );
