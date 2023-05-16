@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import { Input } from "@saleor/macaw-ui/next";
+import { Dummy } from "./dummy";
 
-const meta: Meta<typeof Input> = {
+const meta: Meta<typeof Dummy> = {
   title: "Components / Input",
   tags: ["autodocs"],
-  component: Input,
+  component: Dummy,
   args: {
     label: "Label",
     size: "large",
@@ -13,14 +13,14 @@ const meta: Meta<typeof Input> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<typeof Dummy>;
 
 const InputTemplate: Story = {
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = useState("Input content");
 
-    return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
+    return <Dummy />;
   },
 };
 

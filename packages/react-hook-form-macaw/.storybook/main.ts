@@ -25,11 +25,6 @@ export default {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      resolve: {
-        alias: {
-          "~": resolve(__dirname, "..", "src"),
-        },
-      },
       plugins: [require("@vanilla-extract/vite-plugin").vanillaExtractPlugin()],
     });
   },

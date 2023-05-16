@@ -1,7 +1,9 @@
+import "@saleor/macaw-ui/next/style";
+import "./styles.css";
+
 import React from "react";
 import { DocsContainer, DocsContainerProps } from "@storybook/blocks";
 import { PropsWithChildren } from "react";
-import "./styles.css";
 import { Box, ThemeProvider, useTheme } from "@saleor/macaw-ui/next";
 
 type MacawDocsContainerProps = {
