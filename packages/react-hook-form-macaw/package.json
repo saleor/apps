@@ -1,0 +1,22 @@
+{
+  "name": "@saleor/react-hook-form-macaw",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@saleor/macaw-ui": "0.8.0-pre.84",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "eslint-config-saleor": "workspace:*",
+    "next": "^13.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "peerDependencies": {
+    "next": "^13.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "scripts": {
+    "lint:fix": "eslint --fix ."
+  },
+  "main": "index.ts"
+}
