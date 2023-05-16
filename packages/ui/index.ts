@@ -1,1 +1,3 @@
-export * from "./src/example";
+/*
+ * * export components from here
+ */
