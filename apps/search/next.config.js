@@ -23,7 +23,7 @@ const moduleExports = {
       },
     ],
   },
-  transpilePackages: ["@saleor/apps-shared"],
+  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui"],
   sentry: {
     /*
      * Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`

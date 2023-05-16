@@ -2,7 +2,7 @@ import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Text, TextProps } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 
-interface TextLinkProps extends TextProps {
+export interface TextLinkProps extends TextProps {
   href: string;
   newTab?: boolean;
 }
@@ -17,7 +17,12 @@ const BaseTextLink = (props: TextLinkProps) => {
       rel="noopener noreferrer"
       {...props}
     >
-      {props.children}
+      <Text
+        __margin={0}
+        color={"text2Decorative"} /* TODO Color not applied - looks like Macaw issue*/
+      >
+        {props.children}
+      </Text>
     </Text>
   );
 };
