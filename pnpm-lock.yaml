@@ -1737,8 +1737,8 @@ importers:
   packages/ui:
     devDependencies:
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.80
-        version: 0.8.0-pre.80(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.84
+        version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: ^18.0.27
         version: 18.0.38
@@ -5676,8 +5676,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@saleor/macaw-ui@0.8.0-pre.80(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ecP65upR3P8NtE/ZaznWP4Lk/BVTiHr33K/g0YH3535hdfevaE8WibWeQ7wS6g41pia1OfDYGiW0rTxXgmsS4g==}
+  /@saleor/macaw-ui@0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-VkkMmr9wZhZHc/r0bP8PVbuDPc+tnhC4pKJMwW9fP4uhNcdTYkKUraPJUxXO6OYkxjyyQBzza3uY9d/7fw48gQ==}
     engines: {node: '>=16 <19', pnpm: '>=8'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
