@@ -1,5 +1,15 @@
 # saleor-app-taxes
 
+## 1.6.0
+
+### Minor Changes
+
+- 72adeb3: Changed behavior of failed webhooks. The app will now return status 500 if the operation failed. Previously, it returned status 200 with an error message in the response body.
+
+### Patch Changes
+
+- 70bf546: Fix the calculations of shipping price and line prices based on the `pricesEnteredWithTax` value. Before, the Tax App didn't consider the `pricesEnteredWithTax` setting. Now, it will return different values for `pricesEnteredWithTax` true/false.
+
 ## 1.5.0
 
 ### Minor Changes
