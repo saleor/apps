@@ -1,12 +1,10 @@
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 
 const SALEOR_EVENTS_DOCS_URL =
   "https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks#available-webhook-events";
 
 export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
-  const { appBridge } = useAppBridge();
-
   return (
     <Box {...props}>
       <Text as="p" marginBottom={4}>
@@ -17,25 +15,10 @@ export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
         Saleor database.
       </Text>
       <Text as="p">
-        The app supports following{" "}
-        <a
-          onClick={(e) => {
-            e.preventDefault();
-
-            /**
-             * TODO extract shared handler
-             */
-            appBridge?.dispatch(
-              actions.Redirect({
-                to: SALEOR_EVENTS_DOCS_URL,
-                newContext: true,
-              })
-            );
-          }}
-          href={SALEOR_EVENTS_DOCS_URL}
-        >
+        The app supports following
+        <TextLink href={SALEOR_EVENTS_DOCS_URL} newTab>
           events
-        </a>{" "}
+        </TextLink>
         that will synchronize Algolia in the background:
       </Text>
       <ul>
