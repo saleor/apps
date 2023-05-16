@@ -1,5 +1,4 @@
 fragment TaxBaseLine on TaxableObjectLine {
-  chargeTaxes
   sourceLine {
     __typename
     ... on CheckoutLine {
@@ -43,6 +42,7 @@ fragment TaxDiscount on TaxableObjectDiscount {
 }
 
 fragment TaxBase on TaxableObject {
+  pricesEnteredWithTax
   currency
   channel {
     slug
