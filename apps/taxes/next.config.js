@@ -17,7 +17,7 @@ const config = {
   experimental: {
     esmExternals: true,
   },
-  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui"],
+  transpilePackages: ["@saleor/apps-shared"],
 };
 
 module.exports = withSentryConfig(

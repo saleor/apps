@@ -1514,9 +1514,6 @@ importers:
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@saleor/apps-ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: ^0.7.2
         version: 0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.27)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0)
