@@ -8,12 +8,14 @@
     "eslint-config-saleor": "workspace:*",
     "next": "^13.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@saleor/app-sdk": "^0.38.0"
   },
   "peerDependencies": {
     "next": "^13.3.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@saleor/app-sdk": "^0.37.0"
   },
   "scripts": {
     "lint:fix": "eslint --fix ."
