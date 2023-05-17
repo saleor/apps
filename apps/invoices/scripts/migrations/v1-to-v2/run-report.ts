@@ -5,14 +5,14 @@ import {
   fetchCloudAplEnvs,
   getMetadataManagerForEnv,
   safeParse,
-  verifyRequireEnvs,
+  verifyRequiredEnvs,
 } from "../migration-utils";
 import { MigrationV1toV2Consts } from "./const";
 
 dotenv.config();
 
 const runReport = async () => {
-  verifyRequireEnvs();
+  verifyRequiredEnvs();
 
   const allEnvs = await fetchCloudAplEnvs().catch((r) => {
     console.error(r);

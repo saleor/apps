@@ -22,11 +22,11 @@ export const safeParse = (json?: string) => {
   }
 };
 
-export const verifyRequireEnvs = () => {
-  const requiresEnvs = ["SALEOR_CLOUD_TOKEN", "SALEOR_CLOUD_RESOURCE_URL", "SECRET_KEY"];
+export const verifyRequiredEnvs = () => {
+  const requiredEnvs = ["SALEOR_CLOUD_TOKEN", "SALEOR_CLOUD_RESOURCE_URL", "SECRET_KEY"];
 
-  if (!requiresEnvs.every((env) => process.env[env])) {
-    throw new Error(`Missing envs: ${requiresEnvs.join(" | ")}`);
+  if (!requiredEnvs.every((env) => process.env[env])) {
+    throw new Error(`Missing envs: ${requiredEnvs.join(" | ")}`);
   }
 };
 

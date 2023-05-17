@@ -1,7 +1,7 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
 import * as dotenv from "dotenv";
-import { fetchCloudAplEnvs, verifyRequireEnvs } from "../migration-utils";
+import { fetchCloudAplEnvs, verifyRequiredEnvs } from "../migration-utils";
 import { createClient } from "../../../src/lib/graphql";
 import { RemoveMetadataDocument } from "../../../generated/graphql";
 import { MigrationV1toV2Consts } from "./const";
@@ -9,7 +9,7 @@ import { MigrationV1toV2Consts } from "./const";
 dotenv.config();
 
 const runMigration = async () => {
-  verifyRequireEnvs();
+  verifyRequiredEnvs();
 
   const allEnvs = await fetchCloudAplEnvs();
 
@@ -33,7 +33,9 @@ const runMigration = async () => {
 
           return r;
         })
-        .catch((e) => {});
+        .catch((e) => {
+          console.error("❌ Error removing metadata", e);
+        });
     })
   );
 

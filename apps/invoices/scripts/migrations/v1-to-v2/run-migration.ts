@@ -5,7 +5,7 @@ import {
   fetchCloudAplEnvs,
   getMetadataManagerForEnv,
   safeParse,
-  verifyRequireEnvs,
+  verifyRequiredEnvs,
 } from "../migration-utils";
 import { ConfigV1ToV2Transformer } from "../../../src/modules/app-configuration/schema-v2/config-v1-to-v2-transformer";
 import { AppConfigV2MetadataManager } from "../../../src/modules/app-configuration/schema-v2/app-config-v2-metadata-manager";
@@ -15,7 +15,7 @@ import { MigrationV1toV2Consts } from "./const";
 dotenv.config();
 
 const runMigration = async () => {
-  verifyRequireEnvs();
+  verifyRequiredEnvs();
 
   const allEnvs = await fetchCloudAplEnvs();
 
