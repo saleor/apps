@@ -1,95 +1,65 @@
 /* eslint-disable react/display-name */
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import Link from "next/link";
-import React, { PropsWithChildren } from "react";
+import React from "react";
+import styles from "./breadcrumbs.module.css";
 
-type BreadcrumbsItem = {
-  active: boolean;
-};
+export type BreadcrumbsItemProps = PropsWithBox<{
+  href?: string;
+  active?: boolean;
+  separator?: React.ReactNode;
+}>;
 
-const BreadcrumbsItem = ({ children, active }: PropsWithChildren<BreadcrumbsItem>) => {
+const BreadcrumbsItem = ({
+  children,
+  href,
+  separator = ">",
+  active = false,
+  ...p
+}: BreadcrumbsItemProps) => {
   return (
-    <Box as="li">
-      {/* // ! macaw-ui colors dont work */}
-      {/* // todo: replace with macaw-ui colors */}
-      <Text style={{ color: active ? "black" : "gray" }}>{children}</Text>
+    <Box as="li" {...p}>
+      <Text variant="title" color={active ? "textNeutralDefault" : "textNeutralSubdued"}>
+        {href ? (
+          <Link className={styles.link} href={href}>
+            {children}
+          </Link>
+        ) : (
+          children
+        )}
+        {!active && (
+          <Box as="span" marginX={4}>
+            {separator}
+          </Box>
+        )}
+      </Text>
     </Box>
   );
 };
 
-const BreadcrumbsContainer = (p: PropsWithChildren<{}>) => {
+export type BreadcrumbsProps = PropsWithBox<{}> & Pick<BreadcrumbsItemProps, "separator">;
+
+export const Breadcrumbs = ({ children, separator, ...p }: BreadcrumbsProps) => {
   return (
     <Box
-      fontSize={"bodyStrongLarge"}
       alignItems={"center"}
       display={"flex"}
-      gap={4}
-      style={{ listStyle: "none", padding: 0, margin: 0 }}
+      padding={0}
+      margin={0}
+      style={{ listStyle: "none" }}
       as="ol"
+      {...p}
     >
-      {p.children}
-    </Box>
-  );
-};
+      {React.Children.map(children, (child, index) => {
+        const isLast = index === React.Children.count(children) - 1;
 
-const BreadcrumbLink = (p: PropsWithChildren<{ href: string }>) => {
-  return (
-    <Link style={{ color: "inherit" }} href={p.href}>
-      {p.children}
-    </Link>
-  );
-};
-
-type BreadcrumbsItemWithLink = BreadcrumbsItem & { href?: string };
-
-const BreadcrumbsItemWithLink = ({
-  active,
-  href,
-  children,
-}: PropsWithChildren<BreadcrumbsItemWithLink>) => {
-  return (
-    <BreadcrumbsItem active={active}>
-      {active || !href ? children : <BreadcrumbLink href={href}>{children}</BreadcrumbLink>}
-    </BreadcrumbsItem>
-  );
-};
-
-export type BreadcrumbsProps = {
-  items: {
-    label: string | { icon: React.ReactNode; text: string };
-    href?: string;
-  }[];
-};
-
-export const Breadcrumbs = (p: BreadcrumbsProps) => {
-  return (
-    <BreadcrumbsContainer>
-      {p.items.map((item, index, array) => {
-        const isLast = index === array.length - 1;
-        const key = typeof item.label === "string" ? item.label : item.label.text;
-
-        return (
-          <>
-            <BreadcrumbsItemWithLink active={isLast} key={key} href={item.href}>
-              {typeof item.label === "string" ? (
-                item.label
-              ) : (
-                <>
-                  {/* // todo: replace with macaw icon component */}
-                  <Box as="span" marginRight={2}>
-                    {item.label.icon}
-                  </Box>
-                  {item.label.text}
-                </>
-              )}
-            </BreadcrumbsItemWithLink>
-            {!isLast && <span>/</span>}
-          </>
-        );
+        return React.cloneElement(child as React.ReactElement<BreadcrumbsItemProps>, {
+          active: isLast,
+          separator,
+        });
       })}
-    </BreadcrumbsContainer>
+    </Box>
   );
 };
 
 Breadcrumbs.Item = BreadcrumbsItem;
-Breadcrumbs.Container = BreadcrumbsContainer;
