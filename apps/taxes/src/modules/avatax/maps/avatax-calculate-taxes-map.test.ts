@@ -1,111 +1,88 @@
 import { describe, expect, it } from "vitest";
 import {
-  AvataxCalculateTaxesMapPayloadArgs,
-  avataxCalculateTaxesMaps,
+  SHIPPING_ITEM_CODE,
+  mapPayloadLines,
+  mapResponseProductLines,
+  mapResponseShippingLine,
 } from "./avatax-calculate-taxes-map";
-
-// * Mocked payload data, channel config and avatax config
-const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
-  taxBase: {
-    pricesEnteredWithTax: false,
-    currency: "PLN",
-    channel: {
-      slug: "channel-pln",
-    },
-    sourceObject: {
-      __typename: "Order",
-      user: {
-        id: "VXNlcjo5ZjY3ZjY0Zi1iZjY5LTQ5ZjYtYjQ4Zi1iZjY3ZjY0ZjY0ZjY=",
-      },
-    },
-    discounts: [],
-    address: {
-      streetAddress1: "123 Palm Grove Ln",
-      streetAddress2: "",
-      city: "LOS ANGELES",
-      country: {
-        code: "US",
-      },
-      countryArea: "CA",
-      postalCode: "90002",
-    },
-    shippingPrice: {
-      amount: 48.33,
-    },
-    lines: [
-      {
-        quantity: 3,
-        unitPrice: {
-          amount: 84,
-        },
-        totalPrice: {
-          amount: 252,
-        },
-        sourceLine: {
-          __typename: "OrderLine",
-          id: "T3JkZXJMaW5lOmY1NGQ1MWY2LTc1OTctNGY2OC1hNDk0LTFjYjZlYjRmOTlhMQ==",
-          variant: {
-            id: "UHJvZHVjdFZhcmlhbnQ6MzQ2",
-            product: {
-              metafield: null,
-              productType: {
-                metafield: null,
-              },
-            },
-          },
-        },
-      },
-      {
-        quantity: 1,
-        unitPrice: {
-          amount: 5.99,
-        },
-        totalPrice: {
-          amount: 5.99,
-        },
-        sourceLine: {
-          __typename: "OrderLine",
-          id: "T3JkZXJMaW5lOjU1NTFjNTFjLTM5MWQtNGI0Ny04MGU0LWVjY2Q5ZjU4MjQyNQ==",
-          variant: {
-            id: "UHJvZHVjdFZhcmlhbnQ6Mzg1",
-            product: {
-              metafield: null,
-              productType: {
-                metafield: null,
-              },
-            },
-          },
-        },
-      },
-    ],
-  },
-  channel: {
-    providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-    enabled: false,
-    address: {
-      country: "US",
-      zip: "92093",
-      state: "CA",
-      city: "La Jolla",
-      street: "9500 Gilman Drive",
-    },
-  },
-  config: {
-    companyCode: "DEFAULT",
-    isAutocommit: false,
-    isSandbox: true,
-    name: "Avatax-1",
-    password: "password",
-    username: "username",
-    shippingTaxCode: "FR000000",
-  },
-};
+import { mapPayloadArgsMocks, transactionModelMocks } from "./mocks";
 
 describe("avataxCalculateTaxesMaps", () => {
-  describe.todo("mapResponse", () => {
-    it.todo("calculation of fields");
-    it.todo("formatting the fields");
-    it.todo("rounding of numbers");
+  describe("mapResponseShippingLine", () => {
+    it("when shipping line is not taxable, returns line amount", () => {
+      const nonTaxableShippingLine = mapResponseShippingLine(transactionModelMocks.nonTaxable);
+
+      expect(nonTaxableShippingLine).toEqual({
+        shipping_price_gross_amount: 77.51,
+        shipping_price_net_amount: 77.51,
+        shipping_tax_rate: 0,
+      });
+    });
+
+    it("when shipping line is taxable and tax is included, returns calculated gross & net amounts", () => {
+      const taxableShippingLine = mapResponseShippingLine(
+        transactionModelMocks.taxable.taxIncluded
+      );
+
+      expect(taxableShippingLine).toEqual({
+        shipping_price_gross_amount: 77.51,
+        shipping_price_net_amount: 70.78,
+        shipping_tax_rate: 0,
+      });
+    });
+
+    it("when shipping line is taxable and tax is not included, returns calculated gross & net amounts", () => {
+      const taxableShippingLine = mapResponseShippingLine(
+        transactionModelMocks.taxable.taxNotIncluded
+      );
+
+      expect(taxableShippingLine).toEqual({
+        shipping_price_gross_amount: 84.87,
+        shipping_price_net_amount: 77.51,
+        shipping_tax_rate: 0,
+      });
+    });
+  });
+  describe("mapResponseProductLines", () => {
+    it("when product lines are not taxable, returns line amount", () => {
+      const nonTaxableProductLines = mapResponseProductLines(transactionModelMocks.nonTaxable);
+
+      expect(nonTaxableProductLines).toEqual([
+        {
+          total_gross_amount: 20,
+          total_net_amount: 20,
+          tax_rate: 0,
+        },
+      ]);
+    });
+
+    it("when product lines are taxable and tax is included, returns calculated gross & net amounts", () => {
+      const taxableProductLines = mapResponseProductLines(
+        transactionModelMocks.taxable.taxIncluded
+      );
+
+      expect(taxableProductLines).toEqual([
+        {
+          total_gross_amount: 40,
+          total_net_amount: 36.53,
+          tax_rate: 0,
+        },
+      ]);
+    });
+
+    it("when product lines are taxable and tax is not included, returns calculated gross & net amounts", () => {
+      const taxableProductLines = mapResponseProductLines(
+        transactionModelMocks.taxable.taxNotIncluded
+      );
+
+      expect(taxableProductLines).toEqual([
+        {
+          total_gross_amount: 43.8,
+          total_net_amount: 40,
+          tax_rate: 0,
+        },
+      ]);
+    });
   });
   describe.todo("mapPayload", () => {
     it.todo("calculation of fields");
@@ -113,17 +90,17 @@ describe("avataxCalculateTaxesMaps", () => {
     it.todo("rounding of numbers");
   });
   describe("mapLines", () => {
-    const lines = avataxCalculateTaxesMaps.mapLines(
-      MOCKED_CALCULATE_TAXES_ARGS.taxBase,
-      MOCKED_CALCULATE_TAXES_ARGS.config
+    const lines = mapPayloadLines(
+      mapPayloadArgsMocks.default.taxBase,
+      mapPayloadArgsMocks.default.config
     );
 
     it("includes shipping as a line", () => {
       expect(lines).toContainEqual({
-        itemCode: avataxCalculateTaxesMaps.shippingItemCode,
+        itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,
         amount: 48.33,
-        taxCode: MOCKED_CALCULATE_TAXES_ARGS.config.shippingTaxCode,
+        taxCode: mapPayloadArgsMocks.default.config.shippingTaxCode,
         taxIncluded: false,
       });
     });
