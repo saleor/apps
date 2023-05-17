@@ -15,7 +15,8 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo run generate",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "github:release": "pnpm changeset tag && git push --follow-tags"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",

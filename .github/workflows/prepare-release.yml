@@ -9,7 +9,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 #
 # TODO
-# - Add tags for each app (e.g. search@3.0.1) for easier parsing
 # - Print versions name to commit, for easier Vercel deployments
 #
 jobs:
@@ -19,6 +18,9 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
+      - name: Git fetch tags 
+        run: git fetch --tags origin
       - name: Setup Node.js 16 # It was default for Changesets action, check if it can be bumped to v18
         uses: actions/setup-node@v3
         with:
@@ -32,6 +34,8 @@ jobs:
         with:
           title: Release apps
           commit: Release apps
+          publish: pnpm github:release
+          createGithubReleases: true
         env:
           # Use private access token so Github can trigger another workflow from this one
           GITHUB_TOKEN: ${{ secrets.PAT }}
