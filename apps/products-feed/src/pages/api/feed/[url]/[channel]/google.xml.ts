@@ -7,6 +7,9 @@ import { fetchProductData } from "../../../../../lib/google-feed/fetch-product-d
 import { getGoogleFeedSettings } from "../../../../../lib/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../lib/google-feed/generate-google-xml-feed";
 import { fetchShopData } from "../../../../../lib/google-feed/fetch-shop-data";
+import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
+import { createSettingsManager } from "../../../../../lib/metadata-manager";
+import { createClient } from "../../../../../lib/create-graphq-client";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -86,11 +89,25 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ error: "Could not fetch the shop details" });
   }
 
+  const cacheClient = createClient(authData.saleorApiUrl, async () =>
+    Promise.resolve({ token: authData.token })
+  );
+
+  if (!cacheClient) {
+    logger.error("Can't create the gql client");
+    return res.status(500).end();
+  }
+
+  // get cached cursors
+  const cache = new CacheConfigurator(createSettingsManager(cacheClient), authData.saleorApiUrl);
+
+  const cursors = await cache.get({ channel });
+
   // TODO: instead of separate variants, use group id https://support.google.com/merchants/answer/6324507?hl=en
   let productVariants: GoogleFeedProductVariantFragment[] = [];
 
   try {
-    productVariants = await fetchProductData({ client, channel });
+    productVariants = await fetchProductData({ client, channel, cursors });
   } catch (error) {
     logger.error(error);
     return res.status(400).end();
