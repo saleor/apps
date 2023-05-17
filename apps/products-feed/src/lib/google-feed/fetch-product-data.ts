@@ -74,7 +74,9 @@ interface FetchProductDataArgs {
 export const fetchProductData = async ({ client, channel, cursors }: FetchProductDataArgs) => {
   const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
 
-  const pageCursors = cursors || (await getCursors({ client, channel }));
+  const cachedCursors = cursors || (await getCursors({ client, channel }));
+
+  const pageCursors = [undefined, ...cachedCursors];
 
   logger.debug(`Query generated ${pageCursors.length} cursors`);
 

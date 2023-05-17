@@ -24,7 +24,6 @@ export const updateCacheForConfigurations = async ({
 
   const channelsToUpdate = Object.keys(configurations.shopConfigPerChannel);
 
-  console.log("derp", channelsToUpdate);
   const cacheUpdatePromises = channelsToUpdate.map(async (channel) => {
     const cursors = await getCursors({ client, channel });
 
