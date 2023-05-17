@@ -14,9 +14,9 @@ import { avataxAddressFactory } from "./address-factory";
  * * Shipping is a regular line item in Avatax
  * https://developer.avalara.com/avatax/dev-guide/shipping-and-handling/taxability-of-shipping-charges/
  */
-const SHIPPING_ITEM_CODE = "Shipping";
+export const SHIPPING_ITEM_CODE = "Shipping";
 
-function mapLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
+export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
   const productLines = taxBase.lines.map((line) => ({
     amount: line.totalPrice.amount,
     taxIncluded: taxBase.pricesEnteredWithTax,
@@ -62,49 +62,88 @@ const mapPayload = (props: AvataxCalculateTaxesMapPayloadArgs): CreateTransactio
         shipTo: avataxAddressFactory.fromSaleorAddress(taxBase.address!),
       },
       currencyCode: taxBase.currency,
-      lines: mapLines(taxBase, config),
+      lines: mapPayloadLines(taxBase, config),
       date: new Date(),
     },
   };
 };
 
-const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
+export function mapResponseShippingLine(
+  transaction: TransactionModel
+): Pick<
+  CalculateTaxesResponse,
+  "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
+> {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
 
-  const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
+  if (!shippingLine?.isItemTaxable) {
+    return {
+      shipping_price_gross_amount: shippingLine?.lineAmount ?? 0,
+      shipping_price_net_amount: shippingLine?.lineAmount ?? 0,
+      /*
+       * avatax doesnt return combined tax rate
+       * // todo: calculate percentage tax rate
+       */
+      shipping_tax_rate: 0,
+    };
+  }
+
   const shippingTaxCalculated = shippingLine?.taxCalculated ?? 0;
   const shippingTaxableAmount = shippingLine?.taxableAmount ?? 0;
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated
   );
-  const shippingNetAmount = shippingGrossAmount;
 
   return {
     shipping_price_gross_amount: shippingGrossAmount,
-    shipping_price_net_amount: shippingNetAmount,
-    // todo: add shipping tax rate
+    shipping_price_net_amount: shippingTaxableAmount,
     shipping_tax_rate: 0,
-    lines:
-      productLines?.map((line) => {
-        const lineTaxCalculated = line.taxCalculated ?? 0;
-        const lineTotalNetAmount = line.taxableAmount ?? 0;
-        const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
-          lineTotalNetAmount + lineTaxCalculated
-        );
+  };
+}
 
+export function mapResponseProductLines(
+  transaction: TransactionModel
+): CalculateTaxesResponse["lines"] {
+  const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
+
+  return (
+    productLines?.map((line) => {
+      if (!line.isItemTaxable) {
         return {
-          total_gross_amount: lineTotalGrossAmount,
-          total_net_amount: lineTotalNetAmount,
-          // todo: add tax rate
+          total_gross_amount: line.lineAmount ?? 0,
+          total_net_amount: line.lineAmount ?? 0,
           tax_rate: 0,
         };
-      }) ?? [],
+      }
+
+      const lineTaxCalculated = line.taxCalculated ?? 0;
+      const lineTotalNetAmount = line.taxableAmount ?? 0;
+      const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
+        lineTotalNetAmount + lineTaxCalculated
+      );
+
+      return {
+        total_gross_amount: lineTotalGrossAmount,
+        total_net_amount: lineTotalNetAmount,
+        /*
+         * avatax doesnt return combined tax rate
+         * // todo: calculate percentage tax rate
+         */ tax_rate: 0,
+      };
+    }) ?? []
+  );
+}
+
+const mapResponse = (transaction: TransactionModel): CalculateTaxesResponse => {
+  const shipping = mapResponseShippingLine(transaction);
+
+  return {
+    ...shipping,
+    lines: mapResponseProductLines(transaction),
   };
 };
 
 export const avataxCalculateTaxesMaps = {
   mapPayload,
   mapResponse,
-  mapLines,
-  shippingItemCode: SHIPPING_ITEM_CODE,
 };
