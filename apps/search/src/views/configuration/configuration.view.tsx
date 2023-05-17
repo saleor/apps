@@ -37,7 +37,7 @@ export const ConfigurationView = () => {
               Provide Algolia settings.{" "}
             </Text>
             <Text>
-              You can find your tokens in Algolia Dashboard
+              You can find your tokens in Algolia Dashboard{" "}
               <TextLink href={ALGOLIA_DASHBOARD_TOKENS_URL} newTab>
                 here
               </TextLink>
