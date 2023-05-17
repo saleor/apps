@@ -15,10 +15,10 @@ export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
         Saleor database.
       </Text>
       <Text as="p">
-        The app supports following
+        The app supports following{" "}
         <TextLink href={SALEOR_EVENTS_DOCS_URL} newTab>
           events
-        </TextLink>
+        </TextLink>{" "}
         that will synchronize Algolia in the background:
       </Text>
       <ul>

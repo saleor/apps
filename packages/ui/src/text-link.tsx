@@ -9,17 +9,14 @@ export interface TextLinkProps extends TextProps {
 
 const BaseTextLink = (props: TextLinkProps) => {
   return (
-    <Text
-      target="_blank"
-      as={"a"}
-      textDecoration={"underline"}
-      variant={"bodyStrong"}
-      rel="noopener noreferrer"
-      {...props}
-    >
+    <Text target="_blank" as={"a"} textDecoration={"none"} rel="noopener noreferrer" {...props}>
       <Text
-        __margin={0}
-        color={"text2Decorative"} /* TODO Color not applied - looks like Macaw issue*/
+        transition={"ease"}
+        variant={"bodyStrong"}
+        color={{
+          default: "text3Decorative",
+          hover: "text1Decorative",
+        }}
       >
         {props.children}
       </Text>
