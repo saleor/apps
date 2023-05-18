@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.13.2
+
+### Patch Changes
+
+- 5e903ae: Update app-sdk to 0.38.0
+
 ## 1.13.1
 
 ### Patch Changes
