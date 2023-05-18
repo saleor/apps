@@ -6,59 +6,53 @@ import styles from "./breadcrumbs.module.css";
 
 export type BreadcrumbsItemProps = PropsWithBox<{
   href?: string;
-  active?: boolean;
-  separator?: React.ReactNode;
+  isLast?: boolean;
 }>;
 
-const BreadcrumbsItem = ({
-  children,
-  href,
-  separator = ">",
-  active = false,
-  ...p
-}: BreadcrumbsItemProps) => {
+const BreadcrumbsItem = ({ children, href, isLast = false, ...p }: BreadcrumbsItemProps) => {
   return (
-    <Box as="li" {...p}>
-      <Text variant="title" color={active ? "textNeutralDefault" : "textNeutralSubdued"}>
-        {href ? (
+    <Box fontSize="titleMedium" as="li" {...p}>
+      <Text
+        __fontSize={"inherit"}
+        variant="title"
+        color={isLast ? "textNeutralDefault" : "textNeutralSubdued"}
+      >
+        {href && !isLast ? (
           <Link className={styles.link} href={href}>
             {children}
           </Link>
         ) : (
           children
         )}
-        {!active && (
-          <Box as="span" marginX={4}>
-            {separator}
-          </Box>
-        )}
       </Text>
     </Box>
   );
 };
 
-export type BreadcrumbsProps = PropsWithBox<Pick<BreadcrumbsItemProps, "separator">>;
+export type BreadcrumbsProps = PropsWithBox<{}>;
 
-export const Breadcrumbs = ({ children, separator, ...p }: BreadcrumbsProps) => {
+export const Breadcrumbs = ({ children, ...p }: BreadcrumbsProps) => {
   return (
-    <Box
-      alignItems={"center"}
-      display={"flex"}
-      padding={0}
-      margin={0}
-      style={{ listStyle: "none" }}
-      as="ol"
-      {...p}
-    >
-      {React.Children.map(children, (child, index) => {
-        const isLast = index === React.Children.count(children) - 1;
+    <nav aria-label="breadcrumb">
+      <Box
+        className={styles.breadcrumbs}
+        alignItems={"center"}
+        display={"flex"}
+        padding={0}
+        margin={0}
+        style={{ listStyle: "none" }}
+        as="ol"
+        {...p}
+      >
+        {React.Children.map(children, (child, index) => {
+          const isLast = index === React.Children.count(children) - 1;
 
-        return React.cloneElement(child as React.ReactElement<BreadcrumbsItemProps>, {
-          active: isLast,
-          separator,
-        });
-      })}
-    </Box>
+          return React.cloneElement(child as React.ReactElement<BreadcrumbsItemProps>, {
+            isLast,
+          });
+        })}
+      </Box>
+    </nav>
   );
 };
 

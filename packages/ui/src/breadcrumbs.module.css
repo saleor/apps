@@ -5,3 +5,12 @@
 .link:hover {
   text-decoration: underline;
 }
+
+/* add / separator for .breadcrumbs children */
+
+.breadcrumbs > *:not(:last-child)::after {
+  content: "/";
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  font-size: inherit;
+}
