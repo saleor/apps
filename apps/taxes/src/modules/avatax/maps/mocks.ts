@@ -1283,7 +1283,8 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
   },
   channel: {
     providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-    enabled: false,
+  },
+  config: {
     address: {
       country: "US",
       zip: "92093",
@@ -1291,14 +1292,14 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
       city: "La Jolla",
       street: "9500 Gilman Drive",
     },
-  },
-  config: {
     companyCode: "DEFAULT",
     isAutocommit: false,
     isSandbox: true,
     name: "Avatax-1",
-    password: "password",
-    username: "username",
+    credentials: {
+      password: "password",
+      username: "username",
+    },
     shippingTaxCode: "FR000000",
   },
 };
