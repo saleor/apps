@@ -14,6 +14,7 @@ export interface ProviderInstancePingApiPayload {
 
 export interface ProviderInstancePingApiResponse {
   success: boolean;
+  message?: string;
 }
 
 const handler: NextProtectedApiHandler = async (
@@ -51,22 +52,30 @@ const handler: NextProtectedApiHandler = async (
   const providerInstanceSettings = providerInstancesSettingsParsed[providerInstanceId];
 
   if (!providerInstanceSettings) {
+    logger.debug("Settings not found, returning 400");
     return res.status(400).json({
       success: false,
     });
   }
 
-  const pingResult = await pingProviderInstance(providerInstanceSettings);
+  try {
+    const pingResult = await pingProviderInstance(providerInstanceSettings);
 
-  if (!pingResult.ok) {
+    if (pingResult.ok) {
+      return res.status(200).json({
+        success: true,
+      });
+    } else {
+      throw pingResult;
+    }
+  } catch (e) {
+    logger.debug(e, "Failed connecting to the CMS");
+
     return res.status(400).json({
       success: false,
+      message: JSON.stringify(e),
     });
   }
-
-  return res.status(200).json({
-    success: true,
-  });
 };
 
 export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]);
