@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.7.2
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- Updated dependencies [c406318]
+  - @saleor/apps-shared@1.5.1
+
 ## 1.7.1
 
 ### Patch Changes

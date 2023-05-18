@@ -1,5 +1,14 @@
 # saleor-app-crm
 
+## 1.3.2
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- 403bcf8: Update @saleor/app-sdk to 0.8.0-pre.84
+- Updated dependencies [c406318]
+  - @saleor/apps-shared@1.5.1
+
 ## 1.3.1
 
 ### Patch Changes

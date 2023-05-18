@@ -1,5 +1,19 @@
 # saleor-app-taxes
 
+## 1.6.1
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- 51134a5: Fix returning 0 for line price if Avatax returns isItemTaxable: false. This happens in, f.e., certain states in the US where there is no sales tax. After the fix, the app will fall back to the original line price.
+- Updated dependencies [24615cf]
+- Updated dependencies [ba7c3de]
+- Updated dependencies [c406318]
+- Updated dependencies [e751459]
+- Updated dependencies [f9ca488]
+  - @saleor/apps-ui@1.1.0
+  - @saleor/apps-shared@1.5.1
+
 ## 1.6.0
 
 ### Minor Changes

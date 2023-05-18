@@ -1,5 +1,14 @@
 # saleor-app-invoices
 
+## 1.13.1
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- 403bcf8: Update @saleor/app-sdk to 0.8.0-pre.84
+- Updated dependencies [c406318]
+  - @saleor/apps-shared@1.5.1
+
 ## 1.13.0
 
 ### Minor Changes

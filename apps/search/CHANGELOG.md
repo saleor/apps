@@ -1,5 +1,25 @@
 # saleor-app-search
 
+## 1.9.0
+
+### Minor Changes
+
+- 24615cf: Replaced custom Chip implementation with SemanticChip from shared package
+- e751459: Use TextLink component from shared package
+
+### Patch Changes
+
+- f9ca488: Fixed how TextLink is displayed - added missing space between spans
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- 403bcf8: Update @saleor/app-sdk to 0.8.0-pre.84
+- Updated dependencies [24615cf]
+- Updated dependencies [ba7c3de]
+- Updated dependencies [c406318]
+- Updated dependencies [e751459]
+- Updated dependencies [f9ca488]
+  - @saleor/apps-ui@1.1.0
+  - @saleor/apps-shared@1.5.1
+
 ## 1.8.1
 
 ### Patch Changes
