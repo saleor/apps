@@ -24,8 +24,8 @@ module.exports = withSentryConfig(
     // Suppresses source map uploading logs during build
     silent: true,
 
-    org: "saleor",
-    project: "product-feed",
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
   },
   {
     disableServerWebpackPlugin: !isSentryEnvAvailable,
