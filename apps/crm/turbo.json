@@ -14,7 +14,11 @@
         "REST_APL_TOKEN",
         "ALLOWED_DOMAIN_PATTERN",
         "MAILCHIMP_CLIENT_SECRET",
-        "MAILCHIMP_CLIENT_ID"
+        "MAILCHIMP_CLIENT_ID",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG"
       ]
     }
   }

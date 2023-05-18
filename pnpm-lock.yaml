@@ -185,6 +185,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.84
         version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+      '@sentry/nextjs':
+        specifier: ^7.52.1
+        version: 7.52.1(next@13.3.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^4.28.0
         version: 4.28.0(react-dom@18.2.0)(react@18.2.0)
