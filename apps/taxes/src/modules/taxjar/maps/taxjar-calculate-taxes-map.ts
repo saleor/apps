@@ -1,9 +1,24 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { TaxBaseFragment, TaxBaseLineFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
-import { taxLineResolver } from "../../taxes/tax-line-resolver";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs } from "../taxjar-client";
+function getTaxBaseLineDiscount(
+  line: TaxBaseLineFragment,
+  totalDiscount: number,
+  allLinesTotal: number
+) {
+  if (totalDiscount === 0 || allLinesTotal === 0) {
+    return 0;
+  }
+  const lineTotalAmount = Number(line.totalPrice.amount);
+  const discountAmount = (lineTotalAmount / allLinesTotal) * totalDiscount;
+
+  if (discountAmount > lineTotalAmount) {
+    return lineTotalAmount;
+  }
+  return discountAmount;
+}
 
 const formatCalculatedAmount = (amount: number) => {
   return Number(amount.toFixed(2));
@@ -35,11 +50,7 @@ const prepareLinesWithDiscountPayload = (
   const totalDiscount = discountsSum <= allLinesTotal ? discountsSum : allLinesTotal;
 
   return lines.map((line) => {
-    const discountAmount = taxLineResolver.getTaxBaseLineDiscount(
-      line,
-      totalDiscount,
-      allLinesTotal
-    );
+    const discountAmount = getTaxBaseLineDiscount(line, totalDiscount, allLinesTotal);
 
     return {
       id: line.sourceLine.id,
