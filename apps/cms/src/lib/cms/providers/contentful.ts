@@ -96,7 +96,7 @@ const getEntryEndpoint = ({
 }): string => `/spaces/${spaceId}/environments/${environment}/entries/${resourceId}`;
 
 const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
-  const logger = createLogger({ cms: "strapi" });
+  const logger = createLogger({ cms: "contentful" });
 
   const { environment, spaceId, contentId, locale, apiRequestsPerSecond } = config;
 
@@ -105,8 +105,9 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
   const pingCMS = async () => {
     const endpoint = `/spaces/${spaceId}`;
     const response = await contentfulFetch(endpoint, config, { method: "GET" });
+    const respBody = await response.json();
 
-    logger.debug({ response }, "pingCMS response");
+    logger.debug({ response, body: respBody }, "pingCMS response");
     return {
       ok: response.ok,
     };

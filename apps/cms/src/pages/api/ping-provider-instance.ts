@@ -14,7 +14,6 @@ export interface ProviderInstancePingApiPayload {
 
 export interface ProviderInstancePingApiResponse {
   success: boolean;
-  message?: string;
 }
 
 const handler: NextProtectedApiHandler = async (
@@ -73,7 +72,6 @@ const handler: NextProtectedApiHandler = async (
 
     return res.status(400).json({
       success: false,
-      message: JSON.stringify(e),
     });
   }
 };
