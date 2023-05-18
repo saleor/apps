@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import Link from "next/link";
 import React from "react";
