@@ -1,17 +1,7 @@
 import { Box, BoxProps, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { trpcClient } from "../trpc/trpc-client";
-
-const Table = {
-  Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
-  THead: (props: BoxProps) => <Box {...props} as="thead" />,
-  TR: (props: BoxProps) => <Box {...props} as="tr" />,
-  TH: (props: BoxProps) => (
-    <Box fontWeight={"captionSmall"} fontSize={"captionSmall"} {...props} as="th" />
-  ),
-  TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
-  TD: (props: BoxProps) => <Box fontSize="bodyMedium" {...props} as="td" />,
-};
+import { AppCard } from "./app-card";
 
 const AddProvider = () => {
   const router = useRouter();
@@ -28,17 +18,29 @@ const AddProvider = () => {
       <Text variant="body" __fontWeight={"400"}>
         No providers configured yet
       </Text>
-      <Button onClick={() => router.push("/providers/new")}>Add first provider</Button>
+      <Button onClick={() => router.push("/providers")}>Add first provider</Button>
     </Box>
   );
 };
 
 const Skeleton = () => {
+  // todo: replace with skeleton
   return (
     <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      Skeleton...
+      Loading...
     </Box>
   );
+};
+
+const Table = {
+  Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
+  THead: (props: BoxProps) => <Box {...props} as="thead" />,
+  TR: (props: BoxProps) => <Box {...props} as="tr" />,
+  TH: (props: BoxProps) => (
+    <Box fontWeight={"captionSmall"} fontSize={"captionSmall"} {...props} as="th" />
+  ),
+  TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
+  TD: (props: BoxProps) => <Box fontSize="bodyMedium" {...props} as="td" />,
 };
 
 const ProvidersTable = () => {
@@ -75,25 +77,17 @@ export const Providers = () => {
   const isNoResult = isFetched && !isProvider;
 
   return (
-    <Box
-      borderRadius={4}
-      borderWidth={1}
-      borderColor={"neutralPlain"}
-      borderStyle={"solid"}
-      padding={8}
-      __minHeight={"320px"}
-      height="100%"
-    >
+    <AppCard __minHeight={"320px"} height="100%">
       {isFetching && <Skeleton />}
       {isNoResult && <AddProvider />}
       {isResult && (
         <>
           <ProvidersTable />
           <Box>
-            <Button onClick={() => router.push("/providers/new")}>Add new</Button>
+            <Button onClick={() => router.push("/providers")}>Add new</Button>
           </Box>
         </>
       )}
-    </Box>
+    </AppCard>
   );
 };
