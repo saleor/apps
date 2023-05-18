@@ -3,6 +3,7 @@ import { TaxBaseFragment, TaxBaseLineFragment } from "../../../../generated/grap
 import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs } from "../taxjar-client";
+
 function getTaxBaseLineDiscount(
   line: TaxBaseLineFragment,
   totalDiscount: number,

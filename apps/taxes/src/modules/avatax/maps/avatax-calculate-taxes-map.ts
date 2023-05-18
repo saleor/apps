@@ -9,6 +9,7 @@ import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "./address-factory";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
 /**
  * * Shipping is a regular line item in Avatax
@@ -78,8 +79,10 @@ export function mapResponseShippingLine(
 
   if (!shippingLine?.isItemTaxable) {
     return {
-      shipping_price_gross_amount: shippingLine?.lineAmount ?? 0,
-      shipping_price_net_amount: shippingLine?.lineAmount ?? 0,
+      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shippingLine?.lineAmount
+      ),
+      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine?.lineAmount),
       /*
        * avatax doesnt return combined tax rate
        * // todo: calculate percentage tax rate
@@ -88,8 +91,12 @@ export function mapResponseShippingLine(
     };
   }
 
-  const shippingTaxCalculated = shippingLine?.taxCalculated ?? 0;
-  const shippingTaxableAmount = shippingLine?.taxableAmount ?? 0;
+  const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+    shippingLine?.taxCalculated
+  );
+  const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+    shippingLine?.taxableAmount
+  );
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated
   );
@@ -110,14 +117,14 @@ export function mapResponseProductLines(
     productLines?.map((line) => {
       if (!line.isItemTaxable) {
         return {
-          total_gross_amount: line.lineAmount ?? 0,
-          total_net_amount: line.lineAmount ?? 0,
+          total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(line.lineAmount),
+          total_net_amount: taxProviderUtils.resolveOptionalOrThrow(line.lineAmount),
           tax_rate: 0,
         };
       }
 
-      const lineTaxCalculated = line.taxCalculated ?? 0;
-      const lineTotalNetAmount = line.taxableAmount ?? 0;
+      const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(line.taxCalculated);
+      const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrow(line.taxableAmount);
       const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
         lineTotalNetAmount + lineTaxCalculated
       );

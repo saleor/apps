@@ -5,6 +5,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { CreateOrderArgs } from "../taxjar-client";
 import { numbers } from "../../taxes/numbers";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
 function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] {
   return lines.map((line) => ({
@@ -20,7 +21,13 @@ function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] 
 
 function sumLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
-    lines.reduce((prev, next) => prev + (next.unit_price ?? 0) * (next.quantity ?? 0), 0)
+    lines.reduce(
+      (prev, next) =>
+        prev +
+        taxProviderUtils.resolveOptionalOrThrow(next.unit_price) *
+          taxProviderUtils.resolveOptionalOrThrow(next.quantity),
+      0
+    )
   );
 }
 
