@@ -5536,7 +5536,6 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@saleor/app-sdk@0.38.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-JS/E3YODFHc+1DI+PczbV8jB09nLwzdQcwNs681RlwvR3JUC892hdBYYRdBKG5lauAcr4IxKw1IbrsxJKngtWA==}
