@@ -1,5 +1,14 @@
 # saleor-app-products-feed
 
+## 1.6.2
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- 2de2a40: Query for the product details run now in paralell to speed up overall feed generation
+- Updated dependencies [c406318]
+  - @saleor/apps-shared@1.5.1
+
 ## 1.6.1
 
 ### Patch Changes

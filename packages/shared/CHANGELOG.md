@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.5.1
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+
 ## 1.5.0
 
 ### Minor Changes

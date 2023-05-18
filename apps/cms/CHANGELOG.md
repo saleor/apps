@@ -1,5 +1,17 @@
 # saleor-app-cms
 
+## 1.5.0
+
+### Minor Changes
+
+- 7c9a9a2: Added additional debug logs for "ping" endpoint. In case of failed connection, logs can be checked for details. Endpoint also will return error to the frontend
+
+### Patch Changes
+
+- c406318: Updated dep @saleor/app-sdk to 0.38.0
+- Updated dependencies [c406318]
+  - @saleor/apps-shared@1.5.1
+
 ## 1.4.1
 
 ### Patch Changes
