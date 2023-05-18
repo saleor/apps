@@ -77,12 +77,18 @@ export function mapResponseShippingLine(
 > {
   const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
 
-  if (!shippingLine?.isItemTaxable) {
+  if (!shippingLine) {
     return {
-      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
-        shippingLine?.lineAmount
-      ),
-      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine?.lineAmount),
+      shipping_price_gross_amount: 0,
+      shipping_price_net_amount: 0,
+      shipping_tax_rate: 0,
+    };
+  }
+
+  if (!shippingLine.isItemTaxable) {
+    return {
+      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine.lineAmount),
+      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine.lineAmount),
       /*
        * avatax doesnt return combined tax rate
        * // todo: calculate percentage tax rate
@@ -91,12 +97,8 @@ export function mapResponseShippingLine(
     };
   }
 
-  const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
-    shippingLine?.taxCalculated
-  );
-  const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
-    shippingLine?.taxableAmount
-  );
+  const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(shippingLine.taxCalculated);
+  const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(shippingLine.taxableAmount);
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated
   );
