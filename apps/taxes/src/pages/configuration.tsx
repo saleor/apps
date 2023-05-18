@@ -4,10 +4,7 @@ import { Providers } from "../modules/ui/providers";
 
 const Header = () => {
   return (
-    <Box as="header" display="flex" flexDirection={"column"} gap={6}>
-      <Text as="h1" variant="hero">
-        Configuration
-      </Text>
+    <Box>
       <Text as="p" variant="body" __fontWeight={"400"}>
         Please configure the app by connecting one of the supported tax providers.
       </Text>
