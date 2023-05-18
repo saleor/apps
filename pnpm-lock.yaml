@@ -1088,6 +1088,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: ^0.7.2
         version: 0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.27)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0)
+      '@sentry/nextjs':
+        specifier: ^7.52.1
+        version: 7.52.1(next@13.3.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: ^4.24.2
         version: 4.24.4(react-dom@18.2.0)(react@18.2.0)
