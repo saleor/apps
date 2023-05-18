@@ -37,7 +37,7 @@ const BreadcrumbsItem = ({
   );
 };
 
-export type BreadcrumbsProps = PropsWithBox<{}> & Pick<BreadcrumbsItemProps, "separator">;
+export type BreadcrumbsProps = PropsWithBox<Pick<BreadcrumbsItemProps, "separator">>;
 
 export const Breadcrumbs = ({ children, separator, ...p }: BreadcrumbsProps) => {
   return (
