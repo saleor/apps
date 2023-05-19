@@ -87,8 +87,14 @@ export function mapResponseShippingLine(
 
   if (!shippingLine.isItemTaxable) {
     return {
-      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine.lineAmount),
-      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(shippingLine.lineAmount),
+      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shippingLine.lineAmount,
+        new Error("shippingLine.lineAmount is undefined")
+      ),
+      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shippingLine.lineAmount,
+        new Error("shippingLine.lineAmount is undefined")
+      ),
       /*
        * avatax doesnt return combined tax rate
        * // todo: calculate percentage tax rate
@@ -97,8 +103,14 @@ export function mapResponseShippingLine(
     };
   }
 
-  const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(shippingLine.taxCalculated);
-  const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(shippingLine.taxableAmount);
+  const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+    shippingLine.taxCalculated,
+    new Error("shippingLine.taxCalculated is undefined")
+  );
+  const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+    shippingLine.taxableAmount,
+    new Error("shippingLine.taxableAmount is undefined")
+  );
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated
   );
@@ -119,14 +131,26 @@ export function mapResponseProductLines(
     productLines?.map((line) => {
       if (!line.isItemTaxable) {
         return {
-          total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(line.lineAmount),
-          total_net_amount: taxProviderUtils.resolveOptionalOrThrow(line.lineAmount),
+          total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+            line.lineAmount,
+            new Error("line.lineAmount is undefined")
+          ),
+          total_net_amount: taxProviderUtils.resolveOptionalOrThrow(
+            line.lineAmount,
+            new Error("line.lineAmount is undefined")
+          ),
           tax_rate: 0,
         };
       }
 
-      const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(line.taxCalculated);
-      const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrow(line.taxableAmount);
+      const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+        line.taxCalculated,
+        new Error("line.taxCalculated is undefined")
+      );
+      const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrow(
+        line.taxableAmount,
+        new Error("line.taxableAmount is undefined")
+      );
       const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
         lineTotalNetAmount + lineTaxCalculated
       );

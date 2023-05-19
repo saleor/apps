@@ -22,10 +22,16 @@ function mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] 
 function sumLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
     lines.reduce(
-      (prev, next) =>
+      (prev, line) =>
         prev +
-        taxProviderUtils.resolveOptionalOrThrow(next.unit_price) *
-          taxProviderUtils.resolveOptionalOrThrow(next.quantity),
+        taxProviderUtils.resolveOptionalOrThrow(
+          line.unit_price,
+          new Error("line.unit_price is undefined")
+        ) *
+          taxProviderUtils.resolveOptionalOrThrow(
+            line.quantity,
+            new Error("line.quantity is undefined")
+          ),
       0
     )
   );

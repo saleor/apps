@@ -5,11 +5,16 @@ import { taxProviderUtils } from "./tax-provider-utils";
 
 describe("taxProviderUtils", () => {
   describe("resolveOptionalOrThrow", () => {
-    it("should throw an error if value is undefined", () => {
+    it("should throw a default error if value is undefined", () => {
       expect(() => taxProviderUtils.resolveOptionalOrThrow(undefined)).toThrowError();
     });
-    it("should return value if value is not undefined", () => {
-      expect(taxProviderUtils.resolveOptionalOrThrow("test")).toBe("test");
-    });
+    it("should throw a custom error if value is undefined", () => {
+      expect(() =>
+        taxProviderUtils.resolveOptionalOrThrow(undefined, new Error("test"))
+      ).toThrowError("test");
+    }),
+      it("should return value if value is not undefined", () => {
+        expect(taxProviderUtils.resolveOptionalOrThrow("test")).toBe("test");
+      });
   });
 });
