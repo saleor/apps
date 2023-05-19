@@ -6,6 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { UploadFileArgs } from "./upload-file";
 import { createLogger } from "@saleor/apps-shared";
+import { MULTI_PART_SIZE_THRESHOLD } from "./const";
 
 /*
  * Code based on S3 docs:
@@ -36,10 +37,11 @@ export const UploadMultiPart = async ({
 
     const uploadPromises = [];
     // Multipart uploads require a minimum size of 5 MB per part.
-    const partSize = Math.ceil(buffer.length / 5);
+    const partSize = MULTI_PART_SIZE_THRESHOLD;
+    const numberOfParts = Math.ceil(buffer.length / partSize);
 
     // Upload each part.
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < numberOfParts; i++) {
       const start = i * partSize;
       const end = start + partSize;
 
@@ -55,7 +57,7 @@ export const UploadMultiPart = async ({
             })
           )
           .then((d) => {
-            logger.debug("Part", i + 1, "uploaded");
+            logger.debug(`Part ${i + 1}/${numberOfParts} uploaded`);
             return d;
           })
       );
