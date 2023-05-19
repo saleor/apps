@@ -29,5 +29,6 @@ export const getGoogleFeedSettings = async ({ authData, channel }: GetGoogleFeed
   return {
     storefrontUrl,
     productStorefrontUrl,
+    s3BucketConfiguration: configuration.s3BucketConfiguration,
   };
 };

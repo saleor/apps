@@ -10,6 +10,7 @@ import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
 import { SideMenu } from "./side-menu";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { S3ConfigurationForm } from "./s3-configuration-form";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -100,7 +101,7 @@ export const ChannelsConfiguration = () => {
           <Paper elevation={0}>
             <UrlConfigurationForm
               channelID={activeChannel.id}
-              key={activeChannelSlug}
+              key={activeChannelSlug + "url"}
               channelSlug={activeChannel.slug}
               onSubmit={async (data) => {
                 const newConfig = AppConfigContainer.setChannelUrlConfiguration(configurationData)(
@@ -110,6 +111,22 @@ export const ChannelsConfiguration = () => {
                 mutate(newConfig);
               }}
               initialData={AppConfigContainer.getChannelUrlConfiguration(configurationData)(
+                activeChannel.slug
+              )}
+              channelName={activeChannel?.name ?? activeChannelSlug}
+            />
+            <S3ConfigurationForm
+              channelID={activeChannel.id}
+              key={activeChannelSlug + "s3"}
+              channelSlug={activeChannel.slug}
+              onSubmit={async (data) => {
+                const newConfig = AppConfigContainer.setChannelS3BucketConfiguration(
+                  configurationData
+                )(activeChannel.slug)(data);
+
+                mutate(newConfig);
+              }}
+              initialData={AppConfigContainer.getChannelS3BucketConfiguration(configurationData)(
                 activeChannel.slug
               )}
               channelName={activeChannel?.name ?? activeChannelSlug}
