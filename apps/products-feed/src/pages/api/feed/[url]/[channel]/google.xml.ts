@@ -11,7 +11,7 @@ import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-c
 import { createSettingsManager } from "../../../../../lib/metadata-manager";
 import { createClient } from "../../../../../lib/create-graphq-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
-import { CreateS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
+import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { S3BucketConfiguration } from "../../../../../modules/app-configuration/app-config";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
@@ -98,7 +98,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (bucketConfiguration) {
     logger.debug("Bucket configuration found, checking if the feed has been generated recently");
-    const s3Client = CreateS3ClientFromConfiguration(bucketConfiguration);
+    const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
       saleorApiUrl: authData.saleorApiUrl,
     });
@@ -181,7 +181,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   logger.debug("Bucket configuration found, uploading the feed to S3");
-  const s3Client = CreateS3ClientFromConfiguration(bucketConfiguration);
+  const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,
   });
