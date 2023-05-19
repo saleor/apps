@@ -28,6 +28,15 @@ function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   return payload;
 }
 
+// ? maybe make it a part of WebhookResponse?
+function handleWebhookError(error: unknown) {
+  const logger = createLogger({ service: "checkout-calculate-taxes", name: "handleWebhookError" });
+
+  if (error instanceof Error) {
+    logger.error(error.stack);
+  }
+}
+
 export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
   name: "CheckoutCalculateTaxes",
   apl: saleorApp.apl,
@@ -68,7 +77,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
-    logger.error({ error });
+    handleWebhookError(error);
     return webhookResponse.failure("Error while calculating taxes");
   }
 });

@@ -9,6 +9,15 @@ import { mapPayloadArgsMocks, transactionModelMocks } from "./mocks";
 
 describe("avataxCalculateTaxesMaps", () => {
   describe("mapResponseShippingLine", () => {
+    it("when shipping line is not present, returns 0s", () => {
+      const shippingLine = mapResponseShippingLine(transactionModelMocks.noShippingLine);
+
+      expect(shippingLine).toEqual({
+        shipping_price_gross_amount: 0,
+        shipping_price_net_amount: 0,
+        shipping_tax_rate: 0,
+      });
+    });
     it("when shipping line is not taxable, returns line amount", () => {
       const nonTaxableShippingLine = mapResponseShippingLine(transactionModelMocks.nonTaxable);
 
