@@ -2,7 +2,4 @@
 module.exports = {
   reactStrictMode: true,
   transpilePackages: ["@saleor/apps-shared"],
-  api: {
-    responseLimit: false,
-  },
 };
