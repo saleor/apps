@@ -6,7 +6,7 @@ type Breadcrumb = {
   href?: string;
 };
 
-const newProviderBreadcrumbs = [
+const newProviderBreadcrumbs: Breadcrumb[] = [
   {
     href: "/configuration",
     label: "Configuration",
@@ -15,9 +15,9 @@ const newProviderBreadcrumbs = [
     label: "Add provider",
     href: "/providers",
   },
-] as Breadcrumb[];
+];
 
-const breadcrumbsForRoute = {
+const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
   "/configuration": [
     {
       href: "/configuration",
@@ -39,11 +39,15 @@ const breadcrumbsForRoute = {
       href: "/providers/avatax",
     },
   ],
-} as Record<string, Breadcrumb[]>;
+};
 
 const useBreadcrumbs = () => {
   const router = useRouter();
   const breadcrumbs = breadcrumbsForRoute[router.pathname];
+
+  if (!breadcrumbs) {
+    throw new Error(`No breadcrumbs for route ${router.pathname}`);
+  }
 
   return breadcrumbs;
 };
@@ -53,7 +57,7 @@ export const AppBreadcrumbs = () => {
 
   return (
     <Breadcrumbs>
-      {breadcrumbs?.map((breadcrumb) => (
+      {breadcrumbs.map((breadcrumb) => (
         <Breadcrumbs.Item href={breadcrumb.href}>{breadcrumb.label}</Breadcrumbs.Item>
       ))}
     </Breadcrumbs>
