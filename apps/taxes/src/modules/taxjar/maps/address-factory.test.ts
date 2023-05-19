@@ -13,11 +13,11 @@ describe("taxJarAddressFactory", () => {
       });
 
       expect(result).toEqual({
-        street: "123 Palm Grove Ln",
-        city: "LOS ANGELES",
-        state: "CA",
-        zip: "90002",
-        country: "US",
+        from_street: "123 Palm Grove Ln",
+        from_city: "LOS ANGELES",
+        from_state: "CA",
+        from_zip: "90002",
+        from_country: "US",
       });
     });
   });
@@ -36,11 +36,11 @@ describe("taxJarAddressFactory", () => {
       });
 
       expect(result).toEqual({
-        street: "123 Palm Grove Ln",
-        city: "LOS ANGELES",
-        state: "CA",
-        zip: "90002",
-        country: "US",
+        to_street: "123 Palm Grove Ln",
+        to_city: "LOS ANGELES",
+        to_state: "CA",
+        to_zip: "90002",
+        to_country: "US",
       });
     });
 
@@ -57,11 +57,11 @@ describe("taxJarAddressFactory", () => {
       });
 
       expect(result).toEqual({
-        street: "123 Palm Grove Ln",
-        city: "LOS ANGELES",
-        state: "CA",
-        zip: "90002",
-        country: "US",
+        to_street: "123 Palm Grove Ln",
+        to_city: "LOS ANGELES",
+        to_state: "CA",
+        to_zip: "90002",
+        to_country: "US",
       });
     });
   });

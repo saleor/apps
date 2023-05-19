@@ -1773,7 +1773,7 @@ const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
     address: {
       country: "US",
       zip: "92093",
-      state: "17-05-2023",
+      state: "CA",
       city: "La Jolla",
       street: "9500 Gilman Drive",
     },

@@ -3,6 +3,8 @@ import { TaxBaseFragment, TaxBaseLineFragment } from "../../../../generated/grap
 import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs } from "../taxjar-client";
+import { TaxJarConfig } from "../taxjar-config";
+import { taxJarAddressFactory } from "./address-factory";
 
 function getTaxBaseLineDiscount(
   line: TaxBaseLineFragment,
@@ -55,7 +57,7 @@ const prepareLinesWithDiscountPayload = (
 
     return {
       id: line.sourceLine.id,
-      chargeTaxes: taxBase.pricesEnteredWithTax,
+      chargeTaxes: true,
       // todo: get from tax code matcher
       taxCode: "",
       quantity: line.quantity,
@@ -115,30 +117,42 @@ const mapResponse = (
   };
 };
 
-const mapPayload = (taxBase: TaxBaseFragment, channel: ChannelConfig): FetchTaxForOrderArgs => {
+function mapPayloadLines(lines: FetchTaxesLinePayload[]) {
+  return lines.map((line) => ({
+    id: line.id,
+    quantity: line.quantity,
+    product_tax_code: line.taxCode || undefined,
+    unit_price: line.unitAmount,
+    discount: line.discount,
+  }));
+}
+
+export type TaxJarCalculateTaxesMapPayloadArgs = {
+  taxBase: TaxBaseFragment;
+  channel: ChannelConfig;
+  config: TaxJarConfig;
+};
+
+const mapPayload = ({
+  taxBase,
+  channel,
+}: TaxJarCalculateTaxesMapPayloadArgs): FetchTaxForOrderArgs => {
   const linesWithDiscount = prepareLinesWithDiscountPayload(taxBase);
   const linesWithChargeTaxes = linesWithDiscount.filter((line) => line.chargeTaxes === true);
+  const fromAddress = taxJarAddressFactory.fromChannelAddress(channel.address);
+
+  if (!taxBase.address) {
+    throw new Error("Customer address is required to calculate taxes in TaxJar.");
+  }
+
+  const toAddress = taxJarAddressFactory.fromSaleorAddress(taxBase.address);
 
   const taxParams = {
     params: {
-      from_country: channel.address.country,
-      from_zip: channel.address.zip,
-      from_state: channel.address.state,
-      from_city: channel.address.city,
-      from_street: channel.address.street,
-      to_country: taxBase.address!.country.code,
-      to_zip: taxBase.address!.postalCode,
-      to_state: taxBase.address!.countryArea,
-      to_city: taxBase.address!.city,
-      to_street: `${taxBase.address!.streetAddress1} ${taxBase.address!.streetAddress2}`,
+      ...fromAddress,
+      ...toAddress,
       shipping: taxBase.shippingPrice.amount,
-      line_items: linesWithChargeTaxes.map((line) => ({
-        id: line.id,
-        quantity: line.quantity,
-        product_tax_code: line.taxCode || undefined,
-        unit_price: line.unitAmount,
-        discount: line.discount,
-      })),
+      line_items: mapPayloadLines(linesWithChargeTaxes),
     },
   };
 

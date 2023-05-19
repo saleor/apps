@@ -1,28 +1,32 @@
 import { ChannelAddress } from "../../channels-configuration/channels-config";
 import { AddressFragment as SaleorAddress } from "../../../../generated/graphql";
-import { AddressParams as TaxJarAddress } from "taxjar/dist/types/paramTypes";
+import { AddressParams as TaxJarAddress, TaxParams } from "taxjar/dist/types/paramTypes";
 
 function joinAddresses(address1: string, address2: string): string {
   return `${address1}${address2.length > 0 ? " " + address2 : ""}`;
 }
 
-function mapSaleorAddressToTaxJarAddress(address: SaleorAddress): TaxJarAddress {
+function mapSaleorAddressToTaxJarAddress(
+  address: SaleorAddress
+): Pick<TaxParams, "to_city" | "to_country" | "to_state" | "to_street" | "to_zip"> {
   return {
-    street: joinAddresses(address.streetAddress1, address.streetAddress2),
-    city: address.city,
-    zip: address.postalCode,
-    state: address.countryArea,
-    country: address.country.code,
+    to_street: joinAddresses(address.streetAddress1, address.streetAddress2),
+    to_city: address.city,
+    to_zip: address.postalCode,
+    to_state: address.countryArea,
+    to_country: address.country.code,
   };
 }
 
-function mapChannelAddressToTaxJarAddress(address: ChannelAddress): TaxJarAddress {
+function mapChannelAddressToTaxJarAddress(
+  address: ChannelAddress
+): Pick<TaxParams, "from_city" | "from_country" | "from_state" | "from_street" | "from_zip"> {
   return {
-    city: address.city,
-    country: address.country,
-    state: address.state,
-    street: address.street,
-    zip: address.zip,
+    from_city: address.city,
+    from_country: address.country,
+    from_state: address.state,
+    from_street: address.street,
+    from_zip: address.zip,
   };
 }
 

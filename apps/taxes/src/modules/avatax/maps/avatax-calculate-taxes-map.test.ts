@@ -93,11 +93,6 @@ describe("avataxCalculateTaxesMaps", () => {
       ]);
     });
   });
-  describe.todo("mapPayload", () => {
-    it.todo("calculation of fields");
-    it.todo("formatting the fields");
-    it.todo("rounding of numbers");
-  });
   describe("mapLines", () => {
     const lines = mapPayloadLines(
       mapPayloadArgsMocks.default.taxBase,

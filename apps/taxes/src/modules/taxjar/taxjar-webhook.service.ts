@@ -9,12 +9,14 @@ import { taxJarOrderCreatedMaps } from "./maps/taxjar-order-created-map";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
+  config: TaxJarConfig;
   private logger: Logger;
 
   constructor(config: TaxJarConfig) {
     const avataxClient = new TaxJarClient(config);
 
     this.client = avataxClient;
+    this.config = config;
     this.logger = createLogger({
       service: "TaxJarProvider",
     });
@@ -22,7 +24,11 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
     this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = taxJarCalculateTaxesMaps.mapPayload(payload, channel);
+    const args = taxJarCalculateTaxesMaps.mapPayload({
+      taxBase: payload,
+      config: this.config,
+      channel,
+    });
     const fetchedTaxes = await this.client.fetchTaxForOrder(args);
 
     this.logger.debug({ fetchedTaxes }, "fetchTaxForOrder response");
