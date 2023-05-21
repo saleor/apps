@@ -101,6 +101,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
       saleorApiUrl: authData.saleorApiUrl,
+      channel,
     });
 
     const feedLastModificationDate = await getFileDetails({
@@ -123,6 +124,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const downloadUrl = getDownloadUrl({
           s3BucketConfiguration: bucketConfiguration,
           saleorApiUrl: authData.saleorApiUrl,
+          channel,
         });
 
         return res.redirect(downloadUrl);
@@ -184,6 +186,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,
+    channel,
   });
 
   try {
@@ -198,6 +201,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const downloadUrl = getDownloadUrl({
       s3BucketConfiguration: bucketConfiguration,
       saleorApiUrl: authData.saleorApiUrl,
+      channel,
     });
 
     return res.redirect(downloadUrl);
