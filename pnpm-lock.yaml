@@ -1687,9 +1687,6 @@ importers:
 
   packages/shared:
     dependencies:
-      '@types/semver':
-        specifier: ^7.5.0
-        version: 7.5.0
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -1721,6 +1718,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.10
         version: 18.0.10
+      '@types/semver':
+        specifier: ^7.5.0
+        version: 7.5.0
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -6965,6 +6965,7 @@ packages:
 
   /@types/semver@7.5.0:
     resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
+    dev: true
 
   /@types/unist@2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
