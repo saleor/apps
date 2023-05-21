@@ -34,3 +34,5 @@ switch (process.env.APL) {
 export const saleorApp = new SaleorApp({
   apl,
 });
+
+export const REQUIRED_SALEOR_VERSION = ">=3.10 <4";

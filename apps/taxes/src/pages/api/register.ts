@@ -1,8 +1,20 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
-import { saleorApp } from "../../../saleor-app";
+import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";
+import { createLogger, SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
+import { createClient } from "../../lib/graphql";
+import { gql } from "urql";
+import { SaleorVersionQuery } from "../../../generated/graphql";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
+
+const SaleorVersion = gql`
+  query SaleorVersion {
+    shop {
+      version
+    }
+  }
+`;
 
 /**
  * Required endpoint, called by Saleor to install app.
@@ -25,4 +37,46 @@ export default createAppRegisterHandler({
       return true;
     },
   ],
+  /**
+   * TODO Unify with all apps - shared code. Consider moving to app-sdk
+   */
+  async onRequestVerified(req, { authData: { token, saleorApiUrl }, respondWithError }) {
+    const logger = createLogger({
+      context: "onRequestVerified",
+    });
+
+    try {
+      const client = createClient(saleorApiUrl, async () => {
+        return {
+          token,
+        };
+      });
+
+      const saleorVersion = await client
+        .query<SaleorVersionQuery>(SaleorVersion, {})
+        .toPromise()
+        .then((res) => {
+          return res.data?.shop.version;
+        });
+
+      logger.debug({ saleorVersion }, "Received saleor version from Shop query");
+
+      if (!saleorVersion) {
+        throw new Error("Saleor Version couldnt be fetched from the API");
+      }
+
+      new SaleorVersionCompatibilityValidator(REQUIRED_SALEOR_VERSION).validateOrThrow(
+        saleorVersion
+      );
+    } catch (e: unknown) {
+      const message = (e as Error)?.message ?? "Unknown error";
+
+      logger.debug({ message }, "Failed validating semver, will respond with error and status 400");
+
+      throw respondWithError({
+        message: message,
+        status: 400,
+      });
+    }
+  },
 });
