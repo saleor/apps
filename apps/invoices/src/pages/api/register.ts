@@ -4,8 +4,7 @@ import { gql } from "urql";
 import { createClient } from "../../lib/graphql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 
-import { createLogger } from "@saleor/apps-shared";
-import { SaleorVersionCompatibilityValidator } from "../../lib/saleor-version-compatibility-validator";
+import { createLogger, SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
