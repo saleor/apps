@@ -17,7 +17,7 @@ describe("distributeDiscount", () => {
 
     const result = distributeDiscount(discount, nums);
 
-    expect(result.every((num) => num >= 0)).toBeTruthy();
+    expect(result.every((num) => num >= 0)).toBe(true);
   });
   it("should throw an error when discount is greater than the sum of the numbers array", () => {
     const discount = 100;
@@ -32,5 +32,11 @@ describe("distributeDiscount", () => {
     const result = distributeDiscount(discount, nums);
 
     expect(result).toEqual([0, 0, 0, 0]);
+  });
+  it("should return throw error when discount = 0 and numbers = 0", () => {
+    const discount = 0;
+    const nums = [0, 0, 0, 0];
+
+    expect(() => distributeDiscount(discount, nums)).toThrowError();
   });
 });

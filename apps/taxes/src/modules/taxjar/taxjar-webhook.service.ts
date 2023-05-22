@@ -22,16 +22,19 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     });
   }
 
-  async calculateTaxes(taxBase: TaxBaseFragment, channel: ChannelConfig) {
+  async calculateTaxes(taxBase: TaxBaseFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
     const adapter = new TaxJarCalculateTaxesAdapter(this.config);
 
-    return adapter.send({ channel, taxBase });
+    return adapter.send({ channelConfig, taxBase });
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
+  async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ order, channelConfig }, "createOrder called with:");
+
     const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
-    return adapter.send({ channel, order });
+    return adapter.send({ channelConfig, order });
   }
 
   // * TaxJar doesn't require any action on order fulfillment

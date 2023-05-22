@@ -77,7 +77,7 @@ const MOCKED_TAX_BASE: TaxBaseFragment = {
   ],
 };
 
-const MOCKED_CHANNEL: ChannelConfig = {
+const MOCKED_CHANNEL_CONFIG: ChannelConfig = {
   providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
   enabled: false,
   address: {
@@ -102,7 +102,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
     const transformer = new TaxJarCalculateTaxesPayloadTransformer();
     const transformedPayload = transformer.transform({
       taxBase: MOCKED_TAX_BASE,
-      channel: MOCKED_CHANNEL,
+      channelConfig: MOCKED_CHANNEL_CONFIG,
     });
 
     expect(transformedPayload).toEqual({

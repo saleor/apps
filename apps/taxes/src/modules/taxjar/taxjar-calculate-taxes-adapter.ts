@@ -12,7 +12,7 @@ import { WebhookAdapter } from "../taxes/tax-webhook-adapter";
 
 type Payload = {
   taxBase: TaxBaseFragment;
-  channel: ChannelConfig;
+  channelConfig: ChannelConfig;
 };
 
 type Target = FetchTaxForOrderArgs;
@@ -46,8 +46,8 @@ export class TaxJarCalculateTaxesPayloadTransformer {
     });
   }
 
-  transform({ taxBase, channel }: Payload): Target {
-    const fromAddress = taxJarAddressFactory.fromChannelAddress(channel.address);
+  transform({ taxBase, channelConfig }: Payload): Target {
+    const fromAddress = taxJarAddressFactory.fromChannelAddress(channelConfig.address);
 
     if (!taxBase.address) {
       throw new Error("Customer address is required to calculate taxes in TaxJar.");

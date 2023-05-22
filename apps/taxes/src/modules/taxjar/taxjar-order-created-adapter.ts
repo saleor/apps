@@ -8,7 +8,7 @@ import { CreateOrderArgs, TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
 import { taxProviderUtils } from "../taxes/tax-provider-utils";
 
-type Payload = { order: OrderCreatedSubscriptionFragment; channel: ChannelConfig };
+type Payload = { order: OrderCreatedSubscriptionFragment; channelConfig: ChannelConfig };
 type Target = CreateOrderArgs;
 type Response = CreateOrderResponse;
 
@@ -43,7 +43,7 @@ export class TaxJarOrderCreatedPayloadTransformer {
     }));
   }
 
-  transform({ order, channel }: Payload): Target {
+  transform({ order, channelConfig }: Payload): Target {
     const lineItems = this.mapLines(order.lines);
     const lineSum = sumPayloadLines(lineItems);
     const shippingAmount = order.shippingPrice.gross.amount;
@@ -55,11 +55,11 @@ export class TaxJarOrderCreatedPayloadTransformer {
 
     return {
       params: {
-        from_country: channel.address.country,
-        from_zip: channel.address.zip,
-        from_state: channel.address.state,
-        from_city: channel.address.city,
-        from_street: channel.address.street,
+        from_country: channelConfig.address.country,
+        from_zip: channelConfig.address.zip,
+        from_state: channelConfig.address.state,
+        from_city: channelConfig.address.city,
+        from_street: channelConfig.address.street,
         to_country: order.shippingAddress!.country.code,
         to_zip: order.shippingAddress!.postalCode,
         to_state: order.shippingAddress!.countryArea,
