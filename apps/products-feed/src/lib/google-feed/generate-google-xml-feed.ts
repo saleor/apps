@@ -2,6 +2,8 @@ import { XMLBuilder } from "fast-xml-parser";
 import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
+import { EditorJsPlaintextRenderer } from "../editor-js-plaintext-renderer";
+
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
   storefrontUrl: string;
@@ -36,7 +38,7 @@ export const generateGoogleXmlFeed = ({
       slug: v.product.slug,
       variantId: v.id,
       sku: v.sku || undefined,
-      description: v.product.seoDescription || v.product.description,
+      description: EditorJsPlaintextRenderer({ stringData: v.product.description }),
       availability: v.quantityAvailable && v.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
       category: v.product.category?.name || "unknown",
       googleProductCategory: v.product.category?.googleCategoryId || "",
