@@ -1,9 +1,10 @@
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchConfiguration } from "../lib/configuration";
-import { Box, Button, Divider, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -93,61 +94,33 @@ export const AlgoliaConfigurationForm = () => {
       <form onSubmit={onFormSubmit}>
         <Box padding={8}>
           <Box marginBottom={8}>
-            <Controller
-              name="appId"
+            <Input
               control={control}
-              render={({ field, fieldState }) => {
-                return (
-                  <Input
-                    disabled={isFormDisabled}
-                    required
-                    label="Application ID"
-                    error={fieldState.invalid}
-                    helperText={
-                      fieldState.error?.message ?? "Usually 10 characters, e.g. XYZAAABB00"
-                    }
-                    {...field}
-                  />
-                );
-              }}
+              name="appId"
+              disabled={isFormDisabled}
+              required
+              label="Application ID"
+              helperText="Usually 10 characters, e.g. XYZAAABB00"
             />
           </Box>
           <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>
-            <Controller
-              name="secretKey"
+            <Input
               control={control}
-              render={({ field, fieldState }) => (
-                <Input
-                  helperText={
-                    fieldState.error?.message ?? "In Algolia dashboard it's a masked field"
-                  }
-                  disabled={isFormDisabled}
-                  required
-                  label="Admin API Key"
-                  error={fieldState.invalid}
-                  {...field}
-                />
-              )}
+              name="secretKey"
+              disabled={isFormDisabled}
+              required
+              label="Admin API Key"
+              helperText="In Algolia dashboard it's a masked field"
             />
           </Box>
 
-          <Controller
-            name="indexNamePrefix"
+          <Input
             control={control}
-            render={({ field, fieldState }) => {
-              return (
-                <Input
-                  disabled={isFormDisabled}
-                  error={fieldState.invalid}
-                  label="Index name prefix"
-                  helperText={
-                    fieldState.error?.message ??
-                    'Optional prefix, you can add "test" or "staging" to test the app'
-                  }
-                  {...field}
-                />
-              );
-            }}
+            name="indexNamePrefix"
+            disabled={isFormDisabled}
+            required
+            label="Index name prefix"
+            helperText='Optional prefix, you can add "test" or "staging" to test the app'
           />
 
           {credentialsValidationError && (
