@@ -1,15 +1,6 @@
 import { z } from "zod";
+import { sellerShopConfigSchema } from "./app-config";
 
 export const appConfigInputSchema = z.object({
-  shopConfigPerChannel: z.record(
-    z.object({
-      urlConfiguration: z.object({
-        /**
-         * min() to allow empty strings
-         */
-        storefrontUrl: z.string().min(0),
-        productStorefrontUrl: z.string().min(0),
-      }),
-    })
-  ),
+  shopConfigPerChannel: z.record(sellerShopConfigSchema),
 });
