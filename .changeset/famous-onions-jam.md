@@ -2,7 +2,7 @@
 "saleor-app-taxes": minor
 ---
 
-Set minimum Saleor version where app can be installed (3.10).
+Set minimum Saleor version where app can be installed (3.9).
 
 Previously, app could have been installed in any Saleor, but if required taxes APIs were missing, app would crash
 
