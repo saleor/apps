@@ -63,7 +63,7 @@ const removeHtmlTags = (input: string) => {
    * The EditorJS used in the dashboard produces only a few one letter tags,
    * like <b> or </s>, so we can use simpler regex to remove them
    */
-  return input.replaceAll("&nbsp;", " ").replace(/<[^>]{1,2}>/g, "");
+  return input.replace(/<[^>]{1,2}>/g, "");
 };
 
 type EditorJSRendererProps = {
