@@ -1251,6 +1251,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: ^0.8.0-pre.84
         version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
       '@sentry/nextjs':
         specifier: ^7.46.0
         version: 7.46.0(next@13.3.0)(react@18.2.0)
