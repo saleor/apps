@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { TaxBaseFragment } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-adapter";
+import { TaxBaseFragment } from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 
 const MOCKED_TAX_BASE: TaxBaseFragment = {
   pricesEnteredWithTax: false,
@@ -142,7 +142,3 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
     });
   });
 });
-
-describe.todo("TaxJarResponseTransformer", () => {});
-
-describe.todo("TaxJarCalculateTaxesAdapter", () => {});
