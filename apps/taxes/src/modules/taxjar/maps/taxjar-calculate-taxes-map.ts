@@ -5,27 +5,11 @@ import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-config";
 import { taxJarAddressFactory } from "./address-factory";
+import { numbers } from "../../taxes/numbers";
 
-function getTaxBaseLineDiscount(
-  line: TaxBaseLineFragment,
-  totalDiscount: number,
-  allLinesTotal: number
-) {
-  if (totalDiscount === 0 || allLinesTotal === 0) {
-    return 0;
-  }
-  const lineTotalAmount = Number(line.totalPrice.amount);
-  const discountAmount = (lineTotalAmount / allLinesTotal) * totalDiscount;
-
-  if (discountAmount > lineTotalAmount) {
-    return lineTotalAmount;
-  }
-  return discountAmount;
-}
-
-const formatCalculatedAmount = (amount: number) => {
+function formatCalculatedAmount(amount: number) {
   return Number(amount.toFixed(2));
-};
+}
 
 // * This type is related to `TaxLineItem` from TaxJar. It should be unified.
 type FetchTaxesLinePayload = {
@@ -38,22 +22,42 @@ type FetchTaxesLinePayload = {
   totalAmount: number;
 };
 
+// ? shouldn't it be used in all providers?
+export function distributeDiscount(discountSum: number, prices: number[]) {
+  const totalNumbers = prices.length;
+  const totalSum = prices.reduce((sum, number) => sum + number, 0);
+
+  if (discountSum > totalSum) {
+    throw new Error("Discount cannot be greater than total sum");
+  }
+
+  const discountRatio = discountSum / totalSum;
+  const discountedNumbers = [];
+
+  for (let i = 0; i < totalNumbers; i++) {
+    const number = prices[i];
+    const discountAmount = number * discountRatio;
+    const discountedNumber = (number - discountAmount).toFixed(2);
+
+    discountedNumbers.push(numbers.roundFloatToTwoDecimals(Number(discountedNumber)));
+  }
+
+  return discountedNumbers;
+}
+
 const prepareLinesWithDiscountPayload = (
   taxBase: TaxBaseFragment
 ): Array<FetchTaxesLinePayload> => {
   const { lines, discounts } = taxBase;
-  const allLinesTotal = lines.reduce(
-    (total, current) => total + Number(current.totalPrice.amount),
+  const discountSum = discounts?.reduce(
+    (total, current) => total + Number(current.amount.amount),
     0
   );
-  const discountsSum =
-    discounts?.reduce((total, current) => total + Number(current.amount.amount), 0) || 0;
+  const linePrices = lines.map((line) => Number(line.totalPrice.amount));
+  const distributedDiscounts = distributeDiscount(discountSum, linePrices);
 
-  // Make sure that totalDiscount doesn't exceed a sum of all lines
-  const totalDiscount = discountsSum <= allLinesTotal ? discountsSum : allLinesTotal;
-
-  return lines.map((line) => {
-    const discountAmount = getTaxBaseLineDiscount(line, totalDiscount, allLinesTotal);
+  return lines.map((line, index) => {
+    const discountAmount = distributedDiscounts[index];
 
     return {
       id: line.sourceLine.id,

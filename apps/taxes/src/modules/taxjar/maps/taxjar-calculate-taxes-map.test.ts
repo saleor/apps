@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { mapPayloadArgsMocks } from "./mocks";
-import { taxJarCalculateTaxesMaps } from "./taxjar-calculate-taxes-map";
+import { distributeDiscount, taxJarCalculateTaxesMaps } from "./taxjar-calculate-taxes-map";
 
 describe("taxJarCalculateTaxesMaps", () => {
   describe("mapPayload", () => {
@@ -37,5 +37,34 @@ describe("taxJarCalculateTaxesMaps", () => {
         },
       });
     });
+  });
+});
+
+describe("distributeDiscount", () => {
+  it("should return a numbers array thats sum is equal original sum - the discount", () => {
+    const discount = 10;
+    const nums = [42, 55, 67, 49];
+
+    const originalSum = nums.reduce((acc, curr) => acc + curr, 0);
+    const discountedSum = originalSum - discount;
+
+    const result = distributeDiscount(discount, nums);
+    const resultSum = result.reduce((acc, curr) => acc + curr, 0);
+
+    expect(resultSum).toEqual(discountedSum);
+  });
+  it("should return a numbers array where all items are >= 0", () => {
+    const discount = 10;
+    const nums = [1, 2, 3, 5];
+
+    const result = distributeDiscount(discount, nums);
+
+    expect(result.every((num) => num >= 0)).toBeTruthy();
+  });
+  it("should throw an error when discount is greater than the sum of the numbers array", () => {
+    const discount = 100;
+    const nums = [1, 2, 3, 5];
+
+    expect(() => distributeDiscount(discount, nums)).toThrowError();
   });
 });
