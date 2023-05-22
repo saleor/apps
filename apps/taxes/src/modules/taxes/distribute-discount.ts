@@ -5,6 +5,11 @@ import { numbers } from "./numbers";
 /*
  * Saleor provides discounts as an array of objects with an amount. This function takes in the sum of those discounts and the prices of the line items and returns an array of numbers that represent the discount for each item. You can then use this array to return the individual discounts or to calculate the discounted prices.
  */
+
+/*
+ * // todo: look into how refunds affect the prices and discounts:
+ * https://github.com/saleor/apps/pull/495#discussion_r1200321165
+ */
 export function distributeDiscount(discountSum: number, prices: number[]) {
   const totalSum = prices.reduce((sum, number) => sum + number, 0);
 
