@@ -1,10 +1,11 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "./metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
 import { appConfigInputSchema } from "./app-config-input-schema";
 import { GetAppConfigurationService } from "./get-app-configuration.service";
+import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
 
 export const appConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
@@ -29,6 +30,12 @@ export const appConfigurationRouter = router({
         createSettingsManager(ctx.apiClient),
         ctx.saleorApiUrl
       );
+
+      await updateCacheForConfigurations({
+        client: ctx.apiClient,
+        configurations: input,
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       await appConfigurator.setConfig(input);
 

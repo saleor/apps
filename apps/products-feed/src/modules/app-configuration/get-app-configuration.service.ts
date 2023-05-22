@@ -1,5 +1,5 @@
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "./metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
 import { ChannelsFetcher } from "../channels/channels-fetcher";
 import { ShopInfoFetcher } from "../shop-info/shop-info-fetcher";
 import { FallbackAppConfig } from "./fallback-app-config";

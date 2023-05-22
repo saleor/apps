@@ -7,13 +7,16 @@ import {
   GoogleFeedProductVariantFragment,
 } from "../../../generated/graphql";
 
-const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
+export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
+  const logger = createLogger({ saleorApiUrl: url, channel, fn: "getCursors" });
+
+  logger.debug(`Fetching cursors for channel ${channel}`);
+
   let result = await client
     .query(FetchProductCursorsDocument, { channel: channel as string, first: 100 })
     .toPromise();
 
-  // First page is queried without the `after` param, so we start an array with `undefined`
-  const cursors: Array<string | undefined> = [undefined];
+  const cursors: Array<string> = [];
 
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
     result = await client
@@ -44,6 +47,8 @@ const fetchVariants = async ({
 }): Promise<GoogleFeedProductVariantFragment[]> => {
   const logger = createLogger({ saleorApiUrl: url, channel, fn: "fetchVariants" });
 
+  logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
+
   const result = await client
     .query(FetchProductDataForFeedDocument, {
       channel: channel as string,
@@ -63,16 +68,19 @@ const fetchVariants = async ({
 interface FetchProductDataArgs {
   client: Client;
   channel: string;
+  cursors?: Array<string>;
 }
 
-export const fetchProductData = async ({ client, channel }: FetchProductDataArgs) => {
+export const fetchProductData = async ({ client, channel, cursors }: FetchProductDataArgs) => {
   const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
 
-  const cursors = await getCursors({ client, channel });
+  const cachedCursors = cursors || (await getCursors({ client, channel }));
 
-  logger.debug(`Query generated ${cursors.length} cursors`);
+  const pageCursors = [undefined, ...cachedCursors];
 
-  const promises = cursors.map((cursor) => fetchVariants({ client, after: cursor, channel }));
+  logger.debug(`Query generated ${pageCursors.length} cursors`);
+
+  const promises = pageCursors.map((cursor) => fetchVariants({ client, after: cursor, channel }));
 
   const results = await Promise.all(promises);
 
