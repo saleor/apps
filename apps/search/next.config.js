@@ -23,7 +23,7 @@ const moduleExports = {
       },
     ],
   },
-  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui"],
+  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
   sentry: {
     /*
      * Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
