@@ -5,7 +5,7 @@ import { distributeDiscount } from "../taxes/distribute-discount";
 import { numbers } from "../taxes/numbers";
 import { taxProviderUtils } from "../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../taxes/tax-provider-webhook";
-import { taxJarAddressFactory } from "./maps/address-factory";
+import { taxJarAddressFactory } from "./address-factory";
 import { FetchTaxForOrderArgs, TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
 import { WebhookAdapter } from "../taxes/tax-webhook-adapter";
