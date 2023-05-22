@@ -2,10 +2,10 @@ import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../gene
 import { Logger, createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { taxJarOrderCreatedMaps } from "./maps/taxjar-order-created-map";
 import { TaxJarCalculateTaxesAdapter } from "./taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
+import { TaxJarOrderCreatedAdapter } from "./taxjar-order-created-adapter";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -29,13 +29,9 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
-    this.logger.debug({ order, channel }, "createOrder called with:");
-    const args = taxJarOrderCreatedMaps.mapPayload({ order, channel });
-    const result = await this.client.createOrder(args);
+    const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
-    this.logger.debug({ createOrder: result }, "createOrder response");
-
-    return taxJarOrderCreatedMaps.mapResponse(result);
+    return adapter.send({ channel, order });
   }
 
   // * TaxJar doesn't require any action on order fulfillment

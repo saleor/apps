@@ -1,5 +1,5 @@
-import { ChannelAddress } from "../../channels-configuration/channels-config";
-import { AddressFragment as SaleorAddress } from "../../../../generated/graphql";
+import { ChannelAddress } from "../channels-configuration/channels-config";
+import { AddressFragment as SaleorAddress } from "../../../generated/graphql";
 import { AddressParams as TaxJarAddress, TaxParams } from "taxjar/dist/types/paramTypes";
 
 function joinAddresses(address1: string, address2: string): string {

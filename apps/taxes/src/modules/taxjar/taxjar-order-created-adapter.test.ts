@@ -1,11 +1,11 @@
-import { describe, expect, it } from "vitest";
-import { OrderStatus } from "../../../../generated/graphql";
+import { describe, it, expect } from "vitest";
 import {
-  TaxJarOrderCreatedMapPayloadArgs,
-  taxJarOrderCreatedMaps,
-} from "./taxjar-order-created-map";
+  sumPayloadLines,
+  TaxJarOrderCreatedPayloadTransformer,
+} from "./taxjar-order-created-adapter";
+import { OrderStatus } from "../../../generated/graphql";
 
-const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
+const MOCKED_PAYLOAD = {
   order: {
     id: "T3JkZXI6OTU4MDA5YjQtNDUxZC00NmQ1LThhMWUtMTRkMWRmYjFhNzI5",
     created: "2023-04-11T11:03:09.304109+00:00",
@@ -115,61 +115,55 @@ const MOCKED_ORDER: TaxJarOrderCreatedMapPayloadArgs = {
   },
 };
 
-describe("taxJarOrderCreatedMaps", () => {
-  describe("mapPayload", () => {
-    it.todo("calculation of fields");
-    it.todo("formatting the fields");
-    it.todo("rounding of numbers");
-    it("returns the correct order amount", () => {
-      const result = taxJarOrderCreatedMaps.mapPayload(MOCKED_ORDER);
+describe("TaxJarOrderCreatedPayloadTransformer", () => {
+  it("returns the correct order amount", () => {
+    const transformer = new TaxJarOrderCreatedPayloadTransformer();
+    const transformedPayload = transformer.transform(MOCKED_PAYLOAD);
 
-      expect(result.params.amount).toBe(183.33);
-    });
-  });
-
-  describe.todo("mapResponse", () => {
-    it.todo("calculation of fields");
-    it.todo("formatting the fields");
-    it.todo("rounding of numbers");
-  });
-
-  describe("sumLines", () => {
-    it("returns the sum of all line items when items quantity = 1", () => {
-      const result = taxJarOrderCreatedMaps.sumLines([
-        {
-          quantity: 1,
-          unit_price: 90.45,
-          product_identifier: "328223581",
-        },
-        {
-          quantity: 1,
-          unit_price: 45.25,
-          product_identifier: "328223580",
-        },
-      ]);
-
-      expect(result).toBe(135.7);
-    });
-    it("returns the sum of all line items when items quantity > 1", () => {
-      const result = taxJarOrderCreatedMaps.sumLines([
-        {
-          quantity: 3,
-          unit_price: 90.45,
-          product_identifier: "328223581",
-        },
-        {
-          quantity: 2,
-          unit_price: 45.25,
-          product_identifier: "328223580",
-        },
-        {
-          quantity: 1,
-          unit_price: 50.25,
-          product_identifier: "328223580",
-        },
-      ]);
-
-      expect(result).toBe(412.1);
-    });
+    expect(transformedPayload).toBe(183.33);
   });
 });
+
+describe("sumPayloadLines", () => {
+  it("returns the sum of all line items when items quantity = 1", () => {
+    const result = sumPayloadLines([
+      {
+        quantity: 1,
+        unit_price: 90.45,
+        product_identifier: "328223581",
+      },
+      {
+        quantity: 1,
+        unit_price: 45.25,
+        product_identifier: "328223580",
+      },
+    ]);
+
+    expect(result).toBe(135.7);
+  });
+  it("returns the sum of all line items when items quantity > 1", () => {
+    const result = sumPayloadLines([
+      {
+        quantity: 3,
+        unit_price: 90.45,
+        product_identifier: "328223581",
+      },
+      {
+        quantity: 2,
+        unit_price: 45.25,
+        product_identifier: "328223580",
+      },
+      {
+        quantity: 1,
+        unit_price: 50.25,
+        product_identifier: "328223580",
+      },
+    ]);
+
+    expect(result).toBe(412.1);
+  });
+});
+
+describe.todo("TaxJarOrderCreatedResponseTransformer", () => {});
+
+describe.todo("TaxJarOrderCreatedAdapter", () => {});
