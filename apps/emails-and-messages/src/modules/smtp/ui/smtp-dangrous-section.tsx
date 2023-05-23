@@ -11,11 +11,11 @@ import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 
-interface DangerousSectionProps {
+interface SmtpDangerousSectionProps {
   configuration: SmtpConfiguration;
 }
 
-export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
+export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { replace } = useRouter();
   const { handleSubmit, setError } = useForm<SmtpGetConfigurationIdInput>({

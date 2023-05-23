@@ -1,44 +1,43 @@
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import {
-  SmtpUpdateBasicInformation,
-  smtpUpdateBasicInformationSchema,
+  SmtpUpdateSender,
+  smtpUpdateSenderSchema,
 } from "../configuration/smtp-config-input-schema";
 import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 
-interface BasicInformationSectionProps {
+interface SmtpSenderSectionProps {
   configuration: SmtpConfiguration;
 }
 
-export const BasicInformationSection = ({ configuration }: BasicInformationSectionProps) => {
+export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateBasicInformation>({
+  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateSender>({
     defaultValues: {
       id: configuration.id,
-      name: configuration.name,
-      active: configuration.active,
+      senderName: configuration.senderName,
+      senderEmail: configuration.senderEmail,
     },
-    resolver: zodResolver(smtpUpdateBasicInformationSchema),
+    resolver: zodResolver(smtpUpdateSenderSchema),
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateBasicInformation.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateSender.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SmtpUpdateBasicInformation>({
+      setBackendErrors<SmtpUpdateSender>({
         error,
         setError,
         notifyError,
@@ -47,15 +46,7 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
   });
 
   return (
-    <SectionWithDescription
-      title="Connect SMTP"
-      description={
-        <Text>
-          Provide unique name for your configuration - you can create more than one. For example -
-          production and development. Then, pass your API Key. Obtain it here.
-        </Text>
-      }
-    >
+    <SectionWithDescription title="Sender">
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {
@@ -66,15 +57,17 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
         >
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
-              name="name"
-              label="Configuration name"
+              label="Email"
+              name="senderEmail"
               control={control}
-              helperText="Name of the configuration, for example 'Production' or 'Test'"
+              helperText="Email address that will be used as sender"
             />
-            <label>
-              <input type="checkbox" placeholder="Enabled" {...register("active")} />
-              <Text paddingLeft={defaultPadding}>Active</Text>
-            </label>
+            <Input
+              label="Name"
+              name="senderName"
+              control={control}
+              helperText="Name that will be used as sender"
+            />
           </Box>
           <BoxFooter>
             <Button type="submit">Save provider</Button>

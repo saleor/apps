@@ -91,11 +91,11 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
   );
 };
 
-interface EventsSectionProps {
+interface SendgridEventsSectionProps {
   configuration: SendgridConfiguration;
 }
 
-export const EventsSection = ({ configuration }: EventsSectionProps) => {
+export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionProps) => {
   return (
     <SectionWithDescription
       title="Events"

@@ -17,11 +17,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 
-interface SenderSectionProps {
+interface SendgridSenderSectionProps {
   configuration: SendgridConfiguration;
 }
 
-export const SenderSection = ({ configuration }: SenderSectionProps) => {
+export const SendgridSenderSection = ({ configuration }: SendgridSenderSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { data: sendersChoices } = useQuery({

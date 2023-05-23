@@ -12,11 +12,11 @@ import { useRouter } from "next/router";
 import { appUrls } from "../../app-configuration/urls";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 
-interface DangerousSectionProps {
+interface SendgridDangerousSectionProps {
   configuration: SendgridConfiguration;
 }
 
-export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
+export const SendgridDangerousSection = ({ configuration }: SendgridDangerousSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { replace } = useRouter();
   const { handleSubmit, setError } = useForm<SendgridGetConfigurationIdInput>({

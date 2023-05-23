@@ -78,11 +78,11 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
   );
 };
 
-interface EventsSectionProps {
+interface SmtpEventsSectionProps {
   configuration: SmtpConfiguration;
 }
 
-export const EventsSection = ({ configuration }: EventsSectionProps) => {
+export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => {
   return (
     <SectionWithDescription
       title="Events"

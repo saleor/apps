@@ -4,12 +4,12 @@ import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { BasicLayout } from "../../../components/basic-layout";
-import { BasicInformationSection } from "../../../modules/smtp/ui/basic-information-section";
+import { SmtpBasicInformationSection } from "../../../modules/smtp/ui/smtp-basic-information-section";
 import { SmtpSection } from "../../../modules/smtp/ui/smtp-section";
-import { SenderSection } from "../../../modules/smtp/ui/sender-section";
-import { DangerousSection } from "../../../modules/smtp/ui/dangrous-section";
-import { ChannelsSection } from "../../../modules/smtp/ui/channels-section";
-import { EventsSection } from "../../../modules/smtp/ui/events-section";
+import { SmtpSenderSection } from "../../../modules/smtp/ui/smtp-sender-section";
+import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangrous-section";
+import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
+import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
 import { appUrls } from "../../../modules/app-configuration/urls";
 
 const LoadingView = () => {
@@ -84,12 +84,12 @@ const EditSmtpConfigurationPage: NextPage = () => {
           <Text>Connect SMTP with Saleor.</Text>
         </Box>
       </Box>
-      <BasicInformationSection configuration={configuration} />
+      <SmtpBasicInformationSection configuration={configuration} />
       <SmtpSection configuration={configuration} />
-      <SenderSection configuration={configuration} />
-      <EventsSection configuration={configuration} />
-      <ChannelsSection configuration={configuration} />
-      <DangerousSection configuration={configuration} />
+      <SmtpSenderSection configuration={configuration} />
+      <SmtpEventsSection configuration={configuration} />
+      <SmtpChannelsSection configuration={configuration} />
+      <SmtpDangerousSection configuration={configuration} />
     </BasicLayout>
   );
 };

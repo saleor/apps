@@ -2,14 +2,14 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
-import { BasicInformationSection } from "../../../modules/sendgrid/ui/basic-information-section";
-import { DangerousSection } from "../../../modules/sendgrid/ui/dangrous-section";
+import { SendgridBasicInformationSection } from "../../../modules/sendgrid/ui/sendgrid-basic-information-section";
+import { SendgridDangerousSection } from "../../../modules/sendgrid/ui/sendgrid-dangrous-section";
 import { ApiConnectionSection } from "../../../modules/sendgrid/ui/api-connection-section";
-import { SenderSection } from "../../../modules/sendgrid/ui/sender-section";
-import { EventsSection } from "../../../modules/sendgrid/ui/events-section";
+import { SendgridSenderSection } from "../../../modules/sendgrid/ui/sendgrid-sender-section";
+import { SendgridEventsSection } from "../../../modules/sendgrid/ui/sendgrid-events-section";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { BasicLayout } from "../../../components/basic-layout";
-import { ChannelsSection } from "../../../modules/sendgrid/ui/channels-section";
+import { SendgridChannelsSection } from "../../../modules/sendgrid/ui/sendgrid-channels-section";
 import { appUrls } from "../../../modules/app-configuration/urls";
 
 const LoadingView = () => {
@@ -87,12 +87,12 @@ const EditSendgridConfigurationPage: NextPage = () => {
           <Text>Connect Sendgrid with Saleor.</Text>
         </Box>
       </Box>
-      <BasicInformationSection configuration={configuration} />
+      <SendgridBasicInformationSection configuration={configuration} />
       <ApiConnectionSection configuration={configuration} />
-      <SenderSection configuration={configuration} />
-      <EventsSection configuration={configuration} />
-      <ChannelsSection configuration={configuration} />
-      <DangerousSection configuration={configuration} />
+      <SendgridSenderSection configuration={configuration} />
+      <SendgridEventsSection configuration={configuration} />
+      <SendgridChannelsSection configuration={configuration} />
+      <SendgridDangerousSection configuration={configuration} />
     </BasicLayout>
   );
 };

@@ -1,44 +1,46 @@
-import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import {
-  SendgridUpdateBasicInformation,
-  sendgridUpdateBasicInformationSchema,
-} from "../configuration/sendgrid-config-input-schema";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import {
+  SmtpUpdateBasicInformation,
+  smtpUpdateBasicInformationSchema,
+} from "../configuration/smtp-config-input-schema";
 import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 
-interface BasicInformationSectionProps {
-  configuration: SendgridConfiguration;
+interface SmtpBasicInformationSectionProps {
+  configuration: SmtpConfiguration;
 }
 
-export const BasicInformationSection = ({ configuration }: BasicInformationSectionProps) => {
+export const SmtpBasicInformationSection = ({
+  configuration,
+}: SmtpBasicInformationSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const { handleSubmit, control, setError, register } = useForm<SendgridUpdateBasicInformation>({
+  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateBasicInformation>({
     defaultValues: {
       id: configuration.id,
       name: configuration.name,
       active: configuration.active,
     },
-    resolver: zodResolver(sendgridUpdateBasicInformationSchema),
+    resolver: zodResolver(smtpUpdateBasicInformationSchema),
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.sendgridConfiguration.updateBasicInformation.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateBasicInformation.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
-      trpcContext.sendgridConfiguration.invalidate();
+      trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SendgridUpdateBasicInformation>({
+      setBackendErrors<SmtpUpdateBasicInformation>({
         error,
         setError,
         notifyError,
@@ -48,7 +50,7 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
 
   return (
     <SectionWithDescription
-      title="Connect Sendgrid"
+      title="Connect SMTP"
       description={
         <Text>
           Provide unique name for your configuration - you can create more than one. For example -
@@ -66,9 +68,9 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
         >
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
+              name="name"
               label="Configuration name"
               control={control}
-              name="name"
               helperText="Name of the configuration, for example 'Production' or 'Test'"
             />
             <label>
