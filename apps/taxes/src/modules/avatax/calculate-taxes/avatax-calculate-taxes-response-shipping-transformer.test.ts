@@ -1,12 +1,20 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { avataxMockFactory } from "../avatax-mock-factory";
 import { AvataxCalculateTaxesResponseShippingTransformer } from "./avatax-calculate-taxes-response-shipping-transformer";
-import { transactionModelMocks } from "../mocks";
 
 const transformer = new AvataxCalculateTaxesResponseShippingTransformer();
 
+const TAX_EXCLUDED_NO_SHIPPING_TRANSACTION_MOCK =
+  avataxMockFactory.createMockTransaction("taxExcludedNoShipping");
+const NON_TAXABLE_TRANSACTION_MOCK = avataxMockFactory.createMockTransaction("nonTaxable");
+const TAX_INCLUDED_SHIPPING_TRANSACTION_MOCK =
+  avataxMockFactory.createMockTransaction("taxIncludedShipping");
+const TAX_EXCLUDED_SHIPPING_TRANSACTION_MOCK =
+  avataxMockFactory.createMockTransaction("taxExcludedShipping");
+
 describe("AvataxCalculateTaxesResponseShippingTransformer", () => {
   it("when shipping line is not present, returns 0s", () => {
-    const shippingLine = transformer.transform(transactionModelMocks.noShippingLine);
+    const shippingLine = transformer.transform(TAX_EXCLUDED_NO_SHIPPING_TRANSACTION_MOCK);
 
     expect(shippingLine).toEqual({
       shipping_price_gross_amount: 0,
@@ -15,7 +23,7 @@ describe("AvataxCalculateTaxesResponseShippingTransformer", () => {
     });
   });
   it("when shipping line is not taxable, returns line amount", () => {
-    const nonTaxableShippingLine = transformer.transform(transactionModelMocks.nonTaxable);
+    const nonTaxableShippingLine = transformer.transform(NON_TAXABLE_TRANSACTION_MOCK);
 
     expect(nonTaxableShippingLine).toEqual({
       shipping_price_gross_amount: 77.51,
@@ -25,7 +33,7 @@ describe("AvataxCalculateTaxesResponseShippingTransformer", () => {
   });
 
   it("when shipping line is taxable and tax is included, returns calculated gross & net amounts", () => {
-    const taxableShippingLine = transformer.transform(transactionModelMocks.taxable.taxIncluded);
+    const taxableShippingLine = transformer.transform(TAX_INCLUDED_SHIPPING_TRANSACTION_MOCK);
 
     expect(taxableShippingLine).toEqual({
       shipping_price_gross_amount: 77.51,
@@ -35,7 +43,7 @@ describe("AvataxCalculateTaxesResponseShippingTransformer", () => {
   });
 
   it("when shipping line is taxable and tax is not included, returns calculated gross & net amounts", () => {
-    const taxableShippingLine = transformer.transform(transactionModelMocks.taxable.taxNotIncluded);
+    const taxableShippingLine = transformer.transform(TAX_EXCLUDED_SHIPPING_TRANSACTION_MOCK);
 
     expect(taxableShippingLine).toEqual({
       shipping_price_gross_amount: 84.87,

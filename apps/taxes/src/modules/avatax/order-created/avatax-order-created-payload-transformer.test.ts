@@ -49,12 +49,12 @@ describe("mapLines", () => {
     expect(first).toContain({
       itemCode: "328223581",
       description: "Monospace Tee",
-      quantity: 3,
-      amount: 278.55,
+      quantity: 1,
+      amount: 98.55,
     });
     expect(second).toContain({
       itemCode: "328223580",
-      description: "Polyspace Tee",
+      description: "Monospace Tee",
       quantity: 1,
       amount: 49.28,
     });
@@ -64,7 +64,7 @@ describe("mapDiscounts", () => {
   it("sums up all discounts", () => {
     const discounts = mapDiscounts(MOCKED_ARGS.order.discounts);
 
-    expect(discounts).toEqual(31.45);
+    expect(discounts).toEqual(10);
   });
 
   it("returns 0 if there are no discounts", () => {

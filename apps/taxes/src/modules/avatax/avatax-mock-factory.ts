@@ -1,6 +1,7 @@
 import { TaxBaseFragment } from "../../../generated/graphql";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { AvataxConfig } from "./avatax-config";
+import { avataxMockTransactionFactory } from "./avatax-mock-transaction-factory";
 
 type TaxBase = TaxBaseFragment;
 
@@ -115,10 +116,9 @@ const createMockAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxCo
   ...overrides,
 });
 
-// todo: add createTransactionModelMock
-
 export const avataxMockFactory = {
   createMockTaxBase,
   createMockChannelConfig,
   createMockAvataxConfig,
+  ...avataxMockTransactionFactory,
 };

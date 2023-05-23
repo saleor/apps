@@ -16,7 +16,7 @@ describe("TaxJarOrderCreatedPayloadTransformer", () => {
     const transformer = new TaxJarOrderCreatedPayloadTransformer();
     const transformedPayload = transformer.transform(MOCKED_PAYLOAD);
 
-    expect(transformedPayload).toBe(183.33);
+    expect(transformedPayload.params.amount).toBe(183.33);
   });
 });
 
