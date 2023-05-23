@@ -1,9 +1,9 @@
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../taxes/tax-webhook-adapter";
-import { AvataxClient, CreateTransactionArgs } from "./avatax-client";
-import { AvataxConfig } from "./avatax-config";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
+import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
+import { AvataxConfig } from "../avatax-config";
 import { AvataxOrderCreatedResponseTransformer } from "./avatax-order-created-response-transformer";
 import { AvataxOrderCreatedPayloadTransformer } from "./avatax-order-created-payload-transformer";
 

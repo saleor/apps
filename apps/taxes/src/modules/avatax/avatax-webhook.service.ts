@@ -8,7 +8,7 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
-import { AvataxOrderCreatedAdapter } from "./avatax-order-created-adapter";
+import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
 import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
 import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
 

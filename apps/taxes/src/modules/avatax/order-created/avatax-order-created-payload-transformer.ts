@@ -1,8 +1,8 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { numbers } from "../taxes/numbers";
-import { AvataxConfig } from "./avatax-config";
-import { avataxAddressFactory } from "./maps/address-factory";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { numbers } from "../../taxes/numbers";
+import { AvataxConfig } from "../avatax-config";
+import { avataxAddressFactory } from "../maps/address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { Payload, Target } from "./avatax-order-created-adapter";
 

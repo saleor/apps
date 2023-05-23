@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { taxMockFactory } from "../taxes/tax-mock-factory";
+import { taxMockFactory } from "../../taxes/tax-mock-factory";
 import { Payload } from "./avatax-order-created-adapter";
 import {
   AvataxOrderCreatedPayloadTransformer,
   mapDiscounts,
   mapLines,
 } from "./avatax-order-created-payload-transformer";
-import { avataxMockFactory } from "./maps/avatax-mock-factory";
+import { avataxMockFactory } from "../maps/avatax-mock-factory";
 
 const MOCKED_ARGS: Payload = {
   order: taxMockFactory.createMockOrder(),
