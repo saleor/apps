@@ -2,10 +2,10 @@ import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../gene
 import { Logger, createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { TaxJarCalculateTaxesAdapter } from "./taxjar-calculate-taxes/taxjar-calculate-taxes-adapter";
+import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
-import { TaxJarOrderCreatedAdapter } from "./taxjar-order-created-adapter";
+import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;

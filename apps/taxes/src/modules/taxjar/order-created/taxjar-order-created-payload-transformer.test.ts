@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { taxJarMockFactory } from "./taxjar-mock-factory";
+import { taxJarMockFactory } from "../taxjar-mock-factory";
 import {
   TaxJarOrderCreatedPayloadTransformer,
   sumPayloadLines,
 } from "./taxjar-order-created-payload-transformer";
+import { taxMockFactory } from "../../taxes/tax-mock-factory";
 
 const MOCKED_PAYLOAD = {
-  order: taxJarMockFactory.createMockOrder(),
+  order: taxMockFactory.createMockOrder(),
   channelConfig: taxJarMockFactory.createMockChannelConfig(),
 };
 

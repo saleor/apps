@@ -3,13 +3,13 @@ import {
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
-import { createLogger, Logger } from "../../lib/logger";
+import { Logger, createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
-import { avataxOrderCreatedMaps } from "./maps/avatax-order-created-map";
+import { AvataxOrderCreatedAdapter } from "./avatax-order-created-adapter";
+import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
 import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
 
 export class AvataxWebhookService implements ProviderWebhookService {
@@ -42,15 +42,12 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return avataxCalculateTaxesMaps.mapResponse(result);
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
-    this.logger.debug({ order, channel }, "createOrder called with:");
-    const model = avataxOrderCreatedMaps.mapPayload({ order, channel, config: this.config });
+  async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ order, channelConfig }, "createOrder called with:");
 
-    this.logger.debug({ model }, "will call createTransaction with");
-    const result = await this.client.createTransaction(model);
+    const adapter = new AvataxOrderCreatedAdapter(this.config);
 
-    this.logger.debug({ result }, "createOrder response");
-    return avataxOrderCreatedMaps.mapResponse(result);
+    return adapter.send({ channelConfig, order });
   }
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {

@@ -1,10 +1,10 @@
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { CreateOrderResponse } from "../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../taxes/tax-webhook-adapter";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
+import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { TaxJarOrderCreatedPayloadTransformer } from "./taxjar-order-created-payload-transformer";
-import { CreateOrderArgs, TaxJarClient } from "./taxjar-client";
-import { TaxJarConfig } from "./taxjar-config";
+import { CreateOrderArgs, TaxJarClient } from "../taxjar-client";
+import { TaxJarConfig } from "../taxjar-config";
 import { TaxJarOrderCreatedResponseTransformer } from "./taxjar-order-created-response-transformer";
 
 export type Payload = { order: OrderCreatedSubscriptionFragment; channelConfig: ChannelConfig };

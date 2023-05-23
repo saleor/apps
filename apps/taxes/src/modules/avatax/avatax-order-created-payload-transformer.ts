@@ -1,0 +1,78 @@
+import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
+import { numbers } from "../taxes/numbers";
+import { AvataxConfig } from "./avatax-config";
+import { avataxAddressFactory } from "./maps/address-factory";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { Payload, Target } from "./avatax-order-created-adapter";
+
+const SHIPPING_ITEM_CODE = "Shipping";
+
+// ? separate class?
+export function mapLines(
+  order: OrderCreatedSubscriptionFragment,
+  config: AvataxConfig
+): LineItemModel[] {
+  const productLines: LineItemModel[] = order.lines.map((line) => ({
+    taxIncluded: true,
+    amount: numbers.roundFloatToTwoDecimals(
+      line.totalPrice.net.amount + line.totalPrice.tax.amount
+    ),
+    // todo: get from tax code matcher
+    taxCode: "",
+    quantity: line.quantity,
+    description: line.productName,
+    itemCode: line.productSku ?? "",
+    discounted: order.discounts.length > 0,
+  }));
+
+  if (order.shippingPrice.net.amount !== 0) {
+    // * In Avatax, shipping is a regular line
+    const shippingLine: LineItemModel = {
+      amount: order.shippingPrice.gross.amount,
+      taxIncluded: true,
+      itemCode: SHIPPING_ITEM_CODE,
+      /**
+       * * Different shipping methods can have different tax codes.
+       * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/\
+       */
+      taxCode: config.shippingTaxCode,
+      quantity: 1,
+    };
+
+    return [...productLines, shippingLine];
+  }
+
+  return productLines;
+}
+
+// ? separate class?
+export function mapDiscounts(discounts: Payload["order"]["discounts"]): number {
+  return discounts.reduce((total, current) => total + Number(current.amount.amount), 0);
+}
+
+export class AvataxOrderCreatedPayloadTransformer {
+  transform = ({ order, channelConfig, config }: Payload): Target => {
+    return {
+      model: {
+        type: DocumentType.SalesInvoice,
+        customerCode:
+          order.user?.id ??
+          "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
+        companyCode: config.companyCode,
+        // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
+        commit: config.isAutocommit,
+        addresses: {
+          shipFrom: avataxAddressFactory.fromChannelAddress(channelConfig.address),
+          // billing or shipping address?
+          shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
+        },
+        currencyCode: order.total.currency,
+        email: order.user?.email ?? "",
+        lines: mapLines(order, config),
+        date: new Date(order.created),
+        discount: mapDiscounts(order.discounts),
+      },
+    };
+  };
+}
