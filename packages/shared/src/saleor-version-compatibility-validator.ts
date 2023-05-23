@@ -1,8 +1,5 @@
 const semver = require("semver");
 
-/**
- * TODO Extract to shared or even SDK
- */
 export class SaleorVersionCompatibilityValidator {
   constructor(private appRequiredVersion: string) {}
 
@@ -12,7 +9,9 @@ export class SaleorVersionCompatibilityValidator {
     });
 
     if (!versionIsValid) {
-      throw new Error(`App requires Saleor matching semver: ${this.appRequiredVersion}`);
+      throw new Error(
+        `Your Saleor version (${saleorVersion}) doesn't match App's required version (semver: ${this.appRequiredVersion})`
+      );
     }
   }
 }
