@@ -33,7 +33,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
     const adapter = new AvataxCalculateTaxesAdapter(this.config);
 
-    return adapter.send({ channelConfig, taxBase });
+    const response = await adapter.send({ channelConfig, taxBase });
+
+    this.logger.debug({ response }, "calculateTaxes response:");
+
+    return response;
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
@@ -41,7 +45,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
     const adapter = new AvataxOrderCreatedAdapter(this.config);
 
-    return adapter.send({ channelConfig, order });
+    const response = await adapter.send({ channelConfig, order });
+
+    this.logger.debug({ response }, "createOrder response:");
+
+    return response;
   }
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channelConfig: ChannelConfig) {
@@ -49,6 +57,10 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
     const adapter = new AvataxOrderFulfilledAdapter(this.config);
 
-    return adapter.send({ order });
+    const response = await adapter.send({ order });
+
+    this.logger.debug({ response }, "fulfillOrder response:");
+
+    return response;
   }
 }

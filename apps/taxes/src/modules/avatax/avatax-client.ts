@@ -72,19 +72,19 @@ export class AvataxClient {
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    this.logger.debug({ model }, "createTransaction called with:");
+    this.logger.trace({ model }, "createTransaction called with:");
 
     return this.client.createTransaction({ model });
   }
 
   async commitTransaction(args: CommitTransactionArgs) {
-    this.logger.debug(args, "commitTransaction called with:");
+    this.logger.trace(args, "commitTransaction called with:");
 
     return this.client.commitTransaction(args);
   }
 
   async ping() {
-    this.logger.debug("ping called");
+    this.logger.trace("ping called");
     try {
       const result = await this.client.ping();
 
@@ -103,7 +103,7 @@ export class AvataxClient {
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
-    this.logger.debug({ address }, "validateAddress called with:");
+    this.logger.trace({ address }, "validateAddress called with:");
 
     return this.client.resolveAddress(address);
   }

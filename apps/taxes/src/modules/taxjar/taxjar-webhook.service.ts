@@ -18,7 +18,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.client = taxJarClient;
     this.config = config;
     this.logger = createLogger({
-      service: "TaxJarProvider",
+      service: "TaxJarWebhookService",
     });
   }
 
@@ -26,7 +26,10 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
     const adapter = new TaxJarCalculateTaxesAdapter(this.config);
 
-    return adapter.send({ channelConfig, taxBase });
+    const response = await adapter.send({ channelConfig, taxBase });
+
+    this.logger.debug({ response }, "calculateTaxes response:");
+    return response;
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
@@ -34,7 +37,10 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
     const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
-    return adapter.send({ channelConfig, order });
+    const response = await adapter.send({ channelConfig, order });
+
+    this.logger.debug({ response }, "createOrder response:");
+    return response;
   }
 
   // * TaxJar doesn't require any action on order fulfillment

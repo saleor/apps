@@ -94,19 +94,19 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   }
 
   async calculateTaxes(payload: TaxBaseFragment) {
-    this.logger.debug({ payload }, ".calculate called");
+    this.logger.trace({ payload }, ".calculate called");
 
     return this.client.calculateTaxes(payload, this.channel);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    this.logger.debug(".createOrder called");
+    this.logger.trace(".createOrder called");
 
     return this.client.createOrder(order, this.channel);
   }
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
-    this.logger.debug(".fulfillOrder called");
+    this.logger.trace(".fulfillOrder called");
 
     return this.client.fulfillOrder(payload, this.channel);
   }
