@@ -8,9 +8,9 @@ import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
-import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
-import { avataxCalculateTaxesMaps } from "./maps/avatax-calculate-taxes-map";
+import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
+import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -29,17 +29,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.client = avataxClient;
   }
 
-  async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
-    this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = avataxCalculateTaxesMaps.mapPayload({
-      taxBase: payload,
-      channel,
-      config: this.config,
-    });
-    const result = await this.client.createTransaction(args);
+  async calculateTaxes(taxBase: TaxBaseFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
+    const adapter = new AvataxCalculateTaxesAdapter(this.config);
 
-    this.logger.debug({ result }, "calculateTaxes response");
-    return avataxCalculateTaxesMaps.mapResponse(result);
+    return adapter.send({ channelConfig, taxBase });
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
