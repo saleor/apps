@@ -9,7 +9,9 @@ export class SaleorVersionCompatibilityValidator {
     });
 
     if (!versionIsValid) {
-      throw new Error(`App requires Saleor matching semver: ${this.appRequiredVersion}`);
+      throw new Error(
+        `Your Saleor version (${saleorVersion}) doesn't match App's required version (semver: ${this.appRequiredVersion})`
+      );
     }
   }
 }
