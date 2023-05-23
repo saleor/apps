@@ -6,6 +6,7 @@ import { checkoutCalculateTaxesSyncWebhook } from "./webhooks/checkout-calculate
 import { orderCalculateTaxesSyncWebhook } from "./webhooks/order-calculate-taxes";
 import { orderCreatedAsyncWebhook } from "./webhooks/order-created";
 import { orderFulfilledAsyncWebhook } from "./webhooks/order-fulfilled";
+import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -27,6 +28,7 @@ export default createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       author: "Saleor Commerce",
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
     };
 
     return manifest;
