@@ -1,5 +1,16 @@
 # saleor-app-emails-and-messages
 
+## 1.6.0
+
+### Minor Changes
+
+- 4801803: Added Sentry config. If Sentry is configured in ENV, it will use default Sentry configuration for Next.js to send errors to the Sentry
+
+### Patch Changes
+
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.5.2
 
 ### Patch Changes

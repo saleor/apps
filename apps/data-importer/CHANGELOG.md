@@ -1,5 +1,12 @@
 # saleor-app-data-importer
 
+## 1.7.3
+
+### Patch Changes
+
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.7.2
 
 ### Patch Changes

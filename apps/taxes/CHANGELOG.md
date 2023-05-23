@@ -1,5 +1,22 @@
 # saleor-app-taxes
 
+## 1.7.0
+
+### Minor Changes
+
+- 23b5c70: Set minimum Saleor version where app can be installed (3.9).
+
+  Previously, app could have been installed in any Saleor, but if required taxes APIs were missing, app would crash
+
+  Now, Saleor will reject installation if possible. If Saleor can't do it, App will check Saleor version during installation and fail it if version doesn't match
+
+- dd799e6: Adds `resolveOptionalOrThrow` util that throws when not able to resolve an optional value. Now, when critical values from external APIs are not found, the app will crash instead of falling back to 0s.
+
+### Patch Changes
+
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.6.1
 
 ### Patch Changes

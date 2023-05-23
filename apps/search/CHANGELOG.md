@@ -1,5 +1,16 @@
 # saleor-app-search
 
+## 1.9.1
+
+### Patch Changes
+
+- 590150b: Use input component from the shared package.
+- Updated dependencies [23b5c70]
+- Updated dependencies [8a339fc]
+- Updated dependencies [b36502d]
+  - @saleor/apps-shared@1.6.0
+  - @saleor/react-hook-form-macaw@0.1.0
+
 ## 1.9.0
 
 ### Minor Changes

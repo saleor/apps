@@ -1,5 +1,21 @@
 # saleor-app-products-feed
 
+## 1.7.0
+
+### Minor Changes
+
+- 0c8717a: Generated feed XML can now be uploaded to the s3 bucket.
+
+  Feed generation is now much faster thanks to implemented caching.
+
+- 4801803: Added Sentry config. If Sentry is configured in ENV, it will use default Sentry configuration for Next.js to send errors to the Sentry
+
+### Patch Changes
+
+- ce8d9de: Product description in the feed is now a plaintext instead of JSON.
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.6.2
 
 ### Patch Changes
