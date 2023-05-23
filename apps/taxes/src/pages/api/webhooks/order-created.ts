@@ -13,7 +13,7 @@ import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider
 import { createClient } from "../../../lib/graphql";
 import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/maps/avatax-order-fulfilled-map";
+import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
 
 export const config = {
   api: {

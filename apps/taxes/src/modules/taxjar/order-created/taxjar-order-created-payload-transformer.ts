@@ -1,8 +1,8 @@
 import { LineItem } from "taxjar/dist/util/types";
-import { OrderCreatedSubscriptionFragment } from "../../../generated/graphql";
-import { numbers } from "../taxes/numbers";
+import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { numbers } from "../../taxes/numbers";
 import { Payload, Target } from "./taxjar-order-created-adapter";
-import { taxProviderUtils } from "../taxes/tax-provider-utils";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
 export function sumPayloadLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(

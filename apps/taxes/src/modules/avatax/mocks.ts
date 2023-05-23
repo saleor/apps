@@ -9,6 +9,8 @@ import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
+// todo: move to avatax-mock-factory
+
 const NO_SHIPPING_TRANSACTION_MOCK: TransactionModel = {
   id: 0,
   code: "30ddd987-ed4a-49f1-bba1-ec555e417511",

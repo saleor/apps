@@ -1,6 +1,6 @@
-import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
-import { AvataxConfig } from "../avatax-config";
+import { TaxBaseFragment } from "../../../generated/graphql";
+import { ChannelConfig } from "../channels-configuration/channels-config";
+import { AvataxConfig } from "./avatax-config";
 
 type TaxBase = TaxBaseFragment;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { taxJarMockFactory } from "./taxjar-mock-factory";
+import { taxJarMockFactory } from "../taxjar-mock-factory";
 import { TaxJarOrderCreatedResponseTransformer } from "./taxjar-order-created-response-transformer";
 
 const MOCKED_ORDER = taxJarMockFactory.createMockTaxJarOrder();
