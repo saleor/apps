@@ -1,5 +1,12 @@
 # saleor-app-cms
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.5.0
 
 ### Minor Changes

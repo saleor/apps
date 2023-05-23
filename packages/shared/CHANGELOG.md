@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.6.0
+
+### Minor Changes
+
+- 23b5c70: Add SaleorCompatibilityValidator util that compares semver version of the app and Saleor's
+
 ## 1.5.1
 
 ### Patch Changes

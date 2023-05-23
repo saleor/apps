@@ -1,5 +1,12 @@
 # saleor-app-monitoring
 
+## 0.6.3
+
+### Patch Changes
+
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 0.6.2
 
 ### Patch Changes
