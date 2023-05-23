@@ -5,6 +5,11 @@ const getDefaultEmptyUrlConfiguration = (): SellerShopConfig["urlConfiguration"]
   productStorefrontUrl: "",
 });
 
+const getDefaultEmptyPerChannelConfiguration = (): SellerShopConfig => ({
+  urlConfiguration: getDefaultEmptyUrlConfiguration(),
+  s3BucketConfiguration: undefined, //getDefaultEmptyS3BucketConfiguration(),
+});
+
 const getChannelUrlConfiguration =
   (appConfig: AppConfig | null | undefined) => (channelSlug: string) => {
     try {
@@ -20,15 +25,38 @@ const setChannelUrlConfiguration =
   (urlConfiguration: SellerShopConfig["urlConfiguration"]) => {
     const appConfigNormalized = structuredClone(appConfig) ?? { shopConfigPerChannel: {} };
 
-    appConfigNormalized.shopConfigPerChannel[channelSlug] ??= {
-      urlConfiguration: getDefaultEmptyUrlConfiguration(),
-    };
+    appConfigNormalized.shopConfigPerChannel[channelSlug] ??=
+      getDefaultEmptyPerChannelConfiguration();
+
     appConfigNormalized.shopConfigPerChannel[channelSlug].urlConfiguration = urlConfiguration;
 
     return appConfigNormalized;
   };
 
+const getChannelS3BucketConfiguration =
+  (appConfig: AppConfig | null | undefined) => (channelSlug: string) => {
+    try {
+      return appConfig?.shopConfigPerChannel[channelSlug].s3BucketConfiguration ?? null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+const setChannelS3BucketConfiguration =
+  (appConfig: AppConfig | null | undefined) =>
+  (channelSlug: string) =>
+  (s3BucketConfiguration: SellerShopConfig["s3BucketConfiguration"]) => {
+    const appConfigNormalized = structuredClone(appConfig) ?? { shopConfigPerChannel: {} };
+
+    appConfigNormalized.shopConfigPerChannel[channelSlug].s3BucketConfiguration =
+      s3BucketConfiguration;
+
+    return appConfigNormalized;
+  };
+
 export const AppConfigContainer = {
-  getChannelUrlConfiguration: getChannelUrlConfiguration,
-  setChannelUrlConfiguration: setChannelUrlConfiguration,
+  getChannelUrlConfiguration,
+  setChannelUrlConfiguration,
+  getChannelS3BucketConfiguration,
+  setChannelS3BucketConfiguration,
 };

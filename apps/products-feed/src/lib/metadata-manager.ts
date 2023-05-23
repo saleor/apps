@@ -4,7 +4,7 @@ import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
-} from "../../../generated/graphql";
+} from "../../generated/graphql";
 
 gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
