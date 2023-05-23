@@ -47,7 +47,7 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
           });
         })}
       >
-        <BoxWithBorder backgroundColor={"surfaceCriticalSubdued"} borderColor={"criticalSubdued"}>
+        <BoxWithBorder backgroundColor="surfaceCriticalSubdued" borderColor="criticalSubdued">
           <Box padding={defaultPadding}>
             <Text variant="heading" as="h1">
               Remove provider
@@ -60,10 +60,10 @@ export const DangerousSection = ({ configuration }: DangerousSectionProps) => {
             <Text as="p">This operation cant be undone.</Text>
             <Text as="p">You still can create new configuration.</Text>
           </Box>
-          <BoxFooter borderColor={"criticalSubdued"}>
+          <BoxFooter borderColor="criticalSubdued">
             <Button
-              color={"textNeutralSubdued"}
-              backgroundColor={"interactiveCriticalDefault"}
+              color="textNeutralSubdued"
+              backgroundColor="interactiveCriticalDefault"
               type="submit"
             >
               Remove provider

@@ -82,7 +82,7 @@ const EditSendgridConfigurationPage: NextPage = () => {
         },
       ]}
     >
-      <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+      <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Connect Sendgrid with Saleor.</Text>
         </Box>

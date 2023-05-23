@@ -36,7 +36,7 @@ const ConfigurationPage: NextPage = () => {
 
   return (
     <BasicLayout breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }]}>
-      <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+      <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>
             Configure Emails & Messages app to deliver Saleor Events webhooks to various messaging

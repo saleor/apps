@@ -56,12 +56,12 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
             });
           })}
         >
-          <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
               label="API Key"
-              name={"apiKey"}
+              name="apiKey"
               control={control}
-              helperText={"Name of the configuration, for example 'Production' or 'Test'"}
+              helperText="Name of the configuration, for example 'Production' or 'Test'"
             />
 
             <label>

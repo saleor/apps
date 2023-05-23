@@ -54,12 +54,7 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
       })}
     >
       <BoxWithBorder>
-        <Box
-          padding={defaultPadding}
-          display={"flex"}
-          flexDirection={"column"}
-          gap={defaultPadding}
-        >
+        <Box padding={defaultPadding} display="flex" flexDirection="column" gap={defaultPadding}>
           <Text variant="heading">{event.eventType}</Text>
           <Button
             variant="secondary"
@@ -101,7 +96,7 @@ export const EventsSection = ({ configuration }: EventsSectionProps) => {
         </>
       }
     >
-      <Box display="flex" flexDirection={"column"} gap={defaultPadding}>
+      <Box display="flex" flexDirection="column" gap={defaultPadding}>
         {configuration.events.map((event) => (
           <EventBox key={event.eventType} configuration={configuration} event={event} />
         ))}

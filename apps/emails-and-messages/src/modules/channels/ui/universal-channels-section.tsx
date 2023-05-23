@@ -61,13 +61,8 @@ export const UniversalChannelsSection = ({
         })}
       >
         <BoxWithBorder>
-          <Box
-            padding={defaultPadding}
-            display={"flex"}
-            flexDirection={"column"}
-            gap={defaultPadding}
-          >
-            <Box display={"flex"} flexDirection={"column"} gap={defaultPadding}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={defaultPadding}>
+            <Box display="flex" flexDirection="column" gap={defaultPadding}>
               <Text variant="heading">Current behaviour</Text>
               <AssignedChannelsMessage
                 availableChannels={channels?.map((channel) => channel.slug) || []}
@@ -85,7 +80,7 @@ export const UniversalChannelsSection = ({
                 render={({ field: { onChange } }) => (
                   <Switch
                     defaultValue={channelConfiguration.mode}
-                    __maxWidth={"max-content"}
+                    __maxWidth="max-content"
                     onValueChange={onChange}
                   >
                     <Switch.Item id="1" value="restrict">
@@ -103,7 +98,7 @@ export const UniversalChannelsSection = ({
                 control={control}
                 label="Channels"
                 size="large"
-                name={"channels"}
+                name="channels"
                 options={
                   channels?.map((channel) => ({
                     label: channel.name,

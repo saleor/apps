@@ -55,18 +55,18 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
             });
           })}
         >
-          <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
               label="Email"
               name="senderEmail"
               control={control}
-              helperText={"Email address that will be used as sender"}
+              helperText="Email address that will be used as sender"
             />
             <Input
               label="Name"
               name="senderName"
               control={control}
-              helperText={"Name that will be used as sender"}
+              helperText="Name that will be used as sender"
             />
           </Box>
           <BoxFooter>

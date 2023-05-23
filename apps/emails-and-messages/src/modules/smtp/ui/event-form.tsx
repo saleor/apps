@@ -109,11 +109,11 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
           <Text variant="hero">Edit template</Text>
           <Button type="submit">Save</Button>
         </Box>
-        <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+        <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
           <Input control={control} name="subject" label="Subject" />
         </Box>
 
-        <Box display={"grid"} gridTemplateColumns={{ desktop: 5, mobile: 1 }} gap={defaultPadding}>
+        <Box display="grid" gridTemplateColumns={{ desktop: 5, mobile: 1 }} gap={defaultPadding}>
           <Box
             gridColumnStart={{ desktop: "1", mobile: "1" }}
             gridColumnEnd={{ desktop: "3", mobile: "6" }}

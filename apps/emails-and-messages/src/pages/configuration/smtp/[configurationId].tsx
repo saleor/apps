@@ -79,7 +79,7 @@ const EditSmtpConfigurationPage: NextPage = () => {
         { name: `SMTP: ${configuration.name}` },
       ]}
     >
-      <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+      <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Connect SMTP with Saleor.</Text>
         </Box>

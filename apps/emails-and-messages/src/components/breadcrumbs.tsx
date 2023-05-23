@@ -42,7 +42,7 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   const lastItem = items.pop()!; // can enforce the type since array is at least one element long
 
   return (
-    <Box display={"flex"} gap={6}>
+    <Box display="flex" gap={6}>
       {items.map((item) => (
         <Box key={item.name} display={{ mobile: "none", desktop: "flex" }} gap={6}>
           <Breadcrumb {...item} key={item.name} />

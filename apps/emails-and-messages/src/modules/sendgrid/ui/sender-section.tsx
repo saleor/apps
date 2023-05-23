@@ -59,7 +59,7 @@ export const SenderSection = ({ configuration }: SenderSectionProps) => {
             });
           })}
         >
-          <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             {sendersChoices?.length ? (
               <Combobox
                 name="sender"

@@ -22,7 +22,7 @@ export const TextLink = ({ href, openNewTab, children, props }: TextLinkProps) =
   };
 
   return (
-    <Text textDecoration={"underline"} variant="bodyStrong" {...props}>
+    <Text textDecoration="underline" variant="bodyStrong" {...props}>
       {openNewTab ? (
         <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
           {children}

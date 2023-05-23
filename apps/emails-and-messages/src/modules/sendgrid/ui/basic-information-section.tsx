@@ -64,12 +64,12 @@ export const BasicInformationSection = ({ configuration }: BasicInformationSecti
             });
           })}
         >
-          <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
               label="Configuration name"
               control={control}
               name="name"
-              helperText={"Name of the configuration, for example 'Production' or 'Test'"}
+              helperText="Name of the configuration, for example 'Production' or 'Test'"
             />
             <label>
               <input type="checkbox" placeholder="Enabled" {...register("active")} />

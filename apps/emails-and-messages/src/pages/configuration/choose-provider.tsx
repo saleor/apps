@@ -19,7 +19,7 @@ const ChooseProviderPage: NextPage = () => {
         { name: "Add provider" },
       ]}
     >
-      <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+      <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Select and configure providers to connect Saleor with selected services.</Text>
         </Box>

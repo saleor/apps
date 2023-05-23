@@ -43,7 +43,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
         { name: "Sendgrid" },
       ]}
     >
-      <Box display={"grid"} gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
+      <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>Connect Sendgrid with Saleor.</Text>
         </Box>
@@ -65,7 +65,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
               });
             })}
           >
-            <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+            <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
               <Controller
                 name="name"
                 control={control}

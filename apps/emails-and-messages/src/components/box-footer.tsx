@@ -6,11 +6,11 @@ export const BoxFooter = (props: BoxProps) => {
     <Box
       borderTopStyle="solid"
       borderWidth={1}
-      borderColor={"neutralDefault"}
+      borderColor="neutralDefault"
       padding={defaultPadding}
-      display={"flex"}
-      flexDirection={"row"}
-      justifyContent={"flex-end"}
+      display="flex"
+      flexDirection="row"
+      justifyContent="flex-end"
       {...props}
     >
       {props.children}

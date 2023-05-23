@@ -4,8 +4,8 @@ export const BoxWithBorder = (props: BoxProps) => {
   return (
     <Box
       borderWidth={1}
-      borderStyle={"solid"}
-      borderColor={"neutralDefault"}
+      borderStyle="solid"
+      borderColor="neutralDefault"
       borderRadius={5}
       {...props}
     >

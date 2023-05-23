@@ -58,30 +58,30 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
             });
           })}
         >
-          <Box padding={defaultPadding} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
             <Input
               label="Host"
-              helperText={"Server host that will be connected."}
+              helperText="Server host that will be connected."
               control={control}
               name="smtpHost"
             />
             <Input
               label="Port"
-              name={"smtpPort"}
+              name="smtpPort"
               control={control}
-              helperText={"Port that will be used"}
+              helperText="Port that will be used"
             />
             <Input
               label="User"
-              name={"smtpUser"}
+              name="smtpUser"
               control={control}
-              helperText={"User for the SMTP server connection"}
+              helperText="User for the SMTP server connection"
             />
             <Input
               label="Password"
-              name={"smtpPassword"}
+              name="smtpPassword"
               control={control}
-              helperText={"Password for the SMTP server connection"}
+              helperText="Password for the SMTP server connection"
             />
 
             <Box display="flex" gap={defaultPadding}>

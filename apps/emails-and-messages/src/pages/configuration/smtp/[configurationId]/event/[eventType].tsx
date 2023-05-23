@@ -45,21 +45,16 @@ const EditSmtpEventPage: NextPage = () => {
   const { data: configuration, isLoading } = trpcClient.smtpConfiguration.getConfiguration.useQuery(
     {
       id: configurationId,
-      /*
-       * if event type is not valid, it calling the query will not be enabled
-       * so we can safely cast it
-       */
-      // eventType: eventType!,
     },
     {
       enabled: !!configurationId && !!eventType,
       onSettled(data, error) {
         if (error) {
-          console.log("Error: ", error);
+          console.error("Error during fetching the configuration: ", error);
         }
         if (error?.data?.code === "NOT_FOUND" || !data) {
           notifyError("The requested configuration does not exist.");
-          router.replace("/configuration");
+          router.replace(appUrls.configuration());
         }
       },
     }

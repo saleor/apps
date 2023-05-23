@@ -20,7 +20,7 @@ const NoExistingConfigurations = () => {
   };
 
   return (
-    <BoxWithBorder padding={10} display={"grid"} alignItems={"center"} justifyContent={"center"}>
+    <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
       <Text>No providers configured yet</Text>
       <Button onClick={redirectToProvidersSelection}>Add first provider</Button>
     </BoxWithBorder>
@@ -54,7 +54,7 @@ export const MessagingProvidersBox = ({
 
   if (loading) {
     return (
-      <BoxWithBorder padding={10} display={"grid"} alignItems={"center"} justifyContent={"center"}>
+      <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
         <Text>Loading</Text>
       </BoxWithBorder>
     );
@@ -88,7 +88,7 @@ export const MessagingProvidersBox = ({
 
   return (
     <BoxWithBorder>
-      <Box padding={defaultPadding} display={"grid"} gridTemplateColumns={4} gap={defaultPadding}>
+      <Box padding={defaultPadding} display="grid" gridTemplateColumns={4} gap={defaultPadding}>
         <Text variant="caption" color="textNeutralSubdued">
           Provider
         </Text>
@@ -111,7 +111,7 @@ export const MessagingProvidersBox = ({
               content={configuration.active ? "Active" : "Inactive"}
               variant={configuration.active ? "success" : "error"}
             />
-            <Box display="flex" justifyContent={"flex-end"}>
+            <Box display="flex" justifyContent="flex-end">
               <Button
                 variant="tertiary"
                 size="small"

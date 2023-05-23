@@ -5,6 +5,7 @@ import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
 import { isInIframe } from "../lib/is-in-iframe";
 import { appName } from "../const";
+import { appUrls } from "../modules/app-configuration/urls";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -13,7 +14,7 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     if (isMounted() && appBridgeState?.ready) {
-      replace("/configuration");
+      replace(appUrls.configuration());
     }
   }, [isMounted, appBridgeState?.ready, replace]);
 
