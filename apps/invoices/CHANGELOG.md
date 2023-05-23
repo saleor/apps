@@ -1,5 +1,13 @@
 # saleor-app-invoices
 
+## 1.13.3
+
+### Patch Changes
+
+- 23b5c70: Moved Semver compatibility checking to shared package, removed semver library
+- Updated dependencies [23b5c70]
+  - @saleor/apps-shared@1.6.0
+
 ## 1.13.2
 
 ### Patch Changes
