@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vitest";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 import { mapPayloadLines } from "./avatax-calculate-taxes-payload-transformer";
-import { avataxMockFactory } from "../maps/avatax-mock-factory";
+import { avataxMockFactory } from "../avatax-mock-factory";
 
 const mapPayloadArgsMocks = {
   channel: avataxMockFactory.createMockChannelConfig(),

@@ -7,7 +7,7 @@ import {
 import { taxMockFactory } from "../../taxes/tax-mock-factory";
 
 const MOCKED_PAYLOAD = {
-  order: taxMockFactory.createMockOrder(),
+  order: taxMockFactory.createOrderCreatedMock(),
   channelConfig: taxJarMockFactory.createMockChannelConfig(),
 };
 

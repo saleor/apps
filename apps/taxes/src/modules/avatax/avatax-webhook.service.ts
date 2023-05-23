@@ -9,8 +9,8 @@ import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
-import { avataxOrderFulfilledMaps } from "./maps/avatax-order-fulfilled-map";
 import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
+import { AvataxOrderFulfilledAdapter } from "./order-fulfilled/avatax-order-fulfilled-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -44,14 +44,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return adapter.send({ channelConfig, order });
   }
 
-  async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channel: ChannelConfig) {
-    this.logger.debug({ order, channel }, "fulfillOrder called with:");
-    const args = avataxOrderFulfilledMaps.mapPayload({ order, config: this.config });
+  async fulfillOrder(order: OrderFulfilledSubscriptionFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ order, channelConfig }, "fulfillOrder called with:");
 
-    this.logger.debug({ args }, "will call commitTransaction with");
-    const result = await this.client.commitTransaction(args);
+    const adapter = new AvataxOrderFulfilledAdapter(this.config);
 
-    this.logger.debug({ result }, "fulfillOrder response");
-    return { ok: true };
+    return adapter.send({ order });
   }
 }

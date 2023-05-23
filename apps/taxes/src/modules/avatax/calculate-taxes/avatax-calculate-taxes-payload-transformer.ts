@@ -1,7 +1,7 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-config";
-import { avataxAddressFactory } from "../maps/address-factory";
+import { avataxAddressFactory } from "../address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { SHIPPING_ITEM_CODE, Payload, Target } from "./avatax-calculate-taxes-adapter";
 

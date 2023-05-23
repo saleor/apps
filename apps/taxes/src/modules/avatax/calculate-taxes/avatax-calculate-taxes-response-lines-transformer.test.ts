@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { AvataxCalculateTaxesResponseLinesTransformer } from "./avatax-calculate-taxes-response-lines-transformer";
-import { transactionModelMocks } from "../maps/mocks";
+import { transactionModelMocks } from "../mocks";
 
 const transformer = new AvataxCalculateTaxesResponseLinesTransformer();
 

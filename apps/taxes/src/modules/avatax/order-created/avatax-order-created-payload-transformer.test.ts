@@ -6,10 +6,10 @@ import {
   mapDiscounts,
   mapLines,
 } from "./avatax-order-created-payload-transformer";
-import { avataxMockFactory } from "../maps/avatax-mock-factory";
+import { avataxMockFactory } from "../avatax-mock-factory";
 
 const MOCKED_ARGS: Payload = {
-  order: taxMockFactory.createMockOrder(),
+  order: taxMockFactory.createOrderCreatedMock(),
   channelConfig: avataxMockFactory.createMockChannelConfig(),
   config: avataxMockFactory.createMockAvataxConfig(),
 };
