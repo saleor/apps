@@ -4,7 +4,7 @@ import {
   sendgridConfigurationEventSchema,
   sendgridConfigurationSchema,
 } from "./sendgrid-config-schema";
-import { channelConfigurationSchema } from "../../../lib/channel-assignment/channel-configuration-schema";
+import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
 
 export const sendgridCreateConfigurationInputSchema = sendgridConfigurationSchema.pick({
   name: true,

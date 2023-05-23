@@ -1,11 +1,11 @@
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
-import { trpcClient } from "../../../modules/trpc/trpc-client";
+import { trpcClient } from "../../trpc/trpc-client";
 import {
   SmtpUpdateChannels,
   smtpUpdateChannelsSchema,
-} from "../../../modules/smtp/configuration/smtp-config-input-schema";
+} from "../../smtp/configuration/smtp-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";

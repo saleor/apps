@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
-import { channelConfigurationSchema } from "../../../lib/channel-assignment/channel-configuration-schema";
+import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
 
 export const sendgridConfigurationEventSchema = z.object({
   active: z.boolean().default(false),

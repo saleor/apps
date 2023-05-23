@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { smtpConfigurationEventSchema, smtpConfigurationSchema } from "./smtp-config-schema";
-import { channelConfigurationSchema } from "../../../lib/channel-assignment/channel-configuration-schema";
+import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
 
 export const smtpCreateConfigurationInputSchema = smtpConfigurationSchema.pick({
   name: true,
