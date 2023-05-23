@@ -1,11 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
+  AvataxCalculateTaxesMapPayloadArgs,
   SHIPPING_ITEM_CODE,
   mapPayloadLines,
   mapResponseProductLines,
   mapResponseShippingLine,
 } from "./avatax-calculate-taxes-map";
-import { mapPayloadArgsMocks, transactionModelMocks } from "./mocks";
+import { transactionModelMocks } from "./mocks";
+import { avataxMockFactory } from "./avatax-mock-factory";
+
+const mapPayloadArgsMocks: AvataxCalculateTaxesMapPayloadArgs = {
+  channel: avataxMockFactory.createMockChannelConfig(),
+  taxBase: avataxMockFactory.createMockTaxBase(),
+  config: avataxMockFactory.createMockAvataxConfig(),
+};
 
 describe("avataxCalculateTaxesMaps", () => {
   describe("mapResponseShippingLine", () => {
@@ -94,17 +102,14 @@ describe("avataxCalculateTaxesMaps", () => {
     });
   });
   describe("mapLines", () => {
-    const lines = mapPayloadLines(
-      mapPayloadArgsMocks.default.taxBase,
-      mapPayloadArgsMocks.default.config
-    );
+    const lines = mapPayloadLines(mapPayloadArgsMocks.taxBase, mapPayloadArgsMocks.config);
 
     it("includes shipping as a line", () => {
       expect(lines).toContainEqual({
         itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,
         amount: 48.33,
-        taxCode: mapPayloadArgsMocks.default.config.shippingTaxCode,
+        taxCode: mapPayloadArgsMocks.config.shippingTaxCode,
         taxIncluded: false,
       });
     });

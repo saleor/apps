@@ -144,7 +144,7 @@ describe("avataxOrderCreatedMaps", () => {
       const linesWithoutShipping = payload.model.lines.slice(0, -1);
       const check = linesWithoutShipping.every((line) => line.discounted === true);
 
-      expect(check).toBeTruthy();
+      expect(check).toBe(true);
     });
     it.todo("calculation of fields");
     it.todo("formatting the fields");

@@ -8,7 +8,6 @@ import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { AvataxCalculateTaxesMapPayloadArgs } from "./avatax-calculate-taxes-map";
 
 const NO_SHIPPING_TRANSACTION_MOCK: TransactionModel = {
   id: 0,
@@ -1693,102 +1692,6 @@ const TAXABLE_TAX_NOT_INCLUDED_TRANSACTION_MOCK: TransactionModel = {
   ],
 };
 
-const MOCKED_CALCULATE_TAXES_ARGS: AvataxCalculateTaxesMapPayloadArgs = {
-  taxBase: {
-    pricesEnteredWithTax: false,
-    currency: "PLN",
-    channel: {
-      slug: "channel-pln",
-    },
-    sourceObject: {
-      __typename: "Order",
-      user: {
-        id: "VXNlcjo5ZjY3ZjY0Zi1iZjY5LTQ5ZjYtYjQ4Zi1iZjY3ZjY0ZjY0ZjY=",
-      },
-    },
-    discounts: [],
-    address: {
-      streetAddress1: "123 Palm Grove Ln",
-      streetAddress2: "",
-      city: "LOS ANGELES",
-      country: {
-        code: "US",
-      },
-      countryArea: "CA",
-      postalCode: "90002",
-    },
-    shippingPrice: {
-      amount: 48.33,
-    },
-    lines: [
-      {
-        quantity: 3,
-        unitPrice: {
-          amount: 84,
-        },
-        totalPrice: {
-          amount: 252,
-        },
-        sourceLine: {
-          __typename: "OrderLine",
-          id: "T3JkZXJMaW5lOmY1NGQ1MWY2LTc1OTctNGY2OC1hNDk0LTFjYjZlYjRmOTlhMQ==",
-          variant: {
-            id: "UHJvZHVjdFZhcmlhbnQ6MzQ2",
-            product: {
-              metafield: null,
-              productType: {
-                metafield: null,
-              },
-            },
-          },
-        },
-      },
-      {
-        quantity: 1,
-        unitPrice: {
-          amount: 5.99,
-        },
-        totalPrice: {
-          amount: 5.99,
-        },
-        sourceLine: {
-          __typename: "OrderLine",
-          id: "T3JkZXJMaW5lOjU1NTFjNTFjLTM5MWQtNGI0Ny04MGU0LWVjY2Q5ZjU4MjQyNQ==",
-          variant: {
-            id: "UHJvZHVjdFZhcmlhbnQ6Mzg1",
-            product: {
-              metafield: null,
-              productType: {
-                metafield: null,
-              },
-            },
-          },
-        },
-      },
-    ],
-  },
-  channel: {
-    providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-    enabled: false,
-    address: {
-      country: "US",
-      zip: "92093",
-      state: "CA",
-      city: "La Jolla",
-      street: "9500 Gilman Drive",
-    },
-  },
-  config: {
-    companyCode: "DEFAULT",
-    isAutocommit: false,
-    isSandbox: true,
-    name: "Avatax-1",
-    password: "password",
-    username: "username",
-    shippingTaxCode: "FR000000",
-  },
-};
-
 export const transactionModelMocks = {
   taxable: {
     taxIncluded: TAXABLE_TAX_INCLUDED_TRANSACTION_MOCK,
@@ -1796,8 +1699,4 @@ export const transactionModelMocks = {
   },
   nonTaxable: NON_TAXABLE_TRANSACTION_MOCK,
   noShippingLine: NO_SHIPPING_TRANSACTION_MOCK,
-};
-
-export const mapPayloadArgsMocks = {
-  default: MOCKED_CALCULATE_TAXES_ARGS,
 };
