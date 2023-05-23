@@ -13,12 +13,12 @@ import {
   smtpGetConfigurationsInputSchema,
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
-  smtpUpdateChannelsSchema,
   smtpUpdateEventConfigurationInputSchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
 } from "./smtp-config-input-schema";
+import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -257,7 +257,7 @@ export const smtpConfigurationRouter = router({
 
   updateChannels: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(smtpUpdateChannelsSchema)
+    .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
       const configuration = await ctx.configurationService.getConfiguration({
         id: input.id,

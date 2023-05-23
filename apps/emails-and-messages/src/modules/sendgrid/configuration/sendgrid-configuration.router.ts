@@ -6,7 +6,6 @@ import {
   sendgridGetEventConfigurationInputSchema,
   sendgridUpdateApiConnectionSchema,
   sendgridUpdateBasicInformationSchema,
-  sendgridUpdateChannelsSchema,
   sendgridUpdateEventConfigurationInputSchema,
   sendgridUpdateEventSchema,
   sendgridUpdateSenderSchema,
@@ -17,6 +16,7 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { TRPCError } from "@trpc/server";
 import { getDefaultEmptyConfiguration } from "./sendgrid-config-container";
 import { fetchSenders } from "../sendgrid-api";
+import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -223,7 +223,7 @@ export const sendgridConfigurationRouter = router({
     }),
   updateChannels: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridUpdateChannelsSchema)
+    .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
       const configuration = await ctx.configurationService.getConfiguration({
         id: input.id,

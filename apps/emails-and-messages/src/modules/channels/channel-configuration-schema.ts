@@ -9,3 +9,11 @@ export const channelConfigurationSchema = z.object({
 });
 
 export type ChannelConfiguration = z.infer<typeof channelConfigurationSchema>;
+
+export const updateChannelsInputSchema = channelConfigurationSchema.merge(
+  z.object({
+    id: z.string().min(1),
+  })
+);
+
+export type UpdateChannelsInput = z.infer<typeof updateChannelsInputSchema>;

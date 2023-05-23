@@ -1,9 +1,9 @@
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SmtpUpdateChannels } from "../configuration/smtp-config-input-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { UniversalChannelsSection } from "../../channels/ui/universal-channels-section";
+import { UpdateChannelsInput } from "../../channels/channel-configuration-schema";
 
 interface ChannelsSectionProps {
   configuration: SmtpConfiguration;
@@ -19,7 +19,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SmtpUpdateChannels>({
+      setBackendErrors<UpdateChannelsInput>({
         error,
         notifyError,
       });
@@ -30,7 +30,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
     <UniversalChannelsSection
       configurationId={configuration.id}
       channelConfiguration={configuration.channels}
-      mutate={mutate}
+      onSubmit={mutate}
     />
   );
 };

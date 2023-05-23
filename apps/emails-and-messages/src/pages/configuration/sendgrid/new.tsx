@@ -12,6 +12,7 @@ import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
 import { sendgridUrls } from "../../../modules/sendgrid/urls";
 import { appUrls } from "../../../modules/app-configuration/urls";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 const NewSendgridConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -26,26 +27,11 @@ const NewSendgridConfigurationPage: NextPage = () => {
         router.push(sendgridUrls.configuration(data.id));
       },
       onError(error) {
-        let isFieldErrorSet = false;
-        const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-        for (const fieldName in fieldErrors) {
-          for (const message of fieldErrors[fieldName] || []) {
-            isFieldErrorSet = true;
-            setError(fieldName as keyof SendgridCreateConfigurationInput, {
-              type: "manual",
-              message,
-            });
-          }
-        }
-        const formErrors = error.data?.zodError?.formErrors || [];
-        const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-        notifyError(
-          "Could not save the configuration",
-          isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-          formErrorMessage
-        );
+        setBackendErrors<SendgridCreateConfigurationInput>({
+          error,
+          setError,
+          notifyError,
+        });
       },
     });
 

@@ -17,6 +17,7 @@ import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { appUrls } from "../../../modules/app-configuration/urls";
 import { smtpUrls } from "../../../modules/smtp/urls";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 const NewSmtpConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -33,26 +34,11 @@ const NewSmtpConfigurationPage: NextPage = () => {
       router.push(smtpUrls.configuration(data.id));
     },
     onError(error) {
-      let isFieldErrorSet = false;
-      const fieldErrors = error.data?.zodError?.fieldErrors || {};
-
-      for (const fieldName in fieldErrors) {
-        for (const message of fieldErrors[fieldName] || []) {
-          isFieldErrorSet = true;
-          setError(fieldName as keyof SmtpCreateConfigurationInput, {
-            type: "manual",
-            message,
-          });
-        }
-      }
-      const formErrors = error.data?.zodError?.formErrors || [];
-      const formErrorMessage = formErrors.length ? formErrors.join("\n") : undefined;
-
-      notifyError(
-        "Could not save the configuration",
-        isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
-        formErrorMessage
-      );
+      setBackendErrors<SmtpCreateConfigurationInput>({
+        error,
+        setError,
+        notifyError,
+      });
     },
   });
 

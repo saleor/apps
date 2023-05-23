@@ -2,13 +2,13 @@ import { messageEventTypes } from "../../event-handlers/message-event-types";
 
 import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
 import { generateRandomId } from "../../../lib/generate-random-id";
-import { isAvailableInChannel } from "../../../lib/channel-assignment/is-available-in-channel";
 import {
   SmtpConfiguration,
   smtpConfigurationSchema,
   smtpConfigurationEventSchema,
   SmtpConfig,
 } from "./smtp-config-schema";
+import { isAvailableInChannel } from "../../channels/is-available-in-channel";
 
 export const getDefaultEventsConfiguration = (): SmtpConfiguration["events"] =>
   messageEventTypes.map((eventType) =>

@@ -2,35 +2,35 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";
-import {
-  SmtpUpdateChannels,
-  smtpUpdateChannelsSchema,
-} from "../../smtp/configuration/smtp-config-input-schema";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Multiselect } from "../../../components/react-hook-form-macaw/Multiselect";
 import { AssignedChannelsMessage } from "./assigned-channels-message";
-import { ChannelConfiguration } from "../channel-configuration-schema";
+import {
+  ChannelConfiguration,
+  UpdateChannelsInput,
+  updateChannelsInputSchema,
+} from "../channel-configuration-schema";
 
 interface UniversalChannelsSectionProps {
   configurationId: string;
   channelConfiguration: ChannelConfiguration;
-  mutate: any; // TODO: narrow the type
+  onSubmit: (formData: UpdateChannelsInput) => void;
 }
 
 export const UniversalChannelsSection = ({
   configurationId,
   channelConfiguration,
-  mutate,
+  onSubmit,
 }: UniversalChannelsSectionProps) => {
-  const { handleSubmit, control, register } = useForm<SmtpUpdateChannels>({
+  const { handleSubmit, control, register } = useForm<UpdateChannelsInput>({
     defaultValues: {
       id: configurationId,
       ...channelConfiguration,
     },
-    resolver: zodResolver(smtpUpdateChannelsSchema),
+    resolver: zodResolver(updateChannelsInputSchema),
   });
 
   const { data: channels } = trpcClient.channels.fetch.useQuery();
@@ -57,9 +57,7 @@ export const UniversalChannelsSection = ({
     >
       <form
         onSubmit={handleSubmit((data, event) => {
-          mutate({
-            ...data,
-          });
+          onSubmit(data);
         })}
       >
         <BoxWithBorder>

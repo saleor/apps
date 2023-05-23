@@ -1,9 +1,9 @@
 import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SendgridUpdateChannels } from "../configuration/sendgrid-config-input-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { UniversalChannelsSection } from "../../channels/ui/universal-channels-section";
+import { UpdateChannelsInput } from "../../channels/channel-configuration-schema";
 
 interface ChannelsSectionProps {
   configuration: SendgridConfiguration;
@@ -19,7 +19,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
       trpcContext.sendgridConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SendgridUpdateChannels>({ error, notifyError });
+      setBackendErrors<UpdateChannelsInput>({ error, notifyError });
     },
   });
 
@@ -27,7 +27,7 @@ export const ChannelsSection = ({ configuration }: ChannelsSectionProps) => {
     <UniversalChannelsSection
       configurationId={configuration.id}
       channelConfiguration={configuration.channels}
-      mutate={mutate}
+      onSubmit={mutate}
     />
   );
 };

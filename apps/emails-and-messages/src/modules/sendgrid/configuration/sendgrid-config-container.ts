@@ -1,5 +1,5 @@
 import { generateRandomId } from "../../../lib/generate-random-id";
-import { isAvailableInChannel } from "../../../lib/channel-assignment/is-available-in-channel";
+import { isAvailableInChannel } from "../../channels/is-available-in-channel";
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import {
   SendgridConfig as SendgridConfigurationRoot,
