@@ -3,9 +3,9 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
-import { LinearProgress } from "@material-ui/core";
 import { isInIframe } from "../lib/is-in-iframe";
 import { appName } from "../const";
+import { appUrls } from "../modules/app-configuration/urls";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -14,12 +14,12 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     if (isMounted() && appBridgeState?.ready) {
-      replace("/configuration/channels");
+      replace(appUrls.configuration());
     }
   }, [isMounted, appBridgeState?.ready, replace]);
 
   if (isInIframe()) {
-    return <LinearProgress />;
+    return <p>Loading</p>;
   }
 
   return (

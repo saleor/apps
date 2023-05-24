@@ -4,10 +4,10 @@ import { compileHandlebarsTemplate } from "./compile-handlebars-template";
 import { sendEmailWithSmtp, SendMailArgs } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
-import { MjmlConfiguration } from "./configuration/mjml-config";
+import { SmtpConfiguration } from "./configuration/smtp-config-schema";
 
-interface SendMjmlArgs {
-  mjmlConfiguration: MjmlConfiguration;
+interface SendSmtpArgs {
+  smtpConfiguration: SmtpConfiguration;
   recipientEmail: string;
   event: MessageEventTypes;
   payload: any;
@@ -20,18 +20,18 @@ export interface EmailServiceResponse {
   }[];
 }
 
-export const sendMjml = async ({
+export const sendSmtp = async ({
   payload,
   recipientEmail,
   event,
-  mjmlConfiguration,
-}: SendMjmlArgs) => {
+  smtpConfiguration,
+}: SendSmtpArgs) => {
   const logger = createLogger({
-    fn: "sendMjml",
+    fn: "sendSmtp",
     event,
   });
 
-  const eventSettings = mjmlConfiguration.events.find((e) => e.eventType === event);
+  const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
 
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
@@ -133,20 +133,20 @@ export const sendMjml = async ({
     mailData: {
       text: emailBodyPlaintext,
       html: emailBodyHtml,
-      from: `${mjmlConfiguration.senderName} <${mjmlConfiguration.senderEmail}>`,
+      from: `${smtpConfiguration.senderName} <${smtpConfiguration.senderEmail}>`,
       to: recipientEmail,
       subject: emailSubject,
     },
     smtpSettings: {
-      host: mjmlConfiguration.smtpHost,
-      port: parseInt(mjmlConfiguration.smtpPort, 10),
+      host: smtpConfiguration.smtpHost,
+      port: parseInt(smtpConfiguration.smtpPort, 10),
     },
   };
 
-  if (mjmlConfiguration.smtpUser) {
+  if (smtpConfiguration.smtpUser) {
     sendEmailSettings.smtpSettings.auth = {
-      user: mjmlConfiguration.smtpUser,
-      pass: mjmlConfiguration.smtpPassword,
+      user: smtpConfiguration.smtpUser,
+      pass: smtpConfiguration.smtpPassword,
     };
   }
 
