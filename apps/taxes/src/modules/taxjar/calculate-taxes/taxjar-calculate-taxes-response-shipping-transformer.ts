@@ -1,29 +1,29 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
-import { Response } from "./taxjar-calculate-taxes-adapter";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { numbers } from "../../taxes/numbers";
+import { Response } from "./taxjar-calculate-taxes-adapter";
 
 export class TaxJarCalculateTaxesResponseShippingTransformer {
   transform(
-    res: TaxForOrderRes["tax"]
+    res: TaxForOrderRes
   ): Pick<
     Response,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
   > {
-    const shippingDetails = res.breakdown?.shipping;
-    const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
-      shippingDetails?.taxable_amount,
-      new Error("Shipping taxable amount is required to calculate gross amount")
-    );
+    const { tax } = res;
+    const shippingDetails = tax.breakdown?.shipping;
 
-    const shippingPriceGross =
-      shippingTaxableAmount +
-      taxProviderUtils.resolveOptionalOrThrow(
-        shippingDetails?.tax_collectable,
-        new Error("Shipping tax collectable is required to calculate gross amount")
-      );
+    if (!shippingDetails) {
+      return {
+        shipping_price_gross_amount: 0,
+        shipping_price_net_amount: 0,
+        shipping_tax_rate: 0,
+      };
+    }
+
+    const shippingTaxableAmount = shippingDetails.taxable_amount;
+    const shippingPriceGross = shippingTaxableAmount + shippingDetails.tax_collectable;
     const shippingPriceNet = shippingTaxableAmount;
-    const shippingTaxRate = shippingDetails?.combined_tax_rate ?? 0;
+    const shippingTaxRate = shippingDetails.combined_tax_rate;
 
     return {
       shipping_price_gross_amount: numbers.roundFloatToTwoDecimals(shippingPriceGross),

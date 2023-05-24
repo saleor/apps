@@ -98,7 +98,7 @@ const MOCKED_CHANNEL_CONFIG: ChannelConfig = {
  */
 
 describe("TaxJarCalculateTaxesPayloadTransformer", () => {
-  it("should return payload containing line_items", () => {
+  it("returns payload containing line_items", () => {
     const transformer = new TaxJarCalculateTaxesPayloadTransformer();
     const transformedPayload = transformer.transform({
       taxBase: MOCKED_TAX_BASE,
