@@ -16,10 +16,11 @@
     "schemaVersion": "3.11.7"
   },
   "dependencies": {
-    "@hookform/resolvers": "^2.9.10",
+    "@hookform/resolvers": "^3.1.0",
     "@monaco-editor/react": "^4.4.6",
     "@saleor/app-sdk": "0.38.0",
     "@saleor/apps-shared": "workspace:*",
+    "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.83",
     "@sendgrid/client": "^7.7.0",
     "@sendgrid/mail": "^7.7.0",
@@ -45,7 +46,7 @@
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.43.0",
+    "react-hook-form": "^7.43.9",
     "react-is": "^18.2.0",
     "react-query": "^3.39.3",
     "urql": "^3.0.3",

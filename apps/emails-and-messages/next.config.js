@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  transpilePackages: ["@saleor/apps-shared"],
+  transpilePackages: ["@saleor/apps-shared", "@saleor/react-hook-form-macaw"],
 };
 
 const isSentryEnvAvailable =
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG && process.env.SENTRY_AUTH_TOKEN;
+  process.env.SENTRY_AUTH_TOKEN &&
+  process.env.SENTRY_PROJECT &&
+  process.env.SENTRY_ORG &&
+  process.env.SENTRY_AUTH_TOKEN;
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
