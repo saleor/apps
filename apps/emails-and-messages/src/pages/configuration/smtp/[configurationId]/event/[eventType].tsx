@@ -8,7 +8,7 @@ import { parseMessageEventType } from "../../../../../modules/event-handlers/par
 import { appUrls } from "../../../../../modules/app-configuration/urls";
 import { EventForm } from "../../../../../modules/smtp/ui/event-form";
 import { smtpUrls } from "../../../../../modules/smtp/urls";
-import { TextLink } from "../../../../../components/text-link";
+import { TextLink } from "@saleor/apps-ui";
 
 const LoadingView = () => {
   return (
@@ -84,7 +84,7 @@ const EditSmtpEventPage: NextPage = () => {
       <Box display="flex" flexDirection="column" gap={13}>
         <Text as="p">
           Edit template for {eventType} event. You can learn more about MJML{" "}
-          <TextLink href="https://mjml.io/" openNewTab={true}>
+          <TextLink href="https://mjml.io/" newTab={true}>
             here
           </TextLink>
           .
