@@ -30,7 +30,7 @@ export const fetchTemplates =
       };
       const templates =
         resJson.result?.map((r) => ({
-          value: r.id,
+          value: r.id.toString(),
           label: r.name,
         })) || [];
       return templates;
@@ -65,7 +65,7 @@ export const fetchSenders =
       };
       const senders =
         resJson.results?.map((r) => ({
-          value: r.id,
+          value: r.id.toString(),
           label: `${r.nickname} (${r.from_email})`,
           nickname: r.nickname,
           from_email: r.from_email,

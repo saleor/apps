@@ -1,7 +1,8 @@
+import { ChannelConfiguration } from "./channel-configuration-schema";
+
 interface IsAvailableInChannelArgs {
   channel: string;
-  restrictedToChannels: string[];
-  excludedChannels: string[];
+  channelConfiguration: ChannelConfiguration;
 }
 
 /**
@@ -14,14 +15,13 @@ interface IsAvailableInChannelArgs {
  */
 export const isAvailableInChannel = ({
   channel,
-  restrictedToChannels,
-  excludedChannels,
+  channelConfiguration,
 }: IsAvailableInChannelArgs): boolean => {
-  if (channel in excludedChannels) {
-    return false;
+  if (!channelConfiguration.override) {
+    return true;
   }
-  if (restrictedToChannels.length > 0 && !(channel in restrictedToChannels)) {
-    return false;
+  if (channelConfiguration.mode === "restrict") {
+    return channelConfiguration.channels.includes(channel);
   }
-  return true;
+  return !channelConfiguration.channels.includes(channel);
 };
