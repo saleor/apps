@@ -8,13 +8,12 @@ import {
   SendgridUpdateBasicInformation,
   sendgridUpdateBasicInformationSchema,
 } from "../configuration/sendgrid-config-input-schema";
-import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
-import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Input } from "@saleor/react-hook-form-macaw";
 
 interface SendgridBasicInformationSectionProps {
   configuration: SendgridConfiguration;

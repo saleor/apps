@@ -12,9 +12,9 @@ import {
   SmtpUpdateBasicInformation,
   smtpUpdateBasicInformationSchema,
 } from "../configuration/smtp-config-input-schema";
-import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Input } from "@saleor/react-hook-form-macaw";
 
 interface SmtpBasicInformationSectionProps {
   configuration: SmtpConfiguration;

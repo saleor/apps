@@ -17,8 +17,8 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { useQuery } from "@tanstack/react-query";
 import { fetchTemplates } from "../sendgrid-api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Combobox } from "../../../components/react-hook-form-macaw/Combobox";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Combobox } from "@saleor/react-hook-form-macaw";
 
 interface EventBoxProps {
   configuration: SendgridConfiguration;

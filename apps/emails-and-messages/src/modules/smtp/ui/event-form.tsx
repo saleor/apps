@@ -1,7 +1,6 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Controller, useForm } from "react-hook-form";
@@ -17,6 +16,7 @@ import { examplePayloads } from "../../event-handlers/default-payloads";
 import { MjmlPreview } from "./mjml-preview";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Input } from "@saleor/react-hook-form-macaw";
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
 interface EventFormProps {
