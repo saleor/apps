@@ -18,11 +18,11 @@ const MOCKED_METADATA: OrderFulfilledSubscriptionFragment["privateMetadata"] = [
 ];
 
 describe("getTransactionCodeFromMetadata", () => {
-  it("should return transaction code", () => {
+  it("returns transaction code", () => {
     expect(getTransactionCodeFromMetadata(MOCKED_METADATA)).toBe("transaction-code");
   });
 
-  it("should throw error when transaction code not found", () => {
+  it("throws error when transaction code not found", () => {
     expect(() => getTransactionCodeFromMetadata([])).toThrowError();
   });
 });
@@ -35,7 +35,7 @@ const MOCKED_ORDER_FULFILLED_PAYLOAD: Payload = {
 };
 
 describe("AvataxOrderFulfilledPayloadTransformer", () => {
-  it("should return transformed payload", () => {
+  it("returns transformed payload", () => {
     const mappedPayload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
 
     expect(mappedPayload).toEqual({

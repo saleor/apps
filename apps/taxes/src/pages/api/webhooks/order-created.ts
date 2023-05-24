@@ -74,23 +74,17 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-    const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
-    if (!activeTaxProvider.ok) {
-      logger.info("Returning no data");
-      return webhookResponse.failure(activeTaxProvider.error);
-    }
-
-    logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
-    const taxProvider = activeTaxProvider.data;
+    logger.info({ taxProvider }, "Fetched taxProvider");
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
-      return webhookResponse.failure("Insufficient order data");
+      return webhookResponse.error(new Error("Insufficient order data"));
     }
 
     if (payload.order.status === OrderStatus.Fulfilled) {
-      return webhookResponse.failure("Skipping fulfilled order to prevent duplication");
+      return webhookResponse.error(new Error("Skipping fulfilled order to prevent duplication"));
     }
 
     const createdOrder = await taxProvider.createOrder(payload.order);
@@ -104,6 +98,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     return webhookResponse.success();
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.failure("Error while creating order in tax provider");
+    return webhookResponse.error(new Error("Error while creating order in tax provider"));
   }
 });

@@ -62,14 +62,14 @@ const mockedMetadata: MetadataItem[] = [
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getAppConfig", () => {
-  it("should return empty providers and channels config when no metadata", () => {
+  it("returns empty providers and channels config when no metadata", () => {
     const { providers, channels } = getAppConfig([]);
 
     expect(providers).toEqual([]);
     expect(channels).toEqual({});
   });
 
-  it("should return decrypted providers and channels config when metadata provided", () => {
+  it("returns decrypted providers and channels config when metadata provided", () => {
     const { providers, channels } = getAppConfig(mockedMetadata);
 
     expect(providers).toEqual(mockedProviders);
