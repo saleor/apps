@@ -34,7 +34,6 @@ export interface IMailchimpConfigSettingsManagerV1 {
  * V1 config. In case of changing config, create another instance and perform migration
  *
  * todo save domain?
- * todo add test
  */
 export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSettingsManagerV1 {
   private settingsManager: SettingsManager;
@@ -45,14 +44,11 @@ export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSetting
 
   constructor(
     private apiClient: Pick<Client, "query" | "mutation">,
+    private appId: string,
     metadataManagerFactory = createSettingsManager
   ) {
-    this.settingsManager = metadataManagerFactory(apiClient);
+    this.settingsManager = metadataManagerFactory(apiClient, appId);
   }
-
-  private parseEmptyResponse = (value?: string) => {
-    return value === "undefined" ? undefined : value;
-  };
 
   setConfig(config: z.infer<typeof ConfigV1>) {
     const configSchema = MetadataSchemaV1.parse({
@@ -76,18 +72,13 @@ export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSetting
 
   async getConfig(): Promise<z.infer<typeof ConfigV1> | null> {
     this.logger.debug(`Will fetch metadata key: ${this.metadataKey}`);
-    const rawMetadata = await this.settingsManager
-      .get(this.metadataKey)
-      .then(this.parseEmptyResponse);
+
+    const rawMetadata = await this.settingsManager.get(this.metadataKey);
 
     this.logger.debug({ rawMetadata }, "Received raw metadata");
 
-    /**
-     * Check for "undefined" string because after config is deleted, its actually set to "undefined" instead removing
-     * TODO remove config instead setting it to "undefined"
-     */
     if (!rawMetadata) {
-      this.logger.debug("Raw metadata is nullable");
+      this.logger.debug("Fetched metadata does not exist, will return null");
 
       return null;
     }
@@ -103,14 +94,14 @@ export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSetting
 
       return parsedMetadata.config;
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
+
       return null;
     }
   }
 
   async removeConfig() {
-    // todo = implement settingsManager.delete
-    return this.settingsManager.set({ key: this.metadataKey, value: "undefined" });
+    return this.settingsManager.delete(this.metadataKey);
   }
 }
 
