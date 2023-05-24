@@ -44,9 +44,10 @@ export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSetting
 
   constructor(
     private apiClient: Pick<Client, "query" | "mutation">,
+    private appId: string,
     metadataManagerFactory = createSettingsManager
   ) {
-    this.settingsManager = metadataManagerFactory(apiClient);
+    this.settingsManager = metadataManagerFactory(apiClient, appId);
   }
 
   setConfig(config: z.infer<typeof ConfigV1>) {

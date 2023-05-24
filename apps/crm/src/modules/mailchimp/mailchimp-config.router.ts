@@ -37,7 +37,7 @@ const mailchimpConfigRouter = router({
 
       logger.info("Saving Mailchimp token");
 
-      return new MailchimpConfigSettingsManager(ctx.apiClient).setConfig(input);
+      return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).setConfig(input);
     }),
   setWebhookConfig: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -50,7 +50,7 @@ const mailchimpConfigRouter = router({
 
       logger.info("Saving Mailchimp token");
 
-      const mm = new MailchimpConfigSettingsManager(ctx.apiClient);
+      const mm = new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!);
 
       const currentConfig = await mm.getConfig();
 
@@ -69,7 +69,10 @@ const mailchimpConfigRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
 
-      const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+      const config = await new MailchimpConfigSettingsManager(
+        ctx.apiClient,
+        ctx.appId!
+      ).getConfig();
 
       logger.debug(config, "Received config from metadata");
 
@@ -110,7 +113,7 @@ const mailchimpConfigRouter = router({
   removeToken: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .mutation(({ ctx }) => {
-      return new MailchimpConfigSettingsManager(ctx.apiClient).removeConfig();
+      return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).removeConfig();
     }),
 });
 

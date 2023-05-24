@@ -7,6 +7,7 @@ import { Client, gql } from "urql";
 import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
+  RemovePrivateMetadataDocument,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
 
@@ -30,6 +31,16 @@ gql`
       privateMetadata {
         key
         value
+      }
+    }
+  }
+`;
+
+gql`
+  mutation RemovePrivateMetadata($id: ID!, $keys: [String!]!) {
+    deletePrivateMetadata(id: $id, keys: $keys) {
+      errors {
+        message
       }
     }
   }
@@ -88,7 +99,8 @@ export async function mutateMetadata(
 }
 
 export const createSettingsManager = (
-  client: Pick<Client, "query" | "mutation">
+  client: Pick<Client, "query" | "mutation">,
+  appId: string
 ): SettingsManager => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
@@ -100,5 +112,11 @@ export const createSettingsManager = (
     encryptionKey: process.env.SECRET_KEY!,
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, metadata),
+    async deleteMetadata(keys) {
+      await client.mutation(RemovePrivateMetadataDocument, {
+        id: appId,
+        keys: keys,
+      });
+    },
   });
 };

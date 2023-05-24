@@ -7,6 +7,7 @@ describe("MailchimpConfigSettingsManagerV1", () => {
   let mockSettingsManager: SettingsManager = {
     set: vi.fn(),
     get: vi.fn(),
+    delete: vi.fn(),
   };
 
   let service: MailchimpConfigSettingsManagerV1;
@@ -15,9 +16,10 @@ describe("MailchimpConfigSettingsManagerV1", () => {
     mockSettingsManager = {
       set: vi.fn(),
       get: vi.fn(),
+      delete: vi.fn(),
     };
 
-    service = new MailchimpConfigSettingsManagerV1(null as unknown as Client, () => {
+    service = new MailchimpConfigSettingsManagerV1(null as unknown as Client, "appID", () => {
       return mockSettingsManager;
     });
   });
@@ -107,14 +109,9 @@ describe("MailchimpConfigSettingsManagerV1", () => {
     await expect(service.getConfig()).resolves.toBeNull();
   });
 
-  it('.removeConfig method sets value to be "undefined" string', async () => {
+  it(".removeConfig method calls metadata manager DELETE method with a key", async () => {
     await service.removeConfig();
 
-    return expect(mockSettingsManager.set).toHaveBeenCalledWith(
-      expect.objectContaining({
-        key: expect.any(String),
-        value: "undefined",
-      })
-    );
+    return expect(mockSettingsManager.delete).toHaveBeenCalledWith("mailchimp_config_v1");
   });
 });

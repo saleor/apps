@@ -28,7 +28,7 @@ const BulkAddContactsSchema = z.object({
 
 const mailchimpAudienceRouter = router({
   getLists: protectedClientProcedure.query(async ({ ctx }) => {
-    const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+    const config = await new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).getConfig();
 
     /**
      * TODO extract mailchimp API readiness shared class
@@ -70,7 +70,10 @@ const mailchimpAudienceRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
 
-      const config = await new MailchimpConfigSettingsManager(ctx.apiClient).getConfig();
+      const config = await new MailchimpConfigSettingsManager(
+        ctx.apiClient,
+        ctx.appId!
+      ).getConfig();
 
       logger.debug("Fetched config from metadata");
 
