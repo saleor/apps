@@ -177,8 +177,8 @@ importers:
         specifier: ^3.0.80
         version: 3.0.80
       '@saleor/app-sdk':
-        specifier: 0.38.0
-        version: 0.38.0(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.0.0-pr-20230524071955
+        version: 0.0.0-pr-20230524071955(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -308,7 +308,7 @@ importers:
         version: 8.31.0
       eslint-config-next:
         specifier: 13.1.2
-        version: 13.1.2(eslint@8.31.0)(typescript@4.9.4)
+        version: 13.1.2(eslint@8.31.0)(typescript@5.0.4)
       eslint-config-prettier:
         specifier: ^8.6.0
         version: 8.6.0(eslint@8.31.0)
@@ -322,8 +322,8 @@ importers:
         specifier: ^2.8.2
         version: 2.8.4
       typescript:
-        specifier: 4.9.4
-        version: 4.9.4
+        specifier: 5.0.4
+        version: 5.0.4
 
   apps/data-importer:
     dependencies:
@@ -7662,6 +7662,28 @@ packages:
   /@rushstack/eslint-patch@1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
 
+  /@saleor/app-sdk@0.0.0-pr-20230524071955(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/YcY3lA/W1kppXnWTHZCg40wYCOvsBRupygtIJsGxdoORo1VL2uckeJHX0+PFda6C0ZA/VF0rE+DxsZ1RC73sA==}
+    peerDependencies:
+      next: '>=12'
+      react: '>=17'
+      react-dom: '>=17'
+    dependencies:
+      '@changesets/cli': 2.26.0
+      debug: 4.3.4
+      fast-glob: 3.2.12
+      graphql: 16.6.0
+      jose: 4.11.4
+      next: 13.3.0(@babel/core@7.21.8)(react-dom@18.2.0)(react@18.2.0)
+      raw-body: 2.5.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      retes: 0.33.0
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@saleor/app-sdk@0.37.3(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-DFAjiEFBFIDWDqZvaXar8860zDgSZih2n7gT3e+aOpLIfnmMZ0nL6+aNS3A7ym2IStx8oUoPI1RFZBIeuF9+hg==}
     peerDependencies:
@@ -9078,7 +9100,7 @@ packages:
       prompts: 2.4.2
       puppeteer-core: 2.1.1
       read-pkg-up: 7.0.1
-      semver: 7.3.8
+      semver: 7.5.1
       shelljs: 0.8.5
       simple-update-notifier: 1.1.0
       strip-json-comments: 3.1.1
@@ -9211,7 +9233,7 @@ packages:
       pretty-hrtime: 1.0.3
       prompts: 2.4.2
       read-pkg-up: 7.0.1
-      semver: 7.3.8
+      semver: 7.5.1
       serve-favicon: 2.5.0
       telejson: 7.1.0
       ts-dedent: 2.2.0
@@ -9307,7 +9329,7 @@ packages:
       memoizerific: 1.11.3
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      semver: 7.3.8
+      semver: 7.5.1
       store2: 2.14.2
       telejson: 7.1.0
       ts-dedent: 2.2.0
@@ -10417,6 +10439,26 @@ packages:
       debug: 4.3.4
       eslint: 8.31.0
       typescript: 4.9.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@typescript-eslint/parser@5.51.0(eslint@8.31.0)(typescript@5.0.4):
+    resolution: {integrity: sha512-fEV0R9gGmfpDeRzJXn+fGQKcl0inIeYobmmUWijZh9zA7bxJ8clPhV9up2ZQzATxAiFAECqPQyMDB4o4B81AaA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 5.51.0
+      '@typescript-eslint/types': 5.51.0
+      '@typescript-eslint/typescript-estree': 5.51.0(typescript@5.0.4)
+      debug: 4.3.4
+      eslint: 8.31.0
+      typescript: 5.0.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -13614,6 +13656,31 @@ packages:
       eslint-plugin-react: 7.32.2(eslint@8.31.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.31.0)
       typescript: 4.9.4
+    transitivePeerDependencies:
+      - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
+
+  /eslint-config-next@13.1.2(eslint@8.31.0)(typescript@5.0.4):
+    resolution: {integrity: sha512-zdRAQOr8v69ZwJRtBrGqAqm160ONqKxU/pV1FB1KlgfyqveGsLZmlQ7l31otwtw763901J7xdiTVkj2y3YxXZA==}
+    peerDependencies:
+      eslint: ^7.23.0 || ^8.0.0
+      typescript: '>=3.3.1'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@next/eslint-plugin-next': 13.1.2
+      '@rushstack/eslint-patch': 1.2.0
+      '@typescript-eslint/parser': 5.51.0(eslint@8.31.0)(typescript@5.0.4)
+      eslint: 8.31.0
+      eslint-import-resolver-node: 0.3.7
+      eslint-import-resolver-typescript: 3.5.3(eslint-plugin-import@2.27.5)(eslint@8.31.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.51.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.33.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.31.0)
+      eslint-plugin-react: 7.32.2(eslint@8.31.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.31.0)
+      typescript: 5.0.4
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
