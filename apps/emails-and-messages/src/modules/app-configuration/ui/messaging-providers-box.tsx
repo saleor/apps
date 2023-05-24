@@ -1,9 +1,9 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { SemanticChip } from "@saleor/apps-ui";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { BoxFooter } from "../../../components/box-footer";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useRouter } from "next/router";
-import { ChipText } from "../../../components/chip-text";
 import Image from "next/image";
 import sendgrid from "../../../public/sendgrid.png";
 import smtp from "../../../public/smtp.svg";
@@ -107,10 +107,11 @@ export const MessagingProvidersBox = ({
             </Box>
 
             <Text>{configuration.name}</Text>
-            <ChipText
-              content={configuration.active ? "Active" : "Inactive"}
-              variant={configuration.active ? "success" : "error"}
-            />
+            <Box __maxWidth="fit-content">
+              <SemanticChip variant={configuration.active ? "success" : "error"}>
+                {configuration.active ? "Active" : "Inactive"}
+              </SemanticChip>
+            </Box>
             <Box display="flex" justifyContent="flex-end">
               <Button
                 variant="tertiary"
