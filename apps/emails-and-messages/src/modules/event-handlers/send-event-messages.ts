@@ -1,8 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
 import { createLogger } from "@saleor/apps-shared";
-import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
-import { sendMjml } from "../mjml/send-mjml";
+import { SmtpConfigurationService } from "../smtp/configuration/get-smtp-configuration.service";
+import { sendSmtp } from "../smtp/send-smtp";
 import { SendgridConfigurationService } from "../sendgrid/configuration/get-sendgrid-configuration.service";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
 import { MessageEventTypes } from "./message-event-types";
@@ -30,27 +30,27 @@ export const sendEventMessages = async ({
 
   logger.debug("Function called");
 
-  const mjmlConfigurationService = new MjmlConfigurationService({
+  const smtpConfigurationService = new SmtpConfigurationService({
     apiClient: client,
     saleorApiUrl: authData.saleorApiUrl,
   });
 
-  const availableMjmlConfigurations = await mjmlConfigurationService.getConfigurations({
+  const availableSmtpConfigurations = await smtpConfigurationService.getConfigurations({
     active: true,
     availableInChannel: channel,
   });
 
-  for (const mjmlConfiguration of availableMjmlConfigurations) {
-    const mjmlStatus = await sendMjml({
+  for (const smtpConfiguration of availableSmtpConfigurations) {
+    const smtpStatus = await sendSmtp({
       event,
       payload,
       recipientEmail,
-      mjmlConfiguration,
+      smtpConfiguration,
     });
 
-    if (mjmlStatus?.errors.length) {
-      logger.error("MJML errors");
-      logger.error(mjmlStatus?.errors);
+    if (smtpStatus?.errors.length) {
+      logger.error("SMTP errors");
+      logger.error(smtpStatus?.errors);
     }
   }
 

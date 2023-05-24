@@ -1,17 +1,22 @@
 import { createLogger } from "@saleor/apps-shared";
 import {
-  sendgridCreateConfigurationSchema,
-  sendgridDeleteConfigurationInputSchema,
-  sendgridGetConfigurationInputSchema,
+  sendgridConfigurationIdInputSchema,
+  sendgridCreateConfigurationInputSchema,
   sendgridGetConfigurationsInputSchema,
   sendgridGetEventConfigurationInputSchema,
+  sendgridUpdateApiConnectionSchema,
+  sendgridUpdateBasicInformationSchema,
   sendgridUpdateEventConfigurationInputSchema,
-  sendgridUpdateOrCreateConfigurationSchema,
+  sendgridUpdateEventSchema,
+  sendgridUpdateSenderSchema,
 } from "./sendgrid-config-input-schema";
 import { SendgridConfigurationService } from "./get-sendgrid-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { TRPCError } from "@trpc/server";
+import { getDefaultEmptyConfiguration } from "./sendgrid-config-container";
+import { fetchSenders } from "../sendgrid-api";
+import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -38,7 +43,7 @@ export const sendgridConfigurationRouter = router({
   }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridGetConfigurationInputSchema)
+    .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
@@ -56,16 +61,21 @@ export const sendgridConfigurationRouter = router({
     }),
   createConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridCreateConfigurationSchema)
+    .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "sendgridConfigurationRouter.create called");
-      return await ctx.configurationService.createConfiguration(input);
+      const newConfiguration = {
+        ...getDefaultEmptyConfiguration(),
+        ...input,
+      };
+
+      return await ctx.configurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridDeleteConfigurationInputSchema)
+    .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
@@ -80,37 +90,6 @@ export const sendgridConfigurationRouter = router({
       }
       await ctx.configurationService.deleteConfiguration(input);
       return null;
-    }),
-  updateOrCreateConfiguration: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridUpdateOrCreateConfigurationSchema)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.update or create called");
-
-      const { id } = input;
-
-      if (!id) {
-        return await ctx.configurationService.createConfiguration(input);
-      } else {
-        const existingConfiguration = await ctx.configurationService.getConfiguration({ id });
-
-        if (!existingConfiguration) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Configuration not found",
-          });
-        }
-        const configuration = {
-          id,
-          ...input,
-          events: existingConfiguration.events,
-        };
-
-        await ctx.configurationService.updateConfiguration(configuration);
-        return configuration;
-      }
     }),
   getEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -167,6 +146,130 @@ export const sendgridConfigurationRouter = router({
         eventType: input.eventType,
         template: input.template,
       };
+      await ctx.configurationService.updateConfiguration(configuration);
+      return configuration;
+    }),
+  updateBasicInformation: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateBasicInformationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+      return configuration;
+    }),
+  updateApiConnection: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateApiConnectionSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
+      return configuration;
+    }),
+
+  updateSender: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateSenderSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+
+      // Pull fresh sender data from the API
+      const senders = await fetchSenders({ apiKey: configuration.apiKey })();
+
+      const chosenSender = senders.find((s) => s.value === input.sender);
+
+      if (!chosenSender) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Sender does not exist",
+        });
+      }
+
+      await ctx.configurationService.updateConfiguration({
+        ...configuration,
+        ...input,
+        senderEmail: chosenSender.from_email,
+        senderName: chosenSender.label,
+      });
+      return configuration;
+    }),
+  updateChannels: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(updateChannelsInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+      configuration.channels = {
+        override: input.override,
+        channels: input.channels,
+        mode: input.mode,
+      };
+      await ctx.configurationService.updateConfiguration(configuration);
+      return configuration;
+    }),
+
+  updateEvent: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateEventSchema)
+    .mutation(async ({ ctx, input }) => {
+      const configuration = await ctx.configurationService.getConfiguration({
+        id: input.id,
+      });
+
+      if (!configuration) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration not found",
+        });
+      }
+      const event = configuration.events.find((e) => e.eventType === input.eventType);
+
+      if (!event) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Configuration event not found",
+        });
+      }
+
+      event.template = input.template;
+      event.active = input.active;
+
       await ctx.configurationService.updateConfiguration(configuration);
       return configuration;
     }),
