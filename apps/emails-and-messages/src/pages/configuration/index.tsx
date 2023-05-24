@@ -1,6 +1,5 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
-import { Breadcrumbs } from "../../components/breadcrumbs";
 import { SectionWithDescription } from "../../components/section-with-description";
 import {
   ConfigurationListItem,
