@@ -467,8 +467,8 @@ importers:
   apps/emails-and-messages:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^2.9.10
-        version: 2.9.11(react-hook-form@7.43.1)
+        specifier: ^3.1.0
+        version: 3.1.0(react-hook-form@7.43.9)
       '@monaco-editor/react':
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.38.0)(react-dom@18.2.0)(react@18.2.0)
@@ -481,6 +481,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.83
         version: 0.8.0-pre.83(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
       '@sendgrid/client':
         specifier: ^7.7.0
         version: 7.7.0
@@ -554,8 +557,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.0
-        version: 7.43.1(react@18.2.0)
+        specifier: ^7.43.9
+        version: 7.43.9(react@18.2.0)
       react-is:
         specifier: ^18.2.0
         version: 18.2.0

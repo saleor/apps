@@ -1,12 +1,12 @@
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
+import { Multiselect } from "@saleor/react-hook-form-macaw";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Controller, useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Multiselect } from "../../../components/react-hook-form-macaw/Multiselect";
 import { AssignedChannelsMessage } from "./assigned-channels-message";
 import {
   ChannelConfiguration,

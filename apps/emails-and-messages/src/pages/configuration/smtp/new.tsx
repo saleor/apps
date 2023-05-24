@@ -13,11 +13,11 @@ import {
 } from "../../../modules/smtp/configuration/smtp-config-input-schema";
 import { BasicLayout } from "../../../components/basic-layout";
 import { useRouter } from "next/router";
-import { Input } from "../../../components/react-hook-form-macaw/Input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { appUrls } from "../../../modules/app-configuration/urls";
 import { smtpUrls } from "../../../modules/smtp/urls";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Input } from "@saleor/react-hook-form-macaw";
 
 const NewSmtpConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -74,9 +74,9 @@ const NewSmtpConfigurationPage: NextPage = () => {
           >
             <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
               <Input
+                control={control}
                 name="name"
                 label="Configuration name"
-                control={control}
                 helperText="Name of the configuration, for example 'Production' or 'Test'"
               />
               <Divider />
