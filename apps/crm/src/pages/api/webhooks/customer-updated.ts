@@ -45,7 +45,7 @@ const handler: NextWebhookApiHandler<CustomerUpdatedPayloadFragment> = async (
     Promise.resolve({ token: authData.token })
   );
 
-  const settingsManager = new MailchimpConfigSettingsManager(client);
+  const settingsManager = new MailchimpConfigSettingsManager(client, authData.appId);
 
   const config = await settingsManager.getConfig();
 
