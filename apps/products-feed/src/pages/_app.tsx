@@ -13,8 +13,8 @@ import React, { PropsWithChildren, useEffect } from "react";
 import { AppProps } from "next/app";
 
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
-import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { trpcClient } from "../modules/trpc/trpc-client";
+import { NoSSRWrapper } from "@saleor/apps-shared";
 
 type PalettesOverride = Record<"light" | "dark", SaleorThemeColors>;
 
