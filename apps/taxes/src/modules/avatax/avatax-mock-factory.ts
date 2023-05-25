@@ -19,23 +19,7 @@ const createMockChannelConfig = (overrides: Partial<ChannelConfig> = {}): Channe
   ...overrides,
 });
 
-const defaultAvataxConfig: AvataxConfig = {
-  companyCode: "DEFAULT",
-  isAutocommit: false,
-  isSandbox: true,
-  name: "Avatax-1",
-  password: "password",
-  username: "username",
-  shippingTaxCode: "FR000000",
-};
-
-const createMockAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig => ({
-  ...defaultAvataxConfig,
-  ...overrides,
-});
-
 export const avataxMockFactory = {
   createMockChannelConfig,
-  createMockAvataxConfig,
   ...avataxMockTransactionFactory,
 };
