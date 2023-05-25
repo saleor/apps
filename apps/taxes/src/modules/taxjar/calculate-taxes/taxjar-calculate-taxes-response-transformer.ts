@@ -1,54 +1,46 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { Response } from "./taxjar-calculate-taxes-adapter";
+import { Logger, createLogger } from "../../../lib/logger";
+import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
+import { TaxJarCalculateTaxesResponseLinesTransformer } from "./taxjar-calculate-taxes-response-lines-transformer";
 import { TaxJarCalculateTaxesResponseShippingTransformer } from "./taxjar-calculate-taxes-response-shipping-transformer";
-import { ExpectedError } from "../../taxes/tax-provider-error";
 
 export class TaxJarCalculateTaxesResponseTransformer {
-  private mapLines(res: TaxForOrderRes["tax"]): Response["lines"] {
-    const lines = res.breakdown?.line_items ?? [];
+  private logger: Logger;
 
-    return lines.map((line) => ({
-      total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
-        line.taxable_amount + line.tax_collectable,
-        new Error("Line taxable amount and tax collectable are required to calculate gross amount")
-      ),
-      total_net_amount: taxProviderUtils.resolveOptionalOrThrow(
-        line.taxable_amount,
-        new Error("Line taxable amount is required to calculate net amount")
-      ),
-      tax_rate: taxProviderUtils.resolveOptionalOrThrow(
-        line.combined_tax_rate,
-        new Error("Line combined tax rate is required to calculate net amount")
-      ),
-    }));
+  constructor() {
+    this.logger = createLogger({ name: "TaxJarCalculateTaxesResponseTransformer" });
   }
 
-  /*
-   * TaxJar operates on the idea of sales tax nexus. Nexus is a place where the company has a physical presence.
-   * If the company has no nexus in the state where the customer is located, the company is not required to collect sales tax.
-   * Therefore, if has_nexus = false, we don't calculate taxes.
-   * See: https://www.taxjar.com/sales-tax/nexus
-   */
-  private resolveResponseNexus(response: TaxForOrderRes) {
+  transform(payload: Payload, response: TaxForOrderRes): Response {
+    /*
+     * TaxJar operates on the idea of sales tax nexus. Nexus is a place where the company has a physical presence.
+     * If the company has no nexus in the state where the customer is located, the company is not required to collect sales tax.
+     * Therefore, if has_nexus = false, we don't calculate taxes and return the same values as in the payload.
+     * See: https://www.taxjar.com/sales-tax/nexus
+     */
     if (!response.tax.has_nexus) {
-      throw new ExpectedError(
-        "The company has no nexus in the state where the customer is located",
-        { cause: "taxjar_no_nexus" }
-      );
+      this.logger.warn("The company has no nexus in the state where the customer is located");
+      return {
+        shipping_price_net_amount: payload.taxBase.shippingPrice.amount,
+        shipping_price_gross_amount: payload.taxBase.shippingPrice.amount,
+        shipping_tax_rate: 0,
+        lines: payload.taxBase.lines.map((line) => ({
+          total_gross_amount: line.totalPrice.amount,
+          total_net_amount: line.totalPrice.amount,
+          tax_rate: 0,
+        })),
+      };
     }
 
-    return response;
-  }
-
-  transform(response: TaxForOrderRes): Response {
-    this.resolveResponseNexus(response);
     const shippingTransformer = new TaxJarCalculateTaxesResponseShippingTransformer();
+    const linesTransformer = new TaxJarCalculateTaxesResponseLinesTransformer();
+
     const shipping = shippingTransformer.transform(response);
+    const lines = linesTransformer.transform(payload, response);
 
     return {
       ...shipping,
-      lines: this.mapLines(response.tax),
+      lines,
     };
   }
 }

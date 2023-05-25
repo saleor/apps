@@ -2,6 +2,7 @@ import {
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   OrderStatus,
+  TaxBaseFragment,
 } from "../../../generated/graphql";
 
 type OrderCreated = OrderCreatedSubscriptionFragment;
@@ -195,7 +196,95 @@ const createOrderFulfilledMock = (overrides: Partial<OrderFulfilled> = {}): Orde
   ...overrides,
 });
 
+type TaxBase = TaxBaseFragment;
+
+const noDiscountsTaxBase: TaxBase = {
+  pricesEnteredWithTax: false,
+  currency: "PLN",
+  channel: {
+    slug: "channel-pln",
+  },
+  sourceObject: {
+    __typename: "Order",
+    user: {
+      id: "VXNlcjo5ZjY3ZjY0Zi1iZjY5LTQ5ZjYtYjQ4Zi1iZjY3ZjY0ZjY0ZjY=",
+    },
+  },
+  discounts: [],
+  address: {
+    streetAddress1: "123 Palm Grove Ln",
+    streetAddress2: "",
+    city: "LOS ANGELES",
+    country: {
+      code: "US",
+    },
+    countryArea: "CA",
+    postalCode: "90002",
+  },
+  shippingPrice: {
+    amount: 48.33,
+  },
+  lines: [
+    {
+      quantity: 3,
+      unitPrice: {
+        amount: 84,
+      },
+      totalPrice: {
+        amount: 252,
+      },
+      sourceLine: {
+        __typename: "OrderLine",
+        id: "T3JkZXJMaW5lOmY1NGQ1MWY2LTc1OTctNGY2OC1hNDk0LTFjYjZlYjRmOTlhMQ==",
+        variant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ2",
+          product: {
+            metafield: null,
+            productType: {
+              metafield: null,
+            },
+          },
+        },
+      },
+    },
+    {
+      quantity: 1,
+      unitPrice: {
+        amount: 5.99,
+      },
+      totalPrice: {
+        amount: 5.99,
+      },
+      sourceLine: {
+        __typename: "OrderLine",
+        id: "T3JkZXJMaW5lOjU1NTFjNTFjLTM5MWQtNGI0Ny04MGU0LWVjY2Q5ZjU4MjQyNQ==",
+        variant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6Mzg1",
+          product: {
+            metafield: null,
+            productType: {
+              metafield: null,
+            },
+          },
+        },
+      },
+    },
+  ],
+};
+
+const mockTaxBaseVariants = {
+  no_discounts: noDiscountsTaxBase,
+};
+
+type TaxBaseVariant = keyof typeof mockTaxBaseVariants;
+
+const createMockTaxBase = (variant: TaxBaseVariant, overrides: Partial<TaxBase> = {}): TaxBase => ({
+  ...mockTaxBaseVariants[variant],
+  ...overrides,
+});
+
 export const taxMockFactory = {
   createOrderCreatedMock,
   createOrderFulfilledMock,
+  createMockTaxBase,
 };

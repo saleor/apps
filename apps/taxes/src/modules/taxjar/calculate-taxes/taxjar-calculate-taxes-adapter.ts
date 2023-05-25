@@ -35,7 +35,7 @@ export class TaxJarCalculateTaxesAdapter implements WebhookAdapter<Payload, Resp
     this.logger.debug({ response }, "TaxJar fetchTaxForOrder response:");
 
     const responseTransformer = new TaxJarCalculateTaxesResponseTransformer();
-    const transformedResponse = responseTransformer.transform(response);
+    const transformedResponse = responseTransformer.transform(payload, response);
 
     this.logger.debug({ transformedResponse }, "Transformed TaxJar fetchTaxForOrder response to:");
 

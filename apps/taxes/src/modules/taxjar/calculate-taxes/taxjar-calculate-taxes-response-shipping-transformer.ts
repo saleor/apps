@@ -10,16 +10,20 @@ export class TaxJarCalculateTaxesResponseShippingTransformer {
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
   > {
     const { tax } = res;
-    const shippingDetails = tax.breakdown?.shipping;
 
-    if (!shippingDetails) {
+    /*
+     * If the shipping is not taxable, we return the same values as in the payload.
+     * If freight_taxable = true, tax.breakdown.shipping exists
+     */
+    if (!tax.freight_taxable) {
       return {
-        shipping_price_gross_amount: 0,
-        shipping_price_net_amount: 0,
+        shipping_price_gross_amount: tax.shipping,
+        shipping_price_net_amount: tax.shipping,
         shipping_tax_rate: 0,
       };
     }
 
+    const shippingDetails = tax.breakdown!.shipping!;
     const shippingTaxableAmount = shippingDetails.taxable_amount;
     const shippingPriceGross = shippingTaxableAmount + shippingDetails.tax_collectable;
     const shippingPriceNet = shippingTaxableAmount;

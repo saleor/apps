@@ -1,4 +1,4 @@
-import { CreateOrderRes, TaxForOrderRes } from "taxjar/dist/types/returnTypes";
+import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 
 const defaultChannelConfig: ChannelConfig = {
@@ -55,116 +55,7 @@ const createMockTaxJarOrder = (overrides: Partial<TaxJarOrder> = {}): TaxJarOrde
   ...overrides,
 });
 
-type TaxForOrder = TaxForOrderRes;
-
-const noNexusTaxForOrderMock: TaxForOrder = {
-  tax: {
-    amount_to_collect: 0,
-    freight_taxable: false,
-    has_nexus: false,
-    order_total_amount: 59.17,
-    rate: 0,
-    shipping: 59.17,
-    tax_source: "",
-    taxable_amount: 0,
-    exemption_type: "",
-    jurisdictions: {
-      country: "",
-    },
-  },
-};
-
-const nexusTaxForOrderMock: TaxForOrder = {
-  tax: {
-    exemption_type: "",
-    amount_to_collect: 1.71,
-    breakdown: {
-      city_tax_collectable: 0,
-      city_tax_rate: 0,
-      city_taxable_amount: 0,
-      combined_tax_rate: 0.05711,
-      county_tax_collectable: 1.31,
-      county_tax_rate: 0.04375,
-      county_taxable_amount: 29.95,
-      line_items: [
-        {
-          city_amount: 0,
-          city_tax_rate: 0,
-          city_taxable_amount: 0,
-          combined_tax_rate: 0.04375,
-          county_amount: 0.87,
-          county_tax_rate: 0.04375,
-          county_taxable_amount: 19.95,
-          id: "1",
-          special_district_amount: 0,
-          special_district_taxable_amount: 0,
-          special_tax_rate: 0,
-          state_amount: 0,
-          state_sales_tax_rate: 0,
-          state_taxable_amount: 0,
-          tax_collectable: 0.87,
-          taxable_amount: 19.95,
-        },
-      ],
-      shipping: {
-        city_amount: 0,
-        city_tax_rate: 0,
-        city_taxable_amount: 0,
-        combined_tax_rate: 0.08375,
-        county_amount: 0.44,
-        county_tax_rate: 0.04375,
-        county_taxable_amount: 10,
-        special_district_amount: 0,
-        special_tax_rate: 0,
-        special_taxable_amount: 0,
-        state_amount: 0.4,
-        state_sales_tax_rate: 0.04,
-        state_taxable_amount: 10,
-        tax_collectable: 0.84,
-        taxable_amount: 10,
-      },
-      special_district_tax_collectable: 0,
-      special_district_taxable_amount: 0,
-      special_tax_rate: 0,
-      state_tax_collectable: 0.4,
-      state_tax_rate: 0.04,
-      state_taxable_amount: 10,
-      tax_collectable: 1.71,
-      taxable_amount: 29.95,
-    },
-    freight_taxable: true,
-    has_nexus: true,
-    jurisdictions: {
-      city: "MAHOPAC",
-      country: "US",
-      county: "PUTNAM",
-      state: "NY",
-    },
-    order_total_amount: 29.95,
-    rate: 0.05711,
-    shipping: 10,
-    tax_source: "destination",
-    taxable_amount: 29.95,
-  },
-};
-
-const taxForOrderMockVariants = {
-  with_no_nexus: noNexusTaxForOrderMock,
-  with_nexus: nexusTaxForOrderMock,
-};
-
-type TaxForOrderMockVariant = keyof typeof taxForOrderMockVariants;
-
-const createTaxForOrderMock = (
-  variant: TaxForOrderMockVariant,
-  overrides: Partial<TaxForOrder> = {}
-): TaxForOrder => ({
-  ...taxForOrderMockVariants[variant],
-  ...overrides,
-});
-
 export const taxJarMockFactory = {
   createMockChannelConfig,
   createMockTaxJarOrder,
-  createTaxForOrderMock,
 };

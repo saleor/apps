@@ -2,10 +2,11 @@ import { expect, describe, it } from "vitest";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 import { mapPayloadLines } from "./avatax-calculate-taxes-payload-transformer";
 import { avataxMockFactory } from "../avatax-mock-factory";
+import { taxMockFactory } from "../../taxes/tax-mock-factory";
 
 const mapPayloadArgsMocks = {
   channel: avataxMockFactory.createMockChannelConfig(),
-  taxBase: avataxMockFactory.createMockTaxBase(),
+  taxBase: taxMockFactory.createMockTaxBase("no_discounts"),
   config: avataxMockFactory.createMockAvataxConfig(),
 };
 
