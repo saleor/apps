@@ -8,7 +8,7 @@ export class WebhookResponse {
     this.logger = createLogger({ event: "WebhookResponse" });
   }
 
-  private returnSuccess(data?: any) {
+  private returnSuccess(data?: unknown) {
     this.logger.debug({ data }, "success called with:");
     return this.res.status(200).json(data ?? {});
   }
@@ -30,7 +30,7 @@ export class WebhookResponse {
     return this.resolveError(error);
   }
 
-  success(data?: any) {
+  success(data?: unknown) {
     return this.returnSuccess(data);
   }
 }
