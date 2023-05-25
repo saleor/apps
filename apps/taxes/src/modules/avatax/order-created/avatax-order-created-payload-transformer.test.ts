@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { AvataxOrderCreatedMockGenerator } from "./avatax-order-created-mock-generator";
 import {
   AvataxOrderCreatedPayloadTransformer,
-  mapDiscounts,
+  sumDiscounts,
   mapLines,
 } from "./avatax-order-created-payload-transformer";
 
@@ -34,6 +34,21 @@ describe("AvataxOrderCreatedPayloadTransformer", () => {
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);
     const check = linesWithoutShipping.every((line) => line.discounted === true);
+
+    expect(check).toBe(true);
+  });
+  it("returns lines with discounted: false when there are no discounts", () => {
+    const transformer = new AvataxOrderCreatedPayloadTransformer();
+    const payloadMock = {
+      order: orderMock,
+      config: avataxConfigMock,
+      channelConfig: channelConfigMock,
+    };
+
+    const payload = transformer.transform(payloadMock);
+
+    const linesWithoutShipping = payload.model.lines.slice(0, -1);
+    const check = linesWithoutShipping.every((line) => line.discounted === false);
 
     expect(check).toBe(true);
   });
@@ -79,15 +94,15 @@ describe("mapLines", () => {
     });
   });
 });
-describe("mapDiscounts", () => {
+describe("sumDiscounts", () => {
   it("sums up all discounts", () => {
-    const discounts = mapDiscounts(discountedOrderMock.discounts);
+    const discounts = sumDiscounts(discountedOrderMock.discounts);
 
     expect(discounts).toEqual(10);
   });
 
   it("returns 0 if there are no discounts", () => {
-    const discounts = mapDiscounts([]);
+    const discounts = sumDiscounts([]);
 
     expect(discounts).toEqual(0);
   });

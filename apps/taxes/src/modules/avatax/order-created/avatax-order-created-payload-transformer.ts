@@ -14,6 +14,7 @@ export function mapLines(
   config: AvataxConfig
 ): LineItemModel[] {
   const productLines: LineItemModel[] = order.lines.map((line) => ({
+    // taxes are included because we threat what is passed in payload as the source of truth
     taxIncluded: true,
     amount: numbers.roundFloatToTwoDecimals(
       line.totalPrice.net.amount + line.totalPrice.tax.amount
@@ -47,7 +48,7 @@ export function mapLines(
 }
 
 // ? separate class?
-export function mapDiscounts(discounts: Payload["order"]["discounts"]): number {
+export function sumDiscounts(discounts: Payload["order"]["discounts"]): number {
   return discounts.reduce((total, current) => total + Number(current.amount.amount), 0);
 }
 
@@ -71,7 +72,7 @@ export class AvataxOrderCreatedPayloadTransformer {
         email: order.user?.email ?? "",
         lines: mapLines(order, config),
         date: new Date(order.created),
-        discount: mapDiscounts(order.discounts),
+        discount: sumDiscounts(order.discounts),
       },
     };
   };

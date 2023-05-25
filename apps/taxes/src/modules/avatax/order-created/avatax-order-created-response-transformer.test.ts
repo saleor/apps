@@ -506,4 +506,9 @@ describe("AvataxOrderCreatedResponseTransformer", () => {
       id: "8fc875ce-a929-4556-9f30-0165b1597d9f",
     });
   });
+  it("throws an error when no transaction id is present", () => {
+    const transformer = new AvataxOrderCreatedResponseTransformer();
+
+    expect(() => transformer.transform({} as any)).toThrowError();
+  });
 });
