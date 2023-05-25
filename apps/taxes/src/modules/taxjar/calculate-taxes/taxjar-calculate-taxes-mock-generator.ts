@@ -270,18 +270,21 @@ type TestingScenario = keyof typeof testingScenariosMap;
 
 export class TaxJarCalculateTaxesMockGenerator {
   constructor(private scenario: TestingScenario) {}
-  generateTaxBase = (overrides: Partial<TaxBase> = {}): TaxBase => ({
-    ...testingScenariosMap[this.scenario].taxBase,
-    ...overrides,
-  });
+  generateTaxBase = (overrides: Partial<TaxBase> = {}): TaxBase =>
+    structuredClone({
+      ...testingScenariosMap[this.scenario].taxBase,
+      ...overrides,
+    });
 
-  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig => ({
-    ...testingScenariosMap[this.scenario].channelConfig,
-    ...overrides,
-  });
+  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig =>
+    structuredClone({
+      ...testingScenariosMap[this.scenario].channelConfig,
+      ...overrides,
+    });
 
-  generateResponse = (overrides: Partial<TaxForOrder> = {}): TaxForOrder => ({
-    ...testingScenariosMap[this.scenario].response,
-    ...overrides,
-  });
+  generateResponse = (overrides: Partial<TaxForOrder> = {}): TaxForOrder =>
+    structuredClone({
+      ...testingScenariosMap[this.scenario].response,
+      ...overrides,
+    });
 }

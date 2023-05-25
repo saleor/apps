@@ -1,22 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { taxJarMockFactory } from "../taxjar-mock-factory";
+import { TaxJarOrderCreatedMockGenerator } from "./taxjar-order-created-mock-generator";
 import {
   TaxJarOrderCreatedPayloadTransformer,
   sumPayloadLines,
 } from "./taxjar-order-created-payload-transformer";
-import { taxMockFactory } from "../../taxes/tax-mock-factory";
-
-const MOCKED_PAYLOAD = {
-  order: taxMockFactory.createOrderCreatedMock(),
-  channelConfig: taxJarMockFactory.createMockChannelConfig(),
-};
 
 describe("TaxJarOrderCreatedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
+    const mockGenerator = new TaxJarOrderCreatedMockGenerator("default");
+    const payloadMock = {
+      order: mockGenerator.generateOrder(),
+      channelConfig: mockGenerator.generateChannelConfig(),
+    };
     const transformer = new TaxJarOrderCreatedPayloadTransformer();
-    const transformedPayload = transformer.transform(MOCKED_PAYLOAD);
+    const transformedPayload = transformer.transform(payloadMock);
 
-    expect(transformedPayload.params.amount).toBe(183.33);
+    expect(transformedPayload.params.amount).toBe(239.17);
   });
 });
 

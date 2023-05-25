@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { taxJarMockFactory } from "../taxjar-mock-factory";
+import { TaxJarOrderCreatedMockGenerator } from "./taxjar-order-created-mock-generator";
 import { TaxJarOrderCreatedResponseTransformer } from "./taxjar-order-created-response-transformer";
-
-const MOCKED_ORDER = taxJarMockFactory.createMockTaxJarOrder();
 
 describe("TaxJarOrderCreatedResponseTransformer", () => {
   it("returns orded id in response", () => {
+    const mockGenerator = new TaxJarOrderCreatedMockGenerator("default");
+    const responseMock = mockGenerator.generateResponse();
     const transformer = new TaxJarOrderCreatedResponseTransformer();
-    const result = transformer.transform(MOCKED_ORDER);
+    const result = transformer.transform(responseMock);
 
     expect(result).toEqual({
-      id: "123",
+      id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
     });
   });
 });
