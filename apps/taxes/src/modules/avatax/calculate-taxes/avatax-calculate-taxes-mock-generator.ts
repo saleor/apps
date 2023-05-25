@@ -965,7 +965,7 @@ const testingScenariosMap = {
 type TestingScenario = keyof typeof testingScenariosMap;
 
 export class AvataxCalculateTaxesMockGenerator {
-  constructor(private scenario: TestingScenario) {}
+  constructor(private scenario: TestingScenario = "default") {}
   generateTaxBase = (overrides: Partial<TaxBase> = {}): TaxBase =>
     structuredClone({
       ...testingScenariosMap[this.scenario].taxBase,

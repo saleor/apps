@@ -7,7 +7,7 @@ import {
 
 describe("TaxJarOrderCreatedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
-    const mockGenerator = new TaxJarOrderCreatedMockGenerator("default");
+    const mockGenerator = new TaxJarOrderCreatedMockGenerator();
     const payloadMock = {
       order: mockGenerator.generateOrder(),
       channelConfig: mockGenerator.generateChannelConfig(),

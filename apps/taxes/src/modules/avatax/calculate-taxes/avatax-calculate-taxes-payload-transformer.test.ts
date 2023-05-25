@@ -4,7 +4,7 @@ import { mapPayloadLines } from "./avatax-calculate-taxes-payload-transformer";
 
 describe("mapPayloadLines", () => {
   it("map lines and adds shipping as line", () => {
-    const mockGenerator = new AvataxCalculateTaxesMockGenerator("default");
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
     const avataxConfigMock = mockGenerator.generateAvataxConfig();
     const taxBaseMock = mockGenerator.generateTaxBase();
     const lines = mapPayloadLines(taxBaseMock, avataxConfigMock);
@@ -38,7 +38,7 @@ describe("mapPayloadLines", () => {
     ]);
   });
   it("when no shipping in tax base, does not add shipping as line", () => {
-    const mockGenerator = new AvataxCalculateTaxesMockGenerator("default");
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
     const avataxConfigMock = mockGenerator.generateAvataxConfig();
     const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 

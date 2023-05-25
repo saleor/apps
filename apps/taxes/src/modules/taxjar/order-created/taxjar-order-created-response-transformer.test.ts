@@ -4,7 +4,7 @@ import { TaxJarOrderCreatedResponseTransformer } from "./taxjar-order-created-re
 
 describe("TaxJarOrderCreatedResponseTransformer", () => {
   it("returns orded id in response", () => {
-    const mockGenerator = new TaxJarOrderCreatedMockGenerator("default");
+    const mockGenerator = new TaxJarOrderCreatedMockGenerator();
     const responseMock = mockGenerator.generateResponse();
     const transformer = new TaxJarOrderCreatedResponseTransformer();
     const result = transformer.transform(responseMock);
