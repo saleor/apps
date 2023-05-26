@@ -1,6 +1,6 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
-export class AppConfigV2MetadataManager {
+export class AppConfigMetadataManager {
   public readonly metadataKey = "app-config-v1";
 
   constructor(private mm: SettingsManager) {}

@@ -5,6 +5,8 @@ import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
 import { logger } from "@saleor/apps-shared";
 import { createClient } from "../../lib/create-graphq-client";
+import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -109,11 +111,15 @@ export const protectedClientProcedure = procedure
       Promise.resolve({ token: ctx.appToken })
     );
 
+    const metadataManager = new AppConfigMetadataManager(createSettingsManager(client));
+
     return next({
       ctx: {
         apiClient: client,
         appToken: ctx.appToken,
         saleorApiUrl: ctx.saleorApiUrl,
+        appId: ctx.appId,
+        metadataManager,
       },
     });
   });
