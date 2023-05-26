@@ -12,12 +12,6 @@
 - Uploads PDF to Saleor built-in file storage
 - Allows to configure shop billing data per each channel
 
-### Learn more about Apps
-
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
-
 ## Development
 
 Follow the `Development` guide in the [Saleor App Template](https://github.com/saleor/saleor-app-template#development)

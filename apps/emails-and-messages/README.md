@@ -22,12 +22,6 @@
 - install the application in your Saleor Instance using manifest URL
 - configure the application in the dashboard
 
-### Learn more about Apps
-
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
-
 ## Development
 
 Follow the `Development` guide in the [Saleor App Template](https://github.com/saleor/saleor-app-template#development)
