@@ -1,18 +1,20 @@
-import { S3BucketConfiguration } from "../app-config";
+import { S3BucketConfiguration, s3BucketConfigurationSchema } from "../app-config";
 import { useForm } from "react-hook-form";
 import { Button, Box } from "@saleor/macaw-ui/next";
 
 import React, { useCallback } from "react";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type Props = {
-  initialData?: S3BucketConfiguration | null;
+  initialData: S3BucketConfiguration;
   onSubmit(data: S3BucketConfiguration): Promise<void>;
 };
 
 export const S3ConfigurationForm = (props: Props) => {
   const { handleSubmit, control } = useForm<S3BucketConfiguration>({
-    defaultValues: props.initialData ?? undefined,
+    defaultValues: props.initialData,
+    resolver: zodResolver(s3BucketConfigurationSchema),
   });
 
   return (

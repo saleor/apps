@@ -2,10 +2,10 @@ import { z } from "zod";
 import { UrlConfiguration } from "./url-configuration";
 
 export const s3BucketConfigurationSchema = z.object({
-  bucketName: z.string(),
-  secretAccessKey: z.string(),
-  accessKeyId: z.string(),
-  region: z.string(),
+  bucketName: z.string().min(1),
+  secretAccessKey: z.string().min(1),
+  accessKeyId: z.string().min(1),
+  region: z.string().min(1),
 });
 
 export type S3BucketConfiguration = z.infer<typeof s3BucketConfigurationSchema>;
