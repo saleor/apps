@@ -4,16 +4,10 @@ import { ChannelsConfiguration } from "../modules/app-configuration/ui/channels-
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { ConfigurationPageBaseLayout } from "../modules/ui/configuration-page-base-layout";
+import { useChannelsExistenceChecking } from "../modules/channels/use-channels-existence-checking";
 
 const ConfigurationPage: NextPage = () => {
-  const channels = trpcClient.channels.fetch.useQuery();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (channels.isSuccess && channels.data.length === 0) {
-      router.push("/not-ready");
-    }
-  }, [channels.data, channels.isSuccess]);
+  useChannelsExistenceChecking();
 
   return (
     <ConfigurationPageBaseLayout>

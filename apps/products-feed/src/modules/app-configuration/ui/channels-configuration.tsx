@@ -19,6 +19,8 @@ export const ChannelsConfiguration = () => {
   const { data: configurationData, refetch: refetchConfig } =
     trpcClient.appConfiguration.fetch.useQuery();
 
+  console.log(configurationData);
+
   const channels = trpcClient.channels.fetch.useQuery();
 
   const [activeChannelSlug, setActiveChannelSlug] = useState<string | null>(null);

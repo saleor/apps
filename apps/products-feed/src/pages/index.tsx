@@ -18,14 +18,16 @@ const IndexPage: NextPage = () => {
   }, [isMounted, appBridgeState?.ready]);
 
   if (isInIframe()) {
-    return <Text>Loading...</Text>;
+    return <Text color={"textNeutralSubdued"}>Loading...</Text>;
   }
 
   return (
     <div>
-      <h1>Saleor Product Feed</h1>
-      <p>This is Saleor App that allows product feed generation</p>
-      <p>Install app in your Saleor instance and open in with Dashboard</p>
+      <Text variant={"hero"} as={"h1"} marginBottom={8}>
+        Saleor Product Feed
+      </Text>
+      <Text as={"p"}>This is Saleor App that allows product feed generation</Text>
+      <Text as={"p"}>Install app in your Saleor instance and open in with Dashboard</Text>
     </div>
   );
 };
