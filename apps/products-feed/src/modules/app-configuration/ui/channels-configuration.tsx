@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AppConfigContainer } from "../app-config-container";
 import { UrlConfigurationForm } from "./url-configuration-form";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { AppColumnsLayout } from "../../ui/app-columns-layout";
+
 import { FeedPreviewCard } from "./feed-preview-card";
 import { Instructions } from "./instructions";
 import { SideMenu } from "./side-menu";
@@ -55,7 +55,7 @@ export const ChannelsConfiguration = () => {
   }
 
   return (
-    <AppColumnsLayout>
+    <Box>
       <SideMenu
         title="Channels"
         selectedItemId={activeChannel?.slug}
@@ -118,6 +118,6 @@ export const ChannelsConfiguration = () => {
         </div>
       ) : null}
       <Instructions />
-    </AppColumnsLayout>
+    </Box>
   );
 };
