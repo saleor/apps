@@ -1,15 +1,12 @@
 import { AppConfig } from "./app-config";
 import { AppConfigContainer } from "./app-config-container";
-import { ChannelFragment, ShopInfoFragment } from "../../../generated/graphql";
+import { ChannelFragment } from "../../../generated/graphql";
 
 /**
- * TODO Test
+ * TODO remove fallback strategy
  */
 export const FallbackAppConfig = {
-  createFallbackConfigFromExistingShopAndChannels(
-    channels: ChannelFragment[],
-    shopUrlConfiguration: ShopInfoFragment | null
-  ) {
+  createFallbackConfigFromExistingShopAndChannels(channels: ChannelFragment[]) {
     return (channels ?? []).reduce<AppConfig>(
       (state, channel) => {
         return AppConfigContainer.setChannelUrlConfiguration(state)(channel.slug)({

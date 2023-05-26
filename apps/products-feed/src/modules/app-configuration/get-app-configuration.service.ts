@@ -1,7 +1,6 @@
 import { PrivateMetadataAppConfigurator } from "./app-configurator";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { ChannelsFetcher } from "../channels/channels-fetcher";
-import { ShopInfoFetcher } from "../shop-info/shop-info-fetcher";
 import { FallbackAppConfig } from "./fallback-app-config";
 import { Client } from "urql";
 import { createLogger } from "@saleor/apps-shared";
@@ -38,19 +37,13 @@ export class GetAppConfigurationService {
     logger.info("App config not found in metadata. Will create default config now.");
 
     const channelsFetcher = new ChannelsFetcher(apiClient);
-    const shopInfoFetcher = new ShopInfoFetcher(apiClient);
 
-    const [channels, shopUrlConfiguration] = await Promise.all([
-      channelsFetcher.fetchChannels(),
-      shopInfoFetcher.fetchShopInfo(),
-    ]);
+    const channels = await channelsFetcher.fetchChannels();
 
     logger.debug(channels, "Fetched channels");
-    logger.debug(shopUrlConfiguration, "Fetched shop url configuration");
 
     const appConfig = FallbackAppConfig.createFallbackConfigFromExistingShopAndChannels(
-      channels ?? [],
-      shopUrlConfiguration
+      channels ?? []
     );
 
     logger.debug(appConfig, "Created a fallback AppConfig. Will save it.");
