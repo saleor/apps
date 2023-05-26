@@ -1,3 +1,6 @@
-import { describe } from "vitest";
+import { describe, it } from "vitest";
 
-describe.todo("AvataxOrderCreatedAdapter", () => {});
+describe("AvataxOrderCreatedAdapter", () => {
+  // ? how to mock internal call to avatax?
+  it.todo("calls avatax client", () => {});
+});

@@ -17,14 +17,10 @@ export class TaxJarCalculateTaxesPayloadTransformer {
 
       return {
         id: line.sourceLine.id,
-        // todo: replace
-        chargeTaxes: true,
         // todo: get from tax code matcher
-        taxCode: "",
+        product_tax_code: "",
         quantity: line.quantity,
-        // todo: clarify if I need to include discount in total amount
-        totalAmount: Number(line.totalPrice.amount),
-        unitAmount: Number(line.unitPrice.amount),
+        unit_price: Number(line.unitPrice.amount),
         discount: discountAmount,
       };
     });

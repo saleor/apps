@@ -1,108 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { TaxJarCalculateTaxesMockGenerator } from "./taxjar-calculate-taxes-mock-generator";
 import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 
-const MOCKED_TAX_BASE: TaxBaseFragment = {
-  pricesEnteredWithTax: false,
-  currency: "PLN",
-  channel: {
-    slug: "channel-pln",
-  },
-  sourceObject: {
-    __typename: "Order",
-    user: {
-      id: "VXNlcjo5ZjY3ZjY0Zi1iZjY5LTQ5ZjYtYjQ4Zi1iZjY3ZjY0ZjY0ZjY=",
-    },
-  },
-  discounts: [],
-  address: {
-    streetAddress1: "123 Palm Grove Ln",
-    streetAddress2: "",
-    city: "LOS ANGELES",
-    country: {
-      code: "US",
-    },
-    countryArea: "CA",
-    postalCode: "90002",
-  },
-  shippingPrice: {
-    amount: 48.33,
-  },
-  lines: [
-    {
-      quantity: 3,
-      unitPrice: {
-        amount: 84,
-      },
-      totalPrice: {
-        amount: 252,
-      },
-      sourceLine: {
-        __typename: "OrderLine",
-        id: "T3JkZXJMaW5lOmY1NGQ1MWY2LTc1OTctNGY2OC1hNDk0LTFjYjZlYjRmOTlhMQ==",
-        variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6MzQ2",
-          product: {
-            metafield: null,
-            productType: {
-              metafield: null,
-            },
-          },
-        },
-      },
-    },
-    {
-      quantity: 1,
-      unitPrice: {
-        amount: 5.99,
-      },
-      totalPrice: {
-        amount: 5.99,
-      },
-      sourceLine: {
-        __typename: "OrderLine",
-        id: "T3JkZXJMaW5lOjU1NTFjNTFjLTM5MWQtNGI0Ny04MGU0LWVjY2Q5ZjU4MjQyNQ==",
-        variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6Mzg1",
-          product: {
-            metafield: null,
-            productType: {
-              metafield: null,
-            },
-          },
-        },
-      },
-    },
-  ],
-};
-
-const MOCKED_CHANNEL_CONFIG: ChannelConfig = {
-  providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-  enabled: false,
-  address: {
-    country: "US",
-    zip: "92093",
-    state: "CA",
-    city: "La Jolla",
-    street: "9500 Gilman Drive",
-  },
-};
-
-/*
- * const MOCKED_TAXJAR_CONFIG = {
- *   apiKey: "5da2f821eee4035db4771edab942a4cc",
- *   isSandbox: true,
- *   name: "taxjar-1",
- * };
- */
+const transformer = new TaxJarCalculateTaxesPayloadTransformer();
 
 describe("TaxJarCalculateTaxesPayloadTransformer", () => {
-  it("should return payload containing line_items", () => {
-    const transformer = new TaxJarCalculateTaxesPayloadTransformer();
+  it("returns payload containing line_items without discounts", () => {
+    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus");
+    const taxBase = mockGenerator.generateTaxBase();
+    const channelConfig = mockGenerator.generateChannelConfig();
     const transformedPayload = transformer.transform({
-      taxBase: MOCKED_TAX_BASE,
-      channelConfig: MOCKED_CHANNEL_CONFIG,
+      taxBase,
+      channelConfig,
     });
 
     expect(transformedPayload).toEqual({
@@ -113,32 +22,91 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
         from_city: "La Jolla",
         from_street: "9500 Gilman Drive",
         to_country: "US",
-        to_zip: "90002",
+        to_zip: "94111",
         to_state: "CA",
-        to_city: "LOS ANGELES",
-        to_street: "123 Palm Grove Ln",
+        to_city: "SAN FRANCISCO",
+        to_street: "600 Montgomery St",
         shipping: 48.33,
         line_items: [
           {
-            id: "T3JkZXJMaW5lOmY1NGQ1MWY2LTc1OTctNGY2OC1hNDk0LTFjYjZlYjRmOTlhMQ==",
+            id: "T3JkZXJMaW5lOjNmMjYwZmMyLTZjN2UtNGM5Ni1iYTMwLTEyMjAyODMzOTUyZA==",
             quantity: 3,
-            unitAmount: 84,
-            totalAmount: 252,
+            unit_price: 20,
             discount: 0,
-            chargeTaxes: true,
-            taxCode: "",
+            product_tax_code: "",
           },
           {
-            id: "T3JkZXJMaW5lOjU1NTFjNTFjLTM5MWQtNGI0Ny04MGU0LWVjY2Q5ZjU4MjQyNQ==",
+            id: "T3JkZXJMaW5lOjNlNGZjODdkLTIyMmEtNDZiYi1iYzIzLWJiYWVkODVlOTQ4Mg==",
             quantity: 1,
-            unitAmount: 5.99,
-            totalAmount: 5.99,
+            unit_price: 20,
             discount: 0,
-            chargeTaxes: true,
-            taxCode: "",
+            product_tax_code: "",
+          },
+          {
+            discount: 0,
+            id: "T3JkZXJMaW5lOmM2NTBhMzVkLWQ1YjQtNGRhNy1hMjNjLWEzODU4ZDE1MzI2Mw==",
+            product_tax_code: "",
+            quantity: 2,
+            unit_price: 50,
           },
         ],
       },
     });
+  });
+  it("returns payload containing line_items with discounts", () => {
+    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus");
+    const taxBase = mockGenerator.generateTaxBase({
+      discounts: [
+        {
+          amount: { amount: 10 },
+        },
+      ],
+    });
+    const channelConfig = mockGenerator.generateChannelConfig();
+    const transformedPayload = transformer.transform({
+      taxBase,
+      channelConfig,
+    });
+
+    const payloadLines = transformedPayload.params.line_items ?? [];
+    const discountSum = payloadLines.reduce((sum, line) => sum + (line.discount ?? 0), 0);
+
+    expect(transformedPayload.params.line_items).toEqual([
+      {
+        id: "T3JkZXJMaW5lOjNmMjYwZmMyLTZjN2UtNGM5Ni1iYTMwLTEyMjAyODMzOTUyZA==",
+        quantity: 3,
+        unit_price: 20,
+        discount: 3.33,
+        product_tax_code: "",
+      },
+      {
+        id: "T3JkZXJMaW5lOjNlNGZjODdkLTIyMmEtNDZiYi1iYzIzLWJiYWVkODVlOTQ4Mg==",
+        quantity: 1,
+        unit_price: 20,
+        discount: 1.11,
+        product_tax_code: "",
+      },
+      {
+        discount: 5.56,
+        id: "T3JkZXJMaW5lOmM2NTBhMzVkLWQ1YjQtNGRhNy1hMjNjLWEzODU4ZDE1MzI2Mw==",
+        product_tax_code: "",
+        quantity: 2,
+        unit_price: 50,
+      },
+    ]);
+
+    expect(discountSum).toEqual(10);
+  });
+  it("throws error when no address", () => {
+    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus");
+    const taxBase = mockGenerator.generateTaxBase({ address: null });
+    const channelConfig = mockGenerator.generateChannelConfig();
+
+    expect(() =>
+      transformer.transform({
+        taxBase,
+        channelConfig,
+      })
+    ).toThrow("Customer address is required to calculate taxes in TaxJar.");
   });
 });

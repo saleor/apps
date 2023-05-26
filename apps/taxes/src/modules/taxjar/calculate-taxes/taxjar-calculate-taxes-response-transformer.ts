@@ -1,32 +1,46 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { Response } from "./taxjar-calculate-taxes-adapter";
+import { Logger, createLogger } from "../../../lib/logger";
+import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
+import { TaxJarCalculateTaxesResponseLinesTransformer } from "./taxjar-calculate-taxes-response-lines-transformer";
 import { TaxJarCalculateTaxesResponseShippingTransformer } from "./taxjar-calculate-taxes-response-shipping-transformer";
 
 export class TaxJarCalculateTaxesResponseTransformer {
-  private mapLines(res: TaxForOrderRes["tax"]): Response["lines"] {
-    const lines = res.breakdown?.line_items ?? [];
+  private logger: Logger;
 
-    return lines.map((line) => ({
-      total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
-        line.taxable_amount + line.tax_collectable,
-        new Error("Taxable amount and tax collectable are required to calculate gross amount")
-      ),
-      total_net_amount: taxProviderUtils.resolveOptionalOrThrow(
-        line.taxable_amount,
-        new Error("Taxable amount is required to calculate net amount")
-      ),
-      tax_rate: line.combined_tax_rate ?? 0,
-    }));
+  constructor() {
+    this.logger = createLogger({ name: "TaxJarCalculateTaxesResponseTransformer" });
   }
 
-  transform(response: TaxForOrderRes): Response {
+  transform(payload: Payload, response: TaxForOrderRes): Response {
+    /*
+     * TaxJar operates on the idea of sales tax nexus. Nexus is a place where the company has a physical presence.
+     * If the company has no nexus in the state where the customer is located, the company is not required to collect sales tax.
+     * Therefore, if has_nexus = false, we don't calculate taxes and return the same values as in the payload.
+     * See: https://www.taxjar.com/sales-tax/nexus
+     */
+    if (!response.tax.has_nexus) {
+      this.logger.warn("The company has no nexus in the state where the customer is located");
+      return {
+        shipping_price_net_amount: payload.taxBase.shippingPrice.amount,
+        shipping_price_gross_amount: payload.taxBase.shippingPrice.amount,
+        shipping_tax_rate: 0,
+        lines: payload.taxBase.lines.map((line) => ({
+          total_gross_amount: line.totalPrice.amount,
+          total_net_amount: line.totalPrice.amount,
+          tax_rate: 0,
+        })),
+      };
+    }
+
     const shippingTransformer = new TaxJarCalculateTaxesResponseShippingTransformer();
-    const shipping = shippingTransformer.transform(response.tax);
+    const linesTransformer = new TaxJarCalculateTaxesResponseLinesTransformer();
+
+    const shipping = shippingTransformer.transform(response);
+    const lines = linesTransformer.transform(payload, response);
 
     return {
       ...shipping,
-      lines: this.mapLines(response.tax),
+      lines,
     };
   }
 }

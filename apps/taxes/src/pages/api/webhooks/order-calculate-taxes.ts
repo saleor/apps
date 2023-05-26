@@ -28,15 +28,6 @@ function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   return payload;
 }
 
-// ? maybe make it a part of WebhookResponse?
-function handleWebhookError(error: unknown) {
-  const logger = createLogger({ service: "order-calculate-taxes", name: "handleWebhookError" });
-
-  if (error instanceof Error) {
-    logger.error(error.stack);
-  }
-}
-
 export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
   name: "OrderCalculateTaxes",
   apl: saleorApp.apl,
@@ -56,28 +47,21 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     verifyCalculateTaxesPayload(payload);
     logger.info("Payload validated succesfully");
   } catch (error) {
-    logger.info("Returning no data");
-    return webhookResponse.failure("Payload is invalid");
+    logger.info("Payload is invalid. Returning no data");
+    return webhookResponse.error(error);
   }
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const activeTaxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
-    if (!activeTaxProvider.ok) {
-      logger.info("Returning no data");
-      return webhookResponse.failure(activeTaxProvider.error);
-    }
-
-    logger.info({ activeTaxProvider }, "Fetched activeTaxProvider");
-    const taxProvider = activeTaxProvider.data;
+    logger.info({ taxProvider }, "Fetched taxProvider");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
-    handleWebhookError(error);
-    return webhookResponse.failure("Error while calculating taxes");
+    return webhookResponse.error(error);
   }
 });

@@ -1,33 +1,68 @@
-import { expect, describe, it } from "vitest";
-import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { describe, expect, it } from "vitest";
+import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { mapPayloadLines } from "./avatax-calculate-taxes-payload-transformer";
-import { avataxMockFactory } from "../avatax-mock-factory";
-
-const mapPayloadArgsMocks = {
-  channel: avataxMockFactory.createMockChannelConfig(),
-  taxBase: avataxMockFactory.createMockTaxBase(),
-  config: avataxMockFactory.createMockAvataxConfig(),
-};
 
 describe("mapPayloadLines", () => {
-  const lines = mapPayloadLines(mapPayloadArgsMocks.taxBase, mapPayloadArgsMocks.config);
+  it("map lines and adds shipping as line", () => {
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+    const avataxConfigMock = mockGenerator.generateAvataxConfig();
+    const taxBaseMock = mockGenerator.generateTaxBase();
+    const lines = mapPayloadLines(taxBaseMock, avataxConfigMock);
 
-  it("includes shipping as a line", () => {
-    expect(lines).toContainEqual({
-      itemCode: SHIPPING_ITEM_CODE,
-      quantity: 1,
-      amount: 48.33,
-      taxCode: mapPayloadArgsMocks.config.shippingTaxCode,
-      taxIncluded: false,
-    });
+    expect(lines).toEqual([
+      {
+        amount: 60,
+        quantity: 3,
+        taxCode: "",
+        taxIncluded: true,
+      },
+      {
+        amount: 20,
+        quantity: 1,
+        taxCode: "",
+        taxIncluded: true,
+      },
+      {
+        amount: 100,
+        quantity: 2,
+        taxCode: "",
+        taxIncluded: true,
+      },
+      {
+        amount: 48.33,
+        itemCode: "Shipping",
+        quantity: 1,
+        taxCode: "FR000000",
+        taxIncluded: true,
+      },
+    ]);
   });
+  it("when no shipping in tax base, does not add shipping as line", () => {
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+    const avataxConfigMock = mockGenerator.generateAvataxConfig();
+    const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 
-  it("returns the correct quantity of individual lines", () => {
-    expect(lines).toContainEqual({
-      quantity: 3,
-      amount: 252,
-      taxCode: "",
-      taxIncluded: false,
-    });
+    const lines = mapPayloadLines(taxBaseMock, avataxConfigMock);
+
+    expect(lines).toEqual([
+      {
+        amount: 60,
+        quantity: 3,
+        taxCode: "",
+        taxIncluded: true,
+      },
+      {
+        amount: 20,
+        quantity: 1,
+        taxCode: "",
+        taxIncluded: true,
+      },
+      {
+        amount: 100,
+        quantity: 2,
+        taxCode: "",
+        taxIncluded: true,
+      },
+    ]);
   });
 });
