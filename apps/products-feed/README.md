@@ -1,10 +1,9 @@
-<div align="center">
-  <h1>Products feed</h1>
-</div>
+# Saleor App Products feed
 
-<div align="center">
-  <p>Share products data with the feed aggregators</p>
-</div>
+![Hero image](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
+
+
+Share products data with the feed aggregators
 
 ## About Saleor Invoices app
 
