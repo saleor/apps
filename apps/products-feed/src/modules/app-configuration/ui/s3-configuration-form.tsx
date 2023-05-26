@@ -1,43 +1,63 @@
-import { S3BucketConfiguration, SellerShopConfig } from "../app-config";
+import { S3BucketConfiguration } from "../app-config";
 import { useForm } from "react-hook-form";
-import { Box, Button, Text, Input } from "@saleor/macaw-ui/next";
+import { Button, Box } from "@saleor/macaw-ui/next";
 
-import React from "react";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import React, { useCallback } from "react";
+import { Input } from "@saleor/react-hook-form-macaw";
 
 type Props = {
-  channelSlug: string;
-  channelName: string;
-  channelID: string;
-  onSubmit(data: S3BucketConfiguration): Promise<void>;
   initialData?: S3BucketConfiguration | null;
+  onSubmit(data: S3BucketConfiguration): Promise<void>;
 };
 
 export const S3ConfigurationForm = (props: Props) => {
-  const { register, handleSubmit } = useForm<S3BucketConfiguration>({
+  const { handleSubmit, control } = useForm<S3BucketConfiguration>({
     defaultValues: props.initialData ?? undefined,
   });
 
-  const { appBridge } = useAppBridge();
-
   return (
-    <form
-      onSubmit={handleSubmit((data, event) => {
+    <Box
+      as={"form"}
+      display={"flex"}
+      gap={8}
+      flexDirection={"column"}
+      onSubmit={handleSubmit((data) => {
         props.onSubmit(data);
       })}
     >
-      <Text>S3 storage</Text>
-      <Input label="Amazon access key ID" {...register("accessKeyId")} />
+      <Input size={"small"} name={"accessKeyId"} control={control} label="Amazon access key ID" />
 
-      <Input label="Amazon secret access key" {...register("secretAccessKey")} />
+      <Input
+        size={"small"}
+        name={"secretAccessKey"}
+        control={control}
+        label="Amazon secret access key"
+      />
 
-      <Input label="Bucket name" {...register("bucketName")} />
+      <Input size={"small"} name={"bucketName"} control={control} label="Bucket name" />
 
-      <Input label="Bucket region" {...register("region")} />
+      <Input size={"small"} name={"region"} control={control} label="Bucket region" />
 
-      <Button type="submit" variant="primary">
+      <Button type="submit" variant="primary" alignSelf={"end"}>
         Save bucket configuration
       </Button>
-    </form>
+    </Box>
+  );
+};
+
+export const ConnectedS3ConfigurationForm = () => {
+  const handleSubmit = useCallback(async () => {}, []);
+
+  // todo fetch config and pass to form
+  return (
+    <S3ConfigurationForm
+      onSubmit={handleSubmit}
+      initialData={{
+        accessKeyId: "",
+        bucketName: "",
+        region: "",
+        secretAccessKey: "",
+      }}
+    />
   );
 };

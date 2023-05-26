@@ -6,6 +6,10 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";
+import {
+  ConnectedS3ConfigurationForm,
+  S3ConfigurationForm,
+} from "../modules/app-configuration/ui/s3-configuration-form";
 
 // todo extract instructions to component, move descriptions to columns
 const ConfigurationPage: NextPage = () => {
@@ -39,7 +43,7 @@ const ConfigurationPage: NextPage = () => {
         __marginBottom="100px"
         includePadding
         heading={"AWS S3 Bucket"}
-        mainContent={<Box>TODO AWS FORM</Box>}
+        mainContent={<ConnectedS3ConfigurationForm />}
         sideContent={
           <Box>
             <Paragraph size={"small"}>
