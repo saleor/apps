@@ -10,7 +10,7 @@ import { numbers } from "./numbers";
  * // todo: look into how refunds affect the prices and discounts:
  * https://github.com/saleor/apps/pull/495#discussion_r1200321165
  */
-export function distributeDiscount(discountSum: number, prices: number[]) {
+function distributeDiscount(discountSum: number, prices: number[]) {
   const totalSum = prices.reduce((sum, number) => sum + number, 0);
 
   if (discountSum > totalSum) {
@@ -31,3 +31,12 @@ export function distributeDiscount(discountSum: number, prices: number[]) {
 
   return distributedDiscounts;
 }
+
+function sumDiscounts(discounts: number[]): number {
+  return discounts.reduce((total, current) => total + Number(current), 0);
+}
+
+export const discountUtils = {
+  distributeDiscount,
+  sumDiscounts,
+};

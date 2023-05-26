@@ -1,4 +1,4 @@
-import { distributeDiscount } from "../../taxes/distribute-discount";
+import { discountUtils } from "../../taxes/discount-utils";
 import { taxJarAddressFactory } from "../address-factory";
 import { Payload, Target } from "./taxjar-calculate-taxes-adapter";
 
@@ -10,7 +10,7 @@ export class TaxJarCalculateTaxesPayloadTransformer {
       0
     );
     const linePrices = lines.map((line) => Number(line.totalPrice.amount));
-    const distributedDiscounts = distributeDiscount(discountSum, linePrices);
+    const distributedDiscounts = discountUtils.distributeDiscount(discountSum, linePrices);
 
     return lines.map((line, index) => {
       const discountAmount = distributedDiscounts[index];

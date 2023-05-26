@@ -5,6 +5,7 @@ import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "../address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { Payload, Target } from "./avatax-order-created-adapter";
+import { discountUtils } from "../../taxes/discount-utils";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -47,11 +48,6 @@ export function mapLines(
   return productLines;
 }
 
-// ? separate class?
-export function sumDiscounts(discounts: Payload["order"]["discounts"]): number {
-  return discounts.reduce((total, current) => total + Number(current.amount.amount), 0);
-}
-
 export class AvataxOrderCreatedPayloadTransformer {
   transform = ({ order, channelConfig, config }: Payload): Target => {
     return {
@@ -72,7 +68,9 @@ export class AvataxOrderCreatedPayloadTransformer {
         email: order.user?.email ?? "",
         lines: mapLines(order, config),
         date: new Date(order.created),
-        discount: sumDiscounts(order.discounts),
+        discount: discountUtils.sumDiscounts(
+          order.discounts.map((discount) => discount.amount.amount)
+        ),
       },
     };
   };

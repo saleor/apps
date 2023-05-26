@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { AvataxOrderCreatedMockGenerator } from "./avatax-order-created-mock-generator";
 import {
   AvataxOrderCreatedPayloadTransformer,
-  sumDiscounts,
   mapLines,
 } from "./avatax-order-created-payload-transformer";
 
@@ -92,18 +91,5 @@ describe("mapLines", () => {
       quantity: 2,
       amount: 108.63,
     });
-  });
-});
-describe("sumDiscounts", () => {
-  it("sums up all discounts", () => {
-    const discounts = sumDiscounts(discountedOrderMock.discounts);
-
-    expect(discounts).toEqual(10);
-  });
-
-  it("returns 0 if there are no discounts", () => {
-    const discounts = sumDiscounts([]);
-
-    expect(discounts).toEqual(0);
   });
 });

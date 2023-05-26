@@ -4,14 +4,17 @@ import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "../address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { SHIPPING_ITEM_CODE, Payload, Target } from "./avatax-calculate-taxes-adapter";
+import { discountUtils } from "../../taxes/discount-utils";
 
 export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
-  const productLines = taxBase.lines.map((line) => ({
+  const isDiscounted = taxBase.discounts.length > 0;
+  const productLines: LineItemModel[] = taxBase.lines.map((line) => ({
     amount: line.totalPrice.amount,
     taxIncluded: taxBase.pricesEnteredWithTax,
     // todo: get from tax code matcher
     taxCode: "",
     quantity: line.quantity,
+    discounted: isDiscounted,
   }));
 
   if (taxBase.shippingPrice.amount !== 0) {
@@ -22,6 +25,7 @@ export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig):
       taxCode: config.shippingTaxCode,
       quantity: 1,
       taxIncluded: taxBase.pricesEnteredWithTax,
+      discounted: isDiscounted,
     };
 
     return [...productLines, shippingLine];
@@ -48,6 +52,9 @@ export class AvataxCalculateTaxesPayloadTransformer {
         currencyCode: taxBase.currency,
         lines: mapPayloadLines(taxBase, config),
         date: new Date(),
+        discount: discountUtils.sumDiscounts(
+          taxBase.discounts.map((discount) => discount.amount.amount)
+        ),
       },
     };
   }
