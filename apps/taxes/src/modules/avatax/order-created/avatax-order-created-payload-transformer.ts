@@ -14,7 +14,7 @@ export function mapLines(
   config: AvataxConfig
 ): LineItemModel[] {
   const productLines: LineItemModel[] = order.lines.map((line) => ({
-    // taxes are included because we threat what is passed in payload as the source of truth
+    // taxes are included because we treat what is passed in payload as the source of truth
     taxIncluded: true,
     amount: numbers.roundFloatToTwoDecimals(
       line.totalPrice.net.amount + line.totalPrice.tax.amount

@@ -2295,6 +2295,7 @@ const createMockTransaction = (
   ...overrides,
 });
 
+// todo: convert to a mock-generator
 export const avataxMockTransactionFactory = {
   createMockTransaction,
 };
