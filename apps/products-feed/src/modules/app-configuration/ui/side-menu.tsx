@@ -1,47 +1,6 @@
-import { Card, CardContent, CardHeader, Divider } from "@material-ui/core";
-("@material-ui/icons");
-import { DeleteIcon, IconButton, List, ListItem, ListItemCell } from "@saleor/macaw-ui";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import clsx from "clsx";
 import React from "react";
-
-import { makeStyles } from "@saleor/macaw-ui";
-import { Skeleton } from "@material-ui/lab";
-
-export const useStyles = makeStyles((theme) => ({
-  menu: {
-    height: "fit-content",
-  },
-  clickable: {
-    cursor: "pointer",
-  },
-  selected: {
-    "&&&&::before": {
-      position: "absolute",
-      left: 0,
-      width: "4px",
-      height: "100%",
-      backgroundColor: theme.palette.saleor.active[1],
-    },
-  },
-  spaceBetween: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  tableRow: {
-    minHeight: "48px",
-    "&::after": {
-      display: "none",
-    },
-  },
-  greyText: {
-    color: theme.palette.text.hint,
-  },
-  link: {
-    all: "inherit",
-    display: "contents",
-  },
-}));
 
 interface SideMenuProps {
   title: string;
@@ -53,6 +12,7 @@ interface SideMenuProps {
   onClick: (itemId: string) => void;
 }
 
+// todo ui
 export const SideMenu: React.FC<SideMenuProps> = ({
   title,
   items,
@@ -62,31 +22,23 @@ export const SideMenu: React.FC<SideMenuProps> = ({
   onDelete,
   onClick,
 }) => {
-  const classes = useStyles();
-
   const isNoItems = !items || !items.length;
 
   return (
-    <Card className={classes.menu}>
-      <CardHeader title={title} action={headerToolbar} />
+    <Box>
+      <Box title={title} />
       {isNoItems ? (
-        !!noItemsText && <CardContent className={classes.greyText}>{noItemsText}</CardContent>
+        !!noItemsText && <Box>{noItemsText}</Box>
       ) : (
-        <List gridTemplate={["1fr"]}>
+        <Box>
           {items.map((item) => (
             <React.Fragment key={item.id}>
-              <Divider />
-              <ListItem
-                className={clsx(classes.clickable, classes.tableRow, {
-                  [classes.selected]: item.id === selectedItemId,
-                })}
-                onClick={() => onClick(item.id)}
-              >
-                <ListItemCell>
-                  <div className={classes.spaceBetween}>
+              <Box onClick={() => onClick(item.id)}>
+                <Box>
+                  <div>
                     {item.label}
                     {!!onDelete && (
-                      <IconButton
+                      <Button
                         variant="secondary"
                         onClick={(event) => {
                           event.stopPropagation();
@@ -94,17 +46,16 @@ export const SideMenu: React.FC<SideMenuProps> = ({
                           onDelete(item.id);
                         }}
                       >
-                        <DeleteIcon />
-                      </IconButton>
+                        del
+                      </Button>
                     )}
                   </div>
-                </ListItemCell>
-              </ListItem>
+                </Box>
+              </Box>
             </React.Fragment>
-          )) ?? <Skeleton />}
-          <Divider />
-        </List>
+          )) ?? null}
+        </Box>
       )}
-    </Card>
+    </Box>
   );
 };

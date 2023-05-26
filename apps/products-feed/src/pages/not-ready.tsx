@@ -1,6 +1,5 @@
-import { AlertBase, Button } from "@saleor/macaw-ui";
+import { Button, Text, Box } from "@saleor/macaw-ui/next";
 import React from "react";
-import { Typography } from "@material-ui/core";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const NotReadyPage = () => {
@@ -9,13 +8,9 @@ const NotReadyPage = () => {
   return (
     <div>
       <h1>Saleor Invoices App</h1>
-      <AlertBase variant="error">
-        <Typography variant="h3" paragraph>
-          App can not be used
-        </Typography>
-        <Typography paragraph>
-          To configure Invoices App you need to create at least 1 channel
-        </Typography>
+      <Box>
+        <Text>App can not be used</Text>
+        <Text as={"p"}>To configure Invoices App you need to create at least 1 channel</Text>
         <Button
           variant="primary"
           onClick={() => {
@@ -28,7 +23,7 @@ const NotReadyPage = () => {
         >
           Set up channel
         </Button>
-      </AlertBase>
+      </Box>
     </div>
   );
 };

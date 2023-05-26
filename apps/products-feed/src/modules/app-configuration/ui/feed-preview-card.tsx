@@ -1,31 +1,11 @@
-import { Paper, TextField, Typography } from "@material-ui/core";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Button, makeStyles } from "@saleor/macaw-ui";
-
-const useStyles = makeStyles((theme) => {
-  return {
-    header: { marginBottom: 20 },
-    grid: { display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "start", gap: 40 },
-    formContainer: {
-      top: 0,
-      position: "sticky",
-    },
-    instructionsContainer: {
-      padding: 15,
-    },
-    field: {
-      marginBottom: 20,
-    },
-  };
-});
+import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 
 interface FeedPreviewCardProps {
   channelSlug: string;
 }
 
 export const FeedPreviewCard = ({ channelSlug }: FeedPreviewCardProps) => {
-  const styles = useStyles();
-
   const { appBridge } = useAppBridge();
   const { saleorApiUrl } = appBridge?.getState() || {};
 
@@ -38,27 +18,18 @@ export const FeedPreviewCard = ({ channelSlug }: FeedPreviewCardProps) => {
   };
 
   return (
-    <Paper elevation={0} className={styles.instructionsContainer}>
-      <Typography paragraph variant="h3">
-        Your Google Merchant Feed preview
-      </Typography>
-      <TextField
+    <Box>
+      <Text>Your Google Merchant Feed preview</Text>
+      <Input
         label="Google feed URL"
-        fullWidth
         value={googleFeedUrl}
         disabled={true}
-        className={styles.field}
         helperText="Dedicated URL for your Google Merchant Feed"
       />
 
-      <Button
-        type="submit"
-        variant="secondary"
-        fullWidth
-        onClick={() => openUrlInNewTab(googleFeedUrl)}
-      >
+      <Button type="submit" variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)}>
         Open feed in a new tab
       </Button>
-    </Paper>
+    </Box>
   );
 };

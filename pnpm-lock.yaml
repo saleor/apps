@@ -1074,15 +1074,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^2.9.10
         version: 2.9.11(react-hook-form@7.43.1)
-      '@material-ui/core':
-        specifier: ^4.12.4
-        version: 4.12.4(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
-      '@material-ui/icons':
-        specifier: ^4.11.3
-        version: 4.11.3(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
-      '@material-ui/lab':
-        specifier: 4.0.0-alpha.61
-        version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
         specifier: 0.39.1
         version: 0.39.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1090,8 +1081,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: ^0.7.2
-        version: 0.7.2(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.0.27)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0)
+        specifier: 0.8.0-pre.84
+        version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.52.1
         version: 7.52.1(next@13.3.0)(react@18.2.0)
@@ -1155,6 +1146,9 @@ importers:
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.2.0)(react@18.2.0)
       urql:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
@@ -20152,7 +20146,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.21.5
       broadcast-channel: 3.7.0
       match-sorter: 6.3.1
       react: 18.2.0

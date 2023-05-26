@@ -1,26 +1,14 @@
-import { Link, Paper, Typography } from "@material-ui/core";
+import { Box, Text } from "@saleor/macaw-ui/next";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { makeStyles } from "@saleor/macaw-ui";
-
-const useStyles = makeStyles((theme) => {
-  return {
-    instructionsContainer: {
-      padding: 15,
-    },
-  };
-});
+import Link from "next/link";
 
 export const Instructions = () => {
-  const styles = useStyles();
-
   const { appBridge } = useAppBridge();
 
   return (
-    <Paper elevation={0} className={styles.instructionsContainer}>
-      <Typography paragraph variant="h4">
-        Using the feed
-      </Typography>
-      <Typography paragraph>
+    <Box>
+      <Text>Using the feed</Text>
+      <Text>
         Configure your Google Merchant account to schedule fetches of the feed. Instructions can be
         found{" "}
         <Link
@@ -37,19 +25,17 @@ export const Instructions = () => {
           here
         </Link>
         .
-      </Typography>
+      </Text>
 
-      <Typography paragraph variant="h4">
-        URL templates
-      </Typography>
-      <Typography paragraph>
+      <Text>URL templates</Text>
+      <Text>
         URLs to products in your storefront are generated dynamically, based on the product data.
         For example, the template
-      </Typography>
+      </Text>
       <code>{"https://example.com/product/{productSlug}"}</code>
-      <Typography paragraph>Will produce</Typography>
+      <Text>Will produce</Text>
       <code>{"https://example.com/product/red-t-shirt"}</code>
-      <Typography paragraph>Available fields: productId, productSlug, variantId</Typography>
-    </Paper>
+      <Text>Available fields: productId, productSlug, variantId</Text>
+    </Box>
   );
 };

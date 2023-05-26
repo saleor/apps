@@ -1,7 +1,7 @@
 import { trpcClient } from "../../trpc/trpc-client";
-import { LinearProgress, Paper } from "@material-ui/core";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useEffect, useMemo, useState } from "react";
-import { EditIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+
 import { AppConfigContainer } from "../app-config-container";
 import { UrlConfigurationForm } from "./url-configuration-form";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
@@ -12,28 +12,7 @@ import { SideMenu } from "./side-menu";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { S3ConfigurationForm } from "./s3-configuration-form";
 
-const useStyles = makeStyles((theme) => {
-  return {
-    grid: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      alignItems: "start",
-      gap: 40,
-    },
-    instructionsContainer: {
-      padding: 15,
-    },
-    configurationColumn: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 20,
-    },
-  };
-});
-
 export const ChannelsConfiguration = () => {
-  const styles = useStyles();
-
   const { appBridge } = useAppBridge();
   const { notifySuccess } = useDashboardNotification();
 
@@ -66,7 +45,7 @@ export const ChannelsConfiguration = () => {
   }, [channels.data, activeChannelSlug]);
 
   if (channels.isLoading || !channels.data) {
-    return <LinearProgress />;
+    return <Text>Loading...</Text>;
   }
 
   if (!activeChannel) {
@@ -79,7 +58,7 @@ export const ChannelsConfiguration = () => {
         title="Channels"
         selectedItemId={activeChannel?.slug}
         headerToolbar={
-          <IconButton
+          <Button
             variant="secondary"
             onClick={() => {
               appBridge?.dispatch(
@@ -89,16 +68,16 @@ export const ChannelsConfiguration = () => {
               );
             }}
           >
-            <EditIcon />
-          </IconButton>
+            edit
+          </Button>
         }
         onClick={(id) => setActiveChannelSlug(id)}
         items={channels.data.map((c) => ({ label: c.name, id: c.slug })) || []}
       />
 
       {activeChannel ? (
-        <div className={styles.configurationColumn}>
-          <Paper elevation={0}>
+        <div>
+          <Box>
             <UrlConfigurationForm
               channelID={activeChannel.id}
               key={activeChannelSlug + "url"}
@@ -132,7 +111,7 @@ export const ChannelsConfiguration = () => {
               channelName={activeChannel?.name ?? activeChannelSlug}
             />
             {saveError && <span>{saveError.message}</span>}
-          </Paper>
+          </Box>
           <FeedPreviewCard channelSlug={activeChannel.slug} />
         </div>
       ) : null}
