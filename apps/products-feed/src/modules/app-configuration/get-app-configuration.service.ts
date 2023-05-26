@@ -5,6 +5,9 @@ import { FallbackAppConfig } from "./fallback-app-config";
 import { Client } from "urql";
 import { createLogger } from "@saleor/apps-shared";
 
+/**
+ * @deprecated
+ */
 export class GetAppConfigurationService {
   constructor(
     private settings: {

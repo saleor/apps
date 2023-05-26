@@ -4,6 +4,7 @@ import { ChannelFragment } from "../../../generated/graphql";
 
 /**
  * TODO remove fallback strategy
+ * @deprecated
  */
 export const FallbackAppConfig = {
   createFallbackConfigFromExistingShopAndChannels(channels: ChannelFragment[]) {

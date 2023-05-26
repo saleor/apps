@@ -6,6 +6,9 @@ export interface AppConfigurator {
   getConfig(): Promise<AppConfig | undefined>;
 }
 
+/**
+ * @deprecated
+ */
 export class PrivateMetadataAppConfigurator implements AppConfigurator {
   private metadataKey = "app-config";
 

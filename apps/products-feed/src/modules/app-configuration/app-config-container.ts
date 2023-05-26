@@ -54,6 +54,9 @@ const setChannelS3BucketConfiguration =
     return appConfigNormalized;
   };
 
+/**
+ * @deprecated
+ */
 export const AppConfigContainer = {
   getChannelUrlConfiguration,
   setChannelUrlConfiguration,

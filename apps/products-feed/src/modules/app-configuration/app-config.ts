@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { UrlConfiguration } from "./url-configuration";
 
+/**
+ * @deprecated
+ */
 export const s3BucketConfigurationSchema = z.object({
   bucketName: z.string().min(1),
   secretAccessKey: z.string().min(1),
@@ -8,8 +10,14 @@ export const s3BucketConfigurationSchema = z.object({
   region: z.string().min(1),
 });
 
+/**
+ * @deprecated
+ */
 export type S3BucketConfiguration = z.infer<typeof s3BucketConfigurationSchema>;
 
+/**
+ * @deprecated
+ */
 export const urlConfigurationSchema = z.object({
   /**
    * min() to allow empty strings
@@ -18,17 +26,27 @@ export const urlConfigurationSchema = z.object({
   productStorefrontUrl: z.string().min(0),
 });
 
-export type UrlConfiguration = z.infer<typeof urlConfigurationSchema>;
-
+/**
+ * @deprecated
+ */
 export const sellerShopConfigSchema = z.object({
   urlConfiguration: urlConfigurationSchema,
   s3BucketConfiguration: s3BucketConfigurationSchema.optional(),
 });
 
+/**
+ * @deprecated
+ */
 export type SellerShopConfig = z.infer<typeof sellerShopConfigSchema>;
 
+/**
+ * @deprecated
+ */
 export type ShopConfigPerChannelSlug = Record<string, SellerShopConfig>;
 
+/**
+ * @deprecated
+ */
 export type AppConfig = {
   shopConfigPerChannel: ShopConfigPerChannelSlug;
 };
