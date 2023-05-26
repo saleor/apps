@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  transpilePackages: ["@saleor/apps-shared"],
+  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui"],
 };
 
 const isSentryEnvAvailable =
