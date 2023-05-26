@@ -1,7 +1,6 @@
-import { OrderStatus } from "../generated/graphql";
-import { Order } from "./modules/avatax/order-created/avatax-order-created-mock-generator";
+import { OrderCreatedSubscriptionFragment, OrderStatus } from "../generated/graphql";
 
-export const defaultOrder: Order = {
+export const defaultOrder: OrderCreatedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
   user: {
     id: "VXNlcjoyMDg0NTEwNDEw",

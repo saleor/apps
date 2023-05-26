@@ -5,8 +5,6 @@ import { orderCreatedTransactionMock } from "./avatax-order-created-response-tra
 import { AvataxConfig } from "../avatax-config";
 import { defaultOrder } from "../../../mocks";
 
-export type Order = OrderCreatedSubscriptionFragment;
-
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
   enabled: false,
@@ -44,7 +42,9 @@ type TestingScenario = keyof typeof testingScenariosMap;
 
 export class AvataxOrderCreatedMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
-  generateOrder = (overrides: Partial<Order> = {}): Order =>
+  generateOrder = (
+    overrides: Partial<OrderCreatedSubscriptionFragment> = {}
+  ): OrderCreatedSubscriptionFragment =>
     structuredClone({
       ...testingScenariosMap[this.scenario].order,
       ...overrides,

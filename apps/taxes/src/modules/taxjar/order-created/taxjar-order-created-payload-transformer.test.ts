@@ -5,9 +5,10 @@ import {
   sumPayloadLines,
 } from "./taxjar-order-created-payload-transformer";
 
+const mockGenerator = new TaxJarOrderCreatedMockGenerator();
+
 describe("TaxJarOrderCreatedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
-    const mockGenerator = new TaxJarOrderCreatedMockGenerator();
     const payloadMock = {
       order: mockGenerator.generateOrder(),
       channelConfig: mockGenerator.generateChannelConfig(),
