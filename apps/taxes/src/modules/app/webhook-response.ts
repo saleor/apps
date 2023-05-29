@@ -2,24 +2,35 @@ import { NextApiResponse } from "next";
 
 import { createLogger, Logger } from "../../lib/logger";
 
-/*
- * idea: distinguish between async and sync webhooks
- * when sync webhooks, require passing the event and enforce the required response format using ctx.buildResponse
- * when async webhooks, dont require anything
- */
 export class WebhookResponse {
   private logger: Logger;
   constructor(private res: NextApiResponse) {
     this.logger = createLogger({ event: "WebhookResponse" });
   }
 
-  failure(error: string) {
-    this.logger.debug({ error }, "failure called with:");
-    return this.res.status(500).json({ error });
+  private returnSuccess(data?: unknown) {
+    this.logger.debug({ data }, "success called with:");
+    return this.res.status(200).json(data ?? {});
   }
 
-  success(data?: any) {
-    this.logger.debug({ data }, "success called with:");
-    return this.res.send(data);
+  private returnError(errorMessage: string) {
+    this.logger.debug({ errorMessage }, "returning error:");
+    return this.res.status(500).json({ error: errorMessage });
+  }
+
+  private resolveError(error: unknown) {
+    if (error instanceof Error) {
+      this.logger.error(error.stack, "Unexpected error caught:");
+      return this.returnError(error.message);
+    }
+    return this.returnError("Internal server error");
+  }
+
+  error(error: unknown) {
+    return this.resolveError(error);
+  }
+
+  success(data?: unknown) {
+    return this.returnSuccess(data);
   }
 }

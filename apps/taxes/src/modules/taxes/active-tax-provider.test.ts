@@ -79,61 +79,49 @@ const mockedValidEncryptedChannels = encrypt(JSON.stringify(mockedValidChannels)
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getActiveTaxProvider", () => {
-  it("should return ok: false when channel slug is missing", () => {
-    const result = getActiveTaxProvider("", mockedInvalidMetadata);
-
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.error).toBe("channel_slug_missing");
-    }
+  it("throws error when channel slug is missing", () => {
+    expect(() => getActiveTaxProvider("", mockedInvalidMetadata)).toThrow(
+      "Channel slug is missing"
+    );
   });
 
-  it("should return ok: false when there are no metadata items", () => {
-    const result = getActiveTaxProvider("default-channel", []);
-
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.error).toBe("app_encrypted_metadata_missing");
-    }
+  it("throws error when there are no metadata items", () => {
+    expect(() => getActiveTaxProvider("default-channel", [])).toThrow(
+      "App encryptedMetadata is missing"
+    );
   });
 
-  it("should return ok: false when no providerInstanceId was found", () => {
-    const result = getActiveTaxProvider("default-channel", [
-      {
-        key: "providers",
-        value: mockedEncryptedProviders,
-      },
-      {
-        key: "channels",
-        value: mockedInvalidEncryptedChannels,
-      },
-    ]);
-
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.error).toBe("no_match_for_channel_provider_instance_id");
-    }
+  it("throws error when no providerInstanceId was found", () => {
+    expect(() =>
+      getActiveTaxProvider("default-channel", [
+        {
+          key: "providers",
+          value: mockedEncryptedProviders,
+        },
+        {
+          key: "channels",
+          value: mockedInvalidEncryptedChannels,
+        },
+      ])
+    ).toThrow("Channel (default-channel) providerInstanceId does not match any providers");
   });
 
-  it("should return ok: false when no channel was found for channelSlug", () => {
-    const result = getActiveTaxProvider("invalid-channel", [
-      {
-        key: "providers",
-        value: mockedEncryptedProviders,
-      },
-      {
-        key: "channels",
-        value: mockedValidEncryptedChannels,
-      },
-    ]);
-
-    expect(result.ok).toBe(false);
-    if (!result.ok) {
-      expect(result.error).toBe("channel_config_not_found");
-    }
+  it("throws error when no channel was found for channelSlug", () => {
+    expect(() =>
+      getActiveTaxProvider("invalid-channel", [
+        {
+          key: "providers",
+          value: mockedEncryptedProviders,
+        },
+        {
+          key: "channels",
+          value: mockedValidEncryptedChannels,
+        },
+      ])
+    ).toThrow("Channel config not found for channel invalid-channel");
   });
 
-  it("should return ok: true when data is correct", () => {
+  it("returns provider when data is correct", () => {
     const result = getActiveTaxProvider("default-channel", [
       {
         key: "providers",
@@ -145,6 +133,6 @@ describe("getActiveTaxProvider", () => {
       },
     ]);
 
-    expect(result.ok).toBe(true);
+    expect(result).toBeDefined();
   });
 });

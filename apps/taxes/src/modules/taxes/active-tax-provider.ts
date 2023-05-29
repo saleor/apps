@@ -4,61 +4,14 @@ import {
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
-import { createLogger, Logger } from "../../lib/logger";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { ProviderConfig } from "../providers-configuration/providers-config";
-import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
-import { ProviderWebhookService } from "./tax-provider-webhook";
-import { TaxProviderError } from "./tax-provider-error";
+import { Logger, createLogger } from "../../lib/logger";
 
 import { getAppConfig } from "../app/get-app-config";
-
-type ActiveTaxProviderResult = { ok: true; data: ActiveTaxProvider } | { ok: false; error: string };
-
-export function getActiveTaxProvider(
-  channelSlug: string | undefined,
-  encryptedMetadata: MetadataItem[]
-): ActiveTaxProviderResult {
-  const logger = createLogger({ service: "getActiveTaxProvider" });
-
-  if (!channelSlug) {
-    logger.error("Channel slug is missing");
-    return { error: "channel_slug_missing", ok: false };
-  }
-
-  if (!encryptedMetadata.length) {
-    logger.error("App encryptedMetadata is missing");
-    return { error: "app_encrypted_metadata_missing", ok: false };
-  }
-
-  const { providers, channels } = getAppConfig(encryptedMetadata);
-
-  const channelConfig = channels[channelSlug];
-
-  if (!channelConfig) {
-    // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    logger.info(`Channel config not found for channel ${channelSlug}`);
-    return { error: `channel_config_not_found`, ok: false };
-  }
-
-  const providerInstance = providers.find(
-    (instance) => instance.id === channelConfig.providerInstanceId
-  );
-
-  if (!providerInstance) {
-    logger.error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
-    return {
-      error: `no_match_for_channel_provider_instance_id`,
-      ok: false,
-    };
-  }
-
-  // todo: refactor so it doesnt create activeTaxProvider
-  const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
-
-  return { data: taxProvider, ok: true };
-}
+import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
+import { ChannelConfig } from "../channels-configuration/channels-config";
+import { ProviderConfig } from "../providers-configuration/providers-config";
+import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
+import { ProviderWebhookService } from "./tax-provider-webhook";
 
 // todo: refactor to a factory
 export class ActiveTaxProvider implements ProviderWebhookService {
@@ -86,28 +39,60 @@ export class ActiveTaxProvider implements ProviderWebhookService {
         break;
 
       default: {
-        throw new TaxProviderError(`Tax provider ${taxProviderName} doesn't match`, {
-          cause: "TaxProviderNotFound",
-        });
+        throw new Error(`Tax provider ${taxProviderName} doesn't match`);
       }
     }
   }
 
   async calculateTaxes(payload: TaxBaseFragment) {
-    this.logger.debug({ payload }, ".calculate called");
+    this.logger.trace({ payload }, ".calculate called");
 
     return this.client.calculateTaxes(payload, this.channel);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    this.logger.debug(".createOrder called");
+    this.logger.trace(".createOrder called");
 
     return this.client.createOrder(order, this.channel);
   }
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
-    this.logger.debug(".fulfillOrder called");
+    this.logger.trace(".fulfillOrder called");
 
     return this.client.fulfillOrder(payload, this.channel);
   }
+}
+
+export function getActiveTaxProvider(
+  channelSlug: string | undefined,
+  encryptedMetadata: MetadataItem[]
+): ActiveTaxProvider {
+  if (!channelSlug) {
+    throw new Error("Channel slug is missing");
+  }
+
+  if (!encryptedMetadata.length) {
+    throw new Error("App encryptedMetadata is missing");
+  }
+
+  const { providers, channels } = getAppConfig(encryptedMetadata);
+
+  const channelConfig = channels[channelSlug];
+
+  if (!channelConfig) {
+    // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
+    throw new Error(`Channel config not found for channel ${channelSlug}`);
+  }
+
+  const providerInstance = providers.find(
+    (instance) => instance.id === channelConfig.providerInstanceId
+  );
+
+  if (!providerInstance) {
+    throw new Error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+  }
+
+  const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
+
+  return taxProvider;
 }
