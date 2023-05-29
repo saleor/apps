@@ -1,11 +1,9 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
-import { appConfigInputSchema } from "./app-config-input-schema";
-import { GetAppConfigurationService } from "./get-app-configuration.service";
+
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
+import { AppConfigSchema } from "./app-config";
 
 export const appConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
@@ -13,31 +11,34 @@ export const appConfigurationRouter = router({
 
     logger.debug("appConfigurationRouter.fetch called");
 
-    return new GetAppConfigurationService({
-      apiClient: ctx.apiClient,
-      saleorApiUrl: ctx.saleorApiUrl,
-    }).getConfiguration();
+    return ctx.getConfig().then((c) => c.getRootConfig());
   }),
-  setAndReplace: protectedClientProcedure
+  setS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(appConfigInputSchema)
+    .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      logger.debug(input, "appConfigurationRouter.setAndReplace called with input");
+      logger.debug(input, "appConfigurationRouter.setS3BucketConfiguration called with input");
 
-      const appConfigurator = new PrivateMetadataAppConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
+      /**
+       * Invalidate cache - todo maybe dont call it here?
+       *
+       * todo enable when config is fixed
+       */
+      /*
+       * await updateCacheForConfigurations({
+       *   client: ctx.apiClient,
+       *   configurations: input,
+       *   saleorApiUrl: ctx.saleorApiUrl,
+       * });
+       */
 
-      await updateCacheForConfigurations({
-        client: ctx.apiClient,
-        configurations: input,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+      const config = await ctx.getConfig();
 
-      await appConfigurator.setConfig(input);
+      config.setS3(input);
+
+      await ctx.appConfigMetadataManager.set(config.serialize());
 
       return null;
     }),

@@ -7,6 +7,7 @@ import { logger } from "@saleor/apps-shared";
 import { createClient } from "../../lib/create-graphq-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
+import { AppConfig } from "../app-configuration/app-config";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -119,7 +120,12 @@ export const protectedClientProcedure = procedure
         appToken: ctx.appToken,
         saleorApiUrl: ctx.saleorApiUrl,
         appId: ctx.appId,
-        metadataManager,
+        appConfigMetadataManager: metadataManager,
+        getConfig: async () => {
+          const metadata = await metadataManager.get();
+
+          return metadata ? AppConfig.parse(metadata) : new AppConfig();
+        },
       },
     });
   });

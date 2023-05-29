@@ -1,10 +1,15 @@
-import { S3BucketConfiguration, s3BucketConfigurationSchema } from "../app-config";
+import { AppConfigSchema, RootConfig } from "../app-config";
 import { useForm } from "react-hook-form";
-import { Button, Box } from "@saleor/macaw-ui/next";
 
-import React, { useCallback } from "react";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+
+import React, { useCallback, useMemo } from "react";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { trpcClient } from "../../trpc/trpc-client";
+import { useDashboardNotification } from "@saleor/apps-shared";
+
+type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;
 
 type Props = {
   initialData: S3BucketConfiguration;
@@ -14,7 +19,7 @@ type Props = {
 export const S3ConfigurationForm = (props: Props) => {
   const { handleSubmit, control } = useForm<S3BucketConfiguration>({
     defaultValues: props.initialData,
-    resolver: zodResolver(s3BucketConfigurationSchema),
+    resolver: zodResolver(AppConfigSchema.s3Bucket),
   });
 
   return (
@@ -48,18 +53,42 @@ export const S3ConfigurationForm = (props: Props) => {
 };
 
 export const ConnectedS3ConfigurationForm = () => {
-  const handleSubmit = useCallback(async () => {}, []);
+  const { notifyError, notifySuccess } = useDashboardNotification();
+
+  const { mutate } = trpcClient.appConfiguration.setS3BucketConfiguration.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Updated S3 configration");
+    },
+    onError() {
+      notifyError("Error", "Failed to update, please refresh and try again");
+    },
+  });
+  const { data, isLoading } = trpcClient.appConfiguration.fetch.useQuery();
+
+  const handleSubmit = useCallback(
+    async (data: S3BucketConfiguration) => {
+      mutate(data);
+    },
+    [mutate]
+  );
+
+  const formData: S3BucketConfiguration = useMemo(() => {
+    if (data?.s3) {
+      return data.s3;
+    }
+
+    return {
+      accessKeyId: "",
+      bucketName: "",
+      region: "",
+      secretAccessKey: "",
+    };
+  }, [data]);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   // todo fetch config and pass to form
-  return (
-    <S3ConfigurationForm
-      onSubmit={handleSubmit}
-      initialData={{
-        accessKeyId: "",
-        bucketName: "",
-        region: "",
-        secretAccessKey: "",
-      }}
-    />
-  );
+  return <S3ConfigurationForm onSubmit={handleSubmit} initialData={formData} />;
 };
