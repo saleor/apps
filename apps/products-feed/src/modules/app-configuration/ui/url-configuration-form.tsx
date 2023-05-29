@@ -12,6 +12,11 @@ type Props = {
   initialData?: SellerShopConfig["urlConfiguration"] | null;
 };
 
+/**
+ * @deprecated
+ * @param props
+ * @constructor
+ */
 export const UrlConfigurationForm = (props: Props) => {
   const { register, handleSubmit } = useForm<SellerShopConfig["urlConfiguration"]>({
     defaultValues: props.initialData ?? undefined,

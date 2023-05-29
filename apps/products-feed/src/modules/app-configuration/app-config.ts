@@ -24,6 +24,7 @@ const RootAppConfig = z.object({
 export const AppConfigSchema = {
   root: RootAppConfig,
   s3Bucket: S3Config,
+  channelUrls: UrlConfiguration,
 };
 
 export type RootConfig = z.infer<typeof RootAppConfig>;

@@ -1,8 +1,8 @@
-import { router } from "../trpc/trpc-server";
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../../trpc/trpc-server";
+import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { ChannelsFetcher } from "./channels-fetcher";
-import { ChannelFragment } from "../../../generated/graphql";
-import { createClient } from "../../lib/create-graphq-client";
+import { ChannelFragment } from "../../../../generated/graphql";
+import { createClient } from "../../../lib/create-graphq-client";
 
 export const channelsRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }): Promise<ChannelFragment[]> => {

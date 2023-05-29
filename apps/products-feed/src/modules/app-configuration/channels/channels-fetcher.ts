@@ -1,5 +1,5 @@
 import { Client, gql } from "urql";
-import { FetchChannelsDocument } from "../../../generated/graphql";
+import { FetchChannelsDocument } from "../../../../generated/graphql";
 
 gql`
   fragment Channel on Channel {

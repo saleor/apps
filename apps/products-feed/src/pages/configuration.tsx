@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import React from "react";
 
-import { useChannelsExistenceChecking } from "../modules/channels/use-channels-existence-checking";
+import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
@@ -10,6 +10,7 @@ import {
   ConnectedS3ConfigurationForm,
   S3ConfigurationForm,
 } from "../modules/app-configuration/ui/s3-configuration-form";
+import { ChannelsConfigAccordion } from "../modules/app-configuration/channels/ui/channels-config-accordion";
 
 // todo extract instructions to component, move descriptions to columns
 const ConfigurationPage: NextPage = () => {
@@ -62,7 +63,11 @@ const ConfigurationPage: NextPage = () => {
         __marginBottom="100px"
         includePadding
         heading={"Channels configuration"}
-        mainContent={<Box>Channels list</Box>}
+        mainContent={
+          <Box>
+            <ChannelsConfigAccordion />
+          </Box>
+        }
         sideContent={
           <Box>
             <Paragraph size={"small"}>App will generate separate feed for each channel</Paragraph>
