@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.6.1
+
+### Patch Changes
+
+- 6e69f4f: Update app-sdk to 0.39.1
+
 ## 1.6.0
 
 ### Minor Changes

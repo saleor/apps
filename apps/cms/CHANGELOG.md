@@ -1,5 +1,13 @@
 # saleor-app-cms
 
+## 1.5.2
+
+### Patch Changes
+
+- 6e69f4f: Update app-sdk to 0.39.1
+- Updated dependencies [6e69f4f]
+  - @saleor/apps-shared@1.6.1
+
 ## 1.5.1
 
 ### Patch Changes

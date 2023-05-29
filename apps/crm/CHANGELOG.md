@@ -1,5 +1,17 @@
 # saleor-app-crm
 
+## 1.5.0
+
+### Minor Changes
+
+- 6e69f4f: Implemented app-sdk@0.39.1 and used its MetadataManager's "delete" method. Now, app will remove config from metadata using "removePrivateMetadata" mutation, instead of setting it to undefined. Previous behaviour was caused by app-sdk not having "delete" method yet
+
+### Patch Changes
+
+- 6e69f4f: Update app-sdk to 0.39.1
+- Updated dependencies [6e69f4f]
+  - @saleor/apps-shared@1.6.1
+
 ## 1.4.0
 
 ### Minor Changes
