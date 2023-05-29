@@ -10,7 +10,7 @@ describe("TaxJarCalculateTaxesResponseTransformer", () => {
     const noNexusResponseMock = mockGenerator.generateResponse();
     const payloadMock = {
       taxBase: mockGenerator.generateTaxBase(),
-      channelConfig: mockGenerator.generateChannelConfig(),
+      providerConfig: mockGenerator.generateProviderConfig(),
     };
 
     const result = transformer.transform(payloadMock, noNexusResponseMock);
@@ -44,7 +44,7 @@ describe("TaxJarCalculateTaxesResponseTransformer", () => {
 
     const payloadMock = {
       taxBase: mockGenerator.generateTaxBase(),
-      channelConfig: mockGenerator.generateChannelConfig(),
+      providerConfig: mockGenerator.generateProviderConfig(),
     };
 
     const result = transformer.transform(payloadMock, nexusResponse);

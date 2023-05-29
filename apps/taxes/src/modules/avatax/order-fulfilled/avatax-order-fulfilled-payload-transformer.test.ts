@@ -2,7 +2,6 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
 import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-config";
-import { Payload } from "./avatax-order-fulfilled-adapter";
 import {
   AvataxOrderFulfilledPayloadTransformer,
   PROVIDER_ORDER_ID_KEY,
@@ -16,9 +15,18 @@ const MOCK_AVATAX_CONFIG: AvataxConfig = {
   isAutocommit: false,
   isSandbox: true,
   name: "Avatax-1",
-  password: "password",
-  username: "username",
   shippingTaxCode: "FR000000",
+  address: {
+    country: "US",
+    zip: "10118",
+    state: "NY",
+    city: "New York",
+    street: "350 5th Avenue",
+  },
+  credentials: {
+    password: "password",
+    username: "username",
+  },
 };
 
 const MOCKED_METADATA: OrderFulfilledSubscriptionFragment["privateMetadata"] = [
@@ -121,11 +129,12 @@ describe("getTransactionCodeFromMetadata", () => {
   });
 });
 
-const transformer = new AvataxOrderFulfilledPayloadTransformer();
+const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
 
-const MOCKED_ORDER_FULFILLED_PAYLOAD: Payload = {
+const MOCKED_ORDER_FULFILLED_PAYLOAD: {
+  order: OrderFulfilledSubscriptionFragment;
+} = {
   order: ORDER_FULFILLED_MOCK,
-  config: MOCK_AVATAX_CONFIG,
 };
 
 describe("AvataxOrderFulfilledPayloadTransformer", () => {

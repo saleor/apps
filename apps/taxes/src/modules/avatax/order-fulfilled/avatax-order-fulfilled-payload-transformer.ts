@@ -1,6 +1,10 @@
-import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { Payload, Target } from "./avatax-order-fulfilled-adapter";
+import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
+import { AvataxConfig } from "../avatax-config";
+import {
+  AvataxOrderFulfilledPayload,
+  AvataxOrderFulfilledTarget,
+} from "./avatax-order-fulfilled-adapter";
 
 // * This is the key that we use to store the provider order id in the Saleor order metadata.
 
@@ -19,12 +23,13 @@ export function getTransactionCodeFromMetadata(
 }
 
 export class AvataxOrderFulfilledPayloadTransformer {
-  transform({ order, config }: Payload): Target {
+  constructor(private readonly config: AvataxConfig) {}
+  transform({ order }: AvataxOrderFulfilledPayload): AvataxOrderFulfilledTarget {
     const transactionCode = getTransactionCodeFromMetadata(order.privateMetadata);
 
     return {
       transactionCode,
-      companyCode: config.companyCode ?? "",
+      companyCode: this.config.companyCode ?? "",
       documentType: DocumentType.SalesInvoice,
       model: {
         commit: true,

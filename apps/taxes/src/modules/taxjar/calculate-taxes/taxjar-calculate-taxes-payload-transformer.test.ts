@@ -2,16 +2,15 @@ import { describe, expect, it } from "vitest";
 import { TaxJarCalculateTaxesMockGenerator } from "./taxjar-calculate-taxes-mock-generator";
 import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 
-const transformer = new TaxJarCalculateTaxesPayloadTransformer();
-
 describe("TaxJarCalculateTaxesPayloadTransformer", () => {
+  const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
+  const providerConfig = mockGenerator.generateProviderConfig();
+  const transformer = new TaxJarCalculateTaxesPayloadTransformer(providerConfig);
+
   it("returns payload containing line_items without discounts", () => {
-    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
     const taxBase = mockGenerator.generateTaxBase();
-    const channelConfig = mockGenerator.generateChannelConfig();
     const transformedPayload = transformer.transform({
       taxBase,
-      channelConfig,
     });
 
     expect(transformedPayload).toEqual({
@@ -62,10 +61,8 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
         },
       ],
     });
-    const channelConfig = mockGenerator.generateChannelConfig();
     const transformedPayload = transformer.transform({
       taxBase,
-      channelConfig,
     });
 
     const payloadLines = transformedPayload.params.line_items ?? [];
@@ -100,12 +97,10 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
   it("throws error when no address", () => {
     const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
     const taxBase = mockGenerator.generateTaxBase({ address: null });
-    const channelConfig = mockGenerator.generateChannelConfig();
 
     expect(() =>
       transformer.transform({
         taxBase,
-        channelConfig,
       })
     ).toThrow("Customer address is required to calculate taxes in TaxJar.");
   });
