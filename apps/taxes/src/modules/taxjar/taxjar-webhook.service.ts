@@ -1,43 +1,46 @@
 import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
-import { createLogger, Logger } from "../../lib/logger";
+import { Logger, createLogger } from "../../lib/logger";
 import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
-import { taxJarCalculateTaxesMaps } from "./maps/taxjar-calculate-taxes-map";
-import { taxJarOrderCreatedMaps } from "./maps/taxjar-order-created-map";
+import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
+  config: TaxJarConfig;
   private logger: Logger;
 
   constructor(config: TaxJarConfig) {
-    const avataxClient = new TaxJarClient(config);
+    const taxJarClient = new TaxJarClient(config);
 
-    this.client = avataxClient;
+    this.client = taxJarClient;
+    this.config = config;
     this.logger = createLogger({
-      service: "TaxJarProvider",
+      service: "TaxJarWebhookService",
     });
   }
 
-  async calculateTaxes(payload: TaxBaseFragment, channel: ChannelConfig) {
-    this.logger.debug({ payload, channel }, "calculateTaxes called with:");
-    const args = taxJarCalculateTaxesMaps.mapPayload(payload, channel);
-    const fetchedTaxes = await this.client.fetchTaxForOrder(args);
+  async calculateTaxes(taxBase: TaxBaseFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
+    const adapter = new TaxJarCalculateTaxesAdapter(this.config);
 
-    this.logger.debug({ fetchedTaxes }, "fetchTaxForOrder response");
+    const response = await adapter.send({ channelConfig, taxBase });
 
-    return taxJarCalculateTaxesMaps.mapResponse(payload, fetchedTaxes);
+    this.logger.debug({ response }, "calculateTaxes response:");
+    return response;
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment, channel: ChannelConfig) {
-    this.logger.debug({ order, channel }, "createOrder called with:");
-    const args = taxJarOrderCreatedMaps.mapPayload({ order, channel });
-    const result = await this.client.createOrder(args);
+  async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
+    this.logger.debug({ order, channelConfig }, "createOrder called with:");
 
-    this.logger.debug({ createOrder: result }, "createOrder response");
+    const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
-    return taxJarOrderCreatedMaps.mapResponse(result);
+    const response = await adapter.send({ channelConfig, order });
+
+    this.logger.debug({ response }, "createOrder response:");
+    return response;
   }
 
   // * TaxJar doesn't require any action on order fulfillment

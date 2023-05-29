@@ -39,14 +39,14 @@ export class TaxJarClient {
   }
 
   async fetchTaxForOrder({ params }: FetchTaxForOrderArgs) {
-    this.logger.debug({ params }, "fetchTaxForOrder called with:");
+    this.logger.trace({ params }, "fetchTaxForOrder called with:");
     const response = await this.client.taxForOrder(params);
 
     return response;
   }
 
   async ping() {
-    this.logger.debug("ping called");
+    this.logger.trace("ping called");
     try {
       await this.client.categories();
       return { authenticated: true };
@@ -59,13 +59,13 @@ export class TaxJarClient {
   }
 
   async createOrder({ params }: CreateOrderArgs) {
-    this.logger.debug({ params }, "createOrder called with:");
+    this.logger.trace({ params }, "createOrder called with:");
 
     return this.client.createOrder(params);
   }
 
   async validateAddress({ params }: ValidateAddressArgs) {
-    this.logger.debug({ params }, "validateAddress called with:");
+    this.logger.trace({ params }, "validateAddress called with:");
 
     return this.client.validateAddress(params);
   }
