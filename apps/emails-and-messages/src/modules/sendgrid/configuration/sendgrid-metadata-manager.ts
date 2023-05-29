@@ -1,12 +1,8 @@
+import { GenericConfigurator } from "../../smtp/configuration/smtp-metadata-manager";
 import { SendgridConfig } from "./sendgrid-config-schema";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
-export interface SendgridConfigurator {
-  setConfig(config: SendgridConfig): Promise<void>;
-  getConfig(): Promise<SendgridConfig | undefined>;
-}
-
-export class PrivateMetadataSendgridConfigurator implements SendgridConfigurator {
+export class SendgridPrivateMetadataManager implements GenericConfigurator<SendgridConfig> {
   private metadataKey = "sendgrid-config";
 
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}

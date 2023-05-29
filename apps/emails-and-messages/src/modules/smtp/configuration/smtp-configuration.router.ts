@@ -1,12 +1,15 @@
 import { createLogger } from "@saleor/apps-shared";
-import { SmtpConfigurationService } from "./get-smtp-configuration.service";
+import {
+  SmtpConfigurationService,
+  SmtpConfigurationServiceError,
+} from "./smtp-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { z } from "zod";
 import { compileMjml } from "../compile-mjml";
 import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
-import { getDefaultEmptyConfiguration } from "./smtp-config-container";
+import { getDefaultEmptyConfiguration } from "./smtp-empty-configurations";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,
@@ -19,6 +22,36 @@ import {
   smtpUpdateSmtpSchema,
 } from "./smtp-config-input-schema";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
+import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
+
+export const throwTrpcErrorFromConfigurationServiceError = (
+  error: SmtpConfigurationServiceError | unknown
+) => {
+  if (error instanceof SmtpConfigurationServiceError) {
+    switch (error.errorType) {
+      case "CONFIGURATION_NOT_FOUND":
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Configuration not found",
+        });
+      case "EVENT_CONFIGURATION_NOT_FOUND":
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Event configuration not found",
+        });
+      case "CANT_FETCH":
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Can't fetch configuration",
+        });
+    }
+  }
+  throw new TRPCError({
+    code: "INTERNAL_SERVER_ERROR",
+    message: "Internal server error",
+  });
+};
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -29,8 +62,14 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
     ctx: {
       ...ctx,
       configurationService: new SmtpConfigurationService({
-        apiClient: ctx.apiClient,
-        saleorApiUrl: ctx.saleorApiUrl,
+        metadataManager: new SmtpPrivateMetadataManager(
+          createSettingsManager(ctx.apiClient, {
+            appId: ctx.appId!,
+            saleorApiUrl: ctx.saleorApiUrl,
+            token: ctx.token!,
+          }),
+          ctx.saleorApiUrl
+        ),
       }),
     },
   })
@@ -50,7 +89,12 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.get called");
-      return ctx.configurationService.getConfiguration(input);
+
+      try {
+        return ctx.configurationService.getConfiguration(input);
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
+      }
     }),
   getConfigurations: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -59,7 +103,11 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.getConfigurations called");
-      return ctx.configurationService.getConfigurations(input);
+      try {
+        return ctx.configurationService.getConfigurations(input);
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
+      }
     }),
   createConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -83,16 +131,12 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.delete called");
-      const existingConfiguration = await ctx.configurationService.getConfiguration(input);
 
-      if (!existingConfiguration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
-        });
+      try {
+        await ctx.configurationService.deleteConfiguration(input);
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-      await ctx.configurationService.deleteConfiguration(input);
-      return null;
     }),
   getEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -102,26 +146,14 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.getEventConfiguration or create called");
 
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
-
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
+      try {
+        return await ctx.configurationService.getEventConfiguration({
+          configurationId: input.id,
+          eventType: input.eventType,
         });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-
-      const event = configuration.events.find((e) => e.eventType === input.eventType);
-
-      if (!event) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Event configuration not found",
-        });
-      }
-      return event;
     }),
   updateEventConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -131,27 +163,14 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
 
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
-
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
+      try {
+        return await ctx.configurationService.updateEventConfiguration({
+          configurationId: input.id,
+          eventConfiguration: input,
         });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-
-      const eventIndex = configuration.events.findIndex((e) => e.eventType === input.eventType);
-
-      configuration.events[eventIndex] = {
-        active: input.active,
-        eventType: input.eventType,
-        template: input.template,
-        subject: input.subject,
-      };
-      await ctx.configurationService.updateConfiguration(configuration);
-      return configuration;
     }),
 
   renderTemplate: protectedWithConfigurationService
@@ -202,109 +221,84 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
-        });
+      logger.debug(input, "smtpConfigurationRouter.updateBasicInformation called");
+
+      try {
+        return await ctx.configurationService.updateConfiguration({ ...input });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-
-      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
-      return configuration;
     }),
 
   updateSmtp: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateSmtpSchema)
     .mutation(async ({ ctx, input }) => {
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
-        });
+      logger.debug(input, "smtpConfigurationRouter.updateSmtp called");
+
+      try {
+        return await ctx.configurationService.updateConfiguration({ ...input });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-
-      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
-      return configuration;
     }),
 
   updateSender: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
-        });
+      logger.debug(input, "smtpConfigurationRouter.updateSender called");
+
+      try {
+        return await ctx.configurationService.updateConfiguration({ ...input });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-
-      await ctx.configurationService.updateConfiguration({ ...configuration, ...input });
-      return configuration;
     }),
 
   updateChannels: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
+      logger.debug(input, "smtpConfigurationRouter.updateChannels called");
+
+      try {
+        return await ctx.configurationService.updateConfiguration({
+          id: input.id,
+          channels: {
+            override: input.override,
+            channels: input.channels,
+            mode: input.mode,
+          },
         });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-      configuration.channels = {
-        override: input.override,
-        channels: input.channels,
-        mode: input.mode,
-      };
-      await ctx.configurationService.updateConfiguration(configuration);
-      return configuration;
     }),
 
   updateEvent: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
-      const configuration = await ctx.configurationService.getConfiguration({
-        id: input.id,
-      });
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-      if (!configuration) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration not found",
+      logger.debug(input, "smtpConfigurationRouter.updateEvent called");
+
+      try {
+        return await ctx.configurationService.updateEventConfiguration({
+          eventConfiguration: input,
+          configurationId: input.id,
         });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
       }
-      const event = configuration.events.find((e) => e.eventType === input.eventType);
-
-      if (!event) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Configuration event not found",
-        });
-      }
-
-      event.template = input.template;
-      event.active = input.active;
-
-      await ctx.configurationService.updateConfiguration(configuration);
-      return configuration;
     }),
 });

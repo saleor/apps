@@ -1,11 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
 import { createLogger } from "@saleor/apps-shared";
-import { SmtpConfigurationService } from "../smtp/configuration/get-smtp-configuration.service";
+import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { sendSmtp } from "../smtp/send-smtp";
-import { SendgridConfigurationService } from "../sendgrid/configuration/get-sendgrid-configuration.service";
+import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
 import { MessageEventTypes } from "./message-event-types";
+import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
+import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
 
 interface SendEventMessagesArgs {
   recipientEmail: string;
@@ -31,8 +34,10 @@ export const sendEventMessages = async ({
   logger.debug("Function called");
 
   const smtpConfigurationService = new SmtpConfigurationService({
-    apiClient: client,
-    saleorApiUrl: authData.saleorApiUrl,
+    metadataManager: new SmtpPrivateMetadataManager(
+      createSettingsManager(client, authData),
+      authData.saleorApiUrl
+    ),
   });
 
   const availableSmtpConfigurations = await smtpConfigurationService.getConfigurations({
@@ -57,8 +62,10 @@ export const sendEventMessages = async ({
   logger.debug("Channel has assigned Sendgrid configuration");
 
   const sendgridConfigurationService = new SendgridConfigurationService({
-    apiClient: client,
-    saleorApiUrl: authData.saleorApiUrl,
+    metadataManager: new SendgridPrivateMetadataManager(
+      createSettingsManager(client, authData),
+      authData.saleorApiUrl
+    ),
   });
 
   const availableSendgridConfigurations = await sendgridConfigurationService.getConfigurations({

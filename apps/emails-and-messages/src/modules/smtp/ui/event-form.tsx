@@ -42,7 +42,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   );
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateSender.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateEvent.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
