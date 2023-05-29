@@ -4,7 +4,7 @@ import { matchPayloadLinesToResponseLines } from "./taxjar-calculate-taxes-respo
 
 describe("matchPayloadLinesToResponseLines", () => {
   it("shold return the response lines in the order of payload lines", () => {
-    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus");
+    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
     const responseMock = mockGenerator.generateResponse();
     const payloadMock = mockGenerator.generateTaxBase();
 
@@ -18,7 +18,7 @@ describe("matchPayloadLinesToResponseLines", () => {
     expect(third!.id).toBe(payloadLines[2].sourceLine.id);
   });
   it("throws error if there is no match for a payload line in response lines", () => {
-    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus");
+    const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
     const responseMock = mockGenerator.generateResponse();
     const payloadMock = mockGenerator.generateTaxBase();
 

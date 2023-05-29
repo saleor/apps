@@ -12,7 +12,7 @@ export class TaxJarCalculateTaxesPayloadTransformer {
     const linePrices = lines.map((line) => Number(line.totalPrice.amount));
     const distributedDiscounts = discountUtils.distributeDiscount(discountSum, linePrices);
 
-    return lines.map((line, index) => {
+    const mappedLines: Target["params"]["line_items"] = lines.map((line, index) => {
       const discountAmount = distributedDiscounts[index];
 
       return {
@@ -24,6 +24,8 @@ export class TaxJarCalculateTaxesPayloadTransformer {
         discount: discountAmount,
       };
     });
+
+    return mappedLines;
   }
 
   transform({ taxBase, channelConfig }: Payload): Target {
@@ -35,7 +37,7 @@ export class TaxJarCalculateTaxesPayloadTransformer {
 
     const toAddress = taxJarAddressFactory.fromSaleorAddress(taxBase.address);
 
-    const taxParams = {
+    const taxParams: Target = {
       params: {
         ...fromAddress,
         ...toAddress,

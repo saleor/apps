@@ -35,7 +35,7 @@ export class TaxJarCalculateTaxesResponseTransformer {
     const shippingTransformer = new TaxJarCalculateTaxesResponseShippingTransformer();
     const linesTransformer = new TaxJarCalculateTaxesResponseLinesTransformer();
 
-    const shipping = shippingTransformer.transform(response);
+    const shipping = shippingTransformer.transform(payload.taxBase, response);
     const lines = linesTransformer.transform(payload, response);
 
     return {

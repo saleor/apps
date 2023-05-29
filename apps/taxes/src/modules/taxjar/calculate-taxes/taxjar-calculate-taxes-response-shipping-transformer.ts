@@ -1,9 +1,10 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { numbers } from "../../taxes/numbers";
-import { Response } from "./taxjar-calculate-taxes-adapter";
+import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
 
 export class TaxJarCalculateTaxesResponseShippingTransformer {
   transform(
+    taxBase: Payload["taxBase"],
     res: TaxForOrderRes
   ): Pick<
     Response,
@@ -23,10 +24,18 @@ export class TaxJarCalculateTaxesResponseShippingTransformer {
       };
     }
 
+    const isTaxIncluded = taxBase.pricesEnteredWithTax;
+
     const shippingDetails = tax.breakdown!.shipping!;
     const shippingTaxableAmount = shippingDetails.taxable_amount;
-    const shippingPriceGross = shippingTaxableAmount + shippingDetails.tax_collectable;
-    const shippingPriceNet = shippingTaxableAmount;
+    const shippingTaxCollectable = shippingDetails.tax_collectable;
+
+    const shippingPriceGross = isTaxIncluded
+      ? shippingTaxableAmount
+      : shippingTaxableAmount + shippingTaxCollectable;
+    const shippingPriceNet = isTaxIncluded
+      ? shippingTaxableAmount - shippingTaxCollectable
+      : shippingTaxableAmount;
     const shippingTaxRate = shippingDetails.combined_tax_rate;
 
     return {

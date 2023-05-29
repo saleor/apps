@@ -46,8 +46,12 @@ export class TaxJarCalculateTaxesResponseLinesTransformer {
       );
 
       return {
-        total_gross_amount: taxableAmount + taxCollectable,
-        total_net_amount: taxableAmount,
+        total_gross_amount: payload.taxBase.pricesEnteredWithTax
+          ? taxableAmount
+          : taxableAmount + taxCollectable,
+        total_net_amount: payload.taxBase.pricesEnteredWithTax
+          ? taxableAmount - taxCollectable
+          : taxableAmount,
         tax_rate: taxRate,
       };
     });

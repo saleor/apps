@@ -4,7 +4,7 @@ import { ChannelConfig } from "../../channels-configuration/channels-config";
 
 type TaxBase = TaxBaseFragment;
 
-const defaultTaxBase: TaxBase = {
+const taxIncludedTaxBase: TaxBase = {
   pricesEnteredWithTax: true,
   currency: "USD",
   channel: {
@@ -12,25 +12,25 @@ const defaultTaxBase: TaxBase = {
   },
   discounts: [],
   address: {
-    streetAddress1: "600 Montgomery St",
+    streetAddress1: "668 Route Six",
     streetAddress2: "",
-    city: "SAN FRANCISCO",
-    countryArea: "CA",
-    postalCode: "94111",
+    city: "MAHOPAC",
+    countryArea: "NY",
+    postalCode: "10541",
     country: {
       code: "US",
     },
   },
   shippingPrice: {
-    amount: 48.33,
+    amount: 59.17,
   },
   lines: [
     {
       sourceLine: {
         __typename: "OrderLine",
-        id: "T3JkZXJMaW5lOjNmMjYwZmMyLTZjN2UtNGM5Ni1iYTMwLTEyMjAyODMzOTUyZA==",
+        id: "T3JkZXJMaW5lOmM5MTUxMDljLTBkMzEtNDg2Yy05OGFmLTQ5NDM0MWY4NTNjYw==",
         variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
           product: {
             metafield: null,
             productType: {
@@ -50,9 +50,9 @@ const defaultTaxBase: TaxBase = {
     {
       sourceLine: {
         __typename: "OrderLine",
-        id: "T3JkZXJMaW5lOjNlNGZjODdkLTIyMmEtNDZiYi1iYzIzLWJiYWVkODVlOTQ4Mg==",
+        id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
         variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6MzUw",
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
           product: {
             metafield: null,
             productType: {
@@ -72,7 +72,102 @@ const defaultTaxBase: TaxBase = {
     {
       sourceLine: {
         __typename: "OrderLine",
-        id: "T3JkZXJMaW5lOmM2NTBhMzVkLWQ1YjQtNGRhNy1hMjNjLWEzODU4ZDE1MzI2Mw==",
+        id: "T3JkZXJMaW5lOjlhMGJjZDhmLWFiMGQtNDJhOC04NTBhLTEyYjQ2YjJiNGIyZg==",
+        variant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
+          product: {
+            metafield: null,
+            productType: {
+              metafield: null,
+            },
+          },
+        },
+      },
+      quantity: 2,
+      unitPrice: {
+        amount: 50,
+      },
+      totalPrice: {
+        amount: 100,
+      },
+    },
+  ],
+  sourceObject: {
+    user: {
+      id: "VXNlcjoyMDg0NTEwNDEw",
+    },
+  },
+};
+
+const taxExcludedTaxBase: TaxBase = {
+  pricesEnteredWithTax: false,
+  currency: "USD",
+  channel: {
+    slug: "default-channel",
+  },
+  discounts: [],
+  address: {
+    streetAddress1: "668 Route Six",
+    streetAddress2: "",
+    city: "MAHOPAC",
+    countryArea: "NY",
+    postalCode: "10541",
+    country: {
+      code: "US",
+    },
+  },
+  shippingPrice: {
+    amount: 59.17,
+  },
+  lines: [
+    {
+      sourceLine: {
+        __typename: "OrderLine",
+        id: "T3JkZXJMaW5lOmM5MTUxMDljLTBkMzEtNDg2Yy05OGFmLTQ5NDM0MWY4NTNjYw==",
+        variant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
+          product: {
+            metafield: null,
+            productType: {
+              metafield: null,
+            },
+          },
+        },
+      },
+      quantity: 3,
+      unitPrice: {
+        amount: 20,
+      },
+      totalPrice: {
+        amount: 60,
+      },
+    },
+    {
+      sourceLine: {
+        __typename: "OrderLine",
+        id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
+        variant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
+          product: {
+            metafield: null,
+            productType: {
+              metafield: null,
+            },
+          },
+        },
+      },
+      quantity: 1,
+      unitPrice: {
+        amount: 20,
+      },
+      totalPrice: {
+        amount: 20,
+      },
+    },
+    {
+      sourceLine: {
+        __typename: "OrderLine",
+        id: "T3JkZXJMaW5lOjlhMGJjZDhmLWFiMGQtNDJhOC04NTBhLTEyYjQ2YjJiNGIyZg==",
         variant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
           product: {
@@ -104,10 +199,10 @@ const withNexusChannelConfig: ChannelConfig = {
   enabled: false,
   address: {
     country: "US",
-    zip: "92093",
-    state: "CA",
-    city: "La Jolla",
-    street: "9500 Gilman Drive",
+    zip: "10118",
+    state: "NY",
+    city: "New York",
+    street: "350 5th Avenue",
   },
 };
 
@@ -116,10 +211,10 @@ const noNexusChannelConfig: ChannelConfig = {
   enabled: false,
   address: {
     country: "US",
-    zip: "85297",
-    state: "AZ",
-    city: "Gilbert",
-    street: "3301 S Greenfield Rd",
+    zip: "10118",
+    state: "NY",
+    city: "New York",
+    street: "350 5th Avenue",
   },
 };
 
@@ -142,127 +237,247 @@ const noNexusTaxForOrderMock: TaxForOrder = {
   },
 };
 
-const withNexusTaxForOrderMock: TaxForOrder = {
+const withNexusTaxExcludedTaxForOrderMock: TaxForOrder = {
   tax: {
     exemption_type: "",
-    amount_to_collect: 15.53,
+    amount_to_collect: 20.03,
     breakdown: {
       city_tax_collectable: 0,
       city_tax_rate: 0,
       city_taxable_amount: 0,
-      combined_tax_rate: 0.08625,
-      county_tax_collectable: 1.8,
-      county_tax_rate: 0.01,
-      county_taxable_amount: 180,
+      combined_tax_rate: 0.08375,
+      county_tax_collectable: 10.46,
+      county_tax_rate: 0.04375,
+      county_taxable_amount: 239.17,
       line_items: [
         {
           city_amount: 0,
           city_tax_rate: 0,
           city_taxable_amount: 0,
-          combined_tax_rate: 0.08625,
-          county_amount: 0.2,
-          county_tax_rate: 0.01,
+          combined_tax_rate: 0.08375,
+          county_amount: 0.88,
+          county_tax_rate: 0.04375,
           county_taxable_amount: 20,
-          id: "T3JkZXJMaW5lOjNlNGZjODdkLTIyMmEtNDZiYi1iYzIzLWJiYWVkODVlOTQ4Mg==",
-          special_district_amount: 0.28,
-          special_district_taxable_amount: 20,
-          special_tax_rate: 0.01375,
-          state_amount: 1.25,
-          state_sales_tax_rate: 0.0625,
+          id: taxExcludedTaxBase.lines[0].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 0.8,
+          state_sales_tax_rate: 0.04,
           state_taxable_amount: 20,
-          tax_collectable: 1.73,
+          tax_collectable: 1.68,
           taxable_amount: 20,
         },
         {
           city_amount: 0,
           city_tax_rate: 0,
           city_taxable_amount: 0,
-          combined_tax_rate: 0.08625,
-          county_amount: 0.6,
-          county_tax_rate: 0.01,
-          county_taxable_amount: 60,
-          id: "T3JkZXJMaW5lOjNmMjYwZmMyLTZjN2UtNGM5Ni1iYTMwLTEyMjAyODMzOTUyZA==",
-          special_district_amount: 0.83,
-          special_district_taxable_amount: 60,
-          special_tax_rate: 0.01375,
-          state_amount: 3.75,
-          state_sales_tax_rate: 0.0625,
-          state_taxable_amount: 60,
-          tax_collectable: 5.18,
-          taxable_amount: 60,
+          combined_tax_rate: 0.08375,
+          county_amount: 4.38,
+          county_tax_rate: 0.04375,
+          county_taxable_amount: 100,
+          id: taxExcludedTaxBase.lines[1].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 4,
+          state_sales_tax_rate: 0.04,
+          state_taxable_amount: 100,
+          tax_collectable: 8.38,
+          taxable_amount: 100,
         },
         {
           city_amount: 0,
           city_tax_rate: 0,
           city_taxable_amount: 0,
-          combined_tax_rate: 0.08625,
-          county_amount: 1,
-          county_tax_rate: 0.01,
-          county_taxable_amount: 100,
-          id: "T3JkZXJMaW5lOmM2NTBhMzVkLWQ1YjQtNGRhNy1hMjNjLWEzODU4ZDE1MzI2Mw==",
-          special_district_amount: 1.38,
-          special_district_taxable_amount: 100,
-          special_tax_rate: 0.01375,
-          state_amount: 6.25,
-          state_sales_tax_rate: 0.0625,
-          state_taxable_amount: 100,
-          tax_collectable: 8.63,
-          taxable_amount: 100,
+          combined_tax_rate: 0.08375,
+          county_amount: 2.63,
+          county_tax_rate: 0.04375,
+          county_taxable_amount: 60,
+          id: taxExcludedTaxBase.lines[2].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 2.4,
+          state_sales_tax_rate: 0.04,
+          state_taxable_amount: 60,
+          tax_collectable: 5.03,
+          taxable_amount: 60,
         },
       ],
-      special_district_tax_collectable: 2.48,
-      special_district_taxable_amount: 180,
-      special_tax_rate: 0.01375,
-      state_tax_collectable: 11.25,
-      state_tax_rate: 0.0625,
-      state_taxable_amount: 180,
-      tax_collectable: 15.53,
-      taxable_amount: 180,
       shipping: {
         city_amount: 0,
         city_tax_rate: 0,
         city_taxable_amount: 0,
         combined_tax_rate: 0.08375,
-        county_amount: 2.11,
+        county_amount: 2.59,
         county_tax_rate: 0.04375,
-        county_taxable_amount: 48.33,
+        county_taxable_amount: 59.17,
         special_district_amount: 0,
         special_tax_rate: 0,
         special_taxable_amount: 0,
-        state_amount: 1.93,
+        state_amount: 2.37,
         state_sales_tax_rate: 0.04,
-        state_taxable_amount: 48.33,
-        tax_collectable: 4.05,
-        taxable_amount: 48.33,
+        state_taxable_amount: 59.17,
+        tax_collectable: 4.96,
+        taxable_amount: 59.17,
       },
+      special_district_tax_collectable: 0,
+      special_district_taxable_amount: 0,
+      special_tax_rate: 0,
+      state_tax_collectable: 9.57,
+      state_tax_rate: 0.04,
+      state_taxable_amount: 239.17,
+      tax_collectable: 20.03,
+      taxable_amount: 239.17,
     },
     freight_taxable: true,
     has_nexus: true,
     jurisdictions: {
-      city: "SAN FRANCISCO",
+      city: "MAHOPAC",
       country: "US",
-      county: "SAN FRANCISCO COUNTY",
-      state: "CA",
+      county: "PUTNAM",
+      state: "NY",
     },
-    order_total_amount: 180,
-    rate: 0.08625,
+    order_total_amount: 239.17,
+    rate: 0.08375,
+    shipping: 59.17,
     tax_source: "destination",
-    taxable_amount: 180,
-    shipping: 48.33,
+    taxable_amount: 239.17,
+  },
+};
+
+const withNexusTaxIncludedTaxForOrderMock: TaxForOrder = {
+  tax: {
+    exemption_type: "",
+    amount_to_collect: 20.03,
+    breakdown: {
+      city_tax_collectable: 0,
+      city_tax_rate: 0,
+      city_taxable_amount: 0,
+      combined_tax_rate: 0.08375,
+      county_tax_collectable: 10.46,
+      county_tax_rate: 0.04375,
+      county_taxable_amount: 239.17,
+      line_items: [
+        {
+          city_amount: 0,
+          city_tax_rate: 0,
+          city_taxable_amount: 0,
+          combined_tax_rate: 0.08375,
+          county_amount: 0.88,
+          county_tax_rate: 0.04375,
+          county_taxable_amount: 20,
+          id: taxIncludedTaxBase.lines[0].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 0.8,
+          state_sales_tax_rate: 0.04,
+          state_taxable_amount: 20,
+          tax_collectable: 1.68,
+          taxable_amount: 20,
+        },
+        {
+          city_amount: 0,
+          city_tax_rate: 0,
+          city_taxable_amount: 0,
+          combined_tax_rate: 0.08375,
+          county_amount: 4.38,
+          county_tax_rate: 0.04375,
+          county_taxable_amount: 100,
+          id: taxIncludedTaxBase.lines[1].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 4,
+          state_sales_tax_rate: 0.04,
+          state_taxable_amount: 100,
+          tax_collectable: 8.38,
+          taxable_amount: 100,
+        },
+        {
+          city_amount: 0,
+          city_tax_rate: 0,
+          city_taxable_amount: 0,
+          combined_tax_rate: 0.08375,
+          county_amount: 2.63,
+          county_tax_rate: 0.04375,
+          county_taxable_amount: 60,
+          id: taxIncludedTaxBase.lines[2].sourceLine.id,
+          special_district_amount: 0,
+          special_district_taxable_amount: 0,
+          special_tax_rate: 0,
+          state_amount: 2.4,
+          state_sales_tax_rate: 0.04,
+          state_taxable_amount: 60,
+          tax_collectable: 5.03,
+          taxable_amount: 60,
+        },
+      ],
+      shipping: {
+        city_amount: 0,
+        city_tax_rate: 0,
+        city_taxable_amount: 0,
+        combined_tax_rate: 0.08375,
+        county_amount: 2.59,
+        county_tax_rate: 0.04375,
+        county_taxable_amount: 59.17,
+        special_district_amount: 0,
+        special_tax_rate: 0,
+        special_taxable_amount: 0,
+        state_amount: 2.37,
+        state_sales_tax_rate: 0.04,
+        state_taxable_amount: 59.17,
+        tax_collectable: 4.96,
+        taxable_amount: 59.17,
+      },
+      special_district_tax_collectable: 0,
+      special_district_taxable_amount: 0,
+      special_tax_rate: 0,
+      state_tax_collectable: 9.57,
+      state_tax_rate: 0.04,
+      state_taxable_amount: 239.17,
+      tax_collectable: 20.03,
+      taxable_amount: 239.17,
+    },
+    freight_taxable: true,
+    has_nexus: true,
+    jurisdictions: {
+      city: "MAHOPAC",
+      country: "US",
+      county: "PUTNAM",
+      state: "NY",
+    },
+    order_total_amount: 239.17,
+    rate: 0.08375,
+    shipping: 59.17,
+    tax_source: "destination",
+    taxable_amount: 239.17,
   },
 };
 
 // with/without tax
 const testingScenariosMap = {
-  with_no_nexus: {
-    taxBase: defaultTaxBase,
+  with_no_nexus_tax_included: {
+    taxBase: taxIncludedTaxBase,
     channelConfig: noNexusChannelConfig,
     response: noNexusTaxForOrderMock,
   },
-  with_nexus: {
-    taxBase: defaultTaxBase,
+  with_no_nexus_tax_excluded: {
+    taxBase: taxExcludedTaxBase,
+    channelConfig: noNexusChannelConfig,
+    response: noNexusTaxForOrderMock,
+  },
+  with_nexus_tax_included: {
+    taxBase: taxIncludedTaxBase,
     channelConfig: withNexusChannelConfig,
-    response: withNexusTaxForOrderMock,
+    response: withNexusTaxIncludedTaxForOrderMock,
+  },
+  with_nexus_tax_excluded: {
+    taxBase: taxExcludedTaxBase,
+    channelConfig: withNexusChannelConfig,
+    response: withNexusTaxExcludedTaxForOrderMock,
   },
 };
 
