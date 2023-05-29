@@ -11,16 +11,7 @@ export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TA
 export type CreateOrderResponse = { id: string };
 
 export interface ProviderWebhookService {
-  calculateTaxes: (
-    payload: TaxBaseFragment,
-    channel: ChannelConfig
-  ) => Promise<CalculateTaxesResponse>;
-  createOrder: (
-    payload: OrderCreatedSubscriptionFragment,
-    channel: ChannelConfig
-  ) => Promise<CreateOrderResponse>;
-  fulfillOrder: (
-    payload: OrderFulfilledSubscriptionFragment,
-    channel: ChannelConfig
-  ) => Promise<{ ok: boolean }>;
+  calculateTaxes: (payload: TaxBaseFragment) => Promise<CalculateTaxesResponse>;
+  createOrder: (payload: OrderCreatedSubscriptionFragment) => Promise<CreateOrderResponse>;
+  fulfillOrder: (payload: OrderFulfilledSubscriptionFragment) => Promise<{ ok: boolean }>;
 }

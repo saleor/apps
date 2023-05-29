@@ -1,10 +1,11 @@
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { AvataxConfig } from "../avatax-config";
-import { avataxAddressFactory } from "../address-factory";
-import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { SHIPPING_ITEM_CODE, Payload, Target } from "./avatax-calculate-taxes-adapter";
 import { discountUtils } from "../../taxes/discount-utils";
+import { avataxAddressFactory } from "../address-factory";
+import { CreateTransactionArgs } from "../avatax-client";
+import { AvataxConfig } from "../avatax-config";
+import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 
 export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {
   const isDiscounted = taxBase.discounts.length > 0;
@@ -35,22 +36,26 @@ export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig):
 }
 
 export class AvataxCalculateTaxesPayloadTransformer {
-  transform(props: Payload): Target {
-    const { taxBase, channelConfig, config } = props;
-
+  transform({
+    taxBase,
+    providerConfig,
+  }: {
+    taxBase: TaxBaseFragment;
+    providerConfig: AvataxConfig;
+  }): CreateTransactionArgs {
     return {
       model: {
         type: DocumentType.SalesOrder,
         customerCode: taxBase.sourceObject.user?.id ?? "",
-        companyCode: config.companyCode,
+        companyCode: providerConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
-        commit: config.isAutocommit,
+        commit: providerConfig.isAutocommit,
         addresses: {
-          shipFrom: avataxAddressFactory.fromChannelAddress(channelConfig.address),
+          shipFrom: avataxAddressFactory.fromChannelAddress(providerConfig.address),
           shipTo: avataxAddressFactory.fromSaleorAddress(taxBase.address!),
         },
         currencyCode: taxBase.currency,
-        lines: mapPayloadLines(taxBase, config),
+        lines: mapPayloadLines(taxBase, providerConfig),
         date: new Date(),
         discount: discountUtils.sumDiscounts(
           taxBase.discounts.map((discount) => discount.amount.amount)

@@ -1,11 +1,10 @@
 import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
-import { ChannelConfig } from "../channels-configuration/channels-config";
-import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
 import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
+import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -22,22 +21,26 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     });
   }
 
-  async calculateTaxes(taxBase: TaxBaseFragment, channelConfig: ChannelConfig) {
-    this.logger.debug({ taxBase, channelConfig }, "calculateTaxes called with:");
+  async calculateTaxes(taxBase: TaxBaseFragment) {
+    const providerConfig = this.config;
+
+    this.logger.debug({ taxBase, providerConfig }, "calculateTaxes called with:");
     const adapter = new TaxJarCalculateTaxesAdapter(this.config);
 
-    const response = await adapter.send({ channelConfig, taxBase });
+    const response = await adapter.send({ taxBase });
 
     this.logger.debug({ response }, "calculateTaxes response:");
     return response;
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment, channelConfig: ChannelConfig) {
-    this.logger.debug({ order, channelConfig }, "createOrder called with:");
+  async createOrder(order: OrderCreatedSubscriptionFragment) {
+    const providerConfig = this.config;
+
+    this.logger.debug({ order, providerConfig }, "createOrder called with:");
 
     const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
-    const response = await adapter.send({ channelConfig, order });
+    const response = await adapter.send({ order });
 
     this.logger.debug({ response }, "createOrder response:");
     return response;
