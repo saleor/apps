@@ -161,9 +161,6 @@ export class SendgridConfigurationService {
     return filtered;
   }
 
-  /**
-   * Create a new configuration
-   */
   async createConfiguration(config: Omit<SendgridConfiguration, "id" | "events">) {
     logger.debug("Create configuration");
     const configurationRoot = await this.getConfigurationRoot();
