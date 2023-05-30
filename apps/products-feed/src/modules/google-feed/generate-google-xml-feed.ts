@@ -2,7 +2,7 @@ import { XMLBuilder } from "fast-xml-parser";
 import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
-import { EditorJsPlaintextRenderer } from "../editor-js-plaintext-renderer";
+import { EditorJsPlaintextRenderer } from "../editor-js/editor-js-plaintext-renderer";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
@@ -12,6 +12,9 @@ interface GenerateGoogleXmlFeedArgs {
   shopDescription?: string;
 }
 
+/**
+ * TODO Test
+ */
 export const generateGoogleXmlFeed = ({
   productVariants,
   storefrontUrl,
@@ -46,6 +49,7 @@ export const generateGoogleXmlFeed = ({
       imageUrl: v.product.thumbnail?.url || "",
     });
   });
+
   const builder = new XMLBuilder({
     attributeNamePrefix: "@_",
     attributesGroupName: "@",

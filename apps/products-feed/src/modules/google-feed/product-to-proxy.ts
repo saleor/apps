@@ -1,7 +1,11 @@
-import { fillUrlTemplate } from "../fill-url-template";
+import { fillUrlTemplate } from "../feed-url/fill-url-template";
 import { ProductEntry } from "./types";
 
+/**
+ * TODO Test
+ */
 export const productToProxy = (p: ProductEntry) => {
+  // todo fix type
   const item: any[] = [
     {
       "g:id": [

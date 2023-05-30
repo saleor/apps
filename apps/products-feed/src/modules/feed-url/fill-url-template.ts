@@ -5,6 +5,9 @@ interface FillUrlTemplateArgs {
   variantId: string;
 }
 
+/**
+ * TODO Test
+ */
 export const fillUrlTemplate = ({
   urlTemplate,
   productId,

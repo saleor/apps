@@ -3,10 +3,10 @@ import { initUrqlClient } from "next-urql";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
 import { createLogger } from "@saleor/apps-shared";
-import { fetchProductData } from "../../../../../lib/google-feed/fetch-product-data";
-import { getGoogleFeedSettings } from "../../../../../lib/google-feed/get-google-feed-settings";
-import { generateGoogleXmlFeed } from "../../../../../lib/google-feed/generate-google-xml-feed";
-import { fetchShopData } from "../../../../../lib/google-feed/fetch-shop-data";
+import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
+import { getGoogleFeedSettings } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
+import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
 import { createSettingsManager } from "../../../../../lib/metadata-manager";
 import { createClient } from "../../../../../lib/create-graphq-client";
@@ -21,6 +21,9 @@ const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
   ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
   : 60 * 5;
 
+/**
+ * TODO Refactor and test
+ */
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;

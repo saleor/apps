@@ -1,7 +1,7 @@
 import { createLogger } from "@saleor/apps-shared";
 import { CacheConfigurator } from "./cache-configurator";
 import { createSettingsManager } from "../../lib/metadata-manager";
-import { getCursors } from "../../lib/google-feed/fetch-product-data";
+import { getCursors } from "../google-feed/fetch-product-data";
 import { Client } from "urql";
 
 interface UpdateCacheForConfigurationsArgs {

@@ -1,6 +1,7 @@
 import { ShopDetailsEntry } from "./types";
 
 export const shopDetailsToProxy = ({ title, storefrontUrl, description }: ShopDetailsEntry) => {
+  // todo fix type
   const data: any[] = [
     {
       title: [

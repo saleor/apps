@@ -1,8 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { AppConfigMetadataManager } from "../../modules/app-configuration/app-config-metadata-manager";
-import { createClient } from "../create-graphq-client";
-import { createSettingsManager } from "../metadata-manager";
-import { AppConfig } from "../../modules/app-configuration/app-config";
+import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
+import { createClient } from "../../lib/create-graphq-client";
+import { createSettingsManager } from "../../lib/metadata-manager";
+import { AppConfig } from "../app-configuration/app-config";
 
 interface GetGoogleFeedSettingsArgs {
   authData: AuthData;
