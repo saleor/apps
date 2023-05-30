@@ -1,0 +1,9 @@
+subscription ProductUpdated {
+  event {
+    ... on ProductUpdated {
+      product {
+        ...ProductWebhookPayload
+      }
+    }
+  }
+}

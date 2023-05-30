@@ -48,6 +48,11 @@ export const appConfigurationRouter = router({
 
       const config = await ctx.getConfig();
 
+      /**
+       * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
+       *
+       * But this operation isnt expensive and users will not continously save this form
+       */
       await updateCacheForConfigurations({
         client: ctx.apiClient,
         channelsSlugs: [input.channelSlug],

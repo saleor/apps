@@ -18,6 +18,7 @@ export const updateCacheForConfigurations = async ({
   const logger = createLogger({ saleorApiUrl: saleorApiUrl });
 
   logger.debug("Updating the cursor cache");
+
   const cache = new CacheConfigurator(createSettingsManager(client), saleorApiUrl);
 
   const cacheUpdatePromises = channelsSlugs.map(async (channel) => {
@@ -27,5 +28,6 @@ export const updateCacheForConfigurations = async ({
   });
 
   await Promise.all(cacheUpdatePromises);
+
   logger.debug("Cursor cache updated");
 };
