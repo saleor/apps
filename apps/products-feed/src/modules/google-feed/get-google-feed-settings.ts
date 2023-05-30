@@ -31,7 +31,6 @@ export const getGoogleFeedSettings = async ({ authData, channel }: GetGoogleFeed
   }
 
   const storefrontUrl = channelConfig.storefrontUrl;
-
   const productStorefrontUrl = channelConfig.productStorefrontUrl;
 
   if (!storefrontUrl.length || !productStorefrontUrl.length) {

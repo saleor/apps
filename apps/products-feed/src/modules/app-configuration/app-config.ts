@@ -65,11 +65,11 @@ export class AppConfig {
     }
   }
 
-  setChannelUrls(channelId: string, urlsConfig: z.infer<typeof UrlConfiguration>) {
+  setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof UrlConfiguration>) {
     try {
       const parsedConfig = UrlConfiguration.parse(urlsConfig);
 
-      this.rootData.channelConfig[channelId] = {
+      this.rootData.channelConfig[channelSlug] = {
         storefrontUrls: parsedConfig,
       };
     } catch (e) {
