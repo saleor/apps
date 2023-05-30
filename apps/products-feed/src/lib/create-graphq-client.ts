@@ -5,6 +5,7 @@ import {
   dedupExchange,
   fetchExchange,
 } from "urql";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 interface IAuthState {
   token: string;
@@ -46,3 +47,11 @@ export const createClient = (url: string, getAuth: AuthConfig<IAuthState>["getAu
       fetchExchange,
     ],
   });
+
+export const GraphqlClientFactory = {
+  fromAuthData(authData: AuthData) {
+    return createClient(authData.saleorApiUrl, async () =>
+      Promise.resolve({ token: authData.token })
+    );
+  },
+};

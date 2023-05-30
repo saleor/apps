@@ -1,11 +1,13 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { ProductCreated, ProductCreatedDocument } from "../../../../generated/graphql";
-import { saleorApp } from "../../../../../saleor-app";
-import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
-import { getAlgoliaConfiguration } from "../../../../lib/algolia/getAlgoliaConfiguration";
-import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
-import { createClient } from "../../../../lib/graphql";
-import { createLogger } from "../../../../lib/logger";
+import { createLogger } from "@saleor/apps-shared";
+import { saleorApp } from "../../../saleor-app";
+import { updateCacheForConfigurations } from "../../../modules/metadata-cache/update-cache-for-configurations";
+import { createClient } from "../../../lib/create-graphq-client";
+import {
+  ProductCreatedDocument,
+  ProductCreated,
+  ProductWebhookPayloadFragment,
+} from "../../../../generated/graphql";
 
 export const config = {
   api: {
@@ -13,69 +15,46 @@ export const config = {
   },
 };
 
-export const webhookProductCreated = new SaleorAsyncWebhook<ProductCreated>({
+export const webhookProductCreated = new SaleorAsyncWebhook<ProductWebhookPayloadFragment>({
   webhookPath: "api/webhooks/product_created",
   event: "PRODUCT_CREATED",
   apl: saleorApp.apl,
   query: ProductCreatedDocument,
-  /**
-   * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
-   */
-  isActive: false,
+  // todo make it disabled by default
+  isActive: true,
 });
 
 const logger = createLogger({
-  service: "webhookProductCreatedWebhookHandler",
+  service: "webhook-product_created",
 });
 
-export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, context) => {
-  const { event, authData } = context;
+export const handler: NextWebhookApiHandler<ProductWebhookPayloadFragment> = async (
+  req,
+  res,
+  context
+) => {
+  const { event, authData, payload } = context;
 
-  logger.debug(
-    `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`
+  const client = createClient(authData.saleorApiUrl, async () =>
+    Promise.resolve({ token: authData.token })
   );
 
-  const { settings, errors } = await getAlgoliaConfiguration({ authData });
+  const channelsSlugs = [
+    payload.channel,
+    ...(payload.channelListings?.map((cl) => cl.channel.slug) ?? []),
+  ].filter((c) => c) as string[];
 
-  if (errors?.length || !settings) {
-    logger.warn("Aborting due to lack of settings");
-    logger.debug(errors);
-
-    return res.status(400).json({
-      message: errors[0].message,
-    });
+  if (channelsSlugs.length === 0) {
+    res.status(200).end();
+    return;
   }
 
-  const searchProvider = new AlgoliaSearchProvider({
-    appId: settings.appId,
-    apiKey: settings.secretKey,
-    indexNamePrefix: settings.indexNamePrefix,
+  await updateCacheForConfigurations({
+    channelsSlugs,
+    client,
+    saleorApiUrl: authData.saleorApiUrl,
   });
 
-  const { product } = context.payload;
-
-  if (product) {
-    try {
-      await searchProvider.createProduct(product);
-    } catch (e) {
-      logger.info(e, "Algolia createProduct failed. Webhooks will be disabled");
-
-      const webhooksToggler = new WebhookActivityTogglerService(
-        authData.appId,
-        createClient(authData.saleorApiUrl, async () => ({ token: authData.token }))
-      );
-
-      logger.trace("Will disable webhooks");
-
-      await webhooksToggler.disableOwnWebhooks(
-        context.payload.recipient?.webhooks?.map((w) => w.id)
-      );
-
-      logger.trace("Webhooks disabling operation finished");
-
-      return res.status(500).send("Operation failed, webhooks are disabled");
-    }
-  }
   res.status(200).end();
   return;
 };
