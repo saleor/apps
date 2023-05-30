@@ -63,7 +63,7 @@ export class SmtpConfigurationService {
   }
 
   /**
-   * Push configuration to Saleor API
+   * Save configuration in the App private metadata using Saleor API.
    */
   private async pushConfiguration() {
     logger.debug("Push configuration to Saleor API");
@@ -72,7 +72,7 @@ export class SmtpConfigurationService {
   }
 
   /**
-   * Returns configuration from cache or fetches it from Saleor API
+   * Returns configuration from cache or fetches it from Saleor API.
    */
   async getConfigurationRoot() {
     logger.debug("Get configuration root");
@@ -151,9 +151,6 @@ export class SmtpConfigurationService {
     return filtered;
   }
 
-  /**
-   * Create a new configuration
-   */
   async createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
     logger.debug("Create configuration");
     const configurationRoot = await this.getConfigurationRoot();
@@ -172,7 +169,7 @@ export class SmtpConfigurationService {
   }
 
   /**
-   * Update existing configuration. If not found, throws an error
+   * Update existing configuration. If not found, throws an error.
    */
   async updateConfiguration(configuration: ConfigurationPartial) {
     logger.debug("Update configuration");
@@ -198,7 +195,7 @@ export class SmtpConfigurationService {
   }
 
   /**
-   * Delete existing configuration. If not found, throws an error
+   * Delete existing configuration. If not found, throws an error.
    */
   async deleteConfiguration({ id }: { id: string }) {
     logger.debug("Delete configuration");
