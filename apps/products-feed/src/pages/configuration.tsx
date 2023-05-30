@@ -2,13 +2,12 @@ import { NextPage } from "next";
 import React from "react";
 
 import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
-import { Box, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";
 import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 

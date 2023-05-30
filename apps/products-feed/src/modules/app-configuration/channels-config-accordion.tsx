@@ -1,4 +1,4 @@
-import { Accordion, Box, Button, PropsWithBox, Text, Divider } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Button, Divider, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";
@@ -79,7 +79,7 @@ export const ChannelsConfigAccordion = () => {
   const { data, isLoading } = trpcClient.channels.fetch.useQuery();
 
   if (isLoading) {
-    return null; // todo loading
+    return <Text>Loading...</Text>;
   }
 
   return (

@@ -1,6 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Box, Button, Input, Text, PropsWithBox } from "@saleor/macaw-ui/next";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 
 interface FeedPreviewCardProps {
   channelSlug: string;
@@ -8,7 +7,6 @@ interface FeedPreviewCardProps {
 
 export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPreviewCardProps>) => {
   const { appBridge, appBridgeState } = useAppBridge();
-  const { notifyError, notifySuccess } = useDashboardNotification();
 
   if (!appBridgeState) {
     return null;

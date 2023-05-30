@@ -1,12 +1,13 @@
 import { fillUrlTemplate } from "../feed-url/fill-url-template";
 import { ProductEntry } from "./types";
 
+type ProxyItem = Record<string, Array<Record<string, string>>>;
+
 /**
  * TODO Test
  */
 export const productToProxy = (p: ProductEntry) => {
-  // todo fix type
-  const item: any[] = [
+  const item: ProxyItem[] = [
     {
       "g:id": [
         {

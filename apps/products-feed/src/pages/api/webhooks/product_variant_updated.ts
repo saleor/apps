@@ -4,9 +4,6 @@ import {
   ProductVariantUpdatedDocument,
   ProductVariantWebhookPayloadFragment,
 } from "../../../../generated/graphql";
-
-import { GraphqlClientFactory } from "../../../lib/create-graphq-client";
-import { updateCacheForConfigurations } from "../../../modules/metadata-cache/update-cache-for-configurations";
 import { saleorApp } from "../../../saleor-app";
 import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";
 

@@ -1,6 +1,6 @@
 import "@saleor/macaw-ui/next/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import React, { useEffect } from "react";
+import React from "react";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";

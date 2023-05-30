@@ -8,12 +8,8 @@ const S3Config = z.object({
 });
 
 const UrlConfiguration = z.object({
-  /**
-   * min() to allow empty strings
-   * todo should empty be allowed?
-   */
-  storefrontUrl: z.string().min(0).url(),
-  productStorefrontUrl: z.string().min(0).url(),
+  storefrontUrl: z.string().min(1).url(),
+  productStorefrontUrl: z.string().min(1).url(),
 });
 
 const RootAppConfig = z.object({
