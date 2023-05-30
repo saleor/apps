@@ -3,7 +3,7 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { logger } from "@saleor/apps-shared";
+import { createLogger, logger } from "@saleor/apps-shared";
 import { GraphqlClientFactory } from "../../lib/create-graphq-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
@@ -101,13 +101,11 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  *
  * Can be used only if called from the frontend (react-query),
  * otherwise jwks validation will fail (if createCaller used)
- *
- * TODO Rethink middleware composition to enable safe server-side router calls
  */
 export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
-  .use(async ({ ctx, next }) => {
+  .use(async ({ ctx, next, path, type }) => {
     const client = GraphqlClientFactory.fromAuthData({
       token: ctx.appToken!,
       saleorApiUrl: ctx.saleorApiUrl,
@@ -127,6 +125,12 @@ export const protectedClientProcedure = procedure
 
           return metadata ? AppConfig.parse(metadata) : new AppConfig();
         },
+        logger: createLogger({
+          appId: ctx.appId,
+          apiUrl: ctx.saleorApiUrl,
+          type,
+          path,
+        }),
       },
     });
   });

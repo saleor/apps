@@ -19,3 +19,5 @@ export type ShopDetailsEntry = {
   storefrontUrl: string;
   description?: string;
 };
+
+export type GoogleProxyItem = Record<string, Array<Record<string, string>>>;

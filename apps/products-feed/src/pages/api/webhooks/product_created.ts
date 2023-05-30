@@ -18,7 +18,7 @@ export const webhookProductCreated = new SaleorAsyncWebhook<ProductWebhookPayloa
   event: "PRODUCT_CREATED",
   apl: saleorApp.apl,
   query: ProductCreatedDocument,
-  // todo make it disabled by default
+  // todo make it disabled by default, enable when app is configured
   isActive: true,
 });
 

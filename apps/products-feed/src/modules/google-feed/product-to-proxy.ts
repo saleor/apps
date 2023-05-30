@@ -1,13 +1,11 @@
 import { fillUrlTemplate } from "../feed-url/fill-url-template";
-import { ProductEntry } from "./types";
-
-type ProxyItem = Record<string, Array<Record<string, string>>>;
+import { GoogleProxyItem, ProductEntry } from "./types";
 
 /**
  * TODO Test
  */
 export const productToProxy = (p: ProductEntry) => {
-  const item: ProxyItem[] = [
+  const item: GoogleProxyItem[] = [
     {
       "g:id": [
         {

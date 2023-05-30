@@ -16,7 +16,7 @@ export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragme
         const isLast = index === breadcrumbs.length - 1;
 
         return (
-          <Box display={"flex"}>
+          <Box display={"flex"} key={category}>
             <Text variant={isLast ? "bodyStrong" : "body"}>{category}</Text>
             {!isLast && <ChevronRightIcon />}
           </Box>

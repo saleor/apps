@@ -1,21 +1,20 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { useGetFeedApiUrl } from "../feed-url/use-get-feed-api-url";
 
 interface FeedPreviewCardProps {
   channelSlug: string;
 }
 
 export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPreviewCardProps>) => {
-  const { appBridge, appBridgeState } = useAppBridge();
+  const { appBridge } = useAppBridge();
 
-  if (!appBridgeState) {
+  const googleFeedUrl = useGetFeedApiUrl(channelSlug);
+
+  if (!googleFeedUrl) {
+    // Should never happen, log to sentry todo
     return null;
   }
-
-  // todo extract and test
-  const googleFeedUrl = `${window.location.origin}/api/feed/${encodeURIComponent(
-    appBridgeState.saleorApiUrl as string
-  )}/${channelSlug}/google.xml`;
 
   const openUrlInNewTab = async (url: string) => {
     await appBridge?.dispatch(actions.Redirect({ to: url, newContext: true }));

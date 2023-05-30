@@ -33,6 +33,7 @@ export const CategoryMappingPreview = () => {
         .map((category) => {
           return (
             <Box
+              key={category.id}
               marginBottom={4}
               borderBottomStyle={"solid"}
               borderColor={"neutralHighlight"}

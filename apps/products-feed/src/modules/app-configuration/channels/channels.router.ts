@@ -4,9 +4,13 @@ import { ChannelsFetcher } from "./channels-fetcher";
 import { ChannelFragment } from "../../../../generated/graphql";
 
 export const channelsRouter = router({
-  fetch: protectedClientProcedure.query(async ({ ctx, input }): Promise<ChannelFragment[]> => {
-    const fetcher = new ChannelsFetcher(ctx.apiClient);
+  fetch: protectedClientProcedure.query(
+    async ({ ctx: { logger, apiClient }, input }): Promise<ChannelFragment[]> => {
+      const fetcher = new ChannelsFetcher(apiClient);
 
-    return fetcher.fetchChannels().then((channels) => channels ?? []);
-  }),
+      logger.debug("Will fetch channels");
+
+      return fetcher.fetchChannels().then((channels) => channels ?? []);
+    }
+  ),
 });

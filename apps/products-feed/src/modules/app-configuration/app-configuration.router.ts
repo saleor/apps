@@ -10,26 +10,28 @@ export const appConfigurationRouter = router({
   /**
    * Prefer fetching all to avoid unnecessary calls. Routes are cached by react-query
    */
-  fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+  fetch: protectedClientProcedure.query(async ({ ctx: { logger, getConfig }, input }) => {
+    return getConfig().then((c) => {
+      logger.debug("Fetched config");
 
-    logger.debug("appConfigurationRouter.fetch called");
-
-    return ctx.getConfig().then((c) => c.getRootConfig());
+      return c.getRootConfig();
+    });
   }),
   setS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+    .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
+      const logger = createLogger({ saleorApiUrl: saleorApiUrl });
 
-      logger.debug(input, "appConfigurationRouter.setS3BucketConfiguration called with input");
+      logger.debug(input, "Input");
 
-      const config = await ctx.getConfig();
+      const config = await getConfig();
 
       config.setS3(input);
 
-      await ctx.appConfigMetadataManager.set(config.serialize());
+      await appConfigMetadataManager.set(config.serialize());
+
+      logger.debug("Config saved");
 
       return null;
     }),
@@ -41,28 +43,33 @@ export const appConfigurationRouter = router({
         urls: AppConfigSchema.channelUrls,
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+    .mutation(
+      async ({
+        ctx: { getConfig, apiClient, saleorApiUrl, appConfigMetadataManager, logger },
+        input,
+      }) => {
+        const config = await getConfig();
 
-      logger.debug(input, "appConfigurationRouter.setChannelsUrls called with input");
+        /**
+         * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
+         *
+         * But this operation isnt expensive and users will not continously save this form
+         */
+        await updateCacheForConfigurations({
+          client: apiClient,
+          channelsSlugs: [input.channelSlug],
+          saleorApiUrl: saleorApiUrl,
+        });
 
-      const config = await ctx.getConfig();
+        logger.debug({ channel: input.channelSlug }, "Updated cache for channel");
 
-      /**
-       * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
-       *
-       * But this operation isnt expensive and users will not continously save this form
-       */
-      await updateCacheForConfigurations({
-        client: ctx.apiClient,
-        channelsSlugs: [input.channelSlug],
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+        config.setChannelUrls(input.channelSlug, input.urls);
 
-      config.setChannelUrls(input.channelSlug, input.urls);
+        await appConfigMetadataManager.set(config.serialize());
 
-      await ctx.appConfigMetadataManager.set(config.serialize());
+        logger.debug("Saved config");
 
-      return null;
-    }),
+        return null;
+      }
+    ),
 });

@@ -1,8 +1,8 @@
-import { ShopDetailsEntry } from "./types";
+import { GoogleProxyItem, ShopDetailsEntry } from "./types";
 
+// todo test
 export const shopDetailsToProxy = ({ title, storefrontUrl, description }: ShopDetailsEntry) => {
-  // todo fix type
-  const data: any[] = [
+  const data: GoogleProxyItem[] = [
     {
       title: [
         {

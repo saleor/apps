@@ -11,9 +11,6 @@ import { trpcClient } from "../modules/trpc/trpc-client";
 
 /**
  * Ensure instance is a singleton.
- * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
- *
- * too move to useref
  */
 export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
