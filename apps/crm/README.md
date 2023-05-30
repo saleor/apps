@@ -14,18 +14,16 @@ There are two main features CRM App provides:
 - Initial indexing of existing Saleor customers and sending them to the provider contact list
 - Synchronizing new customers between Saleor and the provider
 
-:::caution
+>**Warning**
+>
+> To successfully configure the CRM App, you must:
+> - Have a Mailchimp account
+> - Have a Saleor user with `MANAGE_APPS` permission
 
-To successfully configure the CRM App, you must:
-
-- Have a Mailchimp account
-- Have a Saleor user with `MANAGE_APPS` permission
-
-:::
 
 ## Installation
 
-The App can be installed from [Saleor App Store](developer/app-store/overview.mdx). To install the App, you must have `MANAGE_USERS` and `MANAGE_APPS` [permissions](developer/permissions.mdx#app-permissions).
+The App can be installed from [Saleor App Store](https://docs.saleor.io/docs/3.x/developer/app-store/overview). To install the App, you must have `MANAGE_USERS` and `MANAGE_APPS` [permissions](https://docs.saleor.io/docs/3.x/developer/permissions#app-permissions).
 
 ## Configuration
 
@@ -56,12 +54,10 @@ If you install the App and already have previously created customers, you would 
 
 You can do that from the App.
 
-:::caution
-
-Customer synchronization **works on the frontend side**, which means the App **must remain open** during this operation.
+> **Warning**
+>
+> Customer synchronization **works on the frontend side**, which means the App **must remain open** during this operation.
 In large shops this operation can take a few seconds.
-
-:::
 
 #### Mailchimp tags and fields mapping
 
@@ -85,7 +81,7 @@ These tags can be used to create segments and bulk-modify customers in Mailchimp
 
 Tags must be an **array of strings**, for example: `["tag 1", "tag 2"]`.
 
-Example query that can be implemented in the storefront after the user agrees to the marketing campaigns:
+An example query that can be implemented in the storefront after the user agrees to the marketing campaigns:
 
 ```graphql
 mutation SetMailchimpTags($customerID: ID!) {
@@ -107,15 +103,15 @@ mutation SetMailchimpTags($customerID: ID!) {
 
 To run the CRM App locally:
 
-1. Follow the [_Setup_ section in the _Development_ article](developer/app-store/development.mdx#setup).
+1. Follow the [_Setup_ section in the _Development_ article](https://docs.saleor.io/docs/3.x/developer/app-store/development#setup).
 2. Go to the app directory.
 3. Copy the `.env.example` file to `.env`.
 
-:::info
 
-CRM is a Next.js application. If you want to learn more about setting environment variables in Next.js, head over to the [documentation](https://nextjs.org/docs/basic-features/environment-variables).
+> **Note**
+>
+> CRM is a Next.js application. If you want to learn more about setting environment variables in Next.js, head over to the [documentation](https://nextjs.org/docs/basic-features/environment-variables).
 
-:::
 
 `MAILCHIMP_CLIENT_ID` and `MAILCHIMP_CLIENT_SECRET` can be obtained in Mailchimp Dashboard when new OAuth integration is created.
 

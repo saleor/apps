@@ -15,11 +15,9 @@ _Taxes_ is a Saleor app that allows delegating tax calculations to external tax 
 
 Taxes App offers flexibility in how you calculate taxes. You can have one provider for all your channels or use different providers for each channel. You can even create multiple configurations of the same provider (f.e. if you have a different account for testing).
 
-:::caution
-
-To successfully configure the Taxes App, you must have an account with one of the supported tax providers.
-
-:::
+> **Warning**
+>
+> To successfully configure the Taxes App, you must have an account with one of the supported tax providers.
 
 ## Configuration
 
@@ -54,15 +52,13 @@ Here are the required fields for each provider:
 
 To run the Taxes App locally:
 
-1. Follow the [_Setup_ section in the _Development_ article](developer/app-store/development.mdx#setup).
+1. Follow the [_Setup_ section in the _Development_ article](https://docs.saleor.io/docs/3.x/developer/app-store/development#setup).
 2. Go to the app directory.
 3. Copy the `.env.example` file to `.env`.The `.env` should contain the following variables:
 
-:::info
-
-Taxes is a Next.js application. If you want to learn more about setting environment variables in Next.js, head over to the [documentation](https://nextjs.org/docs/basic-features/environment-variables).
-
-:::
+> **Note**
+>
+> Taxes is a Next.js application. If you want to learn more about setting environment variables in Next.js, head over to the [documentation](https://nextjs.org/docs/basic-features/environment-variables).
 
 `SECRET_KEY` (_optional_)
 
