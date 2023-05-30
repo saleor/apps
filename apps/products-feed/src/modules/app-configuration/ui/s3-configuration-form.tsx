@@ -89,6 +89,5 @@ export const ConnectedS3ConfigurationForm = () => {
     return <Text>Loading...</Text>;
   }
 
-  // todo fetch config and pass to form
   return <S3ConfigurationForm onSubmit={handleSubmit} initialData={formData} />;
 };

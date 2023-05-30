@@ -12,6 +12,9 @@ import { SideMenu } from "./side-menu";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { S3ConfigurationForm } from "./s3-configuration-form";
 
+/**
+ * @deprecated
+ */
 export const ChannelsConfiguration = () => {
   const { appBridge } = useAppBridge();
   const { notifySuccess } = useDashboardNotification();

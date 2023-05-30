@@ -6,13 +6,9 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";
-import {
-  ConnectedS3ConfigurationForm,
-  S3ConfigurationForm,
-} from "../modules/app-configuration/ui/s3-configuration-form";
+import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/ui/s3-configuration-form";
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels/ui/channels-config-accordion";
 
-// todo extract instructions to component, move descriptions to columns
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
 
@@ -22,7 +18,7 @@ const ConfigurationPage: NextPage = () => {
         <Text variant={"hero"} size={"medium"} as={"h1"} marginBottom={8}>
           Configuration
         </Text>
-        <Text as={"p"}>
+        <Paragraph>
           Configure app to enable Product Feed, that{" "}
           <TextLink
             newTab
@@ -31,13 +27,12 @@ const ConfigurationPage: NextPage = () => {
             Google Merchant Center
           </TextLink>{" "}
           can consume
-        </Text>
-        <Text as={"h2"} variant={"heading"} marginTop={4}>
-          Storefront URL
-        </Text>
-        <Text as={"p"}>
-          Provide your storefront homepage URL and product template. Use{" "}
-          <code>{"{productSlug}"}</code> string to mark product in the URL
+        </Paragraph>
+        <Text>
+          Check{" "}
+          <TextLink href={"https://support.google.com/merchants/answer/1219255"} newTab>
+            this article how to configure feed
+          </TextLink>
         </Text>
       </Box>
       <AppSection
@@ -71,6 +66,34 @@ const ConfigurationPage: NextPage = () => {
         sideContent={
           <Box>
             <Paragraph size={"small"}>App will generate separate feed for each channel</Paragraph>
+            <Paragraph size={"small"}>
+              Provide your storefront homepage URL and product template. Use following placeholders:
+            </Paragraph>
+            <ul>
+              <li>
+                <Text size={"small"}>
+                  <code>{"{productSlug}"}</code> - to inject slug of the product
+                </Text>
+              </li>
+              <li>
+                <Text size={"small"}>
+                  <code>{"{variantId}"}</code> - to inject id of the variant
+                </Text>
+              </li>
+              <li>
+                <Text size={"small"}>
+                  <code>{"{productId}"}</code> - to inject id of the product
+                </Text>
+              </li>
+            </ul>
+            <Paragraph size={"small"}>For example following pattern:</Paragraph>
+            <Paragraph size={"small"}>
+              <code>{"https://my-shop.com/p/{productSlug}/{variantId}"}</code>
+            </Paragraph>
+            <Paragraph size={"small"}>Will produce:</Paragraph>
+            <Paragraph size={"small"}>
+              <code>{"https://my-shop.com/p/t-shirt/Xyp2asZ"}</code>
+            </Paragraph>
           </Box>
         }
       />

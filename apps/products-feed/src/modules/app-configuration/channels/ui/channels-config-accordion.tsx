@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppConfigSchema } from "../../app-config";
 import { z } from "zod";
+import { FeedPreviewCard } from "./feed-preview-card";
 
 type UrlConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
@@ -21,7 +22,6 @@ const ChannelConfigForm = ({ ...props }: PropsWithBox<{}>) => {
       as={"form"}
       display={"grid"}
       gap={6}
-      padding={8}
       {...props}
     >
       <Input
@@ -37,7 +37,7 @@ const ChannelConfigForm = ({ ...props }: PropsWithBox<{}>) => {
         name={"productStorefrontUrl"}
         control={control}
         helperText={
-          "Public address of your storefront product page. Use {productSlug} tag to construct valid URL"
+          "Public address of your storefront product page. Use placeholder tags to inject dynamic product data"
         }
       />
       <Button __width={"fit-content"}>Save channel settings</Button>
@@ -45,9 +45,6 @@ const ChannelConfigForm = ({ ...props }: PropsWithBox<{}>) => {
   );
 };
 
-/**
- * todo nested form should be more readable
- */
 export const ChannelsConfigAccordion = () => {
   const { data, isLoading } = trpcClient.channels.fetch.useQuery();
 
@@ -58,17 +55,19 @@ export const ChannelsConfigAccordion = () => {
   return (
     <Accordion display={"grid"} gap={8}>
       {data?.map((channel) => (
-        <Accordion.Item value={channel.id}>
+        <Accordion.Item
+          value={channel.id}
+          borderColor={"neutralHighlight"}
+          borderWidth={1}
+          borderBottomStyle={"solid"}
+          paddingBottom={8}
+        >
           <Accordion.Trigger>
             <Text>{channel.name}</Text>
           </Accordion.Trigger>
           <Accordion.Content>
-            <ChannelConfigForm
-              marginTop={6}
-              borderColor={"neutralHighlight"}
-              borderStyle={"solid"}
-              borderWidth={1}
-            />
+            <ChannelConfigForm margin={8} />
+            <FeedPreviewCard channelSlug={channel.slug} margin={8} marginTop={12} />
           </Accordion.Content>
         </Accordion.Item>
       ))}
