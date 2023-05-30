@@ -44,14 +44,10 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(
-  client: Client,
-  metadata: MetadataEntry[],
-  authData: AuthData
-) {
+export async function mutateMetadata(client: Client, metadata: MetadataEntry[], appId: string) {
   const { error: mutationError, data: mutationData } = await client
     .mutation(UpdateAppMetadataDocument, {
-      id: authData.appId,
+      id: appId,
       input: metadata,
     })
     .toPromise();
@@ -68,7 +64,7 @@ export async function mutateMetadata(
   );
 }
 
-export const createSettingsManager = (client: Client, authData: AuthData) => {
+export const createSettingsManager = (client: Client, appId: string) => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.
@@ -78,6 +74,6 @@ export const createSettingsManager = (client: Client, authData: AuthData) => {
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,
     fetchMetadata: () => fetchAllMetadata(client),
-    mutateMetadata: (metadata) => mutateMetadata(client, metadata, authData),
+    mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
   });
 };

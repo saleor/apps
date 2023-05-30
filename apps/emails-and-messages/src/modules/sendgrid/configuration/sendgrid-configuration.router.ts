@@ -61,11 +61,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
       ...ctx,
       configurationService: new SendgridConfigurationService({
         metadataManager: new SendgridPrivateMetadataManager(
-          createSettingsManager(ctx.apiClient, {
-            appId: ctx.appId!,
-            saleorApiUrl: ctx.saleorApiUrl,
-            token: ctx.token!,
-          }),
+          createSettingsManager(ctx.apiClient, ctx.appId!),
           ctx.saleorApiUrl
         ),
       }),

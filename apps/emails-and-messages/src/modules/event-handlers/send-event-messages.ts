@@ -35,7 +35,7 @@ export const sendEventMessages = async ({
 
   const smtpConfigurationService = new SmtpConfigurationService({
     metadataManager: new SmtpPrivateMetadataManager(
-      createSettingsManager(client, authData),
+      createSettingsManager(client, authData.appId),
       authData.saleorApiUrl
     ),
   });
@@ -63,7 +63,7 @@ export const sendEventMessages = async ({
 
   const sendgridConfigurationService = new SendgridConfigurationService({
     metadataManager: new SendgridPrivateMetadataManager(
-      createSettingsManager(client, authData),
+      createSettingsManager(client, authData.appId),
       authData.saleorApiUrl
     ),
   });
