@@ -1,9 +1,9 @@
 import { Accordion, Box, Button, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { trpcClient } from "../../../trpc/trpc-client";
+import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AppConfigSchema } from "../../app-config";
+import { AppConfigSchema } from "./app-config";
 import { z } from "zod";
 import { FeedPreviewCard } from "./feed-preview-card";
 

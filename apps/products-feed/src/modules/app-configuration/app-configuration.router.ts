@@ -4,8 +4,12 @@ import { createLogger } from "@saleor/apps-shared";
 
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
 import { AppConfigSchema } from "./app-config";
+import { z } from "zod";
 
 export const appConfigurationRouter = router({
+  /**
+   * Prefer fetching all to avoid unnecessary calls. Routes are cached by react-query
+   */
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
@@ -37,6 +41,27 @@ export const appConfigurationRouter = router({
       const config = await ctx.getConfig();
 
       config.setS3(input);
+
+      await ctx.appConfigMetadataManager.set(config.serialize());
+
+      return null;
+    }),
+  setChannelsUrls: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(
+      z.object({
+        channelSlug: z.string(),
+        urls: AppConfigSchema.channelUrls,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "appConfigurationRouter.setChannelsUrls called with input");
+
+      const config = await ctx.getConfig();
+
+      config.setChannelUrls(input.channelSlug, input.urls);
 
       await ctx.appConfigMetadataManager.set(config.serialize());
 

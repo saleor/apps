@@ -1,4 +1,4 @@
-import { AppConfigSchema, RootConfig } from "../app-config";
+import { AppConfigSchema, RootConfig } from "./app-config";
 import { useForm } from "react-hook-form";
 
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
@@ -6,7 +6,7 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useCallback, useMemo } from "react";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { trpcClient } from "../../trpc/trpc-client";
+import { trpcClient } from "../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 
 type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;

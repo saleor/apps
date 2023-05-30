@@ -6,8 +6,8 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";
-import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/ui/s3-configuration-form";
-import { ChannelsConfigAccordion } from "../modules/app-configuration/channels/ui/channels-config-accordion";
+import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
+import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
