@@ -8,6 +8,7 @@ import { updateCacheForConfigurations } from "../../../modules/metadata-cache/up
 import { saleorApp } from "../../../saleor-app";
 import { GraphqlClientFactory } from "../../../lib/create-graphq-client";
 import { createLogger } from "@saleor/apps-shared";
+import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";
 
 export const config = {
   api: {
@@ -33,28 +34,11 @@ export const handler: NextWebhookApiHandler<ProductVariantWebhookPayloadFragment
   res,
   context
 ) => {
-  const { event, authData, payload } = context;
-
-  const client = GraphqlClientFactory.fromAuthData(authData);
-
-  const channelsSlugs = [
-    payload.channel,
-    ...(payload.channelListings?.map((cl) => cl.channel.slug) ?? []),
-  ].filter((c) => c) as string[];
-
-  if (channelsSlugs.length === 0) {
-    res.status(200).end();
-    return;
-  }
-
-  await updateCacheForConfigurations({
-    channelsSlugs,
-    client,
-    saleorApiUrl: authData.saleorApiUrl,
+  await updateCacheOnWebhook({
+    authData: context.authData,
+    channels: context.payload,
+    res,
   });
-
-  res.status(200).end();
-  return;
 };
 
 export default webhookProductVariantCreated.createHandler(handler);

@@ -8,6 +8,7 @@ import {
   ProductCreated,
   ProductWebhookPayloadFragment,
 } from "../../../../generated/graphql";
+import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";
 
 export const config = {
   api: {
@@ -33,30 +34,11 @@ export const handler: NextWebhookApiHandler<ProductWebhookPayloadFragment> = asy
   res,
   context
 ) => {
-  const { event, authData, payload } = context;
-
-  const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
-
-  const channelsSlugs = [
-    payload.channel,
-    ...(payload.channelListings?.map((cl) => cl.channel.slug) ?? []),
-  ].filter((c) => c) as string[];
-
-  if (channelsSlugs.length === 0) {
-    res.status(200).end();
-    return;
-  }
-
-  await updateCacheForConfigurations({
-    channelsSlugs,
-    client,
-    saleorApiUrl: authData.saleorApiUrl,
+  await updateCacheOnWebhook({
+    authData: context.authData,
+    channels: context.payload,
+    res,
   });
-
-  res.status(200).end();
-  return;
 };
 
 export default webhookProductCreated.createHandler(handler);

@@ -8,6 +8,7 @@ import { updateCacheForConfigurations } from "../../../modules/metadata-cache/up
 import { saleorApp } from "../../../saleor-app";
 import { createLogger } from "@saleor/apps-shared";
 import { createClient, GraphqlClientFactory } from "../../../lib/create-graphq-client";
+import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";
 
 export const config = {
   api: {
@@ -20,7 +21,6 @@ export const webhookProductUpdated = new SaleorAsyncWebhook<ProductWebhookPayloa
   event: "PRODUCT_UPDATED",
   apl: saleorApp.apl,
   query: ProductUpdatedDocument,
-
   isActive: true,
 });
 
@@ -33,28 +33,11 @@ export const handler: NextWebhookApiHandler<ProductWebhookPayloadFragment> = asy
   res,
   context
 ) => {
-  const { event, authData, payload } = context;
-
-  const client = GraphqlClientFactory.fromAuthData(authData);
-
-  const channelsSlugs = [
-    payload.channel,
-    ...(payload.channelListings?.map((cl) => cl.channel.slug) ?? []),
-  ].filter((c) => c) as string[];
-
-  if (channelsSlugs.length === 0) {
-    res.status(200).end();
-    return;
-  }
-
-  await updateCacheForConfigurations({
-    channelsSlugs,
-    client,
-    saleorApiUrl: authData.saleorApiUrl,
+  await updateCacheOnWebhook({
+    authData: context.authData,
+    channels: context.payload,
+    res,
   });
-
-  res.status(200).end();
-  return;
 };
 
 export default webhookProductUpdated.createHandler(handler);
