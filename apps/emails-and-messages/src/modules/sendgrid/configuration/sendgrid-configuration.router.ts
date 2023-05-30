@@ -59,7 +59,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   next({
     ctx: {
       ...ctx,
-      configurationService: new SendgridConfigurationService({
+      sendgridConfigurationService: new SendgridConfigurationService({
         metadataManager: new SendgridPrivateMetadataManager(
           createSettingsManager(ctx.apiClient, ctx.appId!),
           ctx.saleorApiUrl
@@ -74,7 +74,7 @@ export const sendgridConfigurationRouter = router({
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("sendgridConfigurationRouter.fetch called");
-    return ctx.configurationService.getConfigurationRoot();
+    return ctx.sendgridConfigurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -84,7 +84,7 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.get called");
       try {
-        return ctx.configurationService.getConfiguration(input);
+        return ctx.sendgridConfigurationService.getConfiguration(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -97,7 +97,7 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.getConfigurations called");
       try {
-        return ctx.configurationService.getConfigurations(input);
+        return ctx.sendgridConfigurationService.getConfigurations(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -114,7 +114,7 @@ export const sendgridConfigurationRouter = router({
         ...input,
       };
 
-      return await ctx.configurationService.createConfiguration(newConfiguration);
+      return await ctx.sendgridConfigurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -125,7 +125,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.delete called");
 
       try {
-        await ctx.configurationService.deleteConfiguration(input);
+        await ctx.sendgridConfigurationService.deleteConfiguration(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -139,7 +139,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.getEventConfiguration called");
 
       try {
-        return await ctx.configurationService.getEventConfiguration({
+        return await ctx.sendgridConfigurationService.getEventConfiguration({
           configurationId: input.configurationId,
           eventType: input.eventType,
         });
@@ -156,7 +156,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.updateEventConfiguration called");
 
       try {
-        return await ctx.configurationService.updateEventConfiguration({
+        return await ctx.sendgridConfigurationService.updateEventConfiguration({
           configurationId: input.configurationId,
           eventConfiguration: input,
         });
@@ -173,7 +173,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({ ...input });
+        return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -187,7 +187,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.updateApiConnection called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({ ...input });
+        return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -201,7 +201,9 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
 
-      const configuration = await ctx.configurationService.getConfiguration({ id: input.id });
+      const configuration = await ctx.sendgridConfigurationService.getConfiguration({
+        id: input.id,
+      });
 
       // TODO: Discussion - sender validation should be done in the service, or tRPC part?
 
@@ -218,7 +220,7 @@ export const sendgridConfigurationRouter = router({
       }
 
       try {
-        return await ctx.configurationService.updateConfiguration({
+        return await ctx.sendgridConfigurationService.updateConfiguration({
           id: input.id,
           senderEmail: chosenSender.from_email,
           senderName: chosenSender.label,
@@ -237,7 +239,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.updateChannels called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({
+        return await ctx.sendgridConfigurationService.updateConfiguration({
           id: input.id,
           channels: {
             override: input.override,
@@ -259,7 +261,7 @@ export const sendgridConfigurationRouter = router({
       logger.debug(input, "sendgridConfigurationRouter.updateEvent called");
 
       try {
-        return await ctx.configurationService.updateEventConfiguration({
+        return await ctx.sendgridConfigurationService.updateEventConfiguration({
           eventConfiguration: input,
           configurationId: input.id,
         });

@@ -61,7 +61,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   next({
     ctx: {
       ...ctx,
-      configurationService: new SmtpConfigurationService({
+      smtpConfigurationService: new SmtpConfigurationService({
         metadataManager: new SmtpPrivateMetadataManager(
           createSettingsManager(ctx.apiClient, ctx.appId!),
           ctx.saleorApiUrl
@@ -76,7 +76,7 @@ export const smtpConfigurationRouter = router({
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("smtpConfigurationRouter.fetch called");
-    return ctx.configurationService.getConfigurationRoot();
+    return ctx.smtpConfigurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -87,7 +87,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.get called");
 
       try {
-        return ctx.configurationService.getConfiguration(input);
+        return ctx.smtpConfigurationService.getConfiguration(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -100,7 +100,7 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.getConfigurations called");
       try {
-        return ctx.configurationService.getConfigurations(input);
+        return ctx.smtpConfigurationService.getConfigurations(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -118,7 +118,7 @@ export const smtpConfigurationRouter = router({
       };
 
       console.log(newConfiguration, "this is newConfiguration");
-      return await ctx.configurationService.createConfiguration(newConfiguration);
+      return await ctx.smtpConfigurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -129,7 +129,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.delete called");
 
       try {
-        await ctx.configurationService.deleteConfiguration(input);
+        await ctx.smtpConfigurationService.deleteConfiguration(input);
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -143,7 +143,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.getEventConfiguration or create called");
 
       try {
-        return await ctx.configurationService.getEventConfiguration({
+        return await ctx.smtpConfigurationService.getEventConfiguration({
           configurationId: input.id,
           eventType: input.eventType,
         });
@@ -160,7 +160,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
 
       try {
-        return await ctx.configurationService.updateEventConfiguration({
+        return await ctx.smtpConfigurationService.updateEventConfiguration({
           configurationId: input.id,
           eventConfiguration: input,
         });
@@ -222,7 +222,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.updateBasicInformation called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({ ...input });
+        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -237,7 +237,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.updateSmtp called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({ ...input });
+        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -252,7 +252,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.updateSender called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({ ...input });
+        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
@@ -267,7 +267,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.updateChannels called");
 
       try {
-        return await ctx.configurationService.updateConfiguration({
+        return await ctx.smtpConfigurationService.updateConfiguration({
           id: input.id,
           channels: {
             override: input.override,
@@ -289,7 +289,7 @@ export const smtpConfigurationRouter = router({
       logger.debug(input, "smtpConfigurationRouter.updateEvent called");
 
       try {
-        return await ctx.configurationService.updateEventConfiguration({
+        return await ctx.smtpConfigurationService.updateEventConfiguration({
           eventConfiguration: input,
           configurationId: input.id,
         });
