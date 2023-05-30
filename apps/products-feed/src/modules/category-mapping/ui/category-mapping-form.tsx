@@ -11,6 +11,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, ChevronRightIcon, Text, PropsWithBox } from "@saleor/macaw-ui/next";
 import { GoogleProductCategories } from "../google-product-categories";
+import { CategoryBreadcrumbs } from "../construct-category-breadcrumbs";
 
 type CategoryMappingFormProps = {
   category: CategoryWithMappingFragmentFragment;
@@ -42,12 +43,6 @@ export const CategoryMappingForm = ({
     },
   });
 
-  const categoryBreadcrumbs = [
-    category.parent?.parent?.name,
-    category.parent?.name,
-    category.name,
-  ].filter((segment) => Boolean(segment));
-
   return (
     <Box
       as={"form"}
@@ -56,18 +51,7 @@ export const CategoryMappingForm = ({
         mutate(data);
       })}
     >
-      <Box display={"flex"} marginBottom={3}>
-        {categoryBreadcrumbs.map((category, index) => {
-          const isLast = index === categoryBreadcrumbs.length - 1;
-
-          return (
-            <Box display={"flex"}>
-              <Text variant={isLast ? "bodyStrong" : "body"}>{category}</Text>
-              {!isLast && <ChevronRightIcon />}
-            </Box>
-          );
-        })}
-      </Box>
+      <CategoryBreadcrumbs category={category} />
       <Box display={"flex"} gap={8} __width={"100%"}>
         <Controller
           control={control}

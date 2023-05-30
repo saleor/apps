@@ -10,6 +10,7 @@ import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-co
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
@@ -106,7 +107,10 @@ const ConfigurationPage: NextPage = () => {
         heading={"Categories mapping"}
         mainContent={
           <Box>
-            <Button onClick={() => push("/categories")}>Configure categories mapping</Button>
+            <CategoryMappingPreview />
+            <Button marginTop={8} onClick={() => push("/categories")}>
+              Map categories
+            </Button>
           </Box>
         }
         sideContent={
