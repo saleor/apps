@@ -25,19 +25,6 @@ export const appConfigurationRouter = router({
 
       logger.debug(input, "appConfigurationRouter.setS3BucketConfiguration called with input");
 
-      /**
-       * Invalidate cache - todo maybe dont call it here?
-       *
-       * todo enable when config is fixed
-       */
-      /*
-       * await updateCacheForConfigurations({
-       *   client: ctx.apiClient,
-       *   configurations: input,
-       *   saleorApiUrl: ctx.saleorApiUrl,
-       * });
-       */
-
       const config = await ctx.getConfig();
 
       config.setS3(input);
@@ -61,13 +48,13 @@ export const appConfigurationRouter = router({
 
       const config = await ctx.getConfig();
 
-      console.log("Will set config");
-      console.log(input);
+      await updateCacheForConfigurations({
+        client: ctx.apiClient,
+        channelsSlugs: [input.channelSlug],
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       config.setChannelUrls(input.channelSlug, input.urls);
-
-      console.log("config set");
-      console.log(config);
 
       await ctx.appConfigMetadataManager.set(config.serialize());
 
