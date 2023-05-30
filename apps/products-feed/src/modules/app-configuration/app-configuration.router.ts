@@ -61,7 +61,13 @@ export const appConfigurationRouter = router({
 
       const config = await ctx.getConfig();
 
+      console.log("Will set config");
+      console.log(input);
+
       config.setChannelUrls(input.channelSlug, input.urls);
+
+      console.log("config set");
+      console.log(config);
 
       await ctx.appConfigMetadataManager.set(config.serialize());
 

@@ -6,18 +6,41 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AppConfigSchema } from "./app-config";
 import { z } from "zod";
 import { FeedPreviewCard } from "./feed-preview-card";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 type UrlConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
-const ChannelConfigForm = ({ ...props }: PropsWithBox<{}>) => {
+const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug: string }>) => {
+  const { notifySuccess, notifyError } = useDashboardNotification();
+
+  const { data: appConfig } = trpcClient.appConfiguration.fetch.useQuery();
+
+  const channelConfig = appConfig?.channelConfig[channelSlug];
+
+  const { mutate } = trpcClient.appConfiguration.setChannelsUrls.useMutation({
+    onSuccess() {
+      notifySuccess("Success");
+    },
+    onError() {
+      notifyError("Failed saving configuration.", "Refresh the page and try again");
+    },
+  });
+
   const { control, handleSubmit } = useForm<UrlConfig>({
     resolver: zodResolver(AppConfigSchema.channelUrls),
+    defaultValues: {
+      productStorefrontUrl: channelConfig?.storefrontUrls.productStorefrontUrl ?? "",
+      storefrontUrl: channelConfig?.storefrontUrls.storefrontUrl ?? "",
+    },
   });
 
   return (
     <Box
       onSubmit={handleSubmit((data) => {
-        // todo call mutation
+        mutate({
+          urls: data,
+          channelSlug,
+        });
       })}
       as={"form"}
       display={"grid"}
@@ -40,7 +63,9 @@ const ChannelConfigForm = ({ ...props }: PropsWithBox<{}>) => {
           "Public address of your storefront product page. Use placeholder tags to inject dynamic product data"
         }
       />
-      <Button __width={"fit-content"}>Save channel settings</Button>
+      <Button type={"submit"} __width={"fit-content"}>
+        Save channel settings
+      </Button>
     </Box>
   );
 };
@@ -56,6 +81,7 @@ export const ChannelsConfigAccordion = () => {
     <Accordion display={"grid"} gap={8}>
       {data?.map((channel) => (
         <Accordion.Item
+          key={channel.id}
           value={channel.id}
           borderColor={"neutralHighlight"}
           borderWidth={1}
@@ -66,7 +92,7 @@ export const ChannelsConfigAccordion = () => {
             <Text>{channel.name}</Text>
           </Accordion.Trigger>
           <Accordion.Content>
-            <ChannelConfigForm margin={8} />
+            <ChannelConfigForm margin={8} channelSlug={channel.slug} />
             <FeedPreviewCard channelSlug={channel.slug} margin={8} marginTop={12} />
           </Accordion.Content>
         </Accordion.Item>

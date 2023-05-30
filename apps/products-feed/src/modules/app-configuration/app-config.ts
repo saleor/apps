@@ -12,8 +12,8 @@ const UrlConfiguration = z.object({
    * min() to allow empty strings
    * todo should empty be allowed?
    */
-  storefrontUrl: z.string().min(0),
-  productStorefrontUrl: z.string().min(0),
+  storefrontUrl: z.string().min(0).url(),
+  productStorefrontUrl: z.string().min(0).url(),
 });
 
 const RootAppConfig = z.object({
@@ -67,7 +67,11 @@ export class AppConfig {
 
   setChannelUrls(channelId: string, urlsConfig: z.infer<typeof UrlConfiguration>) {
     try {
-      this.rootData.channelConfig[channelId].storefrontUrls = UrlConfiguration.parse(urlsConfig);
+      const parsedConfig = UrlConfiguration.parse(urlsConfig);
+
+      this.rootData.channelConfig[channelId] = {
+        storefrontUrls: parsedConfig,
+      };
     } catch (e) {
       console.error(e);
 
