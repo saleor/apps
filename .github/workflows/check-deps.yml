@@ -1,3 +1,5 @@
+name: Check dependencies versions
+
 on:
   # Run whenever a pull request is updated
   pull_request:
@@ -17,6 +19,9 @@ jobs:
       - uses: JamieMason/syncpack-github-action@0.2.2
         with:
           package-manager: "pnpm"
+          bot-username: "Syncpack Bot"
+          commit-message: "format and sync package.json files"
+
         env:
           # If any options are set to 'fix' then
           # env.GITHUB_TOKEN is needed to push to PRs
