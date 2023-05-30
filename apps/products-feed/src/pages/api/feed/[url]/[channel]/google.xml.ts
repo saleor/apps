@@ -9,7 +9,7 @@ import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/genera
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
 import { createSettingsManager } from "../../../../../lib/metadata-manager";
-import { createClient } from "../../../../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../../../../lib/create-graphq-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
@@ -139,9 +139,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Generating a new feed");
 
-  const cacheClient = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const cacheClient = GraphqlClientFactory.fromAuthData(authData);
 
   if (!cacheClient) {
     logger.error("Can't create the gql client");

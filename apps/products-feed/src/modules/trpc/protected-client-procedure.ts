@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
 import { logger } from "@saleor/apps-shared";
-import { createClient } from "../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../lib/create-graphq-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
@@ -108,9 +108,10 @@ export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
+    const client = GraphqlClientFactory.fromAuthData({
+      token: ctx.appToken!,
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
 
     const metadataManager = new AppConfigMetadataManager(createSettingsManager(client));
 

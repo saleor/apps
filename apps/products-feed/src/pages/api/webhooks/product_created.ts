@@ -1,11 +1,8 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { createLogger } from "@saleor/apps-shared";
 import { saleorApp } from "../../../saleor-app";
-import { updateCacheForConfigurations } from "../../../modules/metadata-cache/update-cache-for-configurations";
-import { createClient } from "../../../lib/create-graphq-client";
 import {
   ProductCreatedDocument,
-  ProductCreated,
   ProductWebhookPayloadFragment,
 } from "../../../../generated/graphql";
 import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";

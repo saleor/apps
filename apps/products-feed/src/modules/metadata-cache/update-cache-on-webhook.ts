@@ -1,9 +1,9 @@
-import { createClient, GraphqlClientFactory } from "../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../lib/create-graphq-client";
 import { updateCacheForConfigurations } from "./update-cache-for-configurations";
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
-  ProductWebhookPayloadFragment,
   ProductVariantWebhookPayloadFragment,
+  ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { NextApiResponse } from "next";
 

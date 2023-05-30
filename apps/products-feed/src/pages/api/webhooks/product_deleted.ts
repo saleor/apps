@@ -3,11 +3,8 @@ import {
   ProductDeletedDocument,
   ProductWebhookPayloadFragment,
 } from "../../../../generated/graphql";
-
-import { updateCacheForConfigurations } from "../../../modules/metadata-cache/update-cache-for-configurations";
 import { saleorApp } from "../../../saleor-app";
 import { createLogger } from "@saleor/apps-shared";
-import { createClient } from "../../../lib/create-graphq-client";
 import { updateCacheOnWebhook } from "../../../modules/metadata-cache/update-cache-on-webhook";
 
 export const config = {

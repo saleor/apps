@@ -49,7 +49,7 @@ export const createClient = (url: string, getAuth: AuthConfig<IAuthState>["getAu
   });
 
 export const GraphqlClientFactory = {
-  fromAuthData(authData: AuthData) {
+  fromAuthData(authData: Pick<AuthData, "token" | "saleorApiUrl">) {
     return createClient(authData.saleorApiUrl, async () =>
       Promise.resolve({ token: authData.token })
     );

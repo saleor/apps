@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
-import { createClient } from "../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../lib/create-graphq-client";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
 
@@ -13,10 +13,7 @@ interface GetGoogleFeedSettingsArgs {
  * TODO Test
  */
 export const getGoogleFeedSettings = async ({ authData, channel }: GetGoogleFeedSettingsArgs) => {
-  // todo extract some helper to create this "context" in one place
-  const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const client = GraphqlClientFactory.fromAuthData(authData);
 
   const metadataManager = new AppConfigMetadataManager(createSettingsManager(client));
 
