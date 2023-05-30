@@ -12,8 +12,20 @@ interface GenerateGoogleXmlFeedArgs {
   shopDescription?: string;
 }
 
+const formatCurrency = (currency: string, amount: number) => {
+  return (
+    new Intl.NumberFormat("en-EN", {
+      useGrouping: false,
+      minimumFractionDigits: 2,
+      style: "decimal",
+      currencyDisplay: "code",
+      currency: currency,
+    }).format(amount) + ` ${currency}`
+  );
+};
+
 /**
- * TODO Test
+ * TODO Test and fix
  */
 export const generateGoogleXmlFeed = ({
   productVariants,
@@ -22,31 +34,29 @@ export const generateGoogleXmlFeed = ({
   shopName,
   shopDescription,
 }: GenerateGoogleXmlFeedArgs) => {
-  const items = productVariants.map((v) => {
+  const items = productVariants.map((variant) => {
+    const currency = variant.pricing?.price?.gross.currency;
+    const amount = variant.pricing?.price?.gross.amount;
+
     // Price format has to be altered from the en format to the one expected by Google
-    const price = v.pricing?.price?.gross.currency
-      ? new Intl.NumberFormat("en-EN", {
-          useGrouping: false,
-          minimumFractionDigits: 2,
-          style: "decimal",
-          currencyDisplay: "code",
-          currency: v.pricing?.price?.gross.currency,
-        }).format(v.pricing?.price?.gross.amount) + ` ${v.pricing?.price?.gross.currency}`
+    const price = currency
+      ? formatCurrency(currency, amount!) // todo
       : undefined;
 
     return productToProxy({
       storefrontUrlTemplate: productStorefrontUrl,
-      id: v.product.id,
-      name: `${v.product.name} - ${v.name}`,
-      slug: v.product.slug,
-      variantId: v.id,
-      sku: v.sku || undefined,
-      description: EditorJsPlaintextRenderer({ stringData: v.product.description }),
-      availability: v.quantityAvailable && v.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
-      category: v.product.category?.name || "unknown",
-      googleProductCategory: v.product.category?.googleCategoryId || "",
+      id: variant.product.id,
+      name: `${variant.product.name} - ${variant.name}`,
+      slug: variant.product.slug,
+      variantId: variant.id,
+      sku: variant.sku || undefined,
+      description: EditorJsPlaintextRenderer({ stringData: variant.product.description }),
+      availability:
+        variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
+      category: variant.product.category?.name || "unknown",
+      googleProductCategory: variant.product.category?.googleCategoryId || "",
       price: price,
-      imageUrl: v.product.thumbnail?.url || "",
+      imageUrl: variant.product.thumbnail?.url || "",
     });
   });
 
@@ -83,6 +93,7 @@ export const generateGoogleXmlFeed = ({
     {
       rss: [
         {
+          // todo this looks wrong
           channel: channelData.concat(items),
         },
       ],
