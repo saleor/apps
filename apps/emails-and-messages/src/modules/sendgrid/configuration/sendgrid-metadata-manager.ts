@@ -1,17 +1,12 @@
+import { SendgridConfig } from "./sendgrid-config-schema";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpConfig } from "./smtp-config-schema";
 
-export interface SmtpConfigurator {
-  setConfig(config: SmtpConfig): Promise<void>;
-  getConfig(): Promise<SmtpConfig | undefined>;
-}
-
-export class PrivateMetadataSmtpConfigurator implements SmtpConfigurator {
-  private metadataKey = "smtp-config";
+export class SendgridPrivateMetadataManager {
+  private metadataKey = "sendgrid-config";
 
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
 
-  getConfig(): Promise<SmtpConfig | undefined> {
+  getConfig(): Promise<SendgridConfig | undefined> {
     return this.metadataManager.get(this.metadataKey, this.saleorApiUrl).then((data) => {
       if (!data) {
         return data;
@@ -20,12 +15,12 @@ export class PrivateMetadataSmtpConfigurator implements SmtpConfigurator {
       try {
         return JSON.parse(data);
       } catch (e) {
-        throw new Error("Invalid metadata value, can't be parsed");
+        throw new Error("Invalid metadata value, cant be parsed");
       }
     });
   }
 
-  setConfig(config: SmtpConfig): Promise<void> {
+  setConfig(config: SendgridConfig): Promise<void> {
     return this.metadataManager.set({
       key: this.metadataKey,
       value: JSON.stringify(config),
