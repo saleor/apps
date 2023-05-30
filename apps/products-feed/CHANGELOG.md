@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 1.7.1
+
+### Patch Changes
+
+- 6e69f4f: Update app-sdk to 0.39.1
+- Updated dependencies [6e69f4f]
+  - @saleor/apps-shared@1.6.1
+
 ## 1.7.0
 
 ### Minor Changes
