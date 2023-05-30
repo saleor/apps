@@ -55,6 +55,17 @@ const ConfigurationPage: NextPage = () => {
               Please use this bucket only for XMLs. They meant to be public - but other files may
               leak if you put them to the same bucket.
             </Paragraph>
+            <Paragraph size={"small"}>
+              Read about generating AWS credentials{" "}
+              <TextLink
+                href={
+                  "https://docs.aws.amazon.com/powershell/latest/userguide/pstools-appendix-sign-up.html"
+                }
+                newTab
+              >
+                here
+              </TextLink>
+            </Paragraph>
           </Box>
         }
       />
@@ -108,9 +119,11 @@ const ConfigurationPage: NextPage = () => {
         mainContent={
           <Box>
             <CategoryMappingPreview />
-            <Button marginTop={8} onClick={() => push("/categories")}>
-              Map categories
-            </Button>
+            <Box display={"flex"} justifyContent={"flex-end"}>
+              <Button marginTop={8} onClick={() => push("/categories")}>
+                Map categories
+              </Button>
+            </Box>
           </Box>
         }
         sideContent={

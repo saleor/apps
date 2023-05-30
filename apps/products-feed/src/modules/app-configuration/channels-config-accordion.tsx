@@ -1,4 +1,4 @@
-import { Accordion, Box, Button, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Button, PropsWithBox, Text, Divider } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";
@@ -47,6 +47,9 @@ const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug
       gap={6}
       {...props}
     >
+      <Text variant={"heading"} as={"h2"} marginBottom={4}>
+        Configure channel URLs
+      </Text>
       <Input
         label={"Storefront URL"}
         placeholder={"https://myshop.com"}
@@ -63,9 +66,11 @@ const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug
           "Public address of your storefront product page. Use placeholder tags to inject dynamic product data"
         }
       />
-      <Button type={"submit"} __width={"fit-content"}>
-        Save channel settings
-      </Button>
+      <Box display={"flex"} justifyContent={"flex-end"}>
+        <Button type={"submit"} __width={"fit-content"}>
+          Save channel settings
+        </Button>
+      </Box>
     </Box>
   );
 };
@@ -93,6 +98,7 @@ export const ChannelsConfigAccordion = () => {
           </Accordion.Trigger>
           <Accordion.Content>
             <ChannelConfigForm margin={8} channelSlug={channel.slug} />
+            <Divider />
             <FeedPreviewCard channelSlug={channel.slug} margin={8} marginTop={12} />
           </Accordion.Content>
         </Accordion.Item>

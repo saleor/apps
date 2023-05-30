@@ -25,6 +25,9 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
 
   return (
     <Box {...props}>
+      <Text variant={"heading"} as={"h2"} marginBottom={4}>
+        Test your feed
+      </Text>
       <Input
         label="Google feed URL"
         value={googleFeedUrl}
@@ -34,9 +37,11 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
         helperText="Dedicated URL for your Google Merchant Feed. Click to select and copy."
       />
 
-      <Button variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)} marginTop={6}>
-        Open feed in a new tab
-      </Button>
+      <Box display={"flex"} justifyContent={"flex-end"}>
+        <Button variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)} marginTop={6}>
+          Open feed in a new tab
+        </Button>
+      </Box>
     </Box>
   );
 };
