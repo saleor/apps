@@ -13,7 +13,7 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
   logger.debug(`Fetching cursors for channel ${channel}`);
 
   let result = await client
-    .query(FetchProductCursorsDocument, { channel: channel as string, first: 100 })
+    .query(FetchProductCursorsDocument, { channel: channel, first: 100 })
     .toPromise();
 
   const cursors: Array<string> = [];
@@ -21,7 +21,7 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
     result = await client
       .query(FetchProductCursorsDocument, {
-        channel: channel as string,
+        channel: channel,
         first: 100,
         after: result.data.productVariants.pageInfo.endCursor,
       })
@@ -51,7 +51,7 @@ const fetchVariants = async ({
 
   const result = await client
     .query(FetchProductDataForFeedDocument, {
-      channel: channel as string,
+      channel: channel,
       first: 100,
       after,
     })
