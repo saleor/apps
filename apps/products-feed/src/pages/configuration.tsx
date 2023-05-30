@@ -2,15 +2,18 @@ import { NextPage } from "next";
 import React from "react";
 
 import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";
 import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
+  const { push } = useRouter();
 
   return (
     <Box>
@@ -101,7 +104,11 @@ const ConfigurationPage: NextPage = () => {
         __marginBottom="100px"
         includePadding
         heading={"Categories mapping"}
-        mainContent={<Box>Categories form</Box>}
+        mainContent={
+          <Box>
+            <Button onClick={() => push("/categories")}>Configure categories mapping</Button>
+          </Box>
+        }
         sideContent={
           <Box>
             <Paragraph size={"small"}>

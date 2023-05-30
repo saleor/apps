@@ -1,5 +1,5 @@
 query FetchCategoriesWithMapping{
-  categories(first: 10){
+  categories(first: 100){
     pageInfo{
       hasNextPage
       endCursor

@@ -13,10 +13,14 @@ export const categoryMappingRouter = router({
    * Get all the category mappings to Google categories from its public metadata
    */
   getCategoryMappings: protectedClientProcedure.query(async ({ ctx, input }) => {
+    // todo add logger to context
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("categoriesRouter.getCategoryMappings called");
 
+    /**
+     * Does it fetch all categories? No pagination todo
+     */
     const result = await ctx.apiClient.query(FetchCategoriesWithMappingDocument, {}).toPromise();
     const categories = result.data?.categories?.edges?.map((edge) => edge.node) || [];
 
@@ -40,6 +44,7 @@ export const categoryMappingRouter = router({
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug("categoriesRouter.setCategoryMapping called");
+
       const { error } = await ctx.apiClient
         .mutation(UpdateCategoryMappingDocument, {
           id: input.categoryId,
