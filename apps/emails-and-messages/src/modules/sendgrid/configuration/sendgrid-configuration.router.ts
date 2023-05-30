@@ -17,11 +17,11 @@ import {
 import { router } from "../../trpc/trpc-server";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { TRPCError } from "@trpc/server";
-import { getDefaultEmptyConfiguration } from "./sendgrid-empty-configurations";
 import { fetchSenders } from "../sendgrid-api";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
+import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: SendgridConfigurationServiceError | unknown
@@ -110,7 +110,7 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.create called");
       const newConfiguration = {
-        ...getDefaultEmptyConfiguration(),
+        ...sendgridDefaultEmptyConfigurations.configuration(),
         ...input,
       };
 

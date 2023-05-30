@@ -9,7 +9,6 @@ import { z } from "zod";
 import { compileMjml } from "../compile-mjml";
 import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
-import { getDefaultEmptyConfiguration } from "./smtp-empty-configurations";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,
@@ -24,6 +23,7 @@ import {
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
+import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: SmtpConfigurationServiceError | unknown
@@ -113,7 +113,7 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.create called");
       const newConfiguration = {
-        ...getDefaultEmptyConfiguration(),
+        ...smtpDefaultEmptyConfigurations.configuration(),
         ...input,
       };
 

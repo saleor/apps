@@ -5,10 +5,10 @@ import {
   sendgridConfigurationSchema,
 } from "./sendgrid-config-schema";
 
-export const getDefaultEventsConfiguration = (): SendgridConfiguration["events"] =>
+const eventsConfiguration = (): SendgridConfiguration["events"] =>
   messageEventTypes.map((eventType) => sendgridConfigurationEventSchema.parse({ eventType }));
 
-export const getDefaultEmptyConfiguration = (): SendgridConfiguration => {
+const configuration = (): SendgridConfiguration => {
   const defaultConfig: SendgridConfiguration = sendgridConfigurationSchema.parse({
     id: "id",
     name: "name",
@@ -17,8 +17,13 @@ export const getDefaultEmptyConfiguration = (): SendgridConfiguration => {
       excludedFrom: [],
       restrictedTo: [],
     },
-    events: getDefaultEventsConfiguration(),
+    events: eventsConfiguration(),
   });
 
   return defaultConfig;
+};
+
+export const sendgridDefaultEmptyConfigurations = {
+  eventsConfiguration,
+  configuration,
 };

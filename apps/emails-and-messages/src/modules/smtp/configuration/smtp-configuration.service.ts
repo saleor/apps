@@ -1,10 +1,10 @@
 import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
-import { getDefaultEventsConfiguration } from "./smtp-empty-configurations";
 import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { isAvailableInChannel } from "../../channels/is-available-in-channel";
 import { generateRandomId } from "../../../lib/generate-random-id";
+import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 
 const logger = createLogger({
   service: "SmtpConfigurationService",
@@ -161,7 +161,7 @@ export class SmtpConfigurationService {
     const newConfiguration = {
       ...config,
       id: generateRandomId(),
-      events: getDefaultEventsConfiguration(),
+      events: smtpDefaultEmptyConfigurations.eventsConfiguration(),
     };
 
     configurationRoot.configurations.push(newConfiguration);

@@ -7,7 +7,7 @@ import {
   smtpConfigurationEventSchema,
 } from "./smtp-config-schema";
 
-export const getDefaultEventsConfiguration = (): SmtpConfiguration["events"] =>
+const eventsConfiguration = (): SmtpConfiguration["events"] =>
   messageEventTypes.map((eventType) =>
     smtpConfigurationEventSchema.parse({
       eventType: eventType,
@@ -16,7 +16,7 @@ export const getDefaultEventsConfiguration = (): SmtpConfiguration["events"] =>
     })
   );
 
-export const getDefaultEmptyConfiguration = (): SmtpConfiguration => {
+const configuration = (): SmtpConfiguration => {
   const defaultConfig: SmtpConfiguration = smtpConfigurationSchema.parse({
     id: "id",
     name: "name",
@@ -27,8 +27,13 @@ export const getDefaultEmptyConfiguration = (): SmtpConfiguration => {
       excludedFrom: [],
       restrictedTo: [],
     },
-    events: getDefaultEventsConfiguration(),
+    events: eventsConfiguration(),
   });
 
   return defaultConfig;
+};
+
+export const smtpDefaultEmptyConfigurations = {
+  eventsConfiguration,
+  configuration,
 };

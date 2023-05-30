@@ -1,6 +1,6 @@
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
-import { getDefaultEventsConfiguration } from "./sendgrid-empty-configurations";
+import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
 import {
   SendgridConfig,
   SendgridConfiguration,
@@ -168,7 +168,7 @@ export class SendgridConfigurationService {
     const newConfiguration = {
       ...config,
       id: generateRandomId(),
-      events: getDefaultEventsConfiguration(),
+      events: sendgridDefaultEmptyConfigurations.eventsConfiguration(),
     };
 
     configurationRoot.configurations.push(newConfiguration);
