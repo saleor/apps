@@ -128,7 +128,10 @@ const ConfigurationPage: NextPage = () => {
         sideContent={
           <Box>
             <Paragraph size={"small"}>
-              Map Saleor categories to pre-defined Google categories
+              Map Saleor categories to pre-defined Google categories. It is not required.{" "}
+              <TextLink newTab href={"https://support.google.com/merchants/answer/6324436?hl=en"}>
+                Read more
+              </TextLink>
             </Paragraph>
           </Box>
         }

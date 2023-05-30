@@ -7,10 +7,10 @@ const NotReadyPage = () => {
 
   return (
     <div>
-      <h1>Saleor Invoices App</h1>
+      <h1>Saleor Product Feed App</h1>
       <Box>
         <Text>App can not be used</Text>
-        <Text as={"p"}>To configure Invoices App you need to create at least 1 channel</Text>
+        <Text as={"p"}>To configure Product Feed App you need to create at least 1 channel</Text>
         <Button
           variant="primary"
           onClick={() => {

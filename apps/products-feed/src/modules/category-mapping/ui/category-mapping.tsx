@@ -11,8 +11,8 @@ export const CategoryMapping = () => {
     return <Text>Loading</Text>;
   }
 
-  if (categories?.data?.length === 0) {
-    return <Text>No catagories to map</Text>;
+  if (categories.data && categories.data.length === 0) {
+    return <Text>No categories to map</Text>;
   }
 
   return (

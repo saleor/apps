@@ -3,12 +3,9 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AppConfigSchema } from "./app-config";
-import { z } from "zod";
+import { AppConfigSchema, ChannelUrlsConfig } from "./app-config";
 import { FeedPreviewCard } from "./feed-preview-card";
 import { useDashboardNotification } from "@saleor/apps-shared";
-
-type UrlConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
 const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug: string }>) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
@@ -26,7 +23,7 @@ const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug
     },
   });
 
-  const { control, handleSubmit } = useForm<UrlConfig>({
+  const { control, handleSubmit } = useForm<ChannelUrlsConfig>({
     resolver: zodResolver(AppConfigSchema.channelUrls),
     defaultValues: {
       productStorefrontUrl: channelConfig?.storefrontUrls.productStorefrontUrl ?? "",

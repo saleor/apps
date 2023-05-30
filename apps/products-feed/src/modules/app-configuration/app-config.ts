@@ -25,6 +25,8 @@ export const AppConfigSchema = {
 
 export type RootConfig = z.infer<typeof RootAppConfig>;
 
+export type ChannelUrlsConfig = z.infer<typeof AppConfigSchema.channelUrls>;
+
 export class AppConfig {
   private rootData: RootConfig = {
     channelConfig: {},
