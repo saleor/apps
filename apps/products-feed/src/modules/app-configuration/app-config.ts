@@ -78,4 +78,16 @@ export class AppConfig {
       throw new Error("Invalid payload");
     }
   }
+
+  getUrlsForChannel(channelSlug: string) {
+    try {
+      return this.rootData.channelConfig[channelSlug].storefrontUrls;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  getS3Config() {
+    return this.rootData.s3;
+  }
 }

@@ -1,26 +1,41 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { appRouter } from "../../modules/trpc/trpc-app-router";
+import { AppConfigMetadataManager } from "../../modules/app-configuration/app-config-metadata-manager";
+import { createClient } from "../create-graphq-client";
+import { createSettingsManager } from "../metadata-manager";
+import { AppConfig } from "../../modules/app-configuration/app-config";
 
 interface GetGoogleFeedSettingsArgs {
   authData: AuthData;
   channel: string;
 }
 
+/**
+ * TODO Test
+ */
 export const getGoogleFeedSettings = async ({ authData, channel }: GetGoogleFeedSettingsArgs) => {
-  const caller = appRouter.createCaller({
-    appId: authData.appId,
-    saleorApiUrl: authData.saleorApiUrl,
-    token: authData.token,
-    ssr: true,
-  });
+  // todo extract some helper to create this "context" in one place
+  const client = createClient(authData.saleorApiUrl, async () =>
+    Promise.resolve({ token: authData.token })
+  );
 
-  const configurations = await caller.appConfiguration.fetch();
+  const metadataManager = new AppConfigMetadataManager(createSettingsManager(client));
 
-  const configuration = configurations.shopConfigPerChannel[channel];
+  const configString = await metadataManager.get();
 
-  const storefrontUrl = configuration.urlConfiguration.storefrontUrl;
+  if (!configString) {
+    throw new Error("App is not configured");
+  }
 
-  const productStorefrontUrl = configuration.urlConfiguration.productStorefrontUrl;
+  const appConfig = AppConfig.parse(configString);
+  const channelConfig = appConfig.getUrlsForChannel(channel);
+
+  if (!channelConfig) {
+    throw new Error("App is not configured");
+  }
+
+  const storefrontUrl = channelConfig.storefrontUrl;
+
+  const productStorefrontUrl = channelConfig.productStorefrontUrl;
 
   if (!storefrontUrl.length || !productStorefrontUrl.length) {
     throw new Error("The application has not been configured");
@@ -29,6 +44,6 @@ export const getGoogleFeedSettings = async ({ authData, channel }: GetGoogleFeed
   return {
     storefrontUrl,
     productStorefrontUrl,
-    s3BucketConfiguration: configuration.s3BucketConfiguration,
+    s3BucketConfiguration: appConfig.getS3Config(),
   };
 };

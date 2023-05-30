@@ -12,9 +12,9 @@ import { createSettingsManager } from "../../../../../lib/metadata-manager";
 import { createClient } from "../../../../../lib/create-graphq-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
-import { S3BucketConfiguration } from "../../../../../modules/app-configuration/app-config";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
+import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -68,7 +68,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let storefrontUrl: string;
   let productStorefrontUrl: string;
-  let bucketConfiguration: S3BucketConfiguration | undefined;
+  let bucketConfiguration: RootConfig["s3"] | undefined;
 
   try {
     const settings = await getGoogleFeedSettings({ authData, channel });
