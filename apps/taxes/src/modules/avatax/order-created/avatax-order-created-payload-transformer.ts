@@ -4,8 +4,8 @@ import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-config";
 import { avataxAddressFactory } from "../address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { Payload, Target } from "./avatax-order-created-adapter";
 import { discountUtils } from "../../taxes/discount-utils";
+import { CreateTransactionArgs } from "../avatax-client";
 
 const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -49,24 +49,25 @@ export function mapLines(
 }
 
 export class AvataxOrderCreatedPayloadTransformer {
-  transform = ({ order, channelConfig, config }: Payload): Target => {
+  constructor(private readonly providerConfig: AvataxConfig) {}
+  transform = ({ order }: { order: OrderCreatedSubscriptionFragment }): CreateTransactionArgs => {
     return {
       model: {
         type: DocumentType.SalesInvoice,
         customerCode:
           order.user?.id ??
           "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
-        companyCode: config.companyCode,
+        companyCode: this.providerConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
-        commit: config.isAutocommit,
+        commit: this.providerConfig.isAutocommit,
         addresses: {
-          shipFrom: avataxAddressFactory.fromChannelAddress(channelConfig.address),
+          shipFrom: avataxAddressFactory.fromChannelAddress(this.providerConfig.address),
           // billing or shipping address?
           shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
         },
         currencyCode: order.total.currency,
         email: order.user?.email ?? "",
-        lines: mapLines(order, config),
+        lines: mapLines(order, this.providerConfig),
         date: new Date(order.created),
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount)

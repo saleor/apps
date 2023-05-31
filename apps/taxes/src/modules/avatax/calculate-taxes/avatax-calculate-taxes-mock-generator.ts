@@ -111,14 +111,6 @@ const defaultTaxBase: TaxBase = {
 
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-  enabled: false,
-  address: {
-    country: "US",
-    zip: "92093",
-    state: "CA",
-    city: "La Jolla",
-    street: "9500 Gilman Drive",
-  },
 };
 
 const defaultTransactionModel: TransactionModel = {
@@ -948,9 +940,18 @@ const defaultAvataxConfig: AvataxConfig = {
   isAutocommit: false,
   isSandbox: true,
   name: "Avatax-1",
-  password: "password",
-  username: "username",
   shippingTaxCode: "FR000000",
+  address: {
+    country: "US",
+    zip: "92093",
+    state: "CA",
+    city: "La Jolla",
+    street: "9500 Gilman Drive",
+  },
+  credentials: {
+    password: "password",
+    username: "username",
+  },
 };
 
 const testingScenariosMap = {

@@ -1,6 +1,5 @@
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -10,25 +9,25 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
-export type Payload = {
+export type AvataxCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
-  channelConfig: ChannelConfig;
-  config: AvataxConfig;
 };
 
-export type Target = CreateTransactionArgs;
-export type Response = CalculateTaxesResponse;
+export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
+export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
-export class AvataxCalculateTaxesAdapter implements WebhookAdapter<Payload, Response> {
+export class AvataxCalculateTaxesAdapter
+  implements WebhookAdapter<AvataxCalculateTaxesPayload, AvataxCalculateTaxesResponse>
+{
   private logger: Logger;
   constructor(private readonly config: AvataxConfig) {
     this.logger = createLogger({ service: "AvataxCalculateTaxesAdapter" });
   }
 
-  async send(payload: Pick<Payload, "channelConfig" | "taxBase">): Promise<Response> {
+  async send(payload: AvataxCalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug({ payload }, "send called with:");
     const payloadTransformer = new AvataxCalculateTaxesPayloadTransformer();
-    const target = payloadTransformer.transform({ ...payload, config: this.config });
+    const target = payloadTransformer.transform({ ...payload, providerConfig: this.config });
 
     const client = new AvataxClient(this.config);
     const response = await client.createTransaction(target);

@@ -7,14 +7,6 @@ import { defaultOrder } from "../../../mocks";
 
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
-  enabled: false,
-  address: {
-    country: "US",
-    zip: "95008",
-    state: "CA",
-    city: "Campbell",
-    street: "33 N. First Street",
-  },
 };
 
 const defaultOrderCreatedResponse: TransactionModel = orderCreatedTransactionMock;
@@ -24,9 +16,18 @@ const defaultAvataxConfig: AvataxConfig = {
   isAutocommit: false,
   isSandbox: true,
   name: "Avatax-1",
-  password: "password",
-  username: "username",
   shippingTaxCode: "FR000000",
+  address: {
+    country: "US",
+    zip: "95008",
+    state: "CA",
+    city: "Campbell",
+    street: "33 N. First Street",
+  },
+  credentials: {
+    password: "password",
+    username: "username",
+  },
 };
 
 const testingScenariosMap = {
