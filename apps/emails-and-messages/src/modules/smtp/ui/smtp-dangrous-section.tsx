@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { appUrls } from "../../app-configuration/urls";
 
 interface SmtpDangerousSectionProps {
   configuration: SmtpConfiguration;
@@ -27,7 +28,7 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
   const { mutate } = trpcClient.smtpConfiguration.deleteConfiguration.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration removed");
-      replace("/configuration");
+      replace(appUrls.configuration());
     },
     onError(error) {
       setBackendErrors<SmtpGetConfigurationIdInput>({

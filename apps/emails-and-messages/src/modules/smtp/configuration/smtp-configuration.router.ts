@@ -117,7 +117,6 @@ export const smtpConfigurationRouter = router({
         ...input,
       };
 
-      console.log(newConfiguration, "this is newConfiguration");
       return await ctx.smtpConfigurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationService

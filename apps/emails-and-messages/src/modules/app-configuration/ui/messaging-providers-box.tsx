@@ -13,10 +13,10 @@ import { appUrls } from "../urls";
 import React from "react";
 
 const NoExistingConfigurations = () => {
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const redirectToProvidersSelection = () => {
-    replace("/configuration/choose-provider");
+    push(appUrls.chooseProvider());
   };
 
   return (

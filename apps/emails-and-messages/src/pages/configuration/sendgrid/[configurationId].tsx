@@ -55,11 +55,11 @@ const EditSendgridConfigurationPage: NextPage = () => {
         enabled: !!configurationId,
         onSettled(data, error) {
           if (error) {
-            console.log("Error: ", error);
+            console.error("Could not fetch configuration data:", error);
           }
           if (error?.data?.code === "NOT_FOUND" || !data) {
             notifyError("The requested configuration does not exist.");
-            router.replace("/configuration");
+            router.replace(appUrls.configuration());
           }
         },
       }
