@@ -32,7 +32,7 @@ jobs:
         uses: changesets/action@v1
         id: changesets
         with:
-          title: Release apps
+          title: 🚀 Release apps
           commit: Release apps
           publish: pnpm github:release
           createGithubReleases: true
