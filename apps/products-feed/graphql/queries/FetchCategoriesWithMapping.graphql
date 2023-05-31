@@ -1,5 +1,5 @@
-query FetchCategoriesWithMapping{
-  categories(first: 100){
+query FetchCategoriesWithMapping($cursor: String){
+  categories(first: 100, after: $cursor){
     pageInfo{
       hasNextPage
       endCursor
