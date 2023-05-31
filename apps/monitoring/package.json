@@ -32,7 +32,7 @@
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.42.1",
+    "react-hook-form": "7.44.2",
     "urql": "^3.0.3",
     "vite": "^4.3.1",
     "vitest": "^0.30.1"
