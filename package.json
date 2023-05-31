@@ -17,8 +17,7 @@
     "generate": "turbo run generate",
     "prepare": "husky install",
     "github:release": "pnpm changeset tag && git push --follow-tags",
-    "check-deps": "syncpack fix-mismatches --source \"apps/*/package.json\" --source \"packages/*/package.json\" --filter \"@saleor/app-sdk|@saleor/macaw-ui\"",
-    "postinstall": "pnpm check-deps"
+    "check-deps": "syncpack fix-mismatches --source \"apps/*/package.json\" --source \"packages/*/package.json\" --filter \"@saleor/app-sdk|@saleor/macaw-ui\""
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
