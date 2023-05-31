@@ -28,7 +28,6 @@ export default createAppRegisterHandler({
   onAuthAplSaved: async (request, ctx) => {
     // Subscribe to Notify using the mutation since it does not use subscriptions and can't be subscribed via manifest
     logger.debug("onAuthAplSaved executing");
-
     const baseUrl = getBaseUrl(request.headers);
     const client = createClient(ctx.authData.saleorApiUrl, async () =>
       Promise.resolve({ token: ctx.authData.token })

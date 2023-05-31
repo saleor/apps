@@ -1,12 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
 import { createLogger } from "@saleor/apps-shared";
-import { AppConfigurationService } from "../app-configuration/get-app-configuration.service";
-import { MjmlConfigurationService } from "../mjml/configuration/get-mjml-configuration.service";
-import { sendMjml } from "../mjml/send-mjml";
-import { SendgridConfigurationService } from "../sendgrid/configuration/get-sendgrid-configuration.service";
+import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
+import { sendSmtp } from "../smtp/send-smtp";
+import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
 import { sendSendgrid } from "../sendgrid/send-sendgrid";
 import { MessageEventTypes } from "./message-event-types";
+import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
+import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
 
 interface SendEventMessagesArgs {
   recipientEmail: string;
@@ -31,75 +33,57 @@ export const sendEventMessages = async ({
 
   logger.debug("Function called");
 
-  const appConfigurationService = new AppConfigurationService({
-    apiClient: client,
-    saleorApiUrl: authData.saleorApiUrl,
+  const smtpConfigurationService = new SmtpConfigurationService({
+    metadataManager: new SmtpPrivateMetadataManager(
+      createSettingsManager(client, authData.appId),
+      authData.saleorApiUrl
+    ),
   });
 
-  const channelAppConfiguration = await appConfigurationService.getChannelConfiguration(channel);
+  const availableSmtpConfigurations = await smtpConfigurationService.getConfigurations({
+    active: true,
+    availableInChannel: channel,
+  });
 
-  if (!channelAppConfiguration) {
-    logger.warn("App has no configuration for this channel");
-    return;
-  }
-  logger.debug("Channel has assigned app configuration");
-
-  if (!channelAppConfiguration.active) {
-    logger.warn("App configuration is not active for this channel");
-    return;
-  }
-
-  if (channelAppConfiguration.mjmlConfigurationId) {
-    logger.debug("Channel has assigned MJML configuration");
-
-    const mjmlConfigurationService = new MjmlConfigurationService({
-      apiClient: client,
-      saleorApiUrl: authData.saleorApiUrl,
+  for (const smtpConfiguration of availableSmtpConfigurations) {
+    const smtpStatus = await sendSmtp({
+      event,
+      payload,
+      recipientEmail,
+      smtpConfiguration,
     });
 
-    const mjmlConfiguration = await mjmlConfigurationService.getConfiguration({
-      id: channelAppConfiguration.mjmlConfigurationId,
-    });
-
-    if (mjmlConfiguration) {
-      const mjmlStatus = await sendMjml({
-        event,
-        payload,
-        recipientEmail,
-        mjmlConfiguration,
-      });
-
-      if (mjmlStatus?.errors.length) {
-        logger.error("MJML errors");
-        logger.error(mjmlStatus?.errors);
-      }
+    if (smtpStatus?.errors.length) {
+      logger.error("SMTP errors");
+      logger.error(smtpStatus?.errors);
     }
   }
 
-  if (channelAppConfiguration.sendgridConfigurationId) {
-    logger.debug("Channel has assigned Sendgrid configuration");
+  logger.debug("Channel has assigned Sendgrid configuration");
 
-    const sendgridConfigurationService = new SendgridConfigurationService({
-      apiClient: client,
-      saleorApiUrl: authData.saleorApiUrl,
+  const sendgridConfigurationService = new SendgridConfigurationService({
+    metadataManager: new SendgridPrivateMetadataManager(
+      createSettingsManager(client, authData.appId),
+      authData.saleorApiUrl
+    ),
+  });
+
+  const availableSendgridConfigurations = await sendgridConfigurationService.getConfigurations({
+    active: true,
+    availableInChannel: channel,
+  });
+
+  for (const sendgridConfiguration of availableSendgridConfigurations) {
+    const sendgridStatus = await sendSendgrid({
+      event,
+      payload,
+      recipientEmail,
+      sendgridConfiguration,
     });
 
-    const sendgridConfiguration = await sendgridConfigurationService.getConfiguration({
-      id: channelAppConfiguration.sendgridConfigurationId,
-    });
-
-    if (sendgridConfiguration) {
-      const sendgridStatus = await sendSendgrid({
-        event,
-        payload,
-        recipientEmail,
-        sendgridConfiguration,
-      });
-
-      if (sendgridStatus?.errors.length) {
-        logger.error("Sendgrid errors");
-        logger.error(sendgridStatus?.errors);
-      }
+    if (sendgridStatus?.errors.length) {
+      logger.error("Sendgrid errors");
+      logger.error(sendgridStatus?.errors);
     }
   }
 };
