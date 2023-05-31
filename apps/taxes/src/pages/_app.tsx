@@ -44,3 +44,5 @@ function NextApp({ Component, pageProps }: AppProps) {
     </NoSSRWrapper>
   );
 }
+
+export default trpcClient.withTRPC(NextApp);
