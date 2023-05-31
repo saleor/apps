@@ -15,11 +15,21 @@ import { createS3ClientFromConfiguration } from "../../../../../modules/file-sto
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
+import { z, ZodError } from "zod";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
   ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
   : 60 * 5;
+
+const validateRequestParams = (req: NextApiRequest) => {
+  const queryShape = z.object({
+    url: z.string().url("Valid API URL must be provided"),
+    channel: z.string().min(1, "Provide valid channel slug"),
+  });
+
+  queryShape.parse(req.query);
+};
 
 /**
  * TODO Refactor and test
@@ -36,14 +46,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Feed route visited");
 
-  if (!url.length) {
-    logger.error("Missing URL param");
-    return res.status(400).json({ error: "No url parameter" });
-  }
+  try {
+    validateRequestParams(req);
+  } catch (e) {
+    const error = e as ZodError;
 
-  if (!channel.length) {
-    logger.error("Missing channel param");
-    return res.status(400).json({ error: "No channel parameter" });
+    return res.status(400).json({ error: error.flatten().fieldErrors });
   }
 
   logger.debug("Checking if app is installed in the given env");
@@ -56,17 +64,20 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("The app is registered for the given URL, checking the configuration");
 
-  // use unauthorized client to eliminate possibility of spilling the non-public data
+  /**
+   * use unauthorized client to eliminate possibility of spilling the non-public data
+   */
   const client = initUrqlClient(
     {
       url: authData.saleorApiUrl,
     },
-    false /* set to false to disable suspense */
+    false
   );
 
   if (!client) {
     logger.error("Can't create the gql client");
-    return res.status(500).end();
+
+    return res.status(500).send("Error creating feed");
   }
 
   let storefrontUrl: string;
@@ -82,6 +93,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     bucketConfiguration = settings.s3BucketConfiguration;
   } catch (error) {
     logger.warn("The application has not been configured");
+
     return res
       .status(400)
       .json({ error: "Please configure the Google Feed settings at the dashboard" });
@@ -97,11 +109,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     shopDescription = shopDetails.shopDescription;
   } catch (error) {
     logger.error("Could not fetch the shop details");
+
     return res.status(500).json({ error: "Could not fetch the shop details" });
   }
 
   if (bucketConfiguration) {
     logger.debug("Bucket configuration found, checking if the feed has been generated recently");
+
     const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
       saleorApiUrl: authData.saleorApiUrl,

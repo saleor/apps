@@ -12,7 +12,7 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
   const googleFeedUrl = useGetFeedApiUrl(channelSlug);
 
   if (!googleFeedUrl) {
-    // Should never happen, log to sentry todo
+    // Should never happen
     return null;
   }
 

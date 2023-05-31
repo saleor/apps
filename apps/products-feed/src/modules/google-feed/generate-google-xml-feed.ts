@@ -39,9 +39,7 @@ export const generateGoogleXmlFeed = ({
     const currency = variant.pricing?.price?.gross.currency;
     const amount = variant.pricing?.price?.gross.amount;
 
-    const price = currency
-      ? formatCurrency(currency, amount!) // todo
-      : undefined;
+    const price = currency ? formatCurrency(currency, amount!) : undefined;
 
     return productToProxy({
       storefrontUrlTemplate: productStorefrontUrl,
