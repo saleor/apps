@@ -1,7 +1,5 @@
 # Saleor App CMS
 
-![Hero image](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
-
 CMS Hub is a Saleor app that exports products from Saleor to several popular CMSes.
 
 Here is a list of currently supported CMSes and their configuration guides:

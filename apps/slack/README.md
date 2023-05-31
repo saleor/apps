@@ -1,7 +1,5 @@
 # Saleor App Slack
 
-![Hero image](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
-
 Send Slack messages based on `order_created` events.
 
 ### What's included?
