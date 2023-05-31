@@ -1,11 +1,9 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
-import {
-  FetchCategoriesWithMappingDocument,
-  UpdateCategoryMappingDocument,
-} from "../../../generated/graphql";
+import { UpdateCategoryMappingDocument } from "../../../generated/graphql";
 import { TRPCError } from "@trpc/server";
+import { CategoriesFetcher } from "./categories-fetcher";
 
 export const categoryMappingRouter = router({
   /**
@@ -13,24 +11,18 @@ export const categoryMappingRouter = router({
    */
   getCategoryMappings: protectedClientProcedure.query(
     async ({ ctx: { logger, apiClient }, input }) => {
-      /**
-       * Does it fetch all categories? No pagination todo
-       */
-      const result = await apiClient.query(FetchCategoriesWithMappingDocument, {}).toPromise();
-      const categories = result.data?.categories?.edges?.map((edge) => edge.node) || [];
+      const categoriesFetcher = new CategoriesFetcher(apiClient);
 
-      if (result.error) {
-        logger.error(`Error during the GraphqlAPI call: ${result.error.message}`);
-
+      const result = await categoriesFetcher.fetchAllCategories().catch((e) => {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Can't fetch the categories",
         });
-      }
+      });
 
       logger.debug("Returning categories");
 
-      return categories;
+      return result;
     }
   ),
   /**
