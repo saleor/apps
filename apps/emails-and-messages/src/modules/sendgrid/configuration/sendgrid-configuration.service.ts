@@ -7,8 +7,8 @@ import {
   SendgridEventConfiguration,
 } from "./sendgrid-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { isAvailableInChannel } from "../../channels/is-available-in-channel";
 import { generateRandomId } from "../../../lib/generate-random-id";
+import { filterConfigurations } from "../../app-configuration/filter-configurations";
 
 const logger = createLogger({
   service: "SendgridConfigurationService",
@@ -135,30 +135,10 @@ export class SendgridConfigurationService {
     logger.debug("Get configurations");
     const configurationRoot = await this.getConfigurationRoot();
 
-    let filtered = configurationRoot.configurations;
-
-    if (!filter) {
-      return filtered;
-    }
-
-    if (filter.ids?.length) {
-      filtered = filtered.filter((c) => filter?.ids?.includes(c.id));
-    }
-
-    if (filter.active !== undefined) {
-      filtered = filtered.filter((c) => c.active === filter.active);
-    }
-
-    if (filter.availableInChannel?.length) {
-      filtered = filtered.filter((c) =>
-        isAvailableInChannel({
-          channel: filter.availableInChannel!,
-          channelConfiguration: c.channels,
-        })
-      );
-    }
-
-    return filtered;
+    return filterConfigurations<SendgridConfiguration>({
+      configurations: configurationRoot.configurations,
+      filter,
+    });
   }
 
   async createConfiguration(config: Omit<SendgridConfiguration, "id" | "events">) {

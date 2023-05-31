@@ -2,9 +2,9 @@ import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
 import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { isAvailableInChannel } from "../../channels/is-available-in-channel";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
+import { filterConfigurations } from "../../app-configuration/filter-configurations";
 
 const logger = createLogger({
   service: "SmtpConfigurationService",
@@ -125,30 +125,10 @@ export class SmtpConfigurationService {
     logger.debug("Get configurations");
     const configurationRoot = await this.getConfigurationRoot();
 
-    let filtered = configurationRoot.configurations;
-
-    if (!filter) {
-      return filtered;
-    }
-
-    if (filter.ids?.length) {
-      filtered = filtered.filter((c) => filter?.ids?.includes(c.id));
-    }
-
-    if (filter.active !== undefined) {
-      filtered = filtered.filter((c) => c.active === filter.active);
-    }
-
-    if (filter.availableInChannel?.length) {
-      filtered = filtered.filter((c) =>
-        isAvailableInChannel({
-          channel: filter.availableInChannel!,
-          channelConfiguration: c.channels,
-        })
-      );
-    }
-
-    return filtered;
+    return filterConfigurations<SmtpConfiguration>({
+      configurations: configurationRoot.configurations,
+      filter,
+    });
   }
 
   async createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
