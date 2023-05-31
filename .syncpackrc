@@ -1,14 +1,16 @@
 {
-  "dev": true,
   "filter": ".",
   "indent": "  ",
-  "overrides": true,
-  "peer": true,
-  "prod": true,
-  "resolutions": true,
-  "workspace": true,
   "semverGroups": [],
   "semverRange": "",
+  "dependencyTypes": [
+    "dev",
+    "overrides",
+    "peer",
+    "prod",
+    "resolutions",
+    "workspace"
+  ],
   "sortAz": [
     "contributors",
     "dependencies",
@@ -18,7 +20,12 @@
     "resolutions",
     "scripts"
   ],
-  "sortFirst": ["name", "description", "version", "author"],
+  "sortFirst": [
+    "name",
+    "description",
+    "version",
+    "author"
+  ],
   "source": [],
   "versionGroups": []
 }
