@@ -11,6 +11,7 @@ import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
 import { NoSSRWrapper } from "@saleor/apps-shared";
+import { AppLayout } from "../modules/ui/app-layout";
 
 /**
  * Ensure instance is a singleton.
@@ -37,7 +38,9 @@ function NextApp({ Component, pageProps }: AppProps) {
           <ThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
-            <Component {...pageProps} />
+            <AppLayout>
+              <Component {...pageProps} />
+            </AppLayout>
           </ThemeProvider>
         </GraphQLProvider>
       </AppBridgeProvider>

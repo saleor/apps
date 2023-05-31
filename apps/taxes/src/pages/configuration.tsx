@@ -29,7 +29,7 @@ const ConfigurationPage = () => {
   return (
     <main>
       <AppColumns
-        gridRatio="1/2"
+        gridRatio="1/1"
         top={<Header />}
         bottomLeft={<Intro />}
         bottomRight={<Providers />}
