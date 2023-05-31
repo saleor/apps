@@ -24,9 +24,18 @@ const mockedProviders: ProvidersConfig = [
       isAutocommit: false,
       isSandbox: true,
       name: "avatax-1",
-      password: "avatax-password",
-      username: "avatax-username",
       shippingTaxCode: "FR000000",
+      credentials: {
+        password: "avatax-password",
+        username: "avatax-username",
+      },
+      address: {
+        city: "New York",
+        country: "US",
+        state: "NY",
+        street: "123 Main St",
+        zip: "10001",
+      },
     },
   },
   {
@@ -34,8 +43,17 @@ const mockedProviders: ProvidersConfig = [
     id: "2",
     config: {
       name: "taxjar-1",
-      apiKey: "taxjar-api-key",
       isSandbox: true,
+      credentials: {
+        apiKey: "taxjar-api-key",
+      },
+      address: {
+        city: "New York",
+        country: "US",
+        state: "NY",
+        street: "123 Main St",
+        zip: "10001",
+      },
     },
   },
 ];
@@ -43,28 +61,12 @@ const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), mocked
 
 const mockedChannelsWithInvalidProviderInstanceId: ChannelsConfig = {
   "default-channel": {
-    address: {
-      city: "New York",
-      country: "US",
-      state: "NY",
-      street: "123 Main St",
-      zip: "10001",
-    },
-    enabled: true,
     providerInstanceId: "3",
   },
 };
 
 const mockedValidChannels: ChannelsConfig = {
   "default-channel": {
-    address: {
-      city: "New York",
-      country: "US",
-      state: "NY",
-      street: "123 Main St",
-      zip: "10001",
-    },
-    enabled: true,
     providerInstanceId: "1",
   },
 };

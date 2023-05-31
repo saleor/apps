@@ -11,9 +11,9 @@ describe("TaxJarOrderCreatedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
     const payloadMock = {
       order: mockGenerator.generateOrder(),
-      channelConfig: mockGenerator.generateChannelConfig(),
     };
-    const transformer = new TaxJarOrderCreatedPayloadTransformer();
+    const providerConfig = mockGenerator.generateProviderConfig();
+    const transformer = new TaxJarOrderCreatedPayloadTransformer(providerConfig);
     const transformedPayload = transformer.transform(payloadMock);
 
     expect(transformedPayload.params.amount).toBe(239.17);

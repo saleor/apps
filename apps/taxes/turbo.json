@@ -13,9 +13,10 @@
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
         "ALLOWED_DOMAIN_PATTERN",
-        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
         "SENTRY_PROJECT",
-        "SENTRY_ORG"
+        "SENTRY_DSN",
+        "SENTRY_AUTH_TOKEN"
       ]
     }
   }

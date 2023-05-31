@@ -1,6 +1,6 @@
-import { ChannelAddress } from "../channels-configuration/channels-config";
+import { TaxParams } from "taxjar/dist/types/paramTypes";
 import { AddressFragment as SaleorAddress } from "../../../generated/graphql";
-import { AddressParams as TaxJarAddress, TaxParams } from "taxjar/dist/types/paramTypes";
+import { TaxJarConfig } from "./taxjar-config";
 
 function joinAddresses(address1: string, address2: string): string {
   return `${address1}${address2.length > 0 ? " " + address2 : ""}`;
@@ -19,7 +19,7 @@ function mapSaleorAddressToTaxJarAddress(
 }
 
 function mapChannelAddressToTaxJarAddress(
-  address: ChannelAddress
+  address: TaxJarConfig["address"]
 ): Pick<TaxParams, "from_city" | "from_country" | "from_state" | "from_street" | "from_zip"> {
   return {
     from_city: address.city,

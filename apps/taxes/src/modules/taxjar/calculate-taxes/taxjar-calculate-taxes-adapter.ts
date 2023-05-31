@@ -8,23 +8,24 @@ import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
 import { Logger, createLogger } from "../../../lib/logger";
 
-export type Payload = {
+export type TaxJarCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
-  channelConfig: ChannelConfig;
 };
 
-export type Target = FetchTaxForOrderArgs;
-export type Response = CalculateTaxesResponse;
+export type TaxJarCalculateTaxesTarget = FetchTaxForOrderArgs;
+export type TaxJarCalculateTaxesResponse = CalculateTaxesResponse;
 
-export class TaxJarCalculateTaxesAdapter implements WebhookAdapter<Payload, Response> {
+export class TaxJarCalculateTaxesAdapter
+  implements WebhookAdapter<TaxJarCalculateTaxesPayload, TaxJarCalculateTaxesResponse>
+{
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig) {
     this.logger = createLogger({ service: "TaxJarCalculateTaxesAdapter" });
   }
 
-  async send(payload: Payload): Promise<Response> {
+  async send(payload: TaxJarCalculateTaxesPayload): Promise<TaxJarCalculateTaxesResponse> {
     this.logger.debug({ payload }, "send called with:");
-    const payloadTransformer = new TaxJarCalculateTaxesPayloadTransformer();
+    const payloadTransformer = new TaxJarCalculateTaxesPayloadTransformer(this.config);
     const target = payloadTransformer.transform(payload);
 
     this.logger.debug({ transformedPayload: target }, "Will call fetchTaxForOrder with:");

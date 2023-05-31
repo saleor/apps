@@ -8,18 +8,16 @@ import { Logger, createLogger } from "../../lib/logger";
 
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { ChannelConfig } from "../channels-configuration/channels-config";
 import { ProviderConfig } from "../providers-configuration/providers-config";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 
 // todo: refactor to a factory
 export class ActiveTaxProvider implements ProviderWebhookService {
-  private client: ProviderWebhookService;
   private logger: Logger;
-  private channel: ChannelConfig;
+  private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerInstance: ProviderConfig, channelConfig: ChannelConfig) {
+  constructor(providerInstance: ProviderConfig) {
     this.logger = createLogger({
       service: "ActiveTaxProvider",
     });
@@ -27,7 +25,6 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     const taxProviderName = providerInstance.provider;
 
     this.logger.trace({ taxProviderName }, "Constructing tax provider: ");
-    this.channel = channelConfig;
 
     switch (taxProviderName) {
       case "taxjar":
@@ -47,19 +44,19 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   async calculateTaxes(payload: TaxBaseFragment) {
     this.logger.trace({ payload }, ".calculate called");
 
-    return this.client.calculateTaxes(payload, this.channel);
+    return this.client.calculateTaxes(payload);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
     this.logger.trace(".createOrder called");
 
-    return this.client.createOrder(order, this.channel);
+    return this.client.createOrder(order);
   }
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
     this.logger.trace(".fulfillOrder called");
 
-    return this.client.fulfillOrder(payload, this.channel);
+    return this.client.fulfillOrder(payload);
   }
 }
 
@@ -92,7 +89,7 @@ export function getActiveTaxProvider(
     throw new Error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerInstance, channelConfig);
+  const taxProvider = new ActiveTaxProvider(providerInstance);
 
   return taxProvider;
 }

@@ -2,12 +2,21 @@ import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { OrderCreatedSubscriptionFragment, OrderStatus } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { defaultOrder } from "../../../mocks";
+import { TaxJarConfig } from "../taxjar-config";
 
 type Order = OrderCreatedSubscriptionFragment;
 
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
-  enabled: false,
+};
+
+// providerConfigMockGenerator class that other classes extend?
+const defaultProviderConfig: TaxJarConfig = {
+  name: "taxjar-1",
+  credentials: {
+    apiKey: "test",
+  },
+  isSandbox: false,
   address: {
     country: "US",
     zip: "95008",
@@ -78,6 +87,7 @@ const testingScenariosMap = {
     order: defaultOrder,
     channelConfig: defaultChannelConfig,
     response: defaultOrderCreatedResponse,
+    providerConfig: defaultProviderConfig,
   },
 };
 
@@ -100,6 +110,12 @@ export class TaxJarOrderCreatedMockGenerator {
   generateResponse = (overrides: Partial<CreateOrderRes> = {}): CreateOrderRes =>
     structuredClone({
       ...testingScenariosMap[this.scenario].response,
+      ...overrides,
+    });
+
+  generateProviderConfig = (overrides: Partial<TaxJarConfig> = {}): TaxJarConfig =>
+    structuredClone({
+      ...testingScenariosMap[this.scenario].providerConfig,
       ...overrides,
     });
 }

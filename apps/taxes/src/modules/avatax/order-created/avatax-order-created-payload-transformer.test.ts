@@ -22,10 +22,10 @@ const channelConfigMock = mockGenerator.generateChannelConfig();
 
 describe("AvataxOrderCreatedPayloadTransformer", () => {
   it("returns lines with discounted: true when there are discounts", () => {
-    const transformer = new AvataxOrderCreatedPayloadTransformer();
+    const transformer = new AvataxOrderCreatedPayloadTransformer(avataxConfigMock);
     const payloadMock = {
       order: discountedOrderMock,
-      config: avataxConfigMock,
+      providerConfig: avataxConfigMock,
       channelConfig: channelConfigMock,
     };
 
@@ -37,10 +37,10 @@ describe("AvataxOrderCreatedPayloadTransformer", () => {
     expect(check).toBe(true);
   });
   it("returns lines with discounted: false when there are no discounts", () => {
-    const transformer = new AvataxOrderCreatedPayloadTransformer();
+    const transformer = new AvataxOrderCreatedPayloadTransformer(avataxConfigMock);
     const payloadMock = {
       order: orderMock,
-      config: avataxConfigMock,
+      providerConfig: avataxConfigMock,
       channelConfig: channelConfigMock,
     };
 

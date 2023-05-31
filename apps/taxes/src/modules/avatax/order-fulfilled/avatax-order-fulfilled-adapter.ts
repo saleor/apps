@@ -6,25 +6,26 @@ import { AvataxConfig } from "../avatax-config";
 import { AvataxOrderFulfilledPayloadTransformer } from "./avatax-order-fulfilled-payload-transformer";
 import { AvataxOrderFulfilledResponseTransformer } from "./avatax-order-fulfilled-response-transformer";
 
-export type Payload = {
+export type AvataxOrderFulfilledPayload = {
   order: OrderFulfilledSubscriptionFragment;
-  config: AvataxConfig;
 };
-export type Target = CommitTransactionArgs;
-export type Response = { ok: true };
+export type AvataxOrderFulfilledTarget = CommitTransactionArgs;
+export type AvataxOrderFulfilledResponse = { ok: true };
 
-export class AvataxOrderFulfilledAdapter implements WebhookAdapter<Payload, Response> {
+export class AvataxOrderFulfilledAdapter
+  implements WebhookAdapter<AvataxOrderFulfilledPayload, AvataxOrderFulfilledResponse>
+{
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
     this.logger = createLogger({ service: "AvataxOrderFulfilledAdapter" });
   }
 
-  async send(payload: Pick<Payload, "order">): Promise<Response> {
+  async send(payload: AvataxOrderFulfilledPayload): Promise<AvataxOrderFulfilledResponse> {
     this.logger.debug({ payload }, "send called with:");
 
-    const payloadTransformer = new AvataxOrderFulfilledPayloadTransformer();
-    const target = payloadTransformer.transform({ ...payload, config: this.config });
+    const payloadTransformer = new AvataxOrderFulfilledPayloadTransformer(this.config);
+    const target = payloadTransformer.transform({ ...payload });
 
     const client = new AvataxClient(this.config);
     const response = await client.commitTransaction(target);
