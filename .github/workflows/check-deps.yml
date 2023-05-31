@@ -30,8 +30,3 @@ jobs:
           lockfile-mismatches: "ignore"
           # format-mismatches: don't update package.json when inconsistent formatting detected
           format-mismatches: "ignore"
-
-        env:
-          # If any options are set to 'fix' then
-          # env.GITHUB_TOKEN is needed to push to PRs
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
