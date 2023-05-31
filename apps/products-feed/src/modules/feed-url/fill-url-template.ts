@@ -12,6 +12,6 @@ export const fillUrlTemplate = ({
   variantId,
 }: FillUrlTemplateArgs) =>
   urlTemplate
-    .replace("{productId}", productId)
-    .replace("{productSlug}", productSlug)
-    .replace("{variantId}", variantId);
+    .replace("{productId}", encodeURIComponent(productId))
+    .replace("{productSlug}", encodeURIComponent(productSlug))
+    .replace("{variantId}", encodeURIComponent(variantId));

@@ -1,29 +1,29 @@
 import { z } from "zod";
 
-const S3Config = z.object({
+const s3ConfigSchema = z.object({
   bucketName: z.string().min(1),
   secretAccessKey: z.string().min(1),
   accessKeyId: z.string().min(1),
   region: z.string().min(1),
 });
 
-const UrlConfiguration = z.object({
+const urlConfigurationSchema = z.object({
   storefrontUrl: z.string().min(1).url(),
   productStorefrontUrl: z.string().min(1).url(),
 });
 
-const RootAppConfig = z.object({
-  s3: S3Config.nullable(),
-  channelConfig: z.record(z.object({ storefrontUrls: UrlConfiguration })),
+const rootAppConfigSchema = z.object({
+  s3: s3ConfigSchema.nullable(),
+  channelConfig: z.record(z.object({ storefrontUrls: urlConfigurationSchema })),
 });
 
 export const AppConfigSchema = {
-  root: RootAppConfig,
-  s3Bucket: S3Config,
-  channelUrls: UrlConfiguration,
+  root: rootAppConfigSchema,
+  s3Bucket: s3ConfigSchema,
+  channelUrls: urlConfigurationSchema,
 };
 
-export type RootConfig = z.infer<typeof RootAppConfig>;
+export type RootConfig = z.infer<typeof rootAppConfigSchema>;
 
 export type ChannelUrlsConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
@@ -35,7 +35,7 @@ export class AppConfig {
 
   constructor(initialData?: RootConfig) {
     if (initialData) {
-      this.rootData = RootAppConfig.parse(initialData);
+      this.rootData = rootAppConfigSchema.parse(initialData);
     }
   }
 
@@ -51,9 +51,9 @@ export class AppConfig {
     return JSON.stringify(this.rootData);
   }
 
-  setS3(s3Config: z.infer<typeof S3Config>) {
+  setS3(s3Config: z.infer<typeof s3ConfigSchema>) {
     try {
-      this.rootData.s3 = S3Config.parse(s3Config);
+      this.rootData.s3 = s3ConfigSchema.parse(s3Config);
 
       return this;
     } catch (e) {
@@ -63,9 +63,9 @@ export class AppConfig {
     }
   }
 
-  setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof UrlConfiguration>) {
+  setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof urlConfigurationSchema>) {
     try {
-      const parsedConfig = UrlConfiguration.parse(urlsConfig);
+      const parsedConfig = urlConfigurationSchema.parse(urlsConfig);
 
       this.rootData.channelConfig[channelSlug] = {
         storefrontUrls: parsedConfig,

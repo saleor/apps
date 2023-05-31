@@ -91,7 +91,7 @@ export const generateGoogleXmlFeed = ({
     {
       rss: [
         {
-          // @ts-ignore -
+          // @ts-ignore - This is "just an object" that is transformed to XML. I dont see good way to type it, other than "any"
           channel: channelData.concat(items),
         },
       ],
