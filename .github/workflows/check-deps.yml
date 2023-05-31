@@ -21,10 +21,15 @@ jobs:
           package-manager: "pnpm"
           bot-username: "Syncpack Bot"
           commit-message: "format and sync package.json files"
+          # The workflow will only list mismatched dependencies, and the assignee has to manually fix them.
+          # version-mismatches: list mismatches in a comment
           version-mismatches: "lint"
+          # semver-range-mismatches: don't align dependency version format
           semver-range-mismatches: "ignore"
-          lockfile-mismatches: "fix"
-          format-mismatches: "fix"
+          # lockfile-mismatches: don't update lockfiles when mismatches detected 
+          lockfile-mismatches: "ignore"
+          # format-mismatches: don't update package.json when inconsistent formatting detected
+          format-mismatches: "ignore"
 
         env:
           # If any options are set to 'fix' then
