@@ -35,6 +35,7 @@ export const S3ConfigurationForm = (props: Props) => {
       <Input size={"small"} name={"accessKeyId"} control={control} label="Amazon access key ID" />
 
       <Input
+        type={"password"}
         size={"small"}
         name={"secretAccessKey"}
         control={control}
