@@ -1,8 +1,12 @@
 import { LineItem } from "taxjar/dist/util/types";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
-import { Payload, Target } from "./taxjar-order-created-adapter";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
+import { TaxJarConfig } from "../taxjar-config";
+import {
+  TaxJarOrderCreatedPayload,
+  TaxJarOrderCreatedTarget,
+} from "./taxjar-order-created-adapter";
 
 export function sumPayloadLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
@@ -23,6 +27,7 @@ export function sumPayloadLines(lines: LineItem[]): number {
 }
 
 export class TaxJarOrderCreatedPayloadTransformer {
+  constructor(private readonly config: TaxJarConfig) {}
   private mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] {
     return lines.map((line) => ({
       quantity: line.quantity,
@@ -35,7 +40,7 @@ export class TaxJarOrderCreatedPayloadTransformer {
     }));
   }
 
-  transform({ order, channelConfig }: Payload): Target {
+  transform({ order }: TaxJarOrderCreatedPayload): TaxJarOrderCreatedTarget {
     const lineItems = this.mapLines(order.lines);
     const lineSum = sumPayloadLines(lineItems);
     const shippingAmount = order.shippingPrice.gross.amount;
@@ -47,11 +52,11 @@ export class TaxJarOrderCreatedPayloadTransformer {
 
     return {
       params: {
-        from_country: channelConfig.address.country,
-        from_zip: channelConfig.address.zip,
-        from_state: channelConfig.address.state,
-        from_city: channelConfig.address.city,
-        from_street: channelConfig.address.street,
+        from_country: this.config.address.country,
+        from_zip: this.config.address.zip,
+        from_state: this.config.address.state,
+        from_city: this.config.address.city,
+        from_street: this.config.address.street,
         to_country: order.shippingAddress!.country.code,
         to_zip: order.shippingAddress!.postalCode,
         to_state: order.shippingAddress!.countryArea,

@@ -6,6 +6,7 @@ import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
+import { DeepPartial } from "@trpc/server";
 
 const getSchema = avataxInstanceConfigSchema;
 
@@ -77,7 +78,7 @@ export class AvataxConfigurationService {
     return result.data;
   }
 
-  async patch(id: string, config: Partial<AvataxConfig>): Promise<void> {
+  async patch(id: string, config: DeepPartial<AvataxConfig>): Promise<void> {
     this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
     const data = await this.get(id);
     // omit the key "id"  from the result

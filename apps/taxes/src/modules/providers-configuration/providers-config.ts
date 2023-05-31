@@ -7,3 +7,4 @@ export const providersSchema = z.array(providerSchema);
 
 export type ProvidersConfig = z.infer<typeof providersSchema>;
 export type ProviderConfig = z.infer<typeof providerSchema>;
+export type ProviderName = ProviderConfig["provider"];

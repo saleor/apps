@@ -13,8 +13,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
 
     const payload = new AvataxCalculateTaxesPayloadTransformer().transform({
       taxBase: taxBaseMock,
-      channelConfig: mockGenerator.generateChannelConfig(),
-      config: avataxConfigMock,
+      providerConfig: avataxConfigMock,
     });
 
     expect(payload.model.discount).toEqual(10);
@@ -26,8 +25,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
 
     const payload = new AvataxCalculateTaxesPayloadTransformer().transform({
       taxBase: taxBaseMock,
-      channelConfig: mockGenerator.generateChannelConfig(),
-      config: avataxConfigMock,
+      providerConfig: avataxConfigMock,
     });
 
     expect(payload.model.discount).toEqual(0);

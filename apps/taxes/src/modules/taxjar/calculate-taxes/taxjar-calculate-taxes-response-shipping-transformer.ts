@@ -1,13 +1,16 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { numbers } from "../../taxes/numbers";
-import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
+import {
+  TaxJarCalculateTaxesResponse,
+  TaxJarCalculateTaxesPayload,
+} from "./taxjar-calculate-taxes-adapter";
 
 export class TaxJarCalculateTaxesResponseShippingTransformer {
   transform(
-    taxBase: Payload["taxBase"],
+    taxBase: TaxJarCalculateTaxesPayload["taxBase"],
     res: TaxForOrderRes
   ): Pick<
-    Response,
+    TaxJarCalculateTaxesResponse,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
   > {
     const { tax } = res;
