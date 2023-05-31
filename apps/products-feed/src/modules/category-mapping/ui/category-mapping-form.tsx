@@ -65,7 +65,7 @@ export const CategoryMappingForm = ({
                   onChange(event.target.value);
                 }}
               >
-                <option value={undefined}>No configuration</option>
+                <option value={undefined}>No override</option>
                 {GoogleProductCategories.map((choice) => (
                   <option key={choice.id} value={choice.id.toString()}>
                     {choice.name}
