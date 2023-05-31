@@ -121,10 +121,8 @@ describe("AppConfig", function () {
 
     it("getUrlsForChannel gets data for given channel or undefined if doesnt exist", () => {
       expect(instance.getUrlsForChannel("test")).toEqual({
-        storefrontUrls: {
-          productStorefrontUrl: "https://example.com",
-          storefrontUrl: "https://example.com/p/{productFeed}",
-        },
+        productStorefrontUrl: "https://example.com",
+        storefrontUrl: "https://example.com/p/{productFeed}",
       });
 
       expect(instance.getUrlsForChannel("not-existing")).toBeUndefined();

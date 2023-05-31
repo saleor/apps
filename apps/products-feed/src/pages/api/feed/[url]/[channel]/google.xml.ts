@@ -4,7 +4,7 @@ import { GoogleFeedProductVariantFragment } from "../../../../../../generated/gr
 import { apl } from "../../../../../saleor-app";
 import { createLogger } from "@saleor/apps-shared";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
-import { getGoogleFeedSettings } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
@@ -74,7 +74,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let bucketConfiguration: RootConfig["s3"] | undefined;
 
   try {
-    const settings = await getGoogleFeedSettings({ authData, channel });
+    const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
+    const settings = await settingsFetcher.fetch(channel);
 
     storefrontUrl = settings.storefrontUrl;
     productStorefrontUrl = settings.productStorefrontUrl;

@@ -1,6 +1,5 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { createLogger } from "@saleor/apps-shared";
 import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
 import {
   FetchCategoriesWithMappingDocument,

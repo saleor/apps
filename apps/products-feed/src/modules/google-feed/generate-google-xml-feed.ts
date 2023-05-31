@@ -12,6 +12,10 @@ interface GenerateGoogleXmlFeedArgs {
   shopDescription?: string;
 }
 
+/**
+ * Price format has to be altered from the en format to the one expected by Google
+ * eg. 1.00 USD, 5.00 PLN
+ */
 const formatCurrency = (currency: string, amount: number) => {
   return (
     new Intl.NumberFormat("en-EN", {
@@ -24,9 +28,6 @@ const formatCurrency = (currency: string, amount: number) => {
   );
 };
 
-/**
- * TODO Test and fix
- */
 export const generateGoogleXmlFeed = ({
   productVariants,
   storefrontUrl,
@@ -38,7 +39,6 @@ export const generateGoogleXmlFeed = ({
     const currency = variant.pricing?.price?.gross.currency;
     const amount = variant.pricing?.price?.gross.amount;
 
-    // Price format has to be altered from the en format to the one expected by Google
     const price = currency
       ? formatCurrency(currency, amount!) // todo
       : undefined;
@@ -93,7 +93,7 @@ export const generateGoogleXmlFeed = ({
     {
       rss: [
         {
-          // todo this looks wrong
+          // @ts-ignore -
           channel: channelData.concat(items),
         },
       ],

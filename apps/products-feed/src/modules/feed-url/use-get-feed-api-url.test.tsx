@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { expect, describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useGetFeedApiUrl } from "./use-get-feed-api-url";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
