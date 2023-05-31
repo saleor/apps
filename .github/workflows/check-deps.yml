@@ -21,10 +21,10 @@ jobs:
           package-manager: "pnpm"
           bot-username: "Syncpack Bot"
           commit-message: "format and sync package.json files"
-          version-mismatches: "ignore"
-          semver-range-mismatches: "ignore"
-          lockfile-mismatches: "ignore"
-          format-mismatches: "ignore"
+          version-mismatches: "lint"
+          semver-range-mismatches: "lint"
+          lockfile-mismatches: "fix"
+          format-mismatches: "fix"
 
         env:
           # If any options are set to 'fix' then
