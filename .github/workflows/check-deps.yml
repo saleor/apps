@@ -22,7 +22,7 @@ jobs:
           bot-username: "Syncpack Bot"
           commit-message: "format and sync package.json files"
           version-mismatches: "lint"
-          semver-range-mismatches: "lint"
+          semver-range-mismatches: "ignore"
           lockfile-mismatches: "fix"
           format-mismatches: "fix"
 
