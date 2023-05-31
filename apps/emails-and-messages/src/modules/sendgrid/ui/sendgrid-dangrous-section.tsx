@@ -46,16 +46,16 @@ export const SendgridDangerousSection = ({ configuration }: SendgridDangerousSec
       >
         <BoxWithBorder backgroundColor="surfaceCriticalSubdued" borderColor="criticalSubdued">
           <Box padding={defaultPadding}>
-            <Text variant="heading" display="block">
+            <Text variant="heading" as="h2">
               Remove provider
             </Text>
-            <Text display="block">You can remove provider configuration.</Text>
-            <Text display="block">
+            <Text as="p">You can remove provider configuration.</Text>
+            <Text as="p">
               This operation will remove all settings related to this configuration. Data will be
               permanently removed from the App.{" "}
             </Text>
-            <Text display="block">This operation cant be undone.</Text>
-            <Text display="block">You still can create new configuration.</Text>
+            <Text as="p">This operation cant be undone.</Text>
+            <Text as="p">You still can create new configuration.</Text>
           </Box>
           <BoxFooter borderColor="criticalSubdued">
             <Button

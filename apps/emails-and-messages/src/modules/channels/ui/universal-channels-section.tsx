@@ -40,15 +40,15 @@ export const UniversalChannelsSection = ({
       title="Channels"
       description={
         <>
-          <Text display="block">
+          <Text as="p">
             By default, provider will work for every channel. You can change this behavior with
             excluding or including strategy.
           </Text>
-          <Text display="block">
+          <Text as="p">
             <Text variant="bodyStrong">Excluding</Text> - all current channels and new created
             channels will work, excluding selected
           </Text>
-          <Text display="block">
+          <Text as="p">
             <Text variant="bodyStrong">Including</Text> - only selected channels will work, new
             created channels will not work
           </Text>

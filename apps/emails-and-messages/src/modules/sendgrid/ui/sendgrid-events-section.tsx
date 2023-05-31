@@ -101,11 +101,11 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
       title="Events"
       description={
         <>
-          <Text display="block">
+          <Text as="p">
             Provide unique name for your configuration - you can create more than one. For example -
             production and development.
           </Text>
-          <Text display="block">Then, pass your API Key. Obtain it here.</Text>
+          <Text as="p">Then, pass your API Key. Obtain it here.</Text>
         </>
       }
     >

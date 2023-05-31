@@ -9,7 +9,7 @@ export const SectionWithDescription = (props: SectionWithDescriptionProps) => {
   return (
     <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }} gap={6}>
       <Box>
-        <Text variant="heading" display="block">
+        <Text variant="heading" as="h2">
           {props.title}
         </Text>
         {props.description}
