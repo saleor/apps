@@ -1,18 +1,25 @@
 import { trpcClient } from "../../trpc/trpc-client";
-import { Paper } from "@material-ui/core";
+
 import React from "react";
 import { CategoryMappingForm } from "./category-mapping-form";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 export const CategoryMapping = () => {
-  const categories = trpcClient.categoryMapping.getCategoryMappings.useQuery();
+  const { data: categories, isLoading } = trpcClient.categoryMapping.getCategoryMappings.useQuery();
+
+  if (isLoading) {
+    return <Text>Loading</Text>;
+  }
+
+  if (categories && categories.length === 0) {
+    return <Text>No categories to map</Text>;
+  }
 
   return (
-    <Paper elevation={0}>
-      {categories.data?.length
-        ? categories.data.map((category) => (
-            <CategoryMappingForm category={category} key={category.id} />
-          ))
-        : null}
-    </Paper>
+    <Box>
+      {categories!.map((category) => (
+        <CategoryMappingForm category={category} key={category.id} marginBottom={8} />
+      ))}
+    </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { MetadataEntry, EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";
 import {
   FetchAppDetailsDocument,

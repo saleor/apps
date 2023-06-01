@@ -3,24 +3,37 @@ import { initUrqlClient } from "next-urql";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
 import { createLogger } from "@saleor/apps-shared";
-import { fetchProductData } from "../../../../../lib/google-feed/fetch-product-data";
-import { getGoogleFeedSettings } from "../../../../../lib/google-feed/get-google-feed-settings";
-import { generateGoogleXmlFeed } from "../../../../../lib/google-feed/generate-google-xml-feed";
-import { fetchShopData } from "../../../../../lib/google-feed/fetch-shop-data";
+import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
+import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
+import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
 import { createSettingsManager } from "../../../../../lib/metadata-manager";
-import { createClient } from "../../../../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../../../../lib/create-graphq-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
-import { S3BucketConfiguration } from "../../../../../modules/app-configuration/app-config";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
+import { RootConfig } from "../../../../../modules/app-configuration/app-config";
+import { z, ZodError } from "zod";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
   ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
   : 60 * 5;
 
+const validateRequestParams = (req: NextApiRequest) => {
+  const queryShape = z.object({
+    url: z.string().url("Valid API URL must be provided"),
+    channel: z.string().min(1, "Provide valid channel slug"),
+  });
+
+  queryShape.parse(req.query);
+};
+
+/**
+ * TODO Refactor and test
+ */
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
@@ -33,14 +46,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Feed route visited");
 
-  if (!url.length) {
-    logger.error("Missing URL param");
-    return res.status(400).json({ error: "No url parameter" });
-  }
+  try {
+    validateRequestParams(req);
+  } catch (e) {
+    const error = e as ZodError;
 
-  if (!channel.length) {
-    logger.error("Missing channel param");
-    return res.status(400).json({ error: "No channel parameter" });
+    return res.status(400).json({ error: error.flatten().fieldErrors });
   }
 
   logger.debug("Checking if app is installed in the given env");
@@ -53,31 +64,36 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("The app is registered for the given URL, checking the configuration");
 
-  // use unauthorized client to eliminate possibility of spilling the non-public data
+  /**
+   * use unauthorized client to eliminate possibility of spilling the non-public data
+   */
   const client = initUrqlClient(
     {
       url: authData.saleorApiUrl,
     },
-    false /* set to false to disable suspense */
+    false
   );
 
   if (!client) {
     logger.error("Can't create the gql client");
-    return res.status(500).end();
+
+    return res.status(500).send("Error creating feed");
   }
 
   let storefrontUrl: string;
   let productStorefrontUrl: string;
-  let bucketConfiguration: S3BucketConfiguration | undefined;
+  let bucketConfiguration: RootConfig["s3"] | undefined;
 
   try {
-    const settings = await getGoogleFeedSettings({ authData, channel });
+    const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
+    const settings = await settingsFetcher.fetch(channel);
 
     storefrontUrl = settings.storefrontUrl;
     productStorefrontUrl = settings.productStorefrontUrl;
     bucketConfiguration = settings.s3BucketConfiguration;
   } catch (error) {
     logger.warn("The application has not been configured");
+
     return res
       .status(400)
       .json({ error: "Please configure the Google Feed settings at the dashboard" });
@@ -93,11 +109,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     shopDescription = shopDetails.shopDescription;
   } catch (error) {
     logger.error("Could not fetch the shop details");
+
     return res.status(500).json({ error: "Could not fetch the shop details" });
   }
 
   if (bucketConfiguration) {
     logger.debug("Bucket configuration found, checking if the feed has been generated recently");
+
     const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
       saleorApiUrl: authData.saleorApiUrl,
@@ -136,9 +154,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Generating a new feed");
 
-  const cacheClient = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const cacheClient = GraphqlClientFactory.fromAuthData(authData);
 
   if (!cacheClient) {
     logger.error("Can't create the gql client");

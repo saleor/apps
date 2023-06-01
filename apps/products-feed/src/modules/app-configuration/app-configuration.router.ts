@@ -1,44 +1,75 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { PrivateMetadataAppConfigurator } from "./app-configurator";
-import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
-import { appConfigInputSchema } from "./app-config-input-schema";
-import { GetAppConfigurationService } from "./get-app-configuration.service";
+
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
+import { AppConfigSchema } from "./app-config";
+import { z } from "zod";
 
 export const appConfigurationRouter = router({
-  fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+  /**
+   * Prefer fetching all to avoid unnecessary calls. Routes are cached by react-query
+   */
+  fetch: protectedClientProcedure.query(async ({ ctx: { logger, getConfig }, input }) => {
+    return getConfig().then((c) => {
+      logger.debug("Fetched config");
 
-    logger.debug("appConfigurationRouter.fetch called");
-
-    return new GetAppConfigurationService({
-      apiClient: ctx.apiClient,
-      saleorApiUrl: ctx.saleorApiUrl,
-    }).getConfiguration();
+      return c.getRootConfig();
+    });
   }),
-  setAndReplace: protectedClientProcedure
+  setS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(appConfigInputSchema)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+    .input(AppConfigSchema.s3Bucket)
+    .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
+      const logger = createLogger({ saleorApiUrl: saleorApiUrl });
 
-      logger.debug(input, "appConfigurationRouter.setAndReplace called with input");
+      logger.debug(input, "Input");
 
-      const appConfigurator = new PrivateMetadataAppConfigurator(
-        createSettingsManager(ctx.apiClient),
-        ctx.saleorApiUrl
-      );
+      const config = await getConfig();
 
-      await updateCacheForConfigurations({
-        client: ctx.apiClient,
-        configurations: input,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+      config.setS3(input);
 
-      await appConfigurator.setConfig(input);
+      await appConfigMetadataManager.set(config.serialize());
+
+      logger.debug("Config saved");
 
       return null;
     }),
+  setChannelsUrls: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(
+      z.object({
+        channelSlug: z.string(),
+        urls: AppConfigSchema.channelUrls,
+      })
+    )
+    .mutation(
+      async ({
+        ctx: { getConfig, apiClient, saleorApiUrl, appConfigMetadataManager, logger },
+        input,
+      }) => {
+        const config = await getConfig();
+
+        /**
+         * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
+         *
+         * But this operation isnt expensive and users will not continously save this form
+         */
+        await updateCacheForConfigurations({
+          client: apiClient,
+          channelsSlugs: [input.channelSlug],
+          saleorApiUrl: saleorApiUrl,
+        });
+
+        logger.debug({ channel: input.channelSlug }, "Updated cache for channel");
+
+        config.setChannelUrls(input.channelSlug, input.urls);
+
+        await appConfigMetadataManager.set(config.serialize());
+
+        logger.debug("Saved config");
+
+        return null;
+      }
+    ),
 });

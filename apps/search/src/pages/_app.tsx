@@ -25,17 +25,6 @@ const queryClient = new QueryClient({
 });
 
 function NextApp({ Component, pageProps }: AppProps) {
-  /**
-   * Configure JSS (used by MacawUI) for SSR. If Macaw is not used, can be removed.
-   */
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
-
-    if (jssStyles) {
-      jssStyles?.parentElement?.removeChild(jssStyles);
-    }
-  }, []);
-
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>

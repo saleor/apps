@@ -1,0 +1,8 @@
+fragment ProductWebhookPayload on Product {
+  channel
+  channelListings {
+    channel {
+      slug
+    }
+  }
+}

@@ -3,8 +3,8 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
-import { LinearProgress } from "@material-ui/core";
-import { isInIframe } from "../lib/is-in-iframe";
+import { isInIframe } from "@saleor/apps-shared";
+import { Text } from "@saleor/macaw-ui/next";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -18,14 +18,16 @@ const IndexPage: NextPage = () => {
   }, [isMounted, appBridgeState?.ready]);
 
   if (isInIframe()) {
-    return <LinearProgress />;
+    return <Text color={"textNeutralSubdued"}>Loading...</Text>;
   }
 
   return (
     <div>
-      <h1>Saleor Product Feed</h1>
-      <p>This is Saleor App that allows product feed generation</p>
-      <p>Install app in your Saleor instance and open in with Dashboard</p>
+      <Text variant={"hero"} as={"h1"} marginBottom={8}>
+        Saleor Product Feed
+      </Text>
+      <Text as={"p"}>This is Saleor App that allows product feed generation</Text>
+      <Text as={"p"}>Install app in your Saleor instance and open in with Dashboard</Text>
     </div>
   );
 };

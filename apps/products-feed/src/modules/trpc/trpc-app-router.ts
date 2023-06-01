@@ -1,4 +1,4 @@
-import { channelsRouter } from "../channels/channels.router";
+import { channelsRouter } from "../app-configuration/channels/channels.router";
 import { router } from "./trpc-server";
 import { appConfigurationRouter } from "../app-configuration/app-configuration.router";
 import { categoryMappingRouter } from "../category-mapping/category-mapping.router";
