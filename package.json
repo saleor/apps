@@ -16,7 +16,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo run generate",
     "prepare": "husky install",
-    "github:release": "pnpm changeset tag && git push --follow-tags"
+    "github:release": "pnpm changeset tag && git push --follow-tags",
+    "check-deps": "syncpack fix-mismatches --source \"apps/*/package.json\"",
+    "postinstall": "pnpm check-deps"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
@@ -35,5 +37,8 @@
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write"
+  },
+  "dependencies": {
+    "syncpack": "^10.1.0"
   }
 }
