@@ -1,34 +1,91 @@
 import { z } from "zod";
-import { UrlConfiguration } from "./url-configuration";
 
-export const s3BucketConfigurationSchema = z.object({
-  bucketName: z.string(),
-  secretAccessKey: z.string(),
-  accessKeyId: z.string(),
-  region: z.string(),
+const s3ConfigSchema = z.object({
+  bucketName: z.string().min(1),
+  secretAccessKey: z.string().min(1),
+  accessKeyId: z.string().min(1),
+  region: z.string().min(1),
 });
 
-export type S3BucketConfiguration = z.infer<typeof s3BucketConfigurationSchema>;
-
-export const urlConfigurationSchema = z.object({
-  /**
-   * min() to allow empty strings
-   */
-  storefrontUrl: z.string().min(0),
-  productStorefrontUrl: z.string().min(0),
+const urlConfigurationSchema = z.object({
+  storefrontUrl: z.string().min(1).url(),
+  productStorefrontUrl: z.string().min(1).url(),
 });
 
-export type UrlConfiguration = z.infer<typeof urlConfigurationSchema>;
-
-export const sellerShopConfigSchema = z.object({
-  urlConfiguration: urlConfigurationSchema,
-  s3BucketConfiguration: s3BucketConfigurationSchema.optional(),
+const rootAppConfigSchema = z.object({
+  s3: s3ConfigSchema.nullable(),
+  channelConfig: z.record(z.object({ storefrontUrls: urlConfigurationSchema })),
 });
 
-export type SellerShopConfig = z.infer<typeof sellerShopConfigSchema>;
-
-export type ShopConfigPerChannelSlug = Record<string, SellerShopConfig>;
-
-export type AppConfig = {
-  shopConfigPerChannel: ShopConfigPerChannelSlug;
+export const AppConfigSchema = {
+  root: rootAppConfigSchema,
+  s3Bucket: s3ConfigSchema,
+  channelUrls: urlConfigurationSchema,
 };
+
+export type RootConfig = z.infer<typeof rootAppConfigSchema>;
+
+export type ChannelUrlsConfig = z.infer<typeof AppConfigSchema.channelUrls>;
+
+export class AppConfig {
+  private rootData: RootConfig = {
+    channelConfig: {},
+    s3: null,
+  };
+
+  constructor(initialData?: RootConfig) {
+    if (initialData) {
+      this.rootData = rootAppConfigSchema.parse(initialData);
+    }
+  }
+
+  static parse(serializedSchema: string) {
+    return new AppConfig(JSON.parse(serializedSchema));
+  }
+
+  getRootConfig() {
+    return this.rootData;
+  }
+
+  serialize() {
+    return JSON.stringify(this.rootData);
+  }
+
+  setS3(s3Config: z.infer<typeof s3ConfigSchema>) {
+    try {
+      this.rootData.s3 = s3ConfigSchema.parse(s3Config);
+
+      return this;
+    } catch (e) {
+      console.error(e);
+
+      throw new Error("Invalid S3 config provided");
+    }
+  }
+
+  setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof urlConfigurationSchema>) {
+    try {
+      const parsedConfig = urlConfigurationSchema.parse(urlsConfig);
+
+      this.rootData.channelConfig[channelSlug] = {
+        storefrontUrls: parsedConfig,
+      };
+    } catch (e) {
+      console.error(e);
+
+      throw new Error("Invalid payload");
+    }
+  }
+
+  getUrlsForChannel(channelSlug: string) {
+    try {
+      return this.rootData.channelConfig[channelSlug].storefrontUrls;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  getS3Config() {
+    return this.rootData.s3;
+  }
+}

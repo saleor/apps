@@ -1,25 +1,18 @@
 import { NextPage } from "next";
-import React, { useEffect } from "react";
-import { trpcClient } from "../modules/trpc/trpc-client";
-import { useRouter } from "next/router";
-import { ConfigurationPageBaseLayout } from "../modules/ui/configuration-page-base-layout";
 import { CategoryMapping } from "../modules/category-mapping/ui/category-mapping";
+import { Breadcrumbs } from "@saleor/apps-ui";
+import { Box } from "@saleor/macaw-ui/next";
 
-const ConfigurationPage: NextPage = () => {
-  const channels = trpcClient.channels.fetch.useQuery();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (channels.isSuccess && channels.data.length === 0) {
-      router.push("/not-ready");
-    }
-  }, [channels.data, channels.isSuccess]);
-
+const CategoriesPage: NextPage = () => {
   return (
-    <ConfigurationPageBaseLayout>
+    <Box>
+      <Breadcrumbs marginBottom={8}>
+        <Breadcrumbs.Item href={"/"}>Configuration</Breadcrumbs.Item>
+        <Breadcrumbs.Item>Categories Mapping</Breadcrumbs.Item>
+      </Breadcrumbs>
       <CategoryMapping />
-    </ConfigurationPageBaseLayout>
+    </Box>
   );
 };
 
-export default ConfigurationPage;
+export default CategoriesPage;

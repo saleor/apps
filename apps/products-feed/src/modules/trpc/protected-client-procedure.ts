@@ -3,8 +3,11 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { logger } from "@saleor/apps-shared";
-import { createClient } from "../../lib/create-graphq-client";
+import { createLogger, logger } from "@saleor/apps-shared";
+import { GraphqlClientFactory } from "../../lib/create-graphq-client";
+import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
+import { createSettingsManager } from "../../lib/metadata-manager";
+import { AppConfig } from "../app-configuration/app-config";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -98,22 +101,36 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  *
  * Can be used only if called from the frontend (react-query),
  * otherwise jwks validation will fail (if createCaller used)
- *
- * TODO Rethink middleware composition to enable safe server-side router calls
  */
 export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
-  .use(async ({ ctx, next }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
+  .use(async ({ ctx, next, path, type }) => {
+    const client = GraphqlClientFactory.fromAuthData({
+      token: ctx.appToken!,
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
+
+    const metadataManager = new AppConfigMetadataManager(createSettingsManager(client));
 
     return next({
       ctx: {
         apiClient: client,
         appToken: ctx.appToken,
         saleorApiUrl: ctx.saleorApiUrl,
+        appId: ctx.appId,
+        appConfigMetadataManager: metadataManager,
+        getConfig: async () => {
+          const metadata = await metadataManager.get();
+
+          return metadata ? AppConfig.parse(metadata) : new AppConfig();
+        },
+        logger: createLogger({
+          appId: ctx.appId,
+          apiUrl: ctx.saleorApiUrl,
+          type,
+          path,
+        }),
       },
     });
   });

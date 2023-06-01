@@ -1,7 +1,7 @@
-import { S3BucketConfiguration } from "../../app-configuration/app-config";
+import { RootConfig } from "../../app-configuration/app-config";
 
 interface GetDownloadUrlArgs {
-  s3BucketConfiguration: S3BucketConfiguration;
+  s3BucketConfiguration: Exclude<RootConfig["s3"], null>;
   saleorApiUrl: string;
   channel: string;
 }
