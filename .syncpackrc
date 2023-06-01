@@ -1,0 +1,31 @@
+{
+  "filter": ".",
+  "indent": "  ",
+  "semverGroups": [],
+  "semverRange": "",
+  "dependencyTypes": [
+    "dev",
+    "overrides",
+    "peer",
+    "prod",
+    "resolutions",
+    "workspace"
+  ],
+  "sortAz": [
+    "contributors",
+    "dependencies",
+    "devDependencies",
+    "keywords",
+    "peerDependencies",
+    "resolutions",
+    "scripts"
+  ],
+  "sortFirst": [
+    "name",
+    "description",
+    "version",
+    "author"
+  ],
+  "source": [],
+  "versionGroups": []
+}
