@@ -21,7 +21,7 @@
     "react-hook-form": "^7.43.9",
     "storybook": "^7.0.12",
     "typescript": "^5.0.4",
-    "vite": "^4.3.6",
+    "vite": "4.3.9",
     "webpack": "^5.82.1"
   },
   "peerDependencies": {

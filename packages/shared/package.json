@@ -20,16 +20,16 @@
     "next": "^13.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite": "^4.3.1",
-    "vitest": "^0.30.1"
+    "vite": "4.3.9",
+    "vitest": "0.31.3"
   },
   "peerDependencies": {
+    "@saleor/app-sdk": "0.39.1",
     "next": "^13.3.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@saleor/app-sdk": "0.39.1"
+    "react-dom": "^18.2.0"
   },
   "scripts": {
     "lint:fix": "eslint --fix ."
