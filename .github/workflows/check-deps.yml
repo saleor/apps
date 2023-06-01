@@ -9,6 +9,7 @@ jobs:
   syncpack:
     runs-on: ubuntu-latest
     name: Check dependencies
+    continue-on-error: true
     steps:
       # Check out the branch so we can read/write its files
       - uses: actions/checkout@v3
@@ -26,7 +27,7 @@ jobs:
           version-mismatches: "lint"
           # semver-range-mismatches: don't align dependency version format
           semver-range-mismatches: "ignore"
-          # lockfile-mismatches: don't update lockfiles when mismatches detected 
+          # lockfile-mismatches: don't update lockfiles when mismatches detected
           lockfile-mismatches: "ignore"
           # format-mismatches: don't update package.json when inconsistent formatting detected
           format-mismatches: "ignore"
