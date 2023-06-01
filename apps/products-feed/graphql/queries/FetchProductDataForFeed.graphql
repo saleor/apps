@@ -1,4 +1,4 @@
-query FetchProductDataForFeed($first:Int!, $after: String, $channel: String!, $language: String!){
+query FetchProductDataForFeed($first:Int!, $after: String, $channel: String!){
   productVariants(first:$first, after: $after, channel: $channel){
     pageInfo{
       hasNextPage
