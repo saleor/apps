@@ -1,10 +1,21 @@
 import pino from "pino";
 
+const forbiddenProductionLevels = ["debug", "trace"];
+
+const logLevel = process.env.APP_LOG_LEVEL ?? "silent";
+
+if (process.env.NODE_ENV === "production" && forbiddenProductionLevels.includes(logLevel)) {
+  throw new Error(
+    `Production app can only log INFO or higher log level. "${logLevel}" is development only.`
+  );
+  process.exit(1);
+}
+
 /**
  * TODO Set up log drain etc
  */
 export const logger = pino({
-  level: process.env.APP_LOG_LEVEL ?? "silent",
+  level: logLevel,
   redact: ["token", "apiKey"],
   transport:
     process.env.NODE_ENV === "development"
