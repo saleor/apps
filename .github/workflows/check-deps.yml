@@ -7,6 +7,7 @@ on:
       - main
 jobs:
   syncpack:
+    if: contains(github.event.pull_request.labels.*.name, 'check dependencies')
     runs-on: ubuntu-latest
     name: Check dependencies
     steps:
