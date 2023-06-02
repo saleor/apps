@@ -4,9 +4,9 @@ import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
-import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "./taxjar-config";
 import { DeepPartial } from "@trpc/server";
+import { TaxJarValidationService } from "./taxjar-validation.service";
 
 const getSchema = taxJarInstanceConfigSchema;
 
@@ -64,12 +64,13 @@ export class TaxJarConfigurationService {
 
   async post(config: TaxJarConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
-    const taxJarClient = new TaxJarClient(config);
-    const validation = await taxJarClient.ping();
+    const validationService = new TaxJarValidationService();
+    const validation = await validationService.validate(config);
 
     if (!validation.authenticated) {
       this.logger.error({ error: validation.error }, "Validation error while post");
-      throw new Error(validation.error);
+
+      throw validation.error;
     }
     const result = await this.crudSettingsManager.create({
       provider: "taxjar",
@@ -84,6 +85,15 @@ export class TaxJarConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
+
+    const validationService = new TaxJarValidationService();
+    const validation = await validationService.validate(setting.config);
+
+    if (!validation.authenticated) {
+      this.logger.error({ error: validation.error }, "Validation error while post");
+
+      throw validation.error;
+    }
 
     return this.crudSettingsManager.update(id, {
       ...setting,
