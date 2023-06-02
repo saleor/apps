@@ -23,6 +23,7 @@ type TaxJarConfigurationFormProps = {
   onSubmit: (data: TaxJarConfig) => void;
   defaultValues?: TaxJarConfig;
   isLoading: boolean;
+  cancelButton: React.ReactNode;
 };
 
 export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => {
@@ -129,9 +130,7 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
         </Box>
         <Divider marginY={8} />
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-          <Button onClick={() => router.push("/configuration")} variant="tertiary">
-            Cancel
-          </Button>
+          {props.cancelButton}
           <Button type="submit" variant="primary">
             {props.isLoading ? "Saving..." : "Save"}
           </Button>

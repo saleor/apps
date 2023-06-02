@@ -1,8 +1,9 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
-import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 
 export const CreateTaxJarConfiguration = () => {
   const router = useRouter();
@@ -27,5 +28,15 @@ export const CreateTaxJarConfiguration = () => {
     createMutation({ value: data });
   };
 
-  return <TaxJarConfigurationForm isLoading={isCreateLoading} onSubmit={submitHandler} />;
+  return (
+    <TaxJarConfigurationForm
+      isLoading={isCreateLoading}
+      onSubmit={submitHandler}
+      cancelButton={
+        <Button onClick={() => router.push("/configuration")} variant="tertiary">
+          Cancel
+        </Button>
+      }
+    />
+  );
 };

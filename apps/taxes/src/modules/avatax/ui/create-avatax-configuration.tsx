@@ -4,6 +4,7 @@ import { AvataxConfig } from "../avatax-config";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
+import { Button } from "@saleor/macaw-ui/next";
 
 export const CreateAvataxConfiguration = () => {
   const router = useRouter();
@@ -28,5 +29,15 @@ export const CreateAvataxConfiguration = () => {
     createMutation({ value: data });
   };
 
-  return <AvataxConfigurationForm isLoading={isCreateLoading} onSubmit={submitHandler} />;
+  return (
+    <AvataxConfigurationForm
+      isLoading={isCreateLoading}
+      onSubmit={submitHandler}
+      cancelButton={
+        <Button onClick={() => router.push("/configuration")} variant="tertiary">
+          Cancel
+        </Button>
+      }
+    />
+  );
 };

@@ -23,13 +23,7 @@ export const AppToggle = <TFieldValues extends FieldValues = FieldValues>({
       <Toggle {...p}>
         <Text marginLeft={4}>{label}</Text>
       </Toggle>
-      {typeof helperText === "string" ? (
-        <Text variant="caption" color="textNeutralSubdued">
-          {helperText}
-        </Text>
-      ) : (
-        helperText
-      )}
+      {helperText}
     </Box>
   );
 };

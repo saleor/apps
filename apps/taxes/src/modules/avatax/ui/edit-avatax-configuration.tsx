@@ -1,10 +1,10 @@
-import React from "react";
-import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import { AvataxConfig } from "../avatax-config";
-import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AvataxConfig } from "../avatax-config";
+import { AvataxConfigurationForm } from "./avatax-configuration-form";
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();
@@ -26,10 +26,31 @@ export const EditAvataxConfiguration = () => {
       },
     });
 
+  const { mutate: deleteMutation, isLoading: isDeleteLoading } =
+    trpcClient.avataxConfiguration.delete.useMutation({
+      onSuccess() {
+        notifySuccess("Success", "Deleted Avatax configuration");
+        refetchProvidersConfigurationData();
+        router.push("/configuration");
+      },
+      onError(error) {
+        notifyError("Error", error.message);
+      },
+    });
+
   const { data } = trpcClient.avataxConfiguration.get.useQuery({ id: configurationId });
 
   const submitHandler = (data: AvataxConfig) => {
     patchMutation({ value: data, id: configurationId });
+  };
+
+  const deleteHandler = () => {
+    /*
+     * // todo: add support for window.confirm to AppBridge or wait on Dialog component in Macaw
+     * if (window.confirm("Are you sure you want to delete the provider?")) {
+     */
+    deleteMutation({ id: configurationId });
+    // }
   };
 
   return (
@@ -37,6 +58,11 @@ export const EditAvataxConfiguration = () => {
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
       defaultValues={data?.config}
+      cancelButton={
+        <Button onClick={deleteHandler} variant="error">
+          Delete provider
+        </Button>
+      }
     />
   );
 };

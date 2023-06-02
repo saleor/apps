@@ -6,9 +6,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { AppCard } from "../../ui/app-card";
 import { AppToggle } from "../../ui/app-toggle";
-import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-config";
 import { CountrySelect } from "../../ui/country-select";
-import { useRouter } from "next/router";
+import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-config";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -22,10 +21,10 @@ type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
   defaultValues?: AvataxConfig;
   isLoading: boolean;
+  cancelButton: React.ReactNode;
 };
 
 export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
-  const router = useRouter();
   const { handleSubmit, control, formState, reset } = useForm({
     defaultValues: defaultAvataxConfig,
     resolver: zodResolver(avataxConfigSchema),
@@ -185,9 +184,8 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
         </Box>
         <Divider marginY={8} />
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-          <Button onClick={() => router.push("/configuration")} variant="tertiary">
-            Cancel
-          </Button>
+          {props.cancelButton}
+
           <Button type="submit" variant="primary">
             {props.isLoading ? "Saving..." : "Save"}
           </Button>
