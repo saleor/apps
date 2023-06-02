@@ -4,9 +4,9 @@ import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
-import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
 import { DeepPartial } from "@trpc/server";
+import { AvataxValidationService } from "./avatax-validation.service";
 
 const getSchema = avataxInstanceConfigSchema;
 
@@ -62,12 +62,12 @@ export class AvataxConfigurationService {
 
   async post(config: AvataxConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
-    const avataxClient = new AvataxClient(config);
-    const validation = await avataxClient.ping();
+    const validationService = new AvataxValidationService();
+    const validation = await validationService.validate(config);
 
     if (!validation.authenticated) {
       this.logger.error(validation.error);
-      throw new Error(validation.error);
+      throw validation.error;
     }
 
     const result = await this.crudSettingsManager.create({
@@ -83,6 +83,14 @@ export class AvataxConfigurationService {
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
+
+    const validationService = new AvataxValidationService();
+    const validation = await validationService.validate(setting.config);
+
+    if (!validation.authenticated) {
+      this.logger.error(validation.error);
+      throw validation.error;
+    }
 
     return this.crudSettingsManager.update(id, {
       ...setting,
