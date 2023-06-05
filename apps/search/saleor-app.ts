@@ -37,15 +37,6 @@ switch (aplType) {
   }
 }
 
-if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
-  throw new Error(
-    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
-  );
-}
-
-// Use placeholder value for the development
-export const settingsManagerSecretKey = process.env.SECRET_KEY || "CHANGE_ME";
-
 export const saleorApp = new SaleorApp({
   apl,
 });

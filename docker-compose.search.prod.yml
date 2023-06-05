@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: search_app_postgres
+    image: postgres # Todo maybe some alpine image?
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - saleor-app-search
+  saleor-app-search:
+    container_name: saleor-app-search
+    depends_on:
+      - postgres
+    build:
+      context: .
+      dockerfile: apps/search/app.prod.Dockerfile
+      args:
+        DATABASE_URL: "postgres://postgres:postgres@postgres/postgres"
+    environment:
+      APP_DEBUG: "info"
+      DATABASE_URL: "postgres://postgres:postgres@postgres/postgres"
+    restart: always
+#    command: TODO
+#      - npx prisma migrate deploy
+#      - node apps/search/server.js
+#    entrypoint: ["/bin/bash", "./apps/search/run-app.sh"]
+    ports:
+      - 3000:3000
+    networks:
+      - saleor-app-search
+#  saleor-app-search-worker:
+#    container_name: saleor-app-search-worker
+#    depends_on:
+#      - postgres
+#    build:
+#      context: . # In examples its ./next-app, we can do that too todo
+#      dockerfile: worker.prod.Dockerfile
+#    environment:
+#      DATABASE_URL: "postgres://postgres:postgres@postgres/postgres"
+#    restart: always
+#    networks:
+#      - saleor-app-search
+volumes:
+    postgres:
+
+
+networks:
+  saleor-app-search:
+    driver: bridge

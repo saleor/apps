@@ -13,6 +13,9 @@ export type Products = NonNullable<
   ProductsDataForImportQuery["products"]
 >["edges"][number]["node"][];
 
+/**
+ * @deprecated
+ */
 export const useQueryAllProducts = (paused: boolean) => {
   const { appBridgeState } = useAppBridge();
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;

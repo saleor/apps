@@ -42,15 +42,17 @@ export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, c
     logger.warn("Aborting due to lack of settings");
     logger.debug(errors);
 
+    const error = (errors && errors[0] && errors[0].message) ?? "Unknown error";
+
     return res.status(400).json({
-      message: errors[0].message,
+      message: error,
     });
   }
 
   const searchProvider = new AlgoliaSearchProvider({
     appId: settings.appId,
     apiKey: settings.secretKey,
-    indexNamePrefix: settings.indexNamePrefix,
+    indexNamePrefix: settings.indexNamePrefix ?? undefined,
   });
 
   const { product } = context.payload;

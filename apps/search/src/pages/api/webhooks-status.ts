@@ -3,15 +3,16 @@ import { saleorApp } from "../../../saleor-app";
 import { createClient, SimpleGraphqlClient } from "../../lib/graphql";
 import { FetchOwnWebhooksDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { createSettingsManager } from "../../lib/metadata";
 import {
   IWebhookActivityTogglerService,
   WebhookActivityTogglerService,
 } from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
 import { SearchProvider } from "../../lib/searchProvider";
+import {
+  AlgoliaConfigurationRepository,
+  algoliaConfigurationRepository,
+} from "../../domain/algolia-configuration/AlgoliaConfigurationRepository";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
@@ -21,7 +22,7 @@ const logger = createLogger({
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (client: SimpleGraphqlClient) => SettingsManager;
+  algoliaConfigurationRepository: Pick<AlgoliaConfigurationRepository, "getConfiguration">;
   webhookActivityTogglerFactory: (
     appId: string,
     client: SimpleGraphqlClient
@@ -32,7 +33,7 @@ type FactoryProps = {
 
 export const webhooksStatusHandlerFactory =
   ({
-    settingsManagerFactory,
+    algoliaConfigurationRepository,
     webhookActivityTogglerFactory,
     algoliaSearchProviderFactory,
     graphqlClientFactory,
@@ -43,25 +44,17 @@ export const webhooksStatusHandlerFactory =
      */
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
-    const settingsManager = settingsManagerFactory(client);
 
-    const domain = new URL(authData.saleorApiUrl).host;
-
-    const [secretKey, appId] = await Promise.all([
-      settingsManager.get("secretKey", domain),
-      settingsManager.get("appId", domain),
-    ]);
-
-    const settings = { secretKey, appId };
-
-    logger.debug(settings, "fetched settings");
+    const configuration = await algoliaConfigurationRepository.getConfiguration(
+      authData.saleorApiUrl
+    );
 
     /**
      * If settings are incomplete, disable webhooks
      *
      * TODO Extract config operations to domain/
      */
-    if (!settings.appId || !settings.secretKey) {
+    if (!configuration) {
       logger.debug("Settings not set, will disable webhooks");
 
       await webhooksToggler.disableOwnWebhooks();
@@ -69,7 +62,10 @@ export const webhooksStatusHandlerFactory =
       /**
        * Otherwise, if settings are set, check in Algolia if tokens are valid
        */
-      const algoliaService = algoliaSearchProviderFactory(settings.appId, settings.secretKey);
+      const algoliaService = algoliaSearchProviderFactory(
+        configuration.appId,
+        configuration.secretKey
+      );
 
       try {
         logger.debug("Settings set, will ping Algolia");
@@ -105,7 +101,7 @@ export const webhooksStatusHandlerFactory =
 
 export default createProtectedHandler(
   webhooksStatusHandlerFactory({
-    settingsManagerFactory: createSettingsManager,
+    algoliaConfigurationRepository: algoliaConfigurationRepository,
     webhookActivityTogglerFactory: function (appId, client) {
       return new WebhookActivityTogglerService(appId, client);
     },
