@@ -16,7 +16,7 @@ const Intro = () => {
       <Text as="h2" variant="heading">
         Connect Avatax
       </Text>
-      <Text as="p" variant="body">
+      <Text as="p">
         {/* // todo: replace */}
         Some description text that explains how to configure the service, but also links to general
         docs and prerequisites{" "}

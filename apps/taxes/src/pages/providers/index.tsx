@@ -1,9 +1,9 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { AvataxIcon, StripeTaxIcon, TaxJarIcon } from "../../assets";
+import { ProviderName } from "../../modules/providers-configuration/providers-config";
 import { AppCard } from "../../modules/ui/app-card";
 import { AppColumns } from "../../modules/ui/app-columns";
+import { ProviderLabel } from "../../modules/ui/provider-label";
 
 const Header = () => {
   return (
@@ -26,16 +26,15 @@ const Intro = () => {
 };
 
 type ProviderProps = {
-  label: string;
-  icon: string;
   description: React.ReactNode;
   isComingSoon?: boolean;
 };
 
+// TODO: remove ProviderNameWithStripeTax when stripeTax is ready
+type ProviderNameWithStripeTax = ProviderName | "stripeTax";
+
 const providerConfig = {
   taxjar: {
-    label: "TaxJar",
-    icon: TaxJarIcon,
     description: (
       <p>
         TaxJar is a cloud-based tax automation platform designed to simplify and streamline sales
@@ -44,8 +43,6 @@ const providerConfig = {
     ),
   },
   avatax: {
-    label: "Avatax",
-    icon: AvataxIcon,
     description: (
       <p>
         Avatax is a comprehensive tax automation software service that helps businesses calculate
@@ -54,8 +51,6 @@ const providerConfig = {
     ),
   },
   stripeTax: {
-    label: "Stripe Tax",
-    icon: StripeTaxIcon,
     isComingSoon: true,
     description: (
       <p>
@@ -64,25 +59,20 @@ const providerConfig = {
       </p>
     ),
   },
-} satisfies Record<string, ProviderProps>;
+} satisfies Record<ProviderNameWithStripeTax, ProviderProps>;
 
 const ProviderCard = ({
-  label,
-  icon,
   description,
   provider,
   isComingSoon,
-}: ProviderProps & { provider: string }) => {
+}: ProviderProps & { provider: ProviderNameWithStripeTax }) => {
   const router = useRouter();
 
   return (
     <AppCard>
       <Box display={"flex"} flexDirection={"column"} gap={8}>
         <Box display={"flex"} justifyContent={"space-between"}>
-          <Box alignItems={"center"} display={"flex"} gap={6}>
-            <Image src={icon} width={20} height={20} alt={`provider icon`} />
-            <Text variant="bodyStrong">{label}</Text>
-          </Box>
+          <ProviderLabel name={provider} />
           {isComingSoon && (
             <Text
               variant="body"
@@ -111,7 +101,7 @@ const ChooseProvider = () => {
   return (
     <Box gap={6} display="flex" flexDirection={"column"}>
       {Object.entries(providerConfig).map(([provider, description]) => {
-        return <ProviderCard {...description} provider={provider} />;
+        return <ProviderCard {...description} provider={provider as ProviderName} />;
       })}
     </Box>
   );

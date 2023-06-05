@@ -16,7 +16,9 @@ export const Table = {
   TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingY={4} {...props} as="td" />,
 };
 
-const providerIconMap: Record<ProviderName, { label: string; icon: string }> = {
+type ProviderNameWithoutStripeTax = Exclude<ProviderName, "stripeTax">;
+
+const providerIconMap: Record<ProviderNameWithoutStripeTax, { label: string; icon: string }> = {
   avatax: {
     icon: AvataxIcon,
     label: "Avatax",
@@ -27,7 +29,7 @@ const providerIconMap: Record<ProviderName, { label: string; icon: string }> = {
   },
 };
 
-const ProviderIcon = ({ provider }: { provider: ProviderName }) => {
+const ProviderIcon = ({ provider }: { provider: ProviderNameWithoutStripeTax }) => {
   const { icon, label } = providerIconMap[provider];
 
   return (

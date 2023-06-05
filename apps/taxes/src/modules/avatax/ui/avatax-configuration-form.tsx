@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { AppCard } from "../../ui/app-card";
 import { AppToggle } from "../../ui/app-toggle";
 import { CountrySelect } from "../../ui/country-select";
+import { ProviderLabel } from "../../ui/provider-label";
 import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-config";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {
@@ -40,6 +41,10 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
 
   return (
     <AppCard>
+      <Box marginBottom={8}>
+        <ProviderLabel name="avatax" />
+      </Box>
+
       <form onSubmit={handleSubmit(submitHandler)}>
         <Input
           control={control}

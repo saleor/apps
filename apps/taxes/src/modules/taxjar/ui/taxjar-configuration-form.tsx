@@ -9,6 +9,7 @@ import { AppToggle } from "../../ui/app-toggle";
 
 import { CountrySelect } from "../../ui/country-select";
 import { TaxJarConfig, defaultTaxJarConfig, taxJarConfigSchema } from "../taxjar-config";
+import { ProviderLabel } from "../../ui/provider-label";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -41,6 +42,10 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
 
   return (
     <AppCard>
+      <Box marginBottom={8}>
+        <ProviderLabel name="taxjar" />
+      </Box>
+
       <form onSubmit={handleSubmit(submitHandler)}>
         <Input
           control={control}
