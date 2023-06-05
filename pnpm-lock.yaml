@@ -524,6 +524,9 @@ importers:
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
+      dotenv:
+        specifier: ^16.0.3
+        version: 16.0.3
       graphql:
         specifier: ^16.6.0
         version: 16.6.0
@@ -6167,7 +6170,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       '@whatwg-node/fetch': 0.7.0(@types/node@18.13.0)
       graphql: 16.6.0
-      tslib: 2.5.0
+      tslib: 2.5.2
     transitivePeerDependencies:
       - '@types/node'
       - encoding
@@ -6194,7 +6197,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       globby: 11.1.0
       graphql: 16.6.0
-      tslib: 2.5.0
+      tslib: 2.5.2
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -6309,7 +6312,7 @@ packages:
       graphql: 16.6.0
       is-glob: 4.0.3
       micromatch: 4.0.5
-      tslib: 2.5.0
+      tslib: 2.5.2
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -6344,7 +6347,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       '@whatwg-node/fetch': 0.7.0(@types/node@18.13.0)
       graphql: 16.6.0
-      tslib: 2.5.0
+      tslib: 2.5.2
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/node'
@@ -6361,7 +6364,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       globby: 11.1.0
       graphql: 16.6.0
-      tslib: 2.5.0
+      tslib: 2.5.2
       unixify: 1.0.0
     dev: true
 
@@ -6401,7 +6404,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       globby: 11.1.0
       graphql: 16.6.0
-      tslib: 2.5.0
+      tslib: 2.5.2
       unixify: 1.0.0
     dev: true
 
@@ -6414,7 +6417,7 @@ packages:
       '@graphql-tools/utils': 9.2.1(graphql@16.6.0)
       graphql: 16.6.0
       p-limit: 3.1.0
-      tslib: 2.5.0
+      tslib: 2.5.2
     dev: true
 
   /@graphql-tools/merge@8.3.18(graphql@16.6.0):
@@ -6492,7 +6495,7 @@ packages:
       jsonwebtoken: 9.0.0
       lodash: 4.17.21
       scuid: 1.1.0
-      tslib: 2.5.0
+      tslib: 2.5.2
       yaml-ast-parser: 0.0.43
     transitivePeerDependencies:
       - '@types/node'
@@ -6586,7 +6589,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.6.0
-      tslib: 2.4.1
+      tslib: 2.5.2
     dev: true
 
   /@graphql-tools/utils@9.2.1(graphql@16.6.0):
@@ -13744,7 +13747,6 @@ packages:
   /dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
-    dev: true
 
   /dotenv@8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
@@ -14436,7 +14438,7 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.3
       aria-query: 5.1.3
       array-includes: 3.1.6
       array.prototype.flatmap: 1.3.1
@@ -16075,7 +16077,7 @@ packages:
       jiti: 1.17.1
       minimatch: 4.2.3
       string-env-interpolation: 1.0.1
-      tslib: 2.5.0
+      tslib: 2.5.2
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
