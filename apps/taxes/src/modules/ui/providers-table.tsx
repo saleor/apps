@@ -1,9 +1,8 @@
-import { Box, BoxProps, Button, Text } from "@saleor/macaw-ui/next";
-import Image from "next/image";
+import { Box, BoxProps, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
-import { AvataxIcon, TaxJarIcon } from "../../assets";
-import { ProviderConfig, ProviderName } from "../providers-configuration/providers-config";
+import { ProviderConfig } from "../providers-configuration/providers-config";
 import { trpcClient } from "../trpc/trpc-client";
+import { ProviderLabel } from "./provider-label";
 
 export const Table = {
   Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
@@ -14,32 +13,6 @@ export const Table = {
   ),
   TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
   TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingY={4} {...props} as="td" />,
-};
-
-type ProviderNameWithoutStripeTax = Exclude<ProviderName, "stripeTax">;
-
-const providerIconMap: Record<ProviderNameWithoutStripeTax, { label: string; icon: string }> = {
-  avatax: {
-    icon: AvataxIcon,
-    label: "Avatax",
-  },
-  taxjar: {
-    icon: TaxJarIcon,
-    label: "TaxJar",
-  },
-};
-
-const ProviderIcon = ({ provider }: { provider: ProviderNameWithoutStripeTax }) => {
-  const { icon, label } = providerIconMap[provider];
-
-  return (
-    <Box alignItems={"center"} display={"flex"} gap={4}>
-      <Image src={icon} width={20} height={20} alt={`${provider} icon`} />
-      <Text __color="inherit" marginTop={2}>
-        {label}
-      </Text>
-    </Box>
-  );
 };
 
 export const ProvidersTable = () => {
@@ -63,7 +36,7 @@ export const ProvidersTable = () => {
           <Table.TR>
             <Table.TD>{item.config.name}</Table.TD>
             <Table.TD>
-              <ProviderIcon provider={item.provider} />
+              <ProviderLabel name={item.provider} />
             </Table.TD>
             <Table.TD onClick={() => itemClickHandler(item)}>
               <Box display={"flex"} justifyContent={"flex-end"}>
