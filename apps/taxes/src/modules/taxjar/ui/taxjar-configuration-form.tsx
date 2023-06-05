@@ -8,7 +8,6 @@ import { AppCard } from "../../ui/app-card";
 import { AppToggle } from "../../ui/app-toggle";
 
 import { CountrySelect } from "../../ui/country-select";
-import { useRouter } from "next/router";
 import { TaxJarConfig, defaultTaxJarConfig, taxJarConfigSchema } from "../taxjar-config";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {
@@ -27,7 +26,6 @@ type TaxJarConfigurationFormProps = {
 };
 
 export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => {
-  const router = useRouter();
   const { handleSubmit, control, formState, reset } = useForm({
     defaultValues: defaultTaxJarConfig,
     resolver: zodResolver(taxJarConfigSchema),

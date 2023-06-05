@@ -20,7 +20,8 @@ export const AppToggle = <TFieldValues extends FieldValues = FieldValues>({
 }: AppToggleProps<TFieldValues>) => {
   return (
     <Box display={"flex"} flexDirection={"column"} gap={4}>
-      <Toggle {...p}>
+      {/* without type="button", radix toggle value change triggers form submission */}
+      <Toggle type="button" {...p}>
         <Text marginLeft={4}>{label}</Text>
       </Toggle>
       {helperText}
