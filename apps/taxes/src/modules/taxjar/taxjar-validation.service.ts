@@ -23,7 +23,7 @@ export class TaxJarValidationService {
 
     if (error.status === 404) {
       return new Error(
-        "The provided address could not be validated. Please visit https://support.taxjar.com/article/659-address-validation for more information."
+        "The provided address is invalid. Please visit https://support.taxjar.com/article/659-address-validation to learn about address formatting."
       );
     }
 
