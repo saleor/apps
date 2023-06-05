@@ -35,7 +35,7 @@ export class AvataxValidationService {
     }
   }
 
-  private resolveError(error: unknown): Error {
+  private resolveValidationError(error: unknown): Error {
     const parseResult = avataxErrorSchema.safeParse(error);
 
     if (parseResult.success) {
@@ -55,9 +55,7 @@ export class AvataxValidationService {
     return new Error("Unknown error while validating Avatax configuration.");
   }
 
-  async validate(
-    config: AvataxConfig
-  ): Promise<{ authenticated: true } | { authenticated: false; error: Error }> {
+  async validate(config: AvataxConfig): Promise<void> {
     const avataxClient = new AvataxClient(config);
     const address = avataxAddressFactory.fromChannelAddress(config.address);
 
@@ -65,13 +63,8 @@ export class AvataxValidationService {
       const validation = await avataxClient.validateAddress({ address });
 
       this.resolveValidationResponse(validation);
-
-      this.logger.debug({ validation }, "Address validation result");
-
-      return { authenticated: true };
     } catch (error) {
-      this.logger.error({ error }, "Error while validating address");
-      return { authenticated: false, error: this.resolveError(error) };
+      throw this.resolveValidationError(error);
     }
   }
 }

@@ -1,16 +1,11 @@
-import { createLogger, Logger } from "../../lib/logger";
+import { TaxjarError } from "taxjar/dist/util/types";
+import { taxJarAddressFactory } from "./address-factory";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-config";
-import { taxJarAddressFactory } from "./address-factory";
-import { TaxjarError } from "taxjar/dist/util/types";
 
 export class TaxJarValidationService {
-  private logger: Logger;
-  constructor() {
-    this.logger = createLogger({ service: "TaxJarValidationService" });
-  }
-
-  private resolveError(error: unknown): Error {
+  constructor() {}
+  private resolveTaxJarValidationError(error: unknown): Error {
     if (!(error instanceof TaxjarError)) {
       return new Error("Unknown error while validating TaxJar configuration.");
     }
@@ -30,24 +25,15 @@ export class TaxJarValidationService {
     return new Error(error.detail);
   }
 
-  async validate(
-    config: TaxJarConfig
-  ): Promise<{ authenticated: true } | { authenticated: false; error: Error }> {
+  async validate(config: TaxJarConfig): Promise<void> {
     const taxJarClient = new TaxJarClient(config);
 
+    const address = taxJarAddressFactory.fromChannelToParams(config.address);
+
     try {
-      const address = taxJarAddressFactory.fromChannelToParams(config.address);
-
       await taxJarClient.validateAddress({ params: address });
-
-      return { authenticated: true };
     } catch (error) {
-      this.logger.error({ error }, "Error while validating TaxJar configuration");
-
-      return {
-        authenticated: false,
-        error: this.resolveError(error),
-      };
+      throw this.resolveTaxJarValidationError(error);
     }
   }
 }

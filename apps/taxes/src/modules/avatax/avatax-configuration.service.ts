@@ -63,12 +63,8 @@ export class AvataxConfigurationService {
   async post(config: AvataxConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const validationService = new AvataxValidationService();
-    const validation = await validationService.validate(config);
 
-    if (!validation.authenticated) {
-      this.logger.error(validation.error);
-      throw validation.error;
-    }
+    await validationService.validate(config);
 
     const result = await this.crudSettingsManager.create({
       provider: "avatax",
@@ -85,12 +81,8 @@ export class AvataxConfigurationService {
     const { id: _, ...setting } = data;
 
     const validationService = new AvataxValidationService();
-    const validation = await validationService.validate(setting.config);
 
-    if (!validation.authenticated) {
-      this.logger.error(validation.error);
-      throw validation.error;
-    }
+    await validationService.validate(setting.config);
 
     return this.crudSettingsManager.update(id, {
       ...setting,

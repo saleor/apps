@@ -65,13 +65,9 @@ export class TaxJarConfigurationService {
   async post(config: TaxJarConfig): Promise<{ id: string }> {
     this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const validationService = new TaxJarValidationService();
-    const validation = await validationService.validate(config);
 
-    if (!validation.authenticated) {
-      this.logger.error({ error: validation.error }, "Validation error while post");
+    await validationService.validate(config);
 
-      throw validation.error;
-    }
     const result = await this.crudSettingsManager.create({
       provider: "taxjar",
       config: config,
@@ -87,13 +83,8 @@ export class TaxJarConfigurationService {
     const { id: _, ...setting } = data;
 
     const validationService = new TaxJarValidationService();
-    const validation = await validationService.validate(setting.config);
 
-    if (!validation.authenticated) {
-      this.logger.error({ error: validation.error }, "Validation error while post");
-
-      throw validation.error;
-    }
+    await validationService.validate(setting.config);
 
     return this.crudSettingsManager.update(id, {
       ...setting,
