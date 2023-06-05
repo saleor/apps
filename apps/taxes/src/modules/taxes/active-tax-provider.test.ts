@@ -59,17 +59,19 @@ const mockedProviders: ProvidersConfig = [
 ];
 const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), mockedSecretKey);
 
-const mockedChannelsWithInvalidProviderInstanceId: ChannelsConfig = {
-  "default-channel": {
+const mockedChannelsWithInvalidProviderInstanceId: ChannelsConfig = [
+  {
     providerInstanceId: "3",
+    slug: "default-channel",
   },
-};
+];
 
-const mockedValidChannels: ChannelsConfig = {
-  "default-channel": {
+const mockedValidChannels: ChannelsConfig = [
+  {
     providerInstanceId: "1",
+    slug: "default-channel",
   },
-};
+];
 
 const mockedInvalidEncryptedChannels = encrypt(
   JSON.stringify(mockedChannelsWithInvalidProviderInstanceId),

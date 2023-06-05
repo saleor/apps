@@ -11,6 +11,7 @@ export class CrudSettingsManager {
   private logger: Logger;
 
   constructor(
+    // move: createSettings manager to constructor
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
     private metadataKey: string

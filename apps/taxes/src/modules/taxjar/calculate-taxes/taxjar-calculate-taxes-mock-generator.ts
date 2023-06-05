@@ -197,6 +197,7 @@ const taxExcludedTaxBase: TaxBase = {
 
 const channelConfig: ChannelConfig = {
   providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
+  slug: "default-channel",
 };
 
 const providerConfig: TaxJarConfig = {

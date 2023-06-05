@@ -8,6 +8,7 @@ type Order = OrderCreatedSubscriptionFragment;
 
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
+  slug: "default-channel",
 };
 
 // providerConfigMockGenerator class that other classes extend?

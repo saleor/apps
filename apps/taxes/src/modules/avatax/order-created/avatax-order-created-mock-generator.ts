@@ -7,6 +7,7 @@ import { defaultOrder } from "../../../mocks";
 
 const defaultChannelConfig: ChannelConfig = {
   providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
+  slug: "default-channel",
 };
 
 const defaultOrderCreatedResponse: TransactionModel = orderCreatedTransactionMock;

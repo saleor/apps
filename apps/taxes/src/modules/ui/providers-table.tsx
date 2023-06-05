@@ -1,4 +1,4 @@
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, BoxProps, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { ProviderConfig } from "../providers-configuration/providers-config";
 import { trpcClient } from "../trpc/trpc-client";
