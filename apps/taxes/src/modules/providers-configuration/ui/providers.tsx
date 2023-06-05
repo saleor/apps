@@ -1,8 +1,8 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
-import { trpcClient } from "../trpc/trpc-client";
-import { AppCard } from "./app-card";
-import { ProvidersTable } from "./providers-table";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AppCard } from "../../ui/app-card";
+import { ProvidersTable } from "../../ui/providers-table";
 
 const AddProvider = () => {
   const router = useRouter();
