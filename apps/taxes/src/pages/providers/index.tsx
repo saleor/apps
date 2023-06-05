@@ -8,7 +8,7 @@ import { AppColumns } from "../../modules/ui/app-columns";
 const Header = () => {
   return (
     <Box>
-      <Text __maxWidth={"360px"} __fontWeight={"400"} variant="body">
+      <Text __maxWidth={"360px"} variant="body">
         Select and configure providers to connect Saleor with selected services.
       </Text>
     </Box>
@@ -94,7 +94,7 @@ const ProviderCard = ({
             </Text>
           )}
         </Box>
-        <Text __fontWeight={"400"} variant="body" __maxWidth={"480px"}>
+        <Text variant="body" __maxWidth={"480px"}>
           {description}
         </Text>
       </Box>

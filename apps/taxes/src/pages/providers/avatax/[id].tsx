@@ -5,9 +5,7 @@ import { AppColumns } from "../../../modules/ui/app-columns";
 const Header = () => {
   return (
     <Box>
-      <Text as="p" variant="body" __fontWeight={"400"}>
-        Edit your Avatax instance
-      </Text>
+      <Text as="p">Edit your Avatax instance</Text>
     </Box>
   );
 };
@@ -18,7 +16,7 @@ const Intro = () => {
       <Text as="h2" variant="heading">
         Connect Avatax
       </Text>
-      <Text as="p" variant="body" __fontWeight={"400"}>
+      <Text as="p" variant="body">
         {/* // todo: replace */}
         Some description text that explains how to configure the service, but also links to general
         docs and prerequisites{" "}

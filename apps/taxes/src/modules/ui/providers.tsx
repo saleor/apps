@@ -16,9 +16,7 @@ const AddProvider = () => {
       height={"100%"}
       justifyContent={"center"}
     >
-      <Text variant="body" __fontWeight={"400"}>
-        No providers configured yet
-      </Text>
+      <Text variant="body">No providers configured yet</Text>
       <Button onClick={() => router.push("/providers")}>Add first provider</Button>
     </Box>
   );
