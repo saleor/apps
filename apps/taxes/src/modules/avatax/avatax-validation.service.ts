@@ -37,8 +37,10 @@ export class AvataxValidationService {
 
   private resolveValidationError(error: unknown): Error {
     const parseResult = avataxErrorSchema.safeParse(error);
+    const isErrorParsed = parseResult.success;
 
-    if (parseResult.success) {
+    // Avatax doesn't return a type for their error format, so we need to parse the error
+    if (isErrorParsed) {
       const { code, details } = parseResult.data;
 
       if (code === "AuthenticationException") {
@@ -52,6 +54,7 @@ export class AvataxValidationService {
       return error;
     }
 
+    this.logger.error("Unknown error while validating Avatax configuration.");
     return new Error("Unknown error while validating Avatax configuration.");
   }
 
