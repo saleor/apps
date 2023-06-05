@@ -25,9 +25,12 @@ export const CreateAvataxConfiguration = () => {
       },
     });
 
-  const submitHandler = (data: AvataxConfig) => {
-    createMutation({ value: data });
-  };
+  const submitHandler = React.useCallback(
+    (data: AvataxConfig) => {
+      createMutation({ value: data });
+    },
+    [createMutation]
+  );
 
   return (
     <AvataxConfigurationForm

@@ -35,9 +35,12 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
     reset(props.defaultValues);
   }, [props.defaultValues, reset]);
 
-  const submitHandler = (data: AvataxConfig) => {
-    props.onSubmit(data);
-  };
+  const submitHandler = React.useCallback(
+    (data: AvataxConfig) => {
+      props.onSubmit(data);
+    },
+    [props]
+  );
 
   return (
     <AppCard>

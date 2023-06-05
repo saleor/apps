@@ -4,7 +4,7 @@ import { ProviderConfig } from "../providers-configuration/providers-config";
 import { trpcClient } from "../trpc/trpc-client";
 import { ProviderLabel } from "./provider-label";
 
-export const Table = {
+const Table = {
   Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
   THead: (props: BoxProps) => <Box {...props} as="thead" />,
   TR: (props: BoxProps) => <Box {...props} as="tr" />,

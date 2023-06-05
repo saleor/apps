@@ -36,9 +36,12 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
     reset(props.defaultValues);
   }, [props.defaultValues, reset]);
 
-  const submitHandler = (data: TaxJarConfig) => {
-    props.onSubmit(data);
-  };
+  const submitHandler = React.useCallback(
+    (data: TaxJarConfig) => {
+      props.onSubmit(data);
+    },
+    [props]
+  );
 
   return (
     <AppCard>

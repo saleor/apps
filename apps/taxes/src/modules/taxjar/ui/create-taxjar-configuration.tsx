@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
 import { TaxJarConfig, defaultTaxJarConfig } from "../taxjar-config";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
+import React from "react";
 
 export const CreateTaxJarConfiguration = () => {
   const router = useRouter();
@@ -24,9 +25,12 @@ export const CreateTaxJarConfiguration = () => {
       },
     });
 
-  const submitHandler = (data: TaxJarConfig) => {
-    createMutation({ value: data });
-  };
+  const submitHandler = React.useCallback(
+    (data: TaxJarConfig) => {
+      createMutation({ value: data });
+    },
+    [createMutation]
+  );
 
   return (
     <TaxJarConfigurationForm

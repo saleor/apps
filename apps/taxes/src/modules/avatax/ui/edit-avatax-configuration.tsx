@@ -5,6 +5,7 @@ import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-config";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
+import React from "react";
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();
@@ -52,9 +53,12 @@ export const EditAvataxConfiguration = () => {
     }
   );
 
-  const submitHandler = (data: AvataxConfig) => {
-    patchMutation({ value: data, id: configurationId });
-  };
+  const submitHandler = React.useCallback(
+    (data: AvataxConfig) => {
+      patchMutation({ value: data, id: configurationId });
+    },
+    [configurationId, patchMutation]
+  );
 
   const deleteHandler = () => {
     /*
@@ -85,7 +89,7 @@ export const EditAvataxConfiguration = () => {
     <AvataxConfigurationForm
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
-      defaultValues={data?.config ?? defaultAvataxConfig}
+      defaultValues={data.config}
       cancelButton={
         <Button onClick={deleteHandler} variant="error">
           Delete provider

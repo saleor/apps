@@ -5,6 +5,7 @@ import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
 import { TaxJarConfig } from "../taxjar-config";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
+import React from "react";
 
 export const EditTaxJarConfiguration = () => {
   const router = useRouter();
@@ -37,9 +38,12 @@ export const EditTaxJarConfiguration = () => {
     }
   );
 
-  const submitHandler = (data: TaxJarConfig) => {
-    patchMutation({ value: data, id: configurationId });
-  };
+  const submitHandler = React.useCallback(
+    (data: TaxJarConfig) => {
+      patchMutation({ value: data, id: configurationId });
+    },
+    [configurationId, patchMutation]
+  );
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
     trpcClient.taxJarConfiguration.delete.useMutation({
@@ -83,7 +87,7 @@ export const EditTaxJarConfiguration = () => {
     <TaxJarConfigurationForm
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
-      defaultValues={data?.config}
+      defaultValues={data.config}
       cancelButton={
         <Button onClick={deleteHandler} variant="error">
           Delete provider
