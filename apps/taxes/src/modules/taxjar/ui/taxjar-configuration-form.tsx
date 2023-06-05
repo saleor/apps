@@ -131,7 +131,7 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
         <Divider marginY={8} />
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
           {props.cancelButton}
-          <Button type="submit" variant="primary">
+          <Button disabled={props.isLoading} type="submit" variant="primary">
             {props.isLoading ? "Saving..." : "Save"}
           </Button>
         </Box>
