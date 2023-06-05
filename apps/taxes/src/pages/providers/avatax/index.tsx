@@ -19,6 +19,7 @@ const Intro = () => {
         Connect Avatax
       </Text>
       <Text as="p" variant="body" __fontWeight={"400"}>
+        {/* // todo: replace */}
         Some description text that explains how to configure the service, but also links to general
         docs and prerequisites{" "}
       </Text>
