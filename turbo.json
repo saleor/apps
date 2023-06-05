@@ -8,6 +8,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "build:app": {
+      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
     "lint": {
       "inputs": ["src"],
       "outputs": []

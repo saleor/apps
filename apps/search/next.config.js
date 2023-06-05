@@ -15,6 +15,9 @@ const isSentryPropertiesInEnvironment =
  */
 const moduleExports = {
   reactStrictMode: true,
+  experimental: {
+    instrumentationHook: true
+  },
   images: {
     remotePatterns: [
       {
@@ -37,6 +40,7 @@ const moduleExports = {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
     disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
   },
+  output: "standalone",
 };
 
 const sentryWebpackPluginOptions = {

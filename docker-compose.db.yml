@@ -1,0 +1,23 @@
+# This compose contains only Database required for local development.
+# App can be run locally without the container
+#
+# TODO Include app and worker services for local development with fullstack setup (and prod setup)
+
+version: '3'
+
+services:
+  postgres:
+    container_name: search_app_postgres
+    image: postgres # Todo maybe some alpine image?
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+    postgres:

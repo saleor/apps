@@ -1,44 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
 import { createClient } from "../../lib/graphql";
-import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 import { createLogger } from "../../lib/logger";
-import { AppConfigurationFields } from "../../domain/configuration";
+import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { algoliaConfigurationRepository } from "../../domain/algolia-configuration/AlgoliaConfigurationRepository";
 
 const logger = createLogger({
   handler: "api/configuration",
 });
-
-export interface SettingsApiResponse {
-  success: boolean;
-  data?: AppConfigurationFields;
-}
-
-const sendResponse = async (
-  res: NextApiResponse<SettingsApiResponse>,
-  statusCode: number,
-  settings: SettingsManager,
-  domain: string
-) => {
-  const data = {
-    secretKey: (await settings.get("secretKey", domain)) || "",
-    appId: (await settings.get("appId", domain)) || "",
-    indexNamePrefix: (await settings.get("indexNamePrefix", domain)) || "",
-  };
-
-  logger.debug(data, "Will return following settings");
-
-  res.status(statusCode).json({
-    success: statusCode === 200,
-    data,
-  });
-};
 
 export const handler = async (
   req: NextApiRequest,
@@ -53,15 +27,20 @@ export const handler = async (
 
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
 
-  const settings = createSettingsManager(client);
-
-  const domain = new URL(saleorApiUrl).host;
-
+  // todo extract endpoints, add trpc
   if (req.method === "GET") {
     logger.debug("Returning configuration");
 
-    await sendResponse(res, 200, settings, domain);
-    return;
+    const configuration = await algoliaConfigurationRepository.getConfiguration(saleorApiUrl);
+
+    return configuration
+      ? res.status(200).send({
+          success: true,
+          data: AppConfigurationSchema.parse(configuration), // todo probably remove Zod at this point
+        })
+      : res.status(404).send({
+          success: false,
+        });
   } else if (req.method === "POST") {
     logger.debug("Updating the configuration");
 
@@ -79,11 +58,11 @@ export const handler = async (
 
       logger.debug("Algolia connection is ok. Will save settings");
 
-      await settings.set([
-        { key: "secretKey", value: secretKey || "", domain },
-        { key: "appId", value: appId || "", domain },
-        { key: "indexNamePrefix", value: indexNamePrefix || "", domain },
-      ]);
+      const configuration = await algoliaConfigurationRepository.setConfiguration(saleorApiUrl, {
+        appId,
+        secretKey,
+        indexNamePrefix,
+      });
 
       logger.debug("Settings set");
 
@@ -92,13 +71,14 @@ export const handler = async (
       await webhooksToggler.enableOwnWebhooks();
 
       logger.debug("Webhooks enabled");
+
+      return res.status(200).send({
+        success: true,
+        data: AppConfigurationSchema.parse(configuration), // todo probably remove Zod at this point
+      });
     } catch (e) {
       return res.status(400).end();
     }
-
-    await sendResponse(res, 200, settings, domain);
-
-    return;
   }
   logger.error("Method not supported");
 

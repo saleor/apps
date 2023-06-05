@@ -1,19 +1,14 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
-import { Products, useQueryAllProducts } from "./useQueryAllProducts";
-import { useWebhooksStatus } from "../lib/useWebhooksStatus";
-
-const BATCH_SIZE = 100;
+import { Products } from "./useQueryAllProducts";
+import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 export const ImportProductsToAlgolia = () => {
-  const [algoliaConfigured, setAlgoliaConfigured] = useState<null | boolean>(null);
-  const [started, setStarted] = useState(false);
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
-  const [isAlgoliaImporting, setIsAlgoliaImporting] = useState(false);
+  const fetch = useAuthenticatedFetch();
 
-  const products = useQueryAllProducts(!started);
+  const [algoliaConfigured, setAlgoliaConfigured] = useState<null | boolean>(null);
 
   const algoliaConfiguration = useConfiguration();
 
@@ -32,10 +27,6 @@ export const ImportProductsToAlgolia = () => {
     algoliaConfiguration?.data?.secretKey,
   ]);
 
-  const importProducts = useCallback(() => {
-    setStarted(true);
-  }, []);
-
   useEffect(() => {
     if (searchProvider) {
       searchProvider
@@ -45,39 +36,29 @@ export const ImportProductsToAlgolia = () => {
     }
   }, [searchProvider]);
 
-  useEffect(() => {
-    if (!searchProvider || isAlgoliaImporting || products.length <= currentProductIndex) {
-      return;
-    }
-    (async () => {
-      setIsAlgoliaImporting(true);
-      const productsBatchStartIndex = currentProductIndex;
-      const productsBatchEndIndex = Math.min(currentProductIndex + BATCH_SIZE, products.length);
-      const productsBatch = products.slice(productsBatchStartIndex, productsBatchEndIndex);
-
-      await searchProvider.updatedBatchProducts(productsBatch);
-
-      setIsAlgoliaImporting(false);
-      setCurrentProductIndex(productsBatchEndIndex);
-    })();
-  }, [searchProvider, currentProductIndex, isAlgoliaImporting, products]);
-
   return (
-    <Box __cursor={started ? "wait" : "auto"}>
+    <Box>
       {searchProvider && algoliaConfigured ? (
         <Box>
           <Text variant={"heading"} as={"p"} marginBottom={4}>
             Importing products & variants
           </Text>
           <Text as={"p"}>
-            Trigger initial indexing for products catalogue. It can take few minutes.{" "}
+            Trigger initial indexing for products catalogue. It can take few minutes and will run in
+            the background
           </Text>
-          <Text marginBottom={8} variant={"bodyStrong"}>
-            Do not close the app - its running client-side
-          </Text>
-          <Box display={"flex"} justifyContent={"flex-end"}>
-            <Button disabled={started || !searchProvider} onClick={importProducts}>
-              Start importing
+          <Box display={"flex"} justifyContent={"flex-end"} marginTop={13}>
+            <Button onClick={() => fetch("/api/index-products")}>Start importing</Button>
+            <Button
+              onClick={() =>
+                fetch("/api/jobs")
+                  .then((r: any) => r.json())
+                  .then((jobs: unknown) => {
+                    console.log(jobs);
+                  })
+              }
+            >
+              Check status
             </Button>
           </Box>
         </Box>
@@ -88,29 +69,6 @@ export const ImportProductsToAlgolia = () => {
           </Text>
           <Text>Configure Algolia first</Text>
         </Box>
-      )}
-
-      {started && (
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {countVariants(products, currentProductIndex)} /{" "}
-          {countVariants(products, products.length)}
-          <progress
-            value={currentProductIndex}
-            max={products.length}
-            style={{
-              height: "30px",
-              width: "500px",
-              maxWidth: "100%",
-            }}
-          />
-        </div>
       )}
     </Box>
   );
