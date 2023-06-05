@@ -1,6 +1,6 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
 import { MetadataItem } from "../../../generated/graphql";
-import { ChannelsConfig, channelsSchema } from "../channels-configuration/channels-config";
+import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import { ProvidersConfig, providersSchema } from "../providers-configuration/providers-config";
 
 export const getAppConfig = (metadata: MetadataItem[]) => {

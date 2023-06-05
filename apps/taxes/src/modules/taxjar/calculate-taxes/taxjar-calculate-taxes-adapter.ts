@@ -1,5 +1,5 @@
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { FetchTaxForOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-config";

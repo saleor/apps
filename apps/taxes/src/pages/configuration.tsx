@@ -1,4 +1,4 @@
-import { ChannelSection } from "../modules/channels-configuration/ui/channel-section";
+import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/providers-configuration/ui/providers-section";
 import { AppColumns } from "../modules/ui/app-columns";
 import { Section } from "../modules/ui/app-section";

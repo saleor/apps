@@ -1,7 +1,7 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { describe, expect, it, vi } from "vitest";
 import { MetadataItem } from "../../../generated/graphql";
-import { ChannelsConfig } from "../channels-configuration/channels-config";
+import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProvidersConfig } from "../providers-configuration/providers-config";
 import { getActiveTaxProvider } from "./active-tax-provider";
 

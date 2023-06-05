@@ -1,6 +1,6 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { TaxJarConfig } from "../taxjar-config";
 
 type TaxBase = TaxBaseFragment;

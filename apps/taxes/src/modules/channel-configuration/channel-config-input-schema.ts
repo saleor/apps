@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { channelSchema } from "./channels-config";
+import { channelSchema } from "./channel-config";
 
 export const setAndReplaceChannelsInputSchema = z.object({
   channelSlug: z.string(),

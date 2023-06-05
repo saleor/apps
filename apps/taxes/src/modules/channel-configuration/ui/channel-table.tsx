@@ -2,7 +2,9 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { Table } from "../../ui/table";
 
 export const ChannelTable = () => {
-  const { data } = trpcClient.channels.fetch.useQuery();
+  const { data } = trpcClient.channelsConfiguration.fetch.useQuery();
+
+  if (!data) return null;
 
   return (
     <Table.Container>
@@ -12,9 +14,9 @@ export const ChannelTable = () => {
         </Table.TR>
       </Table.THead>
       <Table.TBody>
-        {data?.map((item) => (
+        {Object.entries(data).map(([slug]) => (
           <Table.TR>
-            <Table.TD>{item.slug}</Table.TD>
+            <Table.TD>{slug}</Table.TD>
           </Table.TR>
         ))}
       </Table.TBody>

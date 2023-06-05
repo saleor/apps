@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { DocumentStatus } from "avatax/lib/enums/DocumentStatus";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AdjustmentReason } from "avatax/lib/enums/AdjustmentReason";

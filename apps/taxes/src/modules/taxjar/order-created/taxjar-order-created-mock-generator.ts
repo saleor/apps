@@ -1,6 +1,6 @@
 import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { OrderCreatedSubscriptionFragment, OrderStatus } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { defaultOrder } from "../../../mocks";
 import { TaxJarConfig } from "../taxjar-config";
 

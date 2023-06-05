@@ -1,9 +1,7 @@
-import React from "react";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import router, { useRouter } from "next/router";
-import { ProvidersTable } from "../../ui/providers-table";
 import { ChannelTable } from "./channel-table";
 
 const NoChannelConfigured = () => {
@@ -34,11 +32,11 @@ const Skeleton = () => {
 };
 
 export const ChannelList = () => {
-  const { data, isFetching, isFetched } = trpcClient.channels.fetch.useQuery();
+  const { data, isFetching, isFetched } = trpcClient.channelsConfiguration.fetch.useQuery();
 
-  const isProvider = (data?.length ?? 0) > 0;
-  const isResult = isFetched && isProvider;
-  const isNoResult = isFetched && !isProvider;
+  const isAnyChannelConfigured = Object.keys(data || {}).length > 0;
+  const isResult = isFetched && isAnyChannelConfigured;
+  const isNoResult = isFetched && !isAnyChannelConfigured;
 
   return (
     <AppCard __minHeight={"320px"} height="100%">

@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { orderCreatedTransactionMock } from "./avatax-order-created-response-transaction-mock";
 import { AvataxConfig } from "../avatax-config";
 import { defaultOrder } from "../../../mocks";

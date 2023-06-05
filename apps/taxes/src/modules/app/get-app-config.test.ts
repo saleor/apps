@@ -3,7 +3,7 @@ import { getAppConfig } from "./get-app-config";
 import { describe, expect, it, vi } from "vitest";
 import { ProvidersConfig } from "../providers-configuration/providers-config";
 import { MetadataItem } from "../../../generated/graphql";
-import { ChannelsConfig } from "../channels-configuration/channels-config";
+import { ChannelsConfig } from "../channel-configuration/channel-config";
 
 const mockedSecretKey = "test_secret_key";
 const mockedProviders: ProvidersConfig = [

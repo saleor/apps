@@ -1,7 +1,7 @@
 import { Client } from "urql";
 import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
-import { TaxChannelsConfigurator } from "./channels-configurator";
+import { TaxChannelsConfigurator } from "./channel-configurator";
 
 export class GetChannelsConfigurationService {
   constructor(

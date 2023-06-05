@@ -2,10 +2,10 @@ import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { ChannelsConfig } from "./channels-config";
-import { setAndReplaceChannelsInputSchema } from "./channels-config-input-schema";
-import { TaxChannelsConfigurator } from "./channels-configurator";
-import { GetChannelsConfigurationService } from "./get-channels-configuration.service";
+import { ChannelsConfig } from "./channel-config";
+import { setAndReplaceChannelsInputSchema } from "./channel-config-input-schema";
+import { TaxChannelsConfigurator } from "./channel-configurator";
+import { GetChannelsConfigurationService } from "./get-channel-configuration.service";
 
 // todo: refactor with crud-settings
 export const channelsConfigurationRouter = router({
