@@ -1,6 +1,6 @@
 import React from "react";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig, defaultAvataxConfig } from "../avatax-config";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
@@ -33,6 +33,7 @@ export const CreateAvataxConfiguration = () => {
     <AvataxConfigurationForm
       isLoading={isCreateLoading}
       onSubmit={submitHandler}
+      defaultValues={defaultAvataxConfig}
       cancelButton={
         <Button onClick={() => router.push("/configuration")} variant="tertiary">
           Cancel

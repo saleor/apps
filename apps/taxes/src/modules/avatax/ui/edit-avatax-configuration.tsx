@@ -1,15 +1,16 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig, defaultAvataxConfig } from "../avatax-config";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();
   const { id } = router.query;
-  const configurationId = z.string().parse(id);
+
+  const configurationId = z.string().parse(id ?? "");
 
   const { refetch: refetchProvidersConfigurationData } =
     trpcClient.providersConfiguration.getAll.useQuery();
@@ -38,7 +39,18 @@ export const EditAvataxConfiguration = () => {
       },
     });
 
-  const { data } = trpcClient.avataxConfiguration.get.useQuery({ id: configurationId });
+  const {
+    data,
+    isLoading: isGetLoading,
+    isError: isGetError,
+  } = trpcClient.avataxConfiguration.get.useQuery(
+    {
+      id: configurationId,
+    },
+    {
+      enabled: !!configurationId,
+    }
+  );
 
   const submitHandler = (data: AvataxConfig) => {
     patchMutation({ value: data, id: configurationId });
@@ -53,11 +65,27 @@ export const EditAvataxConfiguration = () => {
     // }
   };
 
+  if (isGetLoading) {
+    // todo: replace with skeleton once its available in Macaw
+    return (
+      <Box>
+        <Text color="textNeutralSubdued">Loading...</Text>
+      </Box>
+    );
+  }
+
+  if (isGetError) {
+    return (
+      <Box>
+        <Text color="textCriticalDefault">Error while fetching the provider data.</Text>
+      </Box>
+    );
+  }
   return (
     <AvataxConfigurationForm
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
-      defaultValues={data?.config}
+      defaultValues={data?.config ?? defaultAvataxConfig}
       cancelButton={
         <Button onClick={deleteHandler} variant="error">
           Delete provider

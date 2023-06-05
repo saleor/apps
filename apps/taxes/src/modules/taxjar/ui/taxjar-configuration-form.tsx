@@ -21,7 +21,7 @@ const HelperText = ({ children }: { children: React.ReactNode }) => {
 
 type TaxJarConfigurationFormProps = {
   onSubmit: (data: TaxJarConfig) => void;
-  defaultValues?: TaxJarConfig;
+  defaultValues: TaxJarConfig;
   isLoading: boolean;
   cancelButton: React.ReactNode;
 };
@@ -34,9 +34,7 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
   });
 
   React.useEffect(() => {
-    if (props.defaultValues) {
-      reset(props.defaultValues);
-    }
+    reset(props.defaultValues);
   }, [props.defaultValues, reset]);
 
   const submitHandler = (data: TaxJarConfig) => {

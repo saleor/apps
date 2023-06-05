@@ -19,7 +19,7 @@ const HelperText = ({ children }: { children: React.ReactNode }) => {
 
 type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
-  defaultValues?: AvataxConfig;
+  defaultValues: AvataxConfig;
   isLoading: boolean;
   cancelButton: React.ReactNode;
 };
@@ -31,9 +31,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
   });
 
   React.useEffect(() => {
-    if (props.defaultValues) {
-      reset(props.defaultValues);
-    }
+    reset(props.defaultValues);
   }, [props.defaultValues, reset]);
 
   const submitHandler = (data: AvataxConfig) => {

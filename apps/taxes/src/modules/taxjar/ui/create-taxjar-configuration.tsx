@@ -2,7 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig, defaultTaxJarConfig } from "../taxjar-config";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 
 export const CreateTaxJarConfiguration = () => {
@@ -32,6 +32,7 @@ export const CreateTaxJarConfiguration = () => {
     <TaxJarConfigurationForm
       isLoading={isCreateLoading}
       onSubmit={submitHandler}
+      defaultValues={defaultTaxJarConfig}
       cancelButton={
         <Button onClick={() => router.push("/configuration")} variant="tertiary">
           Cancel

@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -9,7 +9,7 @@ import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 export const EditTaxJarConfiguration = () => {
   const router = useRouter();
   const { id } = router.query;
-  const configurationId = z.string().parse(id);
+  const configurationId = z.string().parse(id ?? "");
 
   const { refetch: refetchProvidersConfigurationData } =
     trpcClient.providersConfiguration.getAll.useQuery();
@@ -26,7 +26,16 @@ export const EditTaxJarConfiguration = () => {
       },
     });
 
-  const { data } = trpcClient.taxJarConfiguration.get.useQuery({ id: configurationId });
+  const {
+    data,
+    isLoading: isGetLoading,
+    isError: isGetError,
+  } = trpcClient.taxJarConfiguration.get.useQuery(
+    { id: configurationId },
+    {
+      enabled: !!configurationId,
+    }
+  );
 
   const submitHandler = (data: TaxJarConfig) => {
     patchMutation({ value: data, id: configurationId });
@@ -52,6 +61,23 @@ export const EditTaxJarConfiguration = () => {
     deleteMutation({ id: configurationId });
     // }
   };
+
+  if (isGetLoading) {
+    // todo: replace with skeleton once its available in Macaw
+    return (
+      <Box>
+        <Text color="textNeutralSubdued">Loading...</Text>
+      </Box>
+    );
+  }
+
+  if (isGetError) {
+    return (
+      <Box>
+        <Text color="textCriticalDefault">Error while fetching the provider data.</Text>
+      </Box>
+    );
+  }
 
   return (
     <TaxJarConfigurationForm
