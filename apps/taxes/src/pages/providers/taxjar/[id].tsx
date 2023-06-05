@@ -16,12 +16,10 @@ const Header = () => {
 const EditTaxJarPage = () => {
   return (
     <main>
-      <AppColumns
-        gridRatio="1/1"
-        top={<Header />}
-        bottomLeft={<TaxJarInstructions />}
-        bottomRight={<EditTaxJarConfiguration />}
-      />
+      <AppColumns top={<Header />}>
+        <EditTaxJarConfiguration />
+        <TaxJarInstructions />
+      </AppColumns>
     </main>
   );
 };

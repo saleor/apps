@@ -103,7 +103,10 @@ const ChooseProvider = () => {
 const NewProviderPage = () => {
   return (
     <main>
-      <AppColumns top={<Header />} bottomLeft={<Intro />} bottomRight={<ChooseProvider />} />
+      <AppColumns top={<Header />}>
+        <Intro />
+        <ChooseProvider />
+      </AppColumns>
     </main>
   );
 };

@@ -1,10 +1,12 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { useRouter } from "next/router";
+import React from "react";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import router, { useRouter } from "next/router";
 import { ProvidersTable } from "../../ui/providers-table";
+import { ChannelTable } from "./channel-table";
 
-const AddProvider = () => {
+const NoChannelConfigured = () => {
   const router = useRouter();
 
   return (
@@ -16,8 +18,8 @@ const AddProvider = () => {
       height={"100%"}
       justifyContent={"center"}
     >
-      <Text variant="body">No providers configured yet</Text>
-      <Button onClick={() => router.push("/providers")}>Add first provider</Button>
+      <Text variant="body">No channels configured yet</Text>
+      <Button onClick={() => router.push("/providers")}>Configure channel to use tax app</Button>
     </Box>
   );
 };
@@ -31,9 +33,8 @@ const Skeleton = () => {
   );
 };
 
-export const Providers = () => {
-  const { data, isFetching, isFetched } = trpcClient.providersConfiguration.getAll.useQuery();
-  const router = useRouter();
+export const ChannelList = () => {
+  const { data, isFetching, isFetched } = trpcClient.channels.fetch.useQuery();
 
   const isProvider = (data?.length ?? 0) > 0;
   const isResult = isFetched && isProvider;
@@ -42,13 +43,10 @@ export const Providers = () => {
   return (
     <AppCard __minHeight={"320px"} height="100%">
       {isFetching && <Skeleton />}
-      {isNoResult && <AddProvider />}
+      {isNoResult && <NoChannelConfigured />}
       {isResult && (
-        <Box height="100%" display="flex" flexDirection={"column"} justifyContent={"space-between"}>
-          <ProvidersTable />
-          <Box display={"flex"} justifyContent={"flex-end"}>
-            <Button onClick={() => router.push("/providers")}>Add new</Button>
-          </Box>
+        <Box height="100%">
+          <ChannelTable />
         </Box>
       )}
     </AppCard>
