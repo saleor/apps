@@ -60,18 +60,23 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
           Credentials
         </Text>
         <Box display="grid" gridTemplateColumns={2} gap={12}>
-          <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
-            <div>
-              <Input
-                control={control}
-                name="credentials.apiKey"
-                required
-                label="API Key *"
-                helperText={formState.errors.credentials?.apiKey?.message}
-              />
-            </div>
+          <Box paddingY={4}>
+            <Input
+              control={control}
+              name="credentials.apiKey"
+              required
+              label="API Key *"
+              helperText={formState.errors.credentials?.apiKey?.message}
+            />
+            <HelperText>
+              You can obtain it by following the instructions from{" "}
+              <TextLink href="https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token">
+                here
+              </TextLink>
+              .
+            </HelperText>
           </Box>
-          <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
+          <Box paddingY={4}>
             <AppToggle
               control={control}
               label="Use sandbox mode"

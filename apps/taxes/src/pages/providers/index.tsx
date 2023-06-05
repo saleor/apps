@@ -4,25 +4,18 @@ import { ProviderName } from "../../modules/providers-configuration/providers-co
 import { AppCard } from "../../modules/ui/app-card";
 import { AppColumns } from "../../modules/ui/app-columns";
 import { ProviderLabel } from "../../modules/ui/provider-label";
+import { Section } from "../../modules/ui/app-section";
 
 const Header = () => {
   return (
-    <Box>
-      <Text __maxWidth={"360px"} variant="body">
-        Select and configure providers to connect Saleor with selected services.
-      </Text>
-    </Box>
+    <Section.Header>
+      Select and configure tax provider to use it for tax calculations in your store.
+    </Section.Header>
   );
 };
 
 const Intro = () => {
-  return (
-    <Box gap={6} display="flex" flexDirection={"column"}>
-      <Text variant="heading" as="h3">
-        Choose provider
-      </Text>
-    </Box>
-  );
+  return <Section.Description title="Choose provider" description={null} />;
 };
 
 type ProviderProps = {
