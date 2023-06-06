@@ -2,6 +2,7 @@
   "name": "@saleor/apps-shared",
   "version": "1.7.0",
   "dependencies": {
+    "eslint": "8.42.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "semver": "^7.5.1",

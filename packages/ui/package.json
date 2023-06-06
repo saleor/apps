@@ -22,6 +22,7 @@
   },
   "main": "index.ts",
   "dependencies": {
+    "eslint": "8.42.0",
     "typescript": "5.1.3"
   }
 }
