@@ -15,7 +15,7 @@ export const AppSection = ({
   includePadding?: boolean;
 }>) => {
   return (
-    <Box as="section" __gridTemplateColumns={"400px auto"} display={"grid"} gap={13} {...props}>
+    <Box as="section" __gridTemplateColumns={"400px auto"} display={"grid"} gap={14} {...props}>
       <Box>
         <Text as="h2" variant={"heading"} size={"large"} marginBottom={4}>
           {heading}

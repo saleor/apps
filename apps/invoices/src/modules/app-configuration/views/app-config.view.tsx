@@ -13,7 +13,7 @@ export const AppConfigView = () => {
         display={"grid"}
         justifyContent={"space-between"}
         __gridTemplateColumns={"400px 400px"}
-        gap={13}
+        gap={14}
         __marginBottom={"200px"}
       >
         <Box>
