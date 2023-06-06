@@ -57,11 +57,7 @@ export const SendgridDangerousSection = ({ configuration }: SendgridDangerousSec
             <Text as="p">You still can create a new configuration.</Text>
           </Box>
           <BoxFooter borderColor="criticalSubdued">
-            <Button
-              color="textNeutralSubdued"
-              backgroundColor="interactiveCriticalDefault"
-              type="submit"
-            >
+            <Button variant="error" type="submit">
               Remove configuration
             </Button>
           </BoxFooter>
