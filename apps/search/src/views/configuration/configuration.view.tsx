@@ -26,6 +26,7 @@ export const ConfigurationView = () => {
       />
 
       <AppSection
+        marginTop={14}
         heading="Algolia settings"
         mainContent={<AlgoliaConfigurationForm />}
         sideContent={
@@ -44,6 +45,7 @@ export const ConfigurationView = () => {
       />
       <AppSection
         includePadding
+        marginTop={14}
         heading="Index products"
         mainContent={<ImportProductsToAlgolia />}
         sideContent={
