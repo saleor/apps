@@ -1,11 +1,11 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
+import React from "react";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-config";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import React from "react";
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();

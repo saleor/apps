@@ -22,8 +22,6 @@ export class AvataxWebhookService implements ProviderWebhookService {
     });
     const avataxClient = new AvataxClient(config);
 
-    this.logger.trace({ client: avataxClient }, "Internal Avatax client created");
-
     this.config = config;
     this.client = avataxClient;
   }

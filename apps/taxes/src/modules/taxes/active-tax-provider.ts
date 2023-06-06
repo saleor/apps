@@ -24,8 +24,6 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
     const taxProviderName = providerInstance.provider;
 
-    this.logger.trace({ taxProviderName }, "Constructing tax provider: ");
-
     switch (taxProviderName) {
       case "taxjar":
         this.client = new TaxJarWebhookService(providerInstance.config);
@@ -42,20 +40,14 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   }
 
   async calculateTaxes(payload: TaxBaseFragment) {
-    this.logger.trace({ payload }, ".calculate called");
-
     return this.client.calculateTaxes(payload);
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    this.logger.trace(".createOrder called");
-
     return this.client.createOrder(order);
   }
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
-    this.logger.trace(".fulfillOrder called");
-
     return this.client.fulfillOrder(payload);
   }
 }

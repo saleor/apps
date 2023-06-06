@@ -21,11 +21,9 @@ export class CrudSettingsManager {
   }
 
   async readAll() {
-    this.logger.trace(".readAll called");
     const result = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
 
     if (!result) {
-      this.logger.trace("No metadata found");
       return { data: [] };
     }
 
@@ -43,7 +41,6 @@ export class CrudSettingsManager {
   }
 
   async read(id: string) {
-    this.logger.trace(".read called");
     const result = await this.readAll();
     const { data: settings } = result;
 
@@ -60,8 +57,6 @@ export class CrudSettingsManager {
   }
 
   async create(data: any) {
-    this.logger.trace(data, ".create called with:");
-
     const settings = await this.readAll();
     const prevData = settings.data;
 
@@ -80,8 +75,6 @@ export class CrudSettingsManager {
   }
 
   async delete(id: string) {
-    this.logger.trace(`.delete called with: ${id}`);
-
     const settings = await this.readAll();
     const prevData = settings.data;
     const nextData = prevData.filter((item) => item.id !== id);
@@ -94,7 +87,6 @@ export class CrudSettingsManager {
   }
 
   async update(id: string, input: any) {
-    this.logger.trace({ input }, `.update called with: ${id}`);
     const { data: currentSettings } = await this.readAll();
     const nextSettings = currentSettings.map((item) => {
       if (item.id === id) {
@@ -113,8 +105,6 @@ export class CrudSettingsManager {
   }
 
   async upsert(id: string, input: any) {
-    this.logger.trace({ input }, `.upsert called with: ${id}`);
-
     const { data: currentSettings } = await this.readAll();
     // update if its there
     const nextSettings = currentSettings.map((item) => {

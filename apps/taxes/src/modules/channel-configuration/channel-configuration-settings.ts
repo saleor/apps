@@ -21,15 +21,12 @@ export class ChannelConfigurationSettings {
   }
 
   async getAll() {
-    this.logger.trace(".getAll called");
     const { data } = await this.crudSettingsManager.readAll();
 
     return channelsSchema.parse(data);
   }
 
   async upsert(id: string, data: ChannelConfigProperties) {
-    this.logger.trace(".update called");
-
     await this.crudSettingsManager.upsert(id, { config: data });
   }
 }

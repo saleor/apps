@@ -58,28 +58,21 @@ export class AvataxClient {
 
   constructor(config: AvataxConfig) {
     this.logger = createLogger({ service: "AvataxClient" });
-    this.logger.trace("AvataxClient constructor");
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(config.credentials);
 
-    this.logger.trace({ client: avataxClient }, "External Avatax client created");
     this.client = avataxClient;
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    this.logger.trace({ model }, "createTransaction called with:");
-
     return this.client.createTransaction({ model });
   }
 
   async commitTransaction(args: CommitTransactionArgs) {
-    this.logger.trace(args, "commitTransaction called with:");
-
     return this.client.commitTransaction(args);
   }
 
   async ping() {
-    this.logger.trace("ping called");
     try {
       const result = await this.client.ping();
 
@@ -98,8 +91,6 @@ export class AvataxClient {
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
-    this.logger.trace({ address }, "validateAddress called with:");
-
     return this.client.resolveAddress(address);
   }
 }
