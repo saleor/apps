@@ -19,8 +19,7 @@ const NoExistingConfigurations = () => {
   };
 
   return (
-    <BoxWithBorder padding={7} display="grid" alignItems="center" justifyContent="center">
-      <Text>No providers configured yet</Text>
+    <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
       <Button onClick={redirectToProvidersSelection}>Add first provider</Button>
     </BoxWithBorder>
   );
