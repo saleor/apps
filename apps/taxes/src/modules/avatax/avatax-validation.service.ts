@@ -23,7 +23,7 @@ export class AvataxValidationService {
 
   constructor() {
     this.logger = createLogger({
-      service: "AvataxValidationService",
+      location: "AvataxValidationService",
     });
   }
 

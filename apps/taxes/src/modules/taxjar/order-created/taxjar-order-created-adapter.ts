@@ -19,20 +19,23 @@ export class TaxJarOrderCreatedAdapter
 {
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig) {
-    this.logger = createLogger({ service: "TaxJarOrderCreatedAdapter" });
+    this.logger = createLogger({ location: "TaxJarOrderCreatedAdapter" });
   }
 
   async send(payload: TaxJarOrderCreatedPayload): Promise<TaxJarOrderCreatedResponse> {
-    this.logger.debug({ payload }, "send called with:");
-
+    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
     const payloadTransformer = new TaxJarOrderCreatedPayloadTransformer(this.config);
     const target = payloadTransformer.transform(payload);
+
+    this.logger.debug(
+      { transformedPayload: target },
+      "Will call TaxJar fetchTaxForOrder with transformed payload:"
+    );
 
     const client = new TaxJarClient(this.config);
     const response = await client.createOrder(target);
 
-    this.logger.debug({ response }, "TaxJar createOrder response:");
-
+    this.logger.debug({ response }, "TaxJar createOrder responded with:");
     const responseTransformer = new TaxJarOrderCreatedResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);
 

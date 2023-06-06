@@ -3,7 +3,7 @@ import { createLogger } from "../../lib/logger";
 import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { avataxConfigSchema, obfuscateAvataxConfig } from "./avatax-config";
+import { avataxConfigSchema } from "./avatax-config";
 import { AvataxConfigurationService } from "./avatax-configuration.service";
 
 const getInputSchema = z.object({
@@ -41,21 +41,19 @@ const postInputSchema = z.object({
 export const avataxConfigurationRouter = router({
   get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConfigurationRouter.get",
+      location: "avataxConfigurationRouter.get",
     });
 
-    logger.debug({ input }, "avataxConfigurationRouter.get called with:");
+    logger.debug({ input }, "Route get called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.get(input.id);
 
-    // * `providerInstance` name is required for secrets censorship
-    logger.debug({ providerInstance: result }, "avataxConfigurationRouter.get finished");
+    logger.info(`Avatax configuration with an id: ${result.id} was successfully retrieved`);
 
-    return { ...result, config: obfuscateAvataxConfig(result.config) };
+    return result;
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
@@ -63,14 +61,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.post",
     });
 
-    logger.debug({ input }, "avataxConfigurationRouter.post called with:");
+    logger.debug({ input }, "Route post called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.post(input.value);
 
-    logger.debug({ result }, "avataxConfigurationRouter.post finished");
+    logger.info("Avatax configuration was successfully created");
 
     return result;
   }),
@@ -80,14 +78,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.delete",
     });
 
-    logger.debug({ input }, "avataxConfigurationRouter.delete called with:");
+    logger.debug({ input }, "Route delete called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.delete(input.id);
 
-    logger.debug({ result }, "avataxConfigurationRouter.delete finished");
+    logger.info(`Avatax configuration with an id: ${input.id} was deleted`);
 
     return result;
   }),
@@ -97,14 +95,14 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.patch",
     });
 
-    logger.debug({ input }, "avataxConfigurationRouter.patch called with:");
+    logger.debug({ input }, "Route patch called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.patch(input.id, input.value);
 
-    logger.debug({ result }, "avataxConfigurationRouter.patch finished");
+    logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
 
     return result;
   }),

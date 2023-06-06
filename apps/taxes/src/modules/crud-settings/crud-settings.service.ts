@@ -17,7 +17,7 @@ export class CrudSettingsManager {
     private metadataKey: string
   ) {
     this.metadataKey = metadataKey;
-    this.logger = createLogger({ service: "CrudSettingsManager", metadataKey });
+    this.logger = createLogger({ location: "CrudSettingsManager", metadataKey });
   }
 
   async readAll() {

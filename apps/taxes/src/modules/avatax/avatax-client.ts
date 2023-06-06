@@ -57,7 +57,7 @@ export class AvataxClient {
   private logger: Logger;
 
   constructor(config: AvataxConfig) {
-    this.logger = createLogger({ service: "AvataxClient" });
+    this.logger = createLogger({ location: "AvataxClient" });
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(config.credentials);
 

@@ -1,12 +1,11 @@
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channel-configuration/channel-config";
+import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { FetchTaxForOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-config";
-import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
-import { Logger, createLogger } from "../../../lib/logger";
 
 export type TaxJarCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
@@ -20,20 +19,23 @@ export class TaxJarCalculateTaxesAdapter
 {
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig) {
-    this.logger = createLogger({ service: "TaxJarCalculateTaxesAdapter" });
+    this.logger = createLogger({ location: "TaxJarCalculateTaxesAdapter" });
   }
 
   async send(payload: TaxJarCalculateTaxesPayload): Promise<TaxJarCalculateTaxesResponse> {
-    this.logger.debug({ payload }, "send called with:");
+    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
     const payloadTransformer = new TaxJarCalculateTaxesPayloadTransformer(this.config);
     const target = payloadTransformer.transform(payload);
 
-    this.logger.debug({ transformedPayload: target }, "Will call fetchTaxForOrder with:");
+    this.logger.debug(
+      { transformedPayload: target },
+      "Will call TaxJar fetchTaxForOrder with transformed payload:"
+    );
 
     const client = new TaxJarClient(this.config);
     const response = await client.fetchTaxForOrder(target);
 
-    this.logger.debug({ response }, "TaxJar fetchTaxForOrder response:");
+    this.logger.debug({ response }, "TaxJar fetchTaxForOrder responded with:");
 
     const responseTransformer = new TaxJarCalculateTaxesResponseTransformer();
     const transformedResponse = responseTransformer.transform(payload, response);

@@ -4,7 +4,12 @@ import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
-import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "./avatax-config";
+import {
+  AvataxConfig,
+  AvataxInstanceConfig,
+  avataxInstanceConfigSchema,
+  obfuscateAvataxConfig,
+} from "./avatax-config";
 import { DeepPartial } from "@trpc/server";
 import { AvataxValidationService } from "./avatax-validation.service";
 
@@ -22,46 +27,40 @@ export class AvataxConfigurationService {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      service: "AvataxConfigurationService",
+      location: "AvataxConfigurationService",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
 
   async getAll(): Promise<AvataxInstanceConfig[]> {
-    this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsManager.readAll();
-    const validation = providersSchema.safeParse(data);
+    const instances = providersSchema.parse(data);
 
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while getAll");
-      throw new Error(validation.error.message);
-    }
-
-    const instances = validation.data.filter(
+    const avataxInstances = instances.filter(
       (instance) => instance.provider === "avatax"
     ) as AvataxInstanceConfig[];
 
-    return instances;
+    return avataxInstances.map((instance) => ({
+      ...instance,
+      config: obfuscateAvataxConfig(instance.config),
+    }));
   }
 
   async get(id: string): Promise<AvataxInstanceConfig> {
-    this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsManager.read(id);
-
-    this.logger.debug(`Fetched setting from CrudSettingsManager`);
 
     const validation = getSchema.safeParse(data);
 
     if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while get");
       throw new Error(validation.error.message);
     }
 
-    return validation.data;
+    const instance = validation.data;
+
+    return { ...instance, config: obfuscateAvataxConfig(instance.config) };
   }
 
   async post(config: AvataxConfig): Promise<{ id: string }> {
-    this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const validationService = new AvataxValidationService();
 
     await validationService.validate(config);
@@ -75,7 +74,6 @@ export class AvataxConfigurationService {
   }
 
   async patch(id: string, config: DeepPartial<AvataxConfig>): Promise<void> {
-    this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
@@ -95,7 +93,6 @@ export class AvataxConfigurationService {
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
 
-    this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
     return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...config },
@@ -103,7 +100,6 @@ export class AvataxConfigurationService {
   }
 
   async delete(id: string): Promise<void> {
-    this.logger.debug(`.delete called with id: ${id}`);
     return this.crudSettingsManager.delete(id);
   }
 }

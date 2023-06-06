@@ -18,7 +18,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   constructor(config: AvataxConfig) {
     this.logger = createLogger({
-      service: "AvataxWebhookService",
+      location: "AvataxWebhookService",
     });
     const avataxClient = new AvataxClient(config);
 
@@ -27,40 +27,25 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    this.logger.debug({ taxBase }, "calculateTaxes called with:");
     const adapter = new AvataxCalculateTaxesAdapter(this.config);
 
     const response = await adapter.send({ taxBase });
-
-    this.logger.debug({ response }, "calculateTaxes response:");
 
     return response;
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const providerConfig = this.config;
-
-    this.logger.debug({ order, providerConfig }, "createOrder called with:");
-
     const adapter = new AvataxOrderCreatedAdapter(this.config);
 
     const response = await adapter.send({ order });
-
-    this.logger.debug({ response }, "createOrder response:");
 
     return response;
   }
 
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment) {
-    const providerConfig = this.config;
-
-    this.logger.debug({ order, providerConfig }, "fulfillOrder called with:");
-
     const adapter = new AvataxOrderFulfilledAdapter(this.config);
 
     const response = await adapter.send({ order });
-
-    this.logger.debug({ response }, "fulfillOrder response:");
 
     return response;
   }

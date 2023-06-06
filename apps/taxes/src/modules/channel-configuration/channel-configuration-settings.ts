@@ -16,7 +16,7 @@ export class ChannelConfigurationSettings {
       "channel-configuration"
     );
     this.logger = createLogger({
-      service: "ChannelConfigurationSettings",
+      location: "ChannelConfigurationSettings",
     });
   }
 

@@ -29,31 +29,24 @@ export class TaxJarClient {
   private logger: Logger;
 
   constructor(providerConfig: TaxJarConfig) {
-    this.logger = createLogger({ service: "TaxJarClient" });
-    this.logger.trace("TaxJarClient constructor");
+    this.logger = createLogger({ location: "TaxJarClient" });
     const settings = createTaxJarSettings(providerConfig);
     const taxJarClient = new TaxJar(settings);
 
-    this.logger.trace({ client: taxJarClient }, "External TaxJar client created");
     this.client = taxJarClient;
   }
 
   async fetchTaxForOrder({ params }: FetchTaxForOrderArgs) {
-    this.logger.trace({ params }, "fetchTaxForOrder called with:");
     const response = await this.client.taxForOrder(params);
 
     return response;
   }
 
   async createOrder({ params }: CreateOrderArgs) {
-    this.logger.trace({ params }, "createOrder called with:");
-
     return this.client.createOrder(params);
   }
 
   async validateAddress({ params }: ValidateAddressArgs) {
-    this.logger.trace({ params }, "validateAddress called with:");
-
     return this.client.validateAddress(params);
   }
 }

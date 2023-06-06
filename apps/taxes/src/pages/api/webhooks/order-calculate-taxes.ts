@@ -37,17 +37,17 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 });
 
 export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ event: ctx.event });
+  const logger = createLogger({ location: "orderCalculateTaxesSyncWebhook" });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info({ payload }, "Handler for ORDER_CALCULATE_TAXES webhook called with payload");
 
   try {
     verifyCalculateTaxesPayload(payload);
-    logger.info("Payload validated succesfully");
+    logger.debug("Payload validated succesfully");
   } catch (error) {
-    logger.info("Payload is invalid. Returning no data");
+    logger.debug("Payload validation failed");
     return webhookResponse.error(error);
   }
 
@@ -56,7 +56,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     const channelSlug = payload.taxBase.channel.slug;
     const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");

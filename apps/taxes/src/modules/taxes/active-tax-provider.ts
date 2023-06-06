@@ -19,19 +19,23 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
   constructor(providerInstance: ProviderConfig) {
     this.logger = createLogger({
-      service: "ActiveTaxProvider",
+      location: "ActiveTaxProvider",
     });
 
     const taxProviderName = providerInstance.provider;
 
     switch (taxProviderName) {
-      case "taxjar":
+      case "taxjar": {
+        this.logger.debug("Selecting TaxJar as tax provider");
         this.client = new TaxJarWebhookService(providerInstance.config);
         break;
+      }
 
-      case "avatax":
+      case "avatax": {
+        this.logger.debug("Selecting Avatax as tax provider");
         this.client = new AvataxWebhookService(providerInstance.config);
         break;
+      }
 
       default: {
         throw new Error(`Tax provider ${taxProviderName} doesn't match`);
@@ -56,12 +60,16 @@ export function getActiveTaxProvider(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[]
 ): ActiveTaxProvider {
+  const logger = createLogger({
+    location: "getActiveTaxProvider",
+  });
+
   if (!channelSlug) {
-    throw new Error("Channel slug is missing");
+    throw new Error("Channel slug was not found in the webhook payload");
   }
 
   if (!encryptedMetadata.length) {
-    throw new Error("App encryptedMetadata is missing");
+    throw new Error("App encryptedMetadata was not found in the webhook payload");
   }
 
   const { providers, channels } = getAppConfig(encryptedMetadata);
@@ -70,7 +78,8 @@ export function getActiveTaxProvider(
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    throw new Error(`Channel config not found for channel ${channelSlug}`);
+    logger.debug({ channelSlug, channelConfig }, "Channel config was not found for channel slug");
+    throw new Error(`Channel config was not found for channel ${channelSlug}`);
   }
 
   const providerInstance = providers.find(
@@ -78,7 +87,11 @@ export function getActiveTaxProvider(
   );
 
   if (!providerInstance) {
-    throw new Error(`Channel (${channelSlug}) providerInstanceId does not match any providers`);
+    logger.debug(
+      { providers, channelConfig },
+      "In the providers array, there is no item with an id that matches the channel config providerInstanceId."
+    );
+    throw new Error(`Channel config providerInstanceId does not match any providers`);
   }
 
   const taxProvider = new ActiveTaxProvider(providerInstance);

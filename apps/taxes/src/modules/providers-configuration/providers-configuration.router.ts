@@ -6,18 +6,15 @@ import { PublicTaxProvidersConfigurationService } from "./public-providers-confi
 export const providersConfigurationRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "providersConfigurationRouter.getAll",
+      location: "providersConfigurationRouter.getAll",
     });
-
-    logger.debug("providersConfigurationRouter.fetch called");
 
     const items = await new PublicTaxProvidersConfigurationService(
       ctx.apiClient,
       ctx.saleorApiUrl
     ).getAll();
 
-    logger.debug({ items }, "providersConfigurationRouter.fetch returned");
+    logger.info("Returning tax providers configuration");
 
     return items;
   }),

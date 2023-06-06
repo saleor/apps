@@ -4,17 +4,20 @@ import { router } from "../trpc/trpc-server";
 import { channelConfigSchema } from "./channel-config";
 import { ChannelConfigurationService } from "./channel-configuration.service";
 
-// todo: refactor with crud-settings
 export const channelsConfigurationRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "channelsConfigurationRouter.fetch",
+      location: "channelsConfigurationRouter.fetch",
     });
 
-    logger.debug("channelsConfigurationRouter.fetch called");
+    const channelConfiguration = await new ChannelConfigurationService(
+      ctx.apiClient,
+      ctx.saleorApiUrl
+    ).getAll();
 
-    return new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl).getAll();
+    logger.info("Returning channel configuration");
+
+    return channelConfiguration;
   }),
   upsert: protectedClientProcedure.input(channelConfigSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
@@ -22,10 +25,10 @@ export const channelsConfigurationRouter = router({
       procedure: "channelsConfigurationRouter.upsert",
     });
 
-    logger.debug(input, "channelsConfigurationRouter.upsert called with input");
-
     const configurationService = new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl);
 
-    return configurationService.update(input.id, input.config);
+    await configurationService.update(input.id, input.config);
+
+    logger.info("Channel configuration updated");
   }),
 });

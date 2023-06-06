@@ -4,7 +4,12 @@ import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { providersSchema } from "../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
-import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "./taxjar-config";
+import {
+  obfuscateTaxJarConfig,
+  TaxJarConfig,
+  TaxJarInstanceConfig,
+  taxJarInstanceConfigSchema,
+} from "./taxjar-config";
 import { DeepPartial } from "@trpc/server";
 import { TaxJarValidationService } from "./taxjar-validation.service";
 
@@ -22,48 +27,35 @@ export class TaxJarConfigurationService {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      service: "TaxJarConfigurationService",
+      location: "TaxJarConfigurationService",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
 
   async getAll(): Promise<TaxJarInstanceConfig[]> {
-    this.logger.debug(".getAll called");
     const { data } = await this.crudSettingsManager.readAll();
 
-    this.logger.debug(`Fetched settings from CrudSettingsManager`);
-    const validation = providersSchema.safeParse(data);
+    const instances = providersSchema.parse(data);
 
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while getAll");
-      throw new Error(validation.error.message);
-    }
-
-    const instances = validation.data.filter(
+    const taxJarInstances = instances.filter(
       (instance) => instance.provider === "taxjar"
     ) as TaxJarInstanceConfig[];
 
-    return instances;
+    return taxJarInstances.map((instance) => ({
+      ...instance,
+      config: obfuscateTaxJarConfig(instance.config),
+    }));
   }
 
   async get(id: string): Promise<TaxJarInstanceConfig> {
-    this.logger.debug(`.get called with id: ${id}`);
     const { data } = await this.crudSettingsManager.read(id);
 
-    this.logger.debug(`Fetched setting from CrudSettingsManager`);
+    const instance = getSchema.parse(data);
 
-    const validation = getSchema.safeParse(data);
-
-    if (!validation.success) {
-      this.logger.error({ error: validation.error.format() }, "Validation error while get");
-      throw new Error(validation.error.message);
-    }
-
-    return validation.data;
+    return { ...instance, config: obfuscateTaxJarConfig(instance.config) };
   }
 
   async post(config: TaxJarConfig): Promise<{ id: string }> {
-    this.logger.debug(`.post called with value: ${JSON.stringify(config)}`);
     const validationService = new TaxJarValidationService();
 
     await validationService.validate(config);
@@ -77,7 +69,6 @@ export class TaxJarConfigurationService {
   }
 
   async patch(id: string, config: DeepPartial<TaxJarConfig>): Promise<void> {
-    this.logger.debug(`.patch called with id: ${id} and value: ${JSON.stringify(config)}`);
     const data = await this.get(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
@@ -97,7 +88,6 @@ export class TaxJarConfigurationService {
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
 
-    this.logger.debug(`.put called with id: ${id} and value: ${JSON.stringify(config)}`);
     return this.crudSettingsManager.update(id, {
       ...setting,
       config: { ...config },
@@ -105,7 +95,6 @@ export class TaxJarConfigurationService {
   }
 
   async delete(id: string): Promise<void> {
-    this.logger.debug(`.delete called with id: ${id}`);
     return this.crudSettingsManager.delete(id);
   }
 }

@@ -37,8 +37,7 @@ const postInputSchema = z.object({
 export const taxjarConfigurationRouter = router({
   get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "taxjarConfigurationRouter.get",
+      location: "taxjarConfigurationRouter.get",
     });
 
     logger.debug("taxjarConfigurationRouter.get called");
@@ -48,59 +47,54 @@ export const taxjarConfigurationRouter = router({
 
     const result = await taxjarConfigurationService.get(input.id);
 
-    // * `providerInstance` name is required for secrets censorship
-    logger.debug({ providerInstance: result }, "taxjarConfigurationRouter.get finished");
-    return { ...result, config: obfuscateTaxJarConfig(result.config) };
+    logger.info(`TaxJar configuration with an id: ${result.id} was successfully retrieved`);
+
+    return result;
   }),
   post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "taxjarConfigurationRouter.post",
+      location: "taxjarConfigurationRouter.post",
     });
 
-    logger.debug("taxjarConfigurationRouter.post called");
+    logger.debug({ input }, "Route post called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.post(input.value);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.post finished");
+    logger.info("TaxJar configuration was successfully created");
 
     return result;
   }),
   delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "taxjarConfigurationRouter.delete",
+      location: "taxjarConfigurationRouter.delete",
     });
 
-    logger.debug("taxjarConfigurationRouter.delete called");
+    logger.debug({ input }, "Route delete called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.delete(input.id);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.delete finished");
-
+    logger.info(`TaxJar configuration with an id: ${input.id} was deleted`);
     return result;
   }),
   patch: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "taxjarConfigurationRouter.patch",
+      location: "taxjarConfigurationRouter.patch",
     });
 
-    logger.debug("taxjarConfigurationRouter.patch called");
+    logger.debug({ input }, "Route patch called with:");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
 
     const result = await taxjarConfigurationService.patch(input.id, input.value);
 
-    logger.debug({ result }, "taxjarConfigurationRouter.patch finished");
-
+    logger.info(`TaxJar configuration with an id: ${input.id} was successfully updated`);
     return result;
   }),
 });

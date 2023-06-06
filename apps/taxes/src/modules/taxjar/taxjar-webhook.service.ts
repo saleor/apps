@@ -17,32 +17,23 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.client = taxJarClient;
     this.config = config;
     this.logger = createLogger({
-      service: "TaxJarWebhookService",
+      location: "TaxJarWebhookService",
     });
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    const providerConfig = this.config;
-
-    this.logger.debug({ taxBase, providerConfig }, "calculateTaxes called with:");
     const adapter = new TaxJarCalculateTaxesAdapter(this.config);
 
     const response = await adapter.send({ taxBase });
 
-    this.logger.debug({ response }, "calculateTaxes response:");
     return response;
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const providerConfig = this.config;
-
-    this.logger.debug({ order, providerConfig }, "createOrder called with:");
-
     const adapter = new TaxJarOrderCreatedAdapter(this.config);
 
     const response = await adapter.send({ order });
 
-    this.logger.debug({ response }, "createOrder response:");
     return response;
   }
 
