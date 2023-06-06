@@ -1,5 +1,5 @@
 ---
-"saleor-app-emails-and-messages": major
+"saleor-app-emails-and-messages": minor
 ---
 
 App UI has been redesigned to our new components library.
