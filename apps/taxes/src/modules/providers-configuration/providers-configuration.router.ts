@@ -12,6 +12,13 @@ export const providersConfigurationRouter = router({
 
     logger.debug("providersConfigurationRouter.fetch called");
 
-    return new PublicTaxProvidersConfigurationService(ctx.apiClient, ctx.saleorApiUrl).getAll();
+    const items = await new PublicTaxProvidersConfigurationService(
+      ctx.apiClient,
+      ctx.saleorApiUrl
+    ).getAll();
+
+    logger.debug({ items }, "providersConfigurationRouter.fetch returned");
+
+    return items;
   }),
 });

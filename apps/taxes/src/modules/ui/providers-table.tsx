@@ -33,7 +33,7 @@ export const ProvidersTable = () => {
       </Table.THead>
       <Table.TBody>
         {data?.map((item) => (
-          <Table.TR>
+          <Table.TR key={item.id}>
             <Table.TD>{item.config.name}</Table.TD>
             <Table.TD>
               <ProviderLabel name={item.provider} />

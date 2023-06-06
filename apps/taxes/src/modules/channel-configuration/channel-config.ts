@@ -1,10 +1,18 @@
 import { z } from "zod";
 
-export const channelSchema = z.object({
+export const channelConfigPropertiesSchema = z.object({
   providerInstanceId: z.string().or(z.null()),
   slug: z.string(),
 });
-export type ChannelConfig = z.infer<typeof channelSchema>;
 
-export const channelsSchema = z.array(channelSchema);
+export type ChannelConfigProperties = z.infer<typeof channelConfigPropertiesSchema>;
+
+export const channelConfigSchema = z.object({
+  id: z.string(),
+  config: channelConfigPropertiesSchema,
+});
+
+export type ChannelConfig = z.infer<typeof channelConfigSchema>;
+
+export const channelsSchema = z.array(channelConfigSchema);
 export type ChannelsConfig = z.infer<typeof channelsSchema>;

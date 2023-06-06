@@ -1,8 +1,8 @@
 import { Client } from "urql";
-import { ChannelsFetcher } from "./channel-fetcher";
-import { ChannelConfig, ChannelsConfig } from "./channel-config";
 import { ChannelFragment } from "../../../generated/graphql";
+import { ChannelConfigProperties, ChannelsConfig } from "./channel-config";
 import { ChannelConfigurationSettings } from "./channel-configuration-settings";
+import { ChannelsFetcher } from "./channel-fetcher";
 
 export class ChannelConfigurationService {
   private configurationService: ChannelConfigurationSettings;
@@ -12,19 +12,19 @@ export class ChannelConfigurationService {
 
   private mergeChannelsWithConfiguration(
     channels: ChannelFragment[],
-    config: ChannelsConfig
+    channelsConfig: ChannelsConfig
   ): ChannelsConfig {
-    return channels.reduce((acc, channel) => {
-      const channelSlug = channel.slug;
-      const channelConfig = config.find((c) => c.slug === channelSlug);
+    return channels.map((channel) => {
+      const channelConfig = channelsConfig.find((c) => c.config.slug === channel.slug);
 
       return {
-        ...acc,
-        [channel.slug]: {
-          providerInstanceId: channelConfig?.providerInstanceId ?? null,
+        id: channel.id,
+        config: {
+          providerInstanceId: channelConfig?.config.providerInstanceId ?? null,
+          slug: channel.slug,
         },
       };
-    }, {} as ChannelsConfig);
+    });
   }
   async getAll() {
     const channelsFetcher = new ChannelsFetcher(this.client);
@@ -35,7 +35,7 @@ export class ChannelConfigurationService {
     return this.mergeChannelsWithConfiguration(channels, channelConfiguration);
   }
 
-  async update(slug: string, data: ChannelConfig) {
-    await this.configurationService.update(slug, data);
+  async update(id: string, data: ChannelConfigProperties) {
+    await this.configurationService.upsert(id, data);
   }
 }

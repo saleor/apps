@@ -74,7 +74,7 @@ export function getActiveTaxProvider(
 
   const { providers, channels } = getAppConfig(encryptedMetadata);
 
-  const channelConfig = channels.find((channel) => channel.slug === channelSlug);
+  const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
@@ -82,7 +82,7 @@ export function getActiveTaxProvider(
   }
 
   const providerInstance = providers.find(
-    (instance) => instance.id === channelConfig.providerInstanceId
+    (instance) => instance.id === channelConfig.config.providerInstanceId
   );
 
   if (!providerInstance) {

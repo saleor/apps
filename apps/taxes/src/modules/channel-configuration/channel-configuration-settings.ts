@@ -1,8 +1,8 @@
 import { Client } from "urql";
-import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { Logger, createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
-import { ChannelConfig, channelsSchema } from "./channel-config";
+import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
+import { ChannelConfigProperties, channelsSchema } from "./channel-config";
 
 export class ChannelConfigurationSettings {
   private crudSettingsManager: CrudSettingsManager;
@@ -27,9 +27,9 @@ export class ChannelConfigurationSettings {
     return channelsSchema.parse(data);
   }
 
-  async update(slug: string, data: ChannelConfig) {
+  async upsert(id: string, data: ChannelConfigProperties) {
     this.logger.trace(".update called");
 
-    await this.crudSettingsManager.update(slug, data);
+    await this.crudSettingsManager.upsert(id, { config: data });
   }
 }

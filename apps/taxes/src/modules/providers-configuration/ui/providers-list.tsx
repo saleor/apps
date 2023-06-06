@@ -26,7 +26,7 @@ const Skeleton = () => {
   // todo: replace with skeleton
   return (
     <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      Loading...
+      <Text color="textNeutralSubdued">Loading...</Text>
     </Box>
   );
 };

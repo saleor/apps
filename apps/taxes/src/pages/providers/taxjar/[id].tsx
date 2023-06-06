@@ -17,8 +17,8 @@ const EditTaxJarPage = () => {
   return (
     <main>
       <AppColumns top={<Header />}>
-        <EditTaxJarConfiguration />
         <TaxJarInstructions />
+        <EditTaxJarConfiguration />
       </AppColumns>
     </main>
   );

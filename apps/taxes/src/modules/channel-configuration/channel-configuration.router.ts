@@ -1,7 +1,7 @@
 import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { setAndReplaceChannelsInputSchema } from "./channel-config-input-schema";
+import { channelConfigSchema } from "./channel-config";
 import { ChannelConfigurationService } from "./channel-configuration.service";
 
 // todo: refactor with crud-settings
@@ -16,18 +16,16 @@ export const channelsConfigurationRouter = router({
 
     return new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl).getAll();
   }),
-  upsert: protectedClientProcedure
-    .input(setAndReplaceChannelsInputSchema)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
-        saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "channelsConfigurationRouter.upsert",
-      });
+  upsert: protectedClientProcedure.input(channelConfigSchema).mutation(async ({ ctx, input }) => {
+    const logger = createLogger({
+      saleorApiUrl: ctx.saleorApiUrl,
+      procedure: "channelsConfigurationRouter.upsert",
+    });
 
-      logger.debug(input, "channelsConfigurationRouter.upsert called with input");
+    logger.debug(input, "channelsConfigurationRouter.upsert called with input");
 
-      const configurationService = new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl);
+    const configurationService = new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl);
 
-      return configurationService.update(input.channelSlug, input.config);
-    }),
+    return configurationService.update(input.id, input.config);
+  }),
 });

@@ -93,19 +93,44 @@ export class CrudSettingsManager {
     });
   }
 
-  async update(id: string, data: any) {
-    this.logger.trace(data, `.update called with: ${id}`);
-    const { data: settings } = await this.readAll();
-    const nextData = settings.map((item) => {
+  async update(id: string, input: any) {
+    this.logger.trace({ input }, `.update called with: ${id}`);
+    const { data: currentSettings } = await this.readAll();
+    const nextSettings = currentSettings.map((item) => {
       if (item.id === id) {
-        return { id, ...data };
+        return { id, ...input };
       }
       return item;
     });
 
+    this.logger.debug({ nextSettings }, "nextSettings");
+
     await this.metadataManager.set({
       key: this.metadataKey,
-      value: JSON.stringify(nextData),
+      value: JSON.stringify(nextSettings),
+      domain: this.saleorApiUrl,
+    });
+  }
+
+  async upsert(id: string, input: any) {
+    this.logger.trace({ input }, `.upsert called with: ${id}`);
+
+    const { data: currentSettings } = await this.readAll();
+    // update if its there
+    const nextSettings = currentSettings.map((item) => {
+      if (item.id === id) {
+        return { id, ...input };
+      }
+      return item;
+    });
+
+    if (!currentSettings.find((item) => item.id === id)) {
+      nextSettings.push({ id, ...input });
+    }
+
+    await this.metadataManager.set({
+      key: this.metadataKey,
+      value: JSON.stringify(nextSettings),
       domain: this.saleorApiUrl,
     });
   }

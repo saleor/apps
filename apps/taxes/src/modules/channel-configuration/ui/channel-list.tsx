@@ -3,9 +3,14 @@ import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { ChannelTable } from "./channel-table";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const NoChannelConfigured = () => {
-  const router = useRouter();
+  const appBridge = useAppBridge();
+
+  const redirectToTaxes = () => {
+    appBridge.appBridge?.dispatch(actions.Redirect({ to: "/taxes/channels" }));
+  };
 
   return (
     <Box
@@ -17,7 +22,7 @@ const NoChannelConfigured = () => {
       justifyContent={"center"}
     >
       <Text variant="body">No channels configured yet</Text>
-      <Button onClick={() => router.push("/providers")}>Configure channel to use tax app</Button>
+      <Button onClick={redirectToTaxes}>Configure channels</Button>
     </Box>
   );
 };
@@ -26,22 +31,22 @@ const Skeleton = () => {
   // todo: replace with skeleton
   return (
     <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      Loading...
+      <Text color="textNeutralSubdued">Loading...</Text>
     </Box>
   );
 };
 
 export const ChannelList = () => {
-  const { data, isFetching, isFetched } = trpcClient.channelsConfiguration.fetch.useQuery();
+  const { data = [], isFetching, isFetched } = trpcClient.channelsConfiguration.fetch.useQuery();
 
-  const isAnyChannelConfigured = Object.keys(data || {}).length > 0;
+  const isAnyChannelConfigured = data.length > 0;
   const isResult = isFetched && isAnyChannelConfigured;
-  const isNoResult = isFetched && !isAnyChannelConfigured;
+  const isEmpty = isFetched && !isAnyChannelConfigured;
 
   return (
     <AppCard __minHeight={"320px"} height="100%">
       {isFetching && <Skeleton />}
-      {isNoResult && <NoChannelConfigured />}
+      {isEmpty && <NoChannelConfigured />}
       {isResult && (
         <Box height="100%">
           <ChannelTable />

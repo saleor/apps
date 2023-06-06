@@ -74,7 +74,9 @@ export const AppBreadcrumbs = () => {
   return (
     <Breadcrumbs>
       {breadcrumbs.map((breadcrumb) => (
-        <Breadcrumbs.Item href={breadcrumb.href}>{breadcrumb.label}</Breadcrumbs.Item>
+        <Breadcrumbs.Item key={breadcrumb.label} href={breadcrumb.href}>
+          {breadcrumb.label}
+        </Breadcrumbs.Item>
       ))}
     </Breadcrumbs>
   );
