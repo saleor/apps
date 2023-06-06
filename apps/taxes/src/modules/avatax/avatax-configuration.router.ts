@@ -19,6 +19,10 @@ const patchInputSchema = z.object({
   value: avataxConfigSchema.partial().transform((config) => {
     const { username, password } = config.credentials ?? {};
 
+    /*
+     * this logic shouldn't be here
+     * // todo: move to a separate service
+     */
     return {
       ...config,
       credentials: {
