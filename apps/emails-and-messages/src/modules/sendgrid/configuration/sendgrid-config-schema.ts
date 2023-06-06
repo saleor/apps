@@ -1,32 +1,20 @@
-import { z } from "zod";
-import { messageEventTypes } from "../../event-handlers/message-event-types";
-import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
+import {
+  SendgridConfigV2,
+  SendgridConfigurationV2,
+  SendgridEventConfigurationV2,
+  sendgridConfigV2Schema,
+  sendgridConfigurationEventV2Schema,
+  sendgridConfigurationV2Schema,
+} from "./migrations/sendgrid-config-schema-v2";
 
-export const sendgridConfigurationEventSchema = z.object({
-  active: z.boolean().default(false),
-  eventType: z.enum(messageEventTypes),
-  template: z.string().optional(),
-});
+export const sendgridConfigurationEventSchema = sendgridConfigurationEventV2Schema;
 
-export type SendgridEventConfiguration = z.infer<typeof sendgridConfigurationEventSchema>;
+export type SendgridEventConfiguration = SendgridEventConfigurationV2;
 
-export const sendgridConfigurationSchema = z.object({
-  id: z.string().min(1),
-  active: z.boolean().default(true),
-  name: z.string().min(1),
-  sandboxMode: z.boolean().default(false),
-  apiKey: z.string().min(1),
-  sender: z.string().min(1).optional(),
-  senderEmail: z.string().email().optional(),
-  senderName: z.string().optional(),
-  channels: channelConfigurationSchema,
-  events: z.array(sendgridConfigurationEventSchema),
-});
+export const sendgridConfigurationSchema = sendgridConfigurationV2Schema;
 
-export type SendgridConfiguration = z.infer<typeof sendgridConfigurationSchema>;
+export type SendgridConfiguration = SendgridConfigurationV2;
 
-export const sendgridConfigSchema = z.object({
-  configurations: z.array(sendgridConfigurationSchema),
-});
+export const sendgridConfigSchema = sendgridConfigV2Schema;
 
-export type SendgridConfig = z.infer<typeof sendgridConfigSchema>;
+export type SendgridConfig = SendgridConfigV2;

@@ -1,37 +1,22 @@
-import { z } from "zod";
-import { messageEventTypes } from "../../event-handlers/message-event-types";
-import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
+import {
+  SmtpConfigV2,
+  SmtpConfigurationV2,
+  SmtpEventConfigurationV2,
+  smtpConfigV2Schema,
+  smtpConfigurationEventV2Schema,
+  smtpConfigurationV2Schema,
+} from "./migrations/smtp-config-schema-v2";
 
 export const smtpEncryptionTypes = ["NONE", "TLS", "SSL"] as const;
 
-export const smtpConfigurationEventSchema = z.object({
-  active: z.boolean().default(false),
-  eventType: z.enum(messageEventTypes),
-  template: z.string(),
-  subject: z.string(),
-});
+export const smtpConfigurationEventSchema = smtpConfigurationEventV2Schema;
 
-export type SmtpEventConfiguration = z.infer<typeof smtpConfigurationEventSchema>;
+export type SmtpEventConfiguration = SmtpEventConfigurationV2;
 
-export const smtpConfigurationSchema = z.object({
-  id: z.string().min(1),
-  active: z.boolean().default(true),
-  name: z.string().min(1),
-  senderName: z.string().optional(),
-  senderEmail: z.string().email().min(5).optional(),
-  smtpHost: z.string().min(1),
-  smtpPort: z.string().min(1),
-  smtpUser: z.string().optional(),
-  smtpPassword: z.string().optional(),
-  encryption: z.enum(smtpEncryptionTypes).default("NONE"),
-  channels: channelConfigurationSchema,
-  events: z.array(smtpConfigurationEventSchema),
-});
+export const smtpConfigurationSchema = smtpConfigurationV2Schema;
 
-export type SmtpConfiguration = z.infer<typeof smtpConfigurationSchema>;
+export type SmtpConfiguration = SmtpConfigurationV2;
 
-export const smtpConfigSchema = z.object({
-  configurations: z.array(smtpConfigurationSchema),
-});
+export const smtpConfigSchema = smtpConfigV2Schema;
 
-export type SmtpConfig = z.infer<typeof smtpConfigSchema>;
+export type SmtpConfig = SmtpConfigV2;
