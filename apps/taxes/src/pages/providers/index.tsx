@@ -1,41 +1,33 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { AvataxIcon, StripeTaxIcon, TaxJarIcon } from "../../assets";
+import { ProviderName } from "../../modules/providers-configuration/providers-config";
 import { AppCard } from "../../modules/ui/app-card";
 import { AppColumns } from "../../modules/ui/app-columns";
+import { ProviderLabel } from "../../modules/ui/provider-label";
+import { Section } from "../../modules/ui/app-section";
 
 const Header = () => {
   return (
-    <Box>
-      <Text __maxWidth={"360px"} __fontWeight={"400"} variant="body">
-        Select and configure providers to connect Saleor with selected services.
-      </Text>
-    </Box>
+    <Section.Header>
+      Select and configure tax provider to use it for tax calculations in your store.
+    </Section.Header>
   );
 };
 
 const Intro = () => {
-  return (
-    <Box gap={6} display="flex" flexDirection={"column"}>
-      <Text variant="heading" as="h3">
-        Choose provider
-      </Text>
-    </Box>
-  );
+  return <Section.Description title="Choose provider" description={null} />;
 };
 
 type ProviderProps = {
-  label: string;
-  icon: string;
   description: React.ReactNode;
   isComingSoon?: boolean;
 };
 
+// TODO: remove ProviderNameWithStripeTax when stripeTax is ready
+type ProviderNameWithStripeTax = ProviderName | "stripeTax";
+
 const providerConfig = {
   taxjar: {
-    label: "TaxJar",
-    icon: TaxJarIcon,
     description: (
       <p>
         TaxJar is a cloud-based tax automation platform designed to simplify and streamline sales
@@ -44,8 +36,6 @@ const providerConfig = {
     ),
   },
   avatax: {
-    label: "Avatax",
-    icon: AvataxIcon,
     description: (
       <p>
         Avatax is a comprehensive tax automation software service that helps businesses calculate
@@ -54,8 +44,6 @@ const providerConfig = {
     ),
   },
   stripeTax: {
-    label: "Stripe Tax",
-    icon: StripeTaxIcon,
     isComingSoon: true,
     description: (
       <p>
@@ -64,25 +52,20 @@ const providerConfig = {
       </p>
     ),
   },
-} satisfies Record<string, ProviderProps>;
+} satisfies Record<ProviderNameWithStripeTax, ProviderProps>;
 
 const ProviderCard = ({
-  label,
-  icon,
   description,
   provider,
   isComingSoon,
-}: ProviderProps & { provider: string }) => {
+}: ProviderProps & { provider: ProviderNameWithStripeTax }) => {
   const router = useRouter();
 
   return (
     <AppCard>
       <Box display={"flex"} flexDirection={"column"} gap={8}>
         <Box display={"flex"} justifyContent={"space-between"}>
-          <Box alignItems={"center"} display={"flex"} gap={6}>
-            <Image src={icon} width={20} height={20} alt={`provider icon`} />
-            <Text variant="bodyStrong">{label}</Text>
-          </Box>
+          <ProviderLabel name={provider} />
           {isComingSoon && (
             <Text
               variant="body"
@@ -94,7 +77,7 @@ const ProviderCard = ({
             </Text>
           )}
         </Box>
-        <Text __fontWeight={"400"} variant="body" __maxWidth={"480px"}>
+        <Text variant="body" __maxWidth={"480px"}>
           {description}
         </Text>
       </Box>
@@ -111,7 +94,7 @@ const ChooseProvider = () => {
   return (
     <Box gap={6} display="flex" flexDirection={"column"}>
       {Object.entries(providerConfig).map(([provider, description]) => {
-        return <ProviderCard {...description} provider={provider} />;
+        return <ProviderCard {...description} provider={provider as ProviderName} />;
       })}
     </Box>
   );

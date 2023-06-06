@@ -12,12 +12,13 @@ const newProviderBreadcrumbs: Breadcrumb[] = [
     label: "Configuration",
   },
   {
-    label: "Add provider",
+    label: "Providers",
     href: "/providers",
   },
 ];
 
 const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
+  "/": [],
   "/configuration": [
     {
       href: "/configuration",
@@ -32,6 +33,14 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/taxjar",
     },
   ],
+
+  "/providers/taxjar/[id]": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "Editing TaxJar provider",
+      href: "/providers/taxjar",
+    },
+  ],
   "/providers/avatax": [
     ...newProviderBreadcrumbs,
     {
@@ -39,14 +48,21 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/avatax",
     },
   ],
+  "/providers/avatax/[id]": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "Editing Avatax provider",
+      href: "/providers/avatax",
+    },
+  ],
 };
 
 const useBreadcrumbs = () => {
-  const router = useRouter();
-  const breadcrumbs = breadcrumbsForRoute[router.pathname];
+  const { pathname } = useRouter();
+  const breadcrumbs = breadcrumbsForRoute[pathname];
 
-  if (!breadcrumbs) {
-    throw new Error(`No breadcrumbs for route ${router.pathname}`);
+  if (pathname !== "/" && !breadcrumbs) {
+    throw new Error(`No breadcrumbs for route ${pathname}`);
   }
 
   return breadcrumbs;

@@ -1,6 +1,7 @@
 import { TaxParams } from "taxjar/dist/types/paramTypes";
 import { AddressFragment as SaleorAddress } from "../../../generated/graphql";
 import { TaxJarConfig } from "./taxjar-config";
+import { AddressParams } from "taxjar/dist/types/paramTypes";
 
 function joinAddresses(address1: string, address2: string): string {
   return `${address1}${address2.length > 0 ? " " + address2 : ""}`;
@@ -30,7 +31,18 @@ function mapChannelAddressToTaxJarAddress(
   };
 }
 
+function mapChannelAddressToAddressParams(address: TaxJarConfig["address"]): AddressParams {
+  return {
+    city: address.city,
+    country: address.country,
+    state: address.state,
+    street: address.street,
+    zip: address.zip,
+  };
+}
+
 export const taxJarAddressFactory = {
-  fromSaleorAddress: mapSaleorAddressToTaxJarAddress,
-  fromChannelAddress: mapChannelAddressToTaxJarAddress,
+  fromSaleorToTax: mapSaleorAddressToTaxJarAddress,
+  fromChannelToTax: mapChannelAddressToTaxJarAddress,
+  fromChannelToParams: mapChannelAddressToAddressParams,
 };

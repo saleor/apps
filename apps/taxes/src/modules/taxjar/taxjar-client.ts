@@ -45,19 +45,6 @@ export class TaxJarClient {
     return response;
   }
 
-  async ping() {
-    this.logger.trace("ping called");
-    try {
-      await this.client.categories();
-      return { authenticated: true };
-    } catch (error) {
-      return {
-        authenticated: false,
-        error: "TaxJar was not able to authenticate with the provided credentials.",
-      };
-    }
-  }
-
   async createOrder({ params }: CreateOrderArgs) {
     this.logger.trace({ params }, "createOrder called with:");
 
