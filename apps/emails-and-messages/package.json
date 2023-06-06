@@ -71,15 +71,11 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/html-to-text": "^9.0.0",
     "@types/mjml": "^4.7.0",
-    "@types/node": "^18.11.18",
     "@types/nodemailer": "^6.4.7",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
     "eslint": "8.42.0",
-    "eslint-config-next": "13.1.2",
-    "eslint-config-prettier": "^8.6.0",
     "eslint-config-saleor": "workspace:*",
-    "prettier": "^2.8.2",
     "typescript": "5.1.3"
   }
 }

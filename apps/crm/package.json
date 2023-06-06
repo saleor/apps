@@ -58,15 +58,11 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/mailchimp__mailchimp_marketing": "^3.0.7",
-    "@types/node": "^18.11.18",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
     "eslint": "8.42.0",
-    "eslint-config-next": "13.1.2",
-    "eslint-config-prettier": "^8.6.0",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
-    "prettier": "^2.8.2",
     "typescript": "5.1.3"
   }
 }
