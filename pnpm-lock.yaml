@@ -72,7 +72,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -208,7 +208,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -344,7 +344,7 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -504,7 +504,7 @@ importers:
         specifier: ^16.0.3
         version: 16.0.3
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -673,7 +673,7 @@ importers:
         specifier: 8.42.0
         version: 8.42.0
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -806,7 +806,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -927,7 +927,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -1066,7 +1066,7 @@ importers:
         specifier: ^4.0.15
         version: 4.1.2
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -1205,7 +1205,7 @@ importers:
         specifier: ^4.3.4
         version: 4.3.4
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -1332,7 +1332,7 @@ importers:
         specifier: 8.42.0
         version: 8.42.0
       graphql:
-        specifier: ^16.5.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
@@ -1486,7 +1486,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       graphql:
-        specifier: ^16.6.0
+        specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
