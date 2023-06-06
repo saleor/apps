@@ -4,13 +4,12 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { BoxFooter } from "../../../components/box-footer";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import sendgrid from "../../../public/sendgrid.png";
-import smtp from "../../../public/smtp.svg";
 import { smtpUrls } from "../../smtp/urls";
 import { sendgridUrls } from "../../sendgrid/urls";
 import { appUrls } from "../urls";
 import React from "react";
+import { SendgridLogo } from "../../sendgrid/ui/sendgrid-logo";
+import { SmtpLogo } from "../../smtp/ui/smtp-logo";
 
 const NoExistingConfigurations = () => {
   const { push } = useRouter();
@@ -80,9 +79,9 @@ export const MessagingProvidersBox = ({
   const getProviderLogo = (configuration: ConfigurationListItem) => {
     switch (configuration.provider) {
       case "smtp":
-        return <Image alt="SMTP logo" src={smtp} height={20} width={20} />;
+        return <SmtpLogo height={20} width={20} />;
       case "sendgrid":
-        return <Image alt="Sendgrid logo" src={sendgrid} height={20} width={20} />;
+        return <SendgridLogo height={20} width={20} />;
     }
   };
 
