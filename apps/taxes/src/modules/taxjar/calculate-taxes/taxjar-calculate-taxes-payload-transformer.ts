@@ -38,13 +38,13 @@ export class TaxJarCalculateTaxesPayloadTransformer {
   }
 
   transform({ taxBase }: TaxJarCalculateTaxesPayload): TaxJarCalculateTaxesTarget {
-    const fromAddress = taxJarAddressFactory.fromChannelAddress(this.config.address);
+    const fromAddress = taxJarAddressFactory.fromChannelToTax(this.config.address);
 
     if (!taxBase.address) {
       throw new Error("Customer address is required to calculate taxes in TaxJar.");
     }
 
-    const toAddress = taxJarAddressFactory.fromSaleorAddress(taxBase.address);
+    const toAddress = taxJarAddressFactory.fromSaleorToTax(taxBase.address);
 
     const taxParams: TaxJarCalculateTaxesTarget = {
       params: {

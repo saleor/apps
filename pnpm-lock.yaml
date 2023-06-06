@@ -1432,7 +1432,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: ^2.9.10
-        version: 2.9.11(react-hook-form@7.43.1)
+        version: 2.9.11(react-hook-form@7.43.9)
       '@saleor/app-sdk':
         specifier: 0.39.1
         version: 0.39.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1445,6 +1445,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: ^0.8.0-pre.84
         version: 0.8.0-pre.95(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
       '@sentry/nextjs':
         specifier: ^7.45.0
         version: 7.45.0(next@13.3.0)(react@18.2.0)
@@ -1503,8 +1506,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.42.1
-        version: 7.43.1(react@18.2.0)
+        specifier: ^7.43.9
+        version: 7.43.9(react@18.2.0)
       taxjar:
         specifier: ^4.0.1
         version: 4.0.1
@@ -6079,6 +6082,14 @@ packages:
       react-hook-form: ^7.0.0
     dependencies:
       react-hook-form: 7.43.1(react@18.2.0)
+    dev: false
+
+  /@hookform/resolvers@2.9.11(react-hook-form@7.43.9):
+    resolution: {integrity: sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.43.9(react@18.2.0)
     dev: false
 
   /@hookform/resolvers@3.1.0(react-hook-form@7.43.1):
