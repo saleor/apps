@@ -1,6 +1,6 @@
 {
   "name": "@saleor/react-hook-form-macaw",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@saleor/macaw-ui": "0.8.0-pre.84",

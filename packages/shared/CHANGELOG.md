@@ -1,5 +1,15 @@
 # @saleor/apps-shared
 
+## 1.7.0
+
+### Minor Changes
+
+- b75a664: Disabled possibility to create logger if level is DEBUG or TRACE and NODE_ENV is production. This is an additional protection for logging sensitive data.
+
+### Patch Changes
+
+- 0c2fc65: Update dev dependencies - Vite and Vitest. These changes will not affect runtime Apps, but can affect tests and builds
+
 ## 1.6.1
 
 ### Patch Changes

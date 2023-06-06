@@ -1,5 +1,27 @@
 # saleor-app-products-feed
 
+## 1.8.0
+
+### Minor Changes
+
+- 182bdd6: This version introduces major update of the App UI:
+
+  - Added Macaw UI / next
+  - Rebuilt app's UI to match modern Saleor guidelines
+  - Moved S3 form to be configured once, globally
+  - Added tests and refactored App configuration/metadata (incompatible with previous version)
+  - Product-related webhooks are now refreshing cache responsible on indexing large databases
+
+  App was not officially released yet, hence only minor update is introduced
+
+### Patch Changes
+
+- 0c2fc65: Update dev dependencies - Vite and Vitest. These changes will not affect runtime Apps, but can affect tests and builds
+- Updated dependencies [0c2fc65]
+- Updated dependencies [b75a664]
+  - @saleor/react-hook-form-macaw@0.1.1
+  - @saleor/apps-shared@1.7.0
+
 ## 1.7.1
 
 ### Patch Changes
