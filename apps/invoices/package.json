@@ -31,7 +31,7 @@
     "@web-std/file": "^3.0.2",
     "clsx": "^1.2.1",
     "eslint": "8.42.0",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "microinvoice": "^1.0.6",
     "next": "13.3.0",

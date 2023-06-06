@@ -35,7 +35,7 @@
     "@vitejs/plugin-react": "4.0.0",
     "clsx": "^1.2.1",
     "dotenv": "^16.0.3",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "handlebars": "^4.7.7",
     "html-to-text": "^9.0.3",

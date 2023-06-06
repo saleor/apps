@@ -28,7 +28,7 @@
     "algoliasearch": "4.14.2",
     "clsx": "^1.2.1",
     "debug": "^4.3.4",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "next": "13.3.0",
     "next-urql": "4.0.0",

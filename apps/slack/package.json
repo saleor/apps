@@ -25,7 +25,7 @@
     "@urql/exchange-auth": "^1.0.0",
     "clsx": "^1.2.1",
     "eslint": "8.42.0",
-    "graphql": "^16.5.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "jose": "^4.11.2",
     "next": "13.3.0",

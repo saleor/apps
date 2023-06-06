@@ -33,7 +33,7 @@
     "@vitejs/plugin-react": "4.0.0",
     "clsx": "^1.2.1",
     "fast-xml-parser": "^4.0.15",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "jsdom": "^20.0.3",
     "next": "13.3.0",
