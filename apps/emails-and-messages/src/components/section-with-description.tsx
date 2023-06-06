@@ -7,7 +7,7 @@ interface SectionWithDescriptionProps {
 }
 export const SectionWithDescription = (props: SectionWithDescriptionProps) => {
   return (
-    <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }} gap={3}>
+    <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }} gap={12}>
       <Box>
         <Text variant="heading" as="h2" paddingBottom={2}>
           {props.title}
