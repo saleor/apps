@@ -1,5 +1,14 @@
 # saleor-app-crm
 
+## 1.5.1
+
+### Patch Changes
+
+- 0c2fc65: Update dev dependencies - Vite and Vitest. These changes will not affect runtime Apps, but can affect tests and builds
+- Updated dependencies [0c2fc65]
+- Updated dependencies [b75a664]
+  - @saleor/apps-shared@1.7.0
+
 ## 1.5.0
 
 ### Minor Changes
