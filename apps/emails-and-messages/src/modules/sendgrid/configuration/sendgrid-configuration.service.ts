@@ -1,4 +1,3 @@
-import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { createLogger } from "@saleor/apps-shared";
 import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
 import {
@@ -9,6 +8,7 @@ import {
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
+import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 
 const logger = createLogger({
   service: "SendgridConfigurationService",
