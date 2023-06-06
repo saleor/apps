@@ -72,6 +72,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-saleor": "workspace:*",
     "prettier": "^2.7.1",
-    "typescript": "4.8.4"
+    "typescript": "5.1.3"
   }
 }
