@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.1.1
+
+### Patch Changes
+
+- 0c2fc65: Update dev dependencies - Vite and Vitest. These changes will not affect runtime Apps, but can affect tests and builds
+
 ## 0.1.0
 
 ### Minor Changes
