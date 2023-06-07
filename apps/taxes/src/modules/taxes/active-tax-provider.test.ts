@@ -91,13 +91,13 @@ vi.stubEnv("SECRET_KEY", mockedSecretKey);
 describe("getActiveTaxProvider", () => {
   it("throws error when channel slug is missing", () => {
     expect(() => getActiveTaxProvider("", mockedInvalidMetadata)).toThrow(
-      "Channel slug is missing"
+      "Channel slug was not found in the webhook payload"
     );
   });
 
   it("throws error when there are no metadata items", () => {
     expect(() => getActiveTaxProvider("default-channel", [])).toThrow(
-      "App encryptedMetadata is missing"
+      "App encryptedMetadata was not found in the webhook payload"
     );
   });
 
@@ -113,7 +113,7 @@ describe("getActiveTaxProvider", () => {
           value: mockedInvalidEncryptedChannels,
         },
       ])
-    ).toThrow("Channel (default-channel) providerInstanceId does not match any providers");
+    ).toThrow("Channel config providerInstanceId does not match any providers");
   });
 
   it("throws error when no channel was found for channelSlug", () => {
@@ -128,7 +128,7 @@ describe("getActiveTaxProvider", () => {
           value: mockedValidEncryptedChannels,
         },
       ])
-    ).toThrow("Channel config not found for channel invalid-channel");
+    ).toThrow("Channel config was not found for channel invalid-channel");
   });
 
   it("returns provider when data is correct", () => {

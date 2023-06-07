@@ -11,7 +11,7 @@ import {
   obfuscateAvataxConfig,
 } from "./avatax-config";
 import { DeepPartial } from "@trpc/server";
-import { AvataxValidationService } from "./avatax-validation.service";
+import { AvataxValidationService } from "./validation/avatax-validation.service";
 
 const getSchema = avataxInstanceConfigSchema;
 

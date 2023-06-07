@@ -72,24 +72,6 @@ export class AvataxClient {
     return this.client.commitTransaction(args);
   }
 
-  async ping() {
-    try {
-      const result = await this.client.ping();
-
-      return {
-        authenticated: result.authenticated,
-        ...(!result.authenticated && {
-          error: "Avatax was not able to authenticate with the provided credentials.",
-        }),
-      };
-    } catch (error) {
-      return {
-        authenticated: false,
-        error: "Avatax was not able to authenticate with the provided credentials.",
-      };
-    }
-  }
-
   async validateAddress({ address }: ValidateAddressArgs) {
     return this.client.resolveAddress(address);
   }
