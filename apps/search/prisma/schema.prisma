@@ -20,7 +20,7 @@ model AlgoliaConfiguration {
 
 model IndexJob {
   id          Int      @id @default(autoincrement())
-  jobId       Int      @unique
+  jobId       Int      @unique // todo make it ID instead?
   createdAt   DateTime @default(now())
   createdBy   String
   status      String // probably enum

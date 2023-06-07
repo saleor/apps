@@ -21,6 +21,11 @@ async function main() {
     },
   });
 
+  runner.events.on("job:error", ({ job, error, worker }) => {
+    // todo try to rub prisma here
+    console.log(job);
+  });
+
   await runner.promise;
 }
 
