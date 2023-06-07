@@ -49,7 +49,7 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWi
         <ThemeProvider defaultTheme="defaultLight">
           <ThemeSynchronizer />
           <RoutePropagator />
-          <Box padding={8} __maxWidth={1440}>
+          <Box padding={5} __maxWidth={1440}>
             <Component {...pageProps} />
           </Box>
         </ThemeProvider>
