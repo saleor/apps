@@ -2,6 +2,7 @@ import { Task } from "graphile-worker/dist/interfaces";
 import { z } from "zod";
 import { getProductsAndSendToAlgolia } from "./get-products-and-send-to-algolia";
 import { getWorkerUtils } from "../worker-utils";
+import { indexingJobRepository } from "../../domain/indexing-job/IndexingJobRepository";
 
 const payloadSchema = z.object({
   saleorApiUrl: z.string().url(),
@@ -22,6 +23,12 @@ export const IndexSaleorProducts: Task = async (payload, helpers) => {
    * Perform some business logic
    */
   await getProductsAndSendToAlgolia(typedPayload.saleorApiUrl);
+
+  await indexingJobRepository.updateJobStatus(
+    typedPayload.saleorApiUrl,
+    Number(helpers.job.id),
+    "SUCCESS"
+  );
 };
 
 export const IndexSaleorProductsJobName = "IndexSaleorProducts";
