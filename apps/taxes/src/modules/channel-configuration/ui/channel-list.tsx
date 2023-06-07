@@ -1,9 +1,8 @@
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { ChannelTable } from "./channel-table";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const NoChannelConfigured = () => {
   const appBridge = useAppBridge();
@@ -45,12 +44,17 @@ export const ChannelList = () => {
 
   return (
     <AppCard __minHeight={"320px"} height="100%">
-      {isFetching && <Skeleton />}
-      {isEmpty && <NoChannelConfigured />}
-      {isResult && (
-        <Box height="100%">
-          <ChannelTable />
-        </Box>
+      {isFetching ? (
+        <Skeleton />
+      ) : (
+        <>
+          {isEmpty && <NoChannelConfigured />}
+          {isResult && (
+            <Box height="100%">
+              <ChannelTable />
+            </Box>
+          )}
+        </>
       )}
     </AppCard>
   );

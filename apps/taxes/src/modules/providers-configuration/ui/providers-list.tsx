@@ -41,15 +41,25 @@ export const ProvidersList = () => {
 
   return (
     <AppCard __minHeight={"320px"} height="100%">
-      {isFetching && <Skeleton />}
-      {isNoResult && <AddProvider />}
-      {isResult && (
-        <Box height="100%" display="flex" flexDirection={"column"} justifyContent={"space-between"}>
-          <ProvidersTable />
-          <Box display={"flex"} justifyContent={"flex-end"}>
-            <Button onClick={() => router.push("/providers")}>Add new</Button>
-          </Box>
-        </Box>
+      {isFetching ? (
+        <Skeleton />
+      ) : (
+        <>
+          {isNoResult && <AddProvider />}
+          {isResult && (
+            <Box
+              height="100%"
+              display="flex"
+              flexDirection={"column"}
+              justifyContent={"space-between"}
+            >
+              <ProvidersTable />
+              <Box display={"flex"} justifyContent={"flex-end"}>
+                <Button onClick={() => router.push("/providers")}>Add new</Button>
+              </Box>
+            </Box>
+          )}
+        </>
       )}
     </AppCard>
   );
