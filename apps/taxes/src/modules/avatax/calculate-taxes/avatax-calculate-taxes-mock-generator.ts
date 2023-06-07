@@ -12,6 +12,7 @@ import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
 import { AvataxConfig } from "../avatax-config";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
+import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 
 type TaxBase = TaxBaseFragment;
 
@@ -107,14 +108,6 @@ const defaultTaxBase: TaxBase = {
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },
-  },
-};
-
-const defaultChannelConfig: ChannelConfig = {
-  id: "1",
-  config: {
-    providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-    slug: "default-channel",
   },
 };
 
@@ -943,7 +936,6 @@ const defaultTransactionModel: TransactionModel = {
 const testingScenariosMap = {
   default: {
     taxBase: defaultTaxBase,
-    channelConfig: defaultChannelConfig,
     response: defaultTransactionModel,
   },
 };
@@ -958,11 +950,11 @@ export class AvataxCalculateTaxesMockGenerator {
       ...overrides,
     });
 
-  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig =>
-    structuredClone({
-      ...testingScenariosMap[this.scenario].channelConfig,
-      ...overrides,
-    });
+  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig => {
+    const mockGenerator = new ChannelConfigMockGenerator();
+
+    return mockGenerator.generateChannelConfig(overrides);
+  };
 
   generateAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig => {
     const mockGenerator = new AvataxConfigMockGenerator();
