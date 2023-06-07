@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { obfuscateSecret } from "../../lib/utils";
 
 const addressSchema = z.object({
   country: z.string(),
@@ -43,19 +42,3 @@ export const taxJarInstanceConfigSchema = z.object({
 });
 
 export type TaxJarInstanceConfig = z.infer<typeof taxJarInstanceConfigSchema>;
-
-export const obfuscateTaxJarConfig = (config: TaxJarConfig): TaxJarConfig => ({
-  ...config,
-  credentials: {
-    ...config.credentials,
-    apiKey: obfuscateSecret(config.credentials.apiKey),
-  },
-});
-
-export const obfuscateTaxJarInstances = (
-  instances: TaxJarInstanceConfig[]
-): TaxJarInstanceConfig[] =>
-  instances.map((instance) => ({
-    ...instance,
-    config: obfuscateTaxJarConfig(instance.config),
-  }));

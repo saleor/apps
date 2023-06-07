@@ -3,9 +3,13 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
+import { Obfuscator } from "../../../lib/obfuscator";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AvataxConfig } from "../avatax-config";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
+import { AvataxConfigObfuscator } from "../avatax-config-obfuscator";
+
+const avataxObfuscator = new AvataxConfigObfuscator();
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();
@@ -55,7 +59,10 @@ export const EditAvataxConfiguration = () => {
 
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
-      patchMutation({ value: data, id: configurationId });
+      patchMutation({
+        value: avataxObfuscator.filterOutObfuscated(data),
+        id: configurationId,
+      });
     },
     [configurationId, patchMutation]
   );

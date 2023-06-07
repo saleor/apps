@@ -1,11 +1,15 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
+import React from "react";
 import { z } from "zod";
+import { Obfuscator } from "../../../lib/obfuscator";
 import { trpcClient } from "../../trpc/trpc-client";
 import { TaxJarConfig } from "../taxjar-config";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
-import React from "react";
+import { TaxJarConfigObfuscator } from "../configuration/taxjar-config-obfuscator";
+
+const taxJarObfuscator = new TaxJarConfigObfuscator();
 
 export const EditTaxJarConfiguration = () => {
   const router = useRouter();
@@ -40,7 +44,10 @@ export const EditTaxJarConfiguration = () => {
 
   const submitHandler = React.useCallback(
     (data: TaxJarConfig) => {
-      patchMutation({ value: data, id: configurationId });
+      patchMutation({
+        value: taxJarObfuscator.filterOutObfuscated(data),
+        id: configurationId,
+      });
     },
     [configurationId, patchMutation]
   );

@@ -1,10 +1,9 @@
 import { z } from "zod";
 import { createLogger } from "../../lib/logger";
-import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { obfuscateTaxJarConfig, taxJarConfigSchema } from "./taxjar-config";
-import { TaxJarConfigurationService } from "./configuration/taxjar-configuration.service";
+import { taxJarConfigSchema } from "./taxjar-config";
+import { PublicTaxJarConfigurationService } from "./configuration/public-taxjar-configuration.service";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -16,18 +15,7 @@ const deleteInputSchema = z.object({
 
 const patchInputSchema = z.object({
   id: z.string(),
-  value: taxJarConfigSchema.partial().transform((c) => {
-    const { credentials, ...config } = c ?? {};
-    const { apiKey } = credentials ?? {};
-
-    return {
-      ...config,
-      credentials: {
-        ...credentials,
-        ...(apiKey && !isObfuscated(apiKey) && { apiKey }),
-      },
-    };
-  }),
+  value: taxJarConfigSchema.deepPartial(),
 });
 
 const postInputSchema = z.object({
@@ -43,7 +31,10 @@ export const taxjarConfigurationRouter = router({
     logger.debug("taxjarConfigurationRouter.get called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
+    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+      apiClient,
+      saleorApiUrl
+    );
 
     const result = await taxjarConfigurationService.get(input.id);
 
@@ -59,7 +50,10 @@ export const taxjarConfigurationRouter = router({
     logger.debug("Attempting to create configuration");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
+    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+      apiClient,
+      saleorApiUrl
+    );
 
     const result = await taxjarConfigurationService.post(input.value);
 
@@ -75,7 +69,10 @@ export const taxjarConfigurationRouter = router({
     logger.debug("Route delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
+    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+      apiClient,
+      saleorApiUrl
+    );
 
     const result = await taxjarConfigurationService.delete(input.id);
 
@@ -87,10 +84,13 @@ export const taxjarConfigurationRouter = router({
       location: "taxjarConfigurationRouter.patch",
     });
 
-    logger.debug("Route patch called");
+    logger.debug({ input }, "Route patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
+    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+      apiClient,
+      saleorApiUrl
+    );
 
     const result = await taxjarConfigurationService.patch(input.id, input.value);
 

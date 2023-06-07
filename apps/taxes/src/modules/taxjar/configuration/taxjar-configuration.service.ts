@@ -1,17 +1,13 @@
+import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
 import { createLogger, Logger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 import { providersSchema } from "../../providers-configuration/providers-config";
 import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
-import {
-  obfuscateTaxJarConfig,
-  TaxJarConfig,
-  TaxJarInstanceConfig,
-  taxJarInstanceConfigSchema,
-} from "../taxjar-config";
-import { DeepPartial } from "@trpc/server";
+import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "../taxjar-config";
 import { TaxJarValidationService } from "./taxjar-validation.service";
+import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
 
 const getSchema = taxJarInstanceConfigSchema;
 
@@ -41,10 +37,7 @@ export class TaxJarConfigurationService {
       (instance) => instance.provider === "taxjar"
     ) as TaxJarInstanceConfig[];
 
-    return taxJarInstances.map((instance) => ({
-      ...instance,
-      config: obfuscateTaxJarConfig(instance.config),
-    }));
+    return taxJarInstances;
   }
 
   async get(id: string): Promise<TaxJarInstanceConfig> {
@@ -52,7 +45,7 @@ export class TaxJarConfigurationService {
 
     const instance = getSchema.parse(data);
 
-    return { ...instance, config: obfuscateTaxJarConfig(instance.config) };
+    return instance;
   }
 
   async post(config: TaxJarConfig): Promise<{ id: string }> {
@@ -68,18 +61,24 @@ export class TaxJarConfigurationService {
     return result.data;
   }
 
-  async patch(id: string, config: DeepPartial<TaxJarConfig>): Promise<void> {
+  async patch(id: string, nextConfigPartial: DeepPartial<TaxJarConfig>): Promise<void> {
     const data = await this.get(id);
+
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
+    const prevConfig = setting.config;
+
+    const inputTransformer = new PatchInputTransformer();
+
+    const input = inputTransformer.transform(nextConfigPartial, prevConfig);
 
     const validationService = new TaxJarValidationService();
 
-    await validationService.validate(setting.config);
+    await validationService.validate(input);
 
     return this.crudSettingsManager.update(id, {
       ...setting,
-      config: { ...setting.config, ...config },
+      config: { ...setting.config, ...input },
     });
   }
 

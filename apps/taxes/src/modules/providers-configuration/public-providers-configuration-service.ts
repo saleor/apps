@@ -1,17 +1,17 @@
 import { Client } from "urql";
 import { createLogger, Logger } from "../../lib/logger";
-import { AvataxConfigurationService } from "../avatax/configuration/avatax-configuration.service";
-import { TaxJarConfigurationService } from "../taxjar/configuration/taxjar-configuration.service";
+import { PublicAvataxConfigurationService } from "../avatax/configuration/public-avatax-configuration.service";
+import { PublicTaxJarConfigurationService } from "../taxjar/configuration/public-taxjar-configuration.service";
 
 export const TAX_PROVIDER_KEY = "tax-providers";
 
 export class PublicTaxProvidersConfigurationService {
-  private avataxConfigurationService: AvataxConfigurationService;
-  private taxJarConfigurationService: TaxJarConfigurationService;
+  private avataxConfigurationService: PublicAvataxConfigurationService;
+  private taxJarConfigurationService: PublicTaxJarConfigurationService;
   private logger: Logger;
   constructor(client: Client, saleorApiUrl: string) {
-    this.avataxConfigurationService = new AvataxConfigurationService(client, saleorApiUrl);
-    this.taxJarConfigurationService = new TaxJarConfigurationService(client, saleorApiUrl);
+    this.avataxConfigurationService = new PublicAvataxConfigurationService(client, saleorApiUrl);
+    this.taxJarConfigurationService = new PublicTaxJarConfigurationService(client, saleorApiUrl);
     this.logger = createLogger({
       location: "PublicTaxProvidersConfigurationService",
       metadataKey: TAX_PROVIDER_KEY,

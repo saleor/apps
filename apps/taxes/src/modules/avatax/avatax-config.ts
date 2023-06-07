@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { obfuscateSecret } from "../../lib/utils";
 
 const addressSchema = z.object({
   country: z.string(),
@@ -52,20 +51,3 @@ export const avataxInstanceConfigSchema = z.object({
 });
 
 export type AvataxInstanceConfig = z.infer<typeof avataxInstanceConfigSchema>;
-
-export const obfuscateAvataxConfig = (config: AvataxConfig): AvataxConfig => ({
-  ...config,
-  credentials: {
-    ...config.credentials,
-    username: obfuscateSecret(config.credentials.username),
-    password: obfuscateSecret(config.credentials.password),
-  },
-});
-
-export const obfuscateAvataxInstances = (
-  instances: AvataxInstanceConfig[]
-): AvataxInstanceConfig[] =>
-  instances.map((instance) => ({
-    ...instance,
-    config: obfuscateAvataxConfig(instance.config),
-  }));
