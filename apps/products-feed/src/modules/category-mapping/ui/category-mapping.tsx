@@ -18,7 +18,7 @@ export const CategoryMapping = () => {
   return (
     <Box>
       {categories!.map((category) => (
-        <CategoryMappingForm category={category} key={category.id} marginBottom={8} />
+        <CategoryMappingForm category={category} key={category.id} marginBottom={5} />
       ))}
     </Box>
   );

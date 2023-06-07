@@ -23,7 +23,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div>
-      <Text variant={"hero"} as={"h1"} marginBottom={8}>
+      <Text variant={"hero"} as={"h1"} marginBottom={5}>
         Saleor Product Feed
       </Text>
       <Text as={"p"}>This is Saleor App that allows product feed generation</Text>

@@ -25,7 +25,7 @@ export const CategoryMappingPreview = () => {
 
   return (
     <Box>
-      <Text marginBottom={8} as={"h2"} variant={"heading"}>
+      <Text marginBottom={5} as={"h2"} variant={"heading"}>
         Mapped categories
       </Text>
       {categories!
@@ -34,11 +34,11 @@ export const CategoryMappingPreview = () => {
           return (
             <Box
               key={category.id}
-              marginBottom={4}
+              marginBottom={1.5}
               borderBottomStyle={"solid"}
               borderColor={"neutralHighlight"}
               borderWidth={1}
-              paddingBottom={4}
+              paddingBottom={1.5}
             >
               <CategoryBreadcrumbs category={category} />
               <GoogleCategory categoryId={category.googleCategoryId!} />

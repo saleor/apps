@@ -18,7 +18,7 @@ const ConfigurationPage: NextPage = () => {
   return (
     <Box>
       <Box __marginBottom="100px">
-        <Text variant={"hero"} size={"medium"} as={"h1"} marginBottom={8}>
+        <Text variant={"hero"} size={"medium"} as={"h1"} marginBottom={5}>
           Configuration
         </Text>
         <Paragraph>
@@ -119,7 +119,7 @@ const ConfigurationPage: NextPage = () => {
           <Box>
             <CategoryMappingPreview />
             <Box display={"flex"} justifyContent={"flex-end"}>
-              <Button marginTop={8} onClick={() => push("/categories")}>
+              <Button marginTop={5} onClick={() => push("/categories")}>
                 Map categories
               </Button>
             </Box>

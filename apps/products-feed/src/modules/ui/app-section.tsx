@@ -15,9 +15,9 @@ export const AppSection = ({
   includePadding?: boolean;
 }>) => {
   return (
-    <Box as="section" __gridTemplateColumns={"400px auto"} display={"grid"} gap={14} {...props}>
+    <Box as="section" __gridTemplateColumns={"400px auto"} display={"grid"} gap={10} {...props}>
       <Box>
-        <Text as="h2" variant={"heading"} size={"large"} marginBottom={4}>
+        <Text as="h2" variant={"heading"} size={"large"} marginBottom={1.5}>
           {heading}
         </Text>
         {sideContent}
@@ -26,7 +26,7 @@ export const AppSection = ({
         borderStyle={"solid"}
         borderColor={"neutralPlain"}
         borderWidth={1}
-        padding={includePadding ? 8 : 0}
+        padding={includePadding ? 5 : 0}
         borderRadius={4}
       >
         {mainContent}

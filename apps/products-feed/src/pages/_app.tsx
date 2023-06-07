@@ -30,7 +30,7 @@ function NextApp({ Component, pageProps }: AppProps) {
           <ThemeSynchronizer />
           <RoutePropagator />
           <QueryClientProvider client={queryClient}>
-            <Box padding={14}>
+            <Box padding={10}>
               <Component {...pageProps} />
             </Box>
           </QueryClientProvider>
