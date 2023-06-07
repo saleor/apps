@@ -4,6 +4,7 @@ import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { orderCreatedTransactionMock } from "./avatax-order-created-response-transaction-mock";
 import { AvataxConfig } from "../avatax-config";
 import { defaultOrder } from "../../../mocks";
+import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 
 const defaultChannelConfig: ChannelConfig = {
   id: "1",
@@ -15,31 +16,11 @@ const defaultChannelConfig: ChannelConfig = {
 
 const defaultOrderCreatedResponse: TransactionModel = orderCreatedTransactionMock;
 
-const defaultAvataxConfig: AvataxConfig = {
-  companyCode: "DEFAULT",
-  isAutocommit: false,
-  isSandbox: true,
-  name: "Avatax-1",
-  shippingTaxCode: "FR000000",
-  address: {
-    country: "US",
-    zip: "95008",
-    state: "CA",
-    city: "Campbell",
-    street: "33 N. First Street",
-  },
-  credentials: {
-    password: "password",
-    username: "username",
-  },
-};
-
 const testingScenariosMap = {
   default: {
     order: defaultOrder,
     channelConfig: defaultChannelConfig,
     response: defaultOrderCreatedResponse,
-    avataxConfig: defaultAvataxConfig,
   },
 };
 
@@ -61,11 +42,11 @@ export class AvataxOrderCreatedMockGenerator {
       ...overrides,
     });
 
-  generateAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig =>
-    structuredClone({
-      ...testingScenariosMap[this.scenario].avataxConfig,
-      ...overrides,
-    });
+  generateAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig => {
+    const mockGenerator = new AvataxConfigMockGenerator();
+
+    return mockGenerator.generateAvataxConfig(overrides);
+  };
 
   generateResponse = (overrides: Partial<TransactionModel> = {}): TransactionModel =>
     structuredClone({
