@@ -92,8 +92,8 @@ export const AlgoliaConfigurationForm = () => {
   return (
     <Box>
       <form onSubmit={onFormSubmit}>
-        <Box padding={8}>
-          <Box marginBottom={8}>
+        <Box padding={5}>
+          <Box marginBottom={5}>
             <Input
               control={control}
               name="appId"
@@ -103,7 +103,7 @@ export const AlgoliaConfigurationForm = () => {
               helperText="Usually 10 characters, e.g. XYZAAABB00"
             />
           </Box>
-          <Box marginBottom={8} key={"secret"} /* todo why is this "key" here? */>
+          <Box marginBottom={5} key={"secret"} /* todo why is this "key" here? */>
             <Input
               control={control}
               name="secretKey"
@@ -124,7 +124,7 @@ export const AlgoliaConfigurationForm = () => {
           />
 
           {credentialsValidationError && (
-            <Box marginTop={8}>
+            <Box marginTop={5}>
               <Text color={"textCriticalDefault"}>
                 Could not connect to Algolia. Please verify your credentials
               </Text>
@@ -132,9 +132,9 @@ export const AlgoliaConfigurationForm = () => {
           )}
         </Box>
 
-        <Divider margin={0} marginTop={8} />
+        <Divider margin={0} marginTop={5} />
 
-        <Box paddingX={8} paddingY={6} display={"flex"} justifyContent={"flex-end"}>
+        <Box paddingX={5} paddingY={3} display={"flex"} justifyContent={"flex-end"}>
           <Button disabled={isFormDisabled} type="submit" variant="primary">
             {isFormDisabled ? "Loading..." : "Save"}
           </Button>
