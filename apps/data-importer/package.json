@@ -1,19 +1,15 @@
 {
   "name": "saleor-app-data-importer",
   "version": "1.7.5",
-  "private": true,
   "scripts": {
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "build": "pnpm generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "eslint --fix .",
+    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
+    "lint": "next lint",
+    "lint:fix": "eslint --fix .",
+    "start": "next start",
     "test": "vitest"
-  },
-  "saleor": {
-    "schemaVersion": "3.10"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
@@ -27,7 +23,7 @@
     "@vitejs/plugin-react": "4.0.0",
     "clsx": "^1.2.1",
     "dot-object": "^2.1.4",
-    "graphql": "^16.6.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "jose": "^4.11.2",
     "jsdom": "^20.0.3",
@@ -50,18 +46,21 @@
     "@graphql-codegen/typed-document-node": "3.0.2",
     "@graphql-codegen/typescript": "3.0.2",
     "@graphql-codegen/typescript-operations": "3.0.2",
-    "@graphql-codegen/typescript-urql": "^3.7.0",
+    "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/urql-introspection": "2.2.1",
-    "@graphql-typed-document-node/core": "^3.1.1",
+    "@graphql-typed-document-node/core": "3.2.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/dot-object": "^2.1.2",
-    "@types/node": "^18.8.1",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitest/coverage-c8": "^0.28.4",
-    "eslint": "^8.33.0",
+    "eslint": "8.42.0",
     "eslint-config-saleor": "workspace:*",
-    "typescript": "4.9.5"
+    "typescript": "5.1.3"
+  },
+  "private": true,
+  "saleor": {
+    "schemaVersion": "3.10"
   }
 }

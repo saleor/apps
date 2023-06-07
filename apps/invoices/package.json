@@ -1,19 +1,15 @@
 {
   "name": "saleor-app-invoices",
   "version": "1.13.5",
-  "private": true,
   "scripts": {
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "build": "pnpm generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "eslint  --fix .",
+    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
+    "lint": "next lint",
+    "lint:fix": "eslint  --fix .",
+    "start": "next start",
     "test": "vitest"
-  },
-  "saleor": {
-    "schemaVersion": "3.10"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
@@ -30,7 +26,8 @@
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@web-std/file": "^3.0.2",
     "clsx": "^1.2.1",
-    "graphql": "^16.6.0",
+    "eslint": "8.42.0",
+    "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "microinvoice": "^1.0.6",
     "next": "13.3.0",
@@ -51,10 +48,9 @@
     "@graphql-codegen/typed-document-node": "3.0.2",
     "@graphql-codegen/typescript": "3.0.2",
     "@graphql-codegen/typescript-operations": "3.0.2",
-    "@graphql-codegen/typescript-urql": "^3.7.3",
+    "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/urql-introspection": "2.2.1",
-    "@graphql-typed-document-node/core": "^3.1.2",
-    "@types/node": "^18.8.1",
+    "@graphql-typed-document-node/core": "3.2.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/rimraf": "^3.0.2",
@@ -64,8 +60,12 @@
     "eslint-config-saleor": "workspace:*",
     "jsdom": "^20.0.3",
     "rimraf": "^3.0.2",
-    "typescript": "4.9.5",
+    "typescript": "5.1.3",
     "vite": "4.3.9",
     "vitest": "0.31.3"
+  },
+  "private": true,
+  "saleor": {
+    "schemaVersion": "3.10"
   }
 }

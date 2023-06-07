@@ -12,9 +12,6 @@ const isSentryPropertiesInEnvironment =
 
 const moduleExports = {
   transpilePackages: ["@saleor/apps-shared"],
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
   reactStrictMode: true,
 
   sentry: {
