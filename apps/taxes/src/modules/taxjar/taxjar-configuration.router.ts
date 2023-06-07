@@ -56,7 +56,7 @@ export const taxjarConfigurationRouter = router({
       location: "taxjarConfigurationRouter.post",
     });
 
-    logger.debug({ input }, "Route post called with:");
+    logger.debug("Attempting to create configuration");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
@@ -72,7 +72,7 @@ export const taxjarConfigurationRouter = router({
       location: "taxjarConfigurationRouter.delete",
     });
 
-    logger.debug({ input }, "Route delete called with:");
+    logger.debug("Route delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);
@@ -87,7 +87,7 @@ export const taxjarConfigurationRouter = router({
       location: "taxjarConfigurationRouter.patch",
     });
 
-    logger.debug({ input }, "Route patch called with:");
+    logger.debug("Route patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxjarConfigurationService = new TaxJarConfigurationService(apiClient, saleorApiUrl);

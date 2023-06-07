@@ -44,7 +44,7 @@ export const avataxConfigurationRouter = router({
       location: "avataxConfigurationRouter.get",
     });
 
-    logger.debug({ input }, "Route get called with:");
+    logger.debug("Route get called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
@@ -61,7 +61,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.post",
     });
 
-    logger.debug({ input }, "Route post called with:");
+    logger.debug("Attempting to create configuration");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
@@ -78,7 +78,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.delete",
     });
 
-    logger.debug({ input }, "Route delete called with:");
+    logger.debug("Route delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
@@ -95,7 +95,7 @@ export const avataxConfigurationRouter = router({
       procedure: "avataxConfigurationRouter.patch",
     });
 
-    logger.debug({ input }, "Route patch called with:");
+    logger.debug("Route patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const avataxConfigurationService = new AvataxConfigurationService(apiClient, saleorApiUrl);
