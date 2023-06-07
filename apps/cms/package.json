@@ -1,6 +1,16 @@
 {
   "name": "saleor-app-cms",
   "version": "1.5.3",
+  "scripts": {
+    "build": "pnpm generate && next build",
+    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "generate": "graphql-codegen",
+    "lint": "next lint",
+    "lint:fix": "eslint --fix .",
+    "start": "next start",
+    "test": "vitest"
+  },
   "dependencies": {
     "@datocms/cma-client-node": "^1.2.4",
     "@hookform/resolvers": "^2.9.10",
@@ -50,15 +60,5 @@
   "private": true,
   "saleor": {
     "schemaVersion": "3.7"
-  },
-  "scripts": {
-    "build": "pnpm generate && next build",
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen",
-    "lint": "next lint",
-    "lint:fix": "eslint --fix .",
-    "start": "next start",
-    "test": "vitest"
   }
 }

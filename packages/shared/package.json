@@ -1,6 +1,9 @@
 {
   "name": "@saleor/apps-shared",
   "version": "1.7.0",
+  "scripts": {
+    "lint:fix": "eslint --fix ."
+  },
   "dependencies": {
     "eslint": "8.42.0",
     "pino": "^8.14.1",
@@ -33,8 +36,5 @@
     "pino-pretty": "^10.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "scripts": {
-    "lint:fix": "eslint --fix ."
   }
 }

@@ -1,6 +1,12 @@
 {
   "name": "@saleor/react-hook-form-macaw",
   "version": "0.1.1",
+  "scripts": {
+    "build-storybook": "storybook build",
+    "lint:fix": "eslint --fix .",
+    "start-storybook-build": "pnpm dlx http-server ./storybook-static",
+    "storybook": "storybook dev -p 6006"
+  },
   "dependencies": {
     "eslint": "8.42.0"
   },
@@ -31,11 +37,5 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
-  },
-  "scripts": {
-    "build-storybook": "storybook build",
-    "lint:fix": "eslint --fix .",
-    "start-storybook-build": "pnpm dlx http-server ./storybook-static",
-    "storybook": "storybook dev -p 6006"
   }
 }

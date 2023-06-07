@@ -7,9 +7,6 @@ const config = {
   semverGroups: [],
   semverRange: "",
   dependencyTypes: ["dev", "overrides", "peer", "prod", "resolutions", "workspace"],
-  /**
-   * Order doesnt work in Syncpack, however lets still have it in the same format
-   */
   sortAz: [
     "scripts",
     "contributors",
@@ -19,7 +16,7 @@ const config = {
     "peerDependencies",
     "resolutions",
   ],
-  sortFirst: ["name", "description", "version", "author"],
+  sortFirst: ["name", "description", "version", "author", "scripts"],
   source: ["apps/*/package.json", "packages/*/package.json", "package.json"],
   versionGroups: [],
 };

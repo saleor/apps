@@ -1,6 +1,15 @@
 {
   "name": "saleor-app-monitoring",
   "version": "0.6.5",
+  "scripts": {
+    "build": "pnpm generate && next build",
+    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "generate": "graphql-codegen",
+    "lint": "next lint",
+    "lint:fix": "eslint --fix .",
+    "start": "next start",
+    "test": "vitest"
+  },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
@@ -45,14 +54,5 @@
   "private": true,
   "saleor": {
     "schemaVersion": "3.10"
-  },
-  "scripts": {
-    "build": "pnpm generate && next build",
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
-    "generate": "graphql-codegen",
-    "lint": "next lint",
-    "lint:fix": "eslint --fix .",
-    "start": "next start",
-    "test": "vitest"
   }
 }
