@@ -15,8 +15,8 @@ const Intro = () => {
       title="Available channels"
       description={
         <>
-          This table displays all the channels that are configured to use the tax app as a tax
-          configuration method.
+          This table displays all the channels configured to use the tax app as the tax calculation
+          method.
           <br />
           <br />
           You can change the tax configuration method for each channel in the{" "}
