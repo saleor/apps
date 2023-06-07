@@ -27,9 +27,6 @@ const moduleExports = {
     disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
     disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   reactStrictMode: true,
   transpilePackages: ["@saleor/apps-shared"],
 };
