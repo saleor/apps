@@ -1,7 +1,7 @@
 import { TaxjarError } from "taxjar/dist/util/types";
-import { taxJarAddressFactory } from "./address-factory";
-import { TaxJarClient } from "./taxjar-client";
-import { TaxJarConfig } from "./taxjar-config";
+import { taxJarAddressFactory } from "../address-factory";
+import { TaxJarClient } from "../taxjar-client";
+import { TaxJarConfig } from "../taxjar-config";
 
 export class TaxJarValidationService {
   constructor() {}

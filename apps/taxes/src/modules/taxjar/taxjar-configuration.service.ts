@@ -11,7 +11,7 @@ import {
   taxJarInstanceConfigSchema,
 } from "./taxjar-config";
 import { DeepPartial } from "@trpc/server";
-import { TaxJarValidationService } from "./taxjar-validation.service";
+import { TaxJarValidationService } from "./validation/taxjar-validation.service";
 
 const getSchema = taxJarInstanceConfigSchema;
 
