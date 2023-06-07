@@ -8,4 +8,4 @@
 "saleor-app-crm": patch
 ---
 
-Update the Macaw UI library to the latest release
+Updated @saleor/macaw-ui to 0.8.0-pre.95. This version introduces change in spacing scale, so there may be slight changes in spacing
