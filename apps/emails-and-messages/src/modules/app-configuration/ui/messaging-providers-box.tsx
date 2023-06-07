@@ -20,7 +20,7 @@ const NoExistingConfigurations = () => {
   };
 
   return (
-    <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
+    <BoxWithBorder padding={7} display="grid" alignItems="center" justifyContent="center">
       <Text>No providers configured yet</Text>
       <Button onClick={redirectToProvidersSelection}>Add first provider</Button>
     </BoxWithBorder>
@@ -54,7 +54,7 @@ export const MessagingProvidersBox = ({
 
   if (loading) {
     return (
-      <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
+      <BoxWithBorder padding={7} display="grid" alignItems="center" justifyContent="center">
         <Text>Loading</Text>
       </BoxWithBorder>
     );

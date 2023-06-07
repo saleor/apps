@@ -65,7 +65,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
               });
             })}
           >
-            <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
+            <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
               <Controller
                 name="name"
                 control={control}

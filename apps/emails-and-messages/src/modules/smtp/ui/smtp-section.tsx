@@ -58,7 +58,7 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
             });
           })}
         >
-          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
             <Input
               label="Host"
               helperText="Server host that will be connected."

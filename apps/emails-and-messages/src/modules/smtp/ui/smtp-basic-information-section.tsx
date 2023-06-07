@@ -66,7 +66,7 @@ export const SmtpBasicInformationSection = ({
             });
           })}
         >
-          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
             <Input
               name="name"
               label="Configuration name"
