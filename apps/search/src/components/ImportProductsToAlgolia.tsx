@@ -2,7 +2,6 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
-import { Products } from "./useQueryAllProducts";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 export const ImportProductsToAlgolia = () => {
@@ -73,6 +72,3 @@ export const ImportProductsToAlgolia = () => {
     </Box>
   );
 };
-
-const countVariants = (products: Products, index: number) =>
-  products.slice(0, index).reduce((acc, p) => acc + (p.variants?.length ?? 0), 0);
