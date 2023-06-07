@@ -1,44 +1,44 @@
 {
   "name": "saleor-apps",
   "version": "0.0.0",
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "templates/*"
-  ],
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "start": "turbo run start",
-    "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "generate": "turbo run generate",
-    "prepare": "husky install",
-    "github:release": "pnpm changeset tag && git push --follow-tags",
-    "check-deps": "syncpack fix-mismatches --source \"apps/*/package.json\" --source \"packages/*/package.json\""
-  },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
+    "@types/node": "18.15.3",
     "eslint": "8.42.0",
     "eslint-config-saleor": "workspace:*",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
     "next": "^13.3.0",
     "prettier": "^2.8.4",
-    "turbo": "1.10.1",
-    "@types/node": "18.15.3"
+    "syncpack": "10.5.1",
+    "turbo": "1.10.1"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@8.2.0",
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write"
   },
-  "dependencies": {
-    "syncpack": "^10.1.0"
-  }
+  "packageManager": "pnpm@8.2.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "check-deps": "syncpack list-mismatches",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format-package-json": "syncpack format",
+    "generate": "turbo run generate",
+    "github:release": "pnpm changeset tag && git push --follow-tags",
+    "lint": "turbo run lint",
+    "lint-staged": "lint-staged",
+    "prepare": "husky install",
+    "start": "turbo run start",
+    "test": "turbo run test"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "templates/*"
+  ]
 }
