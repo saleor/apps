@@ -4,7 +4,7 @@ import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { obfuscateTaxJarConfig, taxJarConfigSchema } from "./taxjar-config";
-import { TaxJarConfigurationService } from "./taxjar-configuration.service";
+import { TaxJarConfigurationService } from "./configuration/taxjar-configuration.service";
 
 const getInputSchema = z.object({
   id: z.string(),

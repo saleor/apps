@@ -1,7 +1,7 @@
 import { Client } from "urql";
 import { createLogger, Logger } from "../../lib/logger";
-import { AvataxConfigurationService } from "../avatax/avatax-configuration.service";
-import { TaxJarConfigurationService } from "../taxjar/taxjar-configuration.service";
+import { AvataxConfigurationService } from "../avatax/configuration/avatax-configuration.service";
+import { TaxJarConfigurationService } from "../taxjar/configuration/taxjar-configuration.service";
 
 export const TAX_PROVIDER_KEY = "tax-providers";
 

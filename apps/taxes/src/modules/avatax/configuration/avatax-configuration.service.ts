@@ -1,17 +1,17 @@
 import { Client } from "urql";
-import { createLogger, Logger } from "../../lib/logger";
-import { createSettingsManager } from "../app/metadata-manager";
-import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
-import { providersSchema } from "../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
+import { createLogger, Logger } from "../../../lib/logger";
+import { createSettingsManager } from "../../app/metadata-manager";
+import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { providersSchema } from "../../providers-configuration/providers-config";
+import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
 import {
   AvataxConfig,
   AvataxInstanceConfig,
   avataxInstanceConfigSchema,
   obfuscateAvataxConfig,
-} from "./avatax-config";
+} from "../avatax-config";
 import { DeepPartial } from "@trpc/server";
-import { AvataxValidationService } from "./validation/avatax-validation.service";
+import { AvataxValidationService } from "../validation/avatax-validation.service";
 
 const getSchema = avataxInstanceConfigSchema;
 

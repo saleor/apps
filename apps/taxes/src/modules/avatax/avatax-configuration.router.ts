@@ -4,7 +4,7 @@ import { isObfuscated } from "../../lib/utils";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { avataxConfigSchema } from "./avatax-config";
-import { AvataxConfigurationService } from "./avatax-configuration.service";
+import { AvataxConfigurationService } from "./configuration/avatax-configuration.service";
 
 const getInputSchema = z.object({
   id: z.string(),

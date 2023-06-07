@@ -1,17 +1,17 @@
 import { Client } from "urql";
-import { createLogger, Logger } from "../../lib/logger";
-import { createSettingsManager } from "../app/metadata-manager";
-import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
-import { providersSchema } from "../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../providers-configuration/public-providers-configuration-service";
+import { createLogger, Logger } from "../../../lib/logger";
+import { createSettingsManager } from "../../app/metadata-manager";
+import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { providersSchema } from "../../providers-configuration/providers-config";
+import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
 import {
   obfuscateTaxJarConfig,
   TaxJarConfig,
   TaxJarInstanceConfig,
   taxJarInstanceConfigSchema,
-} from "./taxjar-config";
+} from "../taxjar-config";
 import { DeepPartial } from "@trpc/server";
-import { TaxJarValidationService } from "./validation/taxjar-validation.service";
+import { TaxJarValidationService } from "../validation/taxjar-validation.service";
 
 const getSchema = taxJarInstanceConfigSchema;
 
