@@ -28,7 +28,7 @@ export const MailchimpLists = (props: PropsWithBox<{}>) => {
     case "loading": {
       return (
         <Wrapper {...props}>
-          <Text as="p" marginTop={4}>
+          <Text as="p" marginTop={1.5}>
             Loading lists...
           </Text>
         </Wrapper>
@@ -43,14 +43,14 @@ export const MailchimpLists = (props: PropsWithBox<{}>) => {
               <List.Item
                 disabled
                 key={listItem.id}
-                paddingY={4}
+                paddingY={1.5}
                 display="flex"
                 alignItems="center"
                 justifyContent="space-between"
               >
                 <Text>{listItem.name}</Text>
                 <Text variant="caption">
-                  <Box __display="inline-block" marginRight={2}>
+                  <Box __display="inline-block" marginRight={0.5}>
                     <Chip size="small">ID</Chip>
                   </Box>
                   {listItem.id}

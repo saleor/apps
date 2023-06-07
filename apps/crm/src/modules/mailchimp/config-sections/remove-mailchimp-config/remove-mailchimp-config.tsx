@@ -18,7 +18,7 @@ export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
       <Text color="textCriticalDefault" variant="title" size="small">
         Remove configuration
       </Text>
-      <Text as="p" marginY={8}>
+      <Text as="p" marginY={5}>
         This operation will remove saved Mailchimp token from App database. You will be able to
         connect it again. <br />
         It will not disconnect CRM App in Mailchimp - you can do it in the{" "}

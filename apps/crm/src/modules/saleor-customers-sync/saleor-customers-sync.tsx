@@ -9,10 +9,10 @@ import { MailchimpListPicker } from "../mailchimp/mailchimp-list-picker/mailchim
 const RootSection = ({ children, ...props }: ComponentProps<typeof Box>) => {
   return (
     <Section {...props}>
-      <Text as="h1" variant="title" size="small" marginBottom={4}>
+      <Text as="h1" variant="title" size="small" marginBottom={1.5}>
         Bulk sync
       </Text>
-      <Text color="textNeutralSubdued" as="p" marginBottom={8}>
+      <Text color="textNeutralSubdued" as="p" marginBottom={5}>
         Scan Saleor customers and send them to Mailchimp
       </Text>
       {children}
@@ -42,11 +42,11 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
   if (!enabled) {
     return (
       <RootSection {...props}>
-        <Box display="flex" marginBottom={6} gap={4}>
+        <Box display="flex" marginBottom={3} gap={1.5}>
           <WarningIcon />
           <Text as="p">Do not leave the app while indexing</Text>
         </Box>
-        <Box display="flex" justifyContent="flex-end" gap={4} alignItems="center">
+        <Box display="flex" justifyContent="flex-end" gap={1.5} alignItems="center">
           <Text variant="caption">Sync to the Mailchimp list:</Text>
           <MailchimpListPicker
             onChange={(_, value) => {
@@ -83,7 +83,7 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
   return (
     <RootSection {...props}>
       {totalCustomersCount && (
-        <Box display="flex" gap={4} alignItems="center" marginBottom={8}>
+        <Box display="flex" gap={1.5} alignItems="center" marginBottom={5}>
           <progress
             style={{
               height: 30,
@@ -97,7 +97,7 @@ export const SaleorCustomersSync = (props: ComponentProps<typeof Box>) => {
       )}
       {done && (
         <Box>
-          <Text as="p" marginBottom={4}>
+          <Text as="p" marginBottom={1.5}>
             Fetched customers from Saleor
           </Text>
           {status === "loading" && <Text as="p">Sending customer to Mailchimp in progress...</Text>}

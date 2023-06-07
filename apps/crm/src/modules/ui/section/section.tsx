@@ -5,7 +5,7 @@ type Props = PropsWithBox<{}>;
 export const Section = (props: Props) => {
   return (
     <Box
-      padding={8}
+      padding={5}
       borderColor="neutralHighlight"
       borderWidth={1}
       borderStyle="solid"
