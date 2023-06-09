@@ -8,7 +8,7 @@ import {
 } from "./tax-providers-config-schema-v1";
 import { TaxProvidersV2 } from "./tax-providers-config-schema-v2";
 
-export class TaxProvidersV1ToV2Migration {
+export class TaxProvidersV1ToV2Transformer {
   private findTaxProviderChannelConfig = (id: string, channelsConfig: ChannelsV1): ChannelV1 => {
     const channel = Object.values(channelsConfig).find(
       (channel) => channel.providerInstanceId === id
