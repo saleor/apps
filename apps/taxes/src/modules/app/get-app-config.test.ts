@@ -1,12 +1,12 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { getAppConfig } from "./get-app-config";
 import { describe, expect, it, vi } from "vitest";
-import { ProvidersConfig } from "../providers-configuration/providers-config";
+import { ProviderConnections } from "../provider-connections/provider-connections";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 
 const mockedSecretKey = "test_secret_key";
-const mockedProviders: ProvidersConfig = [
+const mockedProviders: ProviderConnections = [
   {
     provider: "avatax",
     id: "1",
@@ -54,7 +54,7 @@ const mockedChannels: ChannelsConfig = [
   {
     id: "1",
     config: {
-      providerInstanceId: "1",
+      providerConnectionId: "1",
       slug: "default-channel",
     },
   },
@@ -76,17 +76,17 @@ const mockedMetadata: MetadataItem[] = [
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getAppConfig", () => {
-  it("returns empty providers and channels config when no metadata", () => {
-    const { providers, channels } = getAppConfig([]);
+  it("returns empty providerConnections and channels config when no metadata", () => {
+    const { providerConnections, channels } = getAppConfig([]);
 
-    expect(providers).toEqual([]);
+    expect(providerConnections).toEqual([]);
     expect(channels).toEqual({});
   });
 
-  it("returns decrypted providers and channels config when metadata provided", () => {
-    const { providers, channels } = getAppConfig(mockedMetadata);
+  it("returns decrypted providerConnections and channels config when metadata provided", () => {
+    const { providerConnections, channels } = getAppConfig(mockedMetadata);
 
-    expect(providers).toEqual(mockedProviders);
+    expect(providerConnections).toEqual(mockedProviders);
     expect(channels).toEqual(mockedChannels);
   });
 });

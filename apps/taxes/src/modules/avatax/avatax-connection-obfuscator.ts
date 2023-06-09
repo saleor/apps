@@ -1,7 +1,7 @@
 import { Obfuscator } from "../../lib/obfuscator";
-import { AvataxConfig, AvataxInstanceConfig } from "./avatax-config";
+import { AvataxConfig, AvataxConnection } from "./avatax-connection-schema";
 
-export class AvataxConfigObfuscator {
+export class AvataxConnectionObfuscator {
   private obfuscator = new Obfuscator();
 
   obfuscateAvataxConfig = (config: AvataxConfig): AvataxConfig => {
@@ -15,13 +15,13 @@ export class AvataxConfigObfuscator {
     };
   };
 
-  obfuscateAvataxInstance = (instance: AvataxInstanceConfig): AvataxInstanceConfig => ({
-    ...instance,
-    config: this.obfuscateAvataxConfig(instance.config),
+  obfuscateAvataxConnection = (connection: AvataxConnection): AvataxConnection => ({
+    ...connection,
+    config: this.obfuscateAvataxConfig(connection.config),
   });
 
-  obfuscateAvataxInstances = (instances: AvataxInstanceConfig[]): AvataxInstanceConfig[] =>
-    instances.map((instance) => this.obfuscateAvataxInstance(instance));
+  obfuscateAvataxConnections = (connections: AvataxConnection[]): AvataxConnection[] =>
+    connections.map((connection) => this.obfuscateAvataxConnection(connection));
 
   filterOutObfuscated = (data: AvataxConfig) => {
     const { credentials, ...rest } = data;

@@ -1,38 +1,38 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarConfigObfuscator } from "./taxjar-config-obfuscator";
-import { TaxJarConfigurationService } from "./taxjar-configuration.service";
+import { TaxJarConnectionService } from "./taxjar-connection.service";
 
 export class PublicTaxJarConfigurationService {
-  private readonly configurationService: TaxJarConfigurationService;
+  private readonly connectionService: TaxJarConnectionService;
   private readonly obfuscator = new TaxJarConfigObfuscator();
   constructor(client: Client, saleorApiUrl: string) {
-    this.configurationService = new TaxJarConfigurationService(client, saleorApiUrl);
+    this.connectionService = new TaxJarConnectionService(client, saleorApiUrl);
     this.obfuscator = new TaxJarConfigObfuscator();
   }
 
   async getAll() {
-    const instances = await this.configurationService.getAll();
+    const connections = await this.connectionService.getAll();
 
-    return this.obfuscator.obfuscateInstances(instances);
+    return this.obfuscator.obfuscateTaxJarConnections(connections);
   }
 
   async getById(id: string) {
-    const instance = await this.configurationService.getById(id);
+    const connection = await this.connectionService.getById(id);
 
-    return this.obfuscator.obfuscateInstance(instance);
+    return this.obfuscator.obfuscateTaxJarConnection(connection);
   }
 
   async create(config: TaxJarConfig) {
-    return this.configurationService.create(config);
+    return this.connectionService.create(config);
   }
 
   async update(id: string, config: DeepPartial<TaxJarConfig>) {
-    return this.configurationService.update(id, config);
+    return this.connectionService.update(id, config);
   }
 
   async delete(id: string) {
-    return this.configurationService.delete(id);
+    return this.connectionService.delete(id);
   }
 }

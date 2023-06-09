@@ -1,28 +1,28 @@
 import { Client } from "urql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { AvataxConfigurationRepository } from "./avatax-configuration-repository";
-import { AvataxConfig, AvataxInstanceConfig } from "../avatax-config";
+import { AvataxConnectionRepository } from "./avatax-connection-repository";
+import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxValidationService } from "./avatax-validation.service";
 import { DeepPartial } from "@trpc/server";
-import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
+import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
 
-export class AvataxConfigurationService {
+export class AvataxConnectionService {
   private logger: Logger;
-  private taxJarConfigurationRepository: AvataxConfigurationRepository;
+  private avataxConnectionRepository: AvataxConnectionRepository;
   constructor(client: Client, saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "AvataxConfigurationService",
+      location: "AvataxConnectionService",
     });
 
-    this.taxJarConfigurationRepository = new AvataxConfigurationRepository(client, saleorApiUrl);
+    this.avataxConnectionRepository = new AvataxConnectionRepository(client, saleorApiUrl);
   }
 
-  getAll(): Promise<AvataxInstanceConfig[]> {
-    return this.taxJarConfigurationRepository.getAll();
+  getAll(): Promise<AvataxConnection[]> {
+    return this.avataxConnectionRepository.getAll();
   }
 
-  getById(id: string): Promise<AvataxInstanceConfig> {
-    return this.taxJarConfigurationRepository.get(id);
+  getById(id: string): Promise<AvataxConnection> {
+    return this.avataxConnectionRepository.get(id);
   }
 
   async create(config: AvataxConfig): Promise<{ id: string }> {
@@ -30,7 +30,7 @@ export class AvataxConfigurationService {
 
     await validationService.validate(config);
 
-    return await this.taxJarConfigurationRepository.post(config);
+    return await this.avataxConnectionRepository.post(config);
   }
 
   async update(id: string, nextConfigPartial: DeepPartial<AvataxConfig>): Promise<void> {
@@ -46,10 +46,10 @@ export class AvataxConfigurationService {
 
     await validationService.validate(input);
 
-    return this.taxJarConfigurationRepository.patch(id, input);
+    return this.avataxConnectionRepository.patch(id, input);
   }
 
   async delete(id: string): Promise<void> {
-    return this.taxJarConfigurationRepository.delete(id);
+    return this.avataxConnectionRepository.delete(id);
   }
 }

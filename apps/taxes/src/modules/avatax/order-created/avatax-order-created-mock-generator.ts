@@ -2,14 +2,14 @@ import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { orderCreatedTransactionMock } from "./avatax-order-created-response-transaction-mock";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { defaultOrder } from "../../../mocks";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 
 const defaultChannelConfig: ChannelConfig = {
   id: "1",
   config: {
-    providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
+    providerConnectionId: "aa5293e5-7f5d-4782-a619-222ead918e50",
     slug: "default-channel",
   },
 };

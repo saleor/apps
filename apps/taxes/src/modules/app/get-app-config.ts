@@ -1,10 +1,13 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
-import { ProvidersConfig, providersSchema } from "../providers-configuration/providers-config";
+import {
+  ProviderConnections,
+  providerConnectionsSchema,
+} from "../provider-connections/provider-connections";
 
 export const getAppConfig = (metadata: MetadataItem[]) => {
-  let providersConfig = [] as ProvidersConfig;
+  let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;
 
   const secretKey = process.env.SECRET_KEY;
@@ -21,10 +24,10 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
     const decrypted = decrypt(item.value, secretKey);
     const parsed = JSON.parse(decrypted);
 
-    const providersValidation = providersSchema.safeParse(parsed);
+    const providerConnectionValidation = providerConnectionsSchema.safeParse(parsed);
 
-    if (providersValidation.success) {
-      providersConfig = providersValidation.data;
+    if (providerConnectionValidation.success) {
+      providerConnections = providerConnectionValidation.data;
       return;
     }
 
@@ -36,5 +39,5 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
     }
   });
 
-  return { providers: providersConfig, channels: channelsConfig };
+  return { providerConnections: providerConnections, channels: channelsConfig };
 };

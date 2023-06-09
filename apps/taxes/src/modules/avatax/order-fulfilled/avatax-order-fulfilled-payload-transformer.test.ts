@@ -1,7 +1,7 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
 import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import {
   AvataxOrderFulfilledPayloadTransformer,
   PROVIDER_ORDER_ID_KEY,

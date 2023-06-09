@@ -4,7 +4,7 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 
 export function mapPayloadLines(taxBase: TaxBaseFragment, config: AvataxConfig): LineItemModel[] {

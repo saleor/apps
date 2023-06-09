@@ -8,7 +8,7 @@ import { AppCard } from "../../ui/app-card";
 import { AppToggle } from "../../ui/app-toggle";
 
 import { CountrySelect } from "../../ui/country-select";
-import { TaxJarConfig, defaultTaxJarConfig, taxJarConfigSchema } from "../taxjar-config";
+import { TaxJarConfig, defaultTaxJarConfig, taxJarConfigSchema } from "../taxjar-connection-schema";
 import { ProviderLabel } from "../../ui/provider-label";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {

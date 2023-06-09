@@ -1,7 +1,7 @@
 import TaxJar from "taxjar";
 import { AddressParams, Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
 import { createLogger, Logger } from "../../lib/logger";
-import { TaxJarConfig } from "./taxjar-config";
+import { TaxJarConfig } from "./taxjar-connection-schema";
 
 const createTaxJarSettings = (config: TaxJarConfig): Config => {
   const settings: Config = {

@@ -2,7 +2,7 @@ import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphq
 import { Logger, createLogger } from "../../../lib/logger";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CommitTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderFulfilledPayloadTransformer } from "./avatax-order-fulfilled-payload-transformer";
 import { AvataxOrderFulfilledResponseTransformer } from "./avatax-order-fulfilled-response-transformer";
 

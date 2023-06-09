@@ -9,7 +9,7 @@ export class ChannelConfigurationMerger {
       return {
         id: channel.id,
         config: {
-          providerInstanceId: channelConfig?.config.providerInstanceId ?? null,
+          providerConnectionId: channelConfig?.config.providerConnectionId ?? null,
           slug: channel.slug,
         },
       };

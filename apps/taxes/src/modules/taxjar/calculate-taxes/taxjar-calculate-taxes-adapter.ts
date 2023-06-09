@@ -3,7 +3,7 @@ import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { FetchTaxForOrderArgs, TaxJarClient } from "../taxjar-client";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
 

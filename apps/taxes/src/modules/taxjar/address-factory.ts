@@ -1,6 +1,6 @@
 import { TaxParams } from "taxjar/dist/types/paramTypes";
 import { AddressFragment as SaleorAddress } from "../../../generated/graphql";
-import { TaxJarConfig } from "./taxjar-config";
+import { TaxJarConfig } from "./taxjar-connection-schema";
 import { AddressParams } from "taxjar/dist/types/paramTypes";
 
 function joinAddresses(address1: string, address2: string): string {

@@ -4,7 +4,7 @@ import { Logger, createLogger } from "../../../lib/logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { CreateOrderArgs, TaxJarClient } from "../taxjar-client";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderCreatedPayloadTransformer } from "./taxjar-order-created-payload-transformer";
 import { TaxJarOrderCreatedResponseTransformer } from "./taxjar-order-created-response-transformer";
 

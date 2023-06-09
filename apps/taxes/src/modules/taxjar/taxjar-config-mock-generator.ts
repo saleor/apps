@@ -1,4 +1,4 @@
-import { TaxJarConfig } from "./taxjar-config";
+import { TaxJarConfig } from "./taxjar-connection-schema";
 
 export const defaultTaxJarConfig: TaxJarConfig = {
   name: "",

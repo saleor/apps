@@ -1,5 +1,5 @@
 import { Obfuscator } from "../../../lib/obfuscator";
-import { TaxJarConfig, TaxJarInstanceConfig } from "../taxjar-config";
+import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
 
 export class TaxJarConfigObfuscator {
   private obfuscator = new Obfuscator();
@@ -13,13 +13,13 @@ export class TaxJarConfigObfuscator {
     };
   };
 
-  obfuscateInstance = (instance: TaxJarInstanceConfig): TaxJarInstanceConfig => ({
-    ...instance,
-    config: this.obfuscateTaxJarConfig(instance.config),
+  obfuscateTaxJarConnection = (connection: TaxJarConnection): TaxJarConnection => ({
+    ...connection,
+    config: this.obfuscateTaxJarConfig(connection.config),
   });
 
-  obfuscateInstances = (instances: TaxJarInstanceConfig[]): TaxJarInstanceConfig[] =>
-    instances.map(this.obfuscateInstance);
+  obfuscateTaxJarConnections = (connections: TaxJarConnection[]): TaxJarConnection[] =>
+    connections.map(this.obfuscateTaxJarConnection);
 
   filterOutObfuscated = (data: TaxJarConfig) => {
     const { credentials, ...rest } = data;

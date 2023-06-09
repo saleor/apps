@@ -1,11 +1,11 @@
 import { AvataxConfigMockGenerator } from "./avatax-config-mock-generator";
-import { AvataxConfigObfuscator } from "./avatax-config-obfuscator";
+import { AvataxConnectionObfuscator } from "./avatax-connection-obfuscator";
 import { expect, it, describe } from "vitest";
 
 const mockAvataxConfig = new AvataxConfigMockGenerator().generateAvataxConfig();
-const obfuscator = new AvataxConfigObfuscator();
+const obfuscator = new AvataxConnectionObfuscator();
 
-describe("AvataxConfigObfuscator", () => {
+describe("AvataxConnectionObfuscator", () => {
   it("obfuscated avatax config", () => {
     const obfuscatedConfig = obfuscator.obfuscateAvataxConfig(mockAvataxConfig);
 

@@ -2,7 +2,7 @@ import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../gene
 import { Logger, createLogger } from "../../lib/logger";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
-import { TaxJarConfig } from "./taxjar-config";
+import { TaxJarConfig } from "./taxjar-connection-schema";
 import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 

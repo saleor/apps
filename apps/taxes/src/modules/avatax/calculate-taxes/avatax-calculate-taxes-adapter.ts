@@ -3,7 +3,7 @@ import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 

@@ -1,15 +1,15 @@
 import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { PublicTaxProvidersConfigurationService } from "./public-providers-configuration-service";
+import { PublicProviderConnectionsService } from "./public-provider-connections.service";
 
-export const providersConfigurationRouter = router({
+export const providerConnectionsRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx }) => {
     const logger = createLogger({
-      location: "providersConfigurationRouter.getAll",
+      location: "providerConnectionsRouter.getAll",
     });
 
-    const items = await new PublicTaxProvidersConfigurationService(
+    const items = await new PublicProviderConnectionsService(
       ctx.apiClient,
       ctx.saleorApiUrl
     ).getAll();

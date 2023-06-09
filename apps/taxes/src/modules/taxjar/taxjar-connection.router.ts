@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { taxJarConfigSchema } from "./taxjar-config";
+import { taxJarConfigSchema } from "./taxjar-connection-schema";
 import { PublicTaxJarConfigurationService } from "./configuration/public-taxjar-configuration.service";
 
 const getInputSchema = z.object({
@@ -22,13 +22,13 @@ const postInputSchema = z.object({
   value: taxJarConfigSchema,
 });
 
-export const taxjarConfigurationRouter = router({
+export const taxjarConnectionRouter = router({
   getById: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarConfigurationRouter.get",
+      location: "taxjarConnectionRouter.get",
     });
 
-    logger.debug("taxjarConfigurationRouter.get called");
+    logger.debug("taxjarConnectionRouter.get called");
 
     const { apiClient, saleorApiUrl } = ctx;
     const taxJarConfigurationService = new PublicTaxJarConfigurationService(
@@ -44,7 +44,7 @@ export const taxjarConfigurationRouter = router({
   }),
   create: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarConfigurationRouter.post",
+      location: "taxjarConnectionRouter.post",
     });
 
     logger.debug("Attempting to create configuration");
@@ -63,7 +63,7 @@ export const taxjarConfigurationRouter = router({
   }),
   delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarConfigurationRouter.delete",
+      location: "taxjarConnectionRouter.delete",
     });
 
     logger.debug("Route delete called");
@@ -81,7 +81,7 @@ export const taxjarConfigurationRouter = router({
   }),
   update: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarConfigurationRouter.patch",
+      location: "taxjarConnectionRouter.patch",
     });
 
     logger.debug({ input }, "Route patch called");

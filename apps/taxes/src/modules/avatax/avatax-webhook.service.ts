@@ -6,7 +6,7 @@ import {
 import { Logger, createLogger } from "../../lib/logger";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxClient } from "./avatax-client";
-import { AvataxConfig, defaultAvataxConfig } from "./avatax-config";
+import { AvataxConfig, defaultAvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
 import { AvataxOrderFulfilledAdapter } from "./order-fulfilled/avatax-order-fulfilled-adapter";

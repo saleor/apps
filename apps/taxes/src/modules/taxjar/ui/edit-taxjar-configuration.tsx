@@ -5,7 +5,7 @@ import React from "react";
 import { z } from "zod";
 import { Obfuscator } from "../../../lib/obfuscator";
 import { trpcClient } from "../../trpc/trpc-client";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 import { TaxJarConfigObfuscator } from "../configuration/taxjar-config-obfuscator";
 
@@ -21,7 +21,7 @@ export const EditTaxJarConfiguration = () => {
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
-    trpcClient.taxJarConfiguration.update.useMutation({
+    trpcClient.taxJarConnection.update.useMutation({
       onSuccess() {
         notifySuccess("Success", "Updated TaxJar configuration");
         refetchProvidersConfigurationData();
@@ -35,7 +35,7 @@ export const EditTaxJarConfiguration = () => {
     data,
     isLoading: isGetLoading,
     isError: isGetError,
-  } = trpcClient.taxJarConfiguration.getById.useQuery(
+  } = trpcClient.taxJarConnection.getById.useQuery(
     { id: configurationId },
     {
       enabled: !!configurationId,
@@ -53,7 +53,7 @@ export const EditTaxJarConfiguration = () => {
   );
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
-    trpcClient.taxJarConfiguration.delete.useMutation({
+    trpcClient.taxJarConnection.delete.useMutation({
       onSuccess() {
         notifySuccess("Success", "Deleted TaxJar configuration");
         refetchProvidersConfigurationData();

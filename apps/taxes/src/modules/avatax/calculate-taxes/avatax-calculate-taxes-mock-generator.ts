@@ -10,7 +10,7 @@ import { RateType } from "avatax/lib/enums/RateType";
 import { ChargedTo } from "avatax/lib/enums/ChargedTo";
 import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 
