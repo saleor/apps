@@ -1,8 +1,8 @@
 import { DeepPartial } from "@trpc/server";
-import { TaxJarConfig } from "../taxjar-config";
-import { TaxJarConfigurationService } from "./taxjar-configuration.service";
 import { Client } from "urql";
+import { TaxJarConfig } from "../taxjar-config";
 import { TaxJarConfigObfuscator } from "./taxjar-config-obfuscator";
+import { TaxJarConfigurationService } from "./taxjar-configuration.service";
 
 export class PublicTaxJarConfigurationService {
   private readonly configurationService: TaxJarConfigurationService;
@@ -18,22 +18,18 @@ export class PublicTaxJarConfigurationService {
     return this.obfuscator.obfuscateInstances(instances);
   }
 
-  async get(id: string) {
-    const instance = await this.configurationService.get(id);
+  async getById(id: string) {
+    const instance = await this.configurationService.getById(id);
 
     return this.obfuscator.obfuscateInstance(instance);
   }
 
-  async post(config: TaxJarConfig) {
-    return this.configurationService.post(config);
+  async create(config: TaxJarConfig) {
+    return this.configurationService.create(config);
   }
 
-  async patch(id: string, config: DeepPartial<TaxJarConfig>) {
-    return this.configurationService.patch(id, config);
-  }
-
-  async put(id: string, config: TaxJarConfig) {
-    return this.configurationService.put(id, config);
+  async update(id: string, config: DeepPartial<TaxJarConfig>) {
+    return this.configurationService.update(id, config);
   }
 
   async delete(id: string) {

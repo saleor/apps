@@ -23,7 +23,7 @@ const postInputSchema = z.object({
 });
 
 export const avataxConfigurationRouter = router({
-  get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
+  getById: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "avataxConfigurationRouter.get",
     });
@@ -36,13 +36,13 @@ export const avataxConfigurationRouter = router({
       saleorApiUrl
     );
 
-    const result = await avataxConfigurationService.get(input.id);
+    const result = await avataxConfigurationService.getById(input.id);
 
     logger.info(`Avatax configuration with an id: ${result.id} was successfully retrieved`);
 
     return result;
   }),
-  post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
+  create: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.post",
@@ -56,7 +56,7 @@ export const avataxConfigurationRouter = router({
       saleorApiUrl
     );
 
-    const result = await avataxConfigurationService.post(input.value);
+    const result = await avataxConfigurationService.create(input.value);
 
     logger.info("Avatax configuration was successfully created");
 
@@ -82,7 +82,7 @@ export const avataxConfigurationRouter = router({
 
     return result;
   }),
-  patch: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
+  update: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
       procedure: "avataxConfigurationRouter.patch",
@@ -96,7 +96,7 @@ export const avataxConfigurationRouter = router({
       saleorApiUrl
     );
 
-    const result = await avataxConfigurationService.patch(input.id, input.value);
+    const result = await avataxConfigurationService.update(input.id, input.value);
 
     logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
 

@@ -1,68 +1,40 @@
-import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { createLogger, Logger } from "../../../lib/logger";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
-import { providersSchema } from "../../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
-import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "../taxjar-config";
+import { Logger, createLogger } from "../../../lib/logger";
+import { TaxJarConfigurationRepository } from "./taxjar-configuration-repository";
+import { TaxJarConfig, TaxJarInstanceConfig } from "../taxjar-config";
 import { TaxJarValidationService } from "./taxjar-validation.service";
+import { DeepPartial } from "@trpc/server";
 import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
 
-const getSchema = taxJarInstanceConfigSchema;
-
 export class TaxJarConfigurationService {
-  private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
+  private taxJarConfigurationRepository: TaxJarConfigurationRepository;
   constructor(client: Client, saleorApiUrl: string) {
-    const settingsManager = createSettingsManager(client);
-
-    this.crudSettingsManager = new CrudSettingsManager(
-      settingsManager,
-      saleorApiUrl,
-      TAX_PROVIDER_KEY
-    );
     this.logger = createLogger({
       location: "TaxJarConfigurationService",
-      metadataKey: TAX_PROVIDER_KEY,
     });
+
+    this.taxJarConfigurationRepository = new TaxJarConfigurationRepository(client, saleorApiUrl);
   }
 
-  async getAll(): Promise<TaxJarInstanceConfig[]> {
-    const { data } = await this.crudSettingsManager.readAll();
-
-    const instances = providersSchema.parse(data);
-
-    const taxJarInstances = instances.filter(
-      (instance) => instance.provider === "taxjar"
-    ) as TaxJarInstanceConfig[];
-
-    return taxJarInstances;
+  getAll(): Promise<TaxJarInstanceConfig[]> {
+    return this.taxJarConfigurationRepository.getAll();
   }
 
-  async get(id: string): Promise<TaxJarInstanceConfig> {
-    const { data } = await this.crudSettingsManager.read(id);
-
-    const instance = getSchema.parse(data);
-
-    return instance;
+  getById(id: string): Promise<TaxJarInstanceConfig> {
+    return this.taxJarConfigurationRepository.get(id);
   }
 
-  async post(config: TaxJarConfig): Promise<{ id: string }> {
+  async create(config: TaxJarConfig): Promise<{ id: string }> {
     const validationService = new TaxJarValidationService();
 
     await validationService.validate(config);
 
-    const result = await this.crudSettingsManager.create({
-      provider: "taxjar",
-      config: config,
-    });
-
-    return result.data;
+    return await this.taxJarConfigurationRepository.post(config);
   }
 
-  async patch(id: string, nextConfigPartial: DeepPartial<TaxJarConfig>): Promise<void> {
-    const data = await this.get(id);
+  async update(id: string, nextConfigPartial: DeepPartial<TaxJarConfig>): Promise<void> {
+    const data = await this.getById(id);
 
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
@@ -76,24 +48,10 @@ export class TaxJarConfigurationService {
 
     await validationService.validate(input);
 
-    return this.crudSettingsManager.update(id, {
-      ...setting,
-      config: { ...setting.config, ...input },
-    });
-  }
-
-  async put(id: string, config: TaxJarConfig): Promise<void> {
-    const data = await this.get(id);
-    // omit the key "id"  from the result
-    const { id: _, ...setting } = data;
-
-    return this.crudSettingsManager.update(id, {
-      ...setting,
-      config: { ...config },
-    });
+    return this.taxJarConfigurationRepository.patch(id, input);
   }
 
   async delete(id: string): Promise<void> {
-    return this.crudSettingsManager.delete(id);
+    return this.taxJarConfigurationRepository.delete(id);
   }
 }

@@ -1,73 +1,40 @@
-import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { createLogger, Logger } from "../../../lib/logger";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
-import { providersSchema } from "../../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
-import { AvataxConfig, AvataxInstanceConfig, avataxInstanceConfigSchema } from "../avatax-config";
-import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
+import { Logger, createLogger } from "../../../lib/logger";
+import { AvataxConfigurationRepository } from "./avatax-configuration-repository";
+import { AvataxConfig, AvataxInstanceConfig } from "../avatax-config";
 import { AvataxValidationService } from "./avatax-validation.service";
-
-const getSchema = avataxInstanceConfigSchema;
+import { DeepPartial } from "@trpc/server";
+import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
 
 export class AvataxConfigurationService {
-  private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
+  private taxJarConfigurationRepository: AvataxConfigurationRepository;
   constructor(client: Client, saleorApiUrl: string) {
-    const settingsManager = createSettingsManager(client);
-
-    this.crudSettingsManager = new CrudSettingsManager(
-      settingsManager,
-      saleorApiUrl,
-      TAX_PROVIDER_KEY
-    );
     this.logger = createLogger({
       location: "AvataxConfigurationService",
-      metadataKey: TAX_PROVIDER_KEY,
     });
+
+    this.taxJarConfigurationRepository = new AvataxConfigurationRepository(client, saleorApiUrl);
   }
 
-  async getAll(): Promise<AvataxInstanceConfig[]> {
-    const { data } = await this.crudSettingsManager.readAll();
-    const instances = providersSchema.parse(data);
-
-    const avataxInstances = instances.filter(
-      (instance) => instance.provider === "avatax"
-    ) as AvataxInstanceConfig[];
-
-    return avataxInstances;
+  getAll(): Promise<AvataxInstanceConfig[]> {
+    return this.taxJarConfigurationRepository.getAll();
   }
 
-  async get(id: string): Promise<AvataxInstanceConfig> {
-    const { data } = await this.crudSettingsManager.read(id);
-
-    const validation = getSchema.safeParse(data);
-
-    if (!validation.success) {
-      throw new Error(validation.error.message);
-    }
-
-    const instance = validation.data;
-
-    return instance;
+  getById(id: string): Promise<AvataxInstanceConfig> {
+    return this.taxJarConfigurationRepository.get(id);
   }
 
-  async post(config: AvataxConfig): Promise<{ id: string }> {
+  async create(config: AvataxConfig): Promise<{ id: string }> {
     const validationService = new AvataxValidationService();
 
     await validationService.validate(config);
 
-    const result = await this.crudSettingsManager.create({
-      provider: "avatax",
-      config: config,
-    });
-
-    return result.data;
+    return await this.taxJarConfigurationRepository.post(config);
   }
 
-  async patch(id: string, nextConfigPartial: DeepPartial<AvataxConfig>): Promise<void> {
-    const data = await this.get(id);
+  async update(id: string, nextConfigPartial: DeepPartial<AvataxConfig>): Promise<void> {
+    const data = await this.getById(id);
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
     const prevConfig = setting.config;
@@ -79,24 +46,10 @@ export class AvataxConfigurationService {
 
     await validationService.validate(input);
 
-    return this.crudSettingsManager.update(id, {
-      ...setting,
-      config: input,
-    });
-  }
-
-  async put(id: string, config: AvataxConfig): Promise<void> {
-    const data = await this.get(id);
-    // omit the key "id"  from the result
-    const { id: _, ...setting } = data;
-
-    return this.crudSettingsManager.update(id, {
-      ...setting,
-      config: { ...config },
-    });
+    return this.taxJarConfigurationRepository.patch(id, input);
   }
 
   async delete(id: string): Promise<void> {
-    return this.crudSettingsManager.delete(id);
+    return this.taxJarConfigurationRepository.delete(id);
   }
 }

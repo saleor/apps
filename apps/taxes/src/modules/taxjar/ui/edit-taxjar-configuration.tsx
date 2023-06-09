@@ -21,7 +21,7 @@ export const EditTaxJarConfiguration = () => {
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
-    trpcClient.taxJarConfiguration.patch.useMutation({
+    trpcClient.taxJarConfiguration.update.useMutation({
       onSuccess() {
         notifySuccess("Success", "Updated TaxJar configuration");
         refetchProvidersConfigurationData();
@@ -35,7 +35,7 @@ export const EditTaxJarConfiguration = () => {
     data,
     isLoading: isGetLoading,
     isError: isGetError,
-  } = trpcClient.taxJarConfiguration.get.useQuery(
+  } = trpcClient.taxJarConfiguration.getById.useQuery(
     { id: configurationId },
     {
       enabled: !!configurationId,

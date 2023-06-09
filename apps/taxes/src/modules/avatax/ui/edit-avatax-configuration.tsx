@@ -22,7 +22,7 @@ export const EditAvataxConfiguration = () => {
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
-    trpcClient.avataxConfiguration.patch.useMutation({
+    trpcClient.avataxConfiguration.update.useMutation({
       onSuccess() {
         notifySuccess("Success", "Updated Avatax configuration");
         refetchProvidersConfigurationData();
@@ -48,7 +48,7 @@ export const EditAvataxConfiguration = () => {
     data,
     isLoading: isGetLoading,
     isError: isGetError,
-  } = trpcClient.avataxConfiguration.get.useQuery(
+  } = trpcClient.avataxConfiguration.getById.useQuery(
     {
       id: configurationId,
     },

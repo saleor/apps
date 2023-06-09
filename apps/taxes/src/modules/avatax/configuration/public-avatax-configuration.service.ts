@@ -1,8 +1,8 @@
 import { DeepPartial } from "@trpc/server";
-import { AvataxConfig } from "../avatax-config";
-import { AvataxConfigurationService } from "./avatax-configuration.service";
 import { Client } from "urql";
+import { AvataxConfig } from "../avatax-config";
 import { AvataxConfigObfuscator } from "../avatax-config-obfuscator";
+import { AvataxConfigurationService } from "./avatax-configuration.service";
 
 export class PublicAvataxConfigurationService {
   private readonly configurationService: AvataxConfigurationService;
@@ -18,22 +18,18 @@ export class PublicAvataxConfigurationService {
     return this.obfuscator.obfuscateAvataxInstances(instances);
   }
 
-  async get(id: string) {
-    const instance = await this.configurationService.get(id);
+  async getById(id: string) {
+    const instance = await this.configurationService.getById(id);
 
     return this.obfuscator.obfuscateAvataxInstance(instance);
   }
 
-  async post(config: AvataxConfig) {
-    return this.configurationService.post(config);
+  async create(config: AvataxConfig) {
+    return this.configurationService.create(config);
   }
 
-  async patch(id: string, config: DeepPartial<AvataxConfig>) {
-    return this.configurationService.patch(id, config);
-  }
-
-  async put(id: string, config: AvataxConfig) {
-    return this.configurationService.put(id, config);
+  async update(id: string, config: DeepPartial<AvataxConfig>) {
+    return this.configurationService.update(id, config);
   }
 
   async delete(id: string) {

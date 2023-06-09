@@ -14,7 +14,7 @@ export const CreateTaxJarConfiguration = () => {
     trpcClient.providersConfiguration.getAll.useQuery();
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.taxJarConfiguration.post.useMutation({
+    trpcClient.taxJarConfiguration.create.useMutation({
       async onSuccess() {
         notifySuccess("Success", "Provider created");
         await refetchProvidersConfigurationData();

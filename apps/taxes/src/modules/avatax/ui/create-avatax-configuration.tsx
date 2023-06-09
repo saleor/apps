@@ -14,7 +14,7 @@ export const CreateAvataxConfiguration = () => {
     trpcClient.providersConfiguration.getAll.useQuery();
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.avataxConfiguration.post.useMutation({
+    trpcClient.avataxConfiguration.create.useMutation({
       async onSuccess() {
         notifySuccess("Success", "Provider created");
         await refetchProvidersConfigurationData();

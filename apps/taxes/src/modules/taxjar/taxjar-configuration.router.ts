@@ -23,7 +23,7 @@ const postInputSchema = z.object({
 });
 
 export const taxjarConfigurationRouter = router({
-  get: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
+  getById: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "taxjarConfigurationRouter.get",
     });
@@ -31,18 +31,18 @@ export const taxjarConfigurationRouter = router({
     logger.debug("taxjarConfigurationRouter.get called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+    const taxJarConfigurationService = new PublicTaxJarConfigurationService(
       apiClient,
       saleorApiUrl
     );
 
-    const result = await taxjarConfigurationService.get(input.id);
+    const result = await taxJarConfigurationService.getById(input.id);
 
     logger.info(`TaxJar configuration with an id: ${result.id} was successfully retrieved`);
 
     return result;
   }),
-  post: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
+  create: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "taxjarConfigurationRouter.post",
     });
@@ -50,12 +50,12 @@ export const taxjarConfigurationRouter = router({
     logger.debug("Attempting to create configuration");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+    const taxJarConfigurationService = new PublicTaxJarConfigurationService(
       apiClient,
       saleorApiUrl
     );
 
-    const result = await taxjarConfigurationService.post(input.value);
+    const result = await taxJarConfigurationService.create(input.value);
 
     logger.info("TaxJar configuration was successfully created");
 
@@ -69,17 +69,17 @@ export const taxjarConfigurationRouter = router({
     logger.debug("Route delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+    const taxJarConfigurationService = new PublicTaxJarConfigurationService(
       apiClient,
       saleorApiUrl
     );
 
-    const result = await taxjarConfigurationService.delete(input.id);
+    const result = await taxJarConfigurationService.delete(input.id);
 
     logger.info(`TaxJar configuration with an id: ${input.id} was deleted`);
     return result;
   }),
-  patch: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
+  update: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "taxjarConfigurationRouter.patch",
     });
@@ -87,12 +87,12 @@ export const taxjarConfigurationRouter = router({
     logger.debug({ input }, "Route patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const taxjarConfigurationService = new PublicTaxJarConfigurationService(
+    const taxJarConfigurationService = new PublicTaxJarConfigurationService(
       apiClient,
       saleorApiUrl
     );
 
-    const result = await taxjarConfigurationService.patch(input.id, input.value);
+    const result = await taxJarConfigurationService.update(input.id, input.value);
 
     logger.info(`TaxJar configuration with an id: ${input.id} was successfully updated`);
     return result;
