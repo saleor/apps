@@ -4,31 +4,39 @@ import { router } from "../trpc/trpc-server";
 import { channelConfigSchema } from "./channel-config";
 import { ChannelConfigurationService } from "./channel-configuration.service";
 
+const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
+  next({
+    ctx: {
+      ...ctx,
+      connectionService: new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl),
+    },
+  })
+);
+
 export const channelsConfigurationRouter = router({
-  fetch: protectedClientProcedure.query(async ({ ctx, input }) => {
+  fetch: protectedWithConfigurationService.query(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "channelsConfigurationRouter.fetch",
     });
 
-    const channelConfiguration = await new ChannelConfigurationService(
-      ctx.apiClient,
-      ctx.saleorApiUrl
-    ).getAll();
+    const channelConfiguration = ctx.connectionService;
 
     logger.info("Returning channel configuration");
 
-    return channelConfiguration;
+    return channelConfiguration.getAll();
   }),
-  upsert: protectedClientProcedure.input(channelConfigSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "channelsConfigurationRouter.upsert",
-    });
+  upsert: protectedWithConfigurationService
+    .input(channelConfigSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "channelsConfigurationRouter.upsert",
+      });
 
-    const configurationService = new ChannelConfigurationService(ctx.apiClient, ctx.saleorApiUrl);
+      const configurationService = ctx.connectionService;
 
-    await configurationService.update(input.id, input.config);
+      await configurationService.update(input.id, input.config);
 
-    logger.info("Channel configuration updated");
-  }),
+      logger.info("Channel configuration updated");
+    }),
 });

@@ -22,16 +22,24 @@ const postInputSchema = z.object({
   value: avataxConfigSchema,
 });
 
+const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
+  next({
+    ctx: {
+      ...ctx,
+      connectionService: new PublicAvataxConnectionService(ctx.apiClient, ctx.saleorApiUrl),
+    },
+  })
+);
+
 export const avataxConnectionRouter = router({
-  getById: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
+  getById: protectedWithConfigurationService.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       location: "avataxConnectionRouter.get",
     });
 
     logger.debug("Route get called");
 
-    const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
+    const avataxConfigurationService = ctx.connectionService;
 
     const result = await avataxConfigurationService.getById(input.id);
 
@@ -39,55 +47,58 @@ export const avataxConnectionRouter = router({
 
     return result;
   }),
-  create: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConnectionRouter.post",
-    });
+  create: protectedWithConfigurationService
+    .input(postInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "avataxConnectionRouter.post",
+      });
 
-    logger.debug("Attempting to create configuration");
+      logger.debug("Attempting to create configuration");
 
-    const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
+      const avataxConfigurationService = ctx.connectionService;
 
-    const result = await avataxConfigurationService.create(input.value);
+      const result = await avataxConfigurationService.create(input.value);
 
-    logger.info("Avatax configuration was successfully created");
+      logger.info("Avatax configuration was successfully created");
 
-    return result;
-  }),
-  delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConnectionRouter.delete",
-    });
+      return result;
+    }),
+  delete: protectedWithConfigurationService
+    .input(deleteInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "avataxConnectionRouter.delete",
+      });
 
-    logger.debug("Route delete called");
+      logger.debug("Route delete called");
 
-    const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
+      const avataxConfigurationService = ctx.connectionService;
 
-    const result = await avataxConfigurationService.delete(input.id);
+      const result = await avataxConfigurationService.delete(input.id);
 
-    logger.info(`Avatax configuration with an id: ${input.id} was deleted`);
+      logger.info(`Avatax configuration with an id: ${input.id} was deleted`);
 
-    return result;
-  }),
-  update: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
-      saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConnectionRouter.patch",
-    });
+      return result;
+    }),
+  update: protectedWithConfigurationService
+    .input(patchInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "avataxConnectionRouter.patch",
+      });
 
-    logger.debug("Route patch called");
+      logger.debug("Route patch called");
 
-    const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
+      const avataxConfigurationService = ctx.connectionService;
 
-    const result = await avataxConfigurationService.update(input.id, input.value);
+      const result = await avataxConfigurationService.update(input.id, input.value);
 
-    logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
+      logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
 
-    return result;
-  }),
+      return result;
+    }),
 });
