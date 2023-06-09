@@ -225,18 +225,18 @@ export class SmtpConfigurationService {
   async updateEventConfiguration({
     configurationId,
     eventConfiguration,
+    eventType,
   }: {
     configurationId: string;
-    eventConfiguration: SmtpEventConfiguration;
+    eventType: SmtpEventConfiguration["eventType"];
+    eventConfiguration: Partial<Omit<SmtpEventConfiguration, "eventType">>;
   }) {
     logger.debug("Update event configuration");
     const configuration = await this.getConfiguration({
       id: configurationId,
     });
 
-    const eventIndex = configuration.events.findIndex(
-      (e) => e.eventType === eventConfiguration.eventType
-    );
+    const eventIndex = configuration.events.findIndex((e) => e.eventType === eventType);
 
     if (eventIndex < 0) {
       logger.warn("Event configuration not found, throwing an error");
@@ -246,9 +246,14 @@ export class SmtpConfigurationService {
       );
     }
 
-    configuration.events[eventIndex] = eventConfiguration;
+    const updatedEventConfiguration = {
+      ...configuration.events[eventIndex],
+      ...eventConfiguration,
+    };
+
+    configuration.events[eventIndex] = updatedEventConfiguration;
 
     await this.updateConfiguration(configuration);
-    return configuration;
+    return updatedEventConfiguration;
   }
 }
