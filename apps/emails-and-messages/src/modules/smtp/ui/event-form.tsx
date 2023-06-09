@@ -4,12 +4,8 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Controller, useForm } from "react-hook-form";
-import {
-  SmtpUpdateEventConfigurationInput,
-  smtpUpdateEventConfigurationInputSchema,
-} from "../configuration/smtp-config-input-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CodeEditor } from "./code-edtor";
+import { CodeEditor } from "./code-editor";
 import { useDebounce } from "usehooks-ts";
 import { useState, useEffect } from "react";
 import { examplePayloads } from "../../event-handlers/default-payloads";
@@ -17,6 +13,7 @@ import { MjmlPreview } from "./mjml-preview";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
 interface EventFormProps {
@@ -31,15 +28,13 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     (eventConfiguration) => eventConfiguration.eventType === eventType
   )!; // Event conf is not optional, so we can use ! here
 
-  const { handleSubmit, control, getValues, setError } = useForm<SmtpUpdateEventConfigurationInput>(
-    {
-      defaultValues: {
-        id: configuration.id,
-        ...eventConfiguration,
-      },
-      resolver: zodResolver(smtpUpdateEventConfigurationInputSchema),
-    }
-  );
+  const { handleSubmit, control, getValues, setError } = useForm<SmtpUpdateEvent>({
+    defaultValues: {
+      id: configuration.id,
+      ...eventConfiguration,
+    },
+    resolver: zodResolver(smtpUpdateEventSchema),
+  });
 
   const trpcContext = trpcClient.useContext();
   const { mutate } = trpcClient.smtpConfiguration.updateEvent.useMutation({
@@ -48,7 +43,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SmtpUpdateEventConfigurationInput>({
+      setBackendErrors<SmtpUpdateEvent>({
         error,
         setError,
         notifyError,
