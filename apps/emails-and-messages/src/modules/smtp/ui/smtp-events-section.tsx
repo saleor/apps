@@ -87,13 +87,10 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
     <SectionWithDescription
       title="Events"
       description={
-        <>
-          <Text as="p">
-            Provide unique name for your configuration - you can create more than one. For example -
-            production and development.
-          </Text>
-          <Text as="p">Then, pass your API Key. Obtain it here.</Text>
-        </>
+        <Text as="p">
+          Choose which events should trigger sending emails to your customers. You can customize
+          each email template.
+        </Text>
       }
     >
       <Box display="flex" flexDirection="column" gap={defaultPadding}>

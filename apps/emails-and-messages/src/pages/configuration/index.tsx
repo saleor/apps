@@ -38,17 +38,15 @@ const ConfigurationPage: NextPage = () => {
       <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
           <Text>
-            Configure Emails & Messages app to deliver Saleor Events webhooks to various messaging
-            providers
+            Configure Emails & Messages app to deliver Saleor Event webhooks to configured messaging
+            providers.
           </Text>
         </Box>
       </Box>
       <SectionWithDescription
         title="Messaging providers"
         description={
-          <Text>
-            Manage providers configuration to connect Saleor events with 3rd party services.
-          </Text>
+          <Text>Manage provider configurations and modify it&apos;s message templates.</Text>
         }
       >
         <MessagingProvidersBox configurations={data || []} isLoading={isLoading} />

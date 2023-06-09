@@ -14,6 +14,8 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { ConfigurationNameDescriptionText } from "../../app-configuration/ui/configuration-name-description-text";
+import { ConfigurationActiveDescriptionText } from "../../app-configuration/ui/configuration-active-description-text";
 
 interface SendgridBasicInformationSectionProps {
   configuration: SendgridConfiguration;
@@ -49,12 +51,12 @@ export const SendgridBasicInformationSection = ({
 
   return (
     <SectionWithDescription
-      title="Connect Sendgrid"
+      title="Status and name"
       description={
-        <Text>
-          Provide unique name for your configuration - you can create more than one. For example -
-          production and development. Then, pass your API Key. Obtain it here.
-        </Text>
+        <Box display="flex" flexDirection="column" gap={2}>
+          <ConfigurationNameDescriptionText />
+          <ConfigurationActiveDescriptionText />
+        </Box>
       }
     >
       <BoxWithBorder>

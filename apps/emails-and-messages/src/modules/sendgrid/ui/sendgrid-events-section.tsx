@@ -19,6 +19,7 @@ import { fetchTemplates } from "../sendgrid-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Combobox } from "@saleor/react-hook-form-macaw";
+import { TextLink } from "@saleor/apps-ui";
 
 interface EventBoxProps {
   configuration: SendgridConfiguration;
@@ -100,13 +101,14 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
     <SectionWithDescription
       title="Events"
       description={
-        <>
-          <Text as="p">
-            Provide unique name for your configuration - you can create more than one. For example -
-            production and development.
-          </Text>
-          <Text as="p">Then, pass your API Key. Obtain it here.</Text>
-        </>
+        <Text as="p">
+          Chose which Saleor events should send emails via Sendgrid. Creating and modification of a
+          dynamic templates can be done at{" "}
+          <TextLink href="https://mc.sendgrid.com/dynamic-templates" newTab={true}>
+            Sendgrid dashboard
+          </TextLink>
+          .
+        </Text>
       }
     >
       <Box display="flex" flexDirection="column" gap={defaultPadding}>

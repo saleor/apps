@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { BoxWithBorder } from "../../../components/box-with-border";
@@ -13,6 +13,9 @@ import { useRouter } from "next/router";
 import { sendgridUrls } from "../../../modules/sendgrid/urls";
 import { appUrls } from "../../../modules/app-configuration/urls";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { Input } from "@saleor/react-hook-form-macaw";
+import { SendgridApiKeyDescriptionText } from "../../../modules/sendgrid/ui/sendgrid-api-key-description-text";
+import { ConfigurationNameDescriptionText } from "../../../modules/app-configuration/ui/configuration-name-description-text";
 
 const NewSendgridConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -51,10 +54,10 @@ const NewSendgridConfigurationPage: NextPage = () => {
       <SectionWithDescription
         title="Connect Sendgrid"
         description={
-          <Text>
-            Provide unique name for your configuration - you can create more than one. For example -
-            production and development. Then, pass your API Key. Obtain it here.
-          </Text>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <ConfigurationNameDescriptionText />
+            <SendgridApiKeyDescriptionText />
+          </Box>
         }
       >
         <BoxWithBorder>
@@ -66,46 +69,14 @@ const NewSendgridConfigurationPage: NextPage = () => {
             })}
           >
             <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
-              <Controller
+              <Input
                 name="name"
                 control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  <Input
-                    label="Configuration name"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={
-                      error?.message ||
-                      "Name of the configuration, for example 'Production' or 'Test'"
-                    }
-                  />
-                )}
+                label="Configuration name"
+                helperText={"Name of the configuration, for example 'Production' or 'Test'"}
               />
-              <Controller
-                name="apiKey"
-                control={control}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                  formState: { errors },
-                }) => (
-                  // TODO: add validation
-                  <Input
-                    label="API key"
-                    value={value}
-                    onChange={onChange}
-                    error={!!error}
-                    helperText={
-                      error?.message || "Your API key, ensure it has permission XYZ enabled"
-                    }
-                  />
-                )}
-              />
+              {/* TODO: add key validation */}
+              <Input name="apiKey" control={control} label="API key" helperText={"Your API key"} />
             </Box>
             <BoxFooter>
               <Button type="submit">Save provider</Button>
