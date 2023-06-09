@@ -3,7 +3,7 @@ import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { taxJarConfigSchema } from "./taxjar-connection-schema";
-import { PublicTaxJarConfigurationService } from "./configuration/public-taxjar-configuration.service";
+import { PublicTaxJarConnectionService } from "./configuration/public-taxjar-connection.service";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -26,7 +26,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   next({
     ctx: {
       ...ctx,
-      connectionService: new PublicTaxJarConfigurationService(ctx.apiClient, ctx.saleorApiUrl),
+      connectionService: new PublicTaxJarConnectionService(ctx.apiClient, ctx.saleorApiUrl),
     },
   })
 );

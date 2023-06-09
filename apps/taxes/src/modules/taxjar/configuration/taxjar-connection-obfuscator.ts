@@ -1,7 +1,7 @@
 import { Obfuscator } from "../../../lib/obfuscator";
 import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
 
-export class TaxJarConfigObfuscator {
+export class TaxJarConnectionObfuscator {
   private obfuscator = new Obfuscator();
   obfuscateTaxJarConfig = (config: TaxJarConfig): TaxJarConfig => {
     return {

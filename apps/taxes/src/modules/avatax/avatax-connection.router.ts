@@ -3,7 +3,7 @@ import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { avataxConfigSchema } from "./avatax-connection-schema";
-import { PublicAvataxConnectionService } from "./configuration/public-avatax-configuration.service";
+import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
 
 const getInputSchema = z.object({
   id: z.string(),

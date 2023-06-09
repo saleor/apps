@@ -1,15 +1,15 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import { TaxJarConfigObfuscator } from "./taxjar-config-obfuscator";
+import { TaxJarConnectionObfuscator } from "./taxjar-connection-obfuscator";
 import { TaxJarConnectionService } from "./taxjar-connection.service";
 
-export class PublicTaxJarConfigurationService {
+export class PublicTaxJarConnectionService {
   private readonly connectionService: TaxJarConnectionService;
-  private readonly obfuscator = new TaxJarConfigObfuscator();
+  private readonly obfuscator = new TaxJarConnectionObfuscator();
   constructor(client: Client, saleorApiUrl: string) {
     this.connectionService = new TaxJarConnectionService(client, saleorApiUrl);
-    this.obfuscator = new TaxJarConfigObfuscator();
+    this.obfuscator = new TaxJarConnectionObfuscator();
   }
 
   async getAll() {

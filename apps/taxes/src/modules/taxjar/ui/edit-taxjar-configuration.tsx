@@ -7,9 +7,9 @@ import { Obfuscator } from "../../../lib/obfuscator";
 import { trpcClient } from "../../trpc/trpc-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
-import { TaxJarConfigObfuscator } from "../configuration/taxjar-config-obfuscator";
+import { TaxJarConnectionObfuscator } from "../configuration/taxjar-connection-obfuscator";
 
-const taxJarObfuscator = new TaxJarConfigObfuscator();
+const taxJarObfuscator = new TaxJarConnectionObfuscator();
 
 export const EditTaxJarConfiguration = () => {
   const router = useRouter();

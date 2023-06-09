@@ -1,11 +1,11 @@
 import { TaxJarConfigMockGenerator } from "../taxjar-config-mock-generator";
-import { TaxJarConfigObfuscator } from "./taxjar-config-obfuscator";
+import { TaxJarConnectionObfuscator } from "./taxjar-connection-obfuscator";
 import { expect, it, describe } from "vitest";
 
 const mockTaxJarConfig = new TaxJarConfigMockGenerator().generateTaxJarConfig();
-const obfuscator = new TaxJarConfigObfuscator();
+const obfuscator = new TaxJarConnectionObfuscator();
 
-describe("TaxJarConfigObfuscator", () => {
+describe("TaxJarConnectionObfuscator", () => {
   it("obfuscated taxjar config", () => {
     const obfuscatedConfig = obfuscator.obfuscateTaxJarConfig(mockTaxJarConfig);
 
