@@ -1,13 +1,5 @@
 import { BoxWithBorder } from "../../../components/box-with-border";
-import {
-  Accordion,
-  Box,
-  Button,
-  ProductsIcons,
-  Switch,
-  TableEditIcon,
-  Text,
-} from "@saleor/macaw-ui/next";
+import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
 import { Multiselect } from "@saleor/react-hook-form-macaw";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -33,7 +25,7 @@ export const UniversalChannelsSection = ({
   channelConfiguration,
   onSubmit,
 }: UniversalChannelsSectionProps) => {
-  const { handleSubmit, control } = useForm<UpdateChannelsInput>({
+  const { handleSubmit, control, register } = useForm<UpdateChannelsInput>({
     defaultValues: {
       id: configurationId,
       ...channelConfiguration,
@@ -77,67 +69,42 @@ export const UniversalChannelsSection = ({
                 channelConfiguration={channelConfiguration}
               />
               <Text variant="heading">Settings</Text>
+              <label>
+                <input type="checkbox" {...register("override")} />
+                <Text paddingLeft={defaultPadding}>Override channels</Text>
+              </label>
 
               <Controller
-                name="override"
+                name="mode"
                 control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Accordion
-                    defaultValue={value ? "true" : "false"}
-                    display="flex"
-                    flexDirection="column"
-                    onValueChange={(newValue) => onChange(newValue === "true")}
-                    value={value ? "true" : "false"}
+                render={({ field: { onChange } }) => (
+                  <Switch
+                    defaultValue={channelConfiguration.mode}
+                    __maxWidth="max-content"
+                    onValueChange={onChange}
                   >
-                    <Accordion.Item value="true">
-                      <label>
-                        <input type="checkbox" checked={value} onChange={onChange} />
-                        <Text paddingLeft={defaultPadding}>Override channels</Text>
-                      </label>
-                      <Accordion.Content>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          gap={defaultPadding}
-                          paddingTop={defaultPadding}
-                        >
-                          <Controller
-                            name="mode"
-                            control={control}
-                            render={({ field: { onChange } }) => (
-                              <Switch
-                                defaultValue={channelConfiguration.mode}
-                                __maxWidth="max-content"
-                                onValueChange={onChange}
-                              >
-                                <Switch.Item id="1" value="restrict">
-                                  <TableEditIcon size="medium" />
-                                  <Text>Include</Text>
-                                </Switch.Item>
-                                <Switch.Item id="2" value="exclude">
-                                  <ProductsIcons size="medium" />
-                                  <Text>Exclude</Text>
-                                </Switch.Item>
-                              </Switch>
-                            )}
-                          />
-                          <Multiselect
-                            control={control}
-                            label="Channels"
-                            size="large"
-                            name="channels"
-                            options={
-                              channels?.map((channel) => ({
-                                label: channel.name,
-                                value: channel.slug,
-                              })) || []
-                            }
-                          />
-                        </Box>
-                      </Accordion.Content>
-                    </Accordion.Item>
-                  </Accordion>
+                    <Switch.Item id="1" value="restrict">
+                      <TableEditIcon size="medium" />
+                      <Text>Include</Text>
+                    </Switch.Item>
+                    <Switch.Item id="2" value="exclude">
+                      <ProductsIcons size="medium" />
+                      <Text>Exclude</Text>
+                    </Switch.Item>
+                  </Switch>
                 )}
+              />
+              <Multiselect
+                control={control}
+                label="Channels"
+                size="large"
+                name="channels"
+                options={
+                  channels?.map((channel) => ({
+                    label: channel.name,
+                    value: channel.slug,
+                  })) || []
+                }
               />
             </Box>
           </Box>
