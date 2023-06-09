@@ -66,13 +66,13 @@ export const ImportProductsToAlgolia = () => {
     <Box __cursor={started ? "wait" : "auto"}>
       {searchProvider && algoliaConfigured ? (
         <Box>
-          <Text variant={"heading"} as={"p"} marginBottom={4}>
+          <Text variant={"heading"} as={"p"} marginBottom={1.5}>
             Importing products & variants
           </Text>
           <Text as={"p"}>
             Trigger initial indexing for products catalogue. It can take few minutes.{" "}
           </Text>
-          <Text marginBottom={8} variant={"bodyStrong"}>
+          <Text marginBottom={5} variant={"bodyStrong"}>
             Do not close the app - its running client-side
           </Text>
           <Box display={"flex"} justifyContent={"flex-end"}>
@@ -83,7 +83,7 @@ export const ImportProductsToAlgolia = () => {
         </Box>
       ) : (
         <Box>
-          <Text variant={"heading"} as={"p"} color={"textCriticalDefault"} marginBottom={4}>
+          <Text variant={"heading"} as={"p"} color={"textCriticalDefault"} marginBottom={1.5}>
             App not configured
           </Text>
           <Text>Configure Algolia first</Text>

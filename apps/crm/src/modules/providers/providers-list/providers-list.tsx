@@ -59,7 +59,7 @@ export const ProvidersList = ({ className, onProviderClick, activeProvider, ...p
       <li className={styles.item}>
         <Box>
           <TextLink href="https://github.com/saleor/apps/discussions/categories/integrations-features">
-            <Box display="flex" gap={4}>
+            <Box display="flex" gap={1.5}>
               <MarketplaceIcon />
               <Text color="inherit">Request integration</Text>
             </Box>

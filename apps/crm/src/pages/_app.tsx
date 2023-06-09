@@ -53,7 +53,7 @@ function NextApp({ Component, pageProps: { session, ...pageProps } }: AppPropsWi
             <ThemeSynchronizer />
             <RoutePropagator />
             <AppBridgeStorageSetter />
-            <Box padding={8}>
+            <Box padding={5}>
               <Component {...pageProps} />
             </Box>
           </ThemeProvider>

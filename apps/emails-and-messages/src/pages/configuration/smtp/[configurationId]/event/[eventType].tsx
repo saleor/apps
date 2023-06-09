@@ -81,7 +81,7 @@ const EditSmtpEventPage: NextPage = () => {
         { name: eventType },
       ]}
     >
-      <Box display="flex" flexDirection="column" gap={13}>
+      <Box display="flex" flexDirection="column" gap={10}>
         <Text as="p">
           Edit template for {eventType} event. You can learn more about MJML{" "}
           <TextLink href="https://mjml.io/" newTab={true}>

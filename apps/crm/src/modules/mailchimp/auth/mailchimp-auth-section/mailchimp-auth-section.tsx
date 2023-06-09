@@ -13,7 +13,7 @@ export const MailchimpAuthSection = () => {
 
   return (
     <Section display="flex" flexDirection="column">
-      <Text as="p" marginBottom={8}>
+      <Text as="p" marginBottom={5}>
         You need to connect Mailchimp with Saleor CRM App. Click button below and authorize the App.
       </Text>
       <form method="POST" action="/api/auth/mailchimp/oauth">

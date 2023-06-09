@@ -19,10 +19,10 @@ const MailchimpOauthSuccessPage: NextPageWithLayoutOverwrite = () => {
 
   return (
     <Box>
-      <Text variant="title" as="h1" marginBottom={4}>
+      <Text variant="title" as="h1" marginBottom={1.5}>
         Success
       </Text>
-      <Text as="p" marginBottom={4}>
+      <Text as="p" marginBottom={1.5}>
         Successfully authorized Mailchimp as {email}
       </Text>
       <Text>Will redirect soon...</Text>

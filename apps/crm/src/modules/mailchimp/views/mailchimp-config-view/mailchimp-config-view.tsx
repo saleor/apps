@@ -9,7 +9,7 @@ import { ConnectionStatus } from "../../config-sections/connection-status/connec
 import { Instructions } from "../../config-sections/instructions/instructions";
 
 const header = (
-  <Box marginBottom={12}>
+  <Box marginBottom={9}>
     <Text as="h1" variant="title" size="large">
       Mailchimp
     </Text>
@@ -40,7 +40,7 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
-        <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
+        <Box marginBottom={9} display="flex" justifyContent="space-between" gap={9}>
           <ConnectionStatus status="error" __flex="0 1 50%" />
         </Box>
       </div>
@@ -51,14 +51,14 @@ export const MailchimpConfigView = () => {
     return (
       <div>
         {header}
-        <Instructions marginBottom={12} />
-        <Box marginBottom={12} display="flex" justifyContent="space-between" gap={12}>
+        <Instructions marginBottom={9} />
+        <Box marginBottom={9} display="flex" justifyContent="space-between" gap={9}>
           <ConnectionStatus status="ok" __flex="0 1 50%" />
           <MailchimpLists __flex="0 1 50%" />
         </Box>
 
-        <WebhookConfiguration marginBottom={12} />
-        <SaleorCustomersSync marginBottom={12} />
+        <WebhookConfiguration marginBottom={9} />
+        <SaleorCustomersSync marginBottom={9} />
         <RemoveMailchimpConfig />
       </div>
     );

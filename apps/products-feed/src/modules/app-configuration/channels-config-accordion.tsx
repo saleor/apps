@@ -41,10 +41,10 @@ const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug
       })}
       as={"form"}
       display={"grid"}
-      gap={6}
+      gap={3}
       {...props}
     >
-      <Text variant={"heading"} as={"h2"} marginBottom={4}>
+      <Text variant={"heading"} as={"h2"} marginBottom={1.5}>
         Configure channel URLs
       </Text>
       <Input
@@ -80,7 +80,7 @@ export const ChannelsConfigAccordion = () => {
   }
 
   return (
-    <Accordion display={"grid"} gap={8}>
+    <Accordion display={"grid"} gap={5}>
       {data?.map((channel) => (
         <Accordion.Item
           key={channel.id}
@@ -88,15 +88,16 @@ export const ChannelsConfigAccordion = () => {
           borderColor={"neutralHighlight"}
           borderWidth={1}
           borderBottomStyle={"solid"}
-          paddingBottom={8}
+          paddingBottom={5}
         >
           <Accordion.Trigger>
             <Text>{channel.name}</Text>
+            <Accordion.TriggerButton />
           </Accordion.Trigger>
           <Accordion.Content>
-            <ChannelConfigForm margin={8} channelSlug={channel.slug} />
+            <ChannelConfigForm margin={5} channelSlug={channel.slug} />
             <Divider />
-            <FeedPreviewCard channelSlug={channel.slug} margin={8} marginTop={12} />
+            <FeedPreviewCard channelSlug={channel.slug} margin={5} marginTop={9} />
           </Accordion.Content>
         </Accordion.Item>
       ))}
