@@ -35,10 +35,10 @@ export const defaultTaxJarConfig: TaxJarConfig = {
   },
 };
 
-export const taxJarInstanceConfigSchema = z.object({
+export const taxJarConnection = z.object({
   id: z.string(),
   provider: z.literal("taxjar"),
   config: taxJarConfigSchema,
 });
 
-export type TaxJarInstanceConfig = z.infer<typeof taxJarInstanceConfigSchema>;
+export type TaxJarConnection = z.infer<typeof taxJarConnection>;

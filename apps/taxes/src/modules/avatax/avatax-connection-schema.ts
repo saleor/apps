@@ -44,10 +44,10 @@ export const defaultAvataxConfig: AvataxConfig = {
   },
 };
 
-export const avataxInstanceConfigSchema = z.object({
+export const avataxConnectionSchema = z.object({
   id: z.string(),
   provider: z.literal("avatax"),
   config: avataxConfigSchema,
 });
 
-export type AvataxInstanceConfig = z.infer<typeof avataxInstanceConfigSchema>;
+export type AvataxConnection = z.infer<typeof avataxConnectionSchema>;

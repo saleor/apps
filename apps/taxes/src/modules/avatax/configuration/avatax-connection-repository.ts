@@ -2,13 +2,17 @@ import { Client } from "urql";
 import { createLogger, Logger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
-import { providersSchema } from "../../providers-configuration/providers-config";
-import { TAX_PROVIDER_KEY } from "../../providers-configuration/public-providers-configuration-service";
-import { TaxJarConfig, TaxJarInstanceConfig, taxJarInstanceConfigSchema } from "../taxjar-config";
+import { providerConnectionsSchema } from "../../provider-connections/provider-connections";
+import { TAX_PROVIDER_KEY } from "../../provider-connections/public-provider-connections.service";
+import {
+  AvataxConfig,
+  AvataxConnection,
+  avataxConnectionSchema,
+} from "../avatax-connection-schema";
 
-const getSchema = taxJarInstanceConfigSchema;
+const getSchema = avataxConnectionSchema;
 
-export class TaxJarConfigurationRepository {
+export class AvataxConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
   constructor(client: Client, saleorApiUrl: string) {
@@ -20,41 +24,40 @@ export class TaxJarConfigurationRepository {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      location: "TaxJarConfigurationRepository",
+      location: "AvataxConnectionRepository",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
 
-  async getAll(): Promise<TaxJarInstanceConfig[]> {
+  async getAll(): Promise<AvataxConnection[]> {
     const { data } = await this.crudSettingsManager.readAll();
+    const connections = providerConnectionsSchema.parse(data);
 
-    const instances = providersSchema.parse(data);
+    const avataxConnections = connections.filter(
+      (connection) => connection.provider === "avatax"
+    ) as AvataxConnection[];
 
-    const taxJarInstances = instances.filter(
-      (instance) => instance.provider === "taxjar"
-    ) as TaxJarInstanceConfig[];
-
-    return taxJarInstances;
+    return avataxConnections;
   }
 
-  async get(id: string): Promise<TaxJarInstanceConfig> {
+  async get(id: string): Promise<AvataxConnection> {
     const { data } = await this.crudSettingsManager.read(id);
 
-    const instance = getSchema.parse(data);
+    const connection = getSchema.parse(data);
 
-    return instance;
+    return connection;
   }
 
-  async post(config: TaxJarConfig): Promise<{ id: string }> {
+  async post(config: AvataxConfig): Promise<{ id: string }> {
     const result = await this.crudSettingsManager.create({
-      provider: "taxjar",
+      provider: "avatax",
       config: config,
     });
 
     return result.data;
   }
 
-  async patch(id: string, input: TaxJarConfig): Promise<void> {
+  async patch(id: string, input: AvataxConfig): Promise<void> {
     return this.crudSettingsManager.update(id, input);
   }
 

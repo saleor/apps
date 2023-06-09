@@ -2,8 +2,8 @@ import { z } from "zod";
 import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { avataxConfigSchema } from "./avatax-config";
-import { PublicAvataxConfigurationService } from "./configuration/public-avatax-configuration.service";
+import { avataxConfigSchema } from "./avatax-connection-schema";
+import { PublicAvataxConnectionService } from "./configuration/public-avatax-configuration.service";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -22,19 +22,16 @@ const postInputSchema = z.object({
   value: avataxConfigSchema,
 });
 
-export const avataxConfigurationRouter = router({
+export const avataxConnectionRouter = router({
   getById: protectedClientProcedure.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "avataxConfigurationRouter.get",
+      location: "avataxConnectionRouter.get",
     });
 
     logger.debug("Route get called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConfigurationService(
-      apiClient,
-      saleorApiUrl
-    );
+    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.getById(input.id);
 
@@ -45,16 +42,13 @@ export const avataxConfigurationRouter = router({
   create: protectedClientProcedure.input(postInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConfigurationRouter.post",
+      procedure: "avataxConnectionRouter.post",
     });
 
     logger.debug("Attempting to create configuration");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConfigurationService(
-      apiClient,
-      saleorApiUrl
-    );
+    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.create(input.value);
 
@@ -65,16 +59,13 @@ export const avataxConfigurationRouter = router({
   delete: protectedClientProcedure.input(deleteInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConfigurationRouter.delete",
+      procedure: "avataxConnectionRouter.delete",
     });
 
     logger.debug("Route delete called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConfigurationService(
-      apiClient,
-      saleorApiUrl
-    );
+    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.delete(input.id);
 
@@ -85,16 +76,13 @@ export const avataxConfigurationRouter = router({
   update: protectedClientProcedure.input(patchInputSchema).mutation(async ({ ctx, input }) => {
     const logger = createLogger({
       saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConfigurationRouter.patch",
+      procedure: "avataxConnectionRouter.patch",
     });
 
     logger.debug("Route patch called");
 
     const { apiClient, saleorApiUrl } = ctx;
-    const avataxConfigurationService = new PublicAvataxConfigurationService(
-      apiClient,
-      saleorApiUrl
-    );
+    const avataxConfigurationService = new PublicAvataxConnectionService(apiClient, saleorApiUrl);
 
     const result = await avataxConfigurationService.update(input.id, input.value);
 

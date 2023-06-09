@@ -8,7 +8,7 @@ import { AppCard } from "../../ui/app-card";
 import { AppToggle } from "../../ui/app-toggle";
 import { CountrySelect } from "../../ui/country-select";
 import { ProviderLabel } from "../../ui/provider-label";
-import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-config";
+import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-connection-schema";
 
 const HelperText = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -3,7 +3,7 @@ import { ChannelConfig } from "./channel-config";
 const defaultChannelConfig: ChannelConfig = {
   id: "1",
   config: {
-    providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
+    providerConnectionId: "aa5293e5-7f5d-4782-a619-222ead918e50",
     slug: "default-channel",
   },
 };

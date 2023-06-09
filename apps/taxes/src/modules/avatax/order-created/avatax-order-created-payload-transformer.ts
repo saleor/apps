@@ -1,7 +1,7 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { avataxAddressFactory } from "../address-factory";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { discountUtils } from "../../taxes/discount-utils";

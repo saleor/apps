@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createLogger, Logger } from "../../../lib/logger";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxValidationResponseResolver } from "./avatax-validation-response-resolver";
 import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
 

@@ -1,28 +1,28 @@
 import { Client } from "urql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { TaxJarConfigurationRepository } from "./taxjar-configuration-repository";
-import { TaxJarConfig, TaxJarInstanceConfig } from "../taxjar-config";
+import { TaxJarConnectionRepository } from "./taxjar-connection-repository";
+import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
 import { TaxJarValidationService } from "./taxjar-validation.service";
 import { DeepPartial } from "@trpc/server";
-import { PatchInputTransformer } from "../../providers-configuration/patch-input-transformer";
+import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
 
-export class TaxJarConfigurationService {
+export class TaxJarConnectionService {
   private logger: Logger;
-  private taxJarConfigurationRepository: TaxJarConfigurationRepository;
+  private taxJarConnectionRepository: TaxJarConnectionRepository;
   constructor(client: Client, saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "TaxJarConfigurationService",
+      location: "TaxJarConnectionService",
     });
 
-    this.taxJarConfigurationRepository = new TaxJarConfigurationRepository(client, saleorApiUrl);
+    this.taxJarConnectionRepository = new TaxJarConnectionRepository(client, saleorApiUrl);
   }
 
-  getAll(): Promise<TaxJarInstanceConfig[]> {
-    return this.taxJarConfigurationRepository.getAll();
+  getAll(): Promise<TaxJarConnection[]> {
+    return this.taxJarConnectionRepository.getAll();
   }
 
-  getById(id: string): Promise<TaxJarInstanceConfig> {
-    return this.taxJarConfigurationRepository.get(id);
+  getById(id: string): Promise<TaxJarConnection> {
+    return this.taxJarConnectionRepository.get(id);
   }
 
   async create(config: TaxJarConfig): Promise<{ id: string }> {
@@ -30,7 +30,7 @@ export class TaxJarConfigurationService {
 
     await validationService.validate(config);
 
-    return await this.taxJarConfigurationRepository.post(config);
+    return await this.taxJarConnectionRepository.post(config);
   }
 
   async update(id: string, nextConfigPartial: DeepPartial<TaxJarConfig>): Promise<void> {
@@ -48,10 +48,10 @@ export class TaxJarConfigurationService {
 
     await validationService.validate(input);
 
-    return this.taxJarConfigurationRepository.patch(id, input);
+    return this.taxJarConnectionRepository.patch(id, input);
   }
 
   async delete(id: string): Promise<void> {
-    return this.taxJarConfigurationRepository.delete(id);
+    return this.taxJarConnectionRepository.delete(id);
   }
 }

@@ -6,7 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { getActiveConnection } from "../../../modules/taxes/active-connection";
 
 export const config = {
   api: {
@@ -54,7 +54,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
     logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);

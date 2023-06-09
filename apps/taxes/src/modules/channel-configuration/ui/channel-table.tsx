@@ -7,10 +7,10 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {
-    config: { providerInstanceId = "", slug },
+    config: { providerConnectionId = "", slug },
     id,
   } = channelConfig;
-  const [value, setValue] = React.useState(providerInstanceId);
+  const [value, setValue] = React.useState(providerConnectionId);
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { mutate: upsertMutation } = trpcClient.channelsConfiguration.upsert.useMutation({
@@ -24,12 +24,12 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
 
   const { data: providerConfigurations = [] } = trpcClient.providersConfiguration.getAll.useQuery();
 
-  const changeValue = (nextProviderInstanceId: string) => {
-    setValue(nextProviderInstanceId);
+  const changeValue = (nextproviderConnectionId: string) => {
+    setValue(nextproviderConnectionId);
     upsertMutation({
       id,
       config: {
-        providerInstanceId: nextProviderInstanceId,
+        providerConnectionId: nextproviderConnectionId,
         slug,
       },
     });

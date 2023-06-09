@@ -5,7 +5,7 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
-import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { getActiveConnection } from "../../../modules/taxes/active-connection";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 
 export const config = {
@@ -54,7 +54,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
     logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);

@@ -2,7 +2,7 @@ import Avatax from "avatax";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import packageJson from "../../../package.json";
 import { createLogger, Logger } from "../../lib/logger";
-import { AvataxConfig } from "./avatax-config";
+import { AvataxConfig } from "./avatax-connection-schema";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";

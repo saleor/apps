@@ -1,6 +1,6 @@
 import { taxJarAddressFactory } from "../address-factory";
 import { TaxJarClient } from "../taxjar-client";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarValidationErrorResolver } from "./tax-jar-validation-error-resolver";
 
 export class TaxJarValidationService {

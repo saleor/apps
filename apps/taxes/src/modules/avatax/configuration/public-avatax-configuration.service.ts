@@ -1,38 +1,38 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { AvataxConfig } from "../avatax-config";
-import { AvataxConfigObfuscator } from "../avatax-config-obfuscator";
-import { AvataxConfigurationService } from "./avatax-configuration.service";
+import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
+import { AvataxConnectionService } from "./avatax-connection.service";
 
-export class PublicAvataxConfigurationService {
-  private readonly configurationService: AvataxConfigurationService;
-  private readonly obfuscator: AvataxConfigObfuscator;
+export class PublicAvataxConnectionService {
+  private readonly connectionService: AvataxConnectionService;
+  private readonly obfuscator: AvataxConnectionObfuscator;
   constructor(client: Client, saleorApiUrl: string) {
-    this.configurationService = new AvataxConfigurationService(client, saleorApiUrl);
-    this.obfuscator = new AvataxConfigObfuscator();
+    this.connectionService = new AvataxConnectionService(client, saleorApiUrl);
+    this.obfuscator = new AvataxConnectionObfuscator();
   }
 
   async getAll() {
-    const instances = await this.configurationService.getAll();
+    const connections = await this.connectionService.getAll();
 
-    return this.obfuscator.obfuscateAvataxInstances(instances);
+    return this.obfuscator.obfuscateAvataxConnections(connections);
   }
 
   async getById(id: string) {
-    const instance = await this.configurationService.getById(id);
+    const connection = await this.connectionService.getById(id);
 
-    return this.obfuscator.obfuscateAvataxInstance(instance);
+    return this.obfuscator.obfuscateAvataxConnection(connection);
   }
 
   async create(config: AvataxConfig) {
-    return this.configurationService.create(config);
+    return this.connectionService.create(config);
   }
 
   async update(id: string, config: DeepPartial<AvataxConfig>) {
-    return this.configurationService.update(id, config);
+    return this.connectionService.update(id, config);
   }
 
   async delete(id: string) {
-    return this.configurationService.delete(id);
+    return this.connectionService.delete(id);
   }
 }

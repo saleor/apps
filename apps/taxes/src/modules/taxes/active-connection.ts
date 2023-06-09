@@ -8,7 +8,7 @@ import { Logger, createLogger } from "../../lib/logger";
 
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { ProviderConfig } from "../providers-configuration/providers-config";
+import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 
@@ -17,23 +17,23 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerInstance: ProviderConfig) {
+  constructor(providerConnection: ProviderConnection) {
     this.logger = createLogger({
       location: "ActiveTaxProvider",
     });
 
-    const taxProviderName = providerInstance.provider;
+    const taxProviderName = providerConnection.provider;
 
     switch (taxProviderName) {
       case "taxjar": {
         this.logger.debug("Selecting TaxJar as tax provider");
-        this.client = new TaxJarWebhookService(providerInstance.config);
+        this.client = new TaxJarWebhookService(providerConnection.config);
         break;
       }
 
       case "avatax": {
         this.logger.debug("Selecting Avatax as tax provider");
-        this.client = new AvataxWebhookService(providerInstance.config);
+        this.client = new AvataxWebhookService(providerConnection.config);
         break;
       }
 
@@ -56,12 +56,12 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   }
 }
 
-export function getActiveTaxProvider(
+export function getActiveConnection(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[]
 ): ActiveTaxProvider {
   const logger = createLogger({
-    location: "getActiveTaxProvider",
+    location: "getActiveConnection",
   });
 
   if (!channelSlug) {
@@ -72,7 +72,7 @@ export function getActiveTaxProvider(
     throw new Error("App encryptedMetadata was not found in the webhook payload");
   }
 
-  const { providers, channels } = getAppConfig(encryptedMetadata);
+  const { providerConnections, channels } = getAppConfig(encryptedMetadata);
 
   const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
@@ -82,19 +82,19 @@ export function getActiveTaxProvider(
     throw new Error(`Channel config was not found for channel ${channelSlug}`);
   }
 
-  const providerInstance = providers.find(
-    (instance) => instance.id === channelConfig.config.providerInstanceId
+  const providerConnection = providerConnections.find(
+    (connection) => connection.id === channelConfig.config.providerConnectionId
   );
 
-  if (!providerInstance) {
+  if (!providerConnection) {
     logger.debug(
-      { providers, channelConfig },
-      "In the providers array, there is no item with an id that matches the channel config providerInstanceId."
+      { providerConnections, channelConfig },
+      "In the providers array, there is no item with an id that matches the channel config providerConnectionId."
     );
-    throw new Error(`Channel config providerInstanceId does not match any providers`);
+    throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerInstance);
+  const taxProvider = new ActiveTaxProvider(providerConnection);
 
   return taxProvider;
 }

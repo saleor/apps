@@ -8,7 +8,7 @@ const channelConfigMockGenerator = new ChannelConfigMockGenerator();
 const configurationMerger = new ChannelConfigurationMerger();
 
 describe("ChannelConfigurationMerger", () => {
-  it("should return config with providerInstanceId when match", () => {
+  it("should return config with providerConnectionId when match", () => {
     const channels = [channelMockGenerator.generateChannel()];
     const channelConfig = channelConfigMockGenerator.generateChannelConfig();
 
@@ -18,17 +18,17 @@ describe("ChannelConfigurationMerger", () => {
       {
         id: "1",
         config: {
-          providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
+          providerConnectionId: "aa5293e5-7f5d-4782-a619-222ead918e50",
           slug: "default-channel",
         },
       },
     ]);
   });
-  it("should return config with providerInstanceId = null when no match", () => {
+  it("should return config with providerConnectionId = null when no match", () => {
     const channels = [channelMockGenerator.generateChannel()];
     const channelConfig = channelConfigMockGenerator.generateChannelConfig({
       config: {
-        providerInstanceId: "1234",
+        providerConnectionId: "1234",
         slug: "different-channel",
       },
     });
@@ -39,7 +39,7 @@ describe("ChannelConfigurationMerger", () => {
       {
         id: "1",
         config: {
-          providerInstanceId: null,
+          providerConnectionId: null,
           slug: "default-channel",
         },
       },

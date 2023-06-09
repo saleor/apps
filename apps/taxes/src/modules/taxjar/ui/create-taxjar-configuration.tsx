@@ -2,7 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
-import { TaxJarConfig, defaultTaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig, defaultTaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 import React from "react";
 
@@ -14,7 +14,7 @@ export const CreateTaxJarConfiguration = () => {
     trpcClient.providersConfiguration.getAll.useQuery();
 
   const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.taxJarConfiguration.create.useMutation({
+    trpcClient.taxJarConnection.create.useMutation({
       async onSuccess() {
         notifySuccess("Success", "Provider created");
         await refetchProvidersConfigurationData();

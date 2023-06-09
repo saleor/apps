@@ -1,7 +1,7 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 
 type TaxBase = TaxBaseFragment;
 
@@ -198,7 +198,7 @@ const taxExcludedTaxBase: TaxBase = {
 const channelConfig: ChannelConfig = {
   id: "1",
   config: {
-    providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
+    providerConnectionId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
     slug: "default-channel",
   },
 };
