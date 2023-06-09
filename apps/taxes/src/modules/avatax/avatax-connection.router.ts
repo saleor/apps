@@ -26,7 +26,11 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   next({
     ctx: {
       ...ctx,
-      connectionService: new PublicAvataxConnectionService(ctx.apiClient, ctx.saleorApiUrl),
+      connectionService: new PublicAvataxConnectionService(
+        ctx.apiClient,
+        ctx.appToken,
+        ctx.saleorApiUrl
+      ),
     },
   })
 );

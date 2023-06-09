@@ -6,8 +6,8 @@ import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 
 export class ChannelConfigurationService {
   private configurationService: ChannelConfigurationSettings;
-  constructor(private client: Client, private saleorApiUrl: string) {
-    this.configurationService = new ChannelConfigurationSettings(this.client, this.saleorApiUrl);
+  constructor(private client: Client, private appId: string, private saleorApiUrl: string) {
+    this.configurationService = new ChannelConfigurationSettings(client, appId, saleorApiUrl);
   }
 
   async getAll() {

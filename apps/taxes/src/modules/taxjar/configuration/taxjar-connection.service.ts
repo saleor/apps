@@ -9,12 +9,12 @@ import { PatchInputTransformer } from "../../provider-connections/patch-input-tr
 export class TaxJarConnectionService {
   private logger: Logger;
   private taxJarConnectionRepository: TaxJarConnectionRepository;
-  constructor(client: Client, saleorApiUrl: string) {
+  constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
       location: "TaxJarConnectionService",
     });
 
-    this.taxJarConnectionRepository = new TaxJarConnectionRepository(client, saleorApiUrl);
+    this.taxJarConnectionRepository = new TaxJarConnectionRepository(client, appId, saleorApiUrl);
   }
 
   getAll(): Promise<TaxJarConnection[]> {

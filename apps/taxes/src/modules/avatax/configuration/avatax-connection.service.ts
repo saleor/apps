@@ -5,16 +5,17 @@ import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxValidationService } from "./avatax-validation.service";
 import { DeepPartial } from "@trpc/server";
 import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 export class AvataxConnectionService {
   private logger: Logger;
   private avataxConnectionRepository: AvataxConnectionRepository;
-  constructor(client: Client, saleorApiUrl: string) {
+  constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
       location: "AvataxConnectionService",
     });
 
-    this.avataxConnectionRepository = new AvataxConnectionRepository(client, saleorApiUrl);
+    this.avataxConnectionRepository = new AvataxConnectionRepository(client, appId, saleorApiUrl);
   }
 
   getAll(): Promise<AvataxConnection[]> {

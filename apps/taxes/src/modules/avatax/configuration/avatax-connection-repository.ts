@@ -15,8 +15,8 @@ const getSchema = avataxConnectionSchema;
 export class AvataxConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
-  constructor(client: Client, saleorApiUrl: string) {
-    const settingsManager = createSettingsManager(client);
+  constructor(client: Client, appId: string, saleorApiUrl: string) {
+    const settingsManager = createSettingsManager(client, appId);
 
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
