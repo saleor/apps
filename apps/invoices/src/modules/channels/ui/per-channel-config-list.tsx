@@ -80,7 +80,7 @@ export const PerChannelConfigList = () => {
 
   return (
     <Box>
-      <Box display={"grid"} gridTemplateColumns={3} marginBottom={8}>
+      <Box display={"grid"} gridTemplateColumns={3} marginBottom={5}>
         <Text color={"textNeutralSubdued"} variant={"caption"} size={"small"}>
           Channel
         </Text>
@@ -93,7 +93,7 @@ export const PerChannelConfigList = () => {
           key={channel.id}
           display={"grid"}
           gridTemplateColumns={3}
-          paddingY={4}
+          paddingY={1.5}
           borderBottomStyle={"solid"}
           borderBottomWidth={1}
           borderColor={"neutralHighlight"}

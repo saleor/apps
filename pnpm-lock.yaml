@@ -177,8 +177,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.52.1
         version: 7.52.1(next@13.3.0)(react@18.2.0)
@@ -461,8 +461,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -636,8 +636,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: ^7.36.0
         version: 7.36.0(next@13.3.0)(react@18.2.0)
@@ -1029,8 +1029,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1180,8 +1180,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: ^0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1619,8 +1619,8 @@ importers:
         specifier: ^7.21.8
         version: 7.21.8
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-actions':
         specifier: ^7.0.12
         version: 7.0.12(react-dom@18.2.0)(react@18.2.0)
@@ -1756,8 +1756,8 @@ importers:
         specifier: 0.39.1
         version: 0.39.1(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.84
-        version: 0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.95
+        version: 0.8.0-pre.95(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: ^18.0.27
         version: 18.0.38
@@ -7595,8 +7595,8 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
 
-  /@saleor/macaw-ui@0.8.0-pre.84(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-VkkMmr9wZhZHc/r0bP8PVbuDPc+tnhC4pKJMwW9fP4uhNcdTYkKUraPJUxXO6OYkxjyyQBzza3uY9d/7fw48gQ==}
+  /@saleor/macaw-ui@0.8.0-pre.95(@types/react@18.0.27)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9J8OZa7DPxhsmfvJ923msZ3cvpvF6SeaUO/y4Fm2PI283UBMiruHDlYASCcBSeCMnaMWkiWGGusaTWrwnkDAwQ==}
     engines: {node: '>=16 <19', pnpm: '>=8'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -7627,8 +7627,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /@saleor/macaw-ui@0.8.0-pre.84(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-VkkMmr9wZhZHc/r0bP8PVbuDPc+tnhC4pKJMwW9fP4uhNcdTYkKUraPJUxXO6OYkxjyyQBzza3uY9d/7fw48gQ==}
+  /@saleor/macaw-ui@0.8.0-pre.95(@types/react@18.0.38)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9J8OZa7DPxhsmfvJ923msZ3cvpvF6SeaUO/y4Fm2PI283UBMiruHDlYASCcBSeCMnaMWkiWGGusaTWrwnkDAwQ==}
     engines: {node: '>=16 <19', pnpm: '>=8'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

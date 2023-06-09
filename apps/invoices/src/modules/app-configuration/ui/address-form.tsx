@@ -62,7 +62,7 @@ export const AddressForm = (props: Props & InnerFormProps) => {
         return props.onSubmit(data);
       })}
     >
-      <Box display={"grid"} gap={6} marginBottom={12}>
+      <Box display={"grid"} gap={3} marginBottom={9}>
         {fieldsBlock1.map((fieldName) => (
           <Controller
             key={fieldName}
@@ -84,7 +84,7 @@ export const AddressForm = (props: Props & InnerFormProps) => {
           />
         ))}
 
-        <Box display={"grid"} gridTemplateColumns={2} gap={6}>
+        <Box display={"grid"} gridTemplateColumns={2} gap={3}>
           {fieldsBlock2.map((fieldName) => (
             <Controller
               key={fieldName}
@@ -128,7 +128,7 @@ export const AddressForm = (props: Props & InnerFormProps) => {
           />
         ))}
       </Box>
-      <Box display={"grid"} justifyContent={"flex-end"} gap={4} gridAutoFlow={"column"}>
+      <Box display={"grid"} justifyContent={"flex-end"} gap={1.5} gridAutoFlow={"column"}>
         <Button
           variant="tertiary"
           onClick={(e) => {

@@ -99,20 +99,20 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
 
   return (
     <Section {...props}>
-      <Text as="h1" variant="title" size="small" marginBottom={4}>
+      <Text as="h1" variant="title" size="small" marginBottom={1.5}>
         Configure webhooks
       </Text>
-      <Text color="textNeutralSubdued" as="p" marginBottom={8}>
+      <Text color="textNeutralSubdued" as="p" marginBottom={5}>
         Each time customer is created, it will be added to selected audience list in Mailchimp
       </Text>
-      <Box display="flex" gap={4} flexDirection="column">
+      <Box display="flex" gap={1.5} flexDirection="column">
         <Checkbox onCheckedChange={handleCheckboxChange} checked={localState.selected}>
           <Text marginRight="auto">Enable customers sync</Text>
         </Checkbox>
         <Box display="flex" alignItems="center">
           <Text
             color={localState?.selected ? "textNeutralDefault" : "textNeutralDisabled"}
-            marginRight={4}
+            marginRight={1.5}
             variant="caption"
           >
             Sync to the Mailchimp list:
@@ -131,7 +131,7 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
           />
         </Box>
       </Box>
-      <Box marginTop={8} display="flex" justifyContent="flex-end">
+      <Box marginTop={5} display="flex" justifyContent="flex-end">
         <Button disabled={webhookConfigMutation.status === "loading"} onClick={handleSaveButton}>
           {webhookConfigMutation.isLoading ? "Saving..." : "Save"}
         </Button>

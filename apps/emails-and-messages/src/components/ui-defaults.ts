@@ -1,1 +1,1 @@
-export const defaultPadding = 6;
+export const defaultPadding = 3;

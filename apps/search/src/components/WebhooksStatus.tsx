@@ -12,10 +12,8 @@ export const WebhooksStatus = () => {
 
   return (
     <Box>
-      <Accordion display={"grid"} gap={4}>
+      <Accordion display={"grid"} gap={1.5}>
         {webhooksData.map((webhook) => {
-          const Trigger = webhook.isActive ? Box : Accordion.Trigger;
-
           const failedEventDeliveries = webhook.eventDeliveries?.edges?.filter(
             (e) => e.node.status === EventDeliveryStatusEnum.Failed
           );
@@ -30,15 +28,11 @@ export const WebhooksStatus = () => {
               borderColor={"neutralPlain"}
               borderBottomWidth={1}
             >
-              <Trigger paddingBottom={4}>
-                <Box
-                  width={"100%"}
-                  display={"grid"}
-                  gridTemplateColumns={2}
-                  gap={4}
-                  alignItems={"center"}
-                >
-                  <Text size={"small"}>{webhook.asyncEvents[0].name}</Text>
+              <Accordion.Trigger paddingBottom={1.5}>
+                <Box width={"100%"} display={"flex"} gap={2} alignItems={"center"}>
+                  <Text size={"small"} flexGrow="1">
+                    {webhook.asyncEvents[0].name}
+                  </Text>
                   {webhook.isActive ? (
                     <SemanticChip marginLeft={"auto"} size={"small"} variant={"success"}>
                       ACTIVE
@@ -48,10 +42,11 @@ export const WebhooksStatus = () => {
                       DISABLED
                     </SemanticChip>
                   )}
+                  <Accordion.TriggerButton />
                 </Box>
-              </Trigger>
+              </Accordion.Trigger>
               <Accordion.Content>
-                <Box marginY={6}>
+                <Box marginY={3}>
                   <Text variant={"bodyStrong"}>Delivery attempts</Text>
                   {!hasFailedDeliveries ? (
                     <Box>
@@ -65,7 +60,7 @@ export const WebhooksStatus = () => {
                           <Box
                             display={"grid"}
                             gridTemplateColumns={3}
-                            gap={3}
+                            gap={1}
                             key={attempt.node.id}
                           >
                             <Text display={"block"} size={"small"}>

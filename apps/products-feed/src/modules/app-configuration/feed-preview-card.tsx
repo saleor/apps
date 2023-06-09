@@ -22,7 +22,7 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
 
   return (
     <Box {...props}>
-      <Text variant={"heading"} as={"h2"} marginBottom={4}>
+      <Text variant={"heading"} as={"h2"} marginBottom={1.5}>
         Test your feed
       </Text>
       <Input
@@ -35,7 +35,7 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
       />
 
       <Box display={"flex"} justifyContent={"flex-end"}>
-        <Button variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)} marginTop={6}>
+        <Button variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)} marginTop={3}>
           Open feed in a new tab
         </Button>
       </Box>

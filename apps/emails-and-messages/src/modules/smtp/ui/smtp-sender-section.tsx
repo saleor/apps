@@ -55,7 +55,7 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
             });
           })}
         >
-          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={10}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
             <Input
               label="Email"
               name="senderEmail"

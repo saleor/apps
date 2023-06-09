@@ -8,7 +8,7 @@ const Wrapper = ({ children }: PropsWithChildren<{}>) => {
 
   return (
     <Box>
-      <Box display={"flex"} justifyContent={"space-between"} marginBottom={8}>
+      <Box display={"flex"} justifyContent={"space-between"} marginBottom={5}>
         <Text variant={"heading"}>Default address of the shop</Text>
         <Button
           size={"small"}
@@ -35,7 +35,7 @@ export const DefaultShopAddress = () => {
   if (error) {
     return (
       <Wrapper>
-        <Text marginBottom={4} color={"textCriticalDefault"}>
+        <Text marginBottom={1.5} color={"textCriticalDefault"}>
           Error while fetching shop address
         </Text>
         <Button onClick={() => refetch()}>Fetch again</Button>
@@ -57,7 +57,7 @@ export const DefaultShopAddress = () => {
         <Text as={"p"} variant={"bodyStrong"}>
           No default address set
         </Text>
-        <Text as={"p"} size={"small"} marginBottom={4}>
+        <Text as={"p"} size={"small"} marginBottom={1.5}>
           Set default shop address or channel overrides
         </Text>
         <Text as={"p"} color={"textCriticalDefault"}>

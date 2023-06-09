@@ -5,10 +5,10 @@ import { useLocalStorage } from "usehooks-ts";
 import { TextLink } from "../../../ui/text-link/text-link";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
-const Paragraph = (props: TextProps) => <Text marginBottom={5} as="p" {...props} />;
+const Paragraph = (props: TextProps) => <Text marginBottom={2} as="p" {...props} />;
 
 const Heading = (props: TextProps) => (
-  <Text as="h2" variant="heading" marginBottom={4} marginTop={12} {...props} />
+  <Text as="h2" variant="heading" marginBottom={1.5} marginTop={9} {...props} />
 );
 
 const getGraphiqlExampleQueryPlaygroundUrl = (apiUrl = "https://demo.saleor.io/graphql/") =>
@@ -30,7 +30,7 @@ export const Instructions = (props: PropsWithBox<{}>) => {
         justifyContent="space-between"
         onClick={() => setInstructionsVisible((v) => !v)}
       >
-        <Text as="h1" variant="title" size="small" marginBottom={12}>
+        <Text as="h1" variant="title" size="small" marginBottom={9}>
           Instructions
         </Text>
         <Button

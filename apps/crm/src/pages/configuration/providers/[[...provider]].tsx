@@ -32,8 +32,8 @@ const ProvidersPage: NextPage = () => {
 
   return (
     <div>
-      <p>Connect Saleor clients database with your favourite CRM platform.</p>
-      <AppColumnsLayout marginTop={12}>
+      <p>Connect Saleor clients database with your favorite CRM platform.</p>
+      <AppColumnsLayout marginTop={9}>
         <ProvidersList
           onProviderClick={(provider) => {
             router.push(`/configuration/providers/${provider}`);

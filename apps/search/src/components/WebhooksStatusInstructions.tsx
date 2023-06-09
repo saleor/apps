@@ -7,7 +7,7 @@ export const WebhooksStatusInstructions = () => {
   if (webhooksData && webhooksData.some((w) => !w.isActive)) {
     return (
       <>
-        <Text as={"p"} marginBottom={4}>
+        <Text as={"p"} marginBottom={1.5}>
           Check status of registered webhooks.
         </Text>
         <Text as={"p"} color={"iconCriticalDefault"}>

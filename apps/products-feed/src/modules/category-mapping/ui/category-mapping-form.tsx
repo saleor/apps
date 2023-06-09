@@ -52,7 +52,7 @@ export const CategoryMappingForm = ({
       })}
     >
       <CategoryBreadcrumbs category={category} />
-      <Box display={"flex"} gap={8} __width={"100%"}>
+      <Box display={"flex"} gap={5} __width={"100%"}>
         <Controller
           control={control}
           name="googleCategoryId"

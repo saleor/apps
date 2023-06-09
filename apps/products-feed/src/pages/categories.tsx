@@ -6,7 +6,7 @@ import { Box } from "@saleor/macaw-ui/next";
 const CategoriesPage: NextPage = () => {
   return (
     <Box>
-      <Breadcrumbs marginBottom={8}>
+      <Breadcrumbs marginBottom={5}>
         <Breadcrumbs.Item href={"/"}>Configuration</Breadcrumbs.Item>
         <Breadcrumbs.Item>Categories Mapping</Breadcrumbs.Item>
       </Breadcrumbs>

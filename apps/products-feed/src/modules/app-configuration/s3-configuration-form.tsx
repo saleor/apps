@@ -26,7 +26,7 @@ export const S3ConfigurationForm = (props: Props) => {
     <Box
       as={"form"}
       display={"flex"}
-      gap={8}
+      gap={5}
       flexDirection={"column"}
       onSubmit={handleSubmit((data) => {
         props.onSubmit(data);
@@ -58,7 +58,7 @@ export const ConnectedS3ConfigurationForm = () => {
 
   const { mutate } = trpcClient.appConfiguration.setS3BucketConfiguration.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated S3 configration");
+      notifySuccess("Success", "Updated S3 configuration");
     },
     onError() {
       notifyError("Error", "Failed to update, please refresh and try again");
