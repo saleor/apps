@@ -48,7 +48,7 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
   return (
     <SectionWithDescription
       title="Connect SMTP server"
-      description={<Text>Provide SMTP server configuration</Text>}
+      description={<Text>Provide SMTP server credentials.</Text>}
     >
       <BoxWithBorder>
         <form
@@ -61,7 +61,7 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
             <Input
               label="Host"
-              helperText="Server host that will be connected."
+              helperText="Address of the SMTP server"
               control={control}
               name="smtpHost"
             />
@@ -69,19 +69,19 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
               label="Port"
               name="smtpPort"
               control={control}
-              helperText="Port that will be used"
+              helperText="Port that will be used for SMTP connection"
             />
             <Input
               label="User"
               name="smtpUser"
               control={control}
-              helperText="User for the SMTP server connection"
+              helperText="User name for the SMTP server auth"
             />
             <Input
               label="Password"
               name="smtpPassword"
               control={control}
-              helperText="Password for the SMTP server connection"
+              helperText="Password for the SMTP server auth"
             />
 
             <Box display="flex" gap={defaultPadding}>

@@ -18,6 +18,7 @@ import { appUrls } from "../../../modules/app-configuration/urls";
 import { smtpUrls } from "../../../modules/smtp/urls";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { ConfigurationNameDescriptionText } from "../../../modules/app-configuration/ui/configuration-name-description-text";
 
 const NewSmtpConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -57,12 +58,7 @@ const NewSmtpConfigurationPage: NextPage = () => {
       </Box>
       <SectionWithDescription
         title="Connect SMTP"
-        description={
-          <Text>
-            Provide unique name for your configuration - you can create more than one. For example -
-            production and development. Then, pass your API Key. Obtain it here.
-          </Text>
-        }
+        description={<ConfigurationNameDescriptionText />}
       >
         <BoxWithBorder>
           <form
@@ -83,7 +79,7 @@ const NewSmtpConfigurationPage: NextPage = () => {
               <Text variant="heading">SMTP server connection</Text>
               <Input
                 label="Host"
-                helperText="Server host that will be connected."
+                helperText="Address of the SMTP server"
                 control={control}
                 name="smtpHost"
               />
@@ -91,19 +87,19 @@ const NewSmtpConfigurationPage: NextPage = () => {
                 label="Port"
                 name="smtpPort"
                 control={control}
-                helperText="Port that will be used"
+                helperText="Port that will be used for SMTP connection"
               />
               <Input
                 label="User"
                 name="smtpUser"
                 control={control}
-                helperText="User for the SMTP server connection"
+                helperText="User name for the SMTP server auth"
               />
               <Input
                 label="Password"
                 name="smtpPassword"
                 control={control}
-                helperText="Password for the SMTP server connection"
+                helperText="Password for the SMTP server auth"
               />
 
               <Box display="flex" gap={defaultPadding}>
