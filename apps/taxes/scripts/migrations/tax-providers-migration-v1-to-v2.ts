@@ -5,11 +5,15 @@ import { TaxProvidersPrivateMetadataManagerV2 } from "./tax-providers-metadata-m
 import { TaxProvidersV1ToV2Transformer } from "./tax-providers-transform-v1-to-v2";
 import { TaxChannelsPrivateMetadataManagerV1 } from "./tax-channels-metadata-manager-v1";
 
-export class TaxProvidersMigrationV1toV2Manager {
+export class TaxProvidersV1toV2MigrationManager {
   private logger: Logger;
-  constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {
+  constructor(
+    private metadataManager: SettingsManager,
+    private saleorApiUrl: string,
+    private options: { mode: "report" | "migrate" } = { mode: "migrate" }
+  ) {
     this.logger = createLogger({
-      location: "TaxProvidersMigrationV1toV2Manager",
+      location: "TaxProvidersV1toV2MigrationManager",
     });
   }
 
@@ -53,7 +57,9 @@ export class TaxProvidersMigrationV1toV2Manager {
     const transformer = new TaxProvidersV1ToV2Transformer();
     const nextConfig = transformer.transform(previousTaxProvidersConfig, previousChannelConfig);
 
-    await taxProvidersManagerV2.setConfig(nextConfig);
+    if (this.options.mode === "migrate") {
+      await taxProvidersManagerV2.setConfig(nextConfig);
+    }
 
     return nextConfig;
   }

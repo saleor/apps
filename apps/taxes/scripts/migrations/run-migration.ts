@@ -2,6 +2,8 @@
 
 import * as dotenv from "dotenv";
 import { fetchCloudAplEnvs, getMetadataManagerForEnv, verifyRequiredEnvs } from "./migration-utils";
+import { TaxProvidersV1toV2MigrationManager } from "./tax-providers-migration-v1-to-v2";
+import { TaxChannelsV1toV2MigrationManager } from "./tax-channels-migration-v1-to-v2";
 
 dotenv.config();
 
@@ -18,22 +20,55 @@ const runMigration = async () => {
   });
 
   const report = {
-    default: [] as string[],
+    taxProviders: [] as string[],
+    taxChannels: [] as string[],
+    none: [] as string[],
   };
 
   for (const env of allEnvs) {
+    let isTaxProvidersMigrated = false;
+    let isTaxChannelsMigrated = false;
+
     console.log("Working on env: ", env.saleorApiUrl);
 
-    // const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token, env.appId);
+    const metadataManager = getMetadataManagerForEnv(env.saleorApiUrl, env.token, env.appId);
 
-    // migration logic
+    const taxProvidersMigrationManager = new TaxProvidersV1toV2MigrationManager(
+      metadataManager,
+      env.saleorApiUrl,
+      { mode: "migrate" }
+    );
 
-    // migration logic end
+    const taxProvidersMigratedConfig = await taxProvidersMigrationManager.migrateIfNeeded();
 
-    const isMigrated = false;
+    if (taxProvidersMigratedConfig) {
+      console.log("Config migrated", taxProvidersMigratedConfig);
+      isTaxProvidersMigrated = true;
+    }
 
-    if (isMigrated) {
-      report.default.push(env.saleorApiUrl);
+    const taxChannelsMigrationManager = new TaxChannelsV1toV2MigrationManager(
+      metadataManager,
+      env.saleorApiUrl,
+      { mode: "migrate" }
+    );
+
+    const taxChannelsMigratedConfig = await taxChannelsMigrationManager.migrateIfNeeded();
+
+    if (taxChannelsMigratedConfig) {
+      console.log("Config migrated", taxChannelsMigratedConfig);
+      isTaxChannelsMigrated = true;
+    }
+
+    if (isTaxProvidersMigrated) {
+      report.taxProviders.push(env.saleorApiUrl);
+    }
+
+    if (isTaxChannelsMigrated) {
+      report.taxChannels.push(env.saleorApiUrl);
+    }
+
+    if (!isTaxProvidersMigrated && !isTaxChannelsMigrated) {
+      report.none.push(env.saleorApiUrl);
     }
   }
 

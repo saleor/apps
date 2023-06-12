@@ -1,5 +1,5 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { TaxProvidersMigrationV1toV2Manager } from "../../../../scripts/migrations/tax-providers-migration-v1-to-v2";
+import { TaxProvidersV1toV2MigrationManager } from "../../../../scripts/migrations/tax-providers-migration-v1-to-v2";
 import { createLogger, Logger } from "../../../lib/logger";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 import {
@@ -38,7 +38,11 @@ export class AvataxConnectionRepository {
 
   async getAll(): Promise<AvataxConnection[]> {
     const { data } = await this.crudSettingsManager.readAll();
-    const migrationManager = new TaxProvidersMigrationV1toV2Manager(
+    /*
+     * * migration logic start
+     * // todo: remove after migration
+     */
+    const migrationManager = new TaxProvidersV1toV2MigrationManager(
       this.settingsManager,
       this.saleorApiUrl
     );
@@ -51,6 +55,9 @@ export class AvataxConnectionRepository {
     }
 
     this.logger.info("Config is up to date, no need to migrate.");
+    /*
+     * * migration logic end
+     */
 
     const connections = providerConnectionsSchema.parse(data);
 
