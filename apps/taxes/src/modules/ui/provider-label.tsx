@@ -1,6 +1,6 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import Image from "next/image";
-import { ProviderName } from "../providers-configuration/providers-config";
+import { ProviderName } from "../provider-connections/provider-connections";
 import { TaxJarIcon, AvataxIcon, StripeTaxIcon } from "../../assets";
 
 type ProviderNameWithStripeTax = ProviderName | "stripeTax";

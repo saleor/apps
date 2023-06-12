@@ -1,6 +1,6 @@
 import { Box, BoxProps, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
-import { ProviderConfig } from "../providers-configuration/providers-config";
+import { ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";
 import { ProviderLabel } from "./provider-label";
 
@@ -19,7 +19,7 @@ export const ProvidersTable = () => {
   const router = useRouter();
   const { data } = trpcClient.providersConfiguration.getAll.useQuery();
 
-  const itemClickHandler = (item: ProviderConfig) => {
+  const itemClickHandler = (item: ProviderConnection) => {
     router.push(`/providers/${item.provider}/${item.id}`);
   };
 
@@ -33,7 +33,7 @@ export const ProvidersTable = () => {
       </Table.THead>
       <Table.TBody>
         {data?.map((item) => (
-          <Table.TR>
+          <Table.TR key={item.id}>
             <Table.TD>{item.config.name}</Table.TD>
             <Table.TD>
               <ProviderLabel name={item.provider} />

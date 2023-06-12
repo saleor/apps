@@ -1,11 +1,15 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
-import { z } from "zod";
-import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-config";
-import { AvataxConfigurationForm } from "./avatax-configuration-form";
 import React from "react";
+import { z } from "zod";
+import { Obfuscator } from "../../../lib/obfuscator";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfigurationForm } from "./avatax-configuration-form";
+import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
+
+const avataxObfuscator = new AvataxConnectionObfuscator();
 
 export const EditAvataxConfiguration = () => {
   const router = useRouter();
@@ -18,7 +22,7 @@ export const EditAvataxConfiguration = () => {
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
-    trpcClient.avataxConfiguration.patch.useMutation({
+    trpcClient.avataxConnection.update.useMutation({
       onSuccess() {
         notifySuccess("Success", "Updated Avatax configuration");
         refetchProvidersConfigurationData();
@@ -29,7 +33,7 @@ export const EditAvataxConfiguration = () => {
     });
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
-    trpcClient.avataxConfiguration.delete.useMutation({
+    trpcClient.avataxConnection.delete.useMutation({
       onSuccess() {
         notifySuccess("Success", "Deleted Avatax configuration");
         refetchProvidersConfigurationData();
@@ -44,7 +48,7 @@ export const EditAvataxConfiguration = () => {
     data,
     isLoading: isGetLoading,
     isError: isGetError,
-  } = trpcClient.avataxConfiguration.get.useQuery(
+  } = trpcClient.avataxConnection.getById.useQuery(
     {
       id: configurationId,
     },
@@ -55,7 +59,10 @@ export const EditAvataxConfiguration = () => {
 
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
-      patchMutation({ value: data, id: configurationId });
+      patchMutation({
+        value: avataxObfuscator.filterOutObfuscated(data),
+        id: configurationId,
+      });
     },
     [configurationId, patchMutation]
   );

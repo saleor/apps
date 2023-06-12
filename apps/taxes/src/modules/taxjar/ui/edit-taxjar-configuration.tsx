@@ -1,11 +1,15 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
-import { z } from "zod";
-import { trpcClient } from "../../trpc/trpc-client";
-import { TaxJarConfig } from "../taxjar-config";
-import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
 import React from "react";
+import { z } from "zod";
+import { Obfuscator } from "../../../lib/obfuscator";
+import { trpcClient } from "../../trpc/trpc-client";
+import { TaxJarConfig } from "../taxjar-connection-schema";
+import { TaxJarConfigurationForm } from "./taxjar-configuration-form";
+import { TaxJarConnectionObfuscator } from "../configuration/taxjar-connection-obfuscator";
+
+const taxJarObfuscator = new TaxJarConnectionObfuscator();
 
 export const EditTaxJarConfiguration = () => {
   const router = useRouter();
@@ -17,7 +21,7 @@ export const EditTaxJarConfiguration = () => {
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
-    trpcClient.taxJarConfiguration.patch.useMutation({
+    trpcClient.taxJarConnection.update.useMutation({
       onSuccess() {
         notifySuccess("Success", "Updated TaxJar configuration");
         refetchProvidersConfigurationData();
@@ -31,7 +35,7 @@ export const EditTaxJarConfiguration = () => {
     data,
     isLoading: isGetLoading,
     isError: isGetError,
-  } = trpcClient.taxJarConfiguration.get.useQuery(
+  } = trpcClient.taxJarConnection.getById.useQuery(
     { id: configurationId },
     {
       enabled: !!configurationId,
@@ -40,13 +44,16 @@ export const EditTaxJarConfiguration = () => {
 
   const submitHandler = React.useCallback(
     (data: TaxJarConfig) => {
-      patchMutation({ value: data, id: configurationId });
+      patchMutation({
+        value: taxJarObfuscator.filterOutObfuscated(data),
+        id: configurationId,
+      });
     },
     [configurationId, patchMutation]
   );
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
-    trpcClient.taxJarConfiguration.delete.useMutation({
+    trpcClient.taxJarConnection.delete.useMutation({
       onSuccess() {
         notifySuccess("Success", "Deleted TaxJar configuration");
         refetchProvidersConfigurationData();

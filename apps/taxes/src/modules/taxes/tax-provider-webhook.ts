@@ -4,7 +4,7 @@ import {
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
-import { ChannelConfig } from "../channels-configuration/channels-config";
+import { ChannelConfig } from "../channel-configuration/channel-config";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
 

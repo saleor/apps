@@ -11,20 +11,19 @@ export class CrudSettingsManager {
   private logger: Logger;
 
   constructor(
+    // move: createSettings manager to constructor
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
     private metadataKey: string
   ) {
     this.metadataKey = metadataKey;
-    this.logger = createLogger({ service: "CrudSettingsManager", metadataKey });
+    this.logger = createLogger({ location: "CrudSettingsManager", metadataKey });
   }
 
   async readAll() {
-    this.logger.trace(".readAll called");
     const result = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
 
     if (!result) {
-      this.logger.trace("No metadata found");
       return { data: [] };
     }
 
@@ -42,7 +41,6 @@ export class CrudSettingsManager {
   }
 
   async read(id: string) {
-    this.logger.trace(".read called");
     const result = await this.readAll();
     const { data: settings } = result;
 
@@ -59,8 +57,6 @@ export class CrudSettingsManager {
   }
 
   async create(data: any) {
-    this.logger.trace(data, ".create called with:");
-
     const settings = await this.readAll();
     const prevData = settings.data;
 
@@ -79,8 +75,6 @@ export class CrudSettingsManager {
   }
 
   async delete(id: string) {
-    this.logger.trace(`.delete called with: ${id}`);
-
     const settings = await this.readAll();
     const prevData = settings.data;
     const nextData = prevData.filter((item) => item.id !== id);
@@ -92,19 +86,41 @@ export class CrudSettingsManager {
     });
   }
 
-  async update(id: string, data: any) {
-    this.logger.trace(data, `.update called with: ${id}`);
-    const { data: settings } = await this.readAll();
-    const nextData = settings.map((item) => {
+  async update(id: string, input: any) {
+    const { data: currentSettings } = await this.readAll();
+    const nextSettings = currentSettings.map((item) => {
       if (item.id === id) {
-        return { id, ...data };
+        return { id, ...input };
       }
       return item;
     });
 
+    this.logger.debug({ nextSettings }, "nextSettings");
+
     await this.metadataManager.set({
       key: this.metadataKey,
-      value: JSON.stringify(nextData),
+      value: JSON.stringify(nextSettings),
+      domain: this.saleorApiUrl,
+    });
+  }
+
+  async upsert(id: string, input: any) {
+    const { data: currentSettings } = await this.readAll();
+    // update if its there
+    const nextSettings = currentSettings.map((item) => {
+      if (item.id === id) {
+        return { id, ...input };
+      }
+      return item;
+    });
+
+    if (!currentSettings.find((item) => item.id === id)) {
+      nextSettings.push({ id, ...input });
+    }
+
+    await this.metadataManager.set({
+      key: this.metadataKey,
+      value: JSON.stringify(nextSettings),
       domain: this.saleorApiUrl,
     });
   }

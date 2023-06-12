@@ -1,6 +1,6 @@
 import { discountUtils } from "../../taxes/discount-utils";
 import { taxJarAddressFactory } from "../address-factory";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import {
   TaxJarCalculateTaxesPayload,
   TaxJarCalculateTaxesTarget,

@@ -2,7 +2,7 @@ import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphq
 import { Logger, createLogger } from "../../../lib/logger";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CommitTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderFulfilledPayloadTransformer } from "./avatax-order-fulfilled-payload-transformer";
 import { AvataxOrderFulfilledResponseTransformer } from "./avatax-order-fulfilled-response-transformer";
 
@@ -18,19 +18,24 @@ export class AvataxOrderFulfilledAdapter
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ service: "AvataxOrderFulfilledAdapter" });
+    this.logger = createLogger({ location: "AvataxOrderFulfilledAdapter" });
   }
 
   async send(payload: AvataxOrderFulfilledPayload): Promise<AvataxOrderFulfilledResponse> {
-    this.logger.debug({ payload }, "send called with:");
+    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
 
     const payloadTransformer = new AvataxOrderFulfilledPayloadTransformer(this.config);
     const target = payloadTransformer.transform({ ...payload });
 
+    this.logger.debug(
+      { transformedPayload: target },
+      "Will call Avatax commitTransaction with transformed payload:"
+    );
+
     const client = new AvataxClient(this.config);
     const response = await client.commitTransaction(target);
 
-    this.logger.debug({ response }, "Avatax commitTransaction response:");
+    this.logger.debug({ response }, "Avatax commitTransaction responded with:");
 
     const responseTransformer = new AvataxOrderFulfilledResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);
