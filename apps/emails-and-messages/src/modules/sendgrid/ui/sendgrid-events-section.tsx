@@ -102,8 +102,7 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
       title="Events"
       description={
         <Text as="p">
-          Chose which Saleor events should send emails via Sendgrid. Creating and modification of a
-          dynamic templates can be done at{" "}
+          Choose which Saleor events should send emails via Sendgrid. You can create and modify your templates in the
           <TextLink href="https://mc.sendgrid.com/dynamic-templates" newTab={true}>
             Sendgrid dashboard
           </TextLink>

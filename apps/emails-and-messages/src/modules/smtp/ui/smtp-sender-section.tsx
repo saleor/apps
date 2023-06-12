@@ -51,7 +51,7 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
       description={
         <Box display="flex" flexDirection="column" gap={2}>
           <Text as="p">
-            Sender name and email address that will be displayed as author of an email.
+            Sender&apos;s name and email address will be displayed as the author of an email.
           </Text>
           <Text as="p">Setting up the sender is required to send emails.</Text>
         </Box>

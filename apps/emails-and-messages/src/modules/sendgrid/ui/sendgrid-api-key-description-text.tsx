@@ -6,7 +6,7 @@ export const SendgridApiKeyDescriptionText = () => (
     The API keys can be found at your Sendgrid dashboard, in the Settings menu. You can find more
     information in the{" "}
     <TextLink href="https://docs.sendgrid.com/ui/account-and-settings/api-keys" newTab={true}>
-      documentation pages
+      documentation
     </TextLink>
     .
   </Text>

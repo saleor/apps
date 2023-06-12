@@ -2,8 +2,7 @@ import { Text } from "@saleor/macaw-ui/next";
 
 export const ConfigurationNameDescriptionText = () => (
   <Text as="p">
-    Provide name for your configuration - you can create more than one to use different settings or
-    templates depending on channel.
+    The name for your configuration. You can have more than one if you want to use different settings for each channel.
     <br />
     For example - <code>production</code> and <code>development</code>.
   </Text>

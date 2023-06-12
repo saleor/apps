@@ -93,13 +93,13 @@ const NewSmtpConfigurationPage: NextPage = () => {
                 label="User"
                 name="smtpUser"
                 control={control}
-                helperText="User name for the SMTP server auth"
+                helperText="User name for the SMTP server authentication"
               />
               <Input
                 label="Password"
                 name="smtpPassword"
                 control={control}
-                helperText="Password for the SMTP server auth"
+                helperText="Password for the SMTP server authentication"
               />
 
               <Box display="flex" gap={defaultPadding}>
