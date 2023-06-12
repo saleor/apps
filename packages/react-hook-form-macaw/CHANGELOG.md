@@ -1,5 +1,15 @@
 # @saleor/react-hook-form-macaw
 
+## 0.1.2
+
+### Patch Changes
+
+- a8834a1: Unified graphql version to 16.6
+- a8834a1: Unified graphql codegen packages
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+- 928c727: Updated @saleor/macaw-ui to 0.8.0-pre.95. This version introduces change in spacing scale, so there may be slight changes in spacing
+
 ## 0.1.1
 
 ### Patch Changes
