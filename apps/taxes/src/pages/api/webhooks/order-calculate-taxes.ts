@@ -41,7 +41,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler for ORDER_CALCULATE_TAXES webhook called with payload");
+  logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
   try {
     verifyCalculateTaxesPayload(payload);
