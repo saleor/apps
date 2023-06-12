@@ -10,7 +10,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
       ...ctx,
       connectionService: new ChannelConfigurationService(
         ctx.apiClient,
-        ctx.appId,
+        ctx.appId!,
         ctx.saleorApiUrl
       ),
     },

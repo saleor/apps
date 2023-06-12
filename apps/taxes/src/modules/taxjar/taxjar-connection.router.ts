@@ -28,7 +28,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
       ...ctx,
       connectionService: new PublicTaxJarConnectionService(
         ctx.apiClient,
-        ctx.appId,
+        ctx.appId!,
         ctx.saleorApiUrl
       ),
     },

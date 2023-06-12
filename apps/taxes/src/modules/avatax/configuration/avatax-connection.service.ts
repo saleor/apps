@@ -6,6 +6,7 @@ import { AvataxValidationService } from "./avatax-validation.service";
 import { DeepPartial } from "@trpc/server";
 import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createSettingsManager } from "../../app/metadata-manager";
 
 export class AvataxConnectionService {
   private logger: Logger;
@@ -15,7 +16,9 @@ export class AvataxConnectionService {
       location: "AvataxConnectionService",
     });
 
-    this.avataxConnectionRepository = new AvataxConnectionRepository(client, appId, saleorApiUrl);
+    const settingsManager = createSettingsManager(client, appId);
+
+    this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);
   }
 
   getAll(): Promise<AvataxConnection[]> {

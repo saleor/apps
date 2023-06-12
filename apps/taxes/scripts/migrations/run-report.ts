@@ -18,7 +18,8 @@ const runReport = async () => {
   });
 
   const report = {
-    default: [] as string[],
+    taxChannels: [] as string[],
+    taxProviders: [] as string[],
   };
 
   for (const env of allEnvs) {
@@ -33,7 +34,7 @@ const runReport = async () => {
     const isMigrated = false;
 
     if (isMigrated) {
-      report.default.push(env.saleorApiUrl);
+      report.taxChannels.push(env.saleorApiUrl);
     }
   }
 

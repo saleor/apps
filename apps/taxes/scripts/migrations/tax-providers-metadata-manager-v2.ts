@@ -2,9 +2,10 @@
 
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { TaxProvidersV2 } from "./tax-providers-config-schema-v2";
+import { TAX_PROVIDER_KEY } from "../../src/modules/provider-connections/public-provider-connections.service";
 
 export class TaxProvidersPrivateMetadataManagerV2 {
-  private metadataKey = "tax-providers-v2";
+  private metadataKey = TAX_PROVIDER_KEY;
 
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
 

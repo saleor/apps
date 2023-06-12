@@ -1,8 +1,11 @@
-import { Client } from "urql";
+import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { TaxProvidersMigrationV1toV2Manager } from "../../../../scripts/migrations/tax-providers-migration-v1-to-v2";
 import { createLogger, Logger } from "../../../lib/logger";
-import { createSettingsManager } from "../../app/metadata-manager";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
-import { providerConnectionsSchema } from "../../provider-connections/provider-connections";
+import {
+  ProviderConnections,
+  providerConnectionsSchema,
+} from "../../provider-connections/provider-connections";
 import { TAX_PROVIDER_KEY } from "../../provider-connections/public-provider-connections.service";
 import {
   AvataxConfig,
@@ -15,9 +18,7 @@ const getSchema = avataxConnectionSchema;
 export class AvataxConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
-    const settingsManager = createSettingsManager(client, appId);
-
+  constructor(private settingsManager: EncryptedMetadataManager, private saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
@@ -29,13 +30,31 @@ export class AvataxConnectionRepository {
     });
   }
 
-  async getAll(): Promise<AvataxConnection[]> {
-    const { data } = await this.crudSettingsManager.readAll();
-    const connections = providerConnectionsSchema.parse(data);
-
-    const avataxConnections = connections.filter(
+  private filterAvataxConnections(connections: ProviderConnections): AvataxConnection[] {
+    return connections.filter(
       (connection) => connection.provider === "avatax"
     ) as AvataxConnection[];
+  }
+
+  async getAll(): Promise<AvataxConnection[]> {
+    const { data } = await this.crudSettingsManager.readAll();
+    const migrationManager = new TaxProvidersMigrationV1toV2Manager(
+      this.settingsManager,
+      this.saleorApiUrl
+    );
+
+    const migratedConfig = await migrationManager.migrateIfNeeded();
+
+    if (migratedConfig) {
+      this.logger.info("Config migrated", migratedConfig);
+      return this.filterAvataxConnections(migratedConfig);
+    }
+
+    this.logger.info("Config is up to date, no need to migrate.");
+
+    const connections = providerConnectionsSchema.parse(data);
+
+    const avataxConnections = this.filterAvataxConnections(connections);
 
     return avataxConnections;
   }

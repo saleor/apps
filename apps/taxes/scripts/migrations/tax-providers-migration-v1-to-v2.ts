@@ -31,8 +31,8 @@ export class TaxProvidersMigrationV1toV2Manager {
     const currentTaxProvidersConfig = await taxProvidersManagerV2.getConfig();
 
     if (currentTaxProvidersConfig) {
-      this.logger.info("Migration is not necessary, we have current config.");
-      return currentTaxProvidersConfig;
+      this.logger.info("Migration is not necessary, the config is up to date.");
+      return;
     }
 
     this.logger.info("Current config not found.");
@@ -41,7 +41,11 @@ export class TaxProvidersMigrationV1toV2Manager {
     const previousChannelConfig = await taxChannelsManagerV1.getConfig();
 
     if (!previousTaxProvidersConfig || !previousChannelConfig) {
-      throw new Error("Previous config not found. Migration not possible.");
+      this.logger.info(
+        { previousChannelConfig, previousTaxProvidersConfig },
+        "Previous config not found. Migration not possible."
+      );
+      return;
     }
 
     this.logger.info("Previous config found. Migrating...");
@@ -50,5 +54,7 @@ export class TaxProvidersMigrationV1toV2Manager {
     const nextConfig = transformer.transform(previousTaxProvidersConfig, previousChannelConfig);
 
     await taxProvidersManagerV2.setConfig(nextConfig);
+
+    return nextConfig;
   }
 }

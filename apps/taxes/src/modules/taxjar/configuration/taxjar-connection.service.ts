@@ -5,6 +5,7 @@ import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
 import { TaxJarValidationService } from "./taxjar-validation.service";
 import { DeepPartial } from "@trpc/server";
 import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
+import { createSettingsManager } from "../../app/metadata-manager";
 
 export class TaxJarConnectionService {
   private logger: Logger;
@@ -14,7 +15,9 @@ export class TaxJarConnectionService {
       location: "TaxJarConnectionService",
     });
 
-    this.taxJarConnectionRepository = new TaxJarConnectionRepository(client, appId, saleorApiUrl);
+    const settingsManager = createSettingsManager(client, appId);
+
+    this.taxJarConnectionRepository = new TaxJarConnectionRepository(settingsManager, saleorApiUrl);
   }
 
   getAll(): Promise<TaxJarConnection[]> {

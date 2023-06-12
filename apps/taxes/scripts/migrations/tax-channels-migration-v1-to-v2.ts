@@ -8,7 +8,7 @@ export class TaxChannelsMigrationV1toV2Manager {
   private logger: Logger;
   constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "MigrationMetadataManager",
+      location: "TaxChannelsMigrationV1toV2Manager",
     });
   }
 
@@ -33,7 +33,8 @@ export class TaxChannelsMigrationV1toV2Manager {
     const previousChannelConfig = await taxChannelsManagerV1.getConfig();
 
     if (!previousChannelConfig) {
-      throw new Error("Previous config not found. Migration not possible.");
+      this.logger.info("Previous config not found. Migration not possible.");
+      return [];
     }
 
     this.logger.info("Previous config found. Migrating...");
@@ -42,5 +43,7 @@ export class TaxChannelsMigrationV1toV2Manager {
     const nextConfig = transformer.transform(previousChannelConfig);
 
     await taxChannelsManagerV2.setConfig(nextConfig);
+
+    return nextConfig;
   }
 }
