@@ -1,6 +1,6 @@
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -46,7 +46,17 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
   });
 
   return (
-    <SectionWithDescription title="Sender">
+    <SectionWithDescription
+      title="Sender"
+      description={
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Text as="p">
+            Sender&apos;s name and email address will be displayed as the author of an email.
+          </Text>
+          <Text as="p">Setting up the sender is required to send emails.</Text>
+        </Box>
+      }
+    >
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {

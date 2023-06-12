@@ -1,6 +1,6 @@
 import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Combobox } from "@saleor/react-hook-form-macaw";
+import { TextLink } from "@saleor/apps-ui";
 
 interface SendgridSenderSectionProps {
   configuration: SendgridConfiguration;
@@ -50,7 +51,18 @@ export const SendgridSenderSection = ({ configuration }: SendgridSenderSectionPr
   });
 
   return (
-    <SectionWithDescription title="Sender">
+    <SectionWithDescription
+      title="Sender"
+      description={
+        <Text as="p">
+          Authenticating the sender is required to send emails. Configure your sender in{" "}
+          <TextLink href="https://app.sendgrid.com/settings/sender_auth" newTab={true}>
+            Sendgrid dashboard
+          </TextLink>{" "}
+          and choose it from the list.
+        </Text>
+      }
+    >
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {
