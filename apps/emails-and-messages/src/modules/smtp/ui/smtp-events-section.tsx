@@ -2,27 +2,55 @@ import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
-
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { useRouter } from "next/router";
 import { smtpUrls } from "../urls";
 import { TextLink } from "@saleor/apps-ui";
 import React from "react";
 import { messageEventTypesLabels } from "../../event-handlers/message-event-types";
-import { SmtpStatusDropdownButton } from "./smtp-status-dropdown-button";
-import { List } from "@saleor/macaw-ui/next";
+import { BoxFooter } from "../../../components/box-footer";
+import { Table } from "../../../components/table";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import {
+  SmtpUpdateEventArray,
+  smtpUpdateEventArraySchema,
+} from "../configuration/smtp-config-input-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { trpcClient } from "../../trpc/trpc-client";
+import { useForm } from "react-hook-form";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
 
 interface SmtpEventsSectionProps {
   configuration: SmtpConfiguration;
 }
 
 export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => {
+  const { notifySuccess, notifyError } = useDashboardNotification();
   const router = useRouter();
 
   // Sort events by displayed label
   const eventsSorted = configuration.events.sort((a, b) =>
     messageEventTypesLabels[a.eventType].localeCompare(messageEventTypesLabels[b.eventType])
   );
+
+  const { register, handleSubmit, setError } = useForm<SmtpUpdateEventArray>({
+    defaultValues: {
+      configurationId: configuration.id,
+      events: eventsSorted,
+    },
+    resolver: zodResolver(smtpUpdateEventArraySchema),
+  });
+
+  const trpcContext = trpcClient.useContext();
+  const { mutate } = trpcClient.smtpConfiguration.updateEventArray.useMutation({
+    onSuccess: async () => {
+      notifySuccess("Configuration saved");
+      trpcContext.smtpConfiguration.invalidate();
+    },
+    onError(error) {
+      setBackendErrors<SmtpUpdateEventArray>({ error, setError, notifyError });
+    },
+  });
 
   return (
     <SectionWithDescription
@@ -40,50 +68,53 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
         </Box>
       }
     >
-      <BoxWithBorder>
-        <Box
-          display={"flex"}
-          gap={defaultPadding}
-          paddingX={defaultPadding}
-          paddingTop={defaultPadding}
-        >
-          <Text variant="caption" color="textNeutralSubdued" __width={100}>
-            Status
-          </Text>
-          <Text variant="caption" color="textNeutralSubdued">
-            Event type
-          </Text>
-        </Box>
-        <List display="flex" flexDirection="column">
-          {eventsSorted.map((event) => (
-            <List.Item
-              key={event.eventType}
-              display={"flex"}
-              gap={defaultPadding}
-              paddingX={defaultPadding}
-              paddingY={2}
-              cursor="auto"
-            >
-              <SmtpStatusDropdownButton
-                configurationId={configuration.id}
-                eventType={event.eventType}
-                isActive={event.active}
-              />
-              <Text flexGrow={"1"}>{messageEventTypesLabels[event.eventType]}</Text>
-              <Button
-                variant="tertiary"
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(smtpUrls.eventConfiguration(configuration.id, event.eventType));
-                }}
-              >
-                Edit
-              </Button>
-            </List.Item>
-          ))}
-        </List>
-      </BoxWithBorder>
+      <form
+        onSubmit={handleSubmit((data) => {
+          mutate(data);
+        })}
+      >
+        <BoxWithBorder>
+          <Box padding={defaultPadding}>
+            <Table.Container>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell __width={40}>Active</Table.HeaderCell>
+                  <Table.HeaderCell>Event type</Table.HeaderCell>
+                  <Table.HeaderCell __width={110}></Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {eventsSorted.map((event, index) => (
+                  <Table.Row key={event.eventType}>
+                    <Table.Cell>
+                      <input type="checkbox" {...register(`events.${index}.active`)} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text>{messageEventTypesLabels[event.eventType]}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        variant="tertiary"
+                        size="small"
+                        onClick={() => {
+                          router.push(
+                            smtpUrls.eventConfiguration(configuration.id, event.eventType)
+                          );
+                        }}
+                      >
+                        Edit template
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Container>
+          </Box>
+          <BoxFooter>
+            <Button type="submit">Save provider</Button>
+          </BoxFooter>
+        </BoxWithBorder>
+      </form>
     </SectionWithDescription>
   );
 };

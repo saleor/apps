@@ -8,8 +8,8 @@ import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  SendgridUpdateEvent,
-  sendgridUpdateEventSchema,
+  SendgridUpdateEventArray,
+  sendgridUpdateEventArraySchema,
 } from "../configuration/sendgrid-config-input-schema";
 import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
@@ -18,16 +18,41 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTemplates } from "../sendgrid-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { Combobox } from "@saleor/react-hook-form-macaw";
+import { Select } from "@saleor/react-hook-form-macaw";
 import { TextLink } from "@saleor/apps-ui";
+import { messageEventTypesLabels } from "../../event-handlers/message-event-types";
+import { Table } from "../../../components/table";
 
-interface EventBoxProps {
+interface SendgridEventsSectionProps {
   configuration: SendgridConfiguration;
-  event: SendgridEventConfiguration;
 }
 
-const EventBox = ({ event, configuration }: EventBoxProps) => {
+export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
+
+  // Sort events by displayed label
+  const eventsSorted = configuration.events.sort((a, b) =>
+    messageEventTypesLabels[a.eventType].localeCompare(messageEventTypesLabels[b.eventType])
+  );
+
+  const { control, register, handleSubmit, setError } = useForm<SendgridUpdateEventArray>({
+    defaultValues: {
+      configurationId: configuration.id,
+      events: eventsSorted,
+    },
+    resolver: zodResolver(sendgridUpdateEventArraySchema),
+  });
+
+  const trpcContext = trpcClient.useContext();
+  const { mutate } = trpcClient.sendgridConfiguration.updateEventArray.useMutation({
+    onSuccess: async () => {
+      notifySuccess("Configuration saved");
+      trpcContext.sendgridConfiguration.invalidate();
+    },
+    onError(error) {
+      setBackendErrors<SendgridUpdateEventArray>({ error, setError, notifyError });
+    },
+  });
 
   const { data: templatesChoices } = useQuery({
     queryKey: ["sendgridTemplates"],
@@ -35,68 +60,6 @@ const EventBox = ({ event, configuration }: EventBoxProps) => {
     enabled: !!configuration.apiKey?.length,
   });
 
-  const { handleSubmit, control, setError, register } = useForm<SendgridUpdateEvent>({
-    defaultValues: {
-      id: configuration.id,
-      ...event,
-    },
-    resolver: zodResolver(sendgridUpdateEventSchema),
-  });
-
-  const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.sendgridConfiguration.updateEvent.useMutation({
-    onSuccess: async () => {
-      notifySuccess("Configuration saved");
-      trpcContext.sendgridConfiguration.invalidate();
-    },
-    onError(error) {
-      setBackendErrors<SendgridUpdateEvent>({ error, setError, notifyError });
-    },
-  });
-
-  return (
-    <form
-      onSubmit={handleSubmit((data, event) => {
-        mutate({
-          ...data,
-        });
-      })}
-    >
-      <BoxWithBorder>
-        <Box padding={defaultPadding} display="flex" flexDirection="column" gap={defaultPadding}>
-          <Text variant="heading">{event.eventType}</Text>
-          {templatesChoices?.length ? (
-            <Combobox
-              name="template"
-              control={control}
-              label="Template"
-              options={templatesChoices.map((sender) => ({
-                label: sender.label,
-                value: sender.value,
-              }))}
-            />
-          ) : (
-            <Combobox name="template" control={control} label="Template" options={[]} />
-          )}
-
-          <label>
-            <input type="checkbox" placeholder="Enabled" {...register("active")} />
-            <Text paddingLeft={defaultPadding}>Active</Text>
-          </label>
-        </Box>
-        <BoxFooter>
-          <Button type="submit">Save event</Button>
-        </BoxFooter>
-      </BoxWithBorder>
-    </form>
-  );
-};
-
-interface SendgridEventsSectionProps {
-  configuration: SendgridConfiguration;
-}
-
-export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionProps) => {
   return (
     <SectionWithDescription
       title="Events"
@@ -111,11 +74,47 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
         </Text>
       }
     >
-      <Box display="flex" flexDirection="column" gap={defaultPadding}>
-        {configuration.events.map((event) => (
-          <EventBox key={event.eventType} configuration={configuration} event={event} />
-        ))}
-      </Box>
+      <form
+        onSubmit={handleSubmit((data) => {
+          mutate(data);
+        })}
+      >
+        <BoxWithBorder>
+          <Box padding={defaultPadding}>
+            <Table.Container>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell __width={40}>Active</Table.HeaderCell>
+                  <Table.HeaderCell>Event type</Table.HeaderCell>
+                  <Table.HeaderCell>Dynamic template</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {eventsSorted.map((event, index) => (
+                  <Table.Row key={event.eventType}>
+                    <Table.Cell>
+                      <input type="checkbox" {...register(`events.${index}.active`)} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text>{messageEventTypesLabels[event.eventType]}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Select
+                        control={control}
+                        name={`events.${index}.template`}
+                        options={templatesChoices || []}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table.Container>
+          </Box>
+          <BoxFooter>
+            <Button type="submit">Save provider</Button>
+          </BoxFooter>
+        </BoxWithBorder>
+      </form>
     </SectionWithDescription>
   );
 };

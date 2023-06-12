@@ -102,3 +102,10 @@ export const smtpUpdateEventConfigurationInputSchema = smtpConfigurationIdInputS
 export type SmtpUpdateEventConfigurationInput = z.infer<
   typeof smtpUpdateEventConfigurationInputSchema
 >;
+
+export const smtpUpdateEventArraySchema = z.object({
+  configurationId: z.string(),
+  events: z.array(smtpConfigurationEventSchema),
+});
+
+export type SmtpUpdateEventArray = z.infer<typeof smtpUpdateEventArraySchema>;

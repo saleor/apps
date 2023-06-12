@@ -16,6 +16,7 @@ import {
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
   smtpUpdateEventActiveStatusInputSchema,
+  smtpUpdateEventArraySchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
@@ -300,5 +301,29 @@ export const smtpConfigurationRouter = router({
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
+    }),
+  updateEventArray: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateEventArraySchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "smtpConfigurationRouter.updateEventArray called");
+
+      return await Promise.all(
+        input.events.map(async (event) => {
+          const { eventType, ...eventConfiguration } = event;
+
+          try {
+            return await ctx.smtpConfigurationService.updateEventConfiguration({
+              configurationId: input.configurationId,
+              eventType,
+              eventConfiguration,
+            });
+          } catch (e) {
+            throwTrpcErrorFromConfigurationServiceError(e);
+          }
+        })
+      );
     }),
 });
