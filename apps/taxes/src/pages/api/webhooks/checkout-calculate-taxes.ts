@@ -41,7 +41,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler for CHECKOUT_CALCULATE_TAXES webhook called with payload");
+  logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
   try {
     verifyCalculateTaxesPayload(payload);
