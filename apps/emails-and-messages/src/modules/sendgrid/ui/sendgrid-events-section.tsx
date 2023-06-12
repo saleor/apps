@@ -54,11 +54,13 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
     },
   });
 
-  const { data: templatesChoices } = useQuery({
+  const { data: sendgridTemplates } = useQuery({
     queryKey: ["sendgridTemplates"],
     queryFn: fetchTemplates({ apiKey: configuration.apiKey }),
     enabled: !!configuration.apiKey?.length,
   });
+
+  const templateChoices = [{ value: "", label: "----" }, ...(sendgridTemplates || [])];
 
   return (
     <SectionWithDescription
@@ -102,7 +104,7 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
                       <Select
                         control={control}
                         name={`events.${index}.template`}
-                        options={templatesChoices || []}
+                        options={templateChoices}
                       />
                     </Table.Cell>
                   </Table.Row>
