@@ -28,6 +28,11 @@ const handler = createManifestHandler({
       homepageUrl: "https://github.com/saleor/apps",
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
     };
   },
 });

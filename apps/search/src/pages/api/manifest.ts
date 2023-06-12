@@ -47,6 +47,11 @@ export default createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       homepageUrl: "https://github.com/saleor/apps",
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
     };
 
     return manifest;

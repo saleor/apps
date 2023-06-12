@@ -31,7 +31,7 @@ export default createManifestHandler({
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/app-products-feed.png`,
+          default: `${context.appBaseUrl}/logo.png`,
         },
       },
     };
