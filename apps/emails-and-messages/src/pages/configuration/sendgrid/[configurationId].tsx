@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
 import { SendgridBasicInformationSection } from "../../../modules/sendgrid/ui/sendgrid-basic-information-section";
-import { SendgridDangerousSection } from "../../../modules/sendgrid/ui/sendgrid-dangrous-section";
+import { SendgridDangerousSection } from "../../../modules/sendgrid/ui/sendgrid-dangerous-section";
 import { ApiConnectionSection } from "../../../modules/sendgrid/ui/api-connection-section";
 import { SendgridSenderSection } from "../../../modules/sendgrid/ui/sendgrid-sender-section";
 import { SendgridEventsSection } from "../../../modules/sendgrid/ui/sendgrid-events-section";

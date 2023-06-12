@@ -9,6 +9,7 @@ export const BoxFooter = (props: BoxProps) => {
       borderColor="neutralDefault"
       padding={defaultPadding}
       display="flex"
+      gap={defaultPadding}
       flexDirection="row"
       justifyContent="flex-end"
       {...props}
