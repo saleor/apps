@@ -23,6 +23,17 @@ export const dummyChannelsV1Config: ChannelsV1 = {
     },
     enabled: true,
   },
+  "channel-pln": {
+    providerInstanceId: "d15d9907-a3cb-42d2-9336-366d2366e91b",
+    address: {
+      city: "San Francisco",
+      country: "US",
+      state: "CA",
+      street: "Sesame Street",
+      zip: "10001",
+    },
+    enabled: true,
+  },
 };
 
 export const dummyTaxProvidersV1Config: TaxProvidersV1 = [
@@ -37,6 +48,15 @@ export const dummyTaxProvidersV1Config: TaxProvidersV1 = [
       username: "username",
       companyCode: "companyCode",
       shippingTaxCode: "shippingTaxCode",
+    },
+  },
+  {
+    provider: "taxjar",
+    id: "d15d9907-a3cb-42d2-9336-366d2366e91b",
+    config: {
+      isSandbox: true,
+      apiKey: "apiKey",
+      name: "TaxJar1",
     },
   },
 ];
