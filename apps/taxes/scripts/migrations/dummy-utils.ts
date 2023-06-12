@@ -57,7 +57,7 @@ class DummyConfigGenerator {
 
   private generateDummyTaxChannelsConfig = (): ChannelsV1 => dummyChannelsV1Config;
 
-  generateDummyTaxProviders = async () => {
+  generate = async () => {
     console.log("Generating dummy config");
     const apls = await this.getFileApl();
 
@@ -99,4 +99,4 @@ class DummyConfigGenerator {
 
 // const dummyConfigGenerator = new DummyConfigGenerator("");
 
-// dummyConfigGenerator.generateDummyTaxProviders();
+// dummyConfigGenerator.generate();
