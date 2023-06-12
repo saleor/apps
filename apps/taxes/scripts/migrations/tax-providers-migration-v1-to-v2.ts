@@ -45,7 +45,7 @@ export class TaxProvidersMigrationV1toV2Manager {
         { previousChannelConfig, previousTaxProvidersConfig },
         "Previous config not found. Migration not possible."
       );
-      return [];
+      return;
     }
 
     this.logger.info("Previous config found. Migrating...");

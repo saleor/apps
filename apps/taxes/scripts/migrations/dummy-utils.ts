@@ -11,6 +11,36 @@ import { TaxChannelsPrivateMetadataManagerV1 } from "./tax-channels-metadata-man
 
 dotenv.config();
 
+export const dummyChannelsV1Config: ChannelsV1 = {
+  "default-channel": {
+    providerInstanceId: "24822834-1a49-4b51-8a59-579affdb772f",
+    address: {
+      city: "San Francisco",
+      country: "US",
+      state: "CA",
+      street: "Sesame Street",
+      zip: "10001",
+    },
+    enabled: true,
+  },
+};
+
+export const dummyTaxProvidersV1Config: TaxProvidersV1 = [
+  {
+    provider: "avatax",
+    id: "24822834-1a49-4b51-8a59-579affdb772f",
+    config: {
+      isAutocommit: true,
+      isSandbox: true,
+      name: "Avatalara1",
+      password: "password",
+      username: "username",
+      companyCode: "companyCode",
+      shippingTaxCode: "shippingTaxCode",
+    },
+  },
+];
+
 // This class is used to generate dummy config for the app to check if the runtime migrations work as expected.
 class DummyConfigGenerator {
   private logger: Logger;
@@ -23,39 +53,9 @@ class DummyConfigGenerator {
     return saleorApp.apl.getAll();
   };
 
-  private generateDummyTaxProvidersConfig = (): TaxProvidersV1 => {
-    return [
-      {
-        provider: "avatax",
-        id: "24822834-1a49-4b51-8a59-579affdb772f",
-        config: {
-          isAutocommit: true,
-          isSandbox: true,
-          name: "Avatalara1",
-          password: "password",
-          username: "username",
-          companyCode: "companyCode",
-          shippingTaxCode: "shippingTaxCode",
-        },
-      },
-    ];
-  };
+  private generateDummyTaxProvidersConfig = (): TaxProvidersV1 => dummyTaxProvidersV1Config;
 
-  private generateDummyTaxChannelsConfig = (): ChannelsV1 => {
-    return {
-      "default-channel": {
-        providerInstanceId: "24822834-1a49-4b51-8a59-579affdb772f",
-        address: {
-          city: "city",
-          country: "country",
-          state: "state",
-          street: "street",
-          zip: "zip",
-        },
-        enabled: true,
-      },
-    };
-  };
+  private generateDummyTaxChannelsConfig = (): ChannelsV1 => dummyChannelsV1Config;
 
   generateDummyTaxProviders = async () => {
     console.log("Generating dummy config");

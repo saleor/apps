@@ -1,15 +1,12 @@
-import { Client } from "urql";
+import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { Logger, createLogger } from "../../lib/logger";
-import { createSettingsManager } from "../app/metadata-manager";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { ChannelConfigProperties, channelsSchema } from "./channel-config";
 
 export class ChannelConfigurationSettings {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
-    const settingsManager = createSettingsManager(client, appId);
-
+  constructor(private settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,

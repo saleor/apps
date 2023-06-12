@@ -8,7 +8,7 @@ export class TaxChannelsTransformV1toV2 {
       const channel = channels[slug];
 
       return {
-        // There was no id in v1, so we need to generate it
+        // * There was no id in v1, so we need to generate it
         id: createId(),
         config: {
           providerConnectionId: channel.providerInstanceId,
