@@ -2,4 +2,4 @@
 "saleor-app-emails-and-messages": patch
 ---
 
-SMTP events section UI has been updated. Events can now be activated/deactivated from the list view.
+Events section UI has been updated. All events are displayed now as single table.
