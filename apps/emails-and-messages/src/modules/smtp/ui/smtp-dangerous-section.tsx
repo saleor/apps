@@ -58,7 +58,7 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
               permanently removed from the App.
             </Text>
             <Text as="p">This operation can&#39;t be undone.</Text>
-            <Text as="p">You still can create a new configuration.</Text>
+            <Text as="p">You can still create a new configuration.</Text>
           </Box>
           <BoxFooter borderColor="criticalSubdued">
             <Button variant="error" type="submit">
