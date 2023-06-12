@@ -7,7 +7,7 @@ import { BasicLayout } from "../../../components/basic-layout";
 import { SmtpBasicInformationSection } from "../../../modules/smtp/ui/smtp-basic-information-section";
 import { SmtpSection } from "../../../modules/smtp/ui/smtp-section";
 import { SmtpSenderSection } from "../../../modules/smtp/ui/smtp-sender-section";
-import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangrous-section";
+import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangerous-section";
 import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
 import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
 import { appUrls } from "../../../modules/app-configuration/urls";

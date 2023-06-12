@@ -5,20 +5,28 @@ import { BoxFooter } from "../../../components/box-footer";
 
 interface ProviderSelectionBoxProps {
   providerName: string;
+  providerLogo?: React.ReactNode;
   providerDescription: string;
   onClick: () => void;
 }
 
 export const ProviderSelectionBox = (props: ProviderSelectionBoxProps) => {
   return (
-    <BoxWithBorder display="grid" alignItems="center" justifyContent="center">
-      <Box padding={defaultPadding} display="grid" alignItems="center" justifyContent="center">
-        <Text variant="heading">{props.providerName}</Text>
-      </Box>
-      <Box padding={defaultPadding} display="grid" alignItems="center" justifyContent="center">
+    <BoxWithBorder __maxWidth={350} display="flex" flexDirection="column">
+      <Box padding={defaultPadding} flexGrow="1">
+        <Box
+          display="flex"
+          gap={2}
+          alignItems="center"
+          justifyContent="center"
+          paddingBottom={defaultPadding}
+        >
+          {props.providerLogo}
+          <Text variant="heading">{props.providerName}</Text>
+        </Box>
         <Text>{props.providerDescription}</Text>
       </Box>
-      <BoxFooter justifyContent="center" alignItems="center">
+      <BoxFooter>
         <Button onClick={props.onClick}>Choose</Button>
       </BoxFooter>
     </BoxWithBorder>

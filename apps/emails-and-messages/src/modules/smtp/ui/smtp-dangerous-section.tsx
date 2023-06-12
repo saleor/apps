@@ -49,25 +49,20 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
         })}
       >
         <BoxWithBorder backgroundColor="surfaceCriticalSubdued" borderColor="criticalSubdued">
-          <Box padding={defaultPadding}>
+          <Box padding={defaultPadding} display="flex" flexDirection="column" gap={2}>
             <Text variant="heading" as="h1">
-              Remove provider
+              Remove provider configuration
             </Text>
-            <Text as="p">You can remove provider configuration.</Text>
             <Text as="p">
               This operation will remove all settings related to this configuration. Data will be
               permanently removed from the App.
             </Text>
-            <Text as="p">This operation cant be undone.</Text>
-            <Text as="p">You still can create new configuration.</Text>
+            <Text as="p">This operation can&#39;t be undone.</Text>
+            <Text as="p">You can still create a new configuration.</Text>
           </Box>
           <BoxFooter borderColor="criticalSubdued">
-            <Button
-              color="textNeutralSubdued"
-              backgroundColor="interactiveCriticalDefault"
-              type="submit"
-            >
-              Remove provider
+            <Button variant="error" type="submit">
+              Remove configuration
             </Button>
           </BoxFooter>
         </BoxWithBorder>
