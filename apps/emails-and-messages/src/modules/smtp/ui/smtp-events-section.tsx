@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { smtpUrls } from "../urls";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { TextLink } from "@saleor/apps-ui";
 
 interface EventBoxProps {
   configuration: SmtpConfiguration;
@@ -87,13 +88,16 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
     <SectionWithDescription
       title="Events"
       description={
-        <>
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Text as="p">Chose which Saleor events should send emails via SMTP.</Text>
           <Text as="p">
-            Provide unique name for your configuration - you can create more than one. For example -
-            production and development.
+            You can modify the email templates using{" "}
+            <TextLink href="https://mjml.io/" newTab={true}>
+              MJML
+            </TextLink>{" "}
+            syntax.
           </Text>
-          <Text as="p">Then, pass your API Key. Obtain it here.</Text>
-        </>
+        </Box>
       }
     >
       <Box display="flex" flexDirection="column" gap={defaultPadding}>

@@ -14,6 +14,7 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { SendgridApiKeyDescriptionText } from "./sendgrid-api-key-description-text";
 
 interface ApiConnectionSectionProps {
   configuration: SendgridConfiguration;
@@ -47,7 +48,7 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
   });
 
   return (
-    <SectionWithDescription title="API Connection">
+    <SectionWithDescription title="API Connection" description={<SendgridApiKeyDescriptionText />}>
       <BoxWithBorder>
         <form
           onSubmit={handleSubmit((data, event) => {

@@ -4,7 +4,6 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { BoxFooter } from "../../../components/box-footer";
 import { SectionWithDescription } from "../../../components/section-with-description";
@@ -15,6 +14,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { ConfigurationNameDescriptionText } from "../../app-configuration/ui/configuration-name-description-text";
+import { ConfigurationActiveDescriptionText } from "../../app-configuration/ui/configuration-active-description-text";
 
 interface SmtpBasicInformationSectionProps {
   configuration: SmtpConfiguration;
@@ -50,12 +51,12 @@ export const SmtpBasicInformationSection = ({
 
   return (
     <SectionWithDescription
-      title="Connect SMTP"
+      title="Status and name"
       description={
-        <Text>
-          Provide unique name for your configuration - you can create more than one. For example -
-          production and development. Then, pass your API Key. Obtain it here.
-        </Text>
+        <Box display="flex" flexDirection="column" gap={2}>
+          <ConfigurationNameDescriptionText />
+          <ConfigurationActiveDescriptionText />
+        </Box>
       }
     >
       <BoxWithBorder>
