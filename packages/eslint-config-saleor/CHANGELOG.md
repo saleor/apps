@@ -1,5 +1,14 @@
 # eslint-config-saleor
 
+## 0.4.1
+
+### Patch Changes
+
+- a8834a1: Unified graphql version to 16.6
+- a8834a1: Unified graphql codegen packages
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+
 ## 0.4.0
 
 ### Minor Changes
