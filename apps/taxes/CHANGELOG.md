@@ -1,5 +1,22 @@
 # saleor-app-taxes
 
+## 1.8.2
+
+### Patch Changes
+
+- a8834a1: Unified graphql version to 16.6
+- a8834a1: Unified graphql codegen packages
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [928c727]
+  - @saleor/apps-shared@1.7.1
+  - @saleor/apps-ui@1.1.1
+
 ## 1.8.1
 
 ### Patch Changes

@@ -1,5 +1,27 @@
 # saleor-app-emails-and-messages
 
+## 1.7.1
+
+### Patch Changes
+
+- a8834a1: Unified graphql version to 16.6
+- cce2fbc: Improved layout spacing across the application.
+- e106ab9: Added improved descriptions in the Sendgrid configuration views.
+- a8834a1: Unified graphql codegen packages
+- e106ab9: Added improved descriptions in the Sendgrid configuration views.
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+- 928c727: Updated @saleor/macaw-ui to 0.8.0-pre.95. This version introduces change in spacing scale, so there may be slight changes in spacing
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [928c727]
+  - @saleor/react-hook-form-macaw@0.1.2
+  - @saleor/apps-shared@1.7.1
+  - @saleor/apps-ui@1.1.1
+
 ## 1.7.0
 
 ### Minor Changes

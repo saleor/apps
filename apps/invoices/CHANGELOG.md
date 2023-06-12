@@ -1,5 +1,21 @@
 # saleor-app-invoices
 
+## 1.13.6
+
+### Patch Changes
+
+- a8834a1: Unified graphql version to 16.6
+- a8834a1: Unified graphql codegen packages
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+- 928c727: Updated @saleor/macaw-ui to 0.8.0-pre.95. This version introduces change in spacing scale, so there may be slight changes in spacing
+- a8834a1: Enabled eslint during build
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+  - @saleor/apps-shared@1.7.1
+
 ## 1.13.5
 
 ### Patch Changes

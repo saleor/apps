@@ -1,5 +1,20 @@
 # saleor-app-klaviyo
 
+## 1.6.6
+
+### Patch Changes
+
+- a8834a1: Removed unused husky dependency
+- a8834a1: Unified graphql version to 16.6
+- a8834a1: Unified graphql codegen packages
+- a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
+- a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+- Updated dependencies [a8834a1]
+  - @saleor/apps-shared@1.7.1
+
 ## 1.6.5
 
 ### Patch Changes
