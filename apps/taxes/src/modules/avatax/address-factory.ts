@@ -1,5 +1,5 @@
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
-import { AvataxConfig } from "./avatax-config";
+import { AvataxConfig } from "./avatax-connection-schema";
 import { AddressFragment } from "../../../generated/graphql";
 
 function mapSaleorAddressToAvataxAddress(address: AddressFragment): AvataxAddress {

@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { DocumentStatus } from "avatax/lib/enums/DocumentStatus";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AdjustmentReason } from "avatax/lib/enums/AdjustmentReason";
@@ -10,7 +10,9 @@ import { RateType } from "avatax/lib/enums/RateType";
 import { ChargedTo } from "avatax/lib/enums/ChargedTo";
 import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
+import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 
 type TaxBase = TaxBaseFragment;
 
@@ -107,10 +109,6 @@ const defaultTaxBase: TaxBase = {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },
   },
-};
-
-const defaultChannelConfig: ChannelConfig = {
-  providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
 };
 
 const defaultTransactionModel: TransactionModel = {
@@ -935,30 +933,9 @@ const defaultTransactionModel: TransactionModel = {
   ],
 };
 
-const defaultAvataxConfig: AvataxConfig = {
-  companyCode: "DEFAULT",
-  isAutocommit: false,
-  isSandbox: true,
-  name: "Avatax-1",
-  shippingTaxCode: "FR000000",
-  address: {
-    country: "US",
-    zip: "92093",
-    state: "CA",
-    city: "La Jolla",
-    street: "9500 Gilman Drive",
-  },
-  credentials: {
-    password: "password",
-    username: "username",
-  },
-};
-
 const testingScenariosMap = {
   default: {
     taxBase: defaultTaxBase,
-    channelConfig: defaultChannelConfig,
-    avataxConfig: defaultAvataxConfig,
     response: defaultTransactionModel,
   },
 };
@@ -973,17 +950,17 @@ export class AvataxCalculateTaxesMockGenerator {
       ...overrides,
     });
 
-  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig =>
-    structuredClone({
-      ...testingScenariosMap[this.scenario].channelConfig,
-      ...overrides,
-    });
+  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig => {
+    const mockGenerator = new ChannelConfigMockGenerator();
 
-  generateAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig =>
-    structuredClone({
-      ...testingScenariosMap[this.scenario].avataxConfig,
-      ...overrides,
-    });
+    return mockGenerator.generateChannelConfig(overrides);
+  };
+
+  generateAvataxConfig = (overrides: Partial<AvataxConfig> = {}): AvataxConfig => {
+    const mockGenerator = new AvataxConfigMockGenerator();
+
+    return mockGenerator.generateAvataxConfig(overrides);
+  };
 
   generateResponse = (overrides: Partial<TransactionModel> = {}): TransactionModel =>
     structuredClone({

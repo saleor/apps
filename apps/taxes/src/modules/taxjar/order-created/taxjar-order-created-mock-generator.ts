@@ -1,14 +1,11 @@
 import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { OrderCreatedSubscriptionFragment, OrderStatus } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { defaultOrder } from "../../../mocks";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
+import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 
 type Order = OrderCreatedSubscriptionFragment;
-
-const defaultChannelConfig: ChannelConfig = {
-  providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
-};
 
 // providerConfigMockGenerator class that other classes extend?
 const defaultProviderConfig: TaxJarConfig = {
@@ -85,7 +82,6 @@ const defaultOrderCreatedResponse: CreateOrderRes = {
 const testingScenariosMap = {
   default: {
     order: defaultOrder,
-    channelConfig: defaultChannelConfig,
     response: defaultOrderCreatedResponse,
     providerConfig: defaultProviderConfig,
   },
@@ -101,11 +97,11 @@ export class TaxJarOrderCreatedMockGenerator {
       ...overrides,
     });
 
-  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig =>
-    structuredClone({
-      ...testingScenariosMap[this.scenario].channelConfig,
-      ...overrides,
-    });
+  generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig => {
+    const mockGenerator = new ChannelConfigMockGenerator();
+
+    return mockGenerator.generateChannelConfig(overrides);
+  };
 
   generateResponse = (overrides: Partial<CreateOrderRes> = {}): CreateOrderRes =>
     structuredClone({

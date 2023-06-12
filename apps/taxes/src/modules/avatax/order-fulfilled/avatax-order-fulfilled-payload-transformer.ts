@@ -1,6 +1,6 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import {
   AvataxOrderFulfilledPayload,
   AvataxOrderFulfilledTarget,

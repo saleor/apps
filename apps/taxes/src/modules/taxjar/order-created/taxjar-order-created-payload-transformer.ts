@@ -2,7 +2,7 @@ import { LineItem } from "taxjar/dist/util/types";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { TaxJarConfig } from "../taxjar-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 import {
   TaxJarOrderCreatedPayload,
   TaxJarOrderCreatedTarget,

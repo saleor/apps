@@ -8,16 +8,11 @@ import {
 import { createLogger } from "../../lib/logger";
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
-  const logger = createLogger({ service: "fetchAllMetadata" });
-
-  logger.debug("Fetching metadata from Saleor");
+  const logger = createLogger({ location: "fetchAllMetadata" });
 
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
-
-  // * `metadata` name is required for secrets censorship
-  logger.debug({ error, metadata: data }, "Metadata fetched");
 
   if (error) {
     return [];
@@ -27,15 +22,12 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 }
 
 export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
-  const logger = createLogger({ service: "mutateMetadata" });
+  const logger = createLogger({ location: "mutateMetadata" });
 
-  logger.debug({ metadata }, "Mutating metadata");
   // to update the metadata, ID is required
   const { error: idQueryError, data: idQueryData } = await client
     .query(FetchAppDetailsDocument, {})
     .toPromise();
-
-  logger.debug({ error: idQueryError, data: idQueryData }, "Metadata mutated");
 
   if (idQueryError) {
     throw new Error(

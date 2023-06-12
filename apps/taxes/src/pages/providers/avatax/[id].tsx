@@ -10,12 +10,10 @@ const Header = () => {
 const EditAvataxPage = () => {
   return (
     <main>
-      <AppColumns
-        gridRatio="1/1"
-        top={<Header />}
-        bottomLeft={<AvataxInstructions />}
-        bottomRight={<EditAvataxConfiguration />}
-      />
+      <AppColumns top={<Header />}>
+        <AvataxInstructions />
+        <EditAvataxConfiguration />
+      </AppColumns>
     </main>
   );
 };
