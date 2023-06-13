@@ -1,19 +1,9 @@
-import { Box, BoxProps, Button } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";
 import { ProviderLabel } from "./provider-label";
-
-const Table = {
-  Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,
-  THead: (props: BoxProps) => <Box {...props} as="thead" />,
-  TR: (props: BoxProps) => <Box {...props} as="tr" />,
-  TH: (props: BoxProps) => (
-    <Box fontWeight={"captionSmall"} fontSize={"captionSmall"} {...props} as="th" />
-  ),
-  TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
-  TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingY={4} {...props} as="td" />,
-};
+import { Table } from "./table";
 
 export const ProvidersTable = () => {
   const router = useRouter();
