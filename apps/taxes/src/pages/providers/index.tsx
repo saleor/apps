@@ -63,7 +63,7 @@ const ProviderCard = ({
 
   return (
     <AppCard>
-      <Box display={"flex"} flexDirection={"column"} gap={8}>
+      <Box display={"flex"} flexDirection={"column"} gap={2}>
         <Box display={"flex"} justifyContent={"space-between"}>
           <ProviderLabel name={provider} />
           {isComingSoon && (
