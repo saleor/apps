@@ -189,6 +189,27 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
           />
         </Box>
         <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Tax codes
+        </Text>
+        <Box paddingY={4} display={"grid"} gridTemplateColumns={2} gap={12}>
+          <div>
+            <Input
+              control={control}
+              name="shippingTaxCode"
+              label="Shipping tax code"
+              helperText={formState.errors.shippingTaxCode?.message}
+            />
+            <HelperText>
+              Tax code that for the shipping line sent to Avatax.{" "}
+              <TextLink newTab href="https://taxcode.avatax.avalara.com">
+                Must match Avatax tax codes format.
+              </TextLink>
+            </HelperText>
+          </div>
+        </Box>
+        <Divider marginY={8} />
+
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
           {props.cancelButton}
 
