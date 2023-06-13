@@ -1478,6 +1478,9 @@ importers:
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
+      dotenv:
+        specifier: ^16.0.3
+        version: 16.0.3
       graphql:
         specifier: 16.6.0
         version: 16.6.0
