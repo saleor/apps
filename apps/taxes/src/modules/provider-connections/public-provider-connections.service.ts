@@ -3,15 +3,15 @@ import { createLogger, Logger } from "../../lib/logger";
 import { PublicAvataxConnectionService } from "../avatax/configuration/public-avatax-connection.service";
 import { PublicTaxJarConnectionService } from "../taxjar/configuration/public-taxjar-connection.service";
 
-export const TAX_PROVIDER_KEY = "tax-providers";
+export const TAX_PROVIDER_KEY = "tax-providers-v2";
 
 export class PublicProviderConnectionsService {
   private avataxConnectionService: PublicAvataxConnectionService;
   private taxJarConnectionService: PublicTaxJarConnectionService;
   private logger: Logger;
-  constructor(client: Client, saleorApiUrl: string) {
-    this.avataxConnectionService = new PublicAvataxConnectionService(client, saleorApiUrl);
-    this.taxJarConnectionService = new PublicTaxJarConnectionService(client, saleorApiUrl);
+  constructor(client: Client, appId: string, saleorApiUrl: string) {
+    this.avataxConnectionService = new PublicAvataxConnectionService(client, appId, saleorApiUrl);
+    this.taxJarConnectionService = new PublicTaxJarConnectionService(client, appId, saleorApiUrl);
     this.logger = createLogger({
       location: "PublicProviderConnectionsService",
       metadataKey: TAX_PROVIDER_KEY,

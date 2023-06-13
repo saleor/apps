@@ -11,6 +11,7 @@ export const providerConnectionsRouter = router({
 
     const items = await new PublicProviderConnectionsService(
       ctx.apiClient,
+      ctx.appId!,
       ctx.saleorApiUrl
     ).getAll();
 
