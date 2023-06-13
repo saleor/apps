@@ -118,7 +118,6 @@ export const AlgoliaConfigurationForm = () => {
             control={control}
             name="indexNamePrefix"
             disabled={isFormDisabled}
-            required
             label="Index name prefix"
             helperText='Optional prefix, you can add "test" or "staging" to test the app'
           />
