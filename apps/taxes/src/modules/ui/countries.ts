@@ -379,4 +379,4 @@ export const countries: CountryType[] = [
   { value: "ZA", label: "South Africa" },
   { value: "ZM", label: "Zambia" },
   { value: "ZW", label: "Zimbabwe" },
-];
+].sort((a, b) => (a.label > b.label ? 1 : -1));
