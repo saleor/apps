@@ -28,7 +28,7 @@ export type AvataxConfig = z.infer<typeof avataxConfigSchema>;
 export const defaultAvataxConfig: AvataxConfig = {
   name: "",
   companyCode: "",
-  isSandbox: true,
+  isSandbox: false,
   isAutocommit: false,
   shippingTaxCode: "",
   credentials: {

@@ -19,9 +19,18 @@ export function Toggle<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field } }) => (
-        <$Toggle {...rest} {...field} value={value || ""} name={name} type={type} />
-      )}
+      render={({ field: { value, ...field } }) => {
+        return (
+          <$Toggle
+            {...rest}
+            {...field}
+            pressed={value}
+            onPressedChange={(pressed) => field.onChange(pressed)}
+            name={name}
+            type={type}
+          />
+        );
+      }}
     />
   );
 }
