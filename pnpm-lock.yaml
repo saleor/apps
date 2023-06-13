@@ -1482,7 +1482,7 @@ importers:
         specifier: ^16.0.3
         version: 16.0.3
       graphql:
-        specifier: 16.6.0
+        specifier: ^16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
