@@ -57,7 +57,7 @@ export const ChannelTable = () => {
     <Table.Container>
       <Table.THead color={"textNeutralSubdued"}>
         <Table.TR>
-          <Table.TH>Slug</Table.TH>
+          <Table.TH>Channel slug</Table.TH>
           <Table.TH>Provider</Table.TH>
         </Table.TR>
       </Table.THead>
