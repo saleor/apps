@@ -18,13 +18,13 @@ type AvataxTaxCodeMap = z.infer<typeof avataxTaxCodeMatchesSchema>;
 
 const metadataKey = "avatax-tax-code-map";
 
-export class AvataxTaxCodeMapRepository {
+export class AvataxTaxCodeMatchRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
     this.logger = createLogger({
-      location: "AvataxTaxCodeMapRepository",
+      location: "AvataxTaxCodeMatchRepository",
       metadataKey,
     });
   }
