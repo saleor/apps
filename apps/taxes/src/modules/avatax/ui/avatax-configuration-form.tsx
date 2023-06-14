@@ -72,8 +72,8 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
                 helperText={formState.errors.credentials?.username?.message}
               />
               <HelperText>
-                You can obtain it in <i>Settings</i> → <i>License and API keys</i> in your Avalara
-                Dashboard.
+                You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
+                in your Avalara Dashboard.
               </HelperText>
             </div>
             <div>
@@ -86,8 +86,8 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
                 helperText={formState.errors.credentials?.password?.message}
               />
               <HelperText>
-                You can obtain it in <i>Settings</i> → <i>License and API keys</i> in your Avalara
-                Dashboard.
+                You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
+                in your Avalara Dashboard.
               </HelperText>
             </div>
 
