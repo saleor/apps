@@ -124,4 +124,31 @@ describe("CrudSettingsService", () => {
       });
     });
   });
+
+  describe("updateMany", () => {
+    it("updates multiple items while keeping the rest intact", async () => {
+      vi.mocked(mockSettingsManager.get).mockImplementation(async () => {
+        return JSON.stringify([
+          { id: "id1", foo: "bar" },
+          { id: "id2", foo: "baz" },
+          { id: "id3", foo: "qux" },
+        ]);
+      });
+
+      await service.updateMany([
+        { id: "id1", foo: "bar2" },
+        { id: "id2", foo: "baz2" },
+      ]);
+
+      expect(mockSettingsManager.set).toHaveBeenCalledWith({
+        domain: "apiUrl",
+        key: "metadataKey",
+        value: JSON.stringify([
+          { id: "id1", foo: "bar2" },
+          { id: "id2", foo: "baz2" },
+          { id: "id3", foo: "qux" },
+        ]),
+      });
+    });
+  });
 });
