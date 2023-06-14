@@ -70,30 +70,12 @@ importers:
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
-      crm:
-        specifier: link:apps/crm
-        version: link:apps/crm
-      data-importer:
-        specifier: link:apps/data-importer
-        version: link:apps/data-importer
-      emails-and-messages:
-        specifier: link:apps/emails-and-messages
-        version: link:apps/emails-and-messages
       graphql:
         specifier: 16.6.0
         version: 16.6.0
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.6.0)
-      invoices:
-        specifier: link:apps/invoices
-        version: link:apps/invoices
-      klaviyo:
-        specifier: link:apps/klaviyo
-        version: link:apps/klaviyo
-      monitoring:
-        specifier: link:apps/monitoring
-        version: link:apps/monitoring
       next:
         specifier: 13.3.0
         version: 13.3.0(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
@@ -103,9 +85,6 @@ importers:
       pino-pretty:
         specifier: ^10.0.0
         version: 10.0.0
-      products-feed:
-        specifier: link:apps/products-feed
-        version: link:apps/products-feed
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -118,15 +97,6 @@ importers:
       react-markdown:
         specifier: ^8.0.5
         version: 8.0.5(@types/react@18.0.27)(react@18.2.0)
-      search:
-        specifier: link:apps/search
-        version: link:apps/search
-      slack:
-        specifier: link:apps/slack
-        version: link:apps/slack
-      taxes:
-        specifier: link:apps/taxes
-        version: link:apps/taxes
       urql:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
