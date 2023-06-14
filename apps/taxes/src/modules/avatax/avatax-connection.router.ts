@@ -28,7 +28,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
       ...ctx,
       connectionService: new PublicAvataxConnectionService(
         ctx.apiClient,
-        ctx.appToken,
+        ctx.appId!,
         ctx.saleorApiUrl
       ),
     },
@@ -43,9 +43,7 @@ export const avataxConnectionRouter = router({
 
     logger.debug("Route get called");
 
-    const avataxConfigurationService = ctx.connectionService;
-
-    const result = await avataxConfigurationService.getById(input.id);
+    const result = await ctx.connectionService.getById(input.id);
 
     logger.info(`Avatax configuration with an id: ${result.id} was successfully retrieved`);
 
@@ -61,9 +59,7 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Attempting to create configuration");
 
-      const avataxConfigurationService = ctx.connectionService;
-
-      const result = await avataxConfigurationService.create(input.value);
+      const result = await ctx.connectionService.create(input.value);
 
       logger.info("Avatax configuration was successfully created");
 
@@ -79,9 +75,7 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Route delete called");
 
-      const avataxConfigurationService = ctx.connectionService;
-
-      const result = await avataxConfigurationService.delete(input.id);
+      const result = await ctx.connectionService.delete(input.id);
 
       logger.info(`Avatax configuration with an id: ${input.id} was deleted`);
 
@@ -97,9 +91,7 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Route patch called");
 
-      const avataxConfigurationService = ctx.connectionService;
-
-      const result = await avataxConfigurationService.update(input.id, input.value);
+      const result = await ctx.connectionService.update(input.id, input.value);
 
       logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
 

@@ -43,9 +43,7 @@ export const taxjarConnectionRouter = router({
 
     logger.debug("taxjarConnectionRouter.get called");
 
-    const taxJarConfigurationService = ctx.connectionService;
-
-    const result = await taxJarConfigurationService.getById(input.id);
+    const result = await ctx.connectionService.getById(input.id);
 
     logger.info(`TaxJar configuration with an id: ${result.id} was successfully retrieved`);
 
@@ -60,9 +58,7 @@ export const taxjarConnectionRouter = router({
 
       logger.debug("Attempting to create configuration");
 
-      const taxJarConfigurationService = ctx.connectionService;
-
-      const result = await taxJarConfigurationService.create(input.value);
+      const result = await ctx.connectionService.create(input.value);
 
       logger.info("TaxJar configuration was successfully created");
 
@@ -77,9 +73,7 @@ export const taxjarConnectionRouter = router({
 
       logger.debug("Route delete called");
 
-      const taxJarConfigurationService = ctx.connectionService;
-
-      const result = await taxJarConfigurationService.delete(input.id);
+      const result = await ctx.connectionService.delete(input.id);
 
       logger.info(`TaxJar configuration with an id: ${input.id} was deleted`);
       return result;
@@ -93,9 +87,7 @@ export const taxjarConnectionRouter = router({
 
       logger.debug({ input }, "Route patch called");
 
-      const taxJarConfigurationService = ctx.connectionService;
-
-      const result = await taxJarConfigurationService.update(input.id, input.value);
+      const result = await ctx.connectionService.update(input.id, input.value);
 
       logger.info(`TaxJar configuration with an id: ${input.id} was successfully updated`);
       return result;

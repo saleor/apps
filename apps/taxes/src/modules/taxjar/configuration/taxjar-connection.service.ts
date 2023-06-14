@@ -38,16 +38,14 @@ export class TaxJarConnectionService {
 
   async update(id: string, nextConfigPartial: DeepPartial<TaxJarConfig>): Promise<void> {
     const data = await this.getById(id);
-
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
     const prevConfig = setting.config;
 
+    const validationService = new TaxJarValidationService();
     const inputTransformer = new PatchInputTransformer();
 
     const input = inputTransformer.transform(nextConfigPartial, prevConfig);
-
-    const validationService = new TaxJarValidationService();
 
     await validationService.validate(input);
 
