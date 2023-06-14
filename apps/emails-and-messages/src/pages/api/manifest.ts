@@ -40,6 +40,11 @@ export default createManifestHandler({
        * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
        */
       requiredSaleorVersion: ">=3.10 <4",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
     };
 
     return manifest;

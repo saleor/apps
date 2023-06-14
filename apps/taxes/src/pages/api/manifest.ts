@@ -29,6 +29,11 @@ export default createManifestHandler({
       author: "Saleor Commerce",
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
     };
 
     return manifest;

@@ -39,4 +39,5 @@ manifest = Manifest(
     extensions=[],
     webhooks=[],
     author="Saleor Commerce"
+    # TODO Add brand.logo.default
 )
