@@ -11,6 +11,7 @@ module.exports = {
     babelOptions: {
       presets: [require.resolve("next/babel")],
     },
+    project: "tsconfig.json",
   },
   overrides: [
     {
