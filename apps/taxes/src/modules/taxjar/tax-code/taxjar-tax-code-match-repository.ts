@@ -18,13 +18,13 @@ type TaxJarTaxCodeMap = z.infer<typeof taxJarTaxCodeMatchesSchema>;
 
 const metadataKey = "taxjar-tax-code-map";
 
-export class TaxJarTaxCodeMapRepository {
+export class TaxJarTaxCodeMatchRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
     this.logger = createLogger({
-      location: "TaxJarTaxCodeMapRepository",
+      location: "TaxJarTaxCodeMatchRepository",
       metadataKey,
     });
   }
