@@ -11,7 +11,15 @@ export class CrudSettingsManager {
   private logger: Logger;
 
   constructor(
-    // move: createSettings manager to constructor
+    /*
+     * // todo: invoke createSettingsManager in constructor
+     * // todo: constructor should accept schema that should be used to validate data
+     * Currently, CrudSettingsManager has a big limitation of not validating the inputs in any way.
+     * We rely on the classes that implement CrudSettingsManager to provide the data in the correct format,
+     * but when you are doing that you must be aware of certain choices CrudSettingsManager makes for you
+     * (like creating an "id" field, or how it updates the data).
+     * So if you make a mistake in data transformations in your class, you will not get any errors.
+     */
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
     private metadataKey: string
@@ -90,7 +98,9 @@ export class CrudSettingsManager {
     const { data: currentSettings } = await this.readAll();
     const nextSettings = currentSettings.map((item) => {
       if (item.id === id) {
-        return { id, ...input };
+        const { id, ...rest } = item;
+
+        return { id, ...rest, ...input };
       }
       return item;
     });
