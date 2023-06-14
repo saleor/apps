@@ -1,8 +1,8 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
-import { Logger, createLogger } from "../../lib/logger";
-import { createRepositoryEntitySchema } from "../app/repository-utils";
-import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
+import { Logger, createLogger } from "../../../lib/logger";
+import { createRepositoryEntitySchema } from "../../app/repository-utils";
+import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 
 const taxJarTaxCodeMatchSchema = createRepositoryEntitySchema(
   z.object({
