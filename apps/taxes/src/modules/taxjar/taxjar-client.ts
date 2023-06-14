@@ -59,4 +59,12 @@ export class TaxJarClient {
     // ! This function doesn't accept any params. This may be troublesome if we want to do pagination/filtering on the frontend.
     return this.client.categories();
   }
+
+  async getTaxCodes() {
+    /*
+     * // ? how many does it return?
+     * * it doesnt allow to pass any params
+     */
+    return this.client.categories();
+  }
 }
