@@ -143,17 +143,17 @@ describe("CrudSettingsService", () => {
   });
 
   describe("update", () => {
-    it("updates an existing item", async () => {
+    it("partially updates an existing item", async () => {
       vi.mocked(mockSettingsManager.get).mockImplementation(async () => {
-        return JSON.stringify([{ id: "id", key: "value" }]);
+        return JSON.stringify([{ id: "id", data: [], config: { foo: "bar" } }]);
       });
 
-      await service.update("id", { key: "value2" });
+      await service.update("id", { config: { foo: "baz" } });
 
       expect(mockSettingsManager.set).toHaveBeenCalledWith({
         domain: "apiUrl",
         key: "metadataKey",
-        value: JSON.stringify([{ id: "id", key: "value2" }]),
+        value: JSON.stringify([{ id: "id", data: [], config: { foo: "baz" } }]),
       });
     });
   });
