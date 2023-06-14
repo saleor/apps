@@ -25,7 +25,7 @@ export class TaxJarConnectionService {
   }
 
   getById(id: string): Promise<TaxJarConnection> {
-    return this.taxJarConnectionRepository.get(id);
+    return this.taxJarConnectionRepository.getById(id);
   }
 
   async create(config: TaxJarConfig): Promise<{ id: string }> {

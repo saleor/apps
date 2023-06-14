@@ -57,7 +57,7 @@ describe("CrudSettingsService", () => {
         return encryptedValue;
       });
 
-      await expect(service.read("id")).rejects.toThrowError("Error while validating metadata");
+      await expect(service.readById("id")).rejects.toThrowError("Error while validating metadata");
     });
 
     it("throws an error if the item is not found", async () => {
@@ -67,7 +67,7 @@ describe("CrudSettingsService", () => {
         return encryptedValue;
       });
 
-      await expect(service.read("id2")).rejects.toThrowError("Item not found");
+      await expect(service.readById("id2")).rejects.toThrowError("Item not found");
     });
 
     it("returns the item if found", async () => {
@@ -77,7 +77,7 @@ describe("CrudSettingsService", () => {
         return encryptedValue;
       });
 
-      const result = await service.read("id");
+      const result = await service.readById("id");
 
       expect(result).toEqual({ data: { id: "id", key: "value" } });
     });
@@ -109,46 +109,13 @@ describe("CrudSettingsService", () => {
     });
   });
 
-  describe("upsert", () => {
-    it("creates a new item if it doesn't exist", async () => {
-      vi.mocked(mockSettingsManager.get).mockImplementation(async () => {
-        return JSON.stringify([{ id: "id", key: "value" }]);
-      });
-
-      await service.upsert("id2", { key: "value2" });
-
-      expect(mockSettingsManager.set).toHaveBeenCalledWith({
-        domain: "apiUrl",
-        key: "metadataKey",
-        value: JSON.stringify([
-          { id: "id", key: "value" },
-          { id: "id2", key: "value2" },
-        ]),
-      });
-    });
-
-    it("updates an existing item", async () => {
-      vi.mocked(mockSettingsManager.get).mockImplementation(async () => {
-        return JSON.stringify([{ id: "id", key: "value" }]);
-      });
-
-      await service.upsert("id", { key: "value2" });
-
-      expect(mockSettingsManager.set).toHaveBeenCalledWith({
-        domain: "apiUrl",
-        key: "metadataKey",
-        value: JSON.stringify([{ id: "id", key: "value2" }]),
-      });
-    });
-  });
-
-  describe("update", () => {
+  describe("updateById", () => {
     it("partially updates an existing item", async () => {
       vi.mocked(mockSettingsManager.get).mockImplementation(async () => {
         return JSON.stringify([{ id: "id", data: [], config: { foo: "bar" } }]);
       });
 
-      await service.update("id", { config: { foo: "baz" } });
+      await service.updateById("id", { config: { foo: "baz" } });
 
       expect(mockSettingsManager.set).toHaveBeenCalledWith({
         domain: "apiUrl",

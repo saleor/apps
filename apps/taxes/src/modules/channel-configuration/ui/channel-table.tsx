@@ -13,7 +13,7 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
   const [value, setValue] = React.useState(providerConnectionId);
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { mutate: upsertMutation } = trpcClient.channelsConfiguration.upsert.useMutation({
+  const { mutate: updateMutation } = trpcClient.channelsConfiguration.updateById.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated channel configuration");
     },
@@ -24,12 +24,12 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
 
   const { data: providerConfigurations = [] } = trpcClient.providersConfiguration.getAll.useQuery();
 
-  const changeValue = (nextproviderConnectionId: string) => {
-    setValue(nextproviderConnectionId);
-    upsertMutation({
+  const changeValue = (nextProviderConnectionId: string) => {
+    setValue(nextProviderConnectionId);
+    updateMutation({
       id,
       config: {
-        providerConnectionId: nextproviderConnectionId,
+        providerConnectionId: nextProviderConnectionId,
         slug,
       },
     });
