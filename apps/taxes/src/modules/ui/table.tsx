@@ -10,5 +10,5 @@ export const Table = {
     <Box fontWeight={"captionSmall"} fontSize={"captionSmall"} {...props} as="th" />
   ),
   TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
-  TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingY={2} {...props} as="td" />,
+  TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingTop={2} {...props} as="td" />,
 };
