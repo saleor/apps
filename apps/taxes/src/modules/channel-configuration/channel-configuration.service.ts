@@ -49,7 +49,7 @@ export class ChannelConfigurationService {
     return configurationMerger.merge(channels, channelConfiguration);
   }
 
-  async update(id: string, data: ChannelConfigProperties) {
-    await this.configurationService.upsert(id, data);
+  async updateById(id: string, data: ChannelConfigProperties) {
+    await this.configurationService.updateById(id, data);
   }
 }

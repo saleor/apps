@@ -29,7 +29,7 @@ export const channelsConfigurationRouter = router({
 
     return channelConfiguration.getAll();
   }),
-  upsert: protectedWithConfigurationService
+  updateById: protectedWithConfigurationService
     .input(channelConfigSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
@@ -39,7 +39,7 @@ export const channelsConfigurationRouter = router({
 
       const configurationService = ctx.connectionService;
 
-      await configurationService.update(input.id, input.config);
+      await configurationService.updateById(input.id, input.config);
 
       logger.info("Channel configuration updated");
     }),
