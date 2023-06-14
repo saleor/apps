@@ -1,4 +1,4 @@
-import { dummyChannelsV1Config } from "./dummy-utils";
+import { dummyChannelsV1Config } from "./run-generate-dummy-data";
 import { TaxChannelsTransformV1toV2 } from "./tax-channels-transform-v1-to-v2";
 import { describe, expect, it } from "vitest";
 
