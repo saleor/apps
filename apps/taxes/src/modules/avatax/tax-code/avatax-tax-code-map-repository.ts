@@ -3,17 +3,12 @@ import { z } from "zod";
 import { Logger, createLogger } from "../../../lib/logger";
 import { createRepositoryEntitySchema } from "../../app/repository-utils";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { saleorTaxClassSchema, taxCodeSchema } from "../../tax-codes/tax-code-match-schema";
 
 const avataxTaxCodeMatchSchema = createRepositoryEntitySchema(
   z.object({
-    saleorTaxClass: z.object({
-      id: z.string(),
-      name: z.string(),
-    }),
-    avataxTaxCode: z.object({
-      id: z.string(),
-      name: z.string(),
-    }),
+    saleorTaxClass: saleorTaxClassSchema,
+    avataxTaxCode: taxCodeSchema,
   })
 );
 
