@@ -14,4 +14,4 @@
 "saleor-app-crm": patch
 ---
 
-Updated @saleor/app-sdk to 0.40.0
+Updated @saleor/app-sdk to 0.40.1
