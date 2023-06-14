@@ -54,4 +54,12 @@ export class TaxJarClient {
   async validateAddress({ params }: ValidateAddressArgs) {
     // return this.client.validateAddress(params);
   }
+
+  async getTaxCodes() {
+    /*
+     * // ? how many does it return?
+     * * it doesnt allow to pass any params
+     */
+    return this.client.categories();
+  }
 }
