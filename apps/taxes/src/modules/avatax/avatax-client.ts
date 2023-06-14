@@ -75,4 +75,9 @@ export class AvataxClient {
   async validateAddress({ address }: ValidateAddressArgs) {
     return this.client.resolveAddress(address);
   }
+
+  async getTaxCodes() {
+    // * filtering and paginating is possible
+    return this.client.listTaxCodes({});
+  }
 }
