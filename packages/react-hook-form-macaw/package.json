@@ -8,7 +8,6 @@
     "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
-    "@saleor/app-sdk": "0.40.0",
     "eslint": "8.42.0"
   },
   "devDependencies": {
