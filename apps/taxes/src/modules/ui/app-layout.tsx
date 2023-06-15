@@ -1,11 +1,12 @@
+import { Box } from "@saleor/macaw-ui/next";
 import React from "react";
-import { AppContainer } from "./app-container";
-import { AppGrid } from "./app-grid";
+import { AppBreadcrumbs } from "./app-breadcrumbs";
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <AppContainer>
-      <AppGrid>{children}</AppGrid>
-    </AppContainer>
+    <Box display={"flex"} flexDirection={"column"} gap={8} paddingY={4}>
+      <AppBreadcrumbs />
+      {children}
+    </Box>
   );
 };

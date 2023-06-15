@@ -1,39 +1,43 @@
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
-export type Payload = {
+export type AvataxCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
-  channelConfig: ChannelConfig;
-  config: AvataxConfig;
 };
 
-export type Target = CreateTransactionArgs;
-export type Response = CalculateTaxesResponse;
+export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
+export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
-export class AvataxCalculateTaxesAdapter implements WebhookAdapter<Payload, Response> {
+export class AvataxCalculateTaxesAdapter
+  implements WebhookAdapter<AvataxCalculateTaxesPayload, AvataxCalculateTaxesResponse>
+{
   private logger: Logger;
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ service: "AvataxCalculateTaxesAdapter" });
+    this.logger = createLogger({ location: "AvataxCalculateTaxesAdapter" });
   }
 
-  async send(payload: Pick<Payload, "channelConfig" | "taxBase">): Promise<Response> {
-    this.logger.debug({ payload }, "send called with:");
+  async send(payload: AvataxCalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
+    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
     const payloadTransformer = new AvataxCalculateTaxesPayloadTransformer();
-    const target = payloadTransformer.transform({ ...payload, config: this.config });
+    const target = payloadTransformer.transform({ ...payload, providerConfig: this.config });
+
+    this.logger.debug(
+      { transformedPayload: target },
+      "Will call Avatax createTransaction with transformed payload:"
+    );
 
     const client = new AvataxClient(this.config);
     const response = await client.createTransaction(target);
 
-    this.logger.debug({ response }, "Avatax createTransaction response:");
+    this.logger.debug({ response }, "Avatax createTransaction responded with:");
 
     const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);

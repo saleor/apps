@@ -1,38 +1,41 @@
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { Logger, createLogger } from "../../../lib/logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
-import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-config";
-import { AvataxOrderCreatedResponseTransformer } from "./avatax-order-created-response-transformer";
+import { AvataxClient } from "../avatax-client";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderCreatedPayloadTransformer } from "./avatax-order-created-payload-transformer";
-import { Logger, createLogger } from "../../../lib/logger";
+import { AvataxOrderCreatedResponseTransformer } from "./avatax-order-created-response-transformer";
 
-export type Payload = {
+type AvataxOrderCreatedPayload = {
   order: OrderCreatedSubscriptionFragment;
-  channelConfig: ChannelConfig;
-  config: AvataxConfig;
 };
-export type Target = CreateTransactionArgs;
-type Response = CreateOrderResponse;
+type AvataxOrderCreatedResponse = CreateOrderResponse;
 
-export class AvataxOrderCreatedAdapter implements WebhookAdapter<Payload, Response> {
+export class AvataxOrderCreatedAdapter
+  implements WebhookAdapter<AvataxOrderCreatedPayload, AvataxOrderCreatedResponse>
+{
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ service: "AvataxOrderCreatedAdapter" });
+    this.logger = createLogger({ location: "AvataxOrderCreatedAdapter" });
   }
 
-  async send(payload: Pick<Payload, "channelConfig" | "order">): Promise<Response> {
-    this.logger.debug({ payload }, "send called with:");
+  async send(payload: AvataxOrderCreatedPayload): Promise<AvataxOrderCreatedResponse> {
+    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
 
-    const payloadTransformer = new AvataxOrderCreatedPayloadTransformer();
-    const target = payloadTransformer.transform({ ...payload, config: this.config });
+    const payloadTransformer = new AvataxOrderCreatedPayloadTransformer(this.config);
+    const target = payloadTransformer.transform(payload);
+
+    this.logger.debug(
+      { transformedPayload: target },
+      "Will call Avatax createTransaction with transformed payload:"
+    );
 
     const client = new AvataxClient(this.config);
     const response = await client.createTransaction(target);
 
-    this.logger.debug({ response }, "Avatax createTransaction response:");
+    this.logger.debug({ response }, "Avatax createTransaction responded with:");
 
     const responseTransformer = new AvataxOrderCreatedResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);

@@ -2,7 +2,10 @@ import Breakdown from "taxjar/dist/types/breakdown";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
+import {
+  TaxJarCalculateTaxesPayload,
+  TaxJarCalculateTaxesResponse,
+} from "./taxjar-calculate-taxes-adapter";
 
 /*
  * TaxJar doesn't guarantee the order of the response items to match the payload items order.
@@ -26,7 +29,10 @@ export function matchPayloadLinesToResponseLines(
 }
 
 export class TaxJarCalculateTaxesResponseLinesTransformer {
-  transform(payload: Payload, response: TaxForOrderRes): Response["lines"] {
+  transform(
+    payload: TaxJarCalculateTaxesPayload,
+    response: TaxForOrderRes
+  ): TaxJarCalculateTaxesResponse["lines"] {
     const responseLines = response.tax.breakdown?.line_items ?? [];
 
     const lines = matchPayloadLinesToResponseLines(payload.taxBase.lines, responseLines);

@@ -1,23 +1,40 @@
 import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
+import { Client, gql } from "urql";
 import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdateMetadataDocument,
 } from "../../../generated/graphql";
-import { createLogger } from "../../lib/logger";
+
+gql`
+  mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
+    updatePrivateMetadata(id: $id, input: $input) {
+      item {
+        privateMetadata {
+          key
+          value
+        }
+      }
+    }
+  }
+`;
+
+gql`
+  query FetchAppDetails {
+    app {
+      id
+      privateMetadata {
+        key
+        value
+      }
+    }
+  }
+`;
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
-  const logger = createLogger({ service: "fetchAllMetadata" });
-
-  logger.debug("Fetching metadata from Saleor");
-
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
-
-  // * `metadata` name is required for secrets censorship
-  logger.debug({ error, metadata: data }, "Metadata fetched");
 
   if (error) {
     return [];
@@ -26,29 +43,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) {
-  const logger = createLogger({ service: "mutateMetadata" });
-
-  logger.debug({ metadata }, "Mutating metadata");
-  // to update the metadata, ID is required
-  const { error: idQueryError, data: idQueryData } = await client
-    .query(FetchAppDetailsDocument, {})
-    .toPromise();
-
-  logger.debug({ error: idQueryError, data: idQueryData }, "Metadata mutated");
-
-  if (idQueryError) {
-    throw new Error(
-      "Could not fetch the app id. Please check if auth data for the client are valid."
-    );
-  }
-
-  const appId = idQueryData?.app?.id;
-
-  if (!appId) {
-    throw new Error("Could not fetch the app ID");
-  }
-
+export async function mutateMetadata(client: Client, metadata: MetadataEntry[], appId: string) {
   const { error: mutationError, data: mutationData } = await client
     .mutation(UpdateMetadataDocument, {
       id: appId,
@@ -68,8 +63,8 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
-export const createSettingsManager = (client: Client) => {
-  /**
+export const createSettingsManager = (client: Client, appId: string) => {
+  /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.
    * If your use case require plain text values, you can use MetadataManager.
@@ -78,6 +73,6 @@ export const createSettingsManager = (client: Client) => {
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,
     fetchMetadata: () => fetchAllMetadata(client),
-    mutateMetadata: (metadata) => mutateMetadata(client, metadata),
+    mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
   });
 };

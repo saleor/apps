@@ -6,7 +6,7 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { getActiveConnection } from "../../../modules/taxes/active-connection";
 
 export const config = {
   api: {
@@ -37,26 +37,26 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
 });
 
 export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ event: ctx.event });
+  const logger = createLogger({ location: "checkoutCalculateTaxesSyncWebhook" });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
   try {
     verifyCalculateTaxesPayload(payload);
-    logger.info("Payload validated succesfully");
+    logger.debug("Payload validated succesfully");
   } catch (error) {
-    logger.info("Returning no data");
+    logger.debug("Payload validation failed");
     return webhookResponse.error(error);
   }
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");

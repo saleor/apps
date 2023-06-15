@@ -4,7 +4,7 @@ import { taxJarAddressFactory } from "./address-factory";
 describe("taxJarAddressFactory", () => {
   describe("fromChannelAddress", () => {
     it("returns fields in the expected format", () => {
-      const result = taxJarAddressFactory.fromChannelAddress({
+      const result = taxJarAddressFactory.fromChannelToTax({
         city: "LOS ANGELES",
         country: "US",
         state: "CA",
@@ -24,7 +24,7 @@ describe("taxJarAddressFactory", () => {
 
   describe("fromSaleorAddress", () => {
     it("returns fields in the expected format with streetAddress1", () => {
-      const result = taxJarAddressFactory.fromSaleorAddress({
+      const result = taxJarAddressFactory.fromSaleorToTax({
         streetAddress1: "123 Palm Grove Ln",
         streetAddress2: "",
         city: "LOS ANGELES",
@@ -45,7 +45,7 @@ describe("taxJarAddressFactory", () => {
     });
 
     it("returns fields in the expected format with streetAddress1 and streetAddress2", () => {
-      const result = taxJarAddressFactory.fromSaleorAddress({
+      const result = taxJarAddressFactory.fromSaleorToTax({
         streetAddress1: "123 Palm",
         streetAddress2: "Grove Ln",
         city: "LOS ANGELES",

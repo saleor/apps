@@ -1,230 +1,150 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  FormHelperText,
-  Grid,
-  InputLabel,
-  Switch,
-  TextField,
-  TextFieldProps,
-} from "@material-ui/core";
-import { Delete, Save } from "@material-ui/icons";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { TextLink } from "@saleor/apps-ui";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { useInstanceId } from "../../taxes/tax-context";
-import { trpcClient } from "../../trpc/trpc-client";
-import { taxJarConfigSchema } from "../taxjar-config";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useForm } from "react-hook-form";
+import { AppCard } from "../../ui/app-card";
+import { AppToggle } from "../../ui/app-toggle";
 
-const useStyles = makeStyles((theme) => ({
-  reverseRow: {
-    display: "flex",
-    flexDirection: "row-reverse",
-    gap: theme.spacing(1),
-  },
-}));
+import { CountrySelect } from "../../ui/country-select";
+import { TaxJarConfig, defaultTaxJarConfig, taxJarConfigSchema } from "../taxjar-connection-schema";
+import { ProviderLabel } from "../../ui/provider-label";
 
-const schema = taxJarConfigSchema;
-
-type FormValues = z.infer<typeof schema>;
-
-const defaultValues: FormValues = {
-  name: "",
-  apiKey: "",
-  isSandbox: false,
+const HelperText = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Text color="textNeutralSubdued" fontWeight={"captionLarge"}>
+      {children}
+    </Text>
+  );
 };
 
-export const TaxJarConfigurationForm = () => {
-  const [isWarningDialogOpen, setIsWarningDialogOpen] = React.useState(false);
-  const styles = useStyles();
-  const { instanceId, setInstanceId } = useInstanceId();
-  const { handleSubmit, reset, control, formState } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues,
+type TaxJarConfigurationFormProps = {
+  onSubmit: (data: TaxJarConfig) => void;
+  defaultValues: TaxJarConfig;
+  isLoading: boolean;
+  cancelButton: React.ReactNode;
+};
+
+export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => {
+  const { handleSubmit, control, formState, reset } = useForm({
+    defaultValues: defaultTaxJarConfig,
+    resolver: zodResolver(taxJarConfigSchema),
   });
-  const { notifySuccess, notifyError } = useDashboardNotification();
-
-  const resetInstanceId = () => {
-    setInstanceId(null);
-  };
-
-  const { refetch: refetchChannelConfigurationData } =
-    trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-
-  const { refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery();
-  const { data: instance } = trpcClient.taxJarConfiguration.get.useQuery(
-    { id: instanceId ?? "" },
-    {
-      enabled: !!instanceId,
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    }
-  );
-
-  const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.taxJarConfiguration.post.useMutation({
-      onSuccess({ id }) {
-        setInstanceId(id);
-        refetchProvidersConfigurationData();
-        refetchChannelConfigurationData();
-
-        notifySuccess("Success", "Saved TaxJar configuration");
-      },
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-
-  const { mutate: updateMutation, isLoading: isUpdateLoading } =
-    trpcClient.taxJarConfiguration.patch.useMutation({
-      onSuccess() {
-        refetchProvidersConfigurationData();
-        refetchChannelConfigurationData();
-        notifySuccess("Success", "Updated TaxJar configuration");
-      },
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-
-  const { mutate: deleteMutation, isLoading: isDeleteLoading } =
-    trpcClient.taxJarConfiguration.delete.useMutation({
-      onSuccess() {
-        resetInstanceId();
-        refetchProvidersConfigurationData();
-        refetchChannelConfigurationData();
-
-        notifySuccess("Success", "Removed TaxJar instance");
-      },
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
 
   React.useEffect(() => {
-    if (instance) {
-      const { config } = instance;
+    reset(props.defaultValues);
+  }, [props.defaultValues, reset]);
 
-      reset(config);
-    } else {
-      reset({ ...defaultValues });
-    }
-  }, [instance, instanceId, reset]);
-
-  const textFieldProps: TextFieldProps = {
-    fullWidth: true,
-  };
-
-  const onSubmit = (value: FormValues) => {
-    if (instanceId) {
-      updateMutation({
-        id: instanceId,
-        value,
-      });
-    } else {
-      createMutation({
-        value,
-      });
-    }
-  };
-
-  const closeWarningDialog = () => {
-    setIsWarningDialogOpen(false);
-  };
-
-  const openWarningDialog = () => {
-    setIsWarningDialogOpen(true);
-  };
-
-  const deleteProvider = () => {
-    closeWarningDialog();
-    if (instanceId) {
-      deleteMutation({ id: instanceId });
-    }
-  };
-
-  const isLoading = isCreateLoading || isUpdateLoading;
+  const submitHandler = React.useCallback(
+    (data: TaxJarConfig) => {
+      props.onSubmit(data);
+    },
+    [props]
+  );
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Controller
-              name="name"
+    <AppCard>
+      <Box marginBottom={8}>
+        <ProviderLabel name="taxjar" />
+      </Box>
+
+      <form onSubmit={handleSubmit(submitHandler)}>
+        <Input
+          control={control}
+          name="name"
+          required
+          label="Configuration name *"
+          helperText={formState.errors.name?.message}
+        />
+        <HelperText>Unique identifier for your provider.</HelperText>
+        <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Credentials
+        </Text>
+        <Box display="grid" gridTemplateColumns={2} gap={12}>
+          <Box paddingY={4}>
+            <Input
               control={control}
-              defaultValue={defaultValues.name}
-              render={({ field }) => (
-                <TextField
-                  required
-                  type="text"
-                  {...field}
-                  label="Instance name"
-                  {...textFieldProps}
-                />
-              )}
+              name="credentials.apiKey"
+              required
+              label="API Key *"
+              helperText={formState.errors.credentials?.apiKey?.message}
             />
-            {formState.errors.name && (
-              <FormHelperText error>{formState.errors.name.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="apiKey"
+            <HelperText>
+              You can obtain it by following the instructions from{" "}
+              <TextLink href="https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token">
+                here
+              </TextLink>
+              .
+            </HelperText>
+          </Box>
+          <Box paddingY={4}>
+            <AppToggle
               control={control}
-              defaultValue={defaultValues.apiKey}
-              render={({ field }) => (
-                <TextField required label="API Key" {...field} {...textFieldProps} />
-              )}
+              label="Use sandbox mode"
+              helperText={
+                <HelperText>
+                  Toggling between{" "}
+                  <TextLink href="https://developers.taxjar.com/integrations/testing/" newTab>
+                    <q>Production</q> and <q>Sandbox</q>
+                  </TextLink>{" "}
+                  environment.
+                </HelperText>
+              }
+              name="isSandbox"
             />
-            {formState.errors?.apiKey && (
-              <FormHelperText error>{formState.errors?.apiKey.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <InputLabel>
-              Sandbox
-              <Controller
-                name={"isSandbox"}
-                control={control}
-                defaultValue={defaultValues.isSandbox}
-                render={({ field }) => (
-                  <Switch
-                    {...field}
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
-              />
-            </InputLabel>
-          </Grid>
-        </Grid>
-        <br />
-        <div className={styles.reverseRow}>
-          <Button startIcon={<Save />} type="submit" variant="primary">
-            {isLoading ? "Saving..." : "Save"}
+          </Box>
+        </Box>
+        <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Address
+        </Text>
+        <Box paddingY={4} display={"grid"} gridTemplateColumns={2} gap={12}>
+          <Input
+            control={control}
+            required
+            name="address.street"
+            label="Street *"
+            helperText={formState.errors.address?.street?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.city"
+            label="City *"
+            helperText={formState.errors.address?.city?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.state"
+            label="State *"
+            helperText={formState.errors.address?.state?.message}
+          />
+          <CountrySelect
+            control={control}
+            required
+            name="address.country"
+            label="Country *"
+            helperText={formState.errors.address?.country?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.zip"
+            label="Zip *"
+            helperText={formState.errors.address?.zip?.message}
+          />
+        </Box>
+        <Divider marginY={8} />
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          {props.cancelButton}
+          <Button disabled={props.isLoading} type="submit" variant="primary">
+            {props.isLoading ? "Saving..." : "Save"}
           </Button>
-          {instanceId && (
-            <Button onClick={deleteProvider} startIcon={<Delete />}>
-              {isDeleteLoading ? "Deleting..." : "Delete"}
-            </Button>
-          )}
-        </div>
+        </Box>
       </form>
-      {/* // todo: bring back to life once Dashboard allows to summon dialog */}
-      {/* <DeleteProviderDialog
-        isOpen={isWarningDialogOpen}
-        onClose={closeWarningDialog}
-        onCancel={closeWarningDialog}
-        onConfirm={deleteProvider}
-      /> */}
-    </>
+    </AppCard>
   );
 };

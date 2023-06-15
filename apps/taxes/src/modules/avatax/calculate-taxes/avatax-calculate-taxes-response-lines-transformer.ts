@@ -1,10 +1,11 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { Response, SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
-  transform(transaction: TransactionModel): Response["lines"] {
+  transform(transaction: TransactionModel): CalculateTaxesResponse["lines"] {
     const productLines = transaction.lines?.filter((line) => line.itemCode !== SHIPPING_ITEM_CODE);
 
     return (

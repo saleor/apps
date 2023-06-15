@@ -9,12 +9,12 @@ export class WebhookResponse {
   }
 
   private returnSuccess(data?: unknown) {
-    this.logger.debug({ data }, "success called with:");
+    this.logger.debug({ data }, "Responding to Saleor with data:");
     return this.res.status(200).json(data ?? {});
   }
 
   private returnError(errorMessage: string) {
-    this.logger.debug({ errorMessage }, "returning error:");
+    this.logger.debug({ errorMessage }, "Responding to Saleor with error:");
     return this.res.status(500).json({ error: errorMessage });
   }
 

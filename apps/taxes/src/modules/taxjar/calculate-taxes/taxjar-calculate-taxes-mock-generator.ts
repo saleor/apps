@@ -1,6 +1,7 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channels-configuration/channels-config";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 
 type TaxBase = TaxBaseFragment;
 
@@ -194,21 +195,20 @@ const taxExcludedTaxBase: TaxBase = {
   },
 };
 
-const withNexusChannelConfig: ChannelConfig = {
-  providerInstanceId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
-  enabled: false,
-  address: {
-    country: "US",
-    zip: "10118",
-    state: "NY",
-    city: "New York",
-    street: "350 5th Avenue",
+const channelConfig: ChannelConfig = {
+  id: "1",
+  config: {
+    providerConnectionId: "b8c29f49-7cae-4762-8458-e9a27eb83081",
+    slug: "default-channel",
   },
 };
 
-const noNexusChannelConfig: ChannelConfig = {
-  providerInstanceId: "aa5293e5-7f5d-4782-a619-222ead918e50",
-  enabled: false,
+const providerConfig: TaxJarConfig = {
+  name: "taxjar-1",
+  isSandbox: false,
+  credentials: {
+    apiKey: "test",
+  },
   address: {
     country: "US",
     zip: "10118",
@@ -461,22 +461,26 @@ const withNexusTaxIncludedTaxForOrderMock: TaxForOrder = {
 const testingScenariosMap = {
   with_no_nexus_tax_included: {
     taxBase: taxIncludedTaxBase,
-    channelConfig: noNexusChannelConfig,
+    channelConfig,
+    providerConfig,
     response: noNexusTaxForOrderMock,
   },
   with_no_nexus_tax_excluded: {
     taxBase: taxExcludedTaxBase,
-    channelConfig: noNexusChannelConfig,
+    channelConfig,
+    providerConfig,
     response: noNexusTaxForOrderMock,
   },
   with_nexus_tax_included: {
     taxBase: taxIncludedTaxBase,
-    channelConfig: withNexusChannelConfig,
+    channelConfig,
+    providerConfig,
     response: withNexusTaxIncludedTaxForOrderMock,
   },
   with_nexus_tax_excluded: {
     taxBase: taxExcludedTaxBase,
-    channelConfig: withNexusChannelConfig,
+    channelConfig,
+    providerConfig,
     response: withNexusTaxExcludedTaxForOrderMock,
   },
 };
@@ -494,6 +498,12 @@ export class TaxJarCalculateTaxesMockGenerator {
   generateChannelConfig = (overrides: Partial<ChannelConfig> = {}): ChannelConfig =>
     structuredClone({
       ...testingScenariosMap[this.scenario].channelConfig,
+      ...overrides,
+    });
+
+  generateProviderConfig = (overrides: Partial<TaxJarConfig> = {}): TaxJarConfig =>
+    structuredClone({
+      ...testingScenariosMap[this.scenario].providerConfig,
       ...overrides,
     });
 
