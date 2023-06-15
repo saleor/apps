@@ -6,7 +6,7 @@ import {
   sendgridGetEventConfigurationInputSchema,
   sendgridUpdateApiConnectionSchema,
   sendgridUpdateBasicInformationSchema,
-  sendgridUpdateEventConfigurationInputSchema,
+  sendgridUpdateEventArraySchema,
   sendgridUpdateEventSchema,
   sendgridUpdateSenderSchema,
 } from "./sendgrid-config-input-schema";
@@ -147,23 +147,6 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  updateEventConfiguration: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(sendgridUpdateEventConfigurationInputSchema)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateEventConfiguration called");
-
-      try {
-        return await ctx.sendgridConfigurationService.updateEventConfiguration({
-          configurationId: input.configurationId,
-          eventConfiguration: input,
-        });
-      } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
-      }
-    }),
   updateBasicInformation: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateBasicInformationSchema)
@@ -260,13 +243,41 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.updateEvent called");
 
+      const { id: configurationId, eventType, ...eventConfiguration } = input;
+
       try {
         return await ctx.sendgridConfigurationService.updateEventConfiguration({
-          eventConfiguration: input,
-          configurationId: input.id,
+          configurationId,
+          eventType,
+          eventConfiguration,
         });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
+    }),
+
+  updateEventArray: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(sendgridUpdateEventArraySchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "sendgridConfigurationRouter.updateEventArray called");
+
+      return await Promise.all(
+        input.events.map(async (event) => {
+          const { eventType, ...eventConfiguration } = event;
+
+          try {
+            return await ctx.sendgridConfigurationService.updateEventConfiguration({
+              configurationId: input.configurationId,
+              eventType,
+              eventConfiguration,
+            });
+          } catch (e) {
+            throwTrpcErrorFromConfigurationServiceError(e);
+          }
+        })
+      );
     }),
 });

@@ -86,3 +86,10 @@ export const sendgridUpdateEventSchema = sendgridConfigurationEventSchema.merge(
 );
 
 export type SendgridUpdateEvent = z.infer<typeof sendgridUpdateEventSchema>;
+
+export const sendgridUpdateEventArraySchema = z.object({
+  configurationId: z.string(),
+  events: z.array(sendgridConfigurationEventSchema),
+});
+
+export type SendgridUpdateEventArray = z.infer<typeof sendgridUpdateEventArraySchema>;

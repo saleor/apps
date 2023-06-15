@@ -9,6 +9,7 @@ import { appUrls } from "../../../../../modules/app-configuration/urls";
 import { EventForm } from "../../../../../modules/smtp/ui/event-form";
 import { smtpUrls } from "../../../../../modules/smtp/urls";
 import { TextLink } from "@saleor/apps-ui";
+import { messageEventTypesLabels } from "../../../../../modules/event-handlers/message-event-types";
 
 const LoadingView = () => {
   return (
@@ -78,12 +79,12 @@ const EditSmtpEventPage: NextPage = () => {
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         { name: `SMTP:  ${configuration.name}`, href: smtpUrls.configuration(configurationId) },
-        { name: eventType },
+        { name: messageEventTypesLabels[eventType] },
       ]}
     >
       <Box display="flex" flexDirection="column" gap={10}>
         <Text as="p">
-          Edit template for {eventType} event. You can learn more about MJML{" "}
+          Edit template for <code>{eventType}</code> event. You can learn more about MJML{" "}
           <TextLink href="https://mjml.io/" newTab={true}>
             here
           </TextLink>

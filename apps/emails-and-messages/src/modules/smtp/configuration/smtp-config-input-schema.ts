@@ -72,6 +72,21 @@ export const smtpUpdateEventSchema = smtpConfigurationEventSchema.merge(
 
 export type SmtpUpdateEvent = z.infer<typeof smtpUpdateEventSchema>;
 
+export const smtpUpdateEventActiveStatusInputSchema = smtpConfigurationEventSchema
+  .pick({
+    active: true,
+    eventType: true,
+  })
+  .merge(
+    smtpConfigurationSchema.pick({
+      id: true,
+    })
+  );
+
+export type SmtpUpdateEventActiveStatusInput = z.infer<
+  typeof smtpUpdateEventActiveStatusInputSchema
+>;
+
 export const smtpGetEventConfigurationInputSchema = smtpConfigurationIdInputSchema.merge(
   z.object({
     eventType: z.enum(messageEventTypes),
@@ -87,3 +102,10 @@ export const smtpUpdateEventConfigurationInputSchema = smtpConfigurationIdInputS
 export type SmtpUpdateEventConfigurationInput = z.infer<
   typeof smtpUpdateEventConfigurationInputSchema
 >;
+
+export const smtpUpdateEventArraySchema = z.object({
+  configurationId: z.string(),
+  events: z.array(smtpConfigurationEventSchema),
+});
+
+export type SmtpUpdateEventArray = z.infer<typeof smtpUpdateEventArraySchema>;
