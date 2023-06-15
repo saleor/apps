@@ -35,7 +35,7 @@
     "graphql-tag": "^2.12.6",
     "handlebars": "^4.7.7",
     "html-to-text": "^9.0.3",
-    "jsdom": "^20.0.3",
+    "jsdom": "^22.1.0",
     "mjml": "^4.13.0",
     "next": "13.3.0",
     "next-urql": "4.0.3",
