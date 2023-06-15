@@ -74,7 +74,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-    const taxProvider = getActiveConnection(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata, ctx.authData);
 
     logger.info({ taxProvider }, "Fetched taxProvider");
 

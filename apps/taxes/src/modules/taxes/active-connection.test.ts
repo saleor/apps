@@ -4,6 +4,7 @@ import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
 import { getActiveConnection } from "./active-connection";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 const mockedInvalidMetadata: MetadataItem[] = [
   {
@@ -86,39 +87,69 @@ const mockedInvalidEncryptedChannels = encrypt(
 
 const mockedValidEncryptedChannels = encrypt(JSON.stringify(mockedValidChannels), mockedSecretKey);
 
+const mockedAuthData: AuthData = {
+  appId: "test-app-id",
+  saleorApiUrl: "https://test.saleor.io/graphql/",
+  token: "test-token",
+};
+
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getActiveConnection", () => {
   it("throws error when channel slug is missing", () => {
-    expect(() => getActiveConnection("", mockedInvalidMetadata)).toThrow(
+    expect(() => getActiveConnection("", mockedInvalidMetadata, mockedAuthData)).toThrow(
       "Channel slug was not found in the webhook payload"
     );
   });
 
   it("throws error when there are no metadata items", () => {
-    expect(() => getActiveConnection("default-channel", [])).toThrow(
+    expect(() => getActiveConnection("default-channel", [], mockedAuthData)).toThrow(
       "App encryptedMetadata was not found in the webhook payload"
     );
   });
 
   it("throws error when no providerConnectionId was found", () => {
     expect(() =>
-      getActiveConnection("default-channel", [
-        {
-          key: "providers",
-          value: mockedEncryptedProviders,
-        },
-        {
-          key: "channels",
-          value: mockedInvalidEncryptedChannels,
-        },
-      ])
+      getActiveConnection(
+        "default-channel",
+        [
+          {
+            key: "providers",
+            value: mockedEncryptedProviders,
+          },
+          {
+            key: "channels",
+            value: mockedInvalidEncryptedChannels,
+          },
+        ],
+        mockedAuthData
+      )
     ).toThrow("Channel config providerConnectionId does not match any providers");
   });
 
   it("throws error when no channel was found for channelSlug", () => {
     expect(() =>
-      getActiveConnection("invalid-channel", [
+      getActiveConnection(
+        "invalid-channel",
+        [
+          {
+            key: "providers",
+            value: mockedEncryptedProviders,
+          },
+          {
+            key: "channels",
+            value: mockedValidEncryptedChannels,
+          },
+        ],
+        mockedAuthData
+      )
+    ).toThrow("Channel config was not found for channel invalid-channel");
+  });
+
+  it("returns provider when data is correct", () => {
+    const result = getActiveConnection(
+      "default-channel",
+      [
         {
           key: "providers",
           value: mockedEncryptedProviders,
@@ -127,21 +158,9 @@ describe("getActiveConnection", () => {
           key: "channels",
           value: mockedValidEncryptedChannels,
         },
-      ])
-    ).toThrow("Channel config was not found for channel invalid-channel");
-  });
-
-  it("returns provider when data is correct", () => {
-    const result = getActiveConnection("default-channel", [
-      {
-        key: "providers",
-        value: mockedEncryptedProviders,
-      },
-      {
-        key: "channels",
-        value: mockedValidEncryptedChannels,
-      },
-    ]);
+      ],
+      mockedAuthData
+    );
 
     expect(result).toBeDefined();
   });
