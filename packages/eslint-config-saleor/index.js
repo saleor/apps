@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["next", "turbo", "prettier"],
+  extends: ["next", "turbo", "prettier", "plugin:@saleor/saleor-app/recommended"],
   rules: {
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
@@ -11,6 +11,7 @@ module.exports = {
     babelOptions: {
       presets: [require.resolve("next/babel")],
     },
+    project: "tsconfig.json",
   },
   overrides: [
     {
