@@ -69,14 +69,14 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const { saleorApiUrl, token } = authData;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info({ orderId: payload?.order?.id }, "Handler called with order ID");
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info("Fetched taxProvider");
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
@@ -89,7 +89,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     const createdOrder = await taxProvider.createOrder(payload.order);
 
-    logger.info({ createdOrder }, "Order created");
+    logger.info({ createdOrderID: createdOrder.id }, "Order created");
     const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
 
     await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
@@ -97,7 +97,9 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     return webhookResponse.success();
   } catch (error) {
-    logger.error({ error });
+    logger.error({
+      error: { message: (error as Error).message, stack: (error as Error).stack },
+    });
     return webhookResponse.error(new Error("Error while creating order in tax provider"));
   }
 });

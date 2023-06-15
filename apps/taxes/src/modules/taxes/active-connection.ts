@@ -88,7 +88,11 @@ export function getActiveConnection(
 
   if (!providerConnection) {
     logger.debug(
-      { providerConnections, channelConfig },
+      {
+        providerConnectionsId: providerConnections.map((c) => c.id),
+        channelConfigId: channelConfig.config.providerConnectionId,
+        channelConfigSlug: channelConfig.config.slug,
+      },
       "In the providers array, there is no item with an id that matches the channel config providerConnectionId."
     );
     throw new Error(`Channel config providerConnectionId does not match any providers`);
