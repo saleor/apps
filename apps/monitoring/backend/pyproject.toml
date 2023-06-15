@@ -8,7 +8,7 @@ authors = ["Przemysław Łada <przemyslaw.lada@saleor.io>"]
 python = "^3.10"
 fastapi = "^0.92.0"
 uvicorn = {extras = ["standard"], version = "^0.20.0"}
-python-dotenv = "^0.21.0"
+python-dotenv = "^1.0.0"
 python-json-logger = "^2.0.4"
 datadog-api-client = {extras = ["async"], version = "^2.8.0"}
 ua-parser = "^0.16.1"
