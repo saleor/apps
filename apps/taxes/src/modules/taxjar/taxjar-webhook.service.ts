@@ -5,13 +5,14 @@ import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
 import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
   private logger: Logger;
   private config: TaxJarConfig;
 
-  constructor(config: TaxJarConfig) {
+  constructor(config: TaxJarConfig, private ctx: AuthData) {
     const taxJarClient = new TaxJarClient(config);
 
     this.client = taxJarClient;
@@ -22,7 +23,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    const adapter = new TaxJarCalculateTaxesAdapter(this.config);
+    const adapter = new TaxJarCalculateTaxesAdapter(this.config, this.ctx);
 
     const response = await adapter.send({ taxBase });
 

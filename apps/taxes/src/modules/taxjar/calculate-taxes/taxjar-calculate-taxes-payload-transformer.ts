@@ -1,15 +1,20 @@
+import { TaxBaseFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { taxJarAddressFactory } from "../address-factory";
+import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import {
   TaxJarCalculateTaxesPayload,
   TaxJarCalculateTaxesTarget,
 } from "./taxjar-calculate-taxes-adapter";
+import { TaxJarTaxCodeMatcher } from "./taxjar-tax-code-matcher";
 
 export class TaxJarCalculateTaxesPayloadTransformer {
   constructor(private readonly config: TaxJarConfig) {}
+
   private mapLines(
-    taxBase: TaxJarCalculateTaxesPayload["taxBase"]
+    taxBase: TaxJarCalculateTaxesPayload["taxBase"],
+    matches: TaxJarTaxCodeMatches
   ): TaxJarCalculateTaxesTarget["params"]["line_items"] {
     const { lines, discounts } = taxBase;
     const discountSum = discounts?.reduce(
@@ -21,12 +26,13 @@ export class TaxJarCalculateTaxesPayloadTransformer {
 
     const mappedLines: TaxJarCalculateTaxesTarget["params"]["line_items"] = lines.map(
       (line, index) => {
+        const matcher = new TaxJarTaxCodeMatcher();
         const discountAmount = distributedDiscounts[index];
+        const taxCode = matcher.match(line, matches);
 
         return {
           id: line.sourceLine.id,
-          // todo: get from tax code matcher
-          product_tax_code: "",
+          product_tax_code: taxCode,
           quantity: line.quantity,
           unit_price: Number(line.unitPrice.amount),
           discount: discountAmount,
@@ -37,7 +43,7 @@ export class TaxJarCalculateTaxesPayloadTransformer {
     return mappedLines;
   }
 
-  transform({ taxBase }: TaxJarCalculateTaxesPayload): TaxJarCalculateTaxesTarget {
+  transform(taxBase: TaxBaseFragment, matches: TaxJarTaxCodeMatches): TaxJarCalculateTaxesTarget {
     const fromAddress = taxJarAddressFactory.fromChannelToTax(this.config.address);
 
     if (!taxBase.address) {
@@ -51,7 +57,7 @@ export class TaxJarCalculateTaxesPayloadTransformer {
         ...fromAddress,
         ...toAddress,
         shipping: taxBase.shippingPrice.amount,
-        line_items: this.mapLines(taxBase),
+        line_items: this.mapLines(taxBase, matches),
       },
     };
 

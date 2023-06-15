@@ -54,7 +54,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const taxProvider = getActiveConnection(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata, ctx.authData);
 
     logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);

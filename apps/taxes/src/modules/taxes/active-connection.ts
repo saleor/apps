@@ -1,3 +1,4 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
   OrderCreatedSubscriptionFragment,
@@ -17,7 +18,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerConnection: ProviderConnection) {
+  constructor(providerConnection: ProviderConnection, private ctx: AuthData) {
     this.logger = createLogger({
       location: "ActiveTaxProvider",
     });
@@ -27,13 +28,13 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     switch (taxProviderName) {
       case "taxjar": {
         this.logger.debug("Selecting TaxJar as tax provider");
-        this.client = new TaxJarWebhookService(providerConnection.config);
+        this.client = new TaxJarWebhookService(providerConnection.config, this.ctx);
         break;
       }
 
       case "avatax": {
         this.logger.debug("Selecting Avatax as tax provider");
-        this.client = new AvataxWebhookService(providerConnection.config);
+        this.client = new AvataxWebhookService(providerConnection.config, this.ctx);
         break;
       }
 
@@ -58,7 +59,8 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
 export function getActiveConnection(
   channelSlug: string | undefined,
-  encryptedMetadata: MetadataItem[]
+  encryptedMetadata: MetadataItem[],
+  ctx: AuthData
 ): ActiveTaxProvider {
   const logger = createLogger({
     location: "getActiveConnection",
@@ -94,7 +96,7 @@ export function getActiveConnection(
     throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerConnection);
+  const taxProvider = new ActiveTaxProvider(providerConnection, ctx);
 
   return taxProvider;
 }
