@@ -20,7 +20,7 @@
     "@storybook/blocks": "^7.0.12",
     "@storybook/react": "^7.0.12",
     "@storybook/react-vite": "^7.0.12",
-    "@storybook/testing-library": "^0.0.14-next.2",
+    "@storybook/testing-library": "^0.1.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vanilla-extract/vite-plugin": "^3.8.1",
