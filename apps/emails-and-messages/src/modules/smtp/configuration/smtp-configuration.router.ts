@@ -15,7 +15,8 @@ import {
   smtpGetConfigurationsInputSchema,
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
-  smtpUpdateEventConfigurationInputSchema,
+  smtpUpdateEventActiveStatusInputSchema,
+  smtpUpdateEventArraySchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
@@ -150,23 +151,6 @@ export const smtpConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  updateEventConfiguration: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(smtpUpdateEventConfigurationInputSchema)
-    .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "mjmlConfigurationRouter.updateEventConfiguration or create called");
-
-      try {
-        return await ctx.smtpConfigurationService.updateEventConfiguration({
-          configurationId: input.id,
-          eventConfiguration: input,
-        });
-      } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
-      }
-    }),
 
   renderTemplate: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -287,13 +271,59 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateEvent called");
 
+      const { id: configurationId, eventType, ...eventConfiguration } = input;
+
       try {
         return await ctx.smtpConfigurationService.updateEventConfiguration({
-          eventConfiguration: input,
-          configurationId: input.id,
+          configurationId,
+          eventType,
+          eventConfiguration,
         });
       } catch (e) {
         throwTrpcErrorFromConfigurationServiceError(e);
       }
+    }),
+  updateEventActiveStatus: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateEventActiveStatusInputSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "mjmlConfigurationRouter.updateEventActiveStatus called");
+      try {
+        return await ctx.smtpConfigurationService.updateEventConfiguration({
+          configurationId: input.id,
+          eventType: input.eventType,
+          eventConfiguration: {
+            active: input.active,
+          },
+        });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
+      }
+    }),
+  updateEventArray: protectedWithConfigurationService
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(smtpUpdateEventArraySchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "smtpConfigurationRouter.updateEventArray called");
+
+      return await Promise.all(
+        input.events.map(async (event) => {
+          const { eventType, ...eventConfiguration } = event;
+
+          try {
+            return await ctx.smtpConfigurationService.updateEventConfiguration({
+              configurationId: input.configurationId,
+              eventType,
+              eventConfiguration,
+            });
+          } catch (e) {
+            throwTrpcErrorFromConfigurationServiceError(e);
+          }
+        })
+      );
     }),
 });

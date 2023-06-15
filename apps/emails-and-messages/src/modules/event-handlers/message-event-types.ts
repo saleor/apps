@@ -22,7 +22,7 @@ export const messageEventTypesLabels: Record<MessageEventTypes, string> = {
   ORDER_FULLY_PAID: "Order fully paid",
   INVOICE_SENT: "Invoice sent",
   ACCOUNT_CONFIRMATION: "Customer account confirmation",
-  ACCOUNT_PASSWORD_RESET: "Customer account password reset",
+  ACCOUNT_PASSWORD_RESET: "Customer account password reset request",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "Customer account change email request",
   ACCOUNT_CHANGE_EMAIL_CONFIRM: "Customer account change email confirmation",
   ACCOUNT_DELETE: "Customer account delete request",

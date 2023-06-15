@@ -512,6 +512,7 @@ describe("SendgridConfigurationService", function () {
 
       await service.updateEventConfiguration({
         configurationId: validConfig.configurations[0].id,
+        eventType: validConfig.configurations[0].events[0].eventType,
         eventConfiguration: {
           ...validConfig.configurations[0].events[0],
           template: "42",
@@ -544,6 +545,7 @@ describe("SendgridConfigurationService", function () {
       await expect(async () =>
         service.updateEventConfiguration({
           configurationId: "this-id-does-not-exist",
+          eventType: validConfig.configurations[0].events[0].eventType,
           eventConfiguration: {
             ...validConfig.configurations[0].events[0],
             template: "42",
