@@ -5,7 +5,7 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
-import { getActiveTaxProvider } from "../../../modules/taxes/active-tax-provider";
+import { getActiveConnection } from "../../../modules/taxes/active-connection";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 export const config = {
   api: {
@@ -36,7 +36,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-    const taxProvider = getActiveTaxProvider(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
     logger.info({ taxProvider }, "Fetched taxProvider");
 

@@ -1,16 +1,14 @@
-import { channelsRouter } from "../channels/channels.router";
 import { router } from "./trpc-server";
-import { providersConfigurationRouter } from "../providers-configuration/providers-configuration.router";
-import { channelsConfigurationRouter } from "../channels-configuration/channels-configuration.router";
-import { taxjarConfigurationRouter } from "../taxjar/taxjar-configuration.router";
-import { avataxConfigurationRouter } from "../avatax/avatax-configuration.router";
+import { providerConnectionsRouter } from "../provider-connections/provider-connections.router";
+import { channelsConfigurationRouter } from "../channel-configuration/channel-configuration.router";
+import { taxjarConnectionRouter } from "../taxjar/taxjar-connection.router";
+import { avataxConnectionRouter } from "../avatax/avatax-connection.router";
 
 export const appRouter = router({
-  channels: channelsRouter,
-  providersConfiguration: providersConfigurationRouter,
+  providersConfiguration: providerConnectionsRouter,
   channelsConfiguration: channelsConfigurationRouter,
-  taxJarConfiguration: taxjarConfigurationRouter,
-  avataxConfiguration: avataxConfigurationRouter,
+  taxJarConnection: taxjarConnectionRouter,
+  avataxConnection: avataxConnectionRouter,
 });
 
 export type AppRouter = typeof appRouter;

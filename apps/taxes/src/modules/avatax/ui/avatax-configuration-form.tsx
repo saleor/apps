@@ -1,318 +1,223 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  FormHelperText,
-  Grid,
-  InputLabel,
-  Switch,
-  TextField,
-  TextFieldProps,
-} from "@material-ui/core";
-import { Delete, Save } from "@material-ui/icons";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { TextLink } from "@saleor/apps-ui";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { useInstanceId } from "../../taxes/tax-context";
-import { trpcClient } from "../../trpc/trpc-client";
-import { AppLink } from "../../ui/app-link";
-import { avataxConfigSchema } from "../avatax-config";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useForm } from "react-hook-form";
+import { AppCard } from "../../ui/app-card";
+import { AppToggle } from "../../ui/app-toggle";
+import { CountrySelect } from "../../ui/country-select";
+import { ProviderLabel } from "../../ui/provider-label";
+import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-connection-schema";
 
-const useStyles = makeStyles((theme) => ({
-  reverseRow: {
-    display: "flex",
-    flexDirection: "row-reverse",
-    gap: theme.spacing(1),
-  },
-}));
-
-const schema = avataxConfigSchema;
-
-type FormValues = z.infer<typeof schema>;
-
-const defaultValues: FormValues = {
-  companyCode: "",
-  isAutocommit: false,
-  isSandbox: false,
-  password: "",
-  username: "",
-  name: "",
-  shippingTaxCode: "",
+const HelperText = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Text color="textNeutralSubdued" fontWeight={"captionLarge"}>
+      {children}
+    </Text>
+  );
 };
 
-export const AvataxConfigurationForm = () => {
-  const { notifySuccess, notifyError } = useDashboardNotification();
-  const [isWarningDialogOpen, setIsWarningDialogOpen] = React.useState(false);
-  const styles = useStyles();
-  const { handleSubmit, reset, control, formState } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues,
-  });
-  const { instanceId, setInstanceId } = useInstanceId();
-  const { refetch: refetchChannelConfigurationData } =
-    trpcClient.channelsConfiguration.fetch.useQuery(undefined, {
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-  const { refetch: refetchProvidersConfigurationData } =
-    trpcClient.providersConfiguration.getAll.useQuery();
-  const { data: instance } = trpcClient.avataxConfiguration.get.useQuery(
-    { id: instanceId ?? "" },
-    {
-      enabled: !!instanceId,
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    }
-  );
+type AvataxConfigurationFormProps = {
+  onSubmit: (data: AvataxConfig) => void;
+  defaultValues: AvataxConfig;
+  isLoading: boolean;
+  cancelButton: React.ReactNode;
+};
 
-  const resetInstanceId = () => {
-    setInstanceId(null);
-  };
+export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
+  const { handleSubmit, control, formState, reset } = useForm({
+    defaultValues: defaultAvataxConfig,
+    resolver: zodResolver(avataxConfigSchema),
+  });
 
   React.useEffect(() => {
-    if (instance) {
-      const { config } = instance;
+    reset(props.defaultValues);
+  }, [props.defaultValues, reset]);
 
-      reset(config);
-    } else {
-      reset(defaultValues);
-    }
-  }, [instance, reset]);
-
-  const { mutate: createMutation, isLoading: isCreateLoading } =
-    trpcClient.avataxConfiguration.post.useMutation({
-      onSuccess({ id }) {
-        setInstanceId(id);
-        refetchProvidersConfigurationData();
-        notifySuccess("Success", "Saved app configuration");
-      },
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-
-  const { mutate: updateMutation, isLoading: isUpdateLoading } =
-    trpcClient.avataxConfiguration.patch.useMutation({
-      onSuccess() {
-        refetchProvidersConfigurationData();
-        notifySuccess("Success", "Updated Avalara configuration");
-      },
-      onError(error) {
-        notifyError("Error", error.message);
-      },
-    });
-
-  const { mutate: deleteMutation } = trpcClient.avataxConfiguration.delete.useMutation({
-    onSuccess() {
-      resetInstanceId();
-      refetchProvidersConfigurationData();
-      refetchChannelConfigurationData();
-      notifySuccess("Success", "Removed Avatax instance");
+  const submitHandler = React.useCallback(
+    (data: AvataxConfig) => {
+      props.onSubmit(data);
     },
-    onError(error) {
-      notifyError("Error", error.message);
-    },
-  });
-
-  const textFieldProps: TextFieldProps = {
-    fullWidth: true,
-  };
-
-  const onSubmit = (value: FormValues) => {
-    if (instanceId) {
-      updateMutation({
-        id: instanceId,
-        value,
-      });
-    } else {
-      createMutation({
-        value,
-      });
-    }
-  };
-
-  const closeWarningDialog = () => {
-    setIsWarningDialogOpen(false);
-  };
-
-  const openWarningDialog = () => {
-    setIsWarningDialogOpen(true);
-  };
-
-  const deleteProvider = () => {
-    closeWarningDialog();
-    if (instanceId) {
-      deleteMutation({ id: instanceId });
-    }
-  };
-
-  const isLoading = isCreateLoading || isUpdateLoading;
+    [props]
+  );
 
   return (
-    <>
-      <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue={defaultValues.name}
-              render={({ field }) => (
-                <TextField
-                  required
-                  type="text"
-                  {...field}
-                  label="Instance name"
-                  {...textFieldProps}
-                />
-              )}
-            />
-            {formState.errors.name && (
-              <FormHelperText error>{formState.errors.name.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <InputLabel>
-              Sandbox
-              <Controller
-                name={"isSandbox"}
+    <AppCard>
+      <Box marginBottom={8}>
+        <ProviderLabel name="avatax" />
+      </Box>
+
+      <form onSubmit={handleSubmit(submitHandler)}>
+        <Input
+          control={control}
+          name="name"
+          required
+          label="Configuration name *"
+          helperText={formState.errors.name?.message}
+        />
+        <HelperText>Unique identifier for your provider.</HelperText>
+        <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Credentials
+        </Text>
+        <Box display="grid" gridTemplateColumns={2} gap={12}>
+          <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
+            <div>
+              <Input
                 control={control}
-                defaultValue={defaultValues.isSandbox}
-                render={({ field }) => (
-                  <Switch
-                    {...field}
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
+                name="credentials.username"
+                required
+                label="Username *"
+                helperText={formState.errors.credentials?.username?.message}
               />
-            </InputLabel>
-            <FormHelperText>
-              Toggling between{" "}
-              <AppLink
-                href={
-                  "https://developer.avalara.com/erp-integration-guide/sales-tax-badge/authentication-in-avatax/sandbox-vs-production/"
-                }
-              >
-                <q>Production</q> and <q>Sandbox</q>
-              </AppLink>{" "}
-              environments.{" "}
-            </FormHelperText>
-          </Grid>
-          <Grid item xs={12}>
-            <InputLabel>
-              Autocommit
-              <Controller
-                name={"isAutocommit"}
+              <HelperText>
+                You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
+                in your Avalara Dashboard.
+              </HelperText>
+            </div>
+            <div>
+              <Input
                 control={control}
-                defaultValue={defaultValues.isAutocommit}
-                render={({ field }) => (
-                  <Switch
-                    {...field}
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
-                )}
+                name="credentials.password"
+                type="password"
+                required
+                label="Password *"
+                helperText={formState.errors.credentials?.password?.message}
               />
-            </InputLabel>
-            <FormHelperText>
-              If enabled, the order will be automatically{" "}
-              <AppLink
-                href={
-                  "https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit/"
-                }
-              >
-                committed to Avalara.
-              </AppLink>{" "}
-            </FormHelperText>
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="username"
+              <HelperText>
+                You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
+                in your Avalara Dashboard.
+              </HelperText>
+            </div>
+
+            <div>
+              <Input
+                control={control}
+                name="companyCode"
+                label="Company name"
+                helperText={formState.errors.companyCode?.message}
+              />
+              <HelperText>
+                When not provided, the default company will be used.{" "}
+                <TextLink
+                  newTab
+                  href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
+                >
+                  Read more
+                </TextLink>{" "}
+                about company codes.
+              </HelperText>
+            </div>
+          </Box>
+          <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
+            <AppToggle
               control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField required type="text" {...field} label="Username" {...textFieldProps} />
-              )}
-            />
-            {formState.errors.username && (
-              <FormHelperText error>{formState.errors.username.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="password"
-              control={control}
-              defaultValue={defaultValues.password}
-              render={({ field }) => (
-                <TextField required label="Password" {...field} {...textFieldProps} />
-              )}
+              label="Use sandbox mode"
+              helperText={
+                <HelperText>
+                  Toggling between{" "}
+                  <TextLink
+                    href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/authentication-in-avatax/sandbox-vs-production/"
+                    newTab
+                  >
+                    <q>Production</q> and <q>Sandbox</q>
+                  </TextLink>{" "}
+                  environment.
+                </HelperText>
+              }
+              name="isSandbox"
             />
 
-            {formState.errors.password && (
-              <FormHelperText error>{formState.errors.password.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
-              name="companyCode"
+            <AppToggle
               control={control}
-              defaultValue={defaultValues.companyCode}
-              render={({ field }) => (
-                <TextField type="text" {...field} label="Company code" {...textFieldProps} />
-              )}
+              label="Autocommit"
+              helperText={
+                <HelperText>
+                  If enabled, the order will be automatically{" "}
+                  <TextLink
+                    href="https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit/"
+                    newTab
+                  >
+                    commited to Avalara.
+                  </TextLink>{" "}
+                </HelperText>
+              }
+              name="isAutocommit"
             />
-            <FormHelperText>
-              {"When not provided, the default company will be used. "}
-              <AppLink href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/">
-                Read more
-              </AppLink>{" "}
-              about company codes.
-            </FormHelperText>
-            {formState.errors.companyCode && (
-              <FormHelperText error>{formState.errors.companyCode.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Controller
+          </Box>
+        </Box>
+        <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Address
+        </Text>
+        <Box paddingY={4} display={"grid"} gridTemplateColumns={2} gap={12}>
+          <Input
+            control={control}
+            required
+            name="address.street"
+            label="Street *"
+            helperText={formState.errors.address?.street?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.city"
+            label="City *"
+            helperText={formState.errors.address?.city?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.state"
+            label="State *"
+            helperText={formState.errors.address?.state?.message}
+          />
+          <CountrySelect
+            control={control}
+            required
+            name="address.country"
+            label="Country *"
+            helperText={formState.errors.address?.country?.message}
+          />
+          <Input
+            control={control}
+            required
+            name="address.zip"
+            label="Zip *"
+            helperText={formState.errors.address?.zip?.message}
+          />
+        </Box>
+        <Divider marginY={8} />
+        <Text marginBottom={4} as="h3" variant="heading">
+          Tax codes
+        </Text>
+        <Box paddingY={4} display={"grid"} gridTemplateColumns={2} gap={12}>
+          <div>
+            <Input
+              control={control}
               name="shippingTaxCode"
-              control={control}
-              defaultValue={defaultValues.shippingTaxCode}
-              render={({ field }) => (
-                <TextField type="text" {...field} label="Shipping tax code" {...textFieldProps} />
-              )}
+              label="Shipping tax code"
+              helperText={formState.errors.shippingTaxCode?.message}
             />
-            <FormHelperText>
-              {"Tax code that for the shipping line sent to Avatax. "}
-              <AppLink href="https://taxcode.avatax.avalara.com">
+            <HelperText>
+              Tax code that for the shipping line sent to Avatax.{" "}
+              <TextLink newTab href="https://taxcode.avatax.avalara.com">
                 Must match Avatax tax codes format.
-              </AppLink>
-            </FormHelperText>
-            {formState.errors.shippingTaxCode && (
-              <FormHelperText error>{formState.errors.shippingTaxCode.message}</FormHelperText>
-            )}
-          </Grid>
-        </Grid>
-        <br />
-        <div className={styles.reverseRow}>
-          <Button startIcon={<Save />} type="submit" variant="primary">
-            {isLoading ? "Saving..." : "Save"}
+              </TextLink>
+            </HelperText>
+          </div>
+        </Box>
+        <Divider marginY={8} />
+
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          {props.cancelButton}
+
+          <Button disabled={props.isLoading} type="submit" variant="primary">
+            {props.isLoading ? "Saving..." : "Save"}
           </Button>
-          {instanceId && (
-            <Button onClick={deleteProvider} startIcon={<Delete />}>
-              Delete
-            </Button>
-          )}
-        </div>
+        </Box>
       </form>
-      {/* <DeleteProviderDialog
-        isOpen={isWarningDialogOpen}
-        onClose={closeWarningDialog}
-        onCancel={closeWarningDialog}
-        onConfirm={deleteProvider}
-      /> */}
-    </>
+    </AppCard>
   );
 };

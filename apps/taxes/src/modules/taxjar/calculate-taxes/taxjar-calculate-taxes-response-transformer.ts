@@ -1,6 +1,9 @@
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { Logger, createLogger } from "../../../lib/logger";
-import { Payload, Response } from "./taxjar-calculate-taxes-adapter";
+import {
+  TaxJarCalculateTaxesResponse,
+  TaxJarCalculateTaxesPayload,
+} from "./taxjar-calculate-taxes-adapter";
 import { TaxJarCalculateTaxesResponseLinesTransformer } from "./taxjar-calculate-taxes-response-lines-transformer";
 import { TaxJarCalculateTaxesResponseShippingTransformer } from "./taxjar-calculate-taxes-response-shipping-transformer";
 
@@ -11,7 +14,10 @@ export class TaxJarCalculateTaxesResponseTransformer {
     this.logger = createLogger({ name: "TaxJarCalculateTaxesResponseTransformer" });
   }
 
-  transform(payload: Payload, response: TaxForOrderRes): Response {
+  transform(
+    payload: TaxJarCalculateTaxesPayload,
+    response: TaxForOrderRes
+  ): TaxJarCalculateTaxesResponse {
     /*
      * TaxJar operates on the idea of sales tax nexus. Nexus is a place where the company has a physical presence.
      * If the company has no nexus in the state where the customer is located, the company is not required to collect sales tax.

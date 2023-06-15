@@ -2,7 +2,7 @@ import Avatax from "avatax";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import packageJson from "../../../package.json";
 import { createLogger, Logger } from "../../lib/logger";
-import { AvataxConfig } from "./avatax-config";
+import { AvataxConfig } from "./avatax-connection-schema";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
@@ -57,54 +57,22 @@ export class AvataxClient {
   private logger: Logger;
 
   constructor(config: AvataxConfig) {
-    this.logger = createLogger({ service: "AvataxClient" });
-    this.logger.trace("AvataxClient constructor");
-    const { username, password } = config;
-    const credentials = {
-      username,
-      password,
-    };
+    this.logger = createLogger({ location: "AvataxClient" });
     const settings = createAvataxSettings(config);
-    const avataxClient = new Avatax(settings).withSecurity(credentials);
+    const avataxClient = new Avatax(settings).withSecurity(config.credentials);
 
-    this.logger.trace({ client: avataxClient }, "External Avatax client created");
     this.client = avataxClient;
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    this.logger.trace({ model }, "createTransaction called with:");
-
     return this.client.createTransaction({ model });
   }
 
   async commitTransaction(args: CommitTransactionArgs) {
-    this.logger.trace(args, "commitTransaction called with:");
-
     return this.client.commitTransaction(args);
   }
 
-  async ping() {
-    this.logger.trace("ping called");
-    try {
-      const result = await this.client.ping();
-
-      return {
-        authenticated: result.authenticated,
-        ...(!result.authenticated && {
-          error: "Avatax was not able to authenticate with the provided credentials.",
-        }),
-      };
-    } catch (error) {
-      return {
-        authenticated: false,
-        error: "Avatax was not able to authenticate with the provided credentials.",
-      };
-    }
-  }
-
   async validateAddress({ address }: ValidateAddressArgs) {
-    this.logger.trace({ address }, "validateAddress called with:");
-
     return this.client.resolveAddress(address);
   }
 }
