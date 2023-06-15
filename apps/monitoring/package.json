@@ -31,7 +31,7 @@
     "react-hook-form": "^7.42.1",
     "urql": "^3.0.3",
     "vite": "4.3.9",
-    "vitest": "0.31.3"
+    "vitest": "0.32.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",
