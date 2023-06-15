@@ -878,8 +878,8 @@ importers:
         specifier: ^10.4.7
         version: 10.4.13(postcss@8.4.21)
       clean-publish:
-        specifier: ^4.0.1
-        version: 4.1.1
+        specifier: ^4.2.0
+        version: 4.2.0
       eslint:
         specifier: 8.42.0
         version: 8.42.0
@@ -1413,8 +1413,8 @@ importers:
         specifier: ^10.4.7
         version: 10.4.13(postcss@8.4.21)
       clean-publish:
-        specifier: ^4.0.1
-        version: 4.1.1
+        specifier: ^4.2.0
+        version: 4.2.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -11627,14 +11627,14 @@ packages:
       source-map: 0.6.1
     dev: false
 
-  /clean-publish@4.1.1:
-    resolution: {integrity: sha512-111O3MNk6x/dAbHZwG+iRZ4AYwpKqc7Qp1MarFhE1KtQIp9m9TkDuI+hedn7qgeFnLgSw3ItgEnHNwvhc7SmGg==}
+  /clean-publish@4.2.0:
+    resolution: {integrity: sha512-dqZF5y6KtlkYhbnJoXiOCP4L1TPdI7HtuDysslUrbI8vLPu65ZjVO3pu5xp4qH0X2cWdDN/La04woe6fg4LNSw==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
       fast-glob: 3.2.12
-      lilconfig: 2.0.6
+      lilconfig: 2.1.0
       micromatch: 4.0.5
     dev: true
 
@@ -15568,6 +15568,11 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /lilconfig@2.1.0:
+    resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /line-height@0.3.1:
     resolution: {integrity: sha512-YExecgqPwnp5gplD2+Y8e8A5+jKpr25+DzMbFdI1/1UAr0FJrTFv4VkHLf8/6B590i1wUPJWMKKldkd/bdQ//w==}
     engines: {node: '>= 4.0.0'}
@@ -17693,7 +17698,7 @@ packages:
       ts-node:
         optional: true
     dependencies:
-      lilconfig: 2.0.6
+      lilconfig: 2.1.0
       postcss: 8.4.21
       yaml: 1.10.2
     dev: true
