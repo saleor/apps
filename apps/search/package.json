@@ -27,7 +27,7 @@
     "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "next": "13.3.0",
-    "next-urql": "4.0.0",
+    "next-urql": "4.0.3",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
@@ -36,7 +36,7 @@
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
     "urql": "^3.0.3",
-    "zod": "^3.21.4"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",
@@ -48,8 +48,8 @@
     "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-typed-document-node/core": "3.2.0",
-    "@types/react": "~18.0.38",
-    "@types/react-dom": "^18.0.8",
+    "@types/react": "18.2.5",
+    "@types/react-dom": "18.2.5",
     "@vitejs/plugin-react": "4.0.0",
     "eslint": "8.42.0",
     "eslint-config-saleor": "workspace:*",
