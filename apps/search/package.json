@@ -21,7 +21,7 @@
     "@sentry/nextjs": "^7.46.0",
     "@types/debug": "^4.1.7",
     "@urql/exchange-auth": "^1.0.0",
-    "algoliasearch": "4.14.2",
+    "algoliasearch": "4.17.2",
     "clsx": "^1.2.1",
     "debug": "^4.3.4",
     "graphql": "16.6.0",
