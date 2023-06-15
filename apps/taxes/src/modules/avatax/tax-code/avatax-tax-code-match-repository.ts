@@ -7,14 +7,14 @@ import { saleorTaxClassSchema, taxCodeSchema } from "../../tax-codes/tax-code-ma
 
 const avataxTaxCodeMatchSchema = createRepositoryEntitySchema(
   z.object({
-    saleorTaxClass: saleorTaxClassSchema,
+    saleorTaxClass: saleorTaxClassSchema.or(z.null()),
     avataxTaxCode: taxCodeSchema,
   })
 );
 
 const avataxTaxCodeMatchesSchema = z.array(avataxTaxCodeMatchSchema);
 
-type AvataxTaxCodeMap = z.infer<typeof avataxTaxCodeMatchesSchema>;
+export type AvataxTaxCodeMatches = z.infer<typeof avataxTaxCodeMatchesSchema>;
 
 const metadataKey = "avatax-tax-code-map";
 
@@ -29,13 +29,13 @@ export class AvataxTaxCodeMatchRepository {
     });
   }
 
-  async getAll(): Promise<AvataxTaxCodeMap> {
+  async getAll(): Promise<AvataxTaxCodeMatches> {
     const data = await this.crudSettingsManager.readAll();
 
     return avataxTaxCodeMatchesSchema.parse(data);
   }
 
-  async updateMany(nextData: AvataxTaxCodeMap): Promise<void> {
+  async updateMany(nextData: AvataxTaxCodeMatches): Promise<void> {
     await this.crudSettingsManager.updateMany(nextData);
   }
 }
