@@ -35,7 +35,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
-    "urql": "^3.0.3",
+    "urql": "^4.0.4",
     "zod": "^3.20.2"
   },
   "devDependencies": {
