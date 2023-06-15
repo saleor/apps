@@ -12,7 +12,12 @@
         "VERCEL_URL",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "ALLOWED_DOMAIN_PATTERN"
+        "ALLOWED_DOMAIN_PATTERN",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG",
+        "SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_DSN"
       ]
     }
   }

@@ -30,7 +30,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const { access_token } = await tokenResponse.json();
 
-  logger.debug({ access_token }, "Received mailchimp access_token");
+  logger.debug("Received mailchimp access_token");
 
   const metadataResponse = await fetch("https://login.mailchimp.com/oauth2/metadata", {
     headers: {

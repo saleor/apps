@@ -112,7 +112,7 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
       try {
         const item = await createProductInCMS(input);
 
-        logger.debug({ item }, "createProduct response");
+        logger.trace("createProduct success");
 
         return transformResponseItem(item, input);
       } catch (error) {
@@ -122,24 +122,24 @@ const datocmsOperations: CreateOperations<DatocmsConfig> = (config) => {
     updateProduct: async ({ id, input }) => {
       const item = await updateProductInCMS(id, input);
 
-      logger.debug({ item }, "updateProduct response");
+      logger.trace("updateProduct success");
     },
     deleteProduct: async ({ id }) => {
       const item = await deleteProductInCMS(id);
 
-      logger.debug({ item }, "deleteProduct response");
+      logger.trace("deleteProduct success");
     },
     createBatchProducts: async ({ input }) => {
       const items = await createBatchProductsInCMS(input);
 
-      logger.debug({ items }, "createBatchProducts response");
+      logger.trace("createBatchProducts success");
 
       return items.map((item) => transformResponseItem(item.id, item.input));
     },
     deleteBatchProducts: async ({ ids }) => {
       const items = await deleteBatchProductsInCMS(ids);
 
-      logger.debug({ items }, "deleteBatchProducts response");
+      logger.trace("deleteBatchProducts success");
     },
   };
 };
