@@ -21,7 +21,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "^0.7.2",
     "@sentry/nextjs": "^7.43.0",
-    "@urql/exchange-auth": "^1.0.0",
+    "@urql/exchange-auth": "^2.1.4",
     "clsx": "^1.2.1",
     "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
