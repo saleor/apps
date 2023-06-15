@@ -1,0 +1,78 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Packages
+  - package-ecosystem: "npm"
+    directory: "/packages/eslint-config-saleor"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/shared"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/ui"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/react-hook-form-macaw"
+    schedule:
+      interval: "weekly"
+
+  # Apps
+  - package-ecosystem: "npm"
+    directory: "/apps/cms"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: apps/crm
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/data-importer
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/emails-and-messages
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/invoices
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/klaviyo
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/monitoring
+    schedule:
+      interval: weekly
+  - package-ecosystem: "pip"
+    directory: apps/monitoring/backend
+    schedule:
+      interval: weekly
+  - package-ecosystem: "docker"
+    directory: apps/monitoring/backend
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/products-feed
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/search
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/slack
+    schedule:
+      interval: weekly
+  - package-ecosystem: "npm"
+    directory: apps/taxes
+    schedule:
+      interval: weekly
