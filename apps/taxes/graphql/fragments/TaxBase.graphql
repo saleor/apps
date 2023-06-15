@@ -3,24 +3,24 @@ fragment TaxBaseLine on TaxableObjectLine {
     __typename
     ... on CheckoutLine {
       id
-      productVariant: variant {
+      checkoutProductVariant: variant {
         id
         product {
-          metafield(key: "taxjar_tax_code")
-          productType {
-            metafield(key: "taxjar_tax_code")
+          taxClass {
+            id
+            name
           }
         }
       }
     }
     ... on OrderLine {
       id
-      variant {
+      orderProductVariant: variant {
         id
         product {
-          metafield(key: "taxjar_tax_code")
-          productType {
-            metafield(key: "taxjar_tax_code")
+          taxClass {
+            id
+            name
           }
         }
       }
