@@ -5,6 +5,7 @@ import { ZodError } from "zod";
 
 interface Meta {
   requiredClientPermissions?: Permission[];
+  updateWebhooks?: boolean;
 }
 
 const t = initTRPC
