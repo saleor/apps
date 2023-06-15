@@ -7,14 +7,14 @@ import { saleorTaxClassSchema, taxCodeSchema } from "../../tax-codes/tax-code-ma
 
 const taxJarTaxCodeMatchSchema = createRepositoryEntitySchema(
   z.object({
-    saleorTaxClass: saleorTaxClassSchema,
+    saleorTaxClass: saleorTaxClassSchema.or(z.null()),
     taxJarTaxCode: taxCodeSchema,
   })
 );
 
 const taxJarTaxCodeMatchesSchema = z.array(taxJarTaxCodeMatchSchema);
 
-type TaxJarTaxCodeMap = z.infer<typeof taxJarTaxCodeMatchesSchema>;
+export type TaxJarTaxCodeMatches = z.infer<typeof taxJarTaxCodeMatchesSchema>;
 
 const metadataKey = "taxjar-tax-code-map";
 
@@ -29,13 +29,13 @@ export class TaxJarTaxCodeMatchRepository {
     });
   }
 
-  async getAll(): Promise<TaxJarTaxCodeMap> {
+  async getAll(): Promise<TaxJarTaxCodeMatches> {
     const data = await this.crudSettingsManager.readAll();
 
     return taxJarTaxCodeMatchesSchema.parse(data);
   }
 
-  async updateMany(nextData: TaxJarTaxCodeMap): Promise<void> {
+  async updateMany(nextData: TaxJarTaxCodeMatches): Promise<void> {
     await this.crudSettingsManager.updateMany(nextData);
   }
 }

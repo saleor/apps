@@ -6,6 +6,8 @@ export const saleorTaxClassSchema = z.object({
 });
 
 export const taxCodeSchema = z.object({
-  id: z.string(),
+  code: z.string(),
   name: z.string(),
 });
+
+export type TaxCode = z.infer<typeof taxCodeSchema>;
