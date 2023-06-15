@@ -1,4 +1,4 @@
-FROM python:3.10 as build
+FROM python:3.11 as build
 
 RUN pip install poetry'>=1.3.2,<1.4.0'
 
@@ -7,7 +7,7 @@ COPY pyproject.toml poetry.lock /app/
 
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install --no-cache --only main
 
-FROM python:3.10-slim as prod
+FROM python:3.11-slim as prod
 
 ENV PYTHONUNBUFFERED 1
 
