@@ -14,6 +14,14 @@ updates:
     directory: "/packages/shared"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/ui"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/packages/react-hook-form-macaw"
+    schedule:
+      interval: "weekly"
 
   # Apps
   - package-ecosystem: "npm"
