@@ -17,7 +17,7 @@
     "@material-ui/lab": "4.0.0-alpha.61",
     "@saleor/app-sdk": "0.40.1",
     "@saleor/macaw-ui": "^0.7.2",
-    "@types/react": "18.2.5",
+    "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
     "@types/semver": "^7.5.0",
     "clsx": "^1.2.1",
