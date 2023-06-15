@@ -36,7 +36,7 @@
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
     "urql": "^3.0.3",
-    "zod": "^3.20.2"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",

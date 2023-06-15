@@ -110,8 +110,8 @@ importers:
         specifier: 4.3.9
         version: 4.3.9(@types/node@18.15.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -252,8 +252,8 @@ importers:
         specifier: 0.31.3
         version: 0.31.3(jsdom@20.0.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -385,8 +385,8 @@ importers:
         specifier: 0.31.3
         version: 0.31.3(jsdom@20.0.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -563,8 +563,8 @@ importers:
         specifier: 0.31.3
         version: 0.31.3(jsdom@20.0.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -708,8 +708,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -1113,8 +1113,8 @@ importers:
         specifier: 0.31.3
         version: 0.31.3(jsdom@20.0.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -1240,8 +1240,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3(graphql@16.6.0)(react@18.2.0)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -1527,8 +1527,8 @@ importers:
         specifier: 0.31.3
         version: 0.31.3(jsdom@20.0.3)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.21.4
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 3.2.2
@@ -18839,7 +18839,7 @@ packages:
     resolution: {integrity: sha512-I6V1G2JkJ2JFIFSVuultNXepf7BW8SCaSUOq5IETM2fDjFim5Dg5F1zU/QbplNW0mqkk8QCw+I722v3nPkpRlA==}
     dependencies:
       busboy: 1.6.0
-      zod: 3.20.2
+      zod: 3.21.4
 
   /reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
@@ -21390,5 +21390,5 @@ packages:
       readable-stream: 3.6.0
     dev: false
 
-  /zod@3.20.2:
-    resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+  /zod@3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
