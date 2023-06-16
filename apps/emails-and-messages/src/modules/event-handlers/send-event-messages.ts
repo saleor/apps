@@ -28,7 +28,7 @@ export const sendEventMessages = async ({
   client,
 }: SendEventMessagesArgs) => {
   const logger = createLogger({
-    fn: "sendEventMessages",
+    name: "sendEventMessages",
   });
 
   logger.debug("Function called");

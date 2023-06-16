@@ -9,7 +9,7 @@ import { smtpTransformV1toV2 } from "./smtp-transform-v1-to-v2";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "smtpConfigMigrationV1ToV2",
+  name: "smtpConfigMigrationV1ToV2",
 });
 
 interface SmtpConfigMigrationV1ToV1Args {

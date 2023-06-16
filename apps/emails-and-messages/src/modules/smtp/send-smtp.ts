@@ -27,7 +27,7 @@ export const sendSmtp = async ({
   smtpConfiguration,
 }: SendSmtpArgs) => {
   const logger = createLogger({
-    fn: "sendSmtp",
+    name: "sendSmtp",
     event,
   });
 

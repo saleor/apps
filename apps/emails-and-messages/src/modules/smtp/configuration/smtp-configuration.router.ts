@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import {
   SmtpConfigurationService,
   SmtpConfigurationServiceError,
@@ -58,35 +57,30 @@ export const throwTrpcErrorFromConfigurationServiceError = (
  * Allow access only for the dashboard users and attaches the
  * configuration service to the context
  */
-const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
-  next({
-    ctx: {
-      ...ctx,
-      smtpConfigurationService: new SmtpConfigurationService({
-        metadataManager: new SmtpPrivateMetadataManager(
-          createSettingsManager(ctx.apiClient, ctx.appId!),
-          ctx.saleorApiUrl
-        ),
-      }),
-    },
-  })
+const protectedWithConfigurationService = protectedClientProcedure.use(
+  ({ next, ctx: { authData, apiClient } }) =>
+    next({
+      ctx: {
+        smtpConfigurationService: new SmtpConfigurationService({
+          metadataManager: new SmtpPrivateMetadataManager(
+            createSettingsManager(apiClient, authData.appId),
+            authData.saleorApiUrl
+          ),
+        }),
+      },
+    })
 );
 
 export const smtpConfigurationRouter = router({
   fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-    logger.debug("smtpConfigurationRouter.fetch called");
+    ctx.logger.debug("smtpConfigurationRouter.fetch called");
     return ctx.smtpConfigurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.get called");
-
+      ctx.logger.debug(input, "Getting configuration");
       try {
         return ctx.smtpConfigurationService.getConfiguration(input);
       } catch (e) {
@@ -97,9 +91,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.getConfigurations called");
+      ctx.logger.debug(input, "Getting configurations");
       try {
         return ctx.smtpConfigurationService.getConfigurations(input);
       } catch (e) {
@@ -110,9 +102,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.create called");
+      ctx.logger.debug({ configurationName: input.name }, "Creating a new configuration");
       const newConfiguration = {
         ...smtpDefaultEmptyConfigurations.configuration(),
         ...input,
@@ -124,9 +114,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.delete called");
+      ctx.logger.debug(input, "Delete configuration");
 
       try {
         await ctx.smtpConfigurationService.deleteConfiguration(input);
@@ -138,9 +126,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.getEventConfiguration or create called");
+      ctx.logger.debug(input, "Getting event configuration");
 
       try {
         return await ctx.smtpConfigurationService.getEventConfiguration({
@@ -162,10 +148,9 @@ export const smtpConfigurationRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      ctx.logger.debug(input, "Rendering submitted MJML template");
 
-      logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
-
+      // TODO: Extract rendering to the separate function
       let renderedSubject = "";
 
       const payload = JSON.parse(input.payload);
@@ -173,7 +158,6 @@ export const smtpConfigurationRouter = router({
       if (input.subject) {
         const compiledSubjectTemplate = Handlebars.compile(input.subject);
 
-        logger.warn("subject part");
         renderedSubject = compiledSubjectTemplate(payload);
       }
 
@@ -190,6 +174,8 @@ export const smtpConfigurationRouter = router({
         }
       }
 
+      ctx.logger.debug("Render successful");
+
       return {
         renderedSubject,
         renderedEmailBody: renderedEmail,
@@ -200,9 +186,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateBasicInformation called");
+      ctx.logger.debug(input, "Updating the configuration");
 
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
@@ -215,9 +199,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateSmtpSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateSmtp called");
+      ctx.logger.debug({ configurationId: input.id }, "Updating the configuration");
 
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
@@ -230,9 +212,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateSender called");
+      ctx.logger.debug(input, "Updating the configuration");
 
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
@@ -245,9 +225,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateChannels called");
+      ctx.logger.debug(input, "Updating the configuration");
 
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({
@@ -267,9 +245,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateEvent called");
+      ctx.logger.debug(input, "Updating the event");
 
       const { id: configurationId, eventType, ...eventConfiguration } = input;
 
@@ -287,9 +263,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateEventActiveStatusInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "mjmlConfigurationRouter.updateEventActiveStatus called");
+      ctx.logger.debug(input, "Updating the event");
       try {
         return await ctx.smtpConfigurationService.updateEventConfiguration({
           configurationId: input.id,
@@ -306,9 +280,7 @@ export const smtpConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "smtpConfigurationRouter.updateEventArray called");
+      ctx.logger.debug(input, "Updating events");
 
       return await Promise.all(
         input.events.map(async (event) => {

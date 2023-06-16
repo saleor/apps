@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import {
   sendgridConfigurationIdInputSchema,
   sendgridCreateConfigurationInputSchema,
@@ -55,37 +54,30 @@ export const throwTrpcErrorFromConfigurationServiceError = (
  * Allow access only for the dashboard users and attaches the
  * configuration service to the context
  */
-const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
-  next({
-    ctx: {
-      ...ctx,
-      sendgridConfigurationService: new SendgridConfigurationService({
-        metadataManager: new SendgridPrivateMetadataManager(
-          createSettingsManager(ctx.apiClient, ctx.appId!),
-          ctx.saleorApiUrl
-        ),
-      }),
-    },
-  })
+const protectedWithConfigurationService = protectedClientProcedure.use(
+  ({ next, ctx: { authData, apiClient } }) =>
+    next({
+      ctx: {
+        sendgridConfigurationService: new SendgridConfigurationService({
+          metadataManager: new SendgridPrivateMetadataManager(
+            createSettingsManager(apiClient, authData.appId),
+            authData.saleorApiUrl
+          ),
+        }),
+      },
+    })
 );
 
 export const sendgridConfigurationRouter = router({
-  fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-    logger.debug("sendgridConfigurationRouter.fetch called");
-    return ctx.sendgridConfigurationService.getConfigurationRoot();
-  }),
   getConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.get called");
+      ctx.logger.debug(`Getting configuration ${input.id} from configuration service`);
       try {
-        return ctx.sendgridConfigurationService.getConfiguration(input);
+        return await ctx.sendgridConfigurationService.getConfiguration(input);
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -93,12 +85,10 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.getConfigurations called");
       try {
-        return ctx.sendgridConfigurationService.getConfigurations(input);
+        return await ctx.sendgridConfigurationService.getConfigurations(input);
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -106,27 +96,26 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.create called");
       const newConfiguration = {
         ...sendgridDefaultEmptyConfigurations.configuration(),
         ...input,
       };
 
-      return await ctx.sendgridConfigurationService.createConfiguration(newConfiguration);
+      try {
+        return await ctx.sendgridConfigurationService.createConfiguration(newConfiguration);
+      } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
+        throwTrpcErrorFromConfigurationServiceError(e);
+      }
     }),
   deleteConfiguration: protectedWithConfigurationService
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.delete called");
-
       try {
         await ctx.sendgridConfigurationService.deleteConfiguration(input);
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -134,16 +123,13 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.getEventConfiguration called");
-
       try {
         return await ctx.sendgridConfigurationService.getEventConfiguration({
           configurationId: input.configurationId,
           eventType: input.eventType,
         });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -151,13 +137,10 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
-
       try {
         return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -165,13 +148,10 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateApiConnectionSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateApiConnection called");
-
       try {
         return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -180,10 +160,6 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
-
       const configuration = await ctx.sendgridConfigurationService.getConfiguration({
         id: input.id,
       });
@@ -196,6 +172,7 @@ export const sendgridConfigurationRouter = router({
       const chosenSender = senders.find((s) => s.value === input.sender);
 
       if (!chosenSender) {
+        ctx.logger.debug({ input }, "Throwing error - sender does not exist");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Sender does not exist",
@@ -210,6 +187,7 @@ export const sendgridConfigurationRouter = router({
           sender: input.sender,
         });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -217,10 +195,6 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateChannels called");
-
       try {
         return await ctx.sendgridConfigurationService.updateConfiguration({
           id: input.id,
@@ -231,6 +205,7 @@ export const sendgridConfigurationRouter = router({
           },
         });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -239,10 +214,6 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateEvent called");
-
       const { id: configurationId, eventType, ...eventConfiguration } = input;
 
       try {
@@ -252,6 +223,7 @@ export const sendgridConfigurationRouter = router({
           eventConfiguration,
         });
       } catch (e) {
+        ctx.logger.debug({ error: e }, `Service has thrown an error`);
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
@@ -260,10 +232,6 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
-      logger.debug(input, "sendgridConfigurationRouter.updateEventArray called");
-
       return await Promise.all(
         input.events.map(async (event) => {
           const { eventType, ...eventConfiguration } = event;
@@ -275,6 +243,7 @@ export const sendgridConfigurationRouter = router({
               eventConfiguration,
             });
           } catch (e) {
+            ctx.logger.debug({ error: e }, `Service has thrown an error`);
             throwTrpcErrorFromConfigurationServiceError(e);
           }
         })

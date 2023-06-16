@@ -5,7 +5,7 @@ import { sendgridTransformV1toV2 } from "./sendgrid-transform-v1-to-v2";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "sendgridConfigMigrationV1ToV2",
+  name: "sendgridConfigMigrationV1ToV2",
 });
 
 interface SendgridConfigMigrationV1ToV1Args {

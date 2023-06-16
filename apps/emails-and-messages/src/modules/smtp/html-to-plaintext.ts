@@ -2,7 +2,7 @@ import { convert } from "html-to-text";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "htmlToPlaintext",
+  name: "htmlToPlaintext",
 });
 
 export const htmlToPlaintext = (html: string) => {

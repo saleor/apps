@@ -3,20 +3,26 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { logger } from "@saleor/apps-shared";
 import { createClient } from "../../lib/create-graphql-client";
+import { attachLogger } from "./middlewares/attach-logger";
+import { createLogger } from "@saleor/apps-shared";
 
-const attachAppToken = middleware(async ({ ctx, next }) => {
-  logger.debug("attachAppToken middleware");
+const attachSaleorAuthData = middleware(async ({ ctx, next }) => {
+  const logger = createLogger({
+    name: "attachSaleorAuthData",
+    saleorApiUrl: ctx.saleorApiUrl,
+  });
 
   if (!ctx.saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
 
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Missing saleorApiUrl in request",
+      message: "Missing saleorApiUrl header in request",
     });
   }
+
+  logger.debug("Check if APL has registration given saleorApiUrl");
 
   const authData = await saleorApp.apl.get(ctx.saleorApiUrl);
 
@@ -31,70 +37,47 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
 
   return next({
     ctx: {
-      appToken: authData.token,
-      saleorApiUrl: authData.saleorApiUrl,
-      appId: authData.appId,
+      authData,
     },
   });
 });
 
-const validateClientToken = middleware(async ({ ctx, next, meta }) => {
-  logger.debug(
-    {
-      permissions: meta?.requiredClientPermissions,
-    },
-    "Calling validateClientToken middleware with permissions required"
-  );
-
-  if (!ctx.token) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Missing token in request. This middleware can be used only in frontend",
+const validateClientToken = attachSaleorAuthData.unstable_pipe(
+  async ({ ctx: { authData, appBridgeToken }, next, meta }) => {
+    const logger = createLogger({
+      name: "validateClientToken",
+      requiredPermissions: meta?.requiredClientPermissions,
+      saleorApiUrl: authData.saleorApiUrl,
     });
-  }
 
-  if (!ctx.appId) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Missing appId in request. This middleware can be used after auth is attached",
-    });
-  }
+    if (!appBridgeToken) {
+      logger.debug("Missing JWT token in the request.");
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Missing JWT token in the request.",
+      });
+    }
 
-  if (!ctx.saleorApiUrl) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message:
-        "Missing saleorApiUrl in request. This middleware can be used after auth is attached",
-    });
-  }
+    logger.debug("Verify JWT token");
 
-  if (!ctx.ssr) {
     try {
-      logger.debug("trying to verify JWT token from frontend");
-      logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
-
       await verifyJWT({
-        appId: ctx.appId,
-        token: ctx.token,
-        saleorApiUrl: ctx.saleorApiUrl,
+        appId: authData.appId,
+        token: appBridgeToken,
+        saleorApiUrl: authData.saleorApiUrl,
         requiredPermissions: meta?.requiredClientPermissions ?? [],
       });
     } catch (e) {
-      logger.debug("JWT verification failed, throwing");
+      logger.debug("JWT verification failed, throwing error");
       throw new ProtectedHandlerError("JWT verification failed: ", "JWT_VERIFICATION_FAILED");
     }
-  }
 
-  return next({
-    ctx: {
-      ...ctx,
-      saleorApiUrl: ctx.saleorApiUrl,
-    },
-  });
-});
+    return next();
+  }
+);
 
 /**
- * Construct common graphQL client and attach it to the context
+ * Construct common GraphQL client and attach it to the context
  *
  * Can be used only if called from the frontend (react-query),
  * otherwise jwks validation will fail (if createCaller used)
@@ -102,18 +85,14 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  * TODO Rethink middleware composition to enable safe server-side router calls
  */
 export const protectedClientProcedure = procedure
-  .use(attachAppToken)
+  .use(attachLogger)
   .use(validateClientToken)
-  .use(async ({ ctx, next }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
-
-    return next({
+  .use(async ({ ctx: { authData }, next }) =>
+    next({
       ctx: {
-        apiClient: client,
-        appToken: ctx.appToken,
-        saleorApiUrl: ctx.saleorApiUrl,
+        apiClient: createClient(authData.saleorApiUrl, async () =>
+          Promise.resolve({ token: authData.token })
+        ),
       },
-    });
-  });
+    })
+  );

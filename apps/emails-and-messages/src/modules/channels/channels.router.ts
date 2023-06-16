@@ -5,11 +5,7 @@ import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 
 export const channelsRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
-
-    const fetcher = new ChannelsFetcher(client);
+    const fetcher = new ChannelsFetcher(ctx.apiClient);
 
     return await fetcher.fetchChannels().then((channels) => channels ?? []);
   }),

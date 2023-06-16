@@ -5,7 +5,7 @@ import { smtpConfigMigrationV1ToV2 } from "./migrations/smtp-config-migration-v1
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "SmtpPrivateMetadataManager",
+  name: "SmtpPrivateMetadataManager",
 });
 
 export class SmtpPrivateMetadataManager {

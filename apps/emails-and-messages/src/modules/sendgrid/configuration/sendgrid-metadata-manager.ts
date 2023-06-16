@@ -5,7 +5,7 @@ import { sendgridConfigMigrationV1ToV2 } from "./migrations/sendgrid-config-migr
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "SendgridPrivateMetadataManager",
+  name: "SendgridPrivateMetadataManager",
 });
 
 export class SendgridPrivateMetadataManager {

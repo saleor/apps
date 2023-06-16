@@ -24,7 +24,7 @@ export const sendSendgrid = async ({
   sendgridConfiguration,
 }: SendSendgridArgs) => {
   const logger = createLogger({
-    fn: "sendSendgrid",
+    name: "sendSendgrid",
     event,
   });
 
