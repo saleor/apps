@@ -59,4 +59,5 @@ When the release introduces some issues or limitations, describe them:
 > You may experience issues when trying to use the new view with an adblocker turned on. The issue will be fixed in the next release. For now, please…
 
 ### Resources
-- https://www.youtube.com/watch?v=L3yAD319DiU&source_ve_path=MjM4NTE
+- https://www.youtube.com/watch?v=L3yAD319DiU
+- https://keepachangelog.com/en/1.0.0/
