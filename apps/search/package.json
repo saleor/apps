@@ -18,7 +18,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.95",
     "@saleor/react-hook-form-macaw": "workspace:*",
-    "@sentry/nextjs": "^7.46.0",
+    "@sentry/nextjs": "7.55.2",
     "@types/debug": "^4.1.7",
     "@urql/exchange-auth": "^2.1.4",
     "algoliasearch": "4.14.2",

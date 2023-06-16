@@ -20,7 +20,9 @@
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
         "SENTRY_ORG",
-        "SENTRY_DSN"
+        "SENTRY_DSN",
+        "SENTRY_ENVIRONMENT",
+        "NEXT_PUBLIC_SENTRY_DSN"
       ]
     }
   }
