@@ -11,7 +11,7 @@ import { filterConfigurations } from "../../app-configuration/filter-configurati
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 
 const logger = createLogger({
-  service: "SendgridConfigurationService",
+  name: "SendgridConfigurationService",
 });
 
 export type SendgridConfigurationServiceErrorType =

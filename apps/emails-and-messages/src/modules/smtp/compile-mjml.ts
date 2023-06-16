@@ -2,7 +2,7 @@ import mjml2html from "mjml";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "compileMjml",
+  name: "compileMjml",
 });
 
 export const compileMjml = (mjml: string) => {
