@@ -14,6 +14,7 @@ import { createClient } from "../../../lib/graphql";
 import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
+import { redactError } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -98,7 +99,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     return webhookResponse.success();
   } catch (error) {
     logger.error({
-      error: { message: (error as Error).message, stack: (error as Error).stack },
+      error: redactError(error),
     });
     return webhookResponse.error(new Error("Error while creating order in tax provider"));
   }

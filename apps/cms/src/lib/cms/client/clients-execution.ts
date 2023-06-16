@@ -9,7 +9,7 @@ import {
   ProductResponseSuccess,
 } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger, redactError } from "@saleor/apps-shared";
 import { CMSProvider, cmsProviders } from "../providers";
 import { ProviderInstanceSchema, providersSchemaSet } from "../config";
 
@@ -77,7 +77,7 @@ const executeCmsClientOperation = async ({
     } catch (error) {
       logger.error(
         {
-          error: { message: (error as Error).message, stack: (error as Error).stack },
+          error: redactError(error),
         },
         "Error deleting item"
       );
@@ -110,7 +110,7 @@ const executeCmsClientOperation = async ({
       });
     } catch (error) {
       logger.error("Error updating item", {
-        error: { message: (error as Error).message, stack: (error as Error).stack },
+        error: redactError(error),
       });
 
       return {
@@ -145,7 +145,7 @@ const executeCmsClientOperation = async ({
       }
     } catch (error) {
       logger.error("Error creating item", {
-        error: { message: (error as Error).message, stack: (error as Error).stack },
+        error: redactError(error),
       });
 
       return {
@@ -220,7 +220,7 @@ export const executeCmsClientBatchOperation = async ({
       } catch (error) {
         logger.error(
           {
-            error: { message: (error as Error).message, stack: (error as Error).stack },
+            error: redactError(error),
           },
           "Error creating batch items"
         );
@@ -268,7 +268,7 @@ export const executeCmsClientBatchOperation = async ({
       } catch (error) {
         logger.error(
           {
-            error: { message: (error as Error).message, stack: (error as Error).stack },
+            error: redactError(error),
           },
           "Error removing batch items"
         );
