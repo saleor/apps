@@ -937,14 +937,8 @@ const defaultTransactionModel: TransactionModel = {
 const defaultTaxCodeMatches: AvataxTaxCodeMatches = [
   {
     data: {
-      avataxTaxCode: {
-        code: "P0000000",
-        name: "Product",
-      },
-      saleorTaxClass: {
-        id: "VGF4Q2xhc3M6MjI=",
-        name: "Clothing",
-      },
+      avataxTaxCode: "P0000000",
+      saleorTaxClassId: "VGF4Q2xhc3M6MjI=",
     },
     id: "VGF4Q29kZTox",
   },

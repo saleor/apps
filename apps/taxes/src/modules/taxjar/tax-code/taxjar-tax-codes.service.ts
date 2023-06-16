@@ -1,24 +1,25 @@
 import { CategoriesRes } from "taxjar/dist/types/returnTypes";
 import { TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import { TaxCode } from "../../tax-codes/tax-code-match-schema";
+import type { TaxCode } from "../../tax-codes/tax-code-schema";
 
-export class TaxJarTaxCodeAdapter {
-  private taxJarClient: TaxJarClient;
+export class TaxJarTaxCodesService {
+  private client: TaxJarClient;
+
   constructor(config: TaxJarConfig) {
-    this.taxJarClient = new TaxJarClient(config);
+    this.client = new TaxJarClient(config);
   }
 
   private adapt(response: CategoriesRes): TaxCode[] {
     return response.categories.map((category) => ({
+      description: category.description,
       code: category.product_tax_code,
-      name: category.name,
     }));
   }
 
-  async getAll(): Promise<TaxCode[]> {
-    const taxCodes = await this.taxJarClient.getTaxCodes();
+  async getAll() {
+    const response = await this.client.getTaxCodes();
 
-    return this.adapt(taxCodes);
+    return this.adapt(response);
   }
 }

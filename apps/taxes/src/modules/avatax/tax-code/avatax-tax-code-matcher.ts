@@ -3,7 +3,7 @@ import { AvataxTaxCodeMatches } from "./avatax-tax-code-match-repository";
 
 export class AvataxTaxCodeMatcher {
   private mapTaxClassWithTaxMatch(taxClassId: string, matches: AvataxTaxCodeMatches) {
-    return matches.find((m) => m.data.saleorTaxClass?.id === taxClassId);
+    return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
 
   private getTaxClassId(line: TaxBaseLineFragment): string | undefined {
@@ -20,7 +20,7 @@ export class AvataxTaxCodeMatcher {
     const taxClassId = this.getTaxClassId(line);
 
     return taxClassId
-      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.avataxTaxCode.code ?? ""
+      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.avataxTaxCode ?? ""
       : "";
   }
 }

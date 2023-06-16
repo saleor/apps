@@ -1,5 +1,5 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
+import { TaxJarTaxCodeMatches } from "./taxjar-tax-code-match-repository";
 import { TaxJarTaxCodeMatcher } from "./taxjar-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
@@ -27,11 +27,8 @@ describe("TaxJarTaxCodeMatcher", () => {
     const matches: TaxJarTaxCodeMatches = [
       {
         data: {
-          saleorTaxClass: null,
-          taxJarTaxCode: {
-            code: "1",
-            name: "Clothing",
-          },
+          saleorTaxClassId: "",
+          taxJarTaxCode: "1",
         },
         id: "1",
       },
@@ -65,14 +62,8 @@ describe("TaxJarTaxCodeMatcher", () => {
     const matches: TaxJarTaxCodeMatches = [
       {
         data: {
-          saleorTaxClass: {
-            id: "1",
-            name: "Clothing",
-          },
-          taxJarTaxCode: {
-            code: "123412",
-            name: "Clothes",
-          },
+          saleorTaxClassId: "1",
+          taxJarTaxCode: "123412",
         },
         id: "1",
       },

@@ -4,7 +4,7 @@ import {
   TaxJarCalculateTaxesPayload,
   TaxJarCalculateTaxesTarget,
 } from "./taxjar-calculate-taxes-adapter";
-import { TaxJarTaxCodeMatcher } from "./taxjar-tax-code-matcher";
+import { TaxJarTaxCodeMatcher } from "../tax-code/taxjar-tax-code-matcher";
 
 export class TaxJarCalculateTaxesPayloadLinesTransformer {
   transform(
