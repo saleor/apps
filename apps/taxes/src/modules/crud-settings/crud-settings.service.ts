@@ -105,31 +105,9 @@ export class CrudSettingsManager {
       return item;
     });
 
-    this.logger.debug({ nextSettings }, "nextSettings");
-
     await this.metadataManager.set({
       key: this.metadataKey,
       value: JSON.stringify(nextSettings),
-      domain: this.saleorApiUrl,
-    });
-  }
-
-  async updateMany(updatedData: ({ id: string } & Record<string, unknown>)[]) {
-    const prevData = await this.readAll();
-
-    const nextData = prevData.data.map((item) => {
-      const updatedItem = updatedData.find((updatedItem) => updatedItem.id === item.id);
-
-      if (updatedItem) {
-        return updatedItem;
-      }
-
-      return item;
-    });
-
-    await this.metadataManager.set({
-      key: this.metadataKey,
-      value: JSON.stringify(nextData),
       domain: this.saleorApiUrl,
     });
   }

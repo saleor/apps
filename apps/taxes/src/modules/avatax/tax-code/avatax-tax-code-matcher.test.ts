@@ -1,5 +1,5 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { AvataxTaxCodeMatches } from "./avatax-tax-code-match-repository";
 import { AvataxTaxCodeMatcher } from "./avatax-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
@@ -27,11 +27,8 @@ describe("AvataxTaxCodeMatcher", () => {
     const matches: AvataxTaxCodeMatches = [
       {
         data: {
-          saleorTaxClass: null,
-          avataxTaxCode: {
-            code: "1",
-            name: "Clothing",
-          },
+          saleorTaxClassId: "",
+          avataxTaxCode: "1",
         },
         id: "1",
       },
@@ -65,14 +62,8 @@ describe("AvataxTaxCodeMatcher", () => {
     const matches: AvataxTaxCodeMatches = [
       {
         data: {
-          saleorTaxClass: {
-            id: "1",
-            name: "Clothing",
-          },
-          avataxTaxCode: {
-            code: "123412",
-            name: "Clothes",
-          },
+          saleorTaxClassId: "1",
+          avataxTaxCode: "123412",
         },
         id: "1",
       },

@@ -1,18 +1,21 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
 import { Logger, createLogger } from "../../../lib/logger";
-import { createRepositoryEntitySchema } from "../../app/repository-utils";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
-import { saleorTaxClassSchema, taxCodeSchema } from "../../tax-codes/tax-code-match-schema";
 
-const taxJarTaxCodeMatchSchema = createRepositoryEntitySchema(
+export const taxJarTaxCodeMatchSchema = z.object({
+  saleorTaxClassId: z.string(),
+  taxJarTaxCode: z.string(),
+});
+
+export type TaxJarTaxCodeMatch = z.infer<typeof taxJarTaxCodeMatchSchema>;
+
+const taxJarTaxCodeMatchesSchema = z.array(
   z.object({
-    saleorTaxClass: saleorTaxClassSchema.or(z.null()),
-    taxJarTaxCode: taxCodeSchema,
+    id: z.string(),
+    data: taxJarTaxCodeMatchSchema,
   })
 );
-
-const taxJarTaxCodeMatchesSchema = z.array(taxJarTaxCodeMatchSchema);
 
 export type TaxJarTaxCodeMatches = z.infer<typeof taxJarTaxCodeMatchesSchema>;
 
@@ -35,7 +38,11 @@ export class TaxJarTaxCodeMatchRepository {
     return taxJarTaxCodeMatchesSchema.parse(data);
   }
 
-  async updateMany(nextData: TaxJarTaxCodeMatches): Promise<void> {
-    await this.crudSettingsManager.updateMany(nextData);
+  async create(input: TaxJarTaxCodeMatch): Promise<void> {
+    await this.crudSettingsManager.create({ data: input });
+  }
+
+  async updateById(id: string, input: TaxJarTaxCodeMatch): Promise<void> {
+    await this.crudSettingsManager.updateById(id, { data: input });
   }
 }
