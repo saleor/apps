@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "sendEmailWithSmtp",
+  name: "sendEmailWithSmtp",
 });
 
 export interface SendMailArgs {
