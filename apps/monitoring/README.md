@@ -1,4 +1,4 @@
-# Saleor Monitoring app
+# Saleor App Monitoring
 
 ❗️NOTE: This is Alpha version of the app.❗️
 

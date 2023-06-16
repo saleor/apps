@@ -1,12 +1,4 @@
-![CMS](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
-
-<div align="center">
-  <h1>CMS</h1>
-</div>
-
-# Overview
-
-## What is it?
+# Saleor App CMS
 
 CMS Hub is a Saleor app that exports products from Saleor to several popular CMSes.
 
@@ -42,7 +34,3 @@ CMS Hub updates product variants in CMS providers on create, update or delete pr
 5. Turn on provider instances for desired channels.
 6. Go to Products in Dashboard.
 7. Add, edit or remove product variant to see it is added, updated or removed in configured CMS provider accordingly.
-
-## How can I contribute?
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
