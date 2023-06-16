@@ -20,7 +20,7 @@ export class TaxJarTaxCodeMatcher {
     const taxClassId = this.getTaxClassId(line);
 
     return taxClassId
-      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode.code
+      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode.code ?? ""
       : "";
   }
 }

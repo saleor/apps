@@ -31,7 +31,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
             quantity: 3,
             unit_price: 20,
             discount: 0,
-            product_tax_code: "",
+            product_tax_code: "P0000000",
           },
           {
             id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
@@ -72,7 +72,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
         quantity: 3,
         unit_price: 20,
         discount: 3.33,
-        product_tax_code: "",
+        product_tax_code: "P0000000",
       },
       {
         id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
