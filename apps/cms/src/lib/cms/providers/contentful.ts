@@ -107,7 +107,8 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
     const response = await contentfulFetch(endpoint, config, { method: "GET" });
     const respBody = await response.json();
 
-    logger.debug({ response, body: respBody }, "pingCMS response");
+    logger.trace("pingCMS success");
+
     return {
       ok: response.ok,
     };
@@ -130,7 +131,8 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
       },
     });
 
-    logger.debug({ response }, "createProduct response");
+    logger.trace("createProduct success");
+
     const json = await response.json();
 
     return {
@@ -150,10 +152,11 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
 
     const getEntryResponse = await contentfulFetch(endpoint, config, { method: "GET" });
 
-    logger.debug({ getEntryResponse }, "updateProduct getEntryResponse");
+    logger.trace("updateProduct success");
+
     const entry = await getEntryResponse.json();
 
-    logger.debug({ entry }, "updateProduct entry");
+    logger.trace("updateProduct entry success");
 
     const response = await contentfulFetch(endpoint, config, {
       method: "PUT",
@@ -163,7 +166,8 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
       },
     });
 
-    logger.debug({ response }, "updateProduct response");
+    logger.trace("updateProduct success");
+
     const json = await response.json();
 
     return {
@@ -226,42 +230,42 @@ const contentfulOperations: CreateOperations<ContentfulConfig> = (config) => {
     ping: async () => {
       const response = await pingCMS();
 
-      logger.debug({ response }, "ping response");
+      logger.trace("ping success");
 
       return response;
     },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
 
-      logger.debug({ result }, "createProduct result");
+      logger.trace("createProduct success");
 
       return transformCreateProductResponse(result);
     },
     updateProduct: async ({ id, input }) => {
       const result = await updateProductInCMS(id, input);
 
-      logger.debug({ result }, "updateProduct result");
+      logger.trace("updateProduct result");
 
       return result;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
 
-      logger.debug({ response }, "deleteProduct response");
+      logger.trace("deleteProduct success");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
 
-      logger.debug({ results }, "createBatchProducts results");
+      logger.trace("createBatchProducts success");
 
       return results.map((result) => transformCreateProductResponse(result));
     },
     deleteBatchProducts: async ({ ids }) => {
       const results = await deleteBatchProductsInCMS(ids);
 
-      logger.debug({ results }, "deleteBatchProducts results");
+      logger.trace("deleteBatchProducts success");
     },
   };
 };

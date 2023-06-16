@@ -88,7 +88,8 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
       method: "GET",
     });
 
-    logger.debug({ response }, "pingCMS response");
+    logger.debug("pingCMS success");
+
     return { ok: response.ok };
   };
 
@@ -99,7 +100,7 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
       body: JSON.stringify(body),
     });
 
-    logger.debug({ response }, "createProduct response");
+    logger.debug("createProduct success");
     return await response.json();
   };
 
@@ -135,42 +136,42 @@ export const strapiOperations: CreateStrapiOperations = (config) => {
     ping: async () => {
       const response = await pingCMS();
 
-      logger.debug({ response }, "ping response");
+      logger.debug("ping response");
 
       return response;
     },
     createProduct: async ({ input }) => {
       const result = await createProductInCMS(input);
 
-      logger.debug({ result }, "createProduct result");
+      logger.debug("createProduct success");
 
       return transformCreateProductResponse(result, input);
     },
     updateProduct: async ({ id, input }) => {
       const response = await updateProductInCMS(id, input);
 
-      logger.debug({ response }, "updateProduct response");
+      logger.debug("updateProduct success");
 
       return response;
     },
     deleteProduct: async ({ id }) => {
       const response = await deleteProductInCMS(id);
 
-      logger.debug({ response }, "deleteProduct response");
+      logger.debug("deleteProduct success");
 
       return response;
     },
     createBatchProducts: async ({ input }) => {
       const results = await createBatchProductsInCMS(input);
 
-      logger.debug({ results }, "createBatchProducts results");
+      logger.debug("createBatchProducts success");
 
       return results.map((result) => transformCreateProductResponse(result.response, result.input));
     },
     deleteBatchProducts: async ({ ids }) => {
       const responses = await deleteBatchProductsInCMS(ids);
 
-      logger.debug({ responses }, "deleteBatchProducts responses");
+      logger.debug("deleteBatchProducts success");
 
       return responses;
     },

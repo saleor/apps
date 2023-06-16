@@ -9,7 +9,7 @@ import {
   ProductResponseSuccess,
 } from "../types";
 import { getCmsIdFromSaleorItem } from "./metadata";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger, redactError } from "@saleor/apps-shared";
 import { CMSProvider, cmsProviders } from "../providers";
 import { ProviderInstanceSchema, providersSchemaSet } from "../config";
 
@@ -75,7 +75,12 @@ const executeCmsClientOperation = async ({
         deletedCmsId: cmsId,
       };
     } catch (error) {
-      logger.error("Error deleting item", { error });
+      logger.error(
+        {
+          error: redactError(error),
+        },
+        "Error deleting item"
+      );
 
       return {
         error: "Error deleting item.",
@@ -104,7 +109,9 @@ const executeCmsClientOperation = async ({
         },
       });
     } catch (error) {
-      logger.error("Error updating item", { error });
+      logger.error("Error updating item", {
+        error: redactError(error),
+      });
 
       return {
         error: "Error updating item.",
@@ -137,7 +144,9 @@ const executeCmsClientOperation = async ({
         };
       }
     } catch (error) {
-      logger.error("Error creating item", { error });
+      logger.error("Error creating item", {
+        error: redactError(error),
+      });
 
       return {
         error: "Error creating item.",
@@ -209,7 +218,12 @@ export const executeCmsClientBatchOperation = async ({
               .map((item) => (item as ProductResponseSuccess).data) || [],
         };
       } catch (error) {
-        logger.error({ error }, "Error creating batch items");
+        logger.error(
+          {
+            error: redactError(error),
+          },
+          "Error creating batch items"
+        );
 
         return {
           error: "Error creating batch items.",
@@ -252,7 +266,12 @@ export const executeCmsClientBatchOperation = async ({
           deletedCmsIds: CMSIdsToRemove,
         };
       } catch (error) {
-        logger.error({ error }, "Error removing batch items");
+        logger.error(
+          {
+            error: redactError(error),
+          },
+          "Error removing batch items"
+        );
 
         return {
           error: "Error removing batch items.",

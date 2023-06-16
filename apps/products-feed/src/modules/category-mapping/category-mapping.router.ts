@@ -41,7 +41,7 @@ export const categoryMappingRouter = router({
 
       logger.debug(
         {
-          input,
+          ...input,
         },
         "Updated category mapping"
       );

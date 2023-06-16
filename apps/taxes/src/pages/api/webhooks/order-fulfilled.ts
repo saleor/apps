@@ -27,18 +27,18 @@ export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledP
 });
 
 export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ event: ctx.event });
+  const logger = createLogger({ event: ctx.event, orderId: ctx.payload.order?.id });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info("Handler called");
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnection(channelSlug, appMetadata);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info("Fetched taxProvider");
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
@@ -46,7 +46,7 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     }
     const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
 
-    logger.info({ fulfilledOrder }, "Order fulfilled");
+    logger.info("Order fulfilled");
 
     return webhookResponse.success();
   } catch (error) {
