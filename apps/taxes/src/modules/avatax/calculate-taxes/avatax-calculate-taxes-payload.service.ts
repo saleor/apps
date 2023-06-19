@@ -6,10 +6,10 @@ import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 
 export class AvataxCalculateTaxesPayloadService {
-  constructor(private ctx: AuthData) {}
+  constructor(private authData: AuthData) {}
 
   private getMatches() {
-    const taxCodeMatchesService = new AvataxTaxCodeMatchesService(this.ctx);
+    const taxCodeMatchesService = new AvataxTaxCodeMatchesService(this.authData);
 
     return taxCodeMatchesService.getAll();
   }

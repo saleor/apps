@@ -17,7 +17,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   client: AvataxClient;
   private logger: Logger;
 
-  constructor(config: AvataxConfig, private ctx: AuthData) {
+  constructor(config: AvataxConfig, private authData: AuthData) {
     this.logger = createLogger({
       name: "AvataxWebhookService",
     });
@@ -28,7 +28,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    const adapter = new AvataxCalculateTaxesAdapter(this.config, this.ctx);
+    const adapter = new AvataxCalculateTaxesAdapter(this.config, this.authData);
 
     const response = await adapter.send({ taxBase });
 
