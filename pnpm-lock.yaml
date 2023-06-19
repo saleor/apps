@@ -131,9 +131,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -270,9 +267,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -406,9 +400,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -581,9 +572,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -723,9 +711,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -853,9 +838,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -974,9 +956,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -1125,9 +1104,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -1249,9 +1225,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -1376,9 +1349,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -1533,9 +1503,6 @@ importers:
       '@graphql-codegen/typescript-urql':
         specifier: 3.7.3
         version: 3.7.3(graphql-tag@2.12.6)(graphql@16.6.0)
-      '@graphql-codegen/urql-introspection':
-        specifier: 2.2.1
-        version: 2.2.1(graphql@16.6.0)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.6.0)
@@ -5791,17 +5758,6 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-codegen/urql-introspection@2.2.1(graphql@16.6.0):
-    resolution: {integrity: sha512-/KjHSf4dQNoYZZ+G10b3lbw304ik9xHzRf/syNvoYehmwdYE5J7RnO1v1Cz78LDm2NEdsFas6vJHi0sJd/pOHg==}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-codegen/plugin-helpers': 2.7.2(graphql@16.6.0)
-      '@urql/introspection': 0.3.3(graphql@16.6.0)
-      graphql: 16.6.0
-      tslib: 2.4.1
-    dev: true
-
   /@graphql-codegen/visitor-plugin-common@2.13.1(graphql@16.6.0):
     resolution: {integrity: sha512-mD9ufZhDGhyrSaWQGrU1Q1c5f01TeWtSWy/cDwXYjJcHIj1Y/DG2x0tOflEfCvh5WcnmHNIw4lzDsg1W7iFJEg==}
     peerDependencies:
@@ -10032,14 +9988,6 @@ packages:
     transitivePeerDependencies:
       - graphql
     dev: false
-
-  /@urql/introspection@0.3.3(graphql@16.6.0):
-    resolution: {integrity: sha512-tekSLLqWnusfV6V7xaEnLJQSdXOD/lWy7f8JYQwrX+88Md+voGSCSx5WJXI7KLBN3Tat2OV08tAr8UROykls4Q==}
-    peerDependencies:
-      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      graphql: 16.6.0
-    dev: true
 
   /@vanilla-extract/babel-plugin-debug-ids@1.0.3:
     resolution: {integrity: sha512-vm4jYu1xhSa6ofQ9AhIpR3DkAp4c+eoR1Rpm8/TQI4DmWbmGbOjYRcqV0aWsfaIlNhN4kFuxFMKBNN9oG6iRzA==}
