@@ -37,7 +37,7 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
 });
 
 export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ location: "checkoutCalculateTaxesSyncWebhook" });
+  const logger = createLogger({ name: "checkoutCalculateTaxesSyncWebhook" });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 

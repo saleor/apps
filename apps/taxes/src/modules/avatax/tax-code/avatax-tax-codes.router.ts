@@ -11,7 +11,7 @@ const getAllForIdSchema = z.object({ connectionId: z.string() });
 export const avataxTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "avataxTaxCodesRouter.getAllForId",
+      name: "avataxTaxCodesRouter.getAllForId",
     });
 
     const connectionService = new AvataxConnectionService(

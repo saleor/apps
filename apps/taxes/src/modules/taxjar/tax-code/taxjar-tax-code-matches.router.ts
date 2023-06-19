@@ -20,7 +20,7 @@ const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({
 export const taxJarTaxCodeMatchesRouter = router({
   getAll: protectedWithTaxJarTaxCodeMatchesService.query(async ({ ctx }) => {
     const logger = createLogger({
-      location: "taxjarTaxCodeMatchesRouter.fetch",
+      name: "taxjarTaxCodeMatchesRouter.fetch",
     });
 
     logger.info("Returning channel configuration");
@@ -31,7 +31,7 @@ export const taxJarTaxCodeMatchesRouter = router({
     .input(taxJarTaxCodeMatchSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        location: "taxjarTaxCodeMatchesRouter.updateMany",
+        name: "taxjarTaxCodeMatchesRouter.updateMany",
       });
 
       logger.info("Updating channel configuration");

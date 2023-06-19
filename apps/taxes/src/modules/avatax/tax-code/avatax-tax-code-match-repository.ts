@@ -27,7 +27,7 @@ export class AvataxTaxCodeMatchRepository {
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
     this.logger = createLogger({
-      location: "AvataxTaxCodeMatchRepository",
+      name: "AvataxTaxCodeMatchRepository",
       metadataKey,
     });
   }

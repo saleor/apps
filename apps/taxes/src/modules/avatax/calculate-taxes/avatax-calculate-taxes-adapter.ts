@@ -22,7 +22,7 @@ export class AvataxCalculateTaxesAdapter
 {
   private logger: Logger;
   constructor(private readonly config: AvataxConfig, private ctx: AuthData) {
-    this.logger = createLogger({ location: "AvataxCalculateTaxesAdapter" });
+    this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
   }
 
   // todo: refactor because its getting too big

@@ -13,7 +13,7 @@ export class AvataxConnectionService {
   private avataxConnectionRepository: AvataxConnectionRepository;
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "AvataxConnectionService",
+      name: "AvataxConnectionService",
     });
 
     const settingsManager = createSettingsManager(client, appId);

@@ -38,7 +38,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 export const taxjarConnectionRouter = router({
   getById: protectedWithConfigurationService.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarConnectionRouter.get",
+      name: "taxjarConnectionRouter.get",
     });
 
     logger.debug("taxjarConnectionRouter.get called");
@@ -53,7 +53,7 @@ export const taxjarConnectionRouter = router({
     .input(postInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        location: "taxjarConnectionRouter.post",
+        name: "taxjarConnectionRouter.post",
       });
 
       logger.debug("Attempting to create configuration");
@@ -68,7 +68,7 @@ export const taxjarConnectionRouter = router({
     .input(deleteInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        location: "taxjarConnectionRouter.delete",
+        name: "taxjarConnectionRouter.delete",
       });
 
       logger.debug("Route delete called");
@@ -82,7 +82,7 @@ export const taxjarConnectionRouter = router({
     .input(patchInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        location: "taxjarConnectionRouter.patch",
+        name: "taxjarConnectionRouter.patch",
       });
 
       logger.debug({ input }, "Route patch called");

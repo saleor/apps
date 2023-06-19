@@ -20,7 +20,7 @@ const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({
 export const avataxTaxCodeMatchesRouter = router({
   getAll: protectedWithAvataxTaxCodeMatchesService.query(async ({ ctx }) => {
     const logger = createLogger({
-      location: "avataxTaxCodeMatchesRouter.fetch",
+      name: "avataxTaxCodeMatchesRouter.fetch",
     });
 
     logger.info("Returning channel configuration");
@@ -31,7 +31,7 @@ export const avataxTaxCodeMatchesRouter = router({
     .input(avataxTaxCodeMatchSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        location: "avataxTaxCodeMatchesRouter.updateMany",
+        name: "avataxTaxCodeMatchesRouter.updateMany",
       });
 
       logger.info("Updating channel configuration");

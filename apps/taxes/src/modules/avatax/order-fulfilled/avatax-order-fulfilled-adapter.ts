@@ -18,7 +18,7 @@ export class AvataxOrderFulfilledAdapter
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ location: "AvataxOrderFulfilledAdapter" });
+    this.logger = createLogger({ name: "AvataxOrderFulfilledAdapter" });
   }
 
   async send(payload: AvataxOrderFulfilledPayload): Promise<AvataxOrderFulfilledResponse> {

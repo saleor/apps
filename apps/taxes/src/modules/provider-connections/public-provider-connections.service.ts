@@ -13,7 +13,7 @@ export class PublicProviderConnectionsService {
     this.avataxConnectionService = new PublicAvataxConnectionService(client, appId, saleorApiUrl);
     this.taxJarConnectionService = new PublicTaxJarConnectionService(client, appId, saleorApiUrl);
     this.logger = createLogger({
-      location: "PublicProviderConnectionsService",
+      name: "PublicProviderConnectionsService",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }

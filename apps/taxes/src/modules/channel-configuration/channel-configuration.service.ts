@@ -18,7 +18,7 @@ export class ChannelConfigurationService {
     this.settingsManager = settingsManager;
 
     this.logger = createLogger({
-      location: "ChannelConfigurationService",
+      name: "ChannelConfigurationService",
     });
 
     this.configurationService = new ChannelConfigurationSettings(settingsManager, saleorApiUrl);
