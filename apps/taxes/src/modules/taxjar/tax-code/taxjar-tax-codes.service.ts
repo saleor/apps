@@ -1,7 +1,7 @@
 import { CategoriesRes } from "taxjar/dist/types/returnTypes";
 import { TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import type { TaxCode } from "../../tax-codes/tax-code-schema";
+import type { TaxCode } from "../../taxes/tax-code";
 
 export class TaxJarTaxCodesService {
   private client: TaxJarClient;

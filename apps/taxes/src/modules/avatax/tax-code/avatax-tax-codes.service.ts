@@ -1,6 +1,6 @@
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import type { TaxCode } from "../../tax-codes/tax-code-schema";
+import type { TaxCode } from "../../taxes/tax-code";
 import { FetchResult } from "avatax/lib/utils/fetch_result";
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
