@@ -1,9 +1,9 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 type ConfigurationKeysType =
   | "PUBLIC_TOKEN"
@@ -46,7 +46,11 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
   const {
     authData: { token, saleorApiUrl, appId },
   } = ctx;
-  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
 
   const settings = createSettingsManager(client, appId);
 
