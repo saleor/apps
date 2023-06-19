@@ -17,7 +17,7 @@
     "@saleor/app-sdk": "0.40.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "^0.7.2",
-    "@urql/exchange-auth": "^1.0.0",
+    "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.0",
     "clsx": "^1.2.1",
     "graphql": "16.6.0",
@@ -29,7 +29,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.42.1",
-    "urql": "^3.0.3",
+    "urql": "^4.0.4",
     "vite": "4.3.9",
     "vitest": "0.31.3"
   },
