@@ -8,20 +8,10 @@ export function GraphQLProvider(props: PropsWithChildren<{}>) {
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
   const token = appBridgeState?.token!;
 
-<<<<<<< HEAD
   const client = createGraphQLClient({
     saleorApiUrl,
     token,
   });
-=======
-  if (!saleorApiUrl) {
-    return <>{props.children}</>;
-  }
-
-  const client = createClient(saleorApiUrl, async () => ({
-    token: appBridgeState?.token!,
-  }));
->>>>>>> ab0d55dd (Update Sentry in CMS)
 
   return <Provider value={client} {...props} />;
 }
