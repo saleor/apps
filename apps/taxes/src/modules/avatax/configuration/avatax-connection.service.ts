@@ -50,7 +50,7 @@ export class AvataxConnectionService {
 
     await validationService.validate(input);
 
-    return this.avataxConnectionRepository.patch(id, input);
+    return this.avataxConnectionRepository.patch(id, { config: input });
   }
 
   async delete(id: string): Promise<void> {

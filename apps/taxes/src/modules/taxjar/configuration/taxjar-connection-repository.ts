@@ -9,7 +9,7 @@ import {
 import { TAX_PROVIDER_KEY } from "../../provider-connections/public-provider-connections.service";
 import { TaxJarConfig, TaxJarConnection, taxJarConnection } from "../taxjar-connection-schema";
 
-const getSchema = taxJarConnection;
+const getSchema = taxJarConnection.strict();
 
 export class TaxJarConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
@@ -79,7 +79,7 @@ export class TaxJarConnectionRepository {
     return result.data;
   }
 
-  async patch(id: string, input: TaxJarConfig): Promise<void> {
+  async patch(id: string, input: Pick<TaxJarConnection, "config">): Promise<void> {
     return this.crudSettingsManager.update(id, input);
   }
 
