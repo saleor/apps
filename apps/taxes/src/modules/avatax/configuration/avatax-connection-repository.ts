@@ -13,7 +13,7 @@ import {
   avataxConnectionSchema,
 } from "../avatax-connection-schema";
 
-const getSchema = avataxConnectionSchema;
+const getSchema = avataxConnectionSchema.strict();
 
 export class AvataxConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;

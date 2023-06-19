@@ -9,7 +9,7 @@ import {
 import { TAX_PROVIDER_KEY } from "../../provider-connections/public-provider-connections.service";
 import { TaxJarConfig, TaxJarConnection, taxJarConnection } from "../taxjar-connection-schema";
 
-const getSchema = taxJarConnection;
+const getSchema = taxJarConnection.strict();
 
 export class TaxJarConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
