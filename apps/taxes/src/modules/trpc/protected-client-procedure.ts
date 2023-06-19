@@ -85,7 +85,6 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
 
   return next({
     ctx: {
-      ...ctx,
       saleorApiUrl: ctx.saleorApiUrl,
     },
   });
