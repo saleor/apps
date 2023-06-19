@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../../saleor-app";
 
@@ -10,6 +9,7 @@ import { createLogger } from "../../lib/logger";
 import { AppConfigurationFields } from "../../domain/configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const logger = createLogger({
   handler: "api/configuration",
@@ -51,7 +51,10 @@ export const handler = async (
 
   logger.debug({ saleorApiUrl }, "handler called");
 
-  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
 
   const settings = createSettingsManager(client);
 
