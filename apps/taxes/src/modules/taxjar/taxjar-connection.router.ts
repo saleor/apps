@@ -25,7 +25,6 @@ const postInputSchema = z.object({
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       connectionService: new PublicTaxJarConnectionService(
         ctx.apiClient,
         ctx.appId!,
