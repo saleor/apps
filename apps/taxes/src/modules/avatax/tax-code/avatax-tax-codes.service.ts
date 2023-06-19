@@ -3,6 +3,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import type { TaxCode } from "../../tax-codes/tax-code-schema";
 import { FetchResult } from "avatax/lib/utils/fetch_result";
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
 export class AvataxTaxCodesService {
   private client: AvataxClient;
@@ -13,7 +14,7 @@ export class AvataxTaxCodesService {
 
   private adapt(response: FetchResult<TaxCodeModel>): TaxCode[] {
     return response.value.map((item) => ({
-      description: item.description ?? "",
+      description: taxProviderUtils.resolveOptionalOrThrow(item.description),
       code: item.taxCode,
     }));
   }
