@@ -48,6 +48,17 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/avatax",
     },
   ],
+  "/providers/avatax/matcher": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "Avatax",
+      href: "/providers/avatax",
+    },
+    {
+      label: "Tax code matcher",
+      href: "/providers/avatax/matcher",
+    },
+  ],
   "/providers/avatax/[id]": [
     ...newProviderBreadcrumbs,
     {

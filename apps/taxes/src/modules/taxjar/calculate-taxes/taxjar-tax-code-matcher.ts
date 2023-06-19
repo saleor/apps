@@ -3,7 +3,7 @@ import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-reposito
 
 export class TaxJarTaxCodeMatcher {
   private mapTaxClassWithTaxMatch(taxClassId: string, matches: TaxJarTaxCodeMatches) {
-    return matches.find((m) => m.data.saleorTaxClass?.id === taxClassId);
+    return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
 
   private getTaxClassId(line: TaxBaseLineFragment): string | undefined {
@@ -19,8 +19,6 @@ export class TaxJarTaxCodeMatcher {
   match(line: TaxBaseLineFragment, matches: TaxJarTaxCodeMatches) {
     const taxClassId = this.getTaxClassId(line);
 
-    return taxClassId
-      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode.code
-      : "";
+    return taxClassId ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode : "";
   }
 }

@@ -2,6 +2,7 @@ import { ChannelSection } from "../modules/channel-configuration/ui/channel-sect
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppColumns } from "../modules/ui/app-columns";
 import { Section } from "../modules/ui/app-section";
+import { MatcherSection } from "../modules/ui/matcher-section";
 
 const Header = () => {
   return (
@@ -16,6 +17,7 @@ const ConfigurationPage = () => {
     <AppColumns top={<Header />}>
       <ProvidersSection />
       <ChannelSection />
+      <MatcherSection />
     </AppColumns>
   );
 };
