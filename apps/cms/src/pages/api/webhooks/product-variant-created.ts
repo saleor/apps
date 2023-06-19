@@ -8,10 +8,9 @@ import { saleorApp } from "../../../../saleor-app";
 import { getChannelsSlugsFromSaleorItem } from "../../../lib/cms/client/channels";
 import { createCmsOperations, executeCmsOperations, updateMetadata } from "../../../lib/cms/client";
 
-import { createClient } from "../../../lib/graphql";
 import { fetchProductVariantMetadata } from "../../../lib/metadata";
 import { getCmsKeysFromSaleorItem } from "../../../lib/cms/client/metadata";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -68,9 +67,10 @@ export const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadF
     });
   }
 
-  const client = createClient(saleorApiUrl, async () => ({
-    token: token,
-  }));
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
 
   const productVariantChannels = getChannelsSlugsFromSaleorItem(productVariant);
   const productVariantMetadata = await fetchProductVariantMetadata(client, productVariant.id);

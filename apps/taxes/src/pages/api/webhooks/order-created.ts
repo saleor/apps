@@ -10,10 +10,10 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveConnection } from "../../../modules/taxes/active-connection";
-import { createClient } from "../../../lib/graphql";
 import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -90,7 +90,10 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     const createdOrder = await taxProvider.createOrder(payload.order);
 
     logger.info({ createdOrder }, "Order created");
-    const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+    const client = createGraphQLClient({
+      saleorApiUrl,
+      token,
+    });
 
     await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
     logger.info("Updated order metadata with externalId");

@@ -4,8 +4,8 @@ import { saleorApp } from "../../../../../saleor-app";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../../../../lib/algolia/getAlgoliaConfiguration";
 import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
-import { createClient } from "../../../../lib/graphql";
 import { createLogger } from "../../../../lib/logger";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -62,7 +62,7 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
 
       const webhooksToggler = new WebhookActivityTogglerService(
         authData.appId,
-        createClient(authData.saleorApiUrl, async () => ({ token: authData.token }))
+        createGraphQLClient({ saleorApiUrl: authData.saleorApiUrl, token: authData.token })
       );
 
       logger.trace("Will disable webhooks");

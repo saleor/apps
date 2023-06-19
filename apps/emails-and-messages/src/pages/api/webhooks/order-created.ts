@@ -2,10 +2,9 @@ import { OrderDetailsFragmentDoc } from "./../../../../generated/graphql";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { OrderCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
-import { createClient } from "../../../lib/create-graphql-client";
 
 const OrderCreatedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -62,9 +61,10 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   }
 
   const channel = order.channel.slug;
-  const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
+    token: authData.token,
+  });
 
   await sendEventMessages({
     authData,

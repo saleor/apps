@@ -5,10 +5,10 @@ import {
   CustomerCreatedWebhookPayloadFragment,
   UntypedCustomerCreatedDocument,
 } from "../../../../generated/graphql";
-import { createClient } from "../../../lib/graphql";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../../saleor-app";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const CustomerCreatedWebhookPayload = gql`
   fragment CustomerCreatedWebhookPayload on CustomerCreated {
@@ -68,7 +68,11 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
 
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
-  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
+
   const settings = createSettingsManager(client, appId);
 
   const klaviyoToken = await settings.get("PUBLIC_TOKEN");

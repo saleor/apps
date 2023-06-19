@@ -7,11 +7,10 @@ import { getChannelsSettings, getProviderInstancesSettings } from "../../lib/cms
 import { providersSchemaSet } from "../../lib/cms/config/providers";
 import { cmsProviders, CMSProvider } from "../../lib/cms/providers";
 
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { batchUpdateMetadata, MetadataRecord } from "../../lib/cms/client/metadata-execution";
 import { CmsBatchOperations } from "../../lib/cms/types";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
 export interface SyncProductsVariantsApiPayload {
   channelSlug: string;
@@ -42,9 +41,10 @@ const handler: NextProtectedApiHandler = async (
 
   logger.debug("Called endpoint sync-products-variants");
 
-  const client = createClient(authData.saleorApiUrl, async () => ({
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
-  }));
+  });
 
   if (req.method !== "POST") {
     return res.status(405).json({

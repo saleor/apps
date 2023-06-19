@@ -2,9 +2,9 @@
 
 import * as dotenv from "dotenv";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "../migration-utils";
-import { createClient } from "../../../src/lib/graphql";
 import { RemoveMetadataDocument } from "../../../generated/graphql";
 import { MigrationV1toV2Consts } from "./const";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 dotenv.config();
 
@@ -15,9 +15,10 @@ const runMigration = async () => {
 
   const results = await Promise.all(
     allEnvs.map((env) => {
-      const client = createClient(env.saleorApiUrl, async () => ({
+      const client = createGraphQLClient({
+        saleorApiUrl: env.saleorApiUrl,
         token: env.token,
-      }));
+      });
 
       return client
         .mutation(RemoveMetadataDocument, {

@@ -2,7 +2,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { PropsWithChildren } from "react";
 import { Provider } from "urql";
 
-import { createClient } from "../lib/graphql";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export function GraphQLProvider(props: PropsWithChildren<{}>) {
   const { appBridgeState } = useAppBridge();
@@ -11,9 +11,10 @@ export function GraphQLProvider(props: PropsWithChildren<{}>) {
     return <div {...props}></div>;
   }
 
-  const client = createClient(appBridgeState?.saleorApiUrl, async () =>
-    Promise.resolve({ token: appBridgeState?.token! })
-  );
+  const client = createGraphQLClient({
+    saleorApiUrl: appBridgeState.saleorApiUrl,
+    token: appBridgeState.token,
+  });
 
   return <Provider value={client} {...props} />;
 }

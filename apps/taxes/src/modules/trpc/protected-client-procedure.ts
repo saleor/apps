@@ -1,10 +1,10 @@
-import { createClient } from "../../lib/graphql";
 import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { middleware, procedure } from "./trpc-server";
 import { saleorApp } from "../../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { logger } from "../../lib/logger";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -103,9 +103,10 @@ export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
+    const client = createGraphQLClient({
+      saleorApiUrl: ctx.saleorApiUrl,
+      token: ctx.appToken,
+    });
 
     return next({
       ctx: {
