@@ -49,7 +49,7 @@ export class TaxJarConnectionService {
 
     await validationService.validate(input);
 
-    return this.taxJarConnectionRepository.patch(id, input);
+    return this.taxJarConnectionRepository.patch(id, { config: input });
   }
 
   async delete(id: string): Promise<void> {

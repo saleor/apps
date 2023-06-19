@@ -46,7 +46,12 @@ export class TaxJarClient {
     return this.client.createOrder(params);
   }
 
+  /**
+   * TaxJar validateAddress doesn't work. It's turned off for now.
+   * @see https://github.com/taxjar/taxjar-node/issues/70
+   * @todo Revisit this when TaxJar fixes the issue. Alternatively, create a custom validation.
+   */
   async validateAddress({ params }: ValidateAddressArgs) {
-    return this.client.validateAddress(params);
+    // return this.client.validateAddress(params);
   }
 }
