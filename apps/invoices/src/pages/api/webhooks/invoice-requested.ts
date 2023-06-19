@@ -5,7 +5,6 @@ import {
   InvoiceRequestedPayloadFragment,
   OrderPayloadFragment,
 } from "../../../../generated/graphql";
-import { createClient } from "../../../lib/graphql";
 import { SaleorInvoiceUploader } from "../../../modules/invoices/invoice-uploader/saleor-invoice-uploader";
 import { InvoiceCreateNotifier } from "../../../modules/invoices/invoice-create-notifier/invoice-create-notifier";
 import {
@@ -15,7 +14,7 @@ import {
 import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-generator/microinvoice/microinvoice-invoice-generator";
 import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
 import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { GetAppConfigurationV2Service } from "../../../modules/app-configuration/schema-v2/get-app-configuration.v2.service";
 import { ShopInfoFetcher } from "../../../modules/shop-info/shop-info-fetcher";
@@ -176,9 +175,10 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
   logger.debug({ invoiceName }, "Generated invoice name");
 
   try {
-    const client = createClient(authData.saleorApiUrl, async () =>
-      Promise.resolve({ token: authData.token })
-    );
+    const client = createGraphQLClient({
+      saleorApiUrl: authData.saleorApiUrl,
+      token: authData.token,
+    });
 
     const hashedInvoiceName = hashInvoiceFilename(invoiceName, orderId);
 

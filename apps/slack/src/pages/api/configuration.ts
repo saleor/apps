@@ -1,9 +1,9 @@
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../lib/saleor-app";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const WEBHOOK_URL = "WEBHOOK_URL";
 
@@ -20,7 +20,10 @@ export const handler = async (
     authData: { token, saleorApiUrl, appId },
   } = ctx;
 
-  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
 
   const settings = createSettingsManager(client, appId);
 

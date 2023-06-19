@@ -1,6 +1,5 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { createClient, SimpleGraphqlClient } from "../../lib/graphql";
 import { FetchOwnWebhooksDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
@@ -10,8 +9,9 @@ import {
 } from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
 import { SearchProvider } from "../../lib/searchProvider";
+import { createGraphQLClient } from "@saleor/apps-shared";
+import { Client } from "urql";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
@@ -21,13 +21,10 @@ const logger = createLogger({
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (client: SimpleGraphqlClient) => SettingsManager;
-  webhookActivityTogglerFactory: (
-    appId: string,
-    client: SimpleGraphqlClient
-  ) => IWebhookActivityTogglerService;
+  settingsManagerFactory: (client: Client) => SettingsManager;
+  webhookActivityTogglerFactory: (appId: string, client: Client) => IWebhookActivityTogglerService;
   algoliaSearchProviderFactory: (appId: string, apiKey: string) => Pick<SearchProvider, "ping">;
-  graphqlClientFactory: (saleorApiUrl: string, token: string) => SimpleGraphqlClient;
+  graphqlClientFactory: (saleorApiUrl: string, token: string) => Client;
 };
 
 export const webhooksStatusHandlerFactory =
@@ -113,9 +110,7 @@ export default createProtectedHandler(
       return new AlgoliaSearchProvider({ appId, apiKey });
     },
     graphqlClientFactory(saleorApiUrl: string, token: string) {
-      return createClient(saleorApiUrl, async () => ({
-        token,
-      }));
+      return createGraphQLClient({ saleorApiUrl, token });
     },
   }),
   saleorApp.apl,

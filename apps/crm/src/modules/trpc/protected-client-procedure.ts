@@ -4,8 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
 
-import { createClient } from "../../lib/create-graphq-client";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({ service: "protected-client-procedure" });
 
@@ -108,9 +107,10 @@ export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {
-    const client = createClient(ctx.saleorApiUrl, async () =>
-      Promise.resolve({ token: ctx.appToken })
-    );
+    const client = createGraphQLClient({
+      saleorApiUrl: ctx.saleorApiUrl,
+      token: ctx.token,
+    });
 
     return next({
       ctx: {

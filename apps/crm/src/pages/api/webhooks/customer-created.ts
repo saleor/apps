@@ -4,11 +4,10 @@ import {
   CustomerCreatedDocument,
   CustomerCreatedPayloadFragment,
 } from "../../../../generated/graphql";
-import { createClient } from "../../../lib/create-graphq-client";
 import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
 import { metadataToMailchimpTags } from "../../../modules/saleor-customers-sync/metadata-to-mailchimp-tags";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
 export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayloadFragment>({
   name: "Customer Created in Saleor",
@@ -40,9 +39,10 @@ export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloa
     return res.status(200).end();
   }
 
-  const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
+    token: authData.token,
+  });
 
   const settingsManager = new MailchimpConfigSettingsManager(client, authData.appId);
 

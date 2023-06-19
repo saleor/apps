@@ -1,10 +1,13 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 import { gql } from "urql";
-import { createClient } from "../../lib/graphql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 
-import { createLogger, SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
+import {
+  createGraphQLClient,
+  createLogger,
+  SaleorVersionCompatibilityValidator,
+} from "@saleor/apps-shared";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -51,10 +54,9 @@ export default createAppRegisterHandler({
     });
 
     try {
-      const client = createClient(saleorApiUrl, async () => {
-        return {
-          token,
-        };
+      const client = createGraphQLClient({
+        saleorApiUrl: saleorApiUrl,
+        token: token,
       });
 
       const saleorVersion = await client

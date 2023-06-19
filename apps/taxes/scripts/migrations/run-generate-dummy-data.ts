@@ -1,5 +1,4 @@
 import { saleorApp } from "../../saleor-app";
-import { createClient } from "../../src/lib/graphql";
 import { Logger, createLogger } from "../../src/lib/logger";
 import { createSettingsManager } from "../../src/modules/app/metadata-manager";
 import { TaxProvidersV1 } from "./tax-providers-config-schema-v1";
@@ -8,6 +7,7 @@ import { ChannelsV1 } from "./channels-config-schema-v1";
 
 import * as dotenv from "dotenv";
 import { TaxChannelsPrivateMetadataManagerV1 } from "./tax-channels-metadata-manager-v1";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 dotenv.config();
 
@@ -94,9 +94,11 @@ class DummyConfigGenerator {
 
     console.log({ dummyTaxProvidersConfig, dummyTaxChannelsConfig }, "Dummy configs generated");
 
-    const client = createClient(target.saleorApiUrl, async () =>
-      Promise.resolve({ token: target.token })
-    );
+    const client = createGraphQLClient({
+      saleorApiUrl: target.saleorApiUrl,
+      token: target.token,
+    });
+
     const metadataManager = createSettingsManager(client, target.appId);
     const taxProvidersManager = new TaxProvidersPrivateMetadataManagerV1(
       metadataManager,

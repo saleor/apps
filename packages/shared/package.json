@@ -5,11 +5,13 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
+    "@urql/exchange-auth": "^2.1.4",
     "eslint": "8.42.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "semver": "^7.5.1",
-    "typescript": "5.1.3"
+    "typescript": "5.1.3",
+    "urql": "^4.0.4"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.4",

@@ -2,10 +2,10 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 
 import { OrderCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
-import { createClient } from "../../../lib/graphql";
 import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../lib/saleor-app";
 import { sendSlackMessage } from "../../../lib/slack";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const OrderCreatedWebhookPayload = gql`
   fragment OrderCreatedWebhookPayload on OrderCreated {
@@ -82,7 +82,10 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   const { saleorApiUrl, token, appId } = authData;
 
-  const client = createClient(saleorApiUrl, async () => Promise.resolve({ token }));
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
 
   const settings = createSettingsManager(client, appId);
 

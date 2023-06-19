@@ -4,9 +4,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { saleorApp } from "../../../saleor-app";
 import { CMSSchemaProviderInstances, SingleProviderSchema } from "../../lib/cms/config";
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { generateUniqueId } from "../../modules/cms/utils";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export type SettingsUpdateApiRequest = SingleProviderSchema;
 
@@ -15,10 +15,12 @@ export interface ProviderInstancesApiResponse {
   data?: CMSSchemaProviderInstances | SingleProviderSchema;
 }
 
-// todo: implement
-// const obfuscateSecret = (secret: string) => {
-//   return "*".repeat(secret.length - 4) + secret.substring(secret.length - 4);
-// };
+/*
+ * todo: implement
+ * const obfuscateSecret = (secret: string) => {
+ *   return "*".repeat(secret.length - 4) + secret.substring(secret.length - 4);
+ * };
+ */
 
 const handler: NextProtectedApiHandler = async (
   req: NextApiRequest,
@@ -27,9 +29,10 @@ const handler: NextProtectedApiHandler = async (
 ) => {
   const { authData } = context;
 
-  const client = createClient(authData.saleorApiUrl, async () => ({
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
-  }));
+  });
 
   const settingsManager = createSettingsManager(client);
 

@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createDebug } from "../debug";
-import { createClient } from "../graphql";
 import { createSettingsManager } from "../metadata";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
@@ -10,9 +10,10 @@ interface GetAlgoliaConfigurationArgs {
 const debug = createDebug("getAlgoliaConfiguration");
 
 export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurationArgs) => {
-  const client = createClient(authData.saleorApiUrl, async () =>
-    Promise.resolve({ token: authData.token })
-  );
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
+    token: authData.token,
+  });
 
   const settings = createSettingsManager(client);
 
