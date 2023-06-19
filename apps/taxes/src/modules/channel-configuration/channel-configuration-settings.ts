@@ -13,7 +13,7 @@ export class ChannelConfigurationSettings {
       "channel-configuration"
     );
     this.logger = createLogger({
-      location: "ChannelConfigurationSettings",
+      name: "ChannelConfigurationSettings",
     });
   }
 

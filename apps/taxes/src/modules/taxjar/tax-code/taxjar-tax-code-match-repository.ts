@@ -27,7 +27,7 @@ export class TaxJarTaxCodeMatchRepository {
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
     this.logger = createLogger({
-      location: "TaxJarTaxCodeMatchRepository",
+      name: "TaxJarTaxCodeMatchRepository",
       metadataKey,
     });
   }

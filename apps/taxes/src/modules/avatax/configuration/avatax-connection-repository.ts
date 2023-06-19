@@ -25,7 +25,7 @@ export class AvataxConnectionRepository {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      location: "AvataxConnectionRepository",
+      name: "AvataxConnectionRepository",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }

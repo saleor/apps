@@ -19,7 +19,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   constructor(config: AvataxConfig, private ctx: AuthData) {
     this.logger = createLogger({
-      location: "AvataxWebhookService",
+      name: "AvataxWebhookService",
     });
     const avataxClient = new AvataxClient(config);
 

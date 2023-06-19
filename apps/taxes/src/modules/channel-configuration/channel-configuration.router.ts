@@ -20,7 +20,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 export const channelsConfigurationRouter = router({
   fetch: protectedWithConfigurationService.query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "channelsConfigurationRouter.fetch",
+      name: "channelsConfigurationRouter.fetch",
     });
 
     const channelConfiguration = ctx.connectionService;

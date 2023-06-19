@@ -21,7 +21,7 @@ export class TaxJarConnectionRepository {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      location: "TaxJarConnectionRepository",
+      name: "TaxJarConnectionRepository",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }

@@ -12,7 +12,7 @@ const getAllForIdSchema = z.object({ connectionId: z.string() });
 export const taxJarTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxjarTaxCodesRouter.getAllForId",
+      name: "taxjarTaxCodesRouter.getAllForId",
     });
 
     const connectionService = new TaxJarConnectionService(

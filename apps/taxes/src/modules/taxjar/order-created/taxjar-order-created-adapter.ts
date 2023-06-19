@@ -19,7 +19,7 @@ export class TaxJarOrderCreatedAdapter
 {
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig) {
-    this.logger = createLogger({ location: "TaxJarOrderCreatedAdapter" });
+    this.logger = createLogger({ name: "TaxJarOrderCreatedAdapter" });
   }
 
   async send(payload: TaxJarOrderCreatedPayload): Promise<TaxJarOrderCreatedResponse> {

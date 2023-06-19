@@ -20,7 +20,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
   constructor(providerConnection: ProviderConnection, private ctx: AuthData) {
     this.logger = createLogger({
-      location: "ActiveTaxProvider",
+      name: "ActiveTaxProvider",
     });
 
     const taxProviderName = providerConnection.provider;
@@ -63,7 +63,7 @@ export function getActiveConnection(
   ctx: AuthData
 ): ActiveTaxProvider {
   const logger = createLogger({
-    location: "getActiveConnection",
+    name: "getActiveConnection",
   });
 
   if (!channelSlug) {

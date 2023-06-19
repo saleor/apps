@@ -20,7 +20,7 @@ export class TaxJarCalculateTaxesAdapter
 {
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig, private ctx: AuthData) {
-    this.logger = createLogger({ location: "TaxJarCalculateTaxesAdapter" });
+    this.logger = createLogger({ name: "TaxJarCalculateTaxesAdapter" });
   }
 
   // todo: refactor because its getting too big

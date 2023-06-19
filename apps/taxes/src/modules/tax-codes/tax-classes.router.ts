@@ -6,7 +6,7 @@ import { TaxClassesFetcher } from "./tax-classes-fetcher";
 export const taxClassesRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "taxClassesRouter.getAll",
+      name: "taxClassesRouter.getAll",
     });
 
     logger.debug("getAll called");

@@ -11,7 +11,7 @@ export class TaxJarConnectionService {
   private taxJarConnectionRepository: TaxJarConnectionRepository;
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "TaxJarConnectionService",
+      name: "TaxJarConnectionService",
     });
 
     const settingsManager = createSettingsManager(client, appId);

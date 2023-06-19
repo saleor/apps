@@ -29,7 +29,7 @@ export class TaxJarClient {
   private logger: Logger;
 
   constructor(providerConfig: TaxJarConfig) {
-    this.logger = createLogger({ location: "TaxJarClient" });
+    this.logger = createLogger({ name: "TaxJarClient" });
     const settings = createTaxJarSettings(providerConfig);
     const taxJarClient = new TaxJar(settings);
 

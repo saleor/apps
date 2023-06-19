@@ -13,7 +13,7 @@ export class AvataxTaxCodeMatchesService {
   private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
 
   constructor(ctx: AuthData) {
-    this.logger = createLogger({ location: "AvataxTaxCodeMatchesService" });
+    this.logger = createLogger({ name: "AvataxTaxCodeMatchesService" });
     const client = createUrqlClientFromCtx(ctx);
     const { appId, saleorApiUrl } = ctx;
     const settingsManager = createSettingsManager(client, appId);

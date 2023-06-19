@@ -18,7 +18,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.client = taxJarClient;
     this.config = config;
     this.logger = createLogger({
-      location: "TaxJarWebhookService",
+      name: "TaxJarWebhookService",
     });
   }
 

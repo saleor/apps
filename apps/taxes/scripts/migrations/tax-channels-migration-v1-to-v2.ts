@@ -12,7 +12,7 @@ export class TaxChannelsV1toV2MigrationManager {
     private options: { mode: "report" | "migrate" } = { mode: "migrate" }
   ) {
     this.logger = createLogger({
-      location: "TaxChannelsV1toV2MigrationManager",
+      name: "TaxChannelsV1toV2MigrationManager",
     });
   }
 
