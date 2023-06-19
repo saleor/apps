@@ -1,9 +1,9 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect, useState } from "react";
-import { createClient } from "../../lib/create-graphq-client";
 import { FetchCustomersDocument, FetchCustomersQuery } from "../../../generated/graphql";
 import { OperationResult } from "urql";
 import { metadataToMailchimpTags } from "./metadata-to-mailchimp-tags";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 type CustomerCollectionItem = {
   email: string;
@@ -27,9 +27,10 @@ export const useFetchAllCustomers = (enabled: boolean) => {
       return;
     }
 
-    const client = createClient(appBridgeState.saleorApiUrl, async () => ({
-      token: appBridgeState.token!,
-    }));
+    const client = createGraphQLClient({
+      saleorApiUrl: appBridgeState.saleorApiUrl,
+      token: appBridgeState.token,
+    });
 
     const fetchPage = (cursor?: string) =>
       client.query(FetchCustomersDocument, { cursor }).toPromise();
