@@ -77,7 +77,7 @@ export class AvataxClient {
   }
 
   async getTaxCodes() {
-    // * filtering and paginating is possible
+    // * If we want to do filtering on the front-end, we can use the `filter` parameter.
     return this.client.listTaxCodes({});
   }
 }
