@@ -58,7 +58,6 @@ export const throwTrpcErrorFromConfigurationServiceError = (
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       sendgridConfigurationService: new SendgridConfigurationService({
         metadataManager: new SendgridPrivateMetadataManager(
           createSettingsManager(ctx.apiClient, ctx.appId!),

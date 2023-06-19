@@ -7,7 +7,6 @@ import { taxJarTaxCodeMatchSchema } from "./taxjar-tax-code-match-repository";
 const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       taxCodeMatchesService: new TaxJarTaxCodeMatchesService({
         ...ctx,
         token: ctx.token!,
