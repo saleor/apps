@@ -27,11 +27,11 @@ export class AvataxCalculateTaxesAdapter
 
   // todo: refactor because its getting too big
   async send(payload: AvataxCalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
-    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
+    this.logger.debug("Transforming the Saleor payload for calculating taxes with Avatax...");
     const payloadService = new AvataxCalculateTaxesPayloadService(this.ctx);
     const target = await payloadService.getPayload(payload.taxBase, this.config);
 
-    this.logger.debug("Will call Avatax createTransaction with transformed payload");
+    this.logger.debug("Calling Avatax createTransaction with transformed payload...");
 
     const client = new AvataxClient(this.config);
     const response = await client.createTransaction(target);

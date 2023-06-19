@@ -85,7 +85,7 @@ export const taxjarConnectionRouter = router({
         name: "taxjarConnectionRouter.patch",
       });
 
-      logger.debug({ input }, "Route patch called");
+      logger.debug("Route update called");
 
       const result = await ctx.connectionService.update(input.id, input.value);
 
