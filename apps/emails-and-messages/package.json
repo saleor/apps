@@ -59,7 +59,6 @@
     "@graphql-codegen/typed-document-node": "3.0.2",
     "@graphql-codegen/typescript": "3.0.2",
     "@graphql-codegen/typescript-operations": "3.0.2",
-    "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-typed-document-node/core": "3.2.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^8.0.1",
