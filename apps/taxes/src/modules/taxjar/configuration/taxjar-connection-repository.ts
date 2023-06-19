@@ -79,7 +79,7 @@ export class TaxJarConnectionRepository {
     return result.data;
   }
 
-  async patch(id: string, input: TaxJarConfig): Promise<void> {
+  async patch(id: string, input: Pick<TaxJarConnection, "config">): Promise<void> {
     return this.crudSettingsManager.update(id, input);
   }
 

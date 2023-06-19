@@ -83,7 +83,7 @@ export class AvataxConnectionRepository {
     return result.data;
   }
 
-  async patch(id: string, input: AvataxConfig): Promise<void> {
+  async patch(id: string, input: Pick<AvataxConnection, "config">): Promise<void> {
     return this.crudSettingsManager.update(id, input);
   }
 
