@@ -17,11 +17,8 @@ query TaxClassesList(
     edges {
       node {
         ...TaxClass
-        __typename
       }
-      __typename
     }
-    __typename
   }
 }
 
