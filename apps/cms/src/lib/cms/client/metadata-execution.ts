@@ -5,8 +5,8 @@ import {
   UpdateMetadataDocument,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { createClient } from "../../graphql";
 import { createCmsKeyForSaleorItem } from "./metadata";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 type WebhookContext = Parameters<NextWebhookApiHandler>["2"];
 
@@ -60,7 +60,7 @@ export const updateMetadata = async ({
   cmsProviderInstanceIdsToDelete: Record<string, string>;
 }) => {
   const { token, saleorApiUrl } = context.authData;
-  const apiClient = createClient(saleorApiUrl, async () => ({ token }));
+  const apiClient = createGraphQLClient({ saleorApiUrl, token });
 
   await executeMetadataUpdateMutation({
     apiClient,
@@ -85,7 +85,7 @@ export const batchUpdateMetadata = async ({
   variantCMSProviderInstanceIdsToDelete: ItemMetadataRecord[];
 }) => {
   const { token, saleorApiUrl } = context.authData;
-  const apiClient = createClient(saleorApiUrl, async () => ({ token }));
+  const apiClient = createGraphQLClient({ saleorApiUrl, token });
 
   const variantCMSProviderInstanceIdsToCreateMap = variantCMSProviderInstanceIdsToCreate.reduce(
     (acc, { id, cmsProviderInstanceIds }) => ({

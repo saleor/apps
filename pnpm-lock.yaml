@@ -65,8 +65,8 @@ importers:
         specifier: ^7.43.0
         version: 7.43.0(next@13.3.0)(react@18.2.0)
       '@urql/exchange-auth':
-        specifier: ^1.0.0
-        version: 1.0.0(graphql@16.6.0)
+        specifier: ^2.1.4
+        version: 2.1.4(graphql@16.6.0)
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -98,8 +98,8 @@ importers:
         specifier: ^8.0.5
         version: 8.0.5(@types/react@18.2.5)(react@18.2.0)
       urql:
-        specifier: ^3.0.3
-        version: 3.0.3(graphql@16.6.0)(react@18.2.0)
+        specifier: ^4.0.4
+        version: 4.0.4(graphql@16.6.0)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)

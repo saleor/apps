@@ -2,11 +2,10 @@ import { NextProtectedApiHandler, createProtectedHandler } from "@saleor/app-sdk
 import { saleorApp } from "../../../saleor-app";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { createClient } from "../../lib/graphql";
 import { createSettingsManager } from "../../lib/metadata";
 import { getProviderInstancesSettings } from "../../lib/cms/client/settings";
 import { pingProviderInstance } from "../../lib/cms/client/clients-execution";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
 export interface ProviderInstancePingApiPayload {
   providerInstanceId: string;
@@ -42,9 +41,11 @@ const handler: NextProtectedApiHandler = async (
     });
   }
 
-  const client = createClient(authData.saleorApiUrl, async () => ({
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
-  }));
+  });
+
   const settingsManager = createSettingsManager(client);
   const providerInstancesSettingsParsed = await getProviderInstancesSettings(settingsManager);
 

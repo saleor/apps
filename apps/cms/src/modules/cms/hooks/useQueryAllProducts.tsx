@@ -4,7 +4,7 @@ import {
   ProductsDataForImportDocument,
   ProductsDataForImportQuery,
 } from "../../../../generated/graphql";
-import { createClient } from "../../../lib/graphql";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 const PER_PAGE = 100;
 
@@ -32,7 +32,7 @@ export const useQueryAllProducts = (paused: boolean, channelSlug: string | null)
     }
 
     const token = appBridgeState.token;
-    const client = createClient(saleorApiUrl, () => Promise.resolve({ token }));
+    const client = createGraphQLClient({ saleorApiUrl, token });
 
     if (!client) {
       return;
