@@ -19,6 +19,7 @@ export class TaxJarTaxCodeMatcher {
   match(line: TaxBaseLineFragment, matches: TaxJarTaxCodeMatches) {
     const taxClassId = this.getTaxClassId(line);
 
+    // We can fall back to empty string if we don't have a tax code match
     return taxClassId
       ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode ?? ""
       : "";

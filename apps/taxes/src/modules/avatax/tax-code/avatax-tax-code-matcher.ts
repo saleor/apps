@@ -19,6 +19,7 @@ export class AvataxTaxCodeMatcher {
   match(line: TaxBaseLineFragment, matches: AvataxTaxCodeMatches) {
     const taxClassId = this.getTaxClassId(line);
 
+    // We can fall back to empty string if we don't have a tax code match
     return taxClassId
       ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.avataxTaxCode ?? ""
       : "";
