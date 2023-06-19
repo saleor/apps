@@ -3,7 +3,7 @@ import { gql } from "urql";
 
 import {
   OrderFullyPaidWebhookPayloadFragment,
-  UntypedOrderFullyPaidDocument,
+  OrderFullyPaidDocument,
 } from "../../../../generated/graphql";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
@@ -32,7 +32,7 @@ export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhoo
   webhookPath: "api/webhooks/order-fully-paid",
   event: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
-  query: UntypedOrderFullyPaidDocument,
+  query: OrderFullyPaidDocument,
 });
 
 const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (

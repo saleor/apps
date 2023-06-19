@@ -3,7 +3,7 @@ import { gql } from "urql";
 
 import {
   FulfillmentCreatedWebhookPayloadFragment,
-  UntypedFulfillmentCreatedDocument,
+  FulfillmentCreatedDocument,
 } from "../../../../generated/graphql";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
@@ -62,7 +62,7 @@ export const fulfillmentCreatedWebhook =
     webhookPath: "api/webhooks/fulfillment-created",
     event: "FULFILLMENT_CREATED",
     apl: saleorApp.apl,
-    query: UntypedFulfillmentCreatedDocument,
+    query: FulfillmentCreatedDocument,
   });
 
 const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> = async (

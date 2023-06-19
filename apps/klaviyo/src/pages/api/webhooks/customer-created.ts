@@ -2,8 +2,8 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 
 import {
+  CustomerCreatedDocument,
   CustomerCreatedWebhookPayloadFragment,
-  UntypedCustomerCreatedDocument,
 } from "../../../../generated/graphql";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
@@ -55,7 +55,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
     webhookPath: "api/webhooks/customer-created",
     event: "CUSTOMER_CREATED",
     apl: saleorApp.apl,
-    query: UntypedCustomerCreatedDocument,
+    query: CustomerCreatedDocument,
   }
 );
 
