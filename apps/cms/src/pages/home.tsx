@@ -6,8 +6,6 @@ import { ReactElement } from "react";
 import { AppTabNavButton } from "../modules/ui/app-tab-nav-button";
 import { makeStyles } from "@saleor/macaw-ui";
 import { Box, Typography } from "@material-ui/core";
-import * as Sentry from "@sentry/nextjs";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const useStyles = makeStyles({
   section: {
@@ -27,38 +25,12 @@ const useStyles = makeStyles({
 
 const HomePage: NextPageWithLayout = () => {
   const styles = useStyles();
-  const { appBridgeState } = useAppBridge();
 
   return (
     <>
       <AppTabs activeTab="home" />
-
       <div>
         <Box>
-          <button
-            onClick={() => {
-              Sentry.withScope((scope) => {
-                scope.setUser({
-                  segment: appBridgeState?.domain,
-                });
-
-                scope.setContext("app-bridge-state", {
-                  appId: appBridgeState?.id,
-                  locale: appBridgeState?.locale,
-                });
-
-                scope.addBreadcrumb({
-                  level: "warning",
-                  data: {},
-                  message: "User clicked error test button",
-                });
-
-                Sentry.captureException(new Error("Test event from CMS app"));
-              });
-            }}
-          >
-            TEST ERROR SENTRY
-          </button>
           <Typography variant="h3">Connect CMS</Typography>
           <p>
             Visit <AppTabNavButton to="providers">providers settings</AppTabNavButton> to configure
