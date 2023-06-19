@@ -33,7 +33,6 @@
     "graphql-tag": "^2.12.6",
     "jsdom": "^20.0.3",
     "next": "13.3.0",
-    "next-urql": "4.0.3",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
