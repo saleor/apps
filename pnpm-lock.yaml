@@ -331,8 +331,8 @@ importers:
         specifier: ^7.39.0
         version: 7.39.0(next@13.3.0)(react@18.2.0)
       '@urql/exchange-auth':
-        specifier: ^1.0.0
-        version: 1.0.0(graphql@16.6.0)
+        specifier: ^2.1.4
+        version: 2.1.4(graphql@16.6.0)
       '@vitejs/plugin-react':
         specifier: 4.0.0
         version: 4.0.0(vite@4.3.9)
@@ -373,8 +373,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       urql:
-        specifier: ^3.0.3
-        version: 3.0.3(graphql@16.6.0)(react@18.2.0)
+        specifier: ^4.0.4
+        version: 4.0.4(graphql@16.6.0)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
