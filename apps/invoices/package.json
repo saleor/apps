@@ -23,7 +23,6 @@
     "@trpc/react-query": "^10.10.0",
     "@trpc/server": "^10.10.0",
     "@urql/exchange-auth": "^2.1.4",
-    "@urql/exchange-multipart-fetch": "^1.0.1",
     "@web-std/file": "^3.0.2",
     "clsx": "^1.2.1",
     "eslint": "8.42.0",
