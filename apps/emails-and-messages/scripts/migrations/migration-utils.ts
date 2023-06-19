@@ -1,13 +1,11 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
-import { createClient } from "../../src/lib/create-graphql-client";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../../src/lib/metadata-manager";
 
 export const getMetadataManagerForEnv = (apiUrl: string, appToken: string, appId: string) => {
-  const client = createClient(apiUrl, async () => ({
-    token: appToken,
-  }));
+  const client = createGraphQLClient({ saleorApiUrl: apiUrl, token: appToken });
 
   return createSettingsManager(client, appId);
 };
