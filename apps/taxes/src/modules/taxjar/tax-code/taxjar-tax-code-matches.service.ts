@@ -1,5 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createUrqlClientFromCtx } from "../../../lib/graphql";
+import { createUrqlClientFromAuthdata } from "../../../lib/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
@@ -14,7 +14,7 @@ export class TaxJarTaxCodeMatchesService {
 
   constructor(authData: AuthData) {
     this.logger = createLogger({ name: "TaxJarTaxCodeService" });
-    const client = createUrqlClientFromCtx(authData);
+    const client = createUrqlClientFromAuthdata(authData);
     const settingsManager = createSettingsManager(client, authData.appId);
 
     this.taxCodeMatchRepository = new TaxJarTaxCodeMatchRepository(
