@@ -10,9 +10,6 @@ extensions:
         plugins:
           - typescript
           - typescript-operations
-          - typescript-urql:
-              documentVariablePrefix: "Untyped"
-              fragmentVariablePrefix: "Untyped"
           - typed-document-node
       generated/schema.graphql:
         plugins:
