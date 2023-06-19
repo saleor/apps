@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { initUrqlClient } from "next-urql";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
-import { createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
@@ -67,12 +66,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
    * use unauthorized client to eliminate possibility of spilling the non-public data
    */
-  const client = initUrqlClient(
-    {
-      url: authData.saleorApiUrl,
-    },
-    false
-  );
+  const client = createGraphQLClient({
+    saleorApiUrl: authData.saleorApiUrl,
+    token: authData.token,
+  });
 
   if (!client) {
     logger.error("Can't create the gql client");
