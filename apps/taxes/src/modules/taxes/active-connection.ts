@@ -80,7 +80,7 @@ export function getActiveConnection(
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    logger.debug({ channelSlug, channelConfig }, "Channel config was not found for channel slug");
+    logger.debug({ channelSlug }, "Channel config was not found for channel slug");
     throw new Error(`Channel config was not found for channel ${channelSlug}`);
   }
 

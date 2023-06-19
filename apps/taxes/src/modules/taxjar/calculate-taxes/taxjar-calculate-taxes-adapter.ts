@@ -25,11 +25,11 @@ export class TaxJarCalculateTaxesAdapter
 
   // todo: refactor because its getting too big
   async send(payload: TaxJarCalculateTaxesPayload): Promise<TaxJarCalculateTaxesResponse> {
-    this.logger.debug("Transforming Saleor payload");
+    this.logger.debug("Transforming the Saleor payload for calculating taxes with TaxJar...");
     const payloadService = new TaxJarCalculateTaxesPayloadService(this.config, this.ctx);
     const target = await payloadService.getPayload(payload);
 
-    this.logger.debug("Will call TaxJar fetchTaxForOrder with transformed payload");
+    this.logger.debug("Calling TaxJar fetchTaxForOrder with transformed payload...");
 
     const client = new TaxJarClient(this.config);
     const response = await client.fetchTaxForOrder(target);
