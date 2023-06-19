@@ -12,14 +12,14 @@ export class TaxJarTaxCodeMatchesService {
   private logger: Logger;
   private taxCodeMatchRepository: TaxJarTaxCodeMatchRepository;
 
-  constructor(ctx: AuthData) {
+  constructor(authData: AuthData) {
     this.logger = createLogger({ name: "TaxJarTaxCodeService" });
-    const client = createUrqlClientFromCtx(ctx);
-    const settingsManager = createSettingsManager(client, ctx.appId);
+    const client = createUrqlClientFromCtx(authData);
+    const settingsManager = createSettingsManager(client, authData.appId);
 
     this.taxCodeMatchRepository = new TaxJarTaxCodeMatchRepository(
       settingsManager,
-      ctx.saleorApiUrl
+      authData.saleorApiUrl
     );
   }
 

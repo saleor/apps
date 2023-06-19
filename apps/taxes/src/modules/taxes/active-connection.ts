@@ -18,7 +18,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerConnection: ProviderConnection, private ctx: AuthData) {
+  constructor(providerConnection: ProviderConnection, private authData: AuthData) {
     this.logger = createLogger({
       name: "ActiveTaxProvider",
     });
@@ -28,13 +28,13 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     switch (taxProviderName) {
       case "taxjar": {
         this.logger.debug("Selecting TaxJar as tax provider");
-        this.client = new TaxJarWebhookService(providerConnection.config, this.ctx);
+        this.client = new TaxJarWebhookService(providerConnection.config, this.authData);
         break;
       }
 
       case "avatax": {
         this.logger.debug("Selecting Avatax as tax provider");
-        this.client = new AvataxWebhookService(providerConnection.config, this.ctx);
+        this.client = new AvataxWebhookService(providerConnection.config, this.authData);
         break;
       }
 
@@ -60,7 +60,7 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 export function getActiveConnection(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
-  ctx: AuthData
+  authData: AuthData
 ): ActiveTaxProvider {
   const logger = createLogger({
     name: "getActiveConnection",
@@ -96,7 +96,7 @@ export function getActiveConnection(
     throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerConnection, ctx);
+  const taxProvider = new ActiveTaxProvider(providerConnection, authData);
 
   return taxProvider;
 }

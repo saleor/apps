@@ -12,10 +12,10 @@ export class AvataxTaxCodeMatchesService {
   private logger: Logger;
   private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
 
-  constructor(ctx: AuthData) {
+  constructor(authData: AuthData) {
     this.logger = createLogger({ name: "AvataxTaxCodeMatchesService" });
-    const client = createUrqlClientFromCtx(ctx);
-    const { appId, saleorApiUrl } = ctx;
+    const client = createUrqlClientFromCtx(authData);
+    const { appId, saleorApiUrl } = authData;
     const settingsManager = createSettingsManager(client, appId);
 
     this.taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);

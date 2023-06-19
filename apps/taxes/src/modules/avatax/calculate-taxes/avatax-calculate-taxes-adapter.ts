@@ -21,14 +21,14 @@ export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<AvataxCalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
   private logger: Logger;
-  constructor(private readonly config: AvataxConfig, private ctx: AuthData) {
+  constructor(private readonly config: AvataxConfig, private authData: AuthData) {
     this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
   }
 
   // todo: refactor because its getting too big
   async send(payload: AvataxCalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with Avatax...");
-    const payloadService = new AvataxCalculateTaxesPayloadService(this.ctx);
+    const payloadService = new AvataxCalculateTaxesPayloadService(this.authData);
     const target = await payloadService.getPayload(payload.taxBase, this.config);
 
     this.logger.debug("Calling Avatax createTransaction with transformed payload...");

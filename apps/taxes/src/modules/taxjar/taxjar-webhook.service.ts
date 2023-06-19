@@ -12,7 +12,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   private logger: Logger;
   private config: TaxJarConfig;
 
-  constructor(config: TaxJarConfig, private ctx: AuthData) {
+  constructor(config: TaxJarConfig, private authData: AuthData) {
     const taxJarClient = new TaxJarClient(config);
 
     this.client = taxJarClient;
@@ -23,7 +23,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    const adapter = new TaxJarCalculateTaxesAdapter(this.config, this.ctx);
+    const adapter = new TaxJarCalculateTaxesAdapter(this.config, this.authData);
 
     const response = await adapter.send({ taxBase });
 

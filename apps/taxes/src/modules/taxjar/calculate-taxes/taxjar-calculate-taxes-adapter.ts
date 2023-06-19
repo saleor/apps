@@ -19,14 +19,14 @@ export class TaxJarCalculateTaxesAdapter
   implements WebhookAdapter<TaxJarCalculateTaxesPayload, TaxJarCalculateTaxesResponse>
 {
   private logger: Logger;
-  constructor(private readonly config: TaxJarConfig, private ctx: AuthData) {
+  constructor(private readonly config: TaxJarConfig, private authData: AuthData) {
     this.logger = createLogger({ name: "TaxJarCalculateTaxesAdapter" });
   }
 
   // todo: refactor because its getting too big
   async send(payload: TaxJarCalculateTaxesPayload): Promise<TaxJarCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with TaxJar...");
-    const payloadService = new TaxJarCalculateTaxesPayloadService(this.config, this.ctx);
+    const payloadService = new TaxJarCalculateTaxesPayloadService(this.config, this.authData);
     const target = await payloadService.getPayload(payload);
 
     this.logger.debug("Calling TaxJar fetchTaxForOrder with transformed payload...");
