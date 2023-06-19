@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createUrqlClientFromAuthdata } from "../../../lib/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
@@ -7,6 +6,7 @@ import {
   AvataxTaxCodeMatchRepository,
   AvataxTaxCodeMatches,
 } from "./avatax-tax-code-match-repository";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export class AvataxTaxCodeMatchesService {
   private logger: Logger;
@@ -14,7 +14,10 @@ export class AvataxTaxCodeMatchesService {
 
   constructor(authData: AuthData) {
     this.logger = createLogger({ name: "AvataxTaxCodeMatchesService" });
-    const client = createUrqlClientFromAuthdata(authData);
+    const client = createGraphQLClient({
+      saleorApiUrl: authData.saleorApiUrl,
+      token: authData.token,
+    });
     const { appId, saleorApiUrl } = authData;
     const settingsManager = createSettingsManager(client, appId);
 
