@@ -7,7 +7,6 @@ import { ChannelConfigurationService } from "./channel-configuration.service";
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       connectionService: new ChannelConfigurationService(
         ctx.apiClient,
         ctx.appId!,

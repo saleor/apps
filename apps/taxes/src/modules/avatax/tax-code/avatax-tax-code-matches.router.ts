@@ -7,9 +7,8 @@ import { avataxTaxCodeMatchSchema } from "./avatax-tax-code-match-repository";
 const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       taxCodeMatchesService: new AvataxTaxCodeMatchesService({
-        ...ctx,
+        saleorApiUrl: ctx.saleorApiUrl,
         token: ctx.token!,
         appId: ctx.appId!,
       }),

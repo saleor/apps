@@ -8,7 +8,7 @@ const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({
   next({
     ctx: {
       taxCodeMatchesService: new TaxJarTaxCodeMatchesService({
-        ...ctx,
+        saleorApiUrl: ctx.saleorApiUrl,
         token: ctx.token!,
         appId: ctx.appId!,
       }),
