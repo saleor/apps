@@ -104,7 +104,7 @@ export const protectedClientProcedure = procedure
   .use(async ({ ctx, next }) => {
     const client = createGraphQLClient({
       saleorApiUrl: ctx.saleorApiUrl,
-      token: ctx.token,
+      token: ctx.appToken,
     });
 
     return next({
