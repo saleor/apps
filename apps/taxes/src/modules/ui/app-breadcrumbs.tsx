@@ -82,7 +82,7 @@ const useBreadcrumbs = () => {
   const { pathname } = useRouter();
   const breadcrumbs = breadcrumbsForRoute[pathname];
 
-  if (pathname !== "/" && !breadcrumbs) {
+  if (pathname !== "/" && pathname !== "_error" && !breadcrumbs) {
     throw new Error(`No breadcrumbs for route ${pathname}`);
   }
 
