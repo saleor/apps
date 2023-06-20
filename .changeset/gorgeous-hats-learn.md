@@ -4,5 +4,5 @@
 "saleor-app-crm": patch
 ---
 
-Fixes "Not enough permissions" error during configuration management.
+Fixed "Not enough permissions" error during configuration management.
 
