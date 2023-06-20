@@ -1,11 +1,10 @@
+import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { TaxJarConnectionRepository } from "./taxjar-connection-repository";
-import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
-import { TaxJarValidationService } from "./taxjar-validation.service";
-import { DeepPartial } from "@trpc/server";
-import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
 import { createSettingsManager } from "../../app/metadata-manager";
+import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
+import { TaxJarConnectionRepository } from "./taxjar-connection-repository";
+import { TaxJarValidationService } from "./taxjar-validation.service";
 
 export class TaxJarConnectionService {
   private logger: Logger;
@@ -43,9 +42,20 @@ export class TaxJarConnectionService {
     const prevConfig = setting.config;
 
     const validationService = new TaxJarValidationService();
-    const inputTransformer = new PatchInputTransformer();
 
-    const input = inputTransformer.transform(nextConfigPartial, prevConfig);
+    // todo: add deepRightMerge
+    const input: TaxJarConfig = {
+      ...prevConfig,
+      ...nextConfigPartial,
+      credentials: {
+        ...prevConfig.credentials,
+        ...nextConfigPartial.credentials,
+      },
+      address: {
+        ...prevConfig.address,
+        ...nextConfigPartial.address,
+      },
+    };
 
     await validationService.validate(input);
 

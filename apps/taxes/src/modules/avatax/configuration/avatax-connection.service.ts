@@ -1,12 +1,10 @@
+import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
 import { Logger, createLogger } from "../../../lib/logger";
-import { AvataxConnectionRepository } from "./avatax-connection-repository";
-import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
-import { AvataxValidationService } from "./avatax-validation.service";
-import { DeepPartial } from "@trpc/server";
-import { PatchInputTransformer } from "../../provider-connections/patch-input-transformer";
-import { AuthData } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../../app/metadata-manager";
+import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
+import { AvataxConnectionRepository } from "./avatax-connection-repository";
+import { AvataxValidationService } from "./avatax-validation.service";
 
 export class AvataxConnectionService {
   private logger: Logger;
@@ -44,9 +42,20 @@ export class AvataxConnectionService {
     const prevConfig = setting.config;
 
     const validationService = new AvataxValidationService();
-    const inputTransformer = new PatchInputTransformer();
 
-    const input = inputTransformer.transform(nextConfigPartial, prevConfig);
+    // todo: add deepRightMerge
+    const input: AvataxConfig = {
+      ...prevConfig,
+      ...nextConfigPartial,
+      credentials: {
+        ...prevConfig.credentials,
+        ...nextConfigPartial.credentials,
+      },
+      address: {
+        ...prevConfig.address,
+        ...nextConfigPartial.address,
+      },
+    };
 
     await validationService.validate(input);
 
