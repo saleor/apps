@@ -3,11 +3,10 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
-import { Obfuscator } from "../../../lib/obfuscator";
 import { trpcClient } from "../../trpc/trpc-client";
+import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
 
 const avataxObfuscator = new AvataxConnectionObfuscator();
 

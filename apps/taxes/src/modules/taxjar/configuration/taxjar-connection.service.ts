@@ -43,9 +43,22 @@ export class TaxJarConnectionService {
     const prevConfig = setting.config;
 
     const validationService = new TaxJarValidationService();
-    const inputTransformer = new PatchInputTransformer();
 
-    const input = inputTransformer.transform(nextConfigPartial, prevConfig);
+    // todo: add deepRightMerge
+    const input: TaxJarConfig = {
+      ...prevConfig,
+      ...nextConfigPartial,
+      credentials: {
+        ...prevConfig.credentials,
+        ...nextConfigPartial.credentials,
+      },
+      address: {
+        ...prevConfig.address,
+        ...nextConfigPartial.address,
+      },
+    };
+
+    this.logger.debug({ input }, "input");
 
     await validationService.validate(input);
 
