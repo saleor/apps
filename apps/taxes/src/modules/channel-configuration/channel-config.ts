@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const channelConfigPropertiesSchema = z.object({
-  providerConnectionId: z.string().or(z.null()),
+  providerConnectionId: z.string().nonempty().or(z.null()),
   slug: z.string(),
 });
 

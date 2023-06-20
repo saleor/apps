@@ -16,7 +16,7 @@ describe("ChannelConfigurationMerger", () => {
 
     expect(result).toEqual([
       {
-        id: "1",
+        id: expect.any(String),
         config: {
           providerConnectionId: "aa5293e5-7f5d-4782-a619-222ead918e50",
           slug: "default-channel",
@@ -37,7 +37,7 @@ describe("ChannelConfigurationMerger", () => {
 
     expect(result).toEqual([
       {
-        id: "1",
+        id: expect.any(String),
         config: {
           providerConnectionId: null,
           slug: "default-channel",

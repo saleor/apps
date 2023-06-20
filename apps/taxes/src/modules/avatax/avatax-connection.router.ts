@@ -25,7 +25,6 @@ const postInputSchema = z.object({
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      ...ctx,
       connectionService: new PublicAvataxConnectionService(
         ctx.apiClient,
         ctx.appId!,
@@ -38,7 +37,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 export const avataxConnectionRouter = router({
   getById: protectedWithConfigurationService.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      location: "avataxConnectionRouter.get",
+      name: "avataxConnectionRouter.get",
     });
 
     logger.debug("Route get called");

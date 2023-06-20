@@ -3,7 +3,7 @@ import { middleware, procedure } from "./trpc-server";
 import { saleorApp } from "../../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { logger } from "../../lib/logger";
+import { createLogger, logger } from "../../lib/logger";
 import { createGraphQLClient } from "@saleor/apps-shared";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
@@ -85,7 +85,6 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
 
   return next({
     ctx: {
-      ...ctx,
       saleorApiUrl: ctx.saleorApiUrl,
     },
   });
@@ -99,7 +98,21 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  *
  * TODO Rethink middleware composition to enable safe server-side router calls
  */
+
+const logErrors = middleware(async ({ next }) => {
+  const logger = createLogger({ name: "trpcServer" });
+
+  const result = await next();
+
+  if (!result.ok) {
+    logger.error(result.error);
+  }
+
+  return result;
+});
+
 export const protectedClientProcedure = procedure
+  .use(logErrors)
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {

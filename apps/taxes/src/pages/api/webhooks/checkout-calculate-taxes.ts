@@ -37,7 +37,7 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
 });
 
 export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ location: "checkoutCalculateTaxesSyncWebhook" });
+  const logger = createLogger({ name: "checkoutCalculateTaxesSyncWebhook" });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
@@ -54,7 +54,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
-    const taxProvider = getActiveConnection(channelSlug, appMetadata);
+    const taxProvider = getActiveConnection(channelSlug, appMetadata, ctx.authData);
 
     logger.info({ taxProvider }, "Will calculate taxes using the tax provider:");
     const calculatedTaxes = await taxProvider.calculateTaxes(payload.taxBase);

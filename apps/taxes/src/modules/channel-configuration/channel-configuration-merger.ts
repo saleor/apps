@@ -1,4 +1,5 @@
 import { ChannelFragment } from "../../../generated/graphql";
+import { createId } from "../../lib/utils";
 import { ChannelsConfig } from "./channel-config";
 
 export class ChannelConfigurationMerger {
@@ -6,10 +7,20 @@ export class ChannelConfigurationMerger {
     return channels.map((channel) => {
       const channelConfig = channelsConfig.find((c) => c.config.slug === channel.slug);
 
+      if (!channelConfig) {
+        return {
+          id: createId(),
+          config: {
+            providerConnectionId: null,
+            slug: channel.slug,
+          },
+        };
+      }
+
       return {
-        id: channel.id,
+        id: channelConfig.id,
         config: {
-          providerConnectionId: channelConfig?.config.providerConnectionId ?? null,
+          providerConnectionId: channelConfig.config.providerConnectionId,
           slug: channel.slug,
         },
       };

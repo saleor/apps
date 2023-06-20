@@ -2,6 +2,7 @@ import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { TaxJarConfig } from "../taxjar-connection-schema";
+import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 
 type TaxBase = TaxBaseFragment;
 
@@ -30,12 +31,12 @@ const taxIncludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOmM5MTUxMDljLTBkMzEtNDg2Yy05OGFmLTQ5NDM0MWY4NTNjYw==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "VGF4Q2xhc3M6MjI=",
+              name: "Clothing",
             },
           },
         },
@@ -52,12 +53,12 @@ const taxIncludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "UHJvZHVjdFZhcmlhbnQ6MzQ6",
+              name: "Shoes",
             },
           },
         },
@@ -74,12 +75,12 @@ const taxIncludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjlhMGJjZDhmLWFiMGQtNDJhOC04NTBhLTEyYjQ2YjJiNGIyZg==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "UHJvZHVjdFZhcmlhbnQ6MzQ6",
+              name: "Shoes",
             },
           },
         },
@@ -125,12 +126,12 @@ const taxExcludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOmM5MTUxMDljLTBkMzEtNDg2Yy05OGFmLTQ5NDM0MWY4NTNjYw==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "",
+              name: "",
             },
           },
         },
@@ -147,12 +148,12 @@ const taxExcludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "",
+              name: "",
             },
           },
         },
@@ -169,12 +170,12 @@ const taxExcludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjlhMGJjZDhmLWFiMGQtNDJhOC04NTBhLTEyYjQ2YjJiNGIyZg==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "",
+              name: "",
             },
           },
         },
@@ -457,6 +458,16 @@ const withNexusTaxIncludedTaxForOrderMock: TaxForOrder = {
   },
 };
 
+const defaultTaxCodeMatches: TaxJarTaxCodeMatches = [
+  {
+    data: {
+      taxJarTaxCode: "P0000000",
+      saleorTaxClassId: "VGF4Q2xhc3M6MjI=",
+    },
+    id: "VGF4Q29kZTox",
+  },
+];
+
 // with/without tax
 const testingScenariosMap = {
   with_no_nexus_tax_included: {
@@ -464,24 +475,28 @@ const testingScenariosMap = {
     channelConfig,
     providerConfig,
     response: noNexusTaxForOrderMock,
+    matches: defaultTaxCodeMatches,
   },
   with_no_nexus_tax_excluded: {
     taxBase: taxExcludedTaxBase,
     channelConfig,
     providerConfig,
     response: noNexusTaxForOrderMock,
+    matches: defaultTaxCodeMatches,
   },
   with_nexus_tax_included: {
     taxBase: taxIncludedTaxBase,
     channelConfig,
     providerConfig,
     response: withNexusTaxIncludedTaxForOrderMock,
+    matches: defaultTaxCodeMatches,
   },
   with_nexus_tax_excluded: {
     taxBase: taxExcludedTaxBase,
     channelConfig,
     providerConfig,
     response: withNexusTaxExcludedTaxForOrderMock,
+    matches: defaultTaxCodeMatches,
   },
 };
 
@@ -512,4 +527,7 @@ export class TaxJarCalculateTaxesMockGenerator {
       ...testingScenariosMap[this.scenario].response,
       ...overrides,
     });
+
+  generateTaxCodeMatches = (overrides: TaxJarTaxCodeMatches = []): TaxJarTaxCodeMatches =>
+    structuredClone([...testingScenariosMap[this.scenario].matches, ...overrides]);
 }

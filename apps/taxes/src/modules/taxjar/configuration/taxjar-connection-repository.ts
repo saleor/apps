@@ -21,7 +21,7 @@ export class TaxJarConnectionRepository {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      location: "TaxJarConnectionRepository",
+      name: "TaxJarConnectionRepository",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
@@ -62,8 +62,8 @@ export class TaxJarConnectionRepository {
     return taxJarConnections;
   }
 
-  async get(id: string): Promise<TaxJarConnection> {
-    const { data } = await this.crudSettingsManager.read(id);
+  async getById(id: string): Promise<TaxJarConnection> {
+    const { data } = await this.crudSettingsManager.readById(id);
 
     const connection = getSchema.parse(data);
 
@@ -80,7 +80,7 @@ export class TaxJarConnectionRepository {
   }
 
   async patch(id: string, input: Pick<TaxJarConnection, "config">): Promise<void> {
-    return this.crudSettingsManager.update(id, input);
+    return this.crudSettingsManager.updateById(id, input);
   }
 
   async delete(id: string): Promise<void> {

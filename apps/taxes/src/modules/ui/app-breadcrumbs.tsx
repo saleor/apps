@@ -33,7 +33,17 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/taxjar",
     },
   ],
-
+  "/providers/taxjar/matcher": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "TaxJar",
+      href: "/providers/taxjar",
+    },
+    {
+      label: "Tax code matcher",
+      href: "/providers/taxjar/matcher",
+    },
+  ],
   "/providers/taxjar/[id]": [
     ...newProviderBreadcrumbs,
     {
@@ -46,6 +56,17 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
     {
       label: "Avatax",
       href: "/providers/avatax",
+    },
+  ],
+  "/providers/avatax/matcher": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "Avatax",
+      href: "/providers/avatax",
+    },
+    {
+      label: "Tax code matcher",
+      href: "/providers/avatax/matcher",
     },
   ],
   "/providers/avatax/[id]": [
@@ -61,7 +82,7 @@ const useBreadcrumbs = () => {
   const { pathname } = useRouter();
   const breadcrumbs = breadcrumbsForRoute[pathname];
 
-  if (pathname !== "/" && !breadcrumbs) {
+  if (pathname !== "/" && pathname !== "_error" && !breadcrumbs) {
     throw new Error(`No breadcrumbs for route ${pathname}`);
   }
 

@@ -13,7 +13,7 @@ export class TaxProvidersV1toV2MigrationManager {
     private options: { mode: "report" | "migrate" } = { mode: "migrate" }
   ) {
     this.logger = createLogger({
-      location: "TaxProvidersV1toV2MigrationManager",
+      name: "TaxProvidersV1toV2MigrationManager",
     });
   }
 

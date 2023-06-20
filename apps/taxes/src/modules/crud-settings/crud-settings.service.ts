@@ -25,7 +25,7 @@ export class CrudSettingsManager {
     private metadataKey: string
   ) {
     this.metadataKey = metadataKey;
-    this.logger = createLogger({ location: "CrudSettingsManager", metadataKey });
+    this.logger = createLogger({ name: "CrudSettingsManager", metadataKey });
   }
 
   async readAll() {
@@ -48,7 +48,7 @@ export class CrudSettingsManager {
     };
   }
 
-  async read(id: string) {
+  async readById(id: string) {
     const result = await this.readAll();
     const { data: settings } = result;
 
@@ -94,7 +94,7 @@ export class CrudSettingsManager {
     });
   }
 
-  async update(id: string, input: any) {
+  async updateById(id: string, input: any) {
     const { data: currentSettings } = await this.readAll();
     const nextSettings = currentSettings.map((item) => {
       if (item.id === id) {
@@ -104,29 +104,6 @@ export class CrudSettingsManager {
       }
       return item;
     });
-
-    this.logger.debug({ nextSettings }, "nextSettings");
-
-    await this.metadataManager.set({
-      key: this.metadataKey,
-      value: JSON.stringify(nextSettings),
-      domain: this.saleorApiUrl,
-    });
-  }
-
-  async upsert(id: string, input: any) {
-    const { data: currentSettings } = await this.readAll();
-    // update if its there
-    const nextSettings = currentSettings.map((item) => {
-      if (item.id === id) {
-        return { id, ...input };
-      }
-      return item;
-    });
-
-    if (!currentSettings.find((item) => item.id === id)) {
-      nextSettings.push({ id, ...input });
-    }
 
     await this.metadataManager.set({
       key: this.metadataKey,

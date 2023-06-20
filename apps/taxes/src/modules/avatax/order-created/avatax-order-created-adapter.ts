@@ -18,29 +18,26 @@ export class AvataxOrderCreatedAdapter
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ location: "AvataxOrderCreatedAdapter" });
+    this.logger = createLogger({ name: "AvataxOrderCreatedAdapter" });
   }
 
   async send(payload: AvataxOrderCreatedPayload): Promise<AvataxOrderCreatedResponse> {
-    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
+    this.logger.debug("Transforming the Saleor payload for creating order with Avatax...");
 
     const payloadTransformer = new AvataxOrderCreatedPayloadTransformer(this.config);
     const target = payloadTransformer.transform(payload);
 
-    this.logger.debug(
-      { transformedPayload: target },
-      "Will call Avatax createTransaction with transformed payload:"
-    );
+    this.logger.debug("Calling Avatax createTransaction with transformed payload...");
 
     const client = new AvataxClient(this.config);
     const response = await client.createTransaction(target);
 
-    this.logger.debug({ response }, "Avatax createTransaction responded with:");
+    this.logger.debug("Avatax createTransaction successfully responded");
 
     const responseTransformer = new AvataxOrderCreatedResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);
 
-    this.logger.debug({ transformedResponse }, "Transformed Avatax createTransaction response to:");
+    this.logger.debug("Transformed Avatax createTransaction response");
 
     return transformedResponse;
   }
