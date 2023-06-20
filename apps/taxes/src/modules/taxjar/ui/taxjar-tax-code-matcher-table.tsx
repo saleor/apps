@@ -1,12 +1,23 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Select } from "@saleor/macaw-ui/next";
 import React from "react";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Table } from "../../ui/table";
+import { Select } from "../../ui/_select";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
   const [value, setValue] = React.useState("");
   const { notifySuccess, notifyError } = useDashboardNotification();
+
+  const { isLoading: isMatchesLoading } = trpcClient.taxJarMatches.getAll.useQuery(undefined, {
+    onSuccess(matches) {
+      const match = matches?.find((item) => item.data.saleorTaxClassId === taxClassId);
+
+      if (match) {
+        setValue(match.data.taxJarTaxCode);
+      }
+    },
+  });
 
   const { mutate: updateMutation } = trpcClient.taxJarMatches.upsert.useMutation({
     onSuccess() {
@@ -21,14 +32,15 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
 
   const firstConnectionId = providers?.[0].id;
 
-  const { data: taxCodes = [] } = trpcClient.taxJarTaxCodes.getAllForId.useQuery(
-    {
-      connectionId: firstConnectionId!,
-    },
-    {
-      enabled: firstConnectionId !== undefined,
-    }
-  );
+  const { data: taxCodes = [], isLoading: isCodesLoading } =
+    trpcClient.taxJarTaxCodes.getAllForId.useQuery(
+      {
+        connectionId: firstConnectionId!,
+      },
+      {
+        enabled: firstConnectionId !== undefined,
+      }
+    );
 
   const changeValue = (taxJarTaxCode: string) => {
     setValue(taxJarTaxCode);
@@ -38,12 +50,17 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
     });
   };
 
+  const isLoading = isMatchesLoading || isCodesLoading;
+
   return (
     <Select
       value={value ?? ""}
+      disabled={isLoading}
       onChange={(value) => changeValue(String(value))}
       options={[
-        { value: "", label: "Not assigned" },
+        ...(isLoading
+          ? [{ value: "", label: "Loading..." }]
+          : [{ value: "", label: "Not assigned" }]),
         ...taxCodes.map((item) => ({
           value: item.code,
           label: `${item.code} | ${item.description}`,
@@ -53,8 +70,16 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
   );
 };
 
-export const TaxJarTaxCodeMatcherTable = ({}) => {
-  const { data: taxClasses = [] } = trpcClient.taxClasses.getAll.useQuery();
+export const TaxJarTaxCodeMatcherTable = () => {
+  const { data: taxClasses = [], isLoading } = trpcClient.taxClasses.getAll.useQuery();
+
+  if (isLoading) {
+    return (
+      <Box>
+        <Text color="textNeutralSubdued">Loading...</Text>
+      </Box>
+    );
+  }
 
   return (
     <section>

@@ -33,7 +33,7 @@ export class TaxJarTaxCodeMatchRepository {
   }
 
   async getAll(): Promise<TaxJarTaxCodeMatches> {
-    const data = await this.crudSettingsManager.readAll();
+    const { data } = await this.crudSettingsManager.readAll();
 
     return taxJarTaxCodeMatchesSchema.parse(data);
   }

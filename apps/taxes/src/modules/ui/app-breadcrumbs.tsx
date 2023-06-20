@@ -33,7 +33,17 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/taxjar",
     },
   ],
-
+  "/providers/taxjar/matcher": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "TaxJar",
+      href: "/providers/taxjar",
+    },
+    {
+      label: "Tax code matcher",
+      href: "/providers/taxjar/matcher",
+    },
+  ],
   "/providers/taxjar/[id]": [
     ...newProviderBreadcrumbs,
     {

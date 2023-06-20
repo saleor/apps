@@ -1,4 +1,4 @@
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../trpc/trpc-client";
 import { AppCard } from "./app-card";
 import { Section } from "./app-section";
@@ -15,7 +15,7 @@ const MatcherTable = () => {
   const router = useRouter();
 
   return (
-    <AppCard>
+    <AppCard __minHeight={"320px"} height="100%">
       <Table.Container>
         <Table.THead>
           <Table.TR>
@@ -69,8 +69,11 @@ const Intro = () => {
       title="Tax code matcher"
       description={
         <>
-          Extend the base tax rate of your products by mapping Saleor tax classes to provider tax
-          codes.
+          Tax Code Matcher allows you to map Saleor tax classes to provider tax codes to extend
+          products base tax rate.
+          <Text as="span" display="block" marginY={4}>
+            You need to have at least one provider configured to use this feature.
+          </Text>
         </>
       }
     />

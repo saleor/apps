@@ -33,7 +33,7 @@ export class AvataxTaxCodeMatchRepository {
   }
 
   async getAll(): Promise<AvataxTaxCodeMatches> {
-    const data = await this.crudSettingsManager.readAll();
+    const { data } = await this.crudSettingsManager.readAll();
 
     return avataxTaxCodeMatchesSchema.parse(data);
   }
