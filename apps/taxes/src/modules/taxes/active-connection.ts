@@ -76,6 +76,10 @@ export function getActiveConnection(
 
   const { providerConnections, channels } = getAppConfig(encryptedMetadata);
 
+  if (!channels.length) {
+    throw new Error("You must assign a provider to the channel");
+  }
+
   const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
   if (!channelConfig) {
