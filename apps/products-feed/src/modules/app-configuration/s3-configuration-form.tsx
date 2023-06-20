@@ -44,7 +44,14 @@ export const S3ConfigurationForm = (props: Props) => {
 
       <Input size={"small"} name={"bucketName"} control={control} label="Bucket name" />
 
-      <Input size={"small"} name={"region"} control={control} label="Bucket region" />
+      <Input
+        size={"small"}
+        name={"region"}
+        control={control}
+        label="Bucket region"
+        helperText={"Use the region code, e.g. 'eu-west-1'"}
+        placeholder={"eu-west-1"}
+      />
 
       <Button type="submit" variant="primary" alignSelf={"end"}>
         Save bucket configuration
