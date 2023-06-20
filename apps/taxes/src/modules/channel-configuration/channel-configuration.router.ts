@@ -1,7 +1,7 @@
 import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { channelConfigSchema } from "./channel-config";
+import { channelConfigPropertiesSchema } from "./channel-config";
 import { ChannelConfigurationService } from "./channel-configuration.service";
 
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
@@ -28,8 +28,8 @@ export const channelsConfigurationRouter = router({
 
     return channelConfiguration.getAll();
   }),
-  updateById: protectedWithConfigurationService
-    .input(channelConfigSchema)
+  upsert: protectedWithConfigurationService
+    .input(channelConfigPropertiesSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
         saleorApiUrl: ctx.saleorApiUrl,
@@ -38,7 +38,7 @@ export const channelsConfigurationRouter = router({
 
       const configurationService = ctx.connectionService;
 
-      await configurationService.updateById(input.id, input.config);
+      await configurationService.upsert(input);
 
       logger.info("Channel configuration updated");
     }),

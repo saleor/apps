@@ -23,7 +23,16 @@ export class ChannelConfigurationSettings {
     return channelsSchema.parse(data);
   }
 
-  async updateById(id: string, data: ChannelConfigProperties) {
-    await this.crudSettingsManager.updateById(id, { config: data });
+  async upsert(data: ChannelConfigProperties) {
+    const { slug } = data;
+    const { data: channels } = await this.crudSettingsManager.readAll();
+
+    const channel = channels.find((channel) => channel.slug === slug);
+
+    if (channel) {
+      await this.crudSettingsManager.updateById(channel.id, { config: data });
+    }
+
+    await this.crudSettingsManager.create({ config: data });
   }
 }
