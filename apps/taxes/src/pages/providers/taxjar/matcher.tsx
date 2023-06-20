@@ -55,4 +55,7 @@ const TaxJarMatcher = () => {
   );
 };
 
+/*
+ * todo: add redirect if no connection
+ */
 export default TaxJarMatcher;

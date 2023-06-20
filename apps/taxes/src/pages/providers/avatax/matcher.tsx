@@ -52,4 +52,7 @@ const AvataxMatcher = () => {
   );
 };
 
+/*
+ * todo: add redirect if no connection
+ */
 export default AvataxMatcher;
