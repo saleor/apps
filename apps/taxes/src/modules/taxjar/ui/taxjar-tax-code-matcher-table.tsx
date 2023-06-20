@@ -30,6 +30,10 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
 
   const { data: providers } = trpcClient.providersConfiguration.getAll.useQuery();
 
+  /*
+   * Tax Code Matcher is only available when there is at least one connection.
+   * The reason for it is that we need any working credentials to fetch the provider tax codes.
+   */
   const firstConnectionId = providers?.[0].id;
 
   const { data: taxCodes = [], isLoading: isCodesLoading } =
