@@ -4,6 +4,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { Table } from "../../ui/table";
 import { Select } from "../../ui/_select";
 import { Box, Text } from "@saleor/macaw-ui/next";
+import { AppCard } from "../../ui/app-card";
 
 const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
   const [value, setValue] = React.useState("");
@@ -86,7 +87,7 @@ export const AvataxTaxCodeMatcherTable = () => {
   }
 
   return (
-    <section>
+    <AppCard>
       <Table.Container>
         <Table.THead>
           <Table.TR>
@@ -107,6 +108,6 @@ export const AvataxTaxCodeMatcherTable = () => {
           })}
         </Table.TBody>
       </Table.Container>
-    </section>
+    </AppCard>
   );
 };
