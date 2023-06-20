@@ -10,25 +10,28 @@ import { notifyWebhook } from "../../pages/api/webhooks/notify";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { createLogger } from "@saleor/apps-shared";
 import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
+import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
 
 export const AppWebhooks = {
-  orderCreatedWebhook,
-  orderFulfilledWebhook,
-  orderConfirmedWebhook,
-  orderCancelledWebhook,
-  orderFullyPaidWebhook,
+  giftCardSentWebhook,
   invoiceSentWebhook,
   notifyWebhook,
+  orderCancelledWebhook,
+  orderConfirmedWebhook,
+  orderCreatedWebhook,
+  orderFulfilledWebhook,
+  orderFullyPaidWebhook,
 };
 
 export type AppWebhook = keyof typeof AppWebhooks;
 
 export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
+  ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
   ACCOUNT_CONFIRMATION: "notifyWebhook",
   ACCOUNT_DELETE: "notifyWebhook",
   ACCOUNT_PASSWORD_RESET: "notifyWebhook",
-  ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
+  GIFT_CARD_SENT: "giftCardSentWebhook",
   INVOICE_SENT: "invoiceSentWebhook",
   ORDER_CANCELLED: "orderCancelledWebhook",
   ORDER_CONFIRMED: "orderConfirmedWebhook",

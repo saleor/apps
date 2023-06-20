@@ -170,6 +170,22 @@ const defaultInvoiceSentMjmlTemplate = `<mjml>
   </mj-body>
 </mjml>`;
 
+// TODO: Improve the template
+const defaultGiftCardSentMjmlTemplate = `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="16px">
+          Hi!
+        </mj-text>
+        <mj-text>
+          Heres your gift card
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`;
+
 const defaultAccountConfirmationMjmlTemplate = `<mjml>
   <mj-body>
     <mj-section>
@@ -258,29 +274,31 @@ const defaultAccountDeleteMjmlTemplate = `<mjml>
 </mjml>`;
 
 export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
+  ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
+  ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
+  ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
+  ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
+  GIFT_CARD_SENT: defaultGiftCardSentMjmlTemplate,
+  INVOICE_SENT: defaultInvoiceSentMjmlTemplate,
+  ORDER_CANCELLED: defaultOrderCancelledMjmlTemplate,
+  ORDER_CONFIRMED: defaultOrderConfirmedMjmlTemplate,
   ORDER_CREATED: defaultOrderCreatedMjmlTemplate,
   ORDER_FULFILLED: defaultOrderFulfilledMjmlTemplate,
-  ORDER_CONFIRMED: defaultOrderConfirmedMjmlTemplate,
   ORDER_FULLY_PAID: defaultOrderFullyPaidMjmlTemplate,
-  ORDER_CANCELLED: defaultOrderCancelledMjmlTemplate,
-  INVOICE_SENT: defaultInvoiceSentMjmlTemplate,
-  ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
-  ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
-  ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
-  ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
 };
 
 export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: "Email change confirmation",
+  ACCOUNT_CHANGE_EMAIL_REQUEST: "Email change request",
+  ACCOUNT_CONFIRMATION: "Account activation",
+  ACCOUNT_DELETE: "Account deletion",
+  ACCOUNT_PASSWORD_RESET: "Password reset request",
+  GIFT_CARD_SENT: "Gift card",
+  INVOICE_SENT: "New invoice has been created",
+  ORDER_CANCELLED: "Order {{ order.number }} has been cancelled",
+  ORDER_CONFIRMED: "Order {{ order.number }} has been confirmed",
   ORDER_CREATED: "Order {{ order.number }} has been created",
   ORDER_FULFILLED: "Order {{ order.number }} has been fulfilled",
-  ORDER_CONFIRMED: "Order {{ order.number }} has been confirmed",
   ORDER_FULLY_PAID: "Order {{ order.number }} has been fully paid",
-  ORDER_CANCELLED: "Order {{ order.number }} has been cancelled",
-  INVOICE_SENT: "New invoice has been created",
-  ACCOUNT_CONFIRMATION: "Account activation",
-  ACCOUNT_PASSWORD_RESET: "Password reset request",
-  ACCOUNT_CHANGE_EMAIL_REQUEST: "Email change request",
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: "Email change confirmation",
-  ACCOUNT_DELETE: "Account deletion",
 };

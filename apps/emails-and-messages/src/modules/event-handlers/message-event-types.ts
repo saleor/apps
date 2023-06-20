@@ -10,6 +10,7 @@ export const messageEventTypes = [
   "ACCOUNT_CHANGE_EMAIL_REQUEST",
   "ACCOUNT_CHANGE_EMAIL_CONFIRM",
   "ACCOUNT_DELETE",
+  "GIFT_CARD_SENT",
 ] as const;
 
 export type MessageEventTypes = (typeof messageEventTypes)[number];
@@ -21,6 +22,7 @@ export const messageEventTypesLabels: Record<MessageEventTypes, string> = {
   ORDER_CANCELLED: "Order cancelled",
   ORDER_FULLY_PAID: "Order fully paid",
   INVOICE_SENT: "Invoice sent",
+  GIFT_CARD_SENT: "Gift card sent",
   ACCOUNT_CONFIRMATION: "Customer account confirmation",
   ACCOUNT_PASSWORD_RESET: "Customer account password reset request",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "Customer account change email request",
