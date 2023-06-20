@@ -36,7 +36,7 @@ const Skeleton = () => {
 };
 
 export const ChannelList = () => {
-  const { data = [], isFetching, isFetched } = trpcClient.channelsConfiguration.fetch.useQuery();
+  const { data = [], isFetching, isFetched } = trpcClient.channelsConfiguration.getAll.useQuery();
 
   const isAnyChannelConfigured = data.length > 0;
   const isResult = isFetched && isAnyChannelConfigured;

@@ -1,12 +1,12 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { Logger, createLogger } from "../../lib/logger";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
-import { ChannelConfigProperties, channelsSchema } from "./channel-config";
+import { ChannelConfig, channelsSchema } from "./channel-config";
 
 export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
-  constructor(private settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
+  constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
@@ -23,16 +23,11 @@ export class ChannelConfigurationRepository {
     return channelsSchema.parse(data);
   }
 
-  async upsert(data: ChannelConfigProperties) {
-    const { slug } = data;
-    const { data: channels } = await this.crudSettingsManager.readAll();
+  async updateById(id: string, input: Pick<ChannelConfig, "config">) {
+    return this.crudSettingsManager.updateById(id, input);
+  }
 
-    const channel = channels.find((channel) => channel.slug === slug);
-
-    if (channel) {
-      return this.crudSettingsManager.updateById(channel.id, { config: data });
-    }
-
-    return this.crudSettingsManager.create({ config: data });
+  async create(input: Pick<ChannelConfig, "config">) {
+    return this.crudSettingsManager.create(input);
   }
 }

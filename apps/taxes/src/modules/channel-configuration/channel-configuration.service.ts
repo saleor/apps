@@ -9,7 +9,7 @@ import { Logger, createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 
 export class ChannelConfigurationService {
-  private configurationService: ChannelConfigurationRepository;
+  private configurationRepository: ChannelConfigurationRepository;
   private logger: Logger;
   private settingsManager: EncryptedMetadataManager;
   constructor(private client: Client, private appId: string, private saleorApiUrl: string) {
@@ -21,7 +21,10 @@ export class ChannelConfigurationService {
       name: "ChannelConfigurationService",
     });
 
-    this.configurationService = new ChannelConfigurationRepository(settingsManager, saleorApiUrl);
+    this.configurationRepository = new ChannelConfigurationRepository(
+      settingsManager,
+      saleorApiUrl
+    );
   }
 
   async getAll() {
@@ -42,7 +45,7 @@ export class ChannelConfigurationService {
     this.logger.info("Config is up to date, no need to migrate.");
     const channels = await channelsFetcher.fetchChannels();
 
-    const channelConfiguration = await this.configurationService.getAll();
+    const channelConfiguration = await this.configurationRepository.getAll();
 
     const configurationMerger = new ChannelConfigurationMerger();
 
@@ -50,6 +53,17 @@ export class ChannelConfigurationService {
   }
 
   async upsert(data: ChannelConfigProperties) {
-    await this.configurationService.upsert(data);
+    const { slug } = data;
+    const configurations = await this.getAll();
+
+    const existingConfiguration = configurations.find(
+      (c) => c.config.slug === slug && c.config.providerConnectionId !== null
+    );
+
+    if (existingConfiguration) {
+      return this.configurationRepository.updateById(existingConfiguration.id, { config: data });
+    }
+
+    return this.configurationRepository.create({ config: data });
   }
 }

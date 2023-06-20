@@ -8,7 +8,6 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {
     config: { providerConnectionId = "", slug },
-    id,
   } = channelConfig;
   const [value, setValue] = React.useState(providerConnectionId);
   const { notifySuccess, notifyError } = useDashboardNotification();
@@ -27,7 +26,7 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
   const changeValue = (nextProviderConnectionId: string) => {
     setValue(nextProviderConnectionId);
     updateMutation({
-      providerConnectionId: nextProviderConnectionId,
+      providerConnectionId: nextProviderConnectionId === "" ? null : nextProviderConnectionId,
       slug,
     });
   };
@@ -48,7 +47,7 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
 };
 
 export const ChannelTable = () => {
-  const { data = [] } = trpcClient.channelsConfiguration.fetch.useQuery();
+  const { data = [] } = trpcClient.channelsConfiguration.getAll.useQuery();
 
   return (
     <Table.Container>

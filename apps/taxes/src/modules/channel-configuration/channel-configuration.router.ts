@@ -17,7 +17,7 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 );
 
 export const channelsConfigurationRouter = router({
-  fetch: protectedWithConfigurationService.query(async ({ ctx, input }) => {
+  getAll: protectedWithConfigurationService.query(async ({ ctx }) => {
     const logger = createLogger({
       name: "channelsConfigurationRouter.fetch",
     });
@@ -36,10 +36,10 @@ export const channelsConfigurationRouter = router({
         procedure: "channelsConfigurationRouter.upsert",
       });
 
-      const configurationService = ctx.connectionService;
+      const result = await ctx.connectionService.upsert(input);
 
-      await configurationService.upsert(input);
+      logger.info("Channel configuration upserted");
 
-      logger.info("Channel configuration updated");
+      return result;
     }),
 });
