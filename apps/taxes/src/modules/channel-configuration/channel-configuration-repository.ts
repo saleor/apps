@@ -3,7 +3,7 @@ import { Logger, createLogger } from "../../lib/logger";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { ChannelConfigProperties, channelsSchema } from "./channel-config";
 
-export class ChannelConfigurationSettings {
+export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger: Logger;
   constructor(private settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
@@ -13,7 +13,7 @@ export class ChannelConfigurationSettings {
       "channel-configuration"
     );
     this.logger = createLogger({
-      name: "ChannelConfigurationSettings",
+      name: "ChannelConfigurationRepository",
     });
   }
 
@@ -30,9 +30,9 @@ export class ChannelConfigurationSettings {
     const channel = channels.find((channel) => channel.slug === slug);
 
     if (channel) {
-      await this.crudSettingsManager.updateById(channel.id, { config: data });
+      return this.crudSettingsManager.updateById(channel.id, { config: data });
     }
 
-    await this.crudSettingsManager.create({ config: data });
+    return this.crudSettingsManager.create({ config: data });
   }
 }

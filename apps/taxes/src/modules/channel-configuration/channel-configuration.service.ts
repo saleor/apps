@@ -1,6 +1,6 @@
 import { Client } from "urql";
 import { ChannelConfigProperties } from "./channel-config";
-import { ChannelConfigurationSettings } from "./channel-configuration-settings";
+import { ChannelConfigurationRepository } from "./channel-configuration-repository";
 import { ChannelsFetcher } from "./channel-fetcher";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { TaxChannelsV1toV2MigrationManager } from "../../../scripts/migrations/tax-channels-migration-v1-to-v2";
@@ -9,7 +9,7 @@ import { Logger, createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 
 export class ChannelConfigurationService {
-  private configurationService: ChannelConfigurationSettings;
+  private configurationService: ChannelConfigurationRepository;
   private logger: Logger;
   private settingsManager: EncryptedMetadataManager;
   constructor(private client: Client, private appId: string, private saleorApiUrl: string) {
@@ -21,7 +21,7 @@ export class ChannelConfigurationService {
       name: "ChannelConfigurationService",
     });
 
-    this.configurationService = new ChannelConfigurationSettings(settingsManager, saleorApiUrl);
+    this.configurationService = new ChannelConfigurationRepository(settingsManager, saleorApiUrl);
   }
 
   async getAll() {
