@@ -60,6 +60,7 @@ export const ProviderInstanceConfigurationForm = <TProvider extends CMSProviderS
 
   React.useEffect(() => {
     resetField("providerName" as Path<ProvidersSchema[TProvider]>, {
+      // @ts-ignore todo
       defaultValue: provider.name,
     });
 

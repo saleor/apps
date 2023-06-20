@@ -20,7 +20,7 @@
     "@saleor/app-sdk": "0.40.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "^0.7.2",
-    "@sentry/nextjs": "^7.43.0",
+    "@sentry/nextjs": "7.55.2",
     "@urql/exchange-auth": "^2.1.4",
     "clsx": "^1.2.1",
     "graphql": "16.6.0",
