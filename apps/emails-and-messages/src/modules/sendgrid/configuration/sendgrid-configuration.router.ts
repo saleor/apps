@@ -10,18 +10,13 @@ import {
   sendgridUpdateEventSchema,
   sendgridUpdateSenderSchema,
 } from "./sendgrid-config-input-schema";
-import {
-  SendgridConfigurationService,
-  SendgridConfigurationServiceError,
-} from "./sendgrid-configuration.service";
+import { SendgridConfigurationServiceError } from "./sendgrid-configuration.service";
 import { router } from "../../trpc/trpc-server";
-import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { TRPCError } from "@trpc/server";
 import { fetchSenders } from "../sendgrid-api";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
-import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
-import { createSettingsManager } from "../../../lib/metadata-manager";
 import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
+import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: SendgridConfigurationServiceError | unknown
@@ -51,32 +46,14 @@ export const throwTrpcErrorFromConfigurationServiceError = (
   });
 };
 
-/*
- * Allow access only for the dashboard users and attaches the
- * configuration service to the context
- */
-const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
-  next({
-    ctx: {
-      ...ctx,
-      sendgridConfigurationService: new SendgridConfigurationService({
-        metadataManager: new SendgridPrivateMetadataManager(
-          createSettingsManager(ctx.apiClient, ctx.appId!),
-          ctx.saleorApiUrl
-        ),
-      }),
-    },
-  })
-);
-
 export const sendgridConfigurationRouter = router({
-  fetch: protectedWithConfigurationService.query(async ({ ctx }) => {
+  fetch: protectedWithConfigurationServices.query(async ({ ctx }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("sendgridConfigurationRouter.fetch called");
     return ctx.sendgridConfigurationService.getConfigurationRoot();
   }),
-  getConfiguration: protectedWithConfigurationService
+  getConfiguration: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
@@ -89,7 +66,7 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  getConfigurations: protectedWithConfigurationService
+  getConfigurations: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
@@ -102,8 +79,8 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  createConfiguration: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+  createConfiguration: protectedWithConfigurationServices
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -116,8 +93,8 @@ export const sendgridConfigurationRouter = router({
 
       return await ctx.sendgridConfigurationService.createConfiguration(newConfiguration);
     }),
-  deleteConfiguration: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+  deleteConfiguration: protectedWithConfigurationServices
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -130,7 +107,7 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  getEventConfiguration: protectedWithConfigurationService
+  getEventConfiguration: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
@@ -147,8 +124,8 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  updateBasicInformation: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+  updateBasicInformation: protectedWithConfigurationServices
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -161,7 +138,7 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  updateApiConnection: protectedWithConfigurationService
+  updateApiConnection: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateApiConnectionSchema)
     .mutation(async ({ ctx, input }) => {
@@ -176,7 +153,7 @@ export const sendgridConfigurationRouter = router({
       }
     }),
 
-  updateSender: protectedWithConfigurationService
+  updateSender: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
@@ -213,7 +190,7 @@ export const sendgridConfigurationRouter = router({
         throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
-  updateChannels: protectedWithConfigurationService
+  updateChannels: protectedWithConfigurationServices
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
@@ -235,8 +212,8 @@ export const sendgridConfigurationRouter = router({
       }
     }),
 
-  updateEvent: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+  updateEvent: protectedWithConfigurationServices
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -256,8 +233,8 @@ export const sendgridConfigurationRouter = router({
       }
     }),
 
-  updateEventArray: protectedWithConfigurationService
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+  updateEventArray: protectedWithConfigurationServices
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });

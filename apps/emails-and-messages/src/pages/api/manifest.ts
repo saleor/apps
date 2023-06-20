@@ -2,12 +2,6 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
-import { orderCreatedWebhook } from "./webhooks/order-created";
-import { orderFulfilledWebhook } from "./webhooks/order-fulfilled";
-import { orderConfirmedWebhook } from "./webhooks/order-confirmed";
-import { orderCancelledWebhook } from "./webhooks/order-cancelled";
-import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
-import { invoiceSentWebhook } from "./webhooks/invoice-sent";
 
 export default createManifestHandler({
   async manifestFactory(context) {
@@ -18,14 +12,6 @@ export default createManifestHandler({
       permissions: ["MANAGE_ORDERS", "MANAGE_USERS"],
       id: "saleor.app.emails-and-messages",
       version: packageJson.version,
-      webhooks: [
-        orderCreatedWebhook.getWebhookManifest(context.appBaseUrl),
-        orderFulfilledWebhook.getWebhookManifest(context.appBaseUrl),
-        orderConfirmedWebhook.getWebhookManifest(context.appBaseUrl),
-        orderCancelledWebhook.getWebhookManifest(context.appBaseUrl),
-        orderFullyPaidWebhook.getWebhookManifest(context.appBaseUrl),
-        invoiceSentWebhook.getWebhookManifest(context.appBaseUrl),
-      ],
       extensions: [
         /**
          * Optionally, extend Dashboard with custom UIs
