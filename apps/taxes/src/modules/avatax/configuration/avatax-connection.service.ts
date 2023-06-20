@@ -44,7 +44,7 @@ export class AvataxConnectionService {
     const validationService = new AvataxValidationService();
 
     // todo: add deepRightMerge
-    const input: AvataxConfig = structuredClone({
+    const input: AvataxConfig = {
       ...prevConfig,
       ...nextConfigPartial,
       credentials: {
@@ -55,7 +55,7 @@ export class AvataxConnectionService {
         ...prevConfig.address,
         ...nextConfigPartial.address,
       },
-    });
+    };
 
     await validationService.validate(input);
 

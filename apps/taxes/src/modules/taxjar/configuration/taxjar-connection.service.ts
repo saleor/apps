@@ -44,7 +44,7 @@ export class TaxJarConnectionService {
     const validationService = new TaxJarValidationService();
 
     // todo: add deepRightMerge
-    const input: TaxJarConfig = structuredClone({
+    const input: TaxJarConfig = {
       ...prevConfig,
       ...nextConfigPartial,
       credentials: {
@@ -55,7 +55,7 @@ export class TaxJarConnectionService {
         ...prevConfig.address,
         ...nextConfigPartial.address,
       },
-    });
+    };
 
     await validationService.validate(input);
 
