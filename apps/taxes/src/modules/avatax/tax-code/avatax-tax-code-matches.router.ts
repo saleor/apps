@@ -9,7 +9,7 @@ const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({
     ctx: {
       taxCodeMatchesService: new AvataxTaxCodeMatchesService({
         saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.token!,
+        token: ctx.appToken!,
         appId: ctx.appId!,
       }),
     },

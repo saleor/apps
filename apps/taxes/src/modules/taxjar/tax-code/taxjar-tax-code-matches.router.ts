@@ -9,7 +9,7 @@ const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({
     ctx: {
       taxCodeMatchesService: new TaxJarTaxCodeMatchesService({
         saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.token!,
+        token: ctx.appToken!,
         appId: ctx.appId!,
       }),
     },
