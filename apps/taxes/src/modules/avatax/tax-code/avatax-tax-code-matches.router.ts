@@ -22,7 +22,7 @@ export const avataxTaxCodeMatchesRouter = router({
       name: "avataxTaxCodeMatchesRouter.fetch",
     });
 
-    logger.info("Returning channel configuration");
+    logger.info("Returning tax code matches");
 
     return ctx.taxCodeMatchesService.getAll();
   }),
@@ -30,10 +30,10 @@ export const avataxTaxCodeMatchesRouter = router({
     .input(avataxTaxCodeMatchSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
-        name: "avataxTaxCodeMatchesRouter.updateMany",
+        name: "avataxTaxCodeMatchesRouter.upsert",
       });
 
-      logger.info("Updating channel configuration");
+      logger.info("Upserting tax code match");
 
       return ctx.taxCodeMatchesService.upsert(input);
     }),
