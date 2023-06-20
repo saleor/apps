@@ -8,12 +8,11 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {
     config: { providerConnectionId = "", slug },
-    id,
   } = channelConfig;
   const [value, setValue] = React.useState(providerConnectionId);
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { mutate: updateMutation } = trpcClient.channelsConfiguration.updateById.useMutation({
+  const { mutate: updateMutation } = trpcClient.channelsConfiguration.upsert.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated channel configuration");
     },
@@ -27,11 +26,8 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
   const changeValue = (nextProviderConnectionId: string) => {
     setValue(nextProviderConnectionId);
     updateMutation({
-      id,
-      config: {
-        providerConnectionId: nextProviderConnectionId,
-        slug,
-      },
+      providerConnectionId: nextProviderConnectionId === "" ? null : nextProviderConnectionId,
+      slug,
     });
   };
 
@@ -51,7 +47,7 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
 };
 
 export const ChannelTable = () => {
-  const { data = [] } = trpcClient.channelsConfiguration.fetch.useQuery();
+  const { data = [] } = trpcClient.channelsConfiguration.getAll.useQuery();
 
   return (
     <Table.Container>

@@ -12,8 +12,8 @@ export class AvataxTaxCodesService {
     this.client = new AvataxClient(config);
   }
 
-  private adapt(response: FetchResult<TaxCodeModel>): TaxCode[] {
-    return response.value.map((item) => ({
+  private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
+    return taxCodes.map((item) => ({
       description: taxProviderUtils.resolveOptionalOrThrow(item.description),
       code: item.taxCode,
     }));

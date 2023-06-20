@@ -6,6 +6,7 @@ import { AvataxConfig } from "./avatax-connection-schema";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 
 type AvataxSettings = {
   appName: string;
@@ -77,7 +78,8 @@ export class AvataxClient {
   }
 
   async getTaxCodes() {
-    // * If we want to do filtering on the front-end, we can use the `filter` parameter.
-    return this.client.listTaxCodes({});
+    const taxCodeService = new AvataxClientTaxCodeService(this.client);
+
+    return taxCodeService.getTaxCodes();
   }
 }

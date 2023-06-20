@@ -12,7 +12,7 @@ export class TaxJarTaxCodesService {
 
   private adapt(response: CategoriesRes): TaxCode[] {
     return response.categories.map((category) => ({
-      description: category.description,
+      description: category.name,
       code: category.product_tax_code,
     }));
   }
