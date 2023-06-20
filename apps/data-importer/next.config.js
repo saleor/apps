@@ -1,27 +1,28 @@
-/*
- * This file sets a custom webpack configuration to use your Next.js app
- * with Sentry.
- * https://nextjs.org/docs/api-reference/next.config.js/introduction
- * https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
- */
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
-/**
- * @type {import('next').NextConfig}
- */
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    esmExternals: true,
-  },
-  transpilePackages: ["nuvo-react", "@saleor/apps-shared"],
-  sentry: {
-    disableServerWebpackPlugin: !isSentryPropertiesInEnvironment,
-    disableClientWebpackPlugin: !isSentryPropertiesInEnvironment,
-  },
+  transpilePackages: ["@saleor/apps-shared", "nuvo-react"],
 };
 
-module.exports = withSentryConfig(module.exports, { silent: true }, { hideSourcemaps: true });
+const configWithSentry = withSentryConfig(
+  nextConfig,
+  {
+    silent: true,
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+  },
+  {
+    widenClientFileUpload: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+    hideSourceMaps: true,
+    disableLogger: true,
+  }
+);
+
+module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;

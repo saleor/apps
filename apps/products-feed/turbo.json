@@ -19,7 +19,8 @@
         "NEXT_PUBLIC_VERCEL_ENV",
         "FEED_CACHE_MAX_AGE",
         "VERCEL_URL",
-        "PORT"
+        "PORT",
+        "SENTRY_ENVIRONMENT"
       ]
     }
   }

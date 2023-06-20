@@ -17,6 +17,7 @@
         "SENTRY_ORG",
         "SENTRY_PROJECT",
         "SENTRY_AUTH_TOKEN",
+        "SENTRY_ENVIRONMENT",
         "NEXT_PUBLIC_VERCEL_ENV"
       ]
     }
