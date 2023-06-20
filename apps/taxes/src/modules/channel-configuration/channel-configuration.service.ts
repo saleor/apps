@@ -54,11 +54,9 @@ export class ChannelConfigurationService {
 
   async upsert(data: ChannelConfigProperties) {
     const { slug } = data;
-    const configurations = await this.getAll();
+    const configurations = await this.configurationRepository.getAll();
 
-    const existingConfiguration = configurations.find(
-      (c) => c.config.slug === slug && c.config.providerConnectionId !== null
-    );
+    const existingConfiguration = configurations.find((c) => c.config.slug === slug);
 
     if (existingConfiguration) {
       return this.configurationRepository.updateById(existingConfiguration.id, { config: data });
