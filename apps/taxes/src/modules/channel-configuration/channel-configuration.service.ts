@@ -1,6 +1,6 @@
 import { Client } from "urql";
 import { ChannelConfigProperties } from "./channel-config";
-import { ChannelConfigurationSettings } from "./channel-configuration-settings";
+import { ChannelConfigurationRepository } from "./channel-configuration-repository";
 import { ChannelsFetcher } from "./channel-fetcher";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { TaxChannelsV1toV2MigrationManager } from "../../../scripts/migrations/tax-channels-migration-v1-to-v2";
@@ -9,7 +9,7 @@ import { Logger, createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
 
 export class ChannelConfigurationService {
-  private configurationService: ChannelConfigurationSettings;
+  private configurationRepository: ChannelConfigurationRepository;
   private logger: Logger;
   private settingsManager: EncryptedMetadataManager;
   constructor(private client: Client, private appId: string, private saleorApiUrl: string) {
@@ -18,10 +18,13 @@ export class ChannelConfigurationService {
     this.settingsManager = settingsManager;
 
     this.logger = createLogger({
-      location: "ChannelConfigurationService",
+      name: "ChannelConfigurationService",
     });
 
-    this.configurationService = new ChannelConfigurationSettings(settingsManager, saleorApiUrl);
+    this.configurationRepository = new ChannelConfigurationRepository(
+      settingsManager,
+      saleorApiUrl
+    );
   }
 
   async getAll() {
@@ -42,14 +45,23 @@ export class ChannelConfigurationService {
     this.logger.info("Config is up to date, no need to migrate.");
     const channels = await channelsFetcher.fetchChannels();
 
-    const channelConfiguration = await this.configurationService.getAll();
+    const channelConfiguration = await this.configurationRepository.getAll();
 
     const configurationMerger = new ChannelConfigurationMerger();
 
     return configurationMerger.merge(channels, channelConfiguration);
   }
 
-  async update(id: string, data: ChannelConfigProperties) {
-    await this.configurationService.upsert(id, data);
+  async upsert(data: ChannelConfigProperties) {
+    const { slug } = data;
+    const configurations = await this.configurationRepository.getAll();
+
+    const existingConfiguration = configurations.find((c) => c.config.slug === slug);
+
+    if (existingConfiguration) {
+      return this.configurationRepository.updateById(existingConfiguration.id, { config: data });
+    }
+
+    return this.configurationRepository.create({ config: data });
   }
 }

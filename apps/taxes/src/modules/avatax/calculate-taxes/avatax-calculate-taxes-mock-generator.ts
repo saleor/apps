@@ -13,6 +13,7 @@ import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 type TaxBase = TaxBaseFragment;
 
@@ -41,12 +42,12 @@ const defaultTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjNmMjYwZmMyLTZjN2UtNGM5Ni1iYTMwLTEyMjAyODMzOTUyZA==",
-        variant: {
+        orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "VGF4Q2xhc3M6MjI=",
+              name: "Clothing",
             },
           },
         },
@@ -63,12 +64,12 @@ const defaultTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjNlNGZjODdkLTIyMmEtNDZiYi1iYzIzLWJiYWVkODVlOTQ4Mg==",
-        variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6MzUw",
+        orderProductVariant: {
+          id: "UHJvZHVjdFZhcmlhbnQ6MzQ6",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "VGF4Q2xhc3M7MjI=",
+              name: "Shoes",
             },
           },
         },
@@ -85,12 +86,12 @@ const defaultTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOmM2NTBhMzVkLWQ1YjQtNGRhNy1hMjNjLWEzODU4ZDE1MzI2Mw==",
-        variant: {
-          id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
+        orderProductVariant: {
+          id: "UHJvZHFjdFZhcmlhbnQ6MzQ5",
           product: {
-            metafield: null,
-            productType: {
-              metafield: null,
+            taxClass: {
+              id: "VGF4Q2xhc3M6TWjI=",
+              name: "Sweets",
             },
           },
         },
@@ -933,10 +934,21 @@ const defaultTransactionModel: TransactionModel = {
   ],
 };
 
+const defaultTaxCodeMatches: AvataxTaxCodeMatches = [
+  {
+    data: {
+      avataxTaxCode: "P0000000",
+      saleorTaxClassId: "VGF4Q2xhc3M6MjI=",
+    },
+    id: "VGF4Q29kZTox",
+  },
+];
+
 const testingScenariosMap = {
   default: {
     taxBase: defaultTaxBase,
     response: defaultTransactionModel,
+    matches: defaultTaxCodeMatches,
   },
 };
 
@@ -967,4 +979,7 @@ export class AvataxCalculateTaxesMockGenerator {
       ...testingScenariosMap[this.scenario].response,
       ...overrides,
     });
+
+  generateTaxCodeMatches = (overrides: AvataxTaxCodeMatches = []): AvataxTaxCodeMatches =>
+    structuredClone([...testingScenariosMap[this.scenario].matches, ...overrides]);
 }

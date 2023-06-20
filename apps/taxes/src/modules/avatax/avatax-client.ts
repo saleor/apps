@@ -6,6 +6,7 @@ import { AvataxConfig } from "./avatax-connection-schema";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 
 type AvataxSettings = {
   appName: string;
@@ -57,7 +58,7 @@ export class AvataxClient {
   private logger: Logger;
 
   constructor(config: AvataxConfig) {
-    this.logger = createLogger({ location: "AvataxClient" });
+    this.logger = createLogger({ name: "AvataxClient" });
     const settings = createAvataxSettings(config);
     const avataxClient = new Avatax(settings).withSecurity(config.credentials);
 
@@ -74,5 +75,11 @@ export class AvataxClient {
 
   async validateAddress({ address }: ValidateAddressArgs) {
     return this.client.resolveAddress(address);
+  }
+
+  async getTaxCodes() {
+    const taxCodeService = new AvataxClientTaxCodeService(this.client);
+
+    return taxCodeService.getTaxCodes();
   }
 }

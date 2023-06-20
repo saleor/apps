@@ -6,7 +6,7 @@ import { PublicProviderConnectionsService } from "./public-provider-connections.
 export const providerConnectionsRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx }) => {
     const logger = createLogger({
-      location: "providerConnectionsRouter.getAll",
+      name: "providerConnectionsRouter.getAll",
     });
 
     const items = await new PublicProviderConnectionsService(

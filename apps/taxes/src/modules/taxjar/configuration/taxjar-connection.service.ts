@@ -11,7 +11,7 @@ export class TaxJarConnectionService {
   private taxJarConnectionRepository: TaxJarConnectionRepository;
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
-      location: "TaxJarConnectionService",
+      name: "TaxJarConnectionService",
     });
 
     const settingsManager = createSettingsManager(client, appId);
@@ -24,7 +24,7 @@ export class TaxJarConnectionService {
   }
 
   getById(id: string): Promise<TaxJarConnection> {
-    return this.taxJarConnectionRepository.get(id);
+    return this.taxJarConnectionRepository.getById(id);
   }
 
   async create(config: TaxJarConfig): Promise<{ id: string }> {

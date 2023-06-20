@@ -25,7 +25,7 @@ export class AvataxConnectionRepository {
       TAX_PROVIDER_KEY
     );
     this.logger = createLogger({
-      location: "AvataxConnectionRepository",
+      name: "AvataxConnectionRepository",
       metadataKey: TAX_PROVIDER_KEY,
     });
   }
@@ -67,7 +67,7 @@ export class AvataxConnectionRepository {
   }
 
   async get(id: string): Promise<AvataxConnection> {
-    const { data } = await this.crudSettingsManager.read(id);
+    const { data } = await this.crudSettingsManager.readById(id);
 
     const connection = getSchema.parse(data);
 
@@ -84,7 +84,7 @@ export class AvataxConnectionRepository {
   }
 
   async patch(id: string, input: Pick<AvataxConnection, "config">): Promise<void> {
-    return this.crudSettingsManager.update(id, input);
+    return this.crudSettingsManager.updateById(id, input);
   }
 
   async delete(id: string): Promise<void> {

@@ -1,3 +1,4 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
   OrderCreatedSubscriptionFragment,
@@ -17,9 +18,9 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerConnection: ProviderConnection) {
+  constructor(providerConnection: ProviderConnection, private authData: AuthData) {
     this.logger = createLogger({
-      location: "ActiveTaxProvider",
+      name: "ActiveTaxProvider",
     });
 
     const taxProviderName = providerConnection.provider;
@@ -27,13 +28,13 @@ export class ActiveTaxProvider implements ProviderWebhookService {
     switch (taxProviderName) {
       case "taxjar": {
         this.logger.debug("Selecting TaxJar as tax provider");
-        this.client = new TaxJarWebhookService(providerConnection.config);
+        this.client = new TaxJarWebhookService(providerConnection.config, this.authData);
         break;
       }
 
       case "avatax": {
         this.logger.debug("Selecting Avatax as tax provider");
-        this.client = new AvataxWebhookService(providerConnection.config);
+        this.client = new AvataxWebhookService(providerConnection.config, this.authData);
         break;
       }
 
@@ -58,10 +59,11 @@ export class ActiveTaxProvider implements ProviderWebhookService {
 
 export function getActiveConnection(
   channelSlug: string | undefined,
-  encryptedMetadata: MetadataItem[]
+  encryptedMetadata: MetadataItem[],
+  authData: AuthData
 ): ActiveTaxProvider {
   const logger = createLogger({
-    location: "getActiveConnection",
+    name: "getActiveConnection",
   });
 
   if (!channelSlug) {
@@ -74,11 +76,15 @@ export function getActiveConnection(
 
   const { providerConnections, channels } = getAppConfig(encryptedMetadata);
 
+  if (!channels.length) {
+    throw new Error("You must assign a provider to the channel");
+  }
+
   const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    logger.debug({ channelSlug, channelConfig }, "Channel config was not found for channel slug");
+    logger.debug({ channelSlug }, "Channel config was not found for channel slug");
     throw new Error(`Channel config was not found for channel ${channelSlug}`);
   }
 
@@ -94,7 +100,7 @@ export function getActiveConnection(
     throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerConnection);
+  const taxProvider = new ActiveTaxProvider(providerConnection, authData);
 
   return taxProvider;
 }

@@ -1,15 +1,8 @@
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Text } from "@saleor/macaw-ui/next";
 import { Section } from "../../ui/app-section";
 import { ChannelList } from "./channel-list";
+import { AppDashboardLink } from "../../ui/app-dashboard-link";
 
 const Intro = () => {
-  const appBridge = useAppBridge();
-
-  const redirectToTaxes = () => {
-    appBridge.appBridge?.dispatch(actions.Redirect({ to: "/taxes/channels" }));
-  };
-
   return (
     <Section.Description
       title="Available channels"
@@ -20,19 +13,7 @@ const Intro = () => {
           <br />
           <br />
           You can change the tax configuration method for each channel in the{" "}
-          <Text
-            transition={"ease"}
-            variant={"bodyStrong"}
-            cursor={"pointer"}
-            color={{
-              default: "text3Decorative",
-              hover: "text1Decorative",
-            }}
-            onClick={redirectToTaxes}
-          >
-            Configuration → Taxes
-          </Text>{" "}
-          view.
+          <AppDashboardLink href="/taxes/channels">Configuration → Taxes</AppDashboardLink> view.
         </>
       }
     />

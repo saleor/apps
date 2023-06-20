@@ -1,3 +1,4 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import {
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
@@ -16,9 +17,9 @@ export class AvataxWebhookService implements ProviderWebhookService {
   client: AvataxClient;
   private logger: Logger;
 
-  constructor(config: AvataxConfig) {
+  constructor(config: AvataxConfig, private authData: AuthData) {
     this.logger = createLogger({
-      location: "AvataxWebhookService",
+      name: "AvataxWebhookService",
     });
     const avataxClient = new AvataxClient(config);
 
@@ -27,7 +28,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(taxBase: TaxBaseFragment) {
-    const adapter = new AvataxCalculateTaxesAdapter(this.config);
+    const adapter = new AvataxCalculateTaxesAdapter(this.config, this.authData);
 
     const response = await adapter.send({ taxBase });
 

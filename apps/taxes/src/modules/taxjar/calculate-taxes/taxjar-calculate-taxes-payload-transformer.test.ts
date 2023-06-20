@@ -9,9 +9,8 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
 
   it("returns payload containing line_items without discounts", () => {
     const taxBase = mockGenerator.generateTaxBase();
-    const transformedPayload = transformer.transform({
-      taxBase,
-    });
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
+    const transformedPayload = transformer.transform(taxBase, matchesMock);
 
     expect(transformedPayload).toEqual({
       params: {
@@ -32,7 +31,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
             quantity: 3,
             unit_price: 20,
             discount: 0,
-            product_tax_code: "",
+            product_tax_code: "P0000000",
           },
           {
             id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
@@ -61,9 +60,8 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
         },
       ],
     });
-    const transformedPayload = transformer.transform({
-      taxBase,
-    });
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
+    const transformedPayload = transformer.transform(taxBase, matchesMock);
 
     const payloadLines = transformedPayload.params.line_items ?? [];
     const discountSum = payloadLines.reduce((sum, line) => sum + (line.discount ?? 0), 0);
@@ -74,7 +72,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
         quantity: 3,
         unit_price: 20,
         discount: 3.33,
-        product_tax_code: "",
+        product_tax_code: "P0000000",
       },
       {
         id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
@@ -97,11 +95,10 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
   it("throws error when no address", () => {
     const mockGenerator = new TaxJarCalculateTaxesMockGenerator("with_nexus_tax_included");
     const taxBase = mockGenerator.generateTaxBase({ address: null });
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-    expect(() =>
-      transformer.transform({
-        taxBase,
-      })
-    ).toThrow("Customer address is required to calculate taxes in TaxJar.");
+    expect(() => transformer.transform(taxBase, matchesMock)).toThrow(
+      "Customer address is required to calculate taxes in TaxJar."
+    );
   });
 });

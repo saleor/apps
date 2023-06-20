@@ -29,7 +29,7 @@ export class TaxJarClient {
   private logger: Logger;
 
   constructor(providerConfig: TaxJarConfig) {
-    this.logger = createLogger({ location: "TaxJarClient" });
+    this.logger = createLogger({ name: "TaxJarClient" });
     const settings = createTaxJarSettings(providerConfig);
     const taxJarClient = new TaxJar(settings);
 
@@ -53,5 +53,10 @@ export class TaxJarClient {
    */
   async validateAddress({ params }: ValidateAddressArgs) {
     // return this.client.validateAddress(params);
+  }
+
+  async getTaxCodes() {
+    // ! This function doesn't accept any params. This may be troublesome if we want to do pagination/filtering on the frontend.
+    return this.client.categories();
   }
 }

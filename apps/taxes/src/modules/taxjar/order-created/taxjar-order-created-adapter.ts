@@ -1,4 +1,3 @@
-import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
@@ -19,27 +18,24 @@ export class TaxJarOrderCreatedAdapter
 {
   private logger: Logger;
   constructor(private readonly config: TaxJarConfig) {
-    this.logger = createLogger({ location: "TaxJarOrderCreatedAdapter" });
+    this.logger = createLogger({ name: "TaxJarOrderCreatedAdapter" });
   }
 
   async send(payload: TaxJarOrderCreatedPayload): Promise<TaxJarOrderCreatedResponse> {
-    this.logger.debug({ payload }, "Transforming the following Saleor payload:");
+    this.logger.debug("Transforming the Saleor payload for creating order with TaxJar...");
     const payloadTransformer = new TaxJarOrderCreatedPayloadTransformer(this.config);
     const target = payloadTransformer.transform(payload);
 
-    this.logger.debug(
-      { transformedPayload: target },
-      "Will call TaxJar fetchTaxForOrder with transformed payload:"
-    );
+    this.logger.debug("Calling TaxJar fetchTaxForOrder with transformed payload...");
 
     const client = new TaxJarClient(this.config);
     const response = await client.createOrder(target);
 
-    this.logger.debug({ response }, "TaxJar createOrder responded with:");
+    this.logger.debug("TaxJar createOrder successfully responded");
     const responseTransformer = new TaxJarOrderCreatedResponseTransformer();
     const transformedResponse = responseTransformer.transform(response);
 
-    this.logger.debug({ transformedResponse }, "Transformed TaxJar createOrder response to:");
+    this.logger.debug("Transformed TaxJar createOrder response");
 
     return transformedResponse;
   }
