@@ -1,7 +1,8 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
-const isSentryPropertiesInEnvironment =
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
+const isSentryPropertiesInEnvironment = Boolean(
+  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG
+);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -25,4 +26,6 @@ const configWithSentry = withSentryConfig(
   }
 );
 
+
 module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+

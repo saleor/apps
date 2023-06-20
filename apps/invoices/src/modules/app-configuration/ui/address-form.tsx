@@ -181,8 +181,6 @@ export const ConnectedAddressForm = (props: Props) => {
     push("/configuration");
   }, [push]);
 
-  console.log(addressData);
-
   if (channelOverrideConfigQuery.isLoading) {
     return <Text color={"textNeutralSubdued"}>Loading</Text>;
   }
