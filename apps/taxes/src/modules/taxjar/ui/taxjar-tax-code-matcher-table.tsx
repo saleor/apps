@@ -10,15 +10,18 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
   const [value, setValue] = React.useState("");
   const { notifySuccess, notifyError } = useDashboardNotification();
 
-  const { isLoading: isMatchesLoading } = trpcClient.taxJarMatches.getAll.useQuery(undefined, {
-    onSuccess(matches) {
-      const match = matches?.find((item) => item.data.saleorTaxClassId === taxClassId);
+  const { data: taxJarMatches, isLoading: isMatchesLoading } =
+    trpcClient.taxJarMatches.getAll.useQuery();
+
+  React.useEffect(() => {
+    if (taxJarMatches) {
+      const match = taxJarMatches?.find((item) => item.data.saleorTaxClassId === taxClassId);
 
       if (match) {
         setValue(match.data.taxJarTaxCode);
       }
-    },
-  });
+    }
+  }, [taxJarMatches, taxClassId]);
 
   const { mutate: updateMutation } = trpcClient.taxJarMatches.upsert.useMutation({
     onSuccess() {
