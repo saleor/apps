@@ -9,6 +9,8 @@ export const saleorUrls = (dashboardUrl: string) => ({
   dashboard: {
     homepage: new URL("/dashboard", dashboardUrl).href,
     apps: new URL("/dashboard/apps", dashboardUrl).href,
+    appInstallPage: (appManifest: string) =>
+      new URL(`/dashboard/apps/install?manifestUrl=${appManifest}`, dashboardUrl).href,
   },
   api: new URL("/graphql/", dashboardUrl).href,
 });

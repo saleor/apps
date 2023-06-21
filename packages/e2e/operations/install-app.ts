@@ -8,13 +8,13 @@ interface InstallTheAppArgs {
 
 export const installTheApp = async ({ page, appManifest }: InstallTheAppArgs) => {
   // got to Apps page, assuming user is logged in
-  await page.goto(routing.saleor.dashboard.apps, { timeout: 20000, waitUntil: "load" });
+  await page.goto(routing.saleor.dashboard.appInstallPage(appManifest), {
+    timeout: 20000,
+    waitUntil: "load",
+  });
 
-  // Install the app via the manifest URL
-  await page.locator('[data-test-id="add-app-from-manifest"]').click();
-  await page.getByRole("textbox").click();
-  await page.getByRole("textbox").fill(appManifest);
-  await page.locator('[data-test-id="install-app-from-manifest"]').click();
+  console.log("Navigated to", page.url());
+
   await page.getByRole("button", { name: "Install App" }).click();
 
   // wait for the toast

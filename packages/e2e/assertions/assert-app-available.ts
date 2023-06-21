@@ -7,13 +7,13 @@ interface checkIfAppIsAvailableArgs {
   appName: string;
 }
 
-export const checkIfAppIsAvailable = async ({ page, appName }: checkIfAppIsAvailableArgs) => {
-  // got to Apps page, assuming user is logged in
+export const assertAppAvailable = async ({ page, appName }: checkIfAppIsAvailableArgs) => {
   await page.goto(routing.saleor.dashboard.apps, { timeout: 20000, waitUntil: "load" });
 
-  // look for a entry with name of our app
-  await expect(await page.getByText(appName).first()).toBeVisible();
+  // todo need data-testid. this element is not unique
+  const appEntry = await page.getByText(appName).first();
 
-  // and confirm its installed
+  await expect(appEntry).toBeVisible();
+
   await expect(await page.getByText("Problem occured during installation.")).toBeHidden();
 };
