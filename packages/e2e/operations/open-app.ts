@@ -15,7 +15,7 @@ export const openTheApp = async ({ page, appName }: InstallTheAppArgs) => {
   console.log("Navigated to", page.url());
 
   // todo it must be test-id because we also have same name in appstore list
-  await page.getByText(appName).click();
+  await page.getByText(appName).first().click();
 
   await expect(page.url()).toMatch(new RegExp("https:\\/\\/.*\\/dashboard\\/apps\\/.*\\/app"));
 };

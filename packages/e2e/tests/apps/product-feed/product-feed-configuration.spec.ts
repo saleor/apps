@@ -7,7 +7,7 @@ import { fillChannelConfig } from "../../../apps/product-feed/operations/fill-ch
 import { setCategoryMapping } from "../../../apps/product-feed/operations/set-category-mapping";
 import { navigateToCategoryMapping } from "../../../apps/product-feed/operations/navigate-to-category-mapping";
 
-test.describe.only("Product Feed Configuration", () => {
+test.describe("Product Feed Configuration", () => {
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
@@ -23,7 +23,7 @@ test.describe.only("Product Feed Configuration", () => {
   });
 
   // Test assumes app is installed
-  test("App can be configured", async () => {
+  test("App can be configured @stable @critical", async () => {
     await openTheApp({ page, appName: "Product Feed" });
 
     // todo make more strict selector
