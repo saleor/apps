@@ -1,13 +1,23 @@
+import { z } from "zod";
+
 const appName = process.env.APP_NAME;
 const appUrl = process.env.APP_URL;
 const instanceUrl = process.env.INSTANCE_URL;
 const dashboardUserEmail = process.env.DASHBOARD_USER_EMAIL;
 const dashboardUserPassword = process.env.DASHBOARD_USER_PASSWORD;
 
-export const configuration = {
-  appName,
-  instanceUrl,
-  appUrl,
-  dashboardUserEmail,
-  dashboardUserPassword,
-};
+export const configuration = z
+  .object({
+    appName: z.string().nonempty(),
+    appUrl: z.string().nonempty().url(),
+    instanceUrl: z.string().nonempty().url(),
+    dashboardUserEmail: z.string().nonempty(),
+    dashboardUserPassword: z.string().nonempty(),
+  })
+  .parse({
+    appName,
+    appUrl,
+    instanceUrl,
+    dashboardUserEmail,
+    dashboardUserPassword,
+  });

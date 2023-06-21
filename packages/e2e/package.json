@@ -4,13 +4,15 @@
   "version": "1.0.0",
   "author": "",
   "scripts": {
-    "e2e:ui": "playwright test --ui",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
   },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
     "dotenv": "^16.3.1",
-    "eslint-config-saleor": "workspace:*"
+    "eslint-config-saleor": "workspace:*",
+    "@saleor/app-sdk": "0.40.1",
+    "zod": "3.20.2"
   },
   "keywords": [],
   "license": "ISC",
