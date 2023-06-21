@@ -18,7 +18,13 @@ const ConfigurationPage: NextPage = () => {
   return (
     <Box>
       <Box __marginBottom="100px">
-        <Text variant={"hero"} size={"medium"} as={"h1"} marginBottom={5}>
+        <Text
+          variant={"hero"}
+          size={"medium"}
+          as={"h1"}
+          marginBottom={5}
+          data-testid={"root-heading"}
+        >
           Configuration
         </Text>
         <Paragraph>
@@ -39,6 +45,7 @@ const ConfigurationPage: NextPage = () => {
         </Text>
       </Box>
       <AppSection
+        data-testid={"s3-configuration-section"}
         __marginBottom="100px"
         includePadding
         heading={"AWS S3 Bucket"}
@@ -69,6 +76,7 @@ const ConfigurationPage: NextPage = () => {
         }
       />
       <AppSection
+        data-testid={"channels-configuration-section"}
         __marginBottom="100px"
         includePadding
         heading={"Channels configuration"}
@@ -112,6 +120,7 @@ const ConfigurationPage: NextPage = () => {
         }
       />
       <AppSection
+        data-testid={"categories-mapping-section"}
         __marginBottom="100px"
         includePadding
         heading={"Categories mapping"}
