@@ -1,6 +1,6 @@
 import { Page, expect } from "@playwright/test";
-import { configuration } from "../setup/configuration";
-import { routing } from "../setup/routing";
+import { configuration } from "../../setup/configuration";
+import { routing } from "../../setup/routing";
 
 interface LogInIntoDashboardArgs {
   page: Page;

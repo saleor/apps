@@ -1,7 +1,7 @@
 import { Page, test, expect } from "@playwright/test";
-import { logInIntoDashboard } from "../../../operations/log-in-to-dashboard";
-import { openTheApp } from "../../../operations/open-app";
-import { assertAppRender } from "../../../apps/taxes/assertions/assert-app-render";
+import { logInIntoDashboard } from "../../operations/log-in-to-dashboard";
+import { openTheApp } from "../../operations/open-app";
+import { assertAppRender } from "./assertions/assert-app-render";
 
 test.describe("Taxes", () => {
   let page: Page;

@@ -1,9 +1,9 @@
 import { test, expect, Page } from "@playwright/test";
-import { logInIntoDashboard } from "../operations/log-in-to-dashboard";
-import { installTheApp } from "../operations/install-app";
+import { logInIntoDashboard } from "./operations/log-in-to-dashboard";
+import { installTheApp } from "./operations/install-app";
 import { appUrls, routing } from "../setup/routing";
 import { AppManifest } from "@saleor/app-sdk/types";
-import { assertAppAvailable } from "../assertions/assert-app-available";
+import { assertAppAvailable } from "./assertions/assert-app-available";
 
 // target every app including staging. This should be config from the outside
 const apps: string[] = [
@@ -24,7 +24,7 @@ const apps: string[] = [
   return urls;
 }, []);
 /*
- * 
+ *
  * test.describe.configure({
  *   mode: "parallel",
  * });
