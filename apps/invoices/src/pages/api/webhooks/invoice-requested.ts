@@ -262,12 +262,10 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     Sentry.addBreadcrumb({
       message: "Uploaded file to Saleor",
       level: "debug",
-      data: {
-        uploadedFileUrl,
-      },
     });
 
-    logger.info({ uploadedFileUrl }, "Uploaded file to storage, will notify Saleor now");
+    logger.info("Uploaded file to storage, will notify Saleor now");
+    logger.debug({ uploadedFileUrl });
 
     await new InvoiceCreateNotifier(client).notifyInvoiceCreated(
       orderId,
@@ -281,7 +279,6 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
       data: {
         orderId,
         invoiceName,
-        uploadedFileUrl,
       },
     });
   } catch (e) {
