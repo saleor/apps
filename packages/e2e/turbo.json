@@ -3,7 +3,14 @@
   "extends": ["//"],
   "pipeline": {
     "build": {
-      "env": ["CI"]
+      "env": [
+        "CI",
+        "APP_NAME",
+        "APP_URL",
+        "INSTANCE_URL",
+        "DASHBOARD_USER_EMAIL",
+        "DASHBOARD_USER_PASSWORD"
+      ]
     }
   }
 }

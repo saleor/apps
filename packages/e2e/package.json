@@ -3,7 +3,10 @@
   "description": "",
   "version": "1.0.0",
   "author": "",
-  "scripts": {},
+  "scripts": {
+    "e2e:ui": "playwright test --ui",
+    "e2e": "playwright test"
+  },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
     "dotenv": "^16.3.1",
