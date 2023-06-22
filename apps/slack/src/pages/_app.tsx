@@ -13,12 +13,15 @@ import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
 export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
 function SaleorApp({ Component, pageProps }: AppProps) {
+  // @ts-ignore todo refactor
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <ThemeProvider>
           <ThemeSynchronizer />
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>
