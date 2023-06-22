@@ -1,48 +1,24 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Link,
-  List,
-  ListItem,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
-import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, ReactElement, SyntheticEvent, useEffect, useState } from "react";
 
-import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 import { ConfigurationError } from "../components/ConfigurationError/ConfigurationError";
 import { useAppApi } from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 import { useDashboardNotification } from "@saleor/apps-shared";
+
+import { Input, Text, Box, Button } from "@saleor/macaw-ui/next";
+import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 
 interface ConfigurationField {
   key: string;
   value: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  confirmButton: {
-    marginLeft: "auto",
-  },
-  fieldContainer: {
-    marginBottom: theme.spacing(2),
-  },
-  additionalInfo: {
-    marginBottom: theme.spacing(3),
-  },
-}));
-
 function Configuration() {
-  const classes = useStyles();
   const { appBridgeState } = useAppBridge();
   const { notifyError, notifySuccess } = useDashboardNotification();
   const [configuration, setConfiguration] = useState<ConfigurationField[]>();
-  const [transitionState, setTransitionState] = useState<ConfirmButtonTransitionState>("default");
 
   const { data: configurationData, error } = useAppApi<{ data: ConfigurationField[] }>({
     url: "/api/configuration",
@@ -56,7 +32,6 @@ function Configuration() {
 
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    setTransitionState("loading");
 
     fetch("/api/configuration", {
       method: "POST",
@@ -68,11 +43,9 @@ function Configuration() {
       body: JSON.stringify({ data: configuration }),
     })
       .then(async (response) => {
-        setTransitionState(response.status === 200 ? "success" : "error");
         notifySuccess("Success", "Configuration updated successfully");
       })
       .catch(async () => {
-        setTransitionState("error");
         await notifyError("Configuration update failed");
       });
   };
@@ -91,32 +64,24 @@ function Configuration() {
   }
 
   if (configuration === undefined) {
-    return <Skeleton />;
+    return <Text>Loading</Text>;
   }
 
   return (
     <form onSubmit={handleSubmit}>
       {configuration!.map(({ key, value }) => (
-        <div key={key} className={classes.fieldContainer}>
-          <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
+        <div key={key}>
+          <Input label={key} name={key} onChange={onChange} value={value} />
         </div>
       ))}
-      <p className={classes.additionalInfo}>
+      <p>
         This webhook will be called when new order is created and `order_created` event is
         triggered.
       </p>
       <div>
-        <ConfirmButton
-          type="submit"
-          variant="primary"
-          fullWidth
-          transitionState={transitionState}
-          labels={{
-            confirm: "Save",
-            error: "Error",
-          }}
-          className={classes.confirmButton}
-        />
+        <Button type="submit" variant="primary">
+          Save
+        </Button>
       </div>
     </form>
   );
@@ -147,10 +112,10 @@ function Instructions() {
 
   return (
     <>
-      <Typography>How to configure</Typography>
-      <List>
-        <ListItem>
-          <Link
+      <Text>How to configure</Text>
+      <ul>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl(slackUrl.href);
@@ -158,18 +123,18 @@ function Instructions() {
             href={slackUrl.href}
           >
             Install Slack application
-          </Link>
-        </ListItem>
-        <ListItem>
+          </a>
+        </li>
+        <li>
           Copy incoming Webhook URL from Slack app configuration and paste it below into
           `WEBHOOK_URL` field
-        </ListItem>
-        <ListItem>Save configuration</ListItem>
-      </List>
-      <Typography>Useful links</Typography>
-      <List>
-        <ListItem>
-          <Link
+        </li>
+        <li>Save configuration</li>
+      </ul>
+      <Text>Useful links</Text>
+      <ul>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl("https://github.com/saleor/saleor-app-slack");
@@ -177,10 +142,10 @@ function Instructions() {
             href="https://github.com/saleor/saleor-app-slack"
           >
             Visit repository & readme
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
+          </a>
+        </li>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
               openExternalUrl("https://api.slack.com/messaging/webhooks");
@@ -188,9 +153,9 @@ function Instructions() {
             href="https://api.slack.com/messaging/webhooks"
           >
             Read about Slack apps that use incoming webhooks
-          </Link>
-        </ListItem>
-      </List>
+          </a>
+        </li>
+      </ul>
     </>
   );
 }
@@ -205,16 +170,16 @@ const ConfigurationWithAuth = withAuthorization({
 ConfigurationWithAuth.getLayout = (page: ReactElement) => (
   <AppColumnsLayout>
     <div />
-    <Card>
-      <CardHeader title="Configuration" />
-      <CardContent>{page}</CardContent>
-    </Card>
-    <Card style={{ marginBottom: 40 }}>
-      <CardHeader title="Instructions" />
-      <CardContent>
+    <Box>
+      <Text>Configuration</Text>
+      <Box>{page}</Box>
+    </Box>
+    <Box marginBottom={4}>
+      <Text>Instructions</Text>
+      <Box>
         <Instructions />
-      </CardContent>
-    </Card>
+      </Box>
+    </Box>
   </AppColumnsLayout>
 );
 
