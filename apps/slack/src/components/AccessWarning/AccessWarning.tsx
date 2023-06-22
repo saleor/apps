@@ -20,9 +20,11 @@ const warnings: Record<WarningCause, string> = {
 
 export function AccessWarning({ cause = "unknown_cause" }: AccessWarningProps) {
   return (
-    <div suppressHydrationWarning>
-      <Text variant="heading">App can&apos;t be accessed outside of the Saleor Dashboard</Text>
-      <Text variant="heading" style={{ marginTop: "2rem" }}>
+    <div>
+      <Text as={"h2"} variant="heading">
+        App can&apos;t be accessed outside of the Saleor Dashboard
+      </Text>
+      <Text variant="body" style={{ marginTop: "2rem" }}>
         ❌ {warnings[cause]}
       </Text>
     </div>

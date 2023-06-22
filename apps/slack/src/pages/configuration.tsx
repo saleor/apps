@@ -71,18 +71,22 @@ function Configuration() {
     <form onSubmit={handleSubmit}>
       {configuration!.map(({ key, value }) => (
         <div key={key}>
-          <Input label={key} name={key} onChange={onChange} value={value} />
+          <Input
+            label={key}
+            name={key}
+            onChange={onChange}
+            value={value}
+            helperText={
+              "This webhook will be called when new order is created and `order_created` event is triggered."
+            }
+          />
         </div>
       ))}
-      <p>
-        This webhook will be called when new order is created and `order_created` event is
-        triggered.
-      </p>
-      <div>
+      <Box marginTop={4}>
         <Button type="submit" variant="primary">
           Save
         </Button>
-      </div>
+      </Box>
     </form>
   );
 }
@@ -112,7 +116,7 @@ function Instructions() {
 
   return (
     <>
-      <Text>How to configure</Text>
+      <Text variant={"bodyStrong"}>How to configure</Text>
       <ul>
         <li>
           <a
@@ -122,28 +126,19 @@ function Instructions() {
             }}
             href={slackUrl.href}
           >
-            Install Slack application
+            <Text>Install Slack application</Text>
           </a>
         </li>
         <li>
-          Copy incoming Webhook URL from Slack app configuration and paste it below into
-          `WEBHOOK_URL` field
+          <Text>
+            Copy incoming Webhook URL from Slack app configuration and paste it below into
+            `WEBHOOK_URL` field
+          </Text>
         </li>
         <li>Save configuration</li>
       </ul>
-      <Text>Useful links</Text>
+      <Text variant={"bodyStrong"}>Useful links</Text>
       <ul>
-        <li>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              openExternalUrl("https://github.com/saleor/saleor-app-slack");
-            }}
-            href="https://github.com/saleor/saleor-app-slack"
-          >
-            Visit repository & readme
-          </a>
-        </li>
         <li>
           <a
             onClick={(e) => {
@@ -152,7 +147,7 @@ function Instructions() {
             }}
             href="https://api.slack.com/messaging/webhooks"
           >
-            Read about Slack apps that use incoming webhooks
+            <Text>Read about Slack apps that use incoming webhooks</Text>
           </a>
         </li>
       </ul>
@@ -171,11 +166,15 @@ ConfigurationWithAuth.getLayout = (page: ReactElement) => (
   <AppColumnsLayout>
     <div />
     <Box>
-      <Text>Configuration</Text>
+      <Text as={"h2"} marginBottom={4} variant={"heading"}>
+        Configuration
+      </Text>
       <Box>{page}</Box>
     </Box>
     <Box marginBottom={4}>
-      <Text>Instructions</Text>
+      <Text as={"h2"} marginBottom={4} variant={"heading"}>
+        Instructions
+      </Text>
       <Box>
         <Instructions />
       </Box>
