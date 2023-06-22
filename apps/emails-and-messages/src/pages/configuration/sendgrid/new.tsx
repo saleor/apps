@@ -76,7 +76,12 @@ const NewSendgridConfigurationPage: NextPage = () => {
                 helperText={"Name of the configuration, for example 'Production' or 'Test'"}
               />
               {/* TODO: add key validation */}
-              <Input name="apiKey" control={control} label="API key" helperText={"Your API key"} />
+              <Input
+                name="apiKey"
+                control={control}
+                label="API key"
+                helperText={"The API key can be generated in your Sendgrid dashboard"}
+              />
             </Box>
             <BoxFooter>
               <Button type="submit">Save provider</Button>

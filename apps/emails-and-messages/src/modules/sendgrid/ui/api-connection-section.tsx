@@ -62,7 +62,7 @@ export const ApiConnectionSection = ({ configuration }: ApiConnectionSectionProp
               label="API Key"
               name="apiKey"
               control={control}
-              helperText="Name of the configuration, for example 'Production' or 'Test'"
+              helperText="The API key can be generated in your Sendgrid dashboard"
             />
 
             <label>
