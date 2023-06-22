@@ -6,15 +6,22 @@ import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { MainInstructions } from "../../components/MainInstructions";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 import { TextLink } from "@saleor/apps-ui";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
 export const ConfigurationView = () => {
+  const { appBridgeState } = useAppBridge();
+
   return (
     <Box display="flex" flexDirection="column" gap={10}>
       <Box>
         <Text variant={"hero"} size={"medium"} as={"h1"}>
           Configuration
+        </Text>
+        <Text>
+          TEMP: Saleor Version: {appBridgeState?.saleorVersion} | Dashboard Version:{" "}
+          {appBridgeState?.dashboardVersion}
         </Text>
         <MainInstructions marginTop={1.5} />
       </Box>
