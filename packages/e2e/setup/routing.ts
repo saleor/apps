@@ -16,9 +16,5 @@ export const saleorUrls = (dashboardUrl: string) => ({
 });
 
 export const routing = {
-  app: {
-    baseUrl: configuration.appUrl,
-    ...appUrls(configuration.appUrl),
-  },
   saleor: saleorUrls(configuration.instanceUrl),
 };

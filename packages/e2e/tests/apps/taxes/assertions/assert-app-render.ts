@@ -5,12 +5,17 @@ export const assertAppRender = async (iframeLocator: FrameLocator) => {
    * TODO Add test-ids assertions after added to app
    * todo assert empty state, but these tests must ensure app has fresh install
    */
-  await expect(iframeLocator.getByText("Tax providers")).toBeVisible();
-  await expect(iframeLocator.getByText("Available channels")).toBeVisible();
-  await expect(iframeLocator.getByText("Tax code matcher")).toBeVisible();
+  await expect(
+    iframeLocator.getByRole("heading", {
+      name: "Tax providers",
+    })
+  ).toBeVisible();
+  await expect(iframeLocator.getByRole("heading", { name: "Available channels" })).toBeVisible();
+  // await expect(iframeLocator.getByRole("heading", { name: "Tax code matcher" })).toBeVisible(); // todo enable when app enables
 
-  const firstProviderButton = await iframeLocator.getByText("Add first provider");
-  const addNextProviderButton = await iframeLocator.getByText("Add new");
+  const addProviderButton = await iframeLocator.getByRole("button", {
+    name: new RegExp(/Add new|Add first provider/),
+  });
 
-  // TODO verify if buttons exist (add configs)
+  await expect(addProviderButton).toBeVisible();
 };
