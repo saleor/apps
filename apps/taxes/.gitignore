@@ -4,3 +4,12 @@
 
 # Sentry
 next.config.original.js
+
+# stryker temp files
+.stryker-tmp
+
+# stryker reports
+reports/mutation
+
+# stryker logs
+stryker.log
