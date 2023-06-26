@@ -50,6 +50,11 @@ export const uninstallAppCommand = async ({
 
     appListSpinner.succeed();
 
+    if (!installedApps.length) {
+      console.log("No apps installed");
+      return;
+    }
+
     // Display CLI interface with multiselect if none of the filters were provided
     if (appId || appName || manifestUrl) {
       const filteredApps = filterApps({
