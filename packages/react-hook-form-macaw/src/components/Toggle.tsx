@@ -1,5 +1,5 @@
 import { Toggle as $Toggle } from "@saleor/macaw-ui/next";
-import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldPath, FieldValues, Path, PathValue } from "react-hook-form";
 
 // ! ToggleProps is not exported from macaw-ui
 type $ToggleProps = React.ComponentProps<typeof $Toggle>;
@@ -19,13 +19,14 @@ export function Toggle<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field } }) => {
+      render={({ field: { value, onChange, ...field } }) => {
         return (
           <$Toggle
             {...rest}
             {...field}
             pressed={value}
-            onPressedChange={(pressed) => field.onChange(pressed)}
+            // TODO: write tests to make sure the cast is safe
+            onPressedChange={(e) => onChange(e as PathValue<TFieldValues, Path<TFieldValues>>)}
             name={name}
             type={type}
           />

@@ -1,5 +1,5 @@
 import { Select as $Select, type SelectProps as $SelectProps } from "@saleor/macaw-ui/next";
-import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldPath, FieldValues, Path, PathValue } from "react-hook-form";
 
 export type SelectProps<T extends FieldValues = FieldValues> = Omit<$SelectProps, "name"> & {
   name: FieldPath<T>;
@@ -18,10 +18,11 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field }, fieldState: { error } }) => (
+      render={({ field: { value, onChange, ...field }, fieldState: { error } }) => (
         <$Select
           {...rest}
           {...field}
+          onChange={(e) => onChange(e as PathValue<TFieldValues, Path<TFieldValues>>)}
           options={options}
           value={value || ""}
           name={name}
