@@ -81,7 +81,7 @@ export const UniversalChannelsSection = ({
                   <Switch
                     defaultValue={channelConfiguration.mode}
                     __maxWidth="max-content"
-                    onValueChange={onChange}
+                    onValueChange={(e) => onChange(e as "exclude" | "restrict")}
                   >
                     <Switch.Item id="1" value="restrict">
                       <TableEditIcon size="medium" />

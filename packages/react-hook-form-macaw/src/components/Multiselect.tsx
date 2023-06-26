@@ -2,7 +2,7 @@ import {
   Multiselect as $Multiselect,
   type MultiselectProps as $MultiselectProps,
 } from "@saleor/macaw-ui/next";
-import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldPath, FieldValues, Path, PathValue } from "react-hook-form";
 
 export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
   $MultiselectProps,
@@ -24,10 +24,11 @@ export function Multiselect<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field }, fieldState: { error } }) => (
+      render={({ field: { value, onChange, ...field }, fieldState: { error } }) => (
         <$Multiselect
           {...rest}
           {...field}
+          onChange={(e) => onChange(e as PathValue<TFieldValues, Path<TFieldValues>>)}
           options={options}
           value={value || []}
           name={name}

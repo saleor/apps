@@ -12,11 +12,11 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.1.0",
+    "@hookform/resolvers": "^3.1.1",
     "@saleor/app-sdk": "0.40.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
-    "@saleor/macaw-ui": "0.8.0-pre.95",
+    "@saleor/macaw-ui": "0.8.0-pre.98",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@sentry/nextjs": "7.55.2",
     "@types/debug": "^4.1.7",
@@ -32,10 +32,10 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "^7.45.0",
     "react-query": "^3.39.3",
     "urql": "^4.0.4",
-    "zod": "^3.20.2"
+    "zod": "^3.21.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",

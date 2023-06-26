@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
-    "@saleor/macaw-ui": "0.8.0-pre.95",
+    "@saleor/macaw-ui": "0.8.0-pre.98",
     "@storybook/addon-actions": "^7.0.12",
     "@storybook/addon-essentials": "^7.0.12",
     "@storybook/addon-interactions": "^7.0.12",
@@ -27,7 +27,7 @@
     "eslint-config-saleor": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "^7.45.0",
     "storybook": "^7.0.12",
     "typescript": "5.1.3",
     "vite": "4.3.9",
