@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "//"
+  ],
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "env": [
+        "APP_DEBUG",
+        "NODE_ENV",
+        "INSTANCE_URL",
+        "USER_EMAIL",
+        "USER_PASSWORD"
+      ]
+    }
+  }
+}

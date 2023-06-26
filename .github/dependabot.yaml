@@ -30,6 +30,11 @@ updates:
 
   # Apps
   - package-ecosystem: "npm"
+    directory: "/apps/apps-cli"
+    open-pull-requests-limit: 0
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
     directory: "/apps/cms"
     open-pull-requests-limit: 0
     schedule:

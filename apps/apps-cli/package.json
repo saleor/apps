@@ -1,0 +1,67 @@
+{
+  "name": "@saleor/apps-cli",
+  "description": "",
+  "version": "0.0.0",
+  "author": "Saleor",
+  "scripts": {
+    "build": "pnpm bundle",
+    "generate": "graphql-codegen",
+    "lint": "prettier --write . && eslint src/**/*.ts --cache --fix",
+    "test": "pnpm vitest",
+    "typecov": "type-coverage --cache",
+    "typecov-report": "typescript-coverage-report",
+    "watch": "concurrently \"npm:watch-*\"",
+    "watch-esbuild": "esbuild --watch src/cli.ts --bundle --minify --outfile=dist/apps-cli.js --platform=node --format=esm --target=node18 --banner:js=\"import { createRequire } from 'module';const require = createRequire(import.meta.url);import { dirname } from 'path'; import { fileURLToPath } from 'url'; const __dirname = dirname(fileURLToPath(import.meta.url));\" --out-extension:.js=.js",
+    "watch-generate": "graphql-codegen -w",
+    "watch-ts": "tsc --noEmit --watch --preserveWatchOutput"
+  },
+  "bin": {
+    "saleor": "./dist/apps-cli.js"
+  },
+  "dependencies": {
+    "@graphql-typed-document-node/core": "3.2.0",
+    "@inquirer/prompts": "^2.1.1",
+    "@oclif/core": "^1.26.2",
+    "@saleor/app-sdk": "0.40.1",
+    "chalk": "^5.2.0",
+    "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
+    "enquirer": "^2.3.6",
+    "fs-extra": "^11.1.1",
+    "graphql": "^16.6.0",
+    "graphql-request": "^6.1.0",
+    "open": "^9.1.0",
+    "ora": "^6.3.1",
+    "semver": "^7.5.1",
+    "slugify": "^1.6.6",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-codegen/client-preset": "^4.0.1",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^20.3.1",
+    "@types/semver": "^7.5.0",
+    "@types/yargs": "^17.0.24",
+    "concurrently": "^8.2.0",
+    "esbuild": "^0.18.2",
+    "eslint": "^8.42.0",
+    "eslint-config-saleor": "workspace:*",
+    "pkg": "^5.8.1",
+    "prettier": "2.8.8",
+    "ts-node": "^10.9.1",
+    "tsm": "^2.3.0",
+    "type-coverage": "^2.26.0",
+    "typescript": "^5.1.3",
+    "typescript-coverage-report": "^0.7.0",
+    "vitest": "^0.32.0"
+  },
+  "engines": {
+    "node": "^18 || ^20"
+  },
+  "files": [
+    "dist/apps-cli.js"
+  ],
+  "license": "BSD 3-Clause",
+  "type": "module"
+}
