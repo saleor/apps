@@ -8,6 +8,7 @@ import { hideBin } from "yargs/helpers";
 import { installAppCommand } from "./commands/install-app-command";
 import { uninstallAppCommand } from "./commands/uninstall-app-command";
 import "dotenv/config";
+import { webhooksCommand } from "./commands/webhooks-command";
 
 const require = createRequire(import.meta.url);
 const pkg = require("../package.json");
@@ -114,6 +115,35 @@ const parser = yargs(hideBin(process.argv))
         appId: argv.appId,
         all: argv.all,
         force: argv.force,
+      });
+    }
+  )
+  .command(
+    "webhooks",
+    "Print webhook details of installed app.",
+    (yargs) => {
+      return yargs
+        .option("instanceUrl", {
+          type: "string",
+          desc: "URL to the Saleor GraphQL API. Example: https://example.com/graphql/",
+          demandOption: true,
+        })
+        .option("userEmail", {
+          type: "string",
+          desc: "Dashboard user email",
+          demandOption: true,
+        })
+        .option("userPassword", {
+          type: "string",
+          desc: "Dashboard user password",
+          demandOption: true,
+        });
+    },
+    (argv) => {
+      webhooksCommand({
+        instanceUrl: argv.instanceUrl,
+        userEmail: argv.userEmail,
+        userPassword: argv.userPassword,
       });
     }
   )
