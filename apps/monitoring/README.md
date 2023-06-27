@@ -55,6 +55,8 @@ To use Graphql Playground, `Monitoring` app needs to be installed in Saleor, and
 
 ### Testing DataDog integration
 
+Set `MOCK_DATADOG_CLIENT` env to `True`
+
 Use these credentials sets to test DataDog integration:
 
 Working credentials:

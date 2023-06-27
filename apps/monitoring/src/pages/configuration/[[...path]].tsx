@@ -1,16 +1,13 @@
 import { NextPage } from "next";
-import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import React, { useEffect } from "react";
-import { IntegrationsList } from "../../ui/providers-list";
 import { NoProvidersConfigured } from "../../ui/no-providers-configured";
 import { useRouter } from "next/router";
 import { DatadogConfig } from "../../ui/datadog/datadog-config";
 import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
-import { LinearProgress, Link, Typography } from "@material-ui/core";
-import { Section } from "../../ui/sections";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Done, Error } from "@material-ui/icons";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Breadcrumbs, TextLink } from "@saleor/apps-ui";
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -20,12 +17,14 @@ const useActiveProvider = () => {
   return selectedProvider ?? null;
 };
 
-const Content = () => {
+const ConfigurationPage = () => {
   const [configuration, fetchConfiguration] = useConfigQuery();
   const { appBridge } = useAppBridge();
 
   const datadogCredentials = configuration.data?.integrations.datadog?.credentials;
   const datadogError = configuration.data?.integrations.datadog?.error;
+
+  const { push } = useRouter();
 
   useEffect(() => {
     fetchConfiguration();
@@ -34,7 +33,7 @@ const Content = () => {
   const selectedProvider = useActiveProvider();
 
   if (configuration.fetching && !configuration.data) {
-    return <LinearProgress />;
+    return <Text>Loading...</Text>;
   }
 
   if (selectedProvider === "datadog") {
@@ -50,57 +49,48 @@ const Content = () => {
     const site = configuration.data?.integrations.datadog?.credentials.site ?? DatadogSite.Us1;
 
     return (
-      <Section>
-        <Typography paragraph variant="h3">
-          <Done style={{ verticalAlign: "middle", marginRight: 10 }} />
+      <Box display={"flex"} gap={4} flexDirection={"column"}>
+        <Text as={"h1"} variant="heading">
           App configured
-        </Typography>
-        <Typography paragraph>
+        </Text>
+        <Text as={"p"}>
           Visit{" "}
-          <Link
-            href="https://app.datadoghq.com/"
-            onClick={(e) => {
-              e.preventDefault();
-              appBridge?.dispatch(
-                actions.Redirect({
-                  to: DATADOG_SITES_LINKS[site],
-                  newContext: true,
-                })
-              );
-            }}
-          >
+          <TextLink newTab href={DATADOG_SITES_LINKS[site] ?? "https://app.datadoghq.com/"}>
             Datadog
-          </Link>{" "}
+          </TextLink>{" "}
           to access your logs
-        </Typography>
-      </Section>
+        </Text>
+        <Button
+          onClick={() => {
+            push("/configuration/datadog");
+          }}
+        >
+          Edit configuration
+        </Button>
+      </Box>
     );
   }
 
   if (datadogError) {
     return (
-      <Section>
-        <Typography paragraph variant="h3">
-          <Error style={{ verticalAlign: "middle", marginRight: 10 }} />
+      <Box>
+        <Text variant="heading" as={"h1"}>
           Configuration Error
-        </Typography>
-        <Typography>{datadogError}</Typography>
-      </Section>
+        </Text>
+        <Text color={"textCriticalDefault"}>{datadogError}</Text>
+        <Button
+          marginTop={8}
+          onClick={() => {
+            push("/configuration/datadog");
+          }}
+        >
+          Edit configuration
+        </Button>
+      </Box>
     );
   }
 
   return null;
-};
-
-const ConfigurationPage: NextPage = () => {
-  const selectedProvider = useActiveProvider();
-
-  return (
-    <AppColumnsLayout>
-      <IntegrationsList activeProvider={selectedProvider} />
-      <Content />
-    </AppColumnsLayout>
-  );
 };
 
 export default ConfigurationPage;

@@ -12,5 +12,7 @@ services:
       - "5001:80"
     environment:
       - DEBUG=True
+      # Uncomment to enable test credentials mode
+      # - MOCK_DATADOG_CLIENT=True
     volumes:
       - ./backend/monitoring/:/app/monitoring
