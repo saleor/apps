@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { MouseEventHandler, useEffect, useState } from "react";
-import { LinearProgress, Link } from "@material-ui/core";
-import { isInIframe } from "../lib/is-in-iframe";
+import { isInIframe } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
+import { Text } from "@saleor/macaw-ui/next";
 
 /**
  * This is page publicly accessible from your app.
@@ -20,7 +20,7 @@ const IndexPage: NextPage = () => {
   }, [appBridgeState?.ready, replace]);
 
   if (isInIframe()) {
-    return <LinearProgress />;
+    return <Text>Loading</Text>;
   }
 
   return (

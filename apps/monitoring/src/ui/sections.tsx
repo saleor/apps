@@ -1,6 +1,4 @@
-import { Paper, PaperProps } from "@material-ui/core";
 import React from "react";
+import { Box, BoxProps } from "@saleor/macaw-ui/next";
 
-export const Section = (props: PaperProps) => (
-  <Paper {...props} elevation={0} style={{ padding: 20 }} />
-);
+export const Section = (props: BoxProps) => <Box {...props} padding={4} />;

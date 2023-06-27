@@ -1,4 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   DataDogCredentialsInput,
   DatadogSite,
@@ -8,47 +8,18 @@ import {
   useDeleteDatadogCredentialsMutation,
 } from "../../../generated/graphql";
 import { Section } from "../sections";
-import {
-  InputLabel,
-  LinearProgress,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  Link,
-} from "@material-ui/core";
+import { Box, BoxProps, Text } from "@saleor/macaw-ui/next";
+
 import React, { useEffect, useState } from "react";
-import { Button, makeStyles, Backlink, IconButton } from "@saleor/macaw-ui";
 import Image from "next/image";
 import DatadogLogo from "../../assets/datadog/dd_logo_h_rgb.svg";
 import { gql, useMutation } from "urql";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { ArrowBack } from "@material-ui/icons";
 import { useRouter } from "next/router";
 
 import { API_KEYS_LINKS } from "../../datadog-urls";
 import { useDashboardNotification } from "@saleor/apps-shared";
-
-const useStyles = makeStyles({
-  form: {
-    marginTop: 50,
-    display: "grid",
-    gridAutoFlow: "row",
-    gap: 30,
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headline: {
-    marginRight: "auto",
-    marginLeft: 10,
-  },
-});
+import { Input, Select, Toggle } from "@saleor/react-hook-form-macaw";
 
 gql`
   query Config {
@@ -110,7 +81,7 @@ const ApiKeyHelperText = ({ site }: { site: DatadogSite }) => {
   return (
     <span>
       Get one{" "}
-      <Link
+      <a
         href={url}
         onClick={(e) => {
           e.preventDefault();
@@ -123,13 +94,12 @@ const ApiKeyHelperText = ({ site }: { site: DatadogSite }) => {
         }}
       >
         here
-      </Link>
+      </a>
     </span>
   );
 };
 
 export const DatadogConfig = () => {
-  const styles = useStyles();
   const [queryData, fetchConfig] = useConfigQuery();
   const [, mutateCredentials] = useUpdateCredentialsMutation();
   const [, deleteCredentials] = useDeleteDatadogCredentialsMutation();
@@ -175,27 +145,17 @@ export const DatadogConfig = () => {
   }, [queryData.data, setValue]);
 
   if (queryData.fetching && !queryData.data) {
-    return <LinearProgress />;
+    return <Text>Loading</Text>;
   }
 
   return (
     <Section>
-      <div className={styles.header}>
-        <IconButton
-          onClick={() => {
-            router.push("/configuration");
-          }}
-          variant="secondary"
-        >
-          <ArrowBack />
-        </IconButton>
-        <Typography className={styles.headline} variant="h3">
-          Configuration
-        </Typography>
+      <div>
+        <button>back</button>
+        <Text>Configuration</Text>
         <Image width={100} src={DatadogLogo} alt="DataDog" />
       </div>
       <form
-        className={styles.form}
         onSubmit={handleSubmit((values) => {
           return mutateCredentials({
             input: {
@@ -224,52 +184,31 @@ export const DatadogConfig = () => {
         })}
       >
         <div>
-          <Controller
-            render={({ field }) => {
-              return (
-                <FormGroup row>
-                  <FormControlLabel
-                    control={<Checkbox checked={field.value} {...field} />}
-                    label="Enabled"
-                  />
-                </FormGroup>
-              );
-            }}
-            name="active"
-            control={control}
-          />
-          <InputLabel id="datadog-site-label">Datadog Site</InputLabel>
+          <Toggle control={control} name={"active"} />
+
+          <Text>Datadog Site</Text>
           <Select
-            defaultValue={DatadogSite.Us1}
-            fullWidth
-            labelId="datadog-site-label"
-            {...register("site")}
-          >
-            {Object.values(DatadogSite).map((v) => (
-              <MenuItem value={v} key={v}>
-                {v}
-              </MenuItem>
-            ))}
-          </Select>
+            options={Object.values(DatadogSite).map((v) => ({
+              label: v,
+              value: v,
+            }))}
+            control={control}
+            name={"site"}
+          />
         </div>
-        <TextField
-          fullWidth
-          variant="standard"
+        <Input
           label="Api Key"
           defaultValue=""
           helperText={<ApiKeyHelperText site={activeSite} />}
-          {...register("apiKey")}
+          control={control}
+          name={"apiKey"}
         />
         {queryData.data?.integrations.datadog?.error && (
-          <Typography color="error">{queryData.data?.integrations.datadog?.error}</Typography>
+          <Text color={"textCriticalDefault"}>{queryData.data?.integrations.datadog?.error}</Text>
         )}
-        <Button type="submit" variant="primary" fullWidth>
-          Save configuration
-        </Button>
-        <Button
+        <button type="submit">Save configuration</button>
+        <button
           type="reset"
-          variant="secondary"
-          fullWidth
           onClick={(e) => {
             e.preventDefault();
 
@@ -281,7 +220,7 @@ export const DatadogConfig = () => {
           }}
         >
           Delete configuration
-        </Button>
+        </button>
       </form>
     </Section>
   );

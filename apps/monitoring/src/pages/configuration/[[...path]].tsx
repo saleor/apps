@@ -6,11 +6,10 @@ import { NoProvidersConfigured } from "../../ui/no-providers-configured";
 import { useRouter } from "next/router";
 import { DatadogConfig } from "../../ui/datadog/datadog-config";
 import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
-import { LinearProgress, Link, Typography } from "@material-ui/core";
 import { Section } from "../../ui/sections";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Done, Error } from "@material-ui/icons";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
+import { Text } from "@saleor/macaw-ui/next";
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -34,7 +33,7 @@ const Content = () => {
   const selectedProvider = useActiveProvider();
 
   if (configuration.fetching && !configuration.data) {
-    return <LinearProgress />;
+    return <Text>Loading...</Text>;
   }
 
   if (selectedProvider === "datadog") {
@@ -51,13 +50,12 @@ const Content = () => {
 
     return (
       <Section>
-        <Typography paragraph variant="h3">
-          <Done style={{ verticalAlign: "middle", marginRight: 10 }} />
+        <Text as={"p"} variant="heading">
           App configured
-        </Typography>
-        <Typography paragraph>
+        </Text>
+        <Text as={"p"}>
           Visit{" "}
-          <Link
+          <a
             href="https://app.datadoghq.com/"
             onClick={(e) => {
               e.preventDefault();
@@ -70,9 +68,9 @@ const Content = () => {
             }}
           >
             Datadog
-          </Link>{" "}
+          </a>{" "}
           to access your logs
-        </Typography>
+        </Text>
       </Section>
     );
   }
@@ -80,11 +78,8 @@ const Content = () => {
   if (datadogError) {
     return (
       <Section>
-        <Typography paragraph variant="h3">
-          <Error style={{ verticalAlign: "middle", marginRight: 10 }} />
-          Configuration Error
-        </Typography>
-        <Typography>{datadogError}</Typography>
+        <Text variant="heading">Configuration Error</Text>
+        <Text>{datadogError}</Text>
       </Section>
     );
   }

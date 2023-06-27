@@ -1,13 +1,11 @@
 import { Section } from "./sections";
-import { Typography } from "@material-ui/core";
+import { Text } from "@saleor/macaw-ui/next";
 
 export const NoProvidersConfigured = () => (
   <Section>
-    <Typography paragraph variant="h3">
+    <Text as={"p"} variant="heading">
       No providers configured
-    </Typography>
-    <Typography paragraph>
-      Chose one of providers on the left and configure it to use the app
-    </Typography>
+    </Text>
+    <Text as={"p"}>Chose one of providers on the left and configure it to use the app</Text>
   </Section>
 );
