@@ -22,7 +22,7 @@ type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
   defaultValues: AvataxConfig;
   isLoading: boolean;
-  cancelButton: React.ReactNode;
+  leftButton: React.ReactNode;
 };
 
 export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
@@ -211,7 +211,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
         <Divider marginY={8} />
 
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-          {props.cancelButton}
+          {props.leftButton}
 
           <Button disabled={props.isLoading} type="submit" variant="primary">
             {props.isLoading ? "Saving..." : "Save"}

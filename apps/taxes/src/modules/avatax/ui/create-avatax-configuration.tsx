@@ -37,7 +37,7 @@ export const CreateAvataxConfiguration = () => {
       isLoading={isCreateLoading}
       onSubmit={submitHandler}
       defaultValues={defaultAvataxConfig}
-      cancelButton={
+      leftButton={
         <Button onClick={() => router.push("/configuration")} variant="tertiary">
           Cancel
         </Button>
