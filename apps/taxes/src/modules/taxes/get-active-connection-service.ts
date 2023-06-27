@@ -14,13 +14,13 @@ import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 
 // todo: refactor to a factory
-export class ActiveTaxProvider implements ProviderWebhookService {
+class ActiveTaxProviderService implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
   constructor(providerConnection: ProviderConnection, private authData: AuthData) {
     this.logger = createLogger({
-      name: "ActiveTaxProvider",
+      name: "ActiveTaxProviderService",
     });
 
     const taxProviderName = providerConnection.provider;
@@ -57,13 +57,13 @@ export class ActiveTaxProvider implements ProviderWebhookService {
   }
 }
 
-export function getActiveConnection(
+export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
   authData: AuthData
-): ActiveTaxProvider {
+): ActiveTaxProviderService {
   const logger = createLogger({
-    name: "getActiveConnection",
+    name: "getActiveConnectionService",
   });
 
   if (!channelSlug) {
@@ -100,7 +100,7 @@ export function getActiveConnection(
     throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
 
-  const taxProvider = new ActiveTaxProvider(providerConnection, authData);
+  const taxProvider = new ActiveTaxProviderService(providerConnection, authData);
 
   return taxProvider;
 }

@@ -9,7 +9,7 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
-import { getActiveConnection } from "../../../modules/taxes/active-connection";
+import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
@@ -74,7 +74,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
-    const taxProvider = getActiveConnection(channelSlug, appMetadata, ctx.authData);
+    const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
     logger.info({ taxProvider }, "Fetched taxProvider");
 
