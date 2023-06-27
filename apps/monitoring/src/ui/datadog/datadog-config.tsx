@@ -208,7 +208,6 @@ export const DatadogConfig = () => {
           </Box>
 
           <Select
-            marginBottom={4}
             label={"Datadog Site"}
             options={Object.values(DatadogSite).map((v) => ({
               label: v,
@@ -217,7 +216,7 @@ export const DatadogConfig = () => {
             control={control}
             name={"site"}
           />
-          <Box marginBottom={4}>
+          <Box marginY={4}>
             <Input
               label="Api Key"
               defaultValue=""
