@@ -26,6 +26,9 @@ import {
 import { ConfigV1ToV2MigrationService } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-migration.service";
 import { shopInfoQueryToAddressShape } from "../../../modules/shop-info/shop-info-query-to-address-shape";
 
+import * as Sentry from "@sentry/nextjs";
+import { AppConfigV2 } from "../../../modules/app-configuration/schema-v2/app-config";
+
 const OrderPayload = gql`
   fragment Address on Address {
     id
@@ -158,6 +161,10 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
   const { authData, payload, baseUrl } = context;
   const logger = createLogger({ domain: authData.saleorApiUrl, url: baseUrl });
 
+  Sentry.configureScope((s) => {
+    s.setTag("saleorApiUrl", authData.saleorApiUrl);
+  });
+
   const order = payload.order;
 
   logger.info({ orderId: order.id }, "Received event INVOICE_REQUESTED");
@@ -171,6 +178,14 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     order as OrderPayloadFragment,
     InvoiceNumberGenerationStrategy.localizedDate("en-US") // todo connect locale -> where from?
   );
+
+  Sentry.addBreadcrumb({
+    message: "Calculated invoice name",
+    data: {
+      invoiceName: invoiceName,
+    },
+    level: "debug",
+  });
 
   logger.debug({ invoiceName }, "Generated invoice name");
 
@@ -189,22 +204,19 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
 
     logger.debug({ tempPdfLocation }, "Resolved PDF location for temporary files");
 
-    let appConfigV2 = await new GetAppConfigurationV2Service({
-      saleorApiUrl: authData.saleorApiUrl,
-      apiClient: client,
-    }).getConfiguration();
+    Sentry.addBreadcrumb({
+      message: "Calculated invoice file location",
+      data: {
+        invoiceFile: tempPdfLocation,
+      },
+      level: "debug",
+    });
 
-    /**
-     * MIGRATION CODE START - remove when metadata migrated
-     */
-    if (!appConfigV2) {
-      const migrationService = new ConfigV1ToV2MigrationService(client, authData.saleorApiUrl);
-
-      appConfigV2 = await migrationService.migrate();
-    }
-    /**
-     * MIGRATION CODE END
-     */
+    let appConfigV2 =
+      (await new GetAppConfigurationV2Service({
+        saleorApiUrl: authData.saleorApiUrl,
+        apiClient: client,
+      }).getConfiguration()) ?? new AppConfigV2();
 
     const address: AddressV2Shape | null =
       appConfigV2.getChannelsOverrides()[order.channel.slug] ??
@@ -212,6 +224,11 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
 
     if (!address) {
       // todo disable webhook
+
+      Sentry.addBreadcrumb({
+        message: "Address not configured",
+        level: "debug",
+      });
 
       return res.status(200).end("App not configured");
     }
@@ -226,24 +243,48 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
       .catch((err) => {
         logger.error(err, "Error generating invoice");
 
+        Sentry.captureException(err);
+
         return res.status(500).json({
           error: "Error generating invoice",
         });
       });
 
+    Sentry.addBreadcrumb({
+      message: "Generated invoice file",
+      level: "debug",
+    });
+
     const uploader = new SaleorInvoiceUploader(client);
 
     const uploadedFileUrl = await uploader.upload(tempPdfLocation, `${invoiceName}.pdf`);
 
-    logger.info({ uploadedFileUrl }, "Uploaded file to storage, will notify Saleor now");
+    Sentry.addBreadcrumb({
+      message: "Uploaded file to Saleor",
+      level: "debug",
+    });
+
+    logger.info("Uploaded file to storage, will notify Saleor now");
+    logger.debug({ uploadedFileUrl });
 
     await new InvoiceCreateNotifier(client).notifyInvoiceCreated(
       orderId,
       invoiceName,
       uploadedFileUrl
     );
+
+    Sentry.addBreadcrumb({
+      message: "Notified Saleor about invoice creation",
+      level: "debug",
+      data: {
+        orderId,
+        invoiceName,
+      },
+    });
   } catch (e) {
     logger.error(e);
+
+    Sentry.captureException(e);
 
     return res.status(500).json({
       error: (e as any)?.message ?? "Error",

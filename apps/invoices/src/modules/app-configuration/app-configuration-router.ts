@@ -7,6 +7,7 @@ import { AppConfigV2MetadataManager } from "./schema-v2/app-config-v2-metadata-m
 import { GetAppConfigurationV2Service } from "./schema-v2/get-app-configuration.v2.service";
 import { ConfigV1ToV2MigrationService } from "./schema-v2/config-v1-to-v2-migration.service";
 import { AddressV2Schema } from "./schema-v2/app-config-schema.v2";
+import { AppConfigV2 } from "./schema-v2/app-config";
 
 const UpsertAddressSchema = z.object({
   address: AddressV2Schema,
@@ -19,19 +20,8 @@ export const appConfigurationRouter = router({
 
     logger.debug("appConfigurationRouterV2.fetch called");
 
-    const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
-
-    /**
-     * MIGRATION CODE START - remove when metadata migrated
-     */
-    if (!appConfigV2) {
-      const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
-
-      return migrationService.migrate().then((config) => config.getChannelsOverrides());
-    }
-    /**
-     * MIGRATION CODE END
-     */
+    const appConfigV2 =
+      (await new GetAppConfigurationV2Service(ctx).getConfiguration()) ?? new AppConfigV2();
 
     return appConfigV2.getChannelsOverrides();
   }),
@@ -41,23 +31,8 @@ export const appConfigurationRouter = router({
     })
     .input(UpsertAddressSchema)
     .mutation(async ({ ctx, input }) => {
-      const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
-
-      /**
-       * MIGRATION CODE START - remove when metadata migrated
-       */
-      if (!appConfigV2) {
-        const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
-
-        await migrationService.migrate((config) =>
-          config.upsertOverride(input.channelSlug, input.address)
-        );
-
-        return;
-      }
-      /**
-       * MIGRATION CODE END
-       */
+      const appConfigV2 =
+        (await new GetAppConfigurationV2Service(ctx).getConfiguration()) ?? new AppConfigV2();
 
       appConfigV2.upsertOverride(input.channelSlug, input.address);
 
@@ -75,21 +50,8 @@ export const appConfigurationRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const appConfigV2 = await new GetAppConfigurationV2Service(ctx).getConfiguration();
-
-      /**
-       * MIGRATION CODE START - remove when metadata migrated
-       */
-      if (!appConfigV2) {
-        const migrationService = new ConfigV1ToV2MigrationService(ctx.apiClient, ctx.saleorApiUrl);
-
-        await migrationService.migrate((config) => config.removeOverride(input.channelSlug));
-
-        return;
-      }
-      /**
-       * MIGRATION CODE END
-       */
+      const appConfigV2 =
+        (await new GetAppConfigurationV2Service(ctx).getConfiguration()) ?? new AppConfigV2();
 
       appConfigV2.removeOverride(input.channelSlug);
 
