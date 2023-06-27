@@ -9,6 +9,7 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 
 const logger = createLogger({
   service: "SendgridConfigurationService",
@@ -18,7 +19,8 @@ export type SendgridConfigurationServiceErrorType =
   | "OTHER"
   | "CONFIGURATION_NOT_FOUND"
   | "EVENT_CONFIGURATION_NOT_FOUND"
-  | "CANT_FETCH";
+  | "CANT_FETCH"
+  | "WRONG_SALEOR_VERSION";
 
 export interface ConfigurationPartial extends Partial<SendgridConfiguration> {
   id: SendgridConfiguration["id"];
@@ -45,16 +47,20 @@ export interface FilterConfigurationsArgs {
 export class SendgridConfigurationService {
   private configurationData?: SendgridConfig;
   private metadataConfigurator: SendgridPrivateMetadataManager;
+  private featureFlagService: FeatureFlagService;
 
   constructor(args: {
     metadataManager: SendgridPrivateMetadataManager;
     initialData?: SendgridConfig;
+    featureFlagService: FeatureFlagService;
   }) {
     this.metadataConfigurator = args.metadataManager;
 
     if (args.initialData) {
       this.configurationData = args.initialData;
     }
+
+    this.featureFlagService = args.featureFlagService;
   }
 
   /**
@@ -103,6 +109,26 @@ export class SendgridConfigurationService {
 
   // Saves configuration to Saleor API and cache it
   async setConfigurationRoot(config: SendgridConfig) {
+    logger.debug("Validate configuration before sending it to the Saleor API");
+    const flags = await this.featureFlagService.getFeatureFlags();
+
+    if (!flags.giftCardSentEvent) {
+      for (const configuration of config.configurations) {
+        for (const event of configuration.events) {
+          if (event.eventType === "GIFT_CARD_SENT" && event.active) {
+            logger.error(
+              { configurationId: configuration.id, event: event.eventType },
+              "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
+            );
+            throw new SendgridConfigurationServiceError(
+              "Gift card sent event is not supported for this Saleor version",
+              "WRONG_SALEOR_VERSION"
+            );
+          }
+        }
+      }
+    }
+
     logger.debug("Set configuration root");
 
     this.configurationData = config;
@@ -179,7 +205,7 @@ export class SendgridConfigurationService {
 
     updatedConfigRoot.configurations[configurationIndex] = updatedConfiguration;
 
-    this.setConfigurationRoot(updatedConfigRoot);
+    await this.setConfigurationRoot(updatedConfigRoot);
 
     return updatedConfiguration;
   }
@@ -199,7 +225,7 @@ export class SendgridConfigurationService {
       (configuration) => configuration.id !== id
     );
 
-    this.setConfigurationRoot(updatedConfigRoot);
+    await this.setConfigurationRoot(updatedConfigRoot);
   }
 
   /**

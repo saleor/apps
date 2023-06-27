@@ -3,12 +3,14 @@ const semver = require("semver");
 export class SaleorVersionCompatibilityValidator {
   constructor(private appRequiredVersion: string) {}
 
-  validateOrThrow(saleorVersion: string) {
-    const versionIsValid = semver.satisfies(saleorVersion, this.appRequiredVersion, {
+  isValid(saleorVersion: string) {
+    return semver.satisfies(saleorVersion, this.appRequiredVersion, {
       includePrerelease: true,
     });
+  }
 
-    if (!versionIsValid) {
+  validateOrThrow(saleorVersion: string) {
+    if (!this.isValid(saleorVersion)) {
       throw new Error(
         `Your Saleor version (${saleorVersion}) doesn't match App's required version (semver: ${this.appRequiredVersion})`
       );

@@ -1,12 +1,12 @@
 import { createLogger } from "@saleor/apps-shared";
 import { router } from "../trpc/trpc-server";
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { protectedWithConfigurationServices } from "../trpc/protected-client-procedure-with-services";
 
 export const appConfigurationRouter = router({
-  featureFlags: protectedClientProcedure.query(async ({ ctx }) => {
+  featureFlags: protectedWithConfigurationServices.query(async ({ ctx }) => {
     const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
 
-    logger.debug("sendgridConfigurationRouter.fetch called");
-    return ctx.sendgridConfigurationService.getConfigurationRoot();
+    logger.debug("appConfigurationRouter.featureFlags called");
+    return await ctx.featureFlagService.getFeatureFlags();
   }),
 });

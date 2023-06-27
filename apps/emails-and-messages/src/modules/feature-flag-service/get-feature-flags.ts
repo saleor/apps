@@ -10,8 +10,11 @@ interface GetFeatureFlagsArgs {
   saleorVersion: string;
 }
 
+/*
+ * Returns list of feature flags based on Saleor version.
+ * `saleorVersion` is expected to be in Semver format, e.g. "3.13.0"
+ */
 export const getFeatureFlags = ({ saleorVersion }: GetFeatureFlagsArgs): FeatureFlagsState => {
-  // TODO: investigate coerse setting to handle XX.YY version scheme
   return {
     giftCardSentEvent: new SaleorVersionCompatibilityValidator(">=3.13").isValid(saleorVersion),
   };
