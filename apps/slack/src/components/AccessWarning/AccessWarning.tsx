@@ -1,5 +1,5 @@
-import { Typography } from "@material-ui/core";
 import React from "react";
+import { Text } from "@saleor/macaw-ui/next";
 
 type WarningCause =
   | "not_in_iframe"
@@ -20,13 +20,13 @@ const warnings: Record<WarningCause, string> = {
 
 export function AccessWarning({ cause = "unknown_cause" }: AccessWarningProps) {
   return (
-    <div suppressHydrationWarning>
-      <Typography variant="subtitle1">
+    <div>
+      <Text as={"h2"} variant="heading">
         App can&apos;t be accessed outside of the Saleor Dashboard
-      </Typography>
-      <Typography variant="subtitle2" style={{ marginTop: "2rem" }}>
+      </Text>
+      <Text variant="body" style={{ marginTop: "2rem" }}>
         ❌ {warnings[cause]}
-      </Typography>
+      </Text>
     </div>
   );
 }
