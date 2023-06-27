@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
-    "@saleor/app-sdk": "0.0.0-pr-20230622095738",
+    "@saleor/app-sdk": "0.41.0",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.95",
     "@sentry/nextjs": "7.55.2",
