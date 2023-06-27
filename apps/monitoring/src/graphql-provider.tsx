@@ -3,6 +3,12 @@ import { PropsWithChildren } from "react";
 import { cacheExchange, createClient as urqlCreateClient, fetchExchange, Provider } from "urql";
 import { authExchange } from "@urql/exchange-auth";
 
+/**
+ * Local client creation. Contrary to other apps, Monitoring frontend doesnt contact Saleor directly,
+ * but calls Python-based service which also provides graphQL endpoint.
+ *
+ * App calls /graphql/ which is rewritten MONITORING_APP_API_URL. See next.config.js
+ */
 const createGraphQLClient = ({
   graphql,
   saleorApiUrl,

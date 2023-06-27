@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { API_KEYS_LINKS } from "../../datadog-urls";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Input, Select, Toggle } from "@saleor/react-hook-form-macaw";
+import { Breadcrumbs } from "@saleor/apps-ui";
 
 gql`
   query Config {
@@ -148,26 +149,25 @@ export const DatadogConfig = () => {
 
   return (
     <Box>
-      <Button
-        onClick={() => {
-          router.push("/configuration");
-        }}
-        variant={"secondary"}
-      >
-        <ArrowLeftIcon /> Back
-      </Button>
+      <Breadcrumbs>
+        <Breadcrumbs.Item href={"/configuration"}>Configuration</Breadcrumbs.Item>
+        <Breadcrumbs.Item>DataDog</Breadcrumbs.Item>
+      </Breadcrumbs>
 
       <Box marginTop={8} display={"grid"} __gridTemplateColumns={"400px auto"} gap={8}>
-        <Box>
-          <Text variant={"heading"} marginBottom={4} as={"h1"}>
+        <Box display={"flex"} gap={4} flexDirection={"column"}>
+          <Text variant={"heading"} as={"h1"}>
             Configuration
           </Text>
           <Image width={100} src={DatadogLogo} alt="DataDog" />
-          <Text as={"p"} marginTop={4}>
+          <Text as={"p"}>
             Configure your Datadog integration to send your Saleor metrics to Datadog.
           </Text>
         </Box>
         <Box
+          display={"flex"}
+          gap={4}
+          flexDirection={"column"}
           as={"form"}
           borderColor={"neutralHighlight"}
           borderWidth={1}
@@ -201,7 +201,7 @@ export const DatadogConfig = () => {
             });
           })}
         >
-          <Box as={"label"} display={"flex"} gap={2} marginBottom={4}>
+          <Box as={"label"} display={"flex"} gap={2}>
             <Toggle control={control} name={"active"} />
             <Text variant={"bodyEmp"}>Active</Text>
           </Box>
@@ -215,9 +215,9 @@ export const DatadogConfig = () => {
             control={control}
             name={"site"}
           />
-          <Box marginY={4}>
+          <Box>
             <Input
-              label="Api Key"
+              label="API Key"
               defaultValue=""
               helperText={<ApiKeyHelperText site={activeSite} />}
               control={control}
@@ -227,8 +227,7 @@ export const DatadogConfig = () => {
           {queryData.data?.integrations.datadog?.error && (
             <Text color={"textCriticalDefault"}>{queryData.data?.integrations.datadog?.error}</Text>
           )}
-          <Box display={"flex"} gap={2} marginTop={8}>
-            <Button type="submit">Save configuration</Button>
+          <Box display={"flex"} gap={2} marginTop={8} justifyContent={"flex-end"}>
             <Button
               variant={"tertiary"}
               type="reset"
@@ -245,6 +244,7 @@ export const DatadogConfig = () => {
             >
               <Text color={"textCriticalDefault"}>Delete configuration</Text>
             </Button>
+            <Button type="submit">Save configuration</Button>
           </Box>
         </Box>
       </Box>

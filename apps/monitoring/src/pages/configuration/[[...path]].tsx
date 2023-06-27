@@ -7,7 +7,7 @@ import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { TextLink } from "@saleor/apps-ui";
+import { Breadcrumbs, TextLink } from "@saleor/apps-ui";
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -17,7 +17,7 @@ const useActiveProvider = () => {
   return selectedProvider ?? null;
 };
 
-const Content = () => {
+const ConfigurationPage = () => {
   const [configuration, fetchConfiguration] = useConfigQuery();
   const { appBridge } = useAppBridge();
 
@@ -92,10 +92,6 @@ const Content = () => {
   }
 
   return null;
-};
-
-const ConfigurationPage: NextPage = () => {
-  return <Content />;
 };
 
 export default ConfigurationPage;
