@@ -1,15 +1,13 @@
 import { NextPage } from "next";
 import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import React, { useEffect } from "react";
-import { IntegrationsList } from "../../ui/providers-list";
 import { NoProvidersConfigured } from "../../ui/no-providers-configured";
 import { useRouter } from "next/router";
 import { DatadogConfig } from "../../ui/datadog/datadog-config";
 import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
-import { Section } from "../../ui/sections";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text, Box } from "@saleor/macaw-ui/next";
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -49,7 +47,7 @@ const Content = () => {
     const site = configuration.data?.integrations.datadog?.credentials.site ?? DatadogSite.Us1;
 
     return (
-      <Section>
+      <Box>
         <Text as={"p"} variant="heading">
           App configured
         </Text>
@@ -71,16 +69,16 @@ const Content = () => {
           </a>{" "}
           to access your logs
         </Text>
-      </Section>
+      </Box>
     );
   }
 
   if (datadogError) {
     return (
-      <Section>
+      <Box>
         <Text variant="heading">Configuration Error</Text>
         <Text>{datadogError}</Text>
-      </Section>
+      </Box>
     );
   }
 
@@ -88,14 +86,7 @@ const Content = () => {
 };
 
 const ConfigurationPage: NextPage = () => {
-  const selectedProvider = useActiveProvider();
-
-  return (
-    <AppColumnsLayout>
-      <IntegrationsList activeProvider={selectedProvider} />
-      <Content />
-    </AppColumnsLayout>
-  );
+  return <Content />;
 };
 
 export default ConfigurationPage;

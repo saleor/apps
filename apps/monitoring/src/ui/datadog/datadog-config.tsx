@@ -7,7 +7,6 @@ import {
   useUpdateCredentialsMutation,
   useDeleteDatadogCredentialsMutation,
 } from "../../../generated/graphql";
-import { Section } from "../sections";
 import { Box, BoxProps, Text } from "@saleor/macaw-ui/next";
 
 import React, { useEffect, useState } from "react";
@@ -20,6 +19,9 @@ import { useRouter } from "next/router";
 import { API_KEYS_LINKS } from "../../datadog-urls";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Input, Select, Toggle } from "@saleor/react-hook-form-macaw";
+import { Button, ArrowLeftIcon } from "@saleor/macaw-ui/next";
+
+import Link from "next/link";
 
 gql`
   query Config {
@@ -149,45 +151,65 @@ export const DatadogConfig = () => {
   }
 
   return (
-    <Section>
-      <div>
-        <button>back</button>
-        <Text>Configuration</Text>
-        <Image width={100} src={DatadogLogo} alt="DataDog" />
-      </div>
-      <form
-        onSubmit={handleSubmit((values) => {
-          return mutateCredentials({
-            input: {
-              active: values.active,
-              credentials: {
-                apiKey: values.apiKey,
-                site: values.site,
+    <Box>
+      <Link href={"/configuration"}>
+        <Button variant={"secondary"}>
+          <ArrowLeftIcon /> Back
+        </Button>
+      </Link>
+
+      <Box marginTop={8} display={"grid"} __gridTemplateColumns={"400px auto"} gap={8}>
+        <Box>
+          <Text variant={"heading"} marginBottom={4} as={"h1"}>
+            Configuration
+          </Text>
+          <Image width={100} src={DatadogLogo} alt="DataDog" />
+          <Text as={"p"} marginTop={4}>
+            Configure your Datadog integration to send your Saleor metrics to Datadog.
+          </Text>
+        </Box>
+        <Box
+          as={"form"}
+          borderColor={"neutralHighlight"}
+          borderWidth={1}
+          borderStyle={"solid"}
+          borderRadius={4}
+          padding={8}
+          onSubmit={handleSubmit((values) => {
+            return mutateCredentials({
+              input: {
+                active: values.active,
+                credentials: {
+                  apiKey: values.apiKey,
+                  site: values.site,
+                },
               },
-            },
-          }).then((res) => {
-            const updatedConfig = res.data?.updateDatadogConfig.datadog;
-            const errors = res.data?.updateDatadogConfig.errors;
+            }).then((res) => {
+              const updatedConfig = res.data?.updateDatadogConfig.datadog;
+              const errors = res.data?.updateDatadogConfig.errors;
 
-            if (updatedConfig) {
-              setValue("active", updatedConfig.active);
-              setValue("apiKey", buildMaskedKey(updatedConfig.credentials.apiKeyLast4));
-              setValue("site", updatedConfig.credentials.site);
+              if (updatedConfig) {
+                setValue("active", updatedConfig.active);
+                setValue("apiKey", buildMaskedKey(updatedConfig.credentials.apiKeyLast4));
+                setValue("site", updatedConfig.credentials.site);
 
-              notifySuccess("Configuration updated", "Successfully updated Datadog settings");
-            }
+                notifySuccess("Configuration updated", "Successfully updated Datadog settings");
+              }
 
-            if (errors?.length) {
-              notifyError("Error configuring Datadog", errors[0].message);
-            }
-          });
-        })}
-      >
-        <div>
-          <Toggle control={control} name={"active"} />
+              if (errors?.length) {
+                notifyError("Error configuring Datadog", errors[0].message);
+              }
+            });
+          })}
+        >
+          <Box as={"label"} display={"flex"} gap={2} marginBottom={4}>
+            <Toggle control={control} name={"active"} />
+            <Text variant={"bodyEmp"}>Active</Text>
+          </Box>
 
-          <Text>Datadog Site</Text>
           <Select
+            marginBottom={4}
+            label={"Datadog Site"}
             options={Object.values(DatadogSite).map((v) => ({
               label: v,
               value: v,
@@ -195,33 +217,38 @@ export const DatadogConfig = () => {
             control={control}
             name={"site"}
           />
-        </div>
-        <Input
-          label="Api Key"
-          defaultValue=""
-          helperText={<ApiKeyHelperText site={activeSite} />}
-          control={control}
-          name={"apiKey"}
-        />
-        {queryData.data?.integrations.datadog?.error && (
-          <Text color={"textCriticalDefault"}>{queryData.data?.integrations.datadog?.error}</Text>
-        )}
-        <button type="submit">Save configuration</button>
-        <button
-          type="reset"
-          onClick={(e) => {
-            e.preventDefault();
+          <Box marginBottom={4}>
+            <Input
+              label="Api Key"
+              defaultValue=""
+              helperText={<ApiKeyHelperText site={activeSite} />}
+              control={control}
+              name={"apiKey"}
+            />
+          </Box>
+          {queryData.data?.integrations.datadog?.error && (
+            <Text color={"textCriticalDefault"}>{queryData.data?.integrations.datadog?.error}</Text>
+          )}
+          <Box display={"flex"} gap={2} marginTop={8}>
+            <Button type="submit">Save configuration</Button>
+            <Button
+              variant={"tertiary"}
+              type="reset"
+              onClick={(e) => {
+                e.preventDefault();
 
-            deleteCredentials({}).then(() => {
-              fetchConfig();
-              reset();
-              notifySuccess("Configuration updated", "Successfully deleted Datadog settings");
-            });
-          }}
-        >
-          Delete configuration
-        </button>
-      </form>
-    </Section>
+                deleteCredentials({}).then(() => {
+                  fetchConfig();
+                  reset();
+                  notifySuccess("Configuration updated", "Successfully deleted Datadog settings");
+                });
+              }}
+            >
+              <Text color={"textCriticalDefault"}>Delete configuration</Text>
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
