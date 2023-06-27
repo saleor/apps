@@ -21,7 +21,9 @@ const NoChannelConfigured = () => {
       justifyContent={"center"}
     >
       <Text variant="body">No channels configured yet</Text>
-      <Button onClick={redirectToTaxes}>Configure channels</Button>
+      <Button data-testid="configure-channel-button" onClick={redirectToTaxes}>
+        Configure channels
+      </Button>
     </Box>
   );
 };

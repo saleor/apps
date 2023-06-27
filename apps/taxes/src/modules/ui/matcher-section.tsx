@@ -31,6 +31,7 @@ const MatcherTable = () => {
               <Table.TD>
                 <Box display="flex" justifyContent={"flex-end"}>
                   <Button
+                    data-testid="avatax-matcher-configure-button"
                     onClick={() => router.push("/providers/avatax/matcher")}
                     variant="tertiary"
                   >
@@ -48,6 +49,7 @@ const MatcherTable = () => {
               <Table.TD>
                 <Box display="flex" justifyContent={"flex-end"}>
                   <Button
+                    data-testid="taxjar-matcher-configure-button"
                     onClick={() => router.push("/providers/taxjar/matcher")}
                     variant="tertiary"
                   >

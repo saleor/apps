@@ -48,7 +48,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
         <ProviderLabel name="avatax" />
       </Box>
 
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <form onSubmit={handleSubmit(submitHandler)} data-testid="avatax-configuration-form">
         <Input
           control={control}
           name="name"
@@ -213,7 +213,12 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
           {props.leftButton}
 
-          <Button disabled={props.isLoading} type="submit" variant="primary">
+          <Button
+            disabled={props.isLoading}
+            type="submit"
+            variant="primary"
+            data-testid="avatax-configuration-save-button"
+          >
             {props.isLoading ? "Saving..." : "Save"}
           </Button>
         </Box>

@@ -83,7 +83,12 @@ const ProviderCard = ({
       </Box>
       <Box display={"flex"} justifyContent={"flex-end"} marginTop={12}>
         {!isComingSoon && (
-          <Button onClick={() => router.push(`/providers/${provider}`)}>Choose</Button>
+          <Button
+            data-testid="coming-soon-choose-button"
+            onClick={() => router.push(`/providers/${provider}`)}
+          >
+            Choose
+          </Button>
         )}
       </Box>
     </AppCard>
