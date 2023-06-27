@@ -59,6 +59,7 @@ export const CategoryMappingForm = ({
           render={({ field: { value, onChange } }) => {
             return (
               <select
+                data-testid={"google-category-select"}
                 style={{ width: "100%" }}
                 value={value}
                 onChange={(event) => {
@@ -75,7 +76,12 @@ export const CategoryMappingForm = ({
             );
           }}
         />
-        <Button type="submit" variant="primary" disabled={isLoading || !formState.isDirty}>
+        <Button
+          data-testid={"google-category-submit"}
+          type="submit"
+          variant="primary"
+          disabled={isLoading || !formState.isDirty}
+        >
           Save
         </Button>
       </Box>
