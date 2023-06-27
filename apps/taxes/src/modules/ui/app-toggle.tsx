@@ -22,7 +22,7 @@ export const AppToggle = <TFieldValues extends FieldValues = FieldValues>({
     <Box display={"flex"} flexDirection={"column"} gap={4}>
       {/* without type="button", radix toggle value change triggers form submission */}
       <Toggle type="button" {...p}>
-        <Text marginLeft={4}>{label}</Text>
+        <Text marginLeft={2}>{label}</Text>
       </Toggle>
       {helperText}
     </Box>
