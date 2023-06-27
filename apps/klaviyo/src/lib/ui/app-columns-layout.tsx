@@ -8,7 +8,8 @@ export function AppColumnsLayout({ children }: PropsWithChildren<{}>) {
       __gridTemplateColumns={"280px auto 280px"}
       gap={4}
       __maxWidth={"1180px"}
-      __margin={"0 auto"}
+      marginX={"auto"}
+      marginY={0}
     >
       {children}
     </Box>
