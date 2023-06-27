@@ -8,6 +8,8 @@ import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayou
 import { useDashboardNotification } from "@saleor/apps-shared";
 
 import { Input, Text, Box, Button } from "@saleor/macaw-ui/next";
+
+import { TextLink } from "@saleor/apps-ui";
 import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 
 interface ConfigurationField {
@@ -116,39 +118,27 @@ function Instructions() {
 
   return (
     <>
-      <Text variant={"bodyStrong"}>How to configure</Text>
-      <ul>
+      <Text variant={"heading"}>How to configure</Text>
+      <Box display={"flex"} gap={2} as={"ul"} flexDirection={"column"}>
         <li>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              openExternalUrl(slackUrl.href);
-            }}
-            href={slackUrl.href}
-          >
-            <Text>Install Slack application</Text>
-          </a>
+          <TextLink href={slackUrl.href}>1. Install Slack application</TextLink>
         </li>
         <li>
           <Text>
-            Copy incoming Webhook URL from Slack app configuration and paste it below into
-            `WEBHOOK_URL` field
+            2. Copy incoming Webhook URL from Slack app configuration and paste it below into{" "}
+            <Text variant={"bodyStrong"}>WEBHOOK_URL</Text> field
           </Text>
         </li>
-        <li>Save configuration</li>
-      </ul>
-      <Text variant={"bodyStrong"}>Useful links</Text>
+        <li>
+          <Text>3. Save configuration</Text>
+        </li>
+      </Box>
+      <Text variant={"heading"}>Useful links</Text>
       <ul>
         <li>
-          <a
-            onClick={(e) => {
-              e.preventDefault();
-              openExternalUrl("https://api.slack.com/messaging/webhooks");
-            }}
-            href="https://api.slack.com/messaging/webhooks"
-          >
-            <Text>Read about Slack apps that use incoming webhooks</Text>
-          </a>
+          <TextLink newTab href={"https://api.slack.com/messaging/webhooks"}>
+            Read about Slack apps that use incoming webhooks
+          </TextLink>
         </li>
       </ul>
     </>
@@ -164,20 +154,20 @@ const ConfigurationWithAuth = withAuthorization({
 
 ConfigurationWithAuth.getLayout = (page: ReactElement) => (
   <AppColumnsLayout>
-    <div />
-    <Box>
+    <Box marginBottom={4}>
+      <Instructions />
+    </Box>
+    <Box
+      borderColor={"neutralHighlight"}
+      borderStyle={"solid"}
+      borderWidth={1}
+      padding={4}
+      borderRadius={4}
+    >
       <Text as={"h2"} marginBottom={4} variant={"heading"}>
         Configuration
       </Text>
       <Box>{page}</Box>
-    </Box>
-    <Box marginBottom={4}>
-      <Text as={"h2"} marginBottom={4} variant={"heading"}>
-        Instructions
-      </Text>
-      <Box>
-        <Instructions />
-      </Box>
     </Box>
   </AppColumnsLayout>
 );

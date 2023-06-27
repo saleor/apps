@@ -1273,9 +1273,15 @@ importers:
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@saleor/apps-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.95
         version: 0.8.0-pre.95(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
       '@sentry/nextjs':
         specifier: 7.55.2
         version: 7.55.2(next@13.3.0)(react@18.2.0)
