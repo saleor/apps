@@ -35,6 +35,19 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
 );
 
 export const avataxConnectionRouter = router({
+  verifyConnections: protectedWithConfigurationService.query(async ({ ctx }) => {
+    const logger = createLogger({
+      name: "avataxConnectionRouter.verifyConnections",
+    });
+
+    logger.debug("Route verifyConnections called");
+
+    await ctx.connectionService.verifyConnections();
+
+    logger.info("Avatax connections were successfully verified");
+
+    return { ok: true };
+  }),
   getById: protectedWithConfigurationService.input(getInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       name: "avataxConnectionRouter.get",
