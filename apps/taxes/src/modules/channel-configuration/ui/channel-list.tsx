@@ -45,7 +45,7 @@ export const ChannelList = () => {
   const isEmpty = isFetched && !isAnyChannelConfigured;
 
   return (
-    <AppCard __minHeight={"320px"} height="100%">
+    <AppCard __minHeight={"320px"} height="100%" data-testid="channel-list">
       {isFetching ? (
         <Skeleton />
       ) : (

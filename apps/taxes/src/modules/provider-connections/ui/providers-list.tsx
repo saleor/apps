@@ -42,7 +42,7 @@ export const ProvidersList = () => {
   const isNoResult = isFetched && !isProvider;
 
   return (
-    <AppCard __minHeight={"320px"} height="100%">
+    <AppCard __minHeight={"320px"} height="100%" data-testid="providers-list">
       {isFetching ? (
         <Skeleton />
       ) : (

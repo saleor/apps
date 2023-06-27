@@ -15,7 +15,7 @@ const MatcherTable = () => {
   const router = useRouter();
 
   return (
-    <AppCard __minHeight={"320px"} height="100%">
+    <AppCard __minHeight={"320px"} height="100%" data-testid="matcher-table">
       <Table.Container>
         <Table.THead>
           <Table.TR>
@@ -68,6 +68,7 @@ const MatcherTable = () => {
 const Intro = () => {
   return (
     <Section.Description
+      data-testid="matcher-intro"
       title="Tax code matcher"
       description={
         <>

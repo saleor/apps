@@ -25,7 +25,10 @@ const Description = () => {
           </Text>
           <Text as="p" marginBottom={4}>
             If you haven&apos;t created any tax classes yet, you can do it in the{" "}
-            <AppDashboardLink href="/taxes/tax-classes">
+            <AppDashboardLink
+              data-testid="avatax-matcher-tax-classes-text-link"
+              href="/taxes/tax-classes"
+            >
               Configuration → Taxes → Tax classes
             </AppDashboardLink>{" "}
             view.
