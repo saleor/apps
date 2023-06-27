@@ -1,13 +1,14 @@
-import { Section } from "./sections";
-import { Typography } from "@material-ui/core";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import Link from "next/link";
 
 export const NoProvidersConfigured = () => (
-  <Section>
-    <Typography paragraph variant="h3">
+  <Box display={"flex"} gap={4} flexDirection={"column"}>
+    <Text as={"h1"} variant="heading">
       No providers configured
-    </Typography>
-    <Typography paragraph>
-      Chose one of providers on the left and configure it to use the app
-    </Typography>
-  </Section>
+    </Text>
+    <Text as={"p"}>You need to configure Datadog to enable the app</Text>
+    <Link href={"/configuration/datadog"}>
+      <Button>Configure Datadog</Button>
+    </Link>
+  </Box>
 );
