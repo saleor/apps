@@ -16,7 +16,7 @@ export const CategoryMapping = () => {
   }
 
   return (
-    <Box data-testid="categories-mapping-container">
+    <Box>
       {categories!.map((category) => (
         <CategoryMappingForm category={category} key={category.id} marginBottom={5} />
       ))}
