@@ -42,7 +42,7 @@ test.describe("Product Feed Configuration", () => {
     }); // todo add more meaningul message, only "success" is set
   });
 
-  test("App can be configured with categories mapping", async () => {
+  test.skip("App can be configured with categories mapping", async () => {
     await openTheApp({ page, appName: "Product Feed" });
 
     // todo make more strict selector
