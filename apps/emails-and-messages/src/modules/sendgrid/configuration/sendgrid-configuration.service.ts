@@ -107,30 +107,35 @@ export class SendgridConfigurationService {
     return this.configurationData;
   }
 
+  private containActiveGiftCardEvent(config: SendgridConfig) {
+    for (const configuration of config.configurations) {
+      const giftCardSentEvent = configuration.events.find(
+        (event) => event.eventType === "GIFT_CARD_SENT"
+      );
+
+      if (giftCardSentEvent?.active) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Saves configuration to Saleor API and cache it
   async setConfigurationRoot(config: SendgridConfig) {
     logger.debug("Validate configuration before sending it to the Saleor API");
-    const flags = await this.featureFlagService.getFeatureFlags();
+    const availableFeatures = await this.featureFlagService.getFeatureFlags();
 
-    if (!flags.giftCardSentEvent) {
-      for (const configuration of config.configurations) {
-        for (const event of configuration.events) {
-          if (event.eventType === "GIFT_CARD_SENT" && event.active) {
-            logger.error(
-              { configurationId: configuration.id, event: event.eventType },
-              "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
-            );
-            throw new SendgridConfigurationServiceError(
-              "Gift card sent event is not supported for this Saleor version",
-              "WRONG_SALEOR_VERSION"
-            );
-          }
-        }
-      }
+    if (!availableFeatures.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
+      logger.error(
+        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
+      );
+      throw new SendgridConfigurationServiceError(
+        "Gift card sent event is not supported for this Saleor version",
+        "WRONG_SALEOR_VERSION"
+      );
     }
 
     logger.debug("Set configuration root");
-
     this.configurationData = config;
     await this.pushConfiguration();
   }
