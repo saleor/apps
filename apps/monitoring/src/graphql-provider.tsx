@@ -8,6 +8,10 @@ export function GraphQLProvider(props: PropsWithChildren<{}>) {
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
   const token = appBridgeState?.token!;
 
+  if (!appBridgeState?.token) {
+    return <>{props.children}</>;
+  }
+
   const client = createGraphQLClient({
     saleorApiUrl,
     token,

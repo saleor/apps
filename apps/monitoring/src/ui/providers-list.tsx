@@ -7,7 +7,7 @@ import { Section } from "./sections";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useConfigQuery } from "../../generated/graphql";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text, Box } from "@saleor/macaw-ui/next";
 
 type Props = {
   activeProvider: "datadog" | string | null;
@@ -21,41 +21,42 @@ export const IntegrationsList = ({ activeProvider }: Props) => {
   const isDatadogError = queryData.data?.integrations.datadog?.error;
 
   return (
-    <Section>
-      <ul>
-        <li
-          onClick={() => {
-            router.push("/configuration/datadog");
-          }}
-          /*
-           * className={clsx(styles.item, {
-           *   [styles.selected]: activeProvider === "datadog",
-           * })}
-           */
+    <Box as={"ul"} display={"grid"} gap={4} gridAutoFlow={"row"}>
+      <Box
+        as={"li"}
+        cursor={"pointer"}
+        onClick={() => {
+          router.push("/configuration/datadog");
+        }}
+      >
+        <Box
+          borderColor={activeProvider === "datadog" ? "brandHighlight" : "neutralHighlight"}
+          borderWidth={1}
+          borderStyle={"solid"}
+          padding={2}
+          borderRadius={4}
         >
-          <div>
-            <Image alt="Datadog" width={100} src={DatadogLogo} />
-          </div>
-          {isDatadogConfigured && !isDatadogError && <div>icon</div>}
-          {isDatadogError && <div>icon</div>}
-        </li>
+          <Image alt="Datadog" width={100} src={DatadogLogo} />
+        </Box>
+        {isDatadogConfigured && !isDatadogError && <div>icon</div>}
+        {isDatadogError && <div>icon</div>}
+      </Box>
 
-        <li>
-          <div>
-            <Text>Coming Soon</Text>
-          </div>
-        </li>
-        <li>
-          <div>
-            <Image alt="New Relic" width={100} src={NewRelicLogo} />
-          </div>
-        </li>
-        <li>
-          <div>
-            <Image alt="Logz.io" width={100} src={LogzLogo} />
-          </div>
-        </li>
-      </ul>
-    </Section>
+      <Box as={"li"} marginTop={8}>
+        <div>
+          <Text color={"textNeutralSubdued"}>Coming Soon</Text>
+        </div>
+      </Box>
+      <Box as={"li"}>
+        <div>
+          <Image alt="New Relic" width={100} src={NewRelicLogo} />
+        </div>
+      </Box>
+      <Box as={"li"}>
+        <div>
+          <Image alt="Logz.io" width={100} src={LogzLogo} />
+        </div>
+      </Box>
+    </Box>
   );
 };

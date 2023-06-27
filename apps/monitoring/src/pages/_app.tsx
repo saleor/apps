@@ -21,7 +21,7 @@ function NextApp({ Component, pageProps }: AppProps) {
           <ThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
-            <Box padding={10}>
+            <Box padding={4}>
               <Component {...pageProps} />
             </Box>
           </ThemeProvider>
