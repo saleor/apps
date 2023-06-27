@@ -11,7 +11,7 @@ export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragme
   const breadcrumbs = constructCategoryBreadcrumbs(props.category);
 
   return (
-    <Box display={"flex"} marginBottom={1}>
+    <Box display={"flex"} marginBottom={1} data-testid={"category-breadcrumb"}>
       {breadcrumbs.map((category, index) => {
         const isLast = index === breadcrumbs.length - 1;
 
