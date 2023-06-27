@@ -40,6 +40,13 @@ test.describe("Product Feed Configuration", () => {
     await expect(page.getByText("Success")).toBeVisible({
       timeout: 10000,
     }); // todo add more meaningul message, only "success" is set
+  });
+
+  test("App can be configured with categories mapping", async () => {
+    await openTheApp({ page, appName: "Product Feed" });
+
+    // todo make more strict selector
+    const iframeLocator = page.frameLocator("iframe");
 
     await navigateToCategoryMapping(iframeLocator);
 
@@ -48,7 +55,5 @@ test.describe("Product Feed Configuration", () => {
     await expect(page.getByText("Success")).toBeVisible({ timeout: 10000 }); // todo add more meaningul message, only "success" is set
 
     await iframeLocator.getByText("Configuration").click();
-
-    // todo search for mapped category existence, add testid
   });
 });
