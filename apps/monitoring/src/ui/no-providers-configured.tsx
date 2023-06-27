@@ -1,4 +1,4 @@
-import { Text, Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import Link from "next/link";
 
 export const NoProvidersConfigured = () => (

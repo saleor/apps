@@ -3,7 +3,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect } from "react";
 import { isInIframe } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
-import { Text, Box } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 /**
  * This is page publicly accessible from your app.

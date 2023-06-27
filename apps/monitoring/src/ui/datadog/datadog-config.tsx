@@ -3,25 +3,21 @@ import {
   DataDogCredentialsInput,
   DatadogSite,
   useConfigQuery,
-  Mutation,
-  useUpdateCredentialsMutation,
   useDeleteDatadogCredentialsMutation,
+  useUpdateCredentialsMutation,
 } from "../../../generated/graphql";
-import { Box, BoxProps, Text } from "@saleor/macaw-ui/next";
+import { ArrowLeftIcon, Box, Button, Text } from "@saleor/macaw-ui/next";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import DatadogLogo from "../../assets/datadog/dd_logo_h_rgb.svg";
-import { gql, useMutation } from "urql";
+import { gql } from "urql";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useRouter } from "next/router";
 
 import { API_KEYS_LINKS } from "../../datadog-urls";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Input, Select, Toggle } from "@saleor/react-hook-form-macaw";
-import { Button, ArrowLeftIcon } from "@saleor/macaw-ui/next";
-
-import Link from "next/link";
 
 gql`
   query Config {
@@ -152,11 +148,14 @@ export const DatadogConfig = () => {
 
   return (
     <Box>
-      <Link href={"/configuration"}>
-        <Button variant={"secondary"}>
-          <ArrowLeftIcon /> Back
-        </Button>
-      </Link>
+      <Button
+        onClick={() => {
+          router.push("/configuration");
+        }}
+        variant={"secondary"}
+      >
+        <ArrowLeftIcon /> Back
+      </Button>
 
       <Box marginTop={8} display={"grid"} __gridTemplateColumns={"400px auto"} gap={8}>
         <Box>
@@ -240,6 +239,7 @@ export const DatadogConfig = () => {
                   fetchConfig();
                   reset();
                   notifySuccess("Configuration updated", "Successfully deleted Datadog settings");
+                  router.push("/configuration");
                 });
               }}
             >

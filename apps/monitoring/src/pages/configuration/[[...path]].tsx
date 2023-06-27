@@ -1,13 +1,13 @@
 import { NextPage } from "next";
-import { AppColumnsLayout } from "../../ui/app-columns-layout";
 import React, { useEffect } from "react";
 import { NoProvidersConfigured } from "../../ui/no-providers-configured";
 import { useRouter } from "next/router";
 import { DatadogConfig } from "../../ui/datadog/datadog-config";
 import { DatadogSite, useConfigQuery } from "../../../generated/graphql";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { DATADOG_SITES_LINKS } from "../../datadog-urls";
-import { Text, Box } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { TextLink } from "@saleor/apps-ui";
 
 const useActiveProvider = () => {
   const router = useRouter();
@@ -23,6 +23,8 @@ const Content = () => {
 
   const datadogCredentials = configuration.data?.integrations.datadog?.credentials;
   const datadogError = configuration.data?.integrations.datadog?.error;
+
+  const { push } = useRouter();
 
   useEffect(() => {
     fetchConfiguration();
@@ -48,27 +50,24 @@ const Content = () => {
 
     return (
       <Box>
-        <Text as={"p"} variant="heading">
+        <Text as={"h1"} variant="heading" marginBottom={4}>
           App configured
         </Text>
         <Text as={"p"}>
           Visit{" "}
-          <a
-            href="https://app.datadoghq.com/"
-            onClick={(e) => {
-              e.preventDefault();
-              appBridge?.dispatch(
-                actions.Redirect({
-                  to: DATADOG_SITES_LINKS[site],
-                  newContext: true,
-                })
-              );
-            }}
-          >
+          <TextLink newTab href={DATADOG_SITES_LINKS[site] ?? "https://app.datadoghq.com/"}>
             Datadog
-          </a>{" "}
+          </TextLink>{" "}
           to access your logs
         </Text>
+        <Button
+          marginTop={4}
+          onClick={() => {
+            push("/configuration/datadog");
+          }}
+        >
+          Edit configuration
+        </Button>
       </Box>
     );
   }
@@ -76,8 +75,18 @@ const Content = () => {
   if (datadogError) {
     return (
       <Box>
-        <Text variant="heading">Configuration Error</Text>
-        <Text>{datadogError}</Text>
+        <Text variant="heading" as={"h1"}>
+          Configuration Error
+        </Text>
+        <Text color={"textCriticalDefault"}>{datadogError}</Text>
+        <Button
+          marginTop={8}
+          onClick={() => {
+            push("/configuration/datadog");
+          }}
+        >
+          Edit configuration
+        </Button>
       </Box>
     );
   }
