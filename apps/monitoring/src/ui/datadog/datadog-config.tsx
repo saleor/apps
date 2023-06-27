@@ -215,15 +215,13 @@ export const DatadogConfig = () => {
             control={control}
             name={"site"}
           />
-          <Box>
-            <Input
-              label="API Key"
-              defaultValue=""
-              helperText={<ApiKeyHelperText site={activeSite} />}
-              control={control}
-              name={"apiKey"}
-            />
-          </Box>
+          <Input
+            label="API Key"
+            defaultValue=""
+            helperText={<ApiKeyHelperText site={activeSite} />}
+            control={control}
+            name={"apiKey"}
+          />
           {queryData.data?.integrations.datadog?.error && (
             <Text color={"textCriticalDefault"}>{queryData.data?.integrations.datadog?.error}</Text>
           )}

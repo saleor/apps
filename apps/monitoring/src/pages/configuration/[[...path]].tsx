@@ -49,8 +49,8 @@ const ConfigurationPage = () => {
     const site = configuration.data?.integrations.datadog?.credentials.site ?? DatadogSite.Us1;
 
     return (
-      <Box>
-        <Text as={"h1"} variant="heading" marginBottom={4}>
+      <Box display={"flex"} gap={4} flexDirection={"column"}>
+        <Text as={"h1"} variant="heading">
           App configured
         </Text>
         <Text as={"p"}>
@@ -61,7 +61,6 @@ const ConfigurationPage = () => {
           to access your logs
         </Text>
         <Button
-          marginTop={4}
           onClick={() => {
             push("/configuration/datadog");
           }}
