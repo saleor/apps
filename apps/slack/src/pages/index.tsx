@@ -29,7 +29,7 @@ const IndexPage: NextPage = () => {
       <Text as={"p"}>This is Saleor App that allows invoices generation</Text>
       <Text as={"p"}>
         Install app in your Saleor instance and open in with Dashboard{" "}
-        <a href={"https://github.com/saleor/apps"}>or check it on Github</a>
+        <a href={"https://github.com/saleor/apps"}>or check it on GitHub</a>
       </Text>
     </Box>
   );
