@@ -1,5 +1,15 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.0
+
+### Minor Changes
+
+- f96563f: Added a binding for the macaw-ui's Toggle component.
+
+### Patch Changes
+
+- cb6ee29: Updated dependencies
+
 ## 0.1.2
 
 ### Patch Changes

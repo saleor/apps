@@ -1,5 +1,32 @@
 # saleor-app-taxes
 
+## 1.9.0
+
+### Minor Changes
+
+- f96563f: Redesigned the app's UI with the new version of macaw-ui. Introduced breaking changes in the structure of providers configuration and channels configuration. Added migrations that convert the obsolete configurations to the new format. Added address validation for tax providers.
+- 1dead1e: Included dedicated logo and attached it to App's manifest. From Saleor 3.15 the logo will be visible in the Dashboard during and after installation.
+- 09e0799: Added fetching tax codes from tax providers and storing the matched combinations of the provider tax codes/Saleor tax classes. The mapped tax codes are then used in the tax calculation process.
+
+### Patch Changes
+
+- c4be200: The update provider configuration views no longer return "invalid credentials" and "invalid address" errors in inappropriate cases. The latter required temporarily disabling the TaxJar address validation, as it currently doesn't work.
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- a1ad70e: Updated configuration and dependencies of GraphQL client - urql.
+  All applications use now unified config for creating the client. Also unused related packages has been removed.
+- ec68ed5: Updated Sentry package and config. Set Sentry release to match package.json version. Now Sentry will use semver version instead a commit
+- cb6ee29: Updated dependencies
+- e239fbb: Fixed the issue with updating a provider. When updating one of the credentials, the user no longer sees "invalid credentials" error.
+- Updated dependencies [f96563f]
+- Updated dependencies [f96563f]
+- Updated dependencies [860bac4]
+- Updated dependencies [a1ad70e]
+- Updated dependencies [cb6ee29]
+- Updated dependencies [a1ad70e]
+  - @saleor/react-hook-form-macaw@0.2.0
+  - @saleor/apps-ui@1.1.2
+  - @saleor/apps-shared@1.7.2
+
 ## 1.8.2
 
 ### Patch Changes
