@@ -27,12 +27,14 @@ export class TaxChannelsV1toV2MigrationManager {
       this.saleorApiUrl
     );
 
-    const currentConfig = await taxChannelsManagerV2.getConfig();
-
-    if (currentConfig) {
-      this.logger.info("Migration is not necessary, we have current config.");
-      return currentConfig;
-    }
+    /*
+     * Commenting this out, because we want to overwrite the previous migrations.
+     * const currentConfig = await taxChannelsManagerV2.getConfig();
+     * if (currentConfig) {
+     *   this.logger.info("Migration is not necessary, we have current config.");
+     *   return currentConfig;
+     * }
+     */
 
     const previousChannelConfig = await taxChannelsManagerV1.getConfig();
 
