@@ -9,6 +9,7 @@ import { MessageEventTypes } from "./message-event-types";
 import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 
 interface SendEventMessagesArgs {
   recipientEmail: string;
@@ -33,11 +34,16 @@ export const sendEventMessages = async ({
 
   logger.debug("Function called");
 
+  const featureFlagService = new FeatureFlagService({
+    client,
+  });
+
   const smtpConfigurationService = new SmtpConfigurationService({
     metadataManager: new SmtpPrivateMetadataManager(
       createSettingsManager(client, authData.appId),
       authData.saleorApiUrl
     ),
+    featureFlagService,
   });
 
   const availableSmtpConfigurations = await smtpConfigurationService.getConfigurations({
@@ -66,6 +72,7 @@ export const sendEventMessages = async ({
       createSettingsManager(client, authData.appId),
       authData.saleorApiUrl
     ),
+    featureFlagService,
   });
 
   const availableSendgridConfigurations = await sendgridConfigurationService.getConfigurations({

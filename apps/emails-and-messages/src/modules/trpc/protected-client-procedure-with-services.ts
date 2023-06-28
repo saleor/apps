@@ -7,6 +7,7 @@ import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-
 import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
 import { protectedClientProcedure } from "./protected-client-procedure";
 import { WebhookManagementService } from "../webhook-management/webhook-management-service";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 
 const logger = createLogger({ name: "protectedWithConfigurationServices middleware" });
 
@@ -19,11 +20,21 @@ const logger = createLogger({ name: "protectedWithConfigurationServices middlewa
  */
 export const protectedWithConfigurationServices = protectedClientProcedure.use(
   async ({ next, ctx, meta }) => {
+    /*
+     * TODO: When App Bridge will add Saleor Version do the context,
+     * extract it from there and pass it to the service constructor.
+     * It will reduce additional call to the API.
+     */
+    const featureFlagService = new FeatureFlagService({
+      client: ctx.apiClient,
+    });
+
     const smtpConfigurationService = new SmtpConfigurationService({
       metadataManager: new SmtpPrivateMetadataManager(
         createSettingsManager(ctx.apiClient, ctx.appId!),
         ctx.saleorApiUrl
       ),
+      featureFlagService,
     });
 
     const sendgridConfigurationService = new SendgridConfigurationService({
@@ -31,19 +42,25 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
         createSettingsManager(ctx.apiClient, ctx.appId!),
         ctx.saleorApiUrl
       ),
+      featureFlagService,
     });
 
     const result = await next({
       ctx: {
         smtpConfigurationService,
         sendgridConfigurationService,
+        featureFlagService,
       },
     });
 
     if (meta?.updateWebhooks) {
       logger.debug("Updating webhooks");
 
-      const webhookManagementService = new WebhookManagementService(ctx.baseUrl, ctx.apiClient);
+      const webhookManagementService = new WebhookManagementService({
+        appBaseUrl: ctx.baseUrl,
+        client: ctx.apiClient,
+        featureFlagService: featureFlagService,
+      });
 
       await syncWebhookStatus({
         sendgridConfigurationService,

@@ -32,7 +32,7 @@ export function setBackendErrors<T extends FieldValues = FieldValues>({
 
   notifyError(
     "Could not save the configuration",
-    isFieldErrorSet ? "Submitted form contain errors" : "Error saving configuration",
+    isFieldErrorSet ? "Submitted form contain errors" : error.message,
     formErrorMessage
   );
 }

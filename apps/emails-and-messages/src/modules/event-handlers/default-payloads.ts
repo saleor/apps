@@ -7,6 +7,7 @@ import {
   OrderFulfilledWebhookPayloadFragment,
   OrderFullyPaidWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
+  GiftCardSentWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { NotifyEventPayload } from "../../pages/api/webhooks/notify";
 
@@ -247,6 +248,33 @@ const accountDeletePayload: NotifyEventPayload = {
   logo_url: "",
 };
 
+// TODO: UPDATE WITH BETTER DATA
+const giftCardSentPayload: GiftCardSentWebhookPayloadFragment = {
+  channel: "default_channel",
+  sentToEmail: "user@example.com",
+  giftCard: {
+    code: "XXXX",
+    tags: [],
+    created: "2021-03-16T13:12:00+00:00",
+    currentBalance: {
+      amount: 100,
+      currency: "USD",
+    },
+    id: "R2lmdENhcmQ6MjI=",
+    initialBalance: {
+      amount: 100,
+      currency: "USD",
+    },
+    isActive: true,
+    lastUsedOn: null,
+    displayCode: "XXXX-XXXX-XXXX-XXXX",
+    last4CodeChars: "XXXX",
+    expiryDate: "2021-03-16T13:12:00+00:00",
+    usedByEmail: null,
+    usedBy: null,
+  },
+};
+
 export const examplePayloads: Record<MessageEventTypes, any> = {
   ORDER_CREATED: orderCreatedPayload,
   ORDER_CONFIRMED: orderConfirmedPayload,
@@ -254,6 +282,7 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ORDER_FULFILLED: orderFulfilledPayload,
   ORDER_FULLY_PAID: orderFullyPaidPayload,
   INVOICE_SENT: invoiceSentPayload,
+  GIFT_CARD_SENT: giftCardSentPayload,
   ACCOUNT_CONFIRMATION: accountConfirmationPayload,
   ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
   ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,

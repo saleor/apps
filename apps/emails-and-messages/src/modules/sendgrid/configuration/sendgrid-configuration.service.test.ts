@@ -3,6 +3,8 @@ import { SendgridConfigurationService } from "./sendgrid-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { SendgridConfig } from "./sendgrid-config-schema";
+import { Client } from "urql";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
@@ -77,6 +79,11 @@ const validConfig: SendgridConfig = {
         {
           active: false,
           eventType: "ACCOUNT_DELETE",
+          template: undefined,
+        },
+        {
+          active: true,
+          eventType: "GIFT_CARD_SENT",
           template: undefined,
         },
       ],
@@ -170,6 +177,10 @@ describe("SendgridConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
       });
 
@@ -187,6 +198,10 @@ describe("SendgridConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(validConfig);
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
       });
 
@@ -209,6 +224,10 @@ describe("SendgridConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(emptyConfigRoot);
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -230,6 +249,10 @@ describe("SendgridConfigurationService", function () {
 
       // Service initialized with empty configuration
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -244,6 +267,28 @@ describe("SendgridConfigurationService", function () {
       expect(await service.getConfigurationRoot());
       expect(getConfigMock).toBeCalledTimes(0);
     });
+
+    it("Operation should be rejected, when attempting to save event not available according to feature flag", async () => {
+      const configurator = new SendgridPrivateMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl
+      );
+
+      // Service initialized with empty configuration
+      const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.12.0", // Feature flag is available since 3.13.0
+        }),
+        metadataManager: configurator,
+        initialData: emptyConfigRoot,
+      });
+
+      // Set configuration
+      await expect(async () => await service.setConfigurationRoot(validConfig)).rejects.toThrow(
+        "Gift card sent event is not supported for this Saleor version"
+      );
+    });
   });
 
   describe("getConfiguration", () => {
@@ -254,6 +299,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -270,6 +319,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -288,6 +341,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -302,6 +359,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -323,6 +384,10 @@ describe("SendgridConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -351,6 +416,10 @@ describe("SendgridConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -381,6 +450,10 @@ describe("SendgridConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -404,6 +477,10 @@ describe("SendgridConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -433,6 +510,10 @@ describe("SendgridConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -456,6 +537,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -475,6 +560,10 @@ describe("SendgridConfigurationService", function () {
       );
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -506,6 +595,10 @@ describe("SendgridConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -538,6 +631,10 @@ describe("SendgridConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SendgridConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
