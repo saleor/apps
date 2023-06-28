@@ -5,7 +5,10 @@ import { appUrls, routing } from "../setup/routing";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { assertAppAvailable } from "./assertions/assert-app-available";
 
-// target every app including staging. This should be config from the outside
+/**
+ * Hardcoded list of every app deployed on staging and production.
+ * TODO: Eventually this should be the entry point and the list should be provided via env
+ */
 const apps: string[] = [
   "taxes",
   "crm",

@@ -42,6 +42,10 @@ test.describe("Product Feed Configuration", () => {
     }); // todo add more meaningul message, only "success" is set
   });
 
+  /**
+   * Test fails. Probably because of a very big list of Google categories that are fetched.
+   * TODO: Fix this in the app
+   */
   test.skip("App can be configured with categories mapping", async () => {
     await openTheApp({ page, appName: "Product Feed" });
 

@@ -5,7 +5,7 @@ export const appUrls = (appUrl: string) => ({
   register: new URL("/api/register", appUrl).href,
 });
 
-export const saleorUrls = (dashboardUrl: string) => ({
+const saleorUrls = (dashboardUrl: string) => ({
   dashboard: {
     homepage: new URL("/dashboard", dashboardUrl).href,
     apps: new URL("/dashboard/apps", dashboardUrl).href,

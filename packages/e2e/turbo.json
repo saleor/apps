@@ -2,13 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
   "pipeline": {
-    "build": {
-      "env": [
-        "CI",
-        "INSTANCE_URL",
-        "DASHBOARD_USER_EMAIL",
-        "DASHBOARD_USER_PASSWORD"
-      ]
-    }
+    "e2e": {},
+    "e2e:ui": {}
   }
 }
