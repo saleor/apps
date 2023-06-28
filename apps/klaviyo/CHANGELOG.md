@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.7.1
+
+### Patch Changes
+
+- cbd763b: Prevent Server-side rendering in Klaviyo app to avoid hydration errors
+
 ## 1.7.0
 
 ### Minor Changes
