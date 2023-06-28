@@ -1,5 +1,15 @@
 # @saleor/apps-shared
 
+## 1.7.2
+
+### Patch Changes
+
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- a1ad70e: Updated configuration and dependencies of GraphQL client - urql.
+  All applications use now unified config for creating the client. Also unused related packages has been removed.
+- cb6ee29: Updated dependencies
+- a1ad70e: Added `createGraphQLClient` function to shared package. Can be used to create urql client instance with optional authorization.
+
 ## 1.7.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.2
+
+### Patch Changes
+
+- cb6ee29: Updated dependencies
+
 ## 0.4.1
 
 ### Patch Changes

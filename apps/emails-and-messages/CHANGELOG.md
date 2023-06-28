@@ -1,5 +1,35 @@
 # saleor-app-emails-and-messages
 
+## 1.8.0
+
+### Minor Changes
+
+- 1dead1e: Included dedicated logo and attached it to App's manifest. From Saleor 3.15 the logo will be visible in the Dashboard during and after installation.
+- 82dfc3f: Webhooks are no longer created during the app registration. Instead, the app will subscribe events based on it's configuration, after change has been detected.
+
+  This change does not have negative impact on existing app installations - webhooks will be removed during next change of the provider configuration.
+
+### Patch Changes
+
+- 59ff617: Fixed "Not enough permissions" error during configuration management.
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- a1ad70e: Updated configuration and dependencies of GraphQL client - urql.
+  All applications use now unified config for creating the client. Also unused related packages has been removed.
+- 00e49ba: Improved descriptions in the events section and API key inputs.
+- 6250095: Added support for new event - Gift Card Sent. The event is available for Saleor version 3.13 and above.
+- ec68ed5: Updated Sentry package and config. Set Sentry release to match package.json version. Now Sentry will use semver version instead a commit
+- cb6ee29: Updated dependencies
+- 8287075: Events section UI has been updated. All events are displayed now as single table.
+- Updated dependencies [f96563f]
+- Updated dependencies [f96563f]
+- Updated dependencies [860bac4]
+- Updated dependencies [a1ad70e]
+- Updated dependencies [cb6ee29]
+- Updated dependencies [a1ad70e]
+  - @saleor/react-hook-form-macaw@0.2.0
+  - @saleor/apps-ui@1.1.2
+  - @saleor/apps-shared@1.7.2
+
 ## 1.7.1
 
 ### Patch Changes

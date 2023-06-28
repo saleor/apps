@@ -1,5 +1,13 @@
 # @saleor/apps-ui
 
+## 1.1.2
+
+### Patch Changes
+
+- f96563f: Fixed a missing text-decoration on a breadcrumb link.
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- cb6ee29: Updated dependencies
+
 ## 1.1.1
 
 ### Patch Changes
