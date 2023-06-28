@@ -9,9 +9,9 @@ import { webhookProductVariantDeleted } from "./webhooks/product_variant_deleted
 import { webhookProductVariantUpdated } from "./webhooks/product_variant_updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
-    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? context.appBaseUrl;
-    const apiBaseURL = process.env.APP_API_BASE_URL ?? context.appBaseUrl;
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
       name: "Product Feed",

@@ -18,7 +18,9 @@
         "SENTRY_DSN",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_ENVIRONMENT",
-        "NEXT_PUBLIC_SENTRY_DSN"
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "APP_IFRAME_BASE_URL",
+        "APP_API_BASE_URL"
       ]
     }
   }

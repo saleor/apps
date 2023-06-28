@@ -6,9 +6,9 @@ import { invoiceRequestedWebhook } from "./webhooks/invoice-requested";
 import { REQUIRED_SALEOR_VERSION } from "../../saleor-app";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
-    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? context.appBaseUrl;
-    const apiBaseURL = process.env.APP_API_BASE_URL ?? context.appBaseUrl;
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
       name: "Invoices",
