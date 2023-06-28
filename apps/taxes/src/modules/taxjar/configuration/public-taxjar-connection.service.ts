@@ -35,4 +35,12 @@ export class PublicTaxJarConnectionService {
   async delete(id: string) {
     return this.connectionService.delete(id);
   }
+
+  async verifyConnections() {
+    const connections = await this.connectionService.getAll();
+
+    if (connections.length === 0) {
+      throw new Error("No TaxJar connections found");
+    }
+  }
 }

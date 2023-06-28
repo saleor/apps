@@ -17,7 +17,9 @@ const AddProvider = () => {
       justifyContent={"center"}
     >
       <Text variant="body">No providers configured yet</Text>
-      <Button onClick={() => router.push("/providers")}>Add first provider</Button>
+      <Button data-testid="no-providers-list-add-button" onClick={() => router.push("/providers")}>
+        Add first provider
+      </Button>
     </Box>
   );
 };
@@ -40,7 +42,7 @@ export const ProvidersList = () => {
   const isNoResult = isFetched && !isProvider;
 
   return (
-    <AppCard __minHeight={"320px"} height="100%">
+    <AppCard __minHeight={"320px"} height="100%" data-testid="providers-list">
       {isFetching ? (
         <Skeleton />
       ) : (
@@ -55,7 +57,12 @@ export const ProvidersList = () => {
             >
               <ProvidersTable />
               <Box display={"flex"} justifyContent={"flex-end"}>
-                <Button onClick={() => router.push("/providers")}>Add new</Button>
+                <Button
+                  data-testid="providers-list-add-button"
+                  onClick={() => router.push("/providers")}
+                >
+                  Add new
+                </Button>
               </Box>
             </Box>
           )}

@@ -5,6 +5,41 @@ import { Table } from "../../ui/table";
 import { Select } from "../../ui/_select";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { AppCard } from "../../ui/app-card";
+import { useRouter } from "next/router";
+
+const useGetTaxCodes = () => {
+  const { data: providers } = trpcClient.providersConfiguration.getAll.useQuery();
+  const { notifyError } = useDashboardNotification();
+  const router = useRouter();
+
+  /*
+   * Tax Code Matcher is only available when there is at least one connection.
+   * The reason for it is that we need any working credentials to fetch the provider tax codes.
+   */
+  const firstConnectionId = providers?.[0].id;
+
+  const result = trpcClient.taxJarTaxCodes.getAllForId.useQuery(
+    {
+      connectionId: firstConnectionId!,
+    },
+    {
+      enabled: firstConnectionId !== undefined,
+      // Retry once, because it's possible we may get a timeout for such a big request.
+      retry: 1,
+    }
+  );
+
+  React.useEffect(() => {
+    if (result.error) {
+      notifyError("Error", "Unable to fetch TaxJar tax codes.");
+      setTimeout(() => {
+        router.push("/configuration");
+      }, 1000);
+    }
+  }, [notifyError, result.error, router]);
+
+  return result;
+};
 
 const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
   const [value, setValue] = React.useState("");
@@ -32,23 +67,7 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
     },
   });
 
-  const { data: providers } = trpcClient.providersConfiguration.getAll.useQuery();
-
-  /*
-   * Tax Code Matcher is only available when there is at least one connection.
-   * The reason for it is that we need any working credentials to fetch the provider tax codes.
-   */
-  const firstConnectionId = providers?.[0].id;
-
-  const { data: taxCodes = [], isLoading: isCodesLoading } =
-    trpcClient.taxJarTaxCodes.getAllForId.useQuery(
-      {
-        connectionId: firstConnectionId!,
-      },
-      {
-        enabled: firstConnectionId !== undefined,
-      }
-    );
+  const { data: taxCodes = [], isLoading: isCodesLoading } = useGetTaxCodes();
 
   const changeValue = (taxJarTaxCode: string) => {
     setValue(taxJarTaxCode);

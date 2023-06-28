@@ -1,9 +1,12 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui/next";
 import { AvataxTaxCodeMatcherTable } from "../../../modules/avatax/ui/avatax-tax-code-matcher-table";
 import { AppColumns } from "../../../modules/ui/app-columns";
 import { AppDashboardLink } from "../../../modules/ui/app-dashboard-link";
 import { Section } from "../../../modules/ui/app-section";
 import { TextLink } from "@saleor/apps-ui";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { useRouter } from "next/router";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const Header = () => {
   return <Section.Header>Match Saleor tax classes to Avatax tax codes</Section.Header>;
@@ -25,7 +28,10 @@ const Description = () => {
           </Text>
           <Text as="p" marginBottom={4}>
             If you haven&apos;t created any tax classes yet, you can do it in the{" "}
-            <AppDashboardLink href="/taxes/tax-classes">
+            <AppDashboardLink
+              data-testid="avatax-matcher-tax-classes-text-link"
+              href="/taxes/tax-classes"
+            >
               Configuration → Taxes → Tax classes
             </AppDashboardLink>{" "}
             view.
@@ -44,6 +50,24 @@ const Description = () => {
 };
 
 const AvataxMatcher = () => {
+  const router = useRouter();
+  const { notifyError } = useDashboardNotification();
+
+  const { isLoading } = trpcClient.avataxConnection.verifyConnections.useQuery(undefined, {
+    onError: () => {
+      notifyError("Error", "You must configure Avatax first.");
+      router.push("/configuration");
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <Box>
+        <Text>Loading...</Text>
+      </Box>
+    );
+  }
+
   return (
     <AppColumns top={<Header />}>
       <Description />
@@ -52,7 +76,4 @@ const AvataxMatcher = () => {
   );
 };
 
-/*
- * todo: add redirect if no connection
- */
 export default AvataxMatcher;

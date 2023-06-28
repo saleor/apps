@@ -37,8 +37,12 @@ export const CreateTaxJarConfiguration = () => {
       isLoading={isCreateLoading}
       onSubmit={submitHandler}
       defaultValues={defaultTaxJarConfig}
-      cancelButton={
-        <Button onClick={() => router.push("/configuration")} variant="tertiary">
+      leftButton={
+        <Button
+          onClick={() => router.push("/configuration")}
+          variant="tertiary"
+          data-testid="create-taxjar-cancel-button"
+        >
           Cancel
         </Button>
       }

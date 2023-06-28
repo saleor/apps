@@ -96,8 +96,8 @@ export const EditAvataxConfiguration = () => {
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
       defaultValues={data.config}
-      cancelButton={
-        <Button onClick={deleteHandler} variant="error">
+      leftButton={
+        <Button onClick={deleteHandler} variant="error" data-testid="delete-avatax-button">
           Delete provider
         </Button>
       }

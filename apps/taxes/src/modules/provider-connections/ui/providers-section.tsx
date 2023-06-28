@@ -6,6 +6,7 @@ const Intro = () => {
   return (
     <Section.Description
       title="Tax providers"
+      data-testid="providers-intro"
       description={
         <>
           Saleor offers two ways of calculating taxes: flat or dynamic rates.
