@@ -14,12 +14,14 @@ export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge()
 
 function SaleorApp({ Component, pageProps }: AppProps) {
   return (
-    <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-      <ThemeProvider>
-        <ThemeSynchronizer />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </AppBridgeProvider>
+    <NoSSRWrapper>
+      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+        <ThemeProvider>
+          <ThemeSynchronizer />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </AppBridgeProvider>
+    </NoSSRWrapper>
   );
 }
 
