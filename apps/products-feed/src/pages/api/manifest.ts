@@ -10,19 +10,22 @@ import { webhookProductVariantUpdated } from "./webhooks/product_variant_updated
 
 export default createManifestHandler({
   async manifestFactory(context) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? context.appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? context.appBaseUrl;
+
     const manifest: AppManifest = {
       name: "Product Feed",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
-      appUrl: context.appBaseUrl,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
+      appUrl: iframeBaseUrl,
       permissions: ["MANAGE_PRODUCTS"],
       id: "saleor.app.product-feed",
       version: packageJson.version,
       webhooks: [
-        webhookProductCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantUpdated.getWebhookManifest(context.appBaseUrl),
+        webhookProductCreated.getWebhookManifest(apiBaseURL),
+        webhookProductDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductVariantCreated.getWebhookManifest(apiBaseURL),
+        webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
       ],
       extensions: [],
       author: "Saleor Commerce",
@@ -31,7 +34,7 @@ export default createManifestHandler({
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
     };
