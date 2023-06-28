@@ -32,14 +32,15 @@ export class TaxProvidersV1toV2MigrationManager {
       this.saleorApiUrl
     );
 
-    const currentTaxProvidersConfig = await taxProvidersManagerV2.getConfig();
-
-    if (currentTaxProvidersConfig) {
-      this.logger.info("Migration is not necessary, the config is up to date.");
-      return;
-    }
-
-    this.logger.info("Current config not found.");
+    /*
+     * Commenting this out, because we want to overwrite the previous migrations.
+     * const currentTaxProvidersConfig = await taxProvidersManagerV2.getConfig();
+     * if (currentTaxProvidersConfig) {
+     *   this.logger.info("Migration is not necessary, the config is up to date.");
+     *   return;
+     * }
+     * this.logger.info("Current config not found.");
+     */
 
     const previousTaxProvidersConfig = await taxProvidersManagerV1.getConfig();
     const previousChannelConfig = await taxChannelsManagerV1.getConfig();
