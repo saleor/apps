@@ -1,32 +1,20 @@
-import { Link, List, ListItem, Paper, PaperProps, TextField, Typography } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 
-import { ConfirmButton, ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
-import { AccessWarning } from "../components/AccessWarning/AccessWarning";
 import { useAppApi } from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../lib/ui/app-columns-layout";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, BoxProps, Text, Input, Button } from "@saleor/macaw-ui/next";
 
 interface ConfigurationField {
   key: string;
   value: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  confirmButton: {
-    marginLeft: "auto",
-  },
-  fieldContainer: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
-function Section(props: PaperProps) {
-  return <Paper style={{ padding: 24 }} elevation={0} {...props} />;
+function Section(props: BoxProps) {
+  return <Box padding={4} {...props} />;
 }
 
 function Instructions() {
@@ -46,22 +34,22 @@ function Instructions() {
 
   return (
     <Section>
-      <Typography paragraph variant="h3">
+      <Text as={"h3"} variant="heading">
         How to set up
-      </Typography>
-      <Typography paragraph>
-        App will send events as Klaviyo metrics each time Saleor Event occurs.
-      </Typography>
-      <Typography paragraph>
+      </Text>
+      <Text as="p">App will send events as Klaviyo metrics each time Saleor Event occurs.</Text>
+      <Text as="p">
         When first metric is sent, it should be available in Klaviyo to build on top of.
-      </Typography>
-      <Typography paragraph>
+      </Text>
+      <Text as="p">
         Metric name can be customized, PUBLIC_TOKEN must be provided to enable the app.
-      </Typography>
-      <Typography variant="h3">Useful links</Typography>
-      <List>
-        <ListItem>
-          <Link
+      </Text>
+      <Text as={"h3"} variant="heading">
+        Useful links
+      </Text>
+      <ul>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
 
@@ -70,13 +58,15 @@ function Instructions() {
             href="https://github.com/saleor/saleor-app-klaviyo"
           >
             Visit repository & readme
-          </Link>
-        </ListItem>
-      </List>
-      <Typography variant="h3">How to configure</Typography>
-      <List>
-        <ListItem>
-          <Link
+          </a>
+        </li>
+      </ul>
+      <Text as={"h3"} variant="heading">
+        How to configure
+      </Text>
+      <ul>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
 
@@ -87,10 +77,10 @@ function Instructions() {
             href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
           >
             Read about public tokens
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
+          </a>
+        </li>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
 
@@ -99,10 +89,10 @@ function Instructions() {
             href="https://www.klaviyo.com/account#api-keys-tab"
           >
             Get public token here
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link
+          </a>
+        </li>
+        <li>
+          <a
             onClick={(e) => {
               e.preventDefault();
 
@@ -113,19 +103,17 @@ function Instructions() {
             href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
           >
             Read about metrics
-          </Link>
-        </ListItem>
-      </List>
+          </a>
+        </li>
+      </ul>
     </Section>
   );
 }
 
 function Configuration() {
   const { appBridgeState } = useAppBridge();
-  const classes = useStyles();
   const { notifySuccess, notifyError } = useDashboardNotification();
   const [configuration, setConfiguration] = useState<ConfigurationField[]>();
-  const [transitionState, setTransitionState] = useState<ConfirmButtonTransitionState>("default");
 
   const { data: configurationData, error } = useAppApi({
     url: "/api/configuration",
@@ -142,7 +130,6 @@ function Configuration() {
    */
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    setTransitionState("loading");
 
     fetch("/api/configuration", {
       method: "POST",
@@ -157,12 +144,10 @@ function Configuration() {
         if (response.status !== 200) {
           throw new Error("Error saving configuration data");
         }
-        setTransitionState("success");
 
         notifySuccess("Success", "Configuration updated successfully");
       })
       .catch(async () => {
-        setTransitionState("error");
         await notifyError(
           "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission"
         );
@@ -207,41 +192,32 @@ function Configuration() {
   }
 
   if (configuration === undefined) {
-    return <Skeleton />;
+    return <p>Loading...</p>;
   }
 
   return (
     <AppColumnsLayout>
       <div />
       <Section>
-        <form onSubmit={handleSubmit}>
+        <Text variant={"heading"} marginBottom={4} as={"h2"}>
+          Klaviyo configuration
+        </Text>
+        <Box as={"form"} display={"grid"} gap={4} gridAutoFlow={"row"} onSubmit={handleSubmit}>
           {configuration!.map(({ key, value }) => (
-            <div key={key} className={classes.fieldContainer}>
-              <TextField label={key} name={key} fullWidth onChange={onChange} value={value} />
+            <div key={key}>
+              <Input label={key} name={key} onChange={onChange} value={value} />
             </div>
           ))}
           <div>
-            <ConfirmButton
-              type="submit"
-              variant="primary"
-              transitionState={transitionState}
-              labels={{
-                confirm: "Save",
-                error: "Error",
-              }}
-              className={classes.confirmButton}
-            />
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
           </div>
-        </form>
+        </Box>
       </Section>
       <Instructions />
     </AppColumnsLayout>
   );
 }
 
-export default withAuthorization({
-  notIframe: <AccessWarning cause="not_in_iframe" />,
-  unmounted: null,
-  noDashboardToken: <AccessWarning cause="missing_access_token" />,
-  dashboardTokenInvalid: <AccessWarning cause="invalid_access_token" />,
-})(Configuration);
+export default Configuration;
