@@ -30,7 +30,9 @@ export const ProvidersTable = () => {
             </Table.TD>
             <Table.TD onClick={() => itemClickHandler(item)}>
               <Box display={"flex"} justifyContent={"flex-end"}>
-                <Button variant="tertiary">Edit</Button>
+                <Button data-testid="provider-edit-button" variant="tertiary">
+                  Edit
+                </Button>
               </Box>
             </Table.TD>
           </Table.TR>

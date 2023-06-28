@@ -37,8 +37,12 @@ export const CreateAvataxConfiguration = () => {
       isLoading={isCreateLoading}
       onSubmit={submitHandler}
       defaultValues={defaultAvataxConfig}
-      cancelButton={
-        <Button onClick={() => router.push("/configuration")} variant="tertiary">
+      leftButton={
+        <Button
+          onClick={() => router.push("/configuration")}
+          variant="tertiary"
+          data-testid="create-avatax-cancel-button"
+        >
           Cancel
         </Button>
       }

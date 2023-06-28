@@ -6,6 +6,7 @@ const Intro = () => {
   return (
     <Section.Description
       title="Available channels"
+      data-testid="channel-intro"
       description={
         <>
           This table displays all the channels configured to use the tax app as the tax calculation
@@ -13,7 +14,10 @@ const Intro = () => {
           <br />
           <br />
           You can change the tax configuration method for each channel in the{" "}
-          <AppDashboardLink href="/taxes/channels">Configuration → Taxes</AppDashboardLink> view.
+          <AppDashboardLink data-testid="configuration-taxes-text-link" href="/taxes/channels">
+            Configuration → Taxes
+          </AppDashboardLink>{" "}
+          view.
         </>
       }
     />

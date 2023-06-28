@@ -95,8 +95,8 @@ export const EditTaxJarConfiguration = () => {
       isLoading={isPatchLoading}
       onSubmit={submitHandler}
       defaultValues={data.config}
-      cancelButton={
-        <Button onClick={deleteHandler} variant="error">
+      leftButton={
+        <Button onClick={deleteHandler} variant="error" data-testid="delete-taxjar-button">
           Delete provider
         </Button>
       }

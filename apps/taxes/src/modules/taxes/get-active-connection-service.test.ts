@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
-import { getActiveConnection } from "./active-connection";
+import { getActiveConnectionService } from "./get-active-connection-service";
 import { AuthData } from "@saleor/app-sdk/APL";
 
 const mockedInvalidMetadata: MetadataItem[] = [
@@ -95,22 +95,22 @@ const mockedAuthData: AuthData = {
 
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
-describe("getActiveConnection", () => {
+describe("getActiveConnectionService", () => {
   it("throws error when channel slug is missing", () => {
-    expect(() => getActiveConnection("", mockedInvalidMetadata, mockedAuthData)).toThrow(
+    expect(() => getActiveConnectionService("", mockedInvalidMetadata, mockedAuthData)).toThrow(
       "Channel slug was not found in the webhook payload"
     );
   });
 
   it("throws error when there are no metadata items", () => {
-    expect(() => getActiveConnection("default-channel", [], mockedAuthData)).toThrow(
+    expect(() => getActiveConnectionService("default-channel", [], mockedAuthData)).toThrow(
       "App encryptedMetadata was not found in the webhook payload"
     );
   });
 
   it("throws error when no providerConnectionId was found", () => {
     expect(() =>
-      getActiveConnection(
+      getActiveConnectionService(
         "default-channel",
         [
           {
@@ -129,7 +129,7 @@ describe("getActiveConnection", () => {
 
   it("throws error when no channel was found for channelSlug", () => {
     expect(() =>
-      getActiveConnection(
+      getActiveConnectionService(
         "invalid-channel",
         [
           {
@@ -147,7 +147,7 @@ describe("getActiveConnection", () => {
   });
 
   it("returns provider when data is correct", () => {
-    const result = getActiveConnection(
+    const result = getActiveConnectionService(
       "default-channel",
       [
         {

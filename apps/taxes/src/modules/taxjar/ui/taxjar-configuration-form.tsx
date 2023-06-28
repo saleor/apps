@@ -23,7 +23,7 @@ type TaxJarConfigurationFormProps = {
   onSubmit: (data: TaxJarConfig) => void;
   defaultValues: TaxJarConfig;
   isLoading: boolean;
-  cancelButton: React.ReactNode;
+  leftButton: React.ReactNode;
 };
 
 export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => {
@@ -49,7 +49,7 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
         <ProviderLabel name="taxjar" />
       </Box>
 
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <form onSubmit={handleSubmit(submitHandler)} data-testid="taxjar-configuration-form">
         <Input
           control={control}
           name="name"
@@ -139,8 +139,13 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
         </Box>
         <Divider marginY={8} />
         <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-          {props.cancelButton}
-          <Button disabled={props.isLoading} type="submit" variant="primary">
+          {props.leftButton}
+          <Button
+            disabled={props.isLoading}
+            type="submit"
+            variant="primary"
+            data-testid="taxjar-configuration-save-button"
+          >
             {props.isLoading ? "Saving..." : "Save"}
           </Button>
         </Box>
