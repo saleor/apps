@@ -1,5 +1,25 @@
 # saleor-app-crm
 
+## 1.6.0
+
+### Minor Changes
+
+- 1dead1e: Included dedicated logo and attached it to App's manifest. From Saleor 3.15 the logo will be visible in the Dashboard during and after installation.
+
+### Patch Changes
+
+- 59ff617: Fixed "Not enough permissions" error during configuration management.
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- a1ad70e: Updated configuration and dependencies of GraphQL client - urql.
+  All applications use now unified config for creating the client. Also unused related packages has been removed.
+- ec68ed5: Updated Sentry package and config. Set Sentry release to match package.json version. Now Sentry will use semver version instead a commit
+- cb6ee29: Updated dependencies
+- Updated dependencies [860bac4]
+- Updated dependencies [a1ad70e]
+- Updated dependencies [cb6ee29]
+- Updated dependencies [a1ad70e]
+  - @saleor/apps-shared@1.7.2
+
 ## 1.5.2
 
 ### Patch Changes

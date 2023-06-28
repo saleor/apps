@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-data-importer",
-  "version": "1.7.6",
+  "version": "1.8.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",

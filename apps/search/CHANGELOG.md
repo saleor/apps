@@ -1,5 +1,29 @@
 # saleor-app-search
 
+## 1.10.0
+
+### Minor Changes
+
+- 1dead1e: Included dedicated logo and attached it to App's manifest. From Saleor 3.15 the logo will be visible in the Dashboard during and after installation.
+
+### Patch Changes
+
+- 860bac4: Updated @saleor/app-sdk to 0.40.1
+- a1ad70e: Updated configuration and dependencies of GraphQL client - urql.
+  All applications use now unified config for creating the client. Also unused related packages has been removed.
+- ec68ed5: Updated Sentry package and config. Set Sentry release to match package.json version. Now Sentry will use semver version instead a commit
+- cb6ee29: Updated dependencies
+- cce3c1e: Regression - Fixed Algolia "index prefix" field to be optional, just like it was before the refcator.
+- Updated dependencies [f96563f]
+- Updated dependencies [f96563f]
+- Updated dependencies [860bac4]
+- Updated dependencies [a1ad70e]
+- Updated dependencies [cb6ee29]
+- Updated dependencies [a1ad70e]
+  - @saleor/react-hook-form-macaw@0.2.0
+  - @saleor/apps-ui@1.1.2
+  - @saleor/apps-shared@1.7.2
+
 ## 1.9.4
 
 ### Patch Changes

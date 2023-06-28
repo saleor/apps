@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-crm",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
