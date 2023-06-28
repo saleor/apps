@@ -10,11 +10,14 @@ import { webhookProductVariantDeleted } from "./webhooks/saleor/product_variant_
 import { webhookProductVariantUpdated } from "./webhooks/saleor/product_variant_updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       name: "Search",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
-      appUrl: context.appBaseUrl,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
+      appUrl: iframeBaseUrl,
       permissions: [
         /**
          * Set permissions for app if needed
@@ -31,12 +34,12 @@ export default createManifestHandler({
          * Read more
          * https://docs.saleor.io/docs/3.x/developer/api-reference/objects/webhook
          */
-        webhookProductCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductUpdated.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantUpdated.getWebhookManifest(context.appBaseUrl),
+        webhookProductCreated.getWebhookManifest(apiBaseURL),
+        webhookProductDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductUpdated.getWebhookManifest(apiBaseURL),
+        webhookProductVariantCreated.getWebhookManifest(apiBaseURL),
+        webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
       ],
       extensions: [
         /**
@@ -49,7 +52,7 @@ export default createManifestHandler({
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
     };

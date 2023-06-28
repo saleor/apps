@@ -18,7 +18,9 @@
         "SENTRY_PROJECT",
         "SENTRY_ORG",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_ENVIRONMENT"
+        "SENTRY_ENVIRONMENT",
+        "APP_IFRAME_BASE_URL",
+        "APP_API_BASE_URL"
       ]
     }
   }

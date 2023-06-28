@@ -6,11 +6,14 @@ import { customerCreatedWebhook } from "./webhooks/customer-created";
 import { customerMetadataUpdatedWebhook } from "./webhooks/customer-updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       name: "CRM",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
-      appUrl: context.appBaseUrl,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
+      appUrl: iframeBaseUrl,
       permissions: [
         "MANAGE_USERS",
         /**
@@ -21,8 +24,8 @@ export default createManifestHandler({
       id: "saleor.app.crm",
       version: packageJson.version,
       webhooks: [
-        customerCreatedWebhook.getWebhookManifest(context.appBaseUrl),
-        customerMetadataUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
+        customerCreatedWebhook.getWebhookManifest(apiBaseURL),
+        customerMetadataUpdatedWebhook.getWebhookManifest(apiBaseURL),
       ],
       extensions: [
         /**
@@ -36,7 +39,7 @@ export default createManifestHandler({
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
     };
