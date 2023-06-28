@@ -5,8 +5,8 @@ import * as operationExports from "./api-operations";
 import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";
 import { orderCancelledWebhook } from "../../pages/api/webhooks/order-cancelled";
-
-const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
+import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
 
 describe("WebhookManagementService", function () {
   const mockedClient = {} as Client;
@@ -16,10 +16,14 @@ describe("WebhookManagementService", function () {
   });
 
   it("API should be called, when getWebhooks is used", async () => {
-    const webhookManagementService = new WebhookManagementService(
-      "https://example.com",
-      mockedClient
-    );
+    const webhookManagementService = new WebhookManagementService({
+      client: mockedClient,
+      appBaseUrl: "https://example.com",
+      featureFlagService: new FeatureFlagService({
+        client: {} as Client,
+        saleorVersion: "3.14.0",
+      }),
+    });
 
     const fetchAppWebhooksMock = vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {
@@ -43,11 +47,15 @@ describe("WebhookManagementService", function () {
     expect(fetchAppWebhooksMock).toBeCalledTimes(1);
   });
 
-  it("Webhook statuses should be active, when whists in API and active", async () => {
-    const webhookManagementService = new WebhookManagementService(
-      "https://example.com",
-      mockedClient
-    );
+  it("Webhook statuses should be active, when webhook is created in the API and set to active", async () => {
+    const webhookManagementService = new WebhookManagementService({
+      client: mockedClient,
+      appBaseUrl: "https://example.com",
+      featureFlagService: new FeatureFlagService({
+        client: {} as Client,
+        saleorVersion: "3.14.0",
+      }),
+    });
 
     const fetchAppWebhooksMock = vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {
@@ -76,15 +84,20 @@ describe("WebhookManagementService", function () {
       orderCreatedWebhook: false,
       orderFulfilledWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
     expect(fetchAppWebhooksMock).toBeCalledTimes(1);
   });
 
   it("Webhook should be created using the API, when requested", async () => {
-    const webhookManagementService = new WebhookManagementService(
-      "https://example.com",
-      mockedClient
-    );
+    const webhookManagementService = new WebhookManagementService({
+      client: mockedClient,
+      appBaseUrl: "https://example.com",
+      featureFlagService: new FeatureFlagService({
+        client: {} as Client,
+        saleorVersion: "3.14.0",
+      }),
+    });
 
     const createAppWebhookMock = vi.spyOn(operationExports, "createAppWebhook").mockResolvedValue({
       id: "1",
@@ -113,11 +126,33 @@ describe("WebhookManagementService", function () {
     });
   });
 
+  it("Should throw error, when attempting to create gift card sent webhook in unsupported environment", async () => {
+    const webhookManagementService = new WebhookManagementService({
+      client: mockedClient,
+      appBaseUrl: "https://example.com",
+      featureFlagService: new FeatureFlagService({
+        client: {} as Client,
+        saleorVersion: "3.12.0", // Gift card sent webhook is supported from 3.13.0
+      }),
+    });
+
+    await expect(
+      async () =>
+        await webhookManagementService.createWebhook({
+          webhook: "giftCardSentWebhook",
+        })
+    ).rejects.toThrow("Gift card event is not supported in this environment");
+  });
+
   it("Webhook should be deleted using the API, when requested", async () => {
-    const webhookManagementService = new WebhookManagementService(
-      "https://example.com",
-      mockedClient
-    );
+    const webhookManagementService = new WebhookManagementService({
+      client: mockedClient,
+      appBaseUrl: "https://example.com",
+      featureFlagService: new FeatureFlagService({
+        client: {} as Client,
+        saleorVersion: "3.14.0",
+      }),
+    });
 
     vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {

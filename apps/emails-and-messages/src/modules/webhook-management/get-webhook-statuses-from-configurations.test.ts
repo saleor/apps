@@ -177,6 +177,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
   });
 
@@ -194,6 +195,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
   });
 
@@ -216,6 +218,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
   });
 
@@ -246,6 +249,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
   });
 
@@ -282,6 +286,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
   });
 });

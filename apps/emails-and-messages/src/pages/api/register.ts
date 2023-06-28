@@ -1,6 +1,12 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
-import { saleorApp } from "../../saleor-app";
+import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
+import {
+  SaleorVersionCompatibilityValidator,
+  createGraphQLClient,
+  createLogger,
+} from "@saleor/apps-shared";
+import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -21,4 +27,54 @@ export default createAppRegisterHandler({
       return true;
     },
   ],
+  async onRequestVerified(req, { authData: { token, saleorApiUrl }, respondWithError }) {
+    const logger = createLogger({
+      name: "onRequestVerified",
+    });
+
+    let saleorVersion: string;
+
+    try {
+      const client = createGraphQLClient({
+        saleorApiUrl: saleorApiUrl,
+        token: token,
+      });
+
+      saleorVersion = await fetchSaleorVersion(client);
+    } catch (e: unknown) {
+      const message = (e as Error)?.message ?? "Unknown error";
+
+      logger.debug(
+        { message, saleorApiUrl },
+        "Error during fetching saleor version in onRequestVerified handler"
+      );
+
+      throw respondWithError({
+        message: "Couldn't communicate with Saleor API",
+        status: 400,
+      });
+    }
+
+    if (!saleorVersion) {
+      logger.warn({ saleorApiUrl }, "No version returned from Saleor API");
+      throw respondWithError({
+        message: "Saleor version couldn't be fetched from the API",
+        status: 400,
+      });
+    }
+
+    const isVersionValid = new SaleorVersionCompatibilityValidator(REQUIRED_SALEOR_VERSION).isValid(
+      saleorVersion
+    );
+
+    if (!isVersionValid) {
+      logger.info({ saleorApiUrl }, "Rejecting installation due to incompatible Saleor version");
+      throw respondWithError({
+        message: `Saleor version (${saleorVersion}) is not compatible with this app version (${REQUIRED_SALEOR_VERSION})`,
+        status: 400,
+      });
+    }
+
+    logger.info("Saleor version validated successfully");
+  },
 });

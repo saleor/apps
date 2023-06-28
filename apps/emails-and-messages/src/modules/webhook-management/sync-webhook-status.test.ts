@@ -64,6 +64,7 @@ describe("syncWebhookStatus", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -76,6 +77,7 @@ describe("syncWebhookStatus", function () {
         orderFulfilledWebhook: false,
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
+        giftCardSentWebhook: false,
       });
 
     await syncWebhookStatus({
@@ -98,6 +100,7 @@ describe("syncWebhookStatus", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -110,6 +113,7 @@ describe("syncWebhookStatus", function () {
         orderFulfilledWebhook: false,
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
+        giftCardSentWebhook: false,
       });
 
     await syncWebhookStatus({
@@ -132,6 +136,7 @@ describe("syncWebhookStatus", function () {
       orderFulfilledWebhook: false,
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
+      giftCardSentWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -144,6 +149,7 @@ describe("syncWebhookStatus", function () {
         orderFulfilledWebhook: false,
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
+        giftCardSentWebhook: false,
       });
 
     await syncWebhookStatus({

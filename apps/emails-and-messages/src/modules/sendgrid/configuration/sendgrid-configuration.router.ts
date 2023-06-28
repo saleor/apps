@@ -26,17 +26,22 @@ export const throwTrpcErrorFromConfigurationServiceError = (
       case "CONFIGURATION_NOT_FOUND":
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Configuration not found",
+          message: "Configuration not found.",
         });
       case "EVENT_CONFIGURATION_NOT_FOUND":
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Event configuration not found",
+          message: "Event configuration not found.",
         });
       case "CANT_FETCH":
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Can't fetch configuration",
+          message: "Can't fetch configuration.",
+        });
+      case "WRONG_SALEOR_VERSION":
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Feature you are trying to use is not supported in this version of Saleor.",
         });
     }
   }
@@ -80,7 +85,7 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   createConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
@@ -241,20 +246,17 @@ export const sendgridConfigurationRouter = router({
 
       logger.debug(input, "sendgridConfigurationRouter.updateEventArray called");
 
-      return await Promise.all(
-        input.events.map(async (event) => {
-          const { eventType, ...eventConfiguration } = event;
+      try {
+        const configuration = await ctx.sendgridConfigurationService.getConfiguration({
+          id: input.configurationId,
+        });
 
-          try {
-            return await ctx.sendgridConfigurationService.updateEventConfiguration({
-              configurationId: input.configurationId,
-              eventType,
-              eventConfiguration,
-            });
-          } catch (e) {
-            throwTrpcErrorFromConfigurationServiceError(e);
-          }
-        })
-      );
+        await ctx.sendgridConfigurationService.updateConfiguration({
+          ...configuration,
+          events: input.events,
+        });
+      } catch (e) {
+        throwTrpcErrorFromConfigurationServiceError(e);
+      }
     }),
 });

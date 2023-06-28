@@ -10,25 +10,30 @@ import { notifyWebhook } from "../../pages/api/webhooks/notify";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { createLogger } from "@saleor/apps-shared";
 import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
+import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
+import { FeatureFlagsState } from "../feature-flag-service/get-feature-flags";
 
 export const AppWebhooks = {
-  orderCreatedWebhook,
-  orderFulfilledWebhook,
-  orderConfirmedWebhook,
-  orderCancelledWebhook,
-  orderFullyPaidWebhook,
+  giftCardSentWebhook,
   invoiceSentWebhook,
   notifyWebhook,
+  orderCancelledWebhook,
+  orderConfirmedWebhook,
+  orderCreatedWebhook,
+  orderFulfilledWebhook,
+  orderFullyPaidWebhook,
 };
 
 export type AppWebhook = keyof typeof AppWebhooks;
 
 export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
+  ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
   ACCOUNT_CONFIRMATION: "notifyWebhook",
   ACCOUNT_DELETE: "notifyWebhook",
   ACCOUNT_PASSWORD_RESET: "notifyWebhook",
-  ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
+  GIFT_CARD_SENT: "giftCardSentWebhook",
   INVOICE_SENT: "invoiceSentWebhook",
   ORDER_CANCELLED: "orderCancelledWebhook",
   ORDER_CONFIRMED: "orderConfirmedWebhook",
@@ -42,7 +47,19 @@ const logger = createLogger({
 });
 
 export class WebhookManagementService {
-  constructor(private appBaseUrl: string, private client: Client) {}
+  private appBaseUrl: string;
+  private client: Client;
+  private featureFlagService: FeatureFlagService;
+
+  constructor(args: {
+    appBaseUrl: string;
+    client: Client;
+    featureFlagService: FeatureFlagService;
+  }) {
+    this.appBaseUrl = args.appBaseUrl;
+    this.client = args.client;
+    this.featureFlagService = args.featureFlagService;
+  }
 
   // Returns list of webhooks registered for the App in the Saleor instance
   public async getWebhooks() {
@@ -70,6 +87,13 @@ export class WebhookManagementService {
   }
 
   public async createWebhook({ webhook }: { webhook: AppWebhook }) {
+    const flags = await this.featureFlagService.getFeatureFlags();
+
+    if (!flags.giftCardSentEvent && webhook === "giftCardSentWebhook") {
+      logger.error(`Attempt to activate Gift Card Sent webhook despite unsupported environment`);
+      throw new Error("Gift card event is not supported in this environment");
+    }
+
     const webhookManifest = AppWebhooks[webhook].getWebhookManifest(this.appBaseUrl);
 
     const asyncWebhooks = webhookManifest.asyncEvents;

@@ -1,9 +1,6 @@
-import {
-  SendgridConfiguration,
-  SendgridEventConfiguration,
-} from "../configuration/sendgrid-config-schema";
+import { SendgridConfiguration } from "../configuration/sendgrid-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui/next";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -29,6 +26,8 @@ interface SendgridEventsSectionProps {
 
 export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
+
+  const { data: featureFlags } = trpcClient.app.featureFlags.useQuery();
 
   // Sort events by displayed label
   const eventsSorted = configuration.events.sort((a, b) =>
@@ -92,23 +91,43 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {eventsSorted.map((event, index) => (
-                  <Table.Row key={event.eventType}>
-                    <Table.Cell>
-                      <input type="checkbox" {...register(`events.${index}.active`)} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Text>{messageEventTypesLabels[event.eventType]}</Text>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Select
-                        control={control}
-                        name={`events.${index}.template`}
-                        options={templateChoices}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                {eventsSorted.map((event, index) => {
+                  const isUnsupported =
+                    !featureFlags?.giftCardSentEvent && event.eventType === "GIFT_CARD_SENT";
+
+                  return (
+                    <Table.Row key={event.eventType}>
+                      <Table.Cell>
+                        <Tooltip>
+                          <Tooltip.Trigger>
+                            <input
+                              type="checkbox"
+                              {...register(`events.${index}.active`)}
+                              disabled={isUnsupported}
+                            />
+                          </Tooltip.Trigger>
+                          {isUnsupported && (
+                            <Tooltip.Content side="left">
+                              Event is available in Saleor version 3.13 and above only.
+                              <Tooltip.Arrow />
+                            </Tooltip.Content>
+                          )}
+                        </Tooltip>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Text>{messageEventTypesLabels[event.eventType]}</Text>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Select
+                          control={control}
+                          name={`events.${index}.template`}
+                          options={templateChoices}
+                          disabled={isUnsupported}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table.Container>
           </Box>

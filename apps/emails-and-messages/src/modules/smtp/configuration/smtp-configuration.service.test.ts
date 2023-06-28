@@ -3,6 +3,8 @@ import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
 import { SmtpConfig } from "./smtp-config-schema";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { Client } from "urql";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
@@ -90,6 +92,12 @@ const validConfig: SmtpConfig = {
           eventType: "ACCOUNT_DELETE",
           template: "template",
           subject: "Account deletion",
+        },
+        {
+          active: true,
+          eventType: "GIFT_CARD_SENT",
+          template: "template",
+          subject: "Gift card sent",
         },
       ],
       smtpUser: "John",
@@ -196,6 +204,10 @@ describe("SmtpConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
       });
 
@@ -213,6 +225,10 @@ describe("SmtpConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(validConfig);
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
       });
 
@@ -235,6 +251,10 @@ describe("SmtpConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(emptyConfigRoot);
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -256,6 +276,10 @@ describe("SmtpConfigurationService", function () {
 
       // Service initialized with empty configuration
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -270,6 +294,28 @@ describe("SmtpConfigurationService", function () {
       expect(await service.getConfigurationRoot());
       expect(getConfigMock).toBeCalledTimes(0);
     });
+
+    it("Operation should be rejected, when attempting to save event not available according to feature flag", async () => {
+      const configurator = new SmtpPrivateMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl
+      );
+
+      // Service initialized with empty configuration
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.12.0", // This version does not support Gift Card event
+        }),
+        metadataManager: configurator,
+        initialData: emptyConfigRoot,
+      });
+
+      // Set configuration
+      await expect(async () => await service.setConfigurationRoot(validConfig)).rejects.toThrow(
+        "Gift card sent event is not supported for this Saleor version"
+      );
+    });
   });
 
   describe("getConfiguration", () => {
@@ -280,6 +326,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -296,6 +346,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -314,6 +368,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -328,6 +386,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -349,6 +411,10 @@ describe("SmtpConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
       });
@@ -378,6 +444,10 @@ describe("SmtpConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -408,6 +478,10 @@ describe("SmtpConfigurationService", function () {
       const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -431,6 +505,10 @@ describe("SmtpConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -460,6 +538,10 @@ describe("SmtpConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -483,6 +565,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -502,6 +588,10 @@ describe("SmtpConfigurationService", function () {
       );
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -533,6 +623,10 @@ describe("SmtpConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });
@@ -565,6 +659,10 @@ describe("SmtpConfigurationService", function () {
       const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
 
       const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
         metadataManager: configurator,
         initialData: { ...validConfig },
       });

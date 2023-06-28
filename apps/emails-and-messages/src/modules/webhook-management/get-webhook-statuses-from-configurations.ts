@@ -13,13 +13,15 @@ export const getWebhookStatusesFromConfigurations = ({
   smtpConfigurations: SmtpConfiguration[];
   sendgridConfigurations: SendgridConfiguration[];
 }) => {
+  // TODO: this dict should be generated in one place instead of manually edited
   const statuses: Record<AppWebhook, boolean> = {
+    giftCardSentWebhook: false,
     invoiceSentWebhook: false,
     notifyWebhook: false,
     orderCancelledWebhook: false,
     orderConfirmedWebhook: false,
-    orderFulfilledWebhook: false,
     orderCreatedWebhook: false,
+    orderFulfilledWebhook: false,
     orderFullyPaidWebhook: false,
   };
 

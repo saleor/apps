@@ -20,6 +20,7 @@ export const fetchTemplates =
         },
       }
     );
+
     if (!response.ok) {
       console.error("Could not fetch available Sendgrid templates");
       return [];
@@ -33,6 +34,7 @@ export const fetchTemplates =
           value: r.id.toString(),
           label: r.name,
         })) || [];
+
       return templates;
     } catch (e) {
       console.error("Could not parse the response from Sendgrid", e);
@@ -55,6 +57,7 @@ export const fetchSenders =
         Authorization: `Bearer ${apiKey}`,
       },
     });
+
     if (!response.ok) {
       console.error("Could not fetch available Sendgrid senders");
       return [];
@@ -70,6 +73,7 @@ export const fetchSenders =
           nickname: r.nickname,
           from_email: r.from_email,
         })) || [];
+
       return senders;
     } catch (e) {
       console.error("Could not parse the response from Sendgrid", e);

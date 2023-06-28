@@ -5,6 +5,7 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 
 const logger = createLogger({
   service: "SmtpConfigurationService",
@@ -14,7 +15,8 @@ export type SmtpConfigurationServiceErrorType =
   | "OTHER"
   | "CONFIGURATION_NOT_FOUND"
   | "EVENT_CONFIGURATION_NOT_FOUND"
-  | "CANT_FETCH";
+  | "CANT_FETCH"
+  | "WRONG_SALEOR_VERSION";
 
 export interface ConfigurationPartial extends Partial<SmtpConfiguration> {
   id: SmtpConfiguration["id"];
@@ -41,13 +43,20 @@ export interface FilterConfigurationsArgs {
 export class SmtpConfigurationService {
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpPrivateMetadataManager;
+  private featureFlagService: FeatureFlagService;
 
-  constructor(args: { metadataManager: SmtpPrivateMetadataManager; initialData?: SmtpConfig }) {
+  constructor(args: {
+    metadataManager: SmtpPrivateMetadataManager;
+    initialData?: SmtpConfig;
+    featureFlagService: FeatureFlagService;
+  }) {
     this.metadataConfigurator = args.metadataManager;
 
     if (args.initialData) {
       this.configurationData = args.initialData;
     }
+
+    this.featureFlagService = args.featureFlagService;
   }
 
   /**
@@ -94,10 +103,35 @@ export class SmtpConfigurationService {
     return this.configurationData;
   }
 
+  private containActiveGiftCardEvent(config: SmtpConfig) {
+    for (const configuration of config.configurations) {
+      const giftCardSentEvent = configuration.events.find(
+        (event) => event.eventType === "GIFT_CARD_SENT"
+      );
+
+      if (giftCardSentEvent?.active) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Saves configuration to Saleor API and cache it
   async setConfigurationRoot(config: SmtpConfig) {
-    logger.debug("Set configuration root");
+    logger.debug("Validate configuration before sending it to the Saleor API");
+    const availableFeatures = await this.featureFlagService.getFeatureFlags();
 
+    if (!availableFeatures.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
+      logger.error(
+        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
+      );
+      throw new SmtpConfigurationServiceError(
+        "Gift card sent event is not supported for this Saleor version",
+        "WRONG_SALEOR_VERSION"
+      );
+    }
+
+    logger.debug("Set configuration root");
     this.configurationData = config;
     await this.pushConfiguration();
   }
@@ -169,7 +203,7 @@ export class SmtpConfigurationService {
 
     updatedConfigRoot.configurations[configurationIndex] = updatedConfiguration;
 
-    this.setConfigurationRoot(updatedConfigRoot);
+    await this.setConfigurationRoot(updatedConfigRoot);
 
     return updatedConfiguration;
   }
@@ -189,7 +223,7 @@ export class SmtpConfigurationService {
       (configuration) => configuration.id !== id
     );
 
-    this.setConfigurationRoot(updatedConfigRoot);
+    await this.setConfigurationRoot(updatedConfigRoot);
   }
 
   /**
