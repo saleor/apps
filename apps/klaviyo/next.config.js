@@ -7,15 +7,6 @@ const isSentryPropertiesInEnvironment =
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
-  redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/configuration",
-        permanent: false,
-      },
-    ];
-  },
 };
 
 const configWithSentry = withSentryConfig(
