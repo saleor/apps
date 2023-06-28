@@ -31,22 +31,22 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info("Handler called with payload");
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info("Fetched taxProvider");
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       return webhookResponse.error(new Error("Insufficient order data"));
     }
-    const fulfilledOrder = await taxProvider.fulfillOrder(payload.order);
+    await taxProvider.fulfillOrder(payload.order);
 
-    logger.info({ fulfilledOrder }, "Order fulfilled");
+    logger.info("Order fulfilled");
 
     return webhookResponse.success();
   } catch (error) {

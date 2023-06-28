@@ -69,14 +69,14 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const { saleorApiUrl, token } = authData;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info({ payload }, "Handler called with payload");
+  logger.info("Handler called with payload");
 
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info({ taxProvider }, "Fetched taxProvider");
+    logger.info("Fetched taxProvider");
 
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
