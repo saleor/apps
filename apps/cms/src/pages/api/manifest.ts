@@ -10,11 +10,23 @@ import { productUpdatedWebhook } from "./webhooks/product-updated";
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: "CMS",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      about:
+        "CMS App is a multi-integration app that connects Saleor with popular Content Management Systems.",
       appUrl: context.appBaseUrl,
-      permissions: ["MANAGE_PRODUCTS"],
+      author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.cms",
+      name: "CMS",
+      permissions: ["MANAGE_PRODUCTS"],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
         productVariantCreatedWebhook.getWebhookManifest(context.appBaseUrl),
@@ -22,16 +34,6 @@ export default createManifestHandler({
         productVariantDeletedWebhook.getWebhookManifest(context.appBaseUrl),
         productUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
       ],
-      extensions: [],
-      author: "Saleor Commerce",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      brand: {
-        logo: {
-          default: `${context.appBaseUrl}/logo.png`,
-        },
-      },
     };
 
     return manifest;

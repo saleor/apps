@@ -8,9 +8,24 @@ import { customerMetadataUpdatedWebhook } from "./webhooks/customer-updated";
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: "CRM",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      about: "CRM App allows synchronization of customers from Saleor to other platforms",
       appUrl: context.appBaseUrl,
+      author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [
+        /**
+         * Optionally, extend Dashboard with custom UIs
+         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
+         */
+      ],
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.crm",
+      name: "CRM",
       permissions: [
         "MANAGE_USERS",
         /**
@@ -18,27 +33,13 @@ export default createManifestHandler({
          * https://docs.saleor.io/docs/3.x/developer/permissions
          */
       ],
-      id: "saleor.app.crm",
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
         customerCreatedWebhook.getWebhookManifest(context.appBaseUrl),
         customerMetadataUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
       ],
-      extensions: [
-        /**
-         * Optionally, extend Dashboard with custom UIs
-         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
-         */
-      ],
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      author: "Saleor Commerce",
-      brand: {
-        logo: {
-          default: `${context.appBaseUrl}/logo.png`,
-        },
-      },
     };
 
     return manifest;

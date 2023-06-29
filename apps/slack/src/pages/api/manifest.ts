@@ -7,23 +7,25 @@ import { orderCreatedWebhook } from "./webhooks/order-created";
 const handler = createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: "Slack",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      about:
+        "Saleor Slack integration allows you to get notifications on Slack channel from Saleor events.",
       appUrl: context.appBaseUrl,
-      permissions: ["MANAGE_ORDERS"],
-      id: "saleor.app.slack",
-      version: packageJson.version,
-      webhooks: [orderCreatedWebhook.getWebhookManifest(context.appBaseUrl)],
-      extensions: [],
       author: "Saleor Commerce",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       brand: {
         logo: {
           default: `${context.appBaseUrl}/logo.png`,
         },
       },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.slack",
+      name: "Slack",
+      permissions: ["MANAGE_ORDERS"],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      version: packageJson.version,
+      webhooks: [orderCreatedWebhook.getWebhookManifest(context.appBaseUrl)],
     };
 
     return manifest;

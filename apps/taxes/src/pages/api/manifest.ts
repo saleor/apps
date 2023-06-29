@@ -11,11 +11,23 @@ import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: "Taxes",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      about: "Taxes App allows dynamic taxes calculations for orders",
       appUrl: context.appBaseUrl,
-      permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
+      author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.taxes",
+      name: "Taxes",
+      permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
+      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
         orderCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
@@ -23,17 +35,6 @@ export default createManifestHandler({
         orderCreatedAsyncWebhook.getWebhookManifest(context.appBaseUrl),
         orderFulfilledAsyncWebhook.getWebhookManifest(context.appBaseUrl),
       ],
-      extensions: [],
-      homepageUrl: "https://github.com/saleor/apps",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      author: "Saleor Commerce",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
-      brand: {
-        logo: {
-          default: `${context.appBaseUrl}/logo.png`,
-        },
-      },
     };
 
     return manifest;
