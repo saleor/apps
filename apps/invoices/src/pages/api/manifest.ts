@@ -26,6 +26,11 @@ export default createManifestHandler({
       tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [invoiceRequestedWebhook.getWebhookManifest(context.appBaseUrl)],
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
     };
 
     return manifest;
