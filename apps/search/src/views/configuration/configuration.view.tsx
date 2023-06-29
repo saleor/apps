@@ -19,10 +19,6 @@ export const ConfigurationView = () => {
         <Text variant={"hero"} size={"medium"} as={"h1"}>
           Configuration
         </Text>
-        <Text>
-          TEMP: Saleor Version: {appBridgeState?.saleorVersion} | Dashboard Version:{" "}
-          {appBridgeState?.dashboardVersion}
-        </Text>
         <MainInstructions marginTop={1.5} />
       </Box>
       <AppSection
