@@ -1,7 +1,7 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { TaxJarTaxCodeMatches } from "./taxjar-tax-code-match-repository";
+import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 
-export class TaxJarTaxCodeMatcher {
+export class TaxJarCalculateTaxesTaxCodeMatcher {
   private mapTaxClassWithTaxMatch(taxClassId: string, matches: TaxJarTaxCodeMatches) {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }

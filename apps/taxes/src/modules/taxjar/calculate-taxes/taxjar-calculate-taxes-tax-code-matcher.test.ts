@@ -1,11 +1,11 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { TaxJarTaxCodeMatches } from "./taxjar-tax-code-match-repository";
-import { TaxJarTaxCodeMatcher } from "./taxjar-tax-code-matcher";
+import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
+import { TaxJarCalculateTaxesTaxCodeMatcher } from "./taxjar-calculate-taxes-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
-const matcher = new TaxJarTaxCodeMatcher();
+const matcher = new TaxJarCalculateTaxesTaxCodeMatcher();
 
-describe("TaxJarTaxCodeMatcher", () => {
+describe("TaxJarCalculateTaxesTaxCodeMatcher", () => {
   it("returns empty string when tax class is not found", () => {
     const line: TaxBaseLineFragment = {
       quantity: 1,
