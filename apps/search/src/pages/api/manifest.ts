@@ -12,9 +12,24 @@ import { webhookProductVariantUpdated } from "./webhooks/saleor/product_variant_
 export default createManifestHandler({
   async manifestFactory(context) {
     const manifest: AppManifest = {
-      name: "Search",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      about:
+        "Search App is a multi-integration app that connects your Saleor store with search engines.",
       appUrl: context.appBaseUrl,
+      brand: {
+        logo: {
+          default: `${context.appBaseUrl}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [
+        /**
+         * Optionally, extend Dashboard with custom UIs
+         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
+         */
+      ],
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.search",
+      name: "Search",
       permissions: [
         /**
          * Set permissions for app if needed
@@ -23,7 +38,8 @@ export default createManifestHandler({
         "MANAGE_PRODUCTS",
         "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",
       ],
-      id: "saleor.app.search",
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
         /**
@@ -38,20 +54,6 @@ export default createManifestHandler({
         webhookProductVariantDeleted.getWebhookManifest(context.appBaseUrl),
         webhookProductVariantUpdated.getWebhookManifest(context.appBaseUrl),
       ],
-      extensions: [
-        /**
-         * Optionally, extend Dashboard with custom UIs
-         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
-         */
-      ],
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      brand: {
-        logo: {
-          default: `${context.appBaseUrl}/logo.png`,
-        },
-      },
     };
 
     return manifest;
