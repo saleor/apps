@@ -1,11 +1,11 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { AvataxTaxCodeMatches } from "./avatax-tax-code-match-repository";
-import { AvataxTaxCodeMatcher } from "./avatax-tax-code-matcher";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
-const matcher = new AvataxTaxCodeMatcher();
+const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
 
-describe("AvataxTaxCodeMatcher", () => {
+describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
   it("returns empty string when tax class is not found", () => {
     const line: TaxBaseLineFragment = {
       quantity: 1,

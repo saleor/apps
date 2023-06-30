@@ -1,7 +1,7 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { AvataxTaxCodeMatches } from "./avatax-tax-code-match-repository";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
-export class AvataxTaxCodeMatcher {
+export class AvataxCalculateTaxesTaxCodeMatcher {
   private mapTaxClassWithTaxMatch(taxClassId: string, matches: AvataxTaxCodeMatches) {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
