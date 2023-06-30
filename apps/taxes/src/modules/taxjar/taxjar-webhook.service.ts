@@ -31,7 +31,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const adapter = new TaxJarOrderCreatedAdapter(this.config);
+    const adapter = new TaxJarOrderCreatedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order });
 

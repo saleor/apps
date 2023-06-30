@@ -22,8 +22,8 @@ export class TaxJarCalculateTaxesPayloadLinesTransformer {
     const mappedLines: TaxJarCalculateTaxesTarget["params"]["line_items"] = lines.map(
       (line, index) => {
         const matcher = new TaxJarCalculateTaxesTaxCodeMatcher();
-        const discountAmount = distributedDiscounts[index];
         const taxCode = matcher.match(line, matches);
+        const discountAmount = distributedDiscounts[index];
 
         return {
           id: line.sourceLine.id,
