@@ -12,27 +12,29 @@ const handler = createManifestHandler({
     const { appBaseUrl } = context;
 
     return {
-      id: "saleor.app.klaviyo",
-      version: pkg.version,
-      name: "Klaviyo",
-      permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
+      about:
+        "Klaviyo integration allows sending Klaviyo notifications on Saleor events.",
       appUrl: appBaseUrl,
-      tokenTargetUrl: `${appBaseUrl}/api/register`,
-      webhooks: [
-        customerCreatedWebhook.getWebhookManifest(appBaseUrl),
-        fulfillmentCreatedWebhook.getWebhookManifest(appBaseUrl),
-        orderCreatedWebhook.getWebhookManifest(appBaseUrl),
-        orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
-      ],
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       author: "Saleor Commerce",
       brand: {
         logo: {
           default: `${context.appBaseUrl}/logo.png`,
         },
       },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.klaviyo",
+      name: "Klaviyo",
+      permissions: ["MANAGE_USERS", "MANAGE_ORDERS"],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${appBaseUrl}/api/register`,
+      version: pkg.version,
+      webhooks: [
+        customerCreatedWebhook.getWebhookManifest(appBaseUrl),
+        fulfillmentCreatedWebhook.getWebhookManifest(appBaseUrl),
+        orderCreatedWebhook.getWebhookManifest(appBaseUrl),
+        orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
+      ],
     };
   },
 });
