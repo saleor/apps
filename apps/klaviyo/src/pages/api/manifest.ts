@@ -13,7 +13,7 @@ const handler = createManifestHandler({
 
     return {
       about:
-        "Klaviyo integration allows to send Saleor events to Klaviyo, where notifications can be sent to customers.",
+        "Klaviyo integration allows sending Klaviyo notifications on Saleor events.",
       appUrl: appBaseUrl,
       author: "Saleor Commerce",
       brand: {
