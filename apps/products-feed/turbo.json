@@ -20,7 +20,9 @@
         "FEED_CACHE_MAX_AGE",
         "VERCEL_URL",
         "PORT",
-        "SENTRY_ENVIRONMENT"
+        "SENTRY_ENVIRONMENT",
+        "APP_IFRAME_BASE_URL",
+        "APP_API_BASE_URL"
       ]
     }
   }

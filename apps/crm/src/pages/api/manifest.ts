@@ -6,14 +6,17 @@ import { customerCreatedWebhook } from "./webhooks/customer-created";
 import { customerMetadataUpdatedWebhook } from "./webhooks/customer-updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       about: "CRM App allows synchronization of customers from Saleor to other platforms",
-      appUrl: context.appBaseUrl,
+      appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
@@ -34,11 +37,11 @@ export default createManifestHandler({
          */
       ],
       supportUrl: "https://github.com/saleor/apps/discussions",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
-        customerCreatedWebhook.getWebhookManifest(context.appBaseUrl),
-        customerMetadataUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
+        customerCreatedWebhook.getWebhookManifest(apiBaseURL),
+        customerMetadataUpdatedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 
