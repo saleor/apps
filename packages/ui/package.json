@@ -9,7 +9,7 @@
     "typescript": "5.1.3"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "0.39.1",
+    "@saleor/app-sdk": "0.41.0",
     "@saleor/macaw-ui": "0.8.0-pre.84",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

@@ -14,7 +14,7 @@ export default createProtectedHandler(
 
     await indexingJobRepository.createPendingJob(ctx.authData.saleorApiUrl, {
       jobId: Number(job.id),
-      createdByEmail: "some-name-todo", // todo add to sdk
+      createdByEmail: ctx.user.email,
     });
 
     return res.status(200).end();
