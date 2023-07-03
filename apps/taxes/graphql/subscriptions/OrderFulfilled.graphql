@@ -2,6 +2,9 @@ fragment OrderLine on OrderLine {
   productSku
   productName
   quantity
+  taxClass {
+    id
+  }
   unitPrice {
     net {
       amount

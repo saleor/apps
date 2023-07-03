@@ -9,12 +9,10 @@ const mockGenerator = new TaxJarOrderCreatedMockGenerator();
 
 describe("TaxJarOrderCreatedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
-    const payloadMock = {
-      order: mockGenerator.generateOrder(),
-    };
+    const orderMock = mockGenerator.generateOrder();
     const providerConfig = mockGenerator.generateProviderConfig();
-    const transformer = new TaxJarOrderCreatedPayloadTransformer(providerConfig);
-    const transformedPayload = transformer.transform(payloadMock);
+    const transformer = new TaxJarOrderCreatedPayloadTransformer();
+    const transformedPayload = transformer.transform(orderMock, providerConfig, []);
 
     expect(transformedPayload.params.amount).toBe(239.17);
   });
