@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
+import { ImportHistory } from "./ImportHistory";
 
 export const ImportProductsToAlgolia = () => {
   const fetch = useAuthenticatedFetch();
@@ -48,17 +49,6 @@ export const ImportProductsToAlgolia = () => {
           </Text>
           <Box display={"flex"} justifyContent={"flex-end"} marginTop={13}>
             <Button onClick={() => fetch("/api/index-products")}>Start importing</Button>
-            <Button
-              onClick={() =>
-                fetch("/api/jobs")
-                  .then((r: any) => r.json())
-                  .then((jobs: unknown) => {
-                    console.log(jobs);
-                  })
-              }
-            >
-              Check status
-            </Button>
           </Box>
         </Box>
       ) : (
@@ -69,6 +59,7 @@ export const ImportProductsToAlgolia = () => {
           <Text>Configure Algolia first</Text>
         </Box>
       )}
+      <ImportHistory />
     </Box>
   );
 };
