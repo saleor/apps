@@ -6,11 +6,14 @@ import { invoiceRequestedWebhook } from "./webhooks/invoice-requested";
 import { REQUIRED_SALEOR_VERSION } from "../../saleor-app";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       about:
         "An app that generates PDF invoices for Orders and stores them in Saleor file storage.",
-      appUrl: context.appBaseUrl,
+      appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       extensions: [],
@@ -23,12 +26,12 @@ export default createManifestHandler({
        */
       requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
       supportUrl: "https://github.com/saleor/apps/discussions",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
-      webhooks: [invoiceRequestedWebhook.getWebhookManifest(context.appBaseUrl)],
+      webhooks: [invoiceRequestedWebhook.getWebhookManifest(apiBaseURL)],
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
     };

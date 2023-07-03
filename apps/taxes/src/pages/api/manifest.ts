@@ -9,14 +9,17 @@ import { orderFulfilledAsyncWebhook } from "./webhooks/order-fulfilled";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       about: "Taxes App allows dynamic taxes calculations for orders",
-      appUrl: context.appBaseUrl,
+      appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
@@ -27,13 +30,13 @@ export default createManifestHandler({
       permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
       requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
       supportUrl: "https://github.com/saleor/apps/discussions",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
-        orderCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
-        checkoutCalculateTaxesSyncWebhook.getWebhookManifest(context.appBaseUrl),
-        orderCreatedAsyncWebhook.getWebhookManifest(context.appBaseUrl),
-        orderFulfilledAsyncWebhook.getWebhookManifest(context.appBaseUrl),
+        orderCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
+        checkoutCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
+        orderCreatedAsyncWebhook.getWebhookManifest(apiBaseURL),
+        orderFulfilledAsyncWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 

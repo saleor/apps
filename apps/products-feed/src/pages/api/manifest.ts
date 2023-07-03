@@ -9,14 +9,17 @@ import { webhookProductVariantDeleted } from "./webhooks/product_variant_deleted
 import { webhookProductVariantUpdated } from "./webhooks/product_variant_updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       about: "Generate feeds consumed by Merchant Platforms",
-      appUrl: context.appBaseUrl,
+      appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
@@ -26,14 +29,14 @@ export default createManifestHandler({
       name: "Product Feed",
       permissions: ["MANAGE_PRODUCTS"],
       supportUrl: "https://github.com/saleor/apps/discussions",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
-        webhookProductCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantCreated.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantDeleted.getWebhookManifest(context.appBaseUrl),
-        webhookProductVariantUpdated.getWebhookManifest(context.appBaseUrl),
+        webhookProductCreated.getWebhookManifest(apiBaseURL),
+        webhookProductDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductVariantCreated.getWebhookManifest(apiBaseURL),
+        webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
+        webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
       ],
     };
 
