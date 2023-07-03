@@ -13,11 +13,21 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "CMS",
-      tokenTargetUrl: `${apiBaseURL}/api/register`,
       appUrl: iframeBaseUrl,
-      permissions: ["MANAGE_PRODUCTS"],
+      author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${apiBaseURL}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.cms",
+      name: "CMS",
+      permissions: ["MANAGE_PRODUCTS"],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
         productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
@@ -25,16 +35,6 @@ export default createManifestHandler({
         productVariantDeletedWebhook.getWebhookManifest(apiBaseURL),
         productUpdatedWebhook.getWebhookManifest(apiBaseURL),
       ],
-      extensions: [],
-      author: "Saleor Commerce",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      brand: {
-        logo: {
-          default: `${apiBaseURL}/logo.png`,
-        },
-      },
     };
 
     return manifest;
