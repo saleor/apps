@@ -10,7 +10,7 @@ const orderMock = mockGenerator.generateOrder();
 
 const matches: AvataxTaxCodeMatches = [];
 
-describe("mapLines", () => {
+describe("AvataxOrderCreatedPayloadLinesTransformer", () => {
   const lines = linesTransformer.transform(orderMock, avataxConfigMock, matches);
 
   it("returns the correct number of lines", () => {
