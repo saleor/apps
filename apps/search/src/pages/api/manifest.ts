@@ -15,7 +15,10 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about:
+        "Search App is a multi-integration app that connects your Saleor store with search engines.",
       appUrl: iframeBaseUrl,
+      author: "Saleor Commerce",
       brand: {
         logo: {
           default: `${apiBaseURL}/logo.png`,

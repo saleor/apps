@@ -10,6 +10,8 @@ const handler = createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about:
+        "Saleor Slack integration allows you to get notifications on Slack channel from Saleor events.",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {

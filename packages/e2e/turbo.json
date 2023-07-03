@@ -1,0 +1,12 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "e2e": {
+      "env": ["INSTANCE_URL", "DASHBOARD_USER_PASSWORD", "DASHBOARD_USER_EMAIL"]
+    },
+    "e2e:ui": {
+      "env": ["INSTANCE_URL", "DASHBOARD_USER_PASSWORD", "DASHBOARD_USER_EMAIL"]
+    }
+  }
+}

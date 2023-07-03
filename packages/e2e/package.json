@@ -1,0 +1,20 @@
+{
+  "name": "@saleor/e2e",
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.35.1",
+    "@saleor/app-sdk": "0.40.1",
+    "dotenv": "^16.3.1",
+    "eslint-config-saleor": "workspace:*",
+    "zod": "3.20.2"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js"
+}

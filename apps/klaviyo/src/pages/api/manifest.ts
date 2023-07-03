@@ -15,6 +15,7 @@ const handler = createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     return {
+      about: "Klaviyo integration allows sending Klaviyo notifications on Saleor events.",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
