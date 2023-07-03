@@ -10,23 +10,23 @@ const handler = createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "Slack",
-      tokenTargetUrl: `${apiBaseURL}/api/register`,
       appUrl: iframeBaseUrl,
-      permissions: ["MANAGE_ORDERS"],
-      id: "saleor.app.slack",
-      version: packageJson.version,
-      webhooks: [orderCreatedWebhook.getWebhookManifest(apiBaseURL)],
-      extensions: [],
       author: "Saleor Commerce",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       brand: {
         logo: {
           default: `${apiBaseURL}/logo.png`,
         },
       },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.slack",
+      name: "Slack",
+      permissions: ["MANAGE_ORDERS"],
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
+      version: packageJson.version,
+      webhooks: [orderCreatedWebhook.getWebhookManifest(apiBaseURL)],
     };
 
     return manifest;

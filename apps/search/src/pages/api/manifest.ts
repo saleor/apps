@@ -15,9 +15,22 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "Search",
-      tokenTargetUrl: `${apiBaseURL}/api/register`,
       appUrl: iframeBaseUrl,
+      brand: {
+        logo: {
+          default: `${apiBaseURL}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [
+        /**
+         * Optionally, extend Dashboard with custom UIs
+         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
+         */
+      ],
+      homepageUrl: "https://github.com/saleor/apps",
+      id: "saleor.app.search",
+      name: "Search",
       permissions: [
         /**
          * Set permissions for app if needed
@@ -26,7 +39,8 @@ export default createManifestHandler({
         "MANAGE_PRODUCTS",
         "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",
       ],
-      id: "saleor.app.search",
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
         /**
@@ -41,20 +55,6 @@ export default createManifestHandler({
         webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
         webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
       ],
-      extensions: [
-        /**
-         * Optionally, extend Dashboard with custom UIs
-         * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
-         */
-      ],
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      homepageUrl: "https://github.com/saleor/apps",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      brand: {
-        logo: {
-          default: `${apiBaseURL}/logo.png`,
-        },
-      },
     };
 
     return manifest;

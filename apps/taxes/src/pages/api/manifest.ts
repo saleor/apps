@@ -14,11 +14,22 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "Taxes",
-      tokenTargetUrl: `${apiBaseURL}/api/register`,
       appUrl: iframeBaseUrl,
-      permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
+      author: "Saleor Commerce",
+      brand: {
+        logo: {
+          default: `${apiBaseURL}/logo.png`,
+        },
+      },
+      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+      extensions: [],
+      homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.taxes",
+      name: "Taxes",
+      permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
+      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
+      supportUrl: "https://github.com/saleor/apps/discussions",
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
         orderCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
@@ -26,17 +37,6 @@ export default createManifestHandler({
         orderCreatedAsyncWebhook.getWebhookManifest(apiBaseURL),
         orderFulfilledAsyncWebhook.getWebhookManifest(apiBaseURL),
       ],
-      extensions: [],
-      homepageUrl: "https://github.com/saleor/apps",
-      supportUrl: "https://github.com/saleor/apps/discussions",
-      author: "Saleor Commerce",
-      dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
-      brand: {
-        logo: {
-          default: `${apiBaseURL}/logo.png`,
-        },
-      },
     };
 
     return manifest;
