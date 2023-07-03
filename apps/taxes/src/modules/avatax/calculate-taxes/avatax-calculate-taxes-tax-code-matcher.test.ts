@@ -1,11 +1,11 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { TaxJarTaxCodeMatches } from "./taxjar-tax-code-match-repository";
-import { TaxJarTaxCodeMatcher } from "./taxjar-tax-code-matcher";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
-const matcher = new TaxJarTaxCodeMatcher();
+const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
 
-describe("TaxJarTaxCodeMatcher", () => {
+describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
   it("returns empty string when tax class is not found", () => {
     const line: TaxBaseLineFragment = {
       quantity: 1,
@@ -24,11 +24,11 @@ describe("TaxJarTaxCodeMatcher", () => {
         },
       },
     };
-    const matches: TaxJarTaxCodeMatches = [
+    const matches: AvataxTaxCodeMatches = [
       {
         data: {
           saleorTaxClassId: "",
-          taxJarTaxCode: "1",
+          avataxTaxCode: "1",
         },
         id: "1",
       },
@@ -59,11 +59,11 @@ describe("TaxJarTaxCodeMatcher", () => {
         },
       },
     };
-    const matches: TaxJarTaxCodeMatches = [
+    const matches: AvataxTaxCodeMatches = [
       {
         data: {
           saleorTaxClassId: "1",
-          taxJarTaxCode: "123412",
+          avataxTaxCode: "123412",
         },
         id: "1",
       },

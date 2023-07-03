@@ -36,7 +36,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const adapter = new AvataxOrderCreatedAdapter(this.config);
+    const adapter = new AvataxOrderCreatedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order });
 

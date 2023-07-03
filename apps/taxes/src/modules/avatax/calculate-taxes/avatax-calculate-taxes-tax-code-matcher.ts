@@ -1,8 +1,8 @@
 import { TaxBaseLineFragment } from "../../../../generated/graphql";
-import { TaxJarTaxCodeMatches } from "./taxjar-tax-code-match-repository";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
-export class TaxJarTaxCodeMatcher {
-  private mapTaxClassWithTaxMatch(taxClassId: string, matches: TaxJarTaxCodeMatches) {
+export class AvataxCalculateTaxesTaxCodeMatcher {
+  private mapTaxClassWithTaxMatch(taxClassId: string, matches: AvataxTaxCodeMatches) {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
 
@@ -16,12 +16,12 @@ export class TaxJarTaxCodeMatcher {
     }
   }
 
-  match(line: TaxBaseLineFragment, matches: TaxJarTaxCodeMatches) {
+  match(line: TaxBaseLineFragment, matches: AvataxTaxCodeMatches) {
     const taxClassId = this.getTaxClassId(line);
 
     // We can fall back to empty string if we don't have a tax code match
     return taxClassId
-      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.taxJarTaxCode ?? ""
+      ? this.mapTaxClassWithTaxMatch(taxClassId, matches)?.data.avataxTaxCode ?? ""
       : "";
   }
 }

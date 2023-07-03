@@ -2,7 +2,7 @@ import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxTaxCodeMatcher } from "../tax-code/avatax-tax-code-matcher";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
@@ -13,7 +13,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
   ): LineItemModel[] {
     const isDiscounted = taxBase.discounts.length > 0;
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
-      const matcher = new AvataxTaxCodeMatcher();
+      const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
 
       return {

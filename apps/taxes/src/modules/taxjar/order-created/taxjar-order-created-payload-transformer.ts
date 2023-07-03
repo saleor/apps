@@ -2,11 +2,10 @@ import { LineItem } from "taxjar/dist/util/types";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
+import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import {
-  TaxJarOrderCreatedPayload,
-  TaxJarOrderCreatedTarget,
-} from "./taxjar-order-created-adapter";
+import { TaxJarOrderCreatedTarget } from "./taxjar-order-created-adapter";
+import { TaxJarOrderCreatedPayloadLinesTransformer } from "./taxjar-order-created-payload-lines-transformer";
 
 export function sumPayloadLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
@@ -27,21 +26,13 @@ export function sumPayloadLines(lines: LineItem[]): number {
 }
 
 export class TaxJarOrderCreatedPayloadTransformer {
-  constructor(private readonly config: TaxJarConfig) {}
-  private mapLines(lines: OrderCreatedSubscriptionFragment["lines"]): LineItem[] {
-    return lines.map((line) => ({
-      quantity: line.quantity,
-      unit_price: line.unitPrice.net.amount,
-      product_identifier: line.productSku ?? "",
-      // todo: add from tax code matcher
-      product_tax_code: "",
-      sales_tax: line.totalPrice.tax.amount,
-      description: line.productName,
-    }));
-  }
-
-  transform({ order }: TaxJarOrderCreatedPayload): TaxJarOrderCreatedTarget {
-    const lineItems = this.mapLines(order.lines);
+  transform(
+    order: OrderCreatedSubscriptionFragment,
+    taxJarConfig: TaxJarConfig,
+    matches: TaxJarTaxCodeMatches
+  ): TaxJarOrderCreatedTarget {
+    const linesTransformer = new TaxJarOrderCreatedPayloadLinesTransformer();
+    const lineItems = linesTransformer.transform(order.lines, matches);
     const lineSum = sumPayloadLines(lineItems);
     const shippingAmount = order.shippingPrice.gross.amount;
     /**
@@ -52,11 +43,11 @@ export class TaxJarOrderCreatedPayloadTransformer {
 
     return {
       params: {
-        from_country: this.config.address.country,
-        from_zip: this.config.address.zip,
-        from_state: this.config.address.state,
-        from_city: this.config.address.city,
-        from_street: this.config.address.street,
+        from_country: taxJarConfig.address.country,
+        from_zip: taxJarConfig.address.zip,
+        from_state: taxJarConfig.address.state,
+        from_city: taxJarConfig.address.city,
+        from_street: taxJarConfig.address.street,
         to_country: order.shippingAddress!.country.code,
         to_zip: order.shippingAddress!.postalCode,
         to_state: order.shippingAddress!.countryArea,

@@ -4,7 +4,7 @@ import {
   TaxJarCalculateTaxesPayload,
   TaxJarCalculateTaxesTarget,
 } from "./taxjar-calculate-taxes-adapter";
-import { TaxJarTaxCodeMatcher } from "../tax-code/taxjar-tax-code-matcher";
+import { TaxJarCalculateTaxesTaxCodeMatcher } from "./taxjar-calculate-taxes-tax-code-matcher";
 
 export class TaxJarCalculateTaxesPayloadLinesTransformer {
   transform(
@@ -21,9 +21,9 @@ export class TaxJarCalculateTaxesPayloadLinesTransformer {
 
     const mappedLines: TaxJarCalculateTaxesTarget["params"]["line_items"] = lines.map(
       (line, index) => {
-        const matcher = new TaxJarTaxCodeMatcher();
-        const discountAmount = distributedDiscounts[index];
+        const matcher = new TaxJarCalculateTaxesTaxCodeMatcher();
         const taxCode = matcher.match(line, matches);
+        const discountAmount = distributedDiscounts[index];
 
         return {
           id: line.sourceLine.id,
