@@ -14,6 +14,7 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about: "Generate feeds consumed by Merchant Platforms",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {

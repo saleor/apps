@@ -9,6 +9,8 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about:
+        "Emails & Messages App is a multi-vendor Saleor app that integrates with notification services.",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {

@@ -11,6 +11,7 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about: "CRM App allows synchronization of customers from Saleor to other platforms",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {

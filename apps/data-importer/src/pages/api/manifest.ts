@@ -9,6 +9,8 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
+      about:
+        "Data Importer allows batch import of shop data to Saleor from sources like CSV or Excel",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
