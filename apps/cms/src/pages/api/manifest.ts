@@ -8,15 +8,18 @@ import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted
 import { productUpdatedWebhook } from "./webhooks/product-updated";
 
 export default createManifestHandler({
-  async manifestFactory(context) {
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
     const manifest: AppManifest = {
       about:
         "CMS App is a multi-integration app that connects Saleor with popular Content Management Systems.",
-      appUrl: context.appBaseUrl,
+      appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${context.appBaseUrl}/logo.png`,
+          default: `${apiBaseURL}/logo.png`,
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
@@ -26,13 +29,13 @@ export default createManifestHandler({
       name: "CMS",
       permissions: ["MANAGE_PRODUCTS"],
       supportUrl: "https://github.com/saleor/apps/discussions",
-      tokenTargetUrl: `${context.appBaseUrl}/api/register`,
+      tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
-        productVariantCreatedWebhook.getWebhookManifest(context.appBaseUrl),
-        productVariantUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
-        productVariantDeletedWebhook.getWebhookManifest(context.appBaseUrl),
-        productUpdatedWebhook.getWebhookManifest(context.appBaseUrl),
+        productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
+        productVariantUpdatedWebhook.getWebhookManifest(apiBaseURL),
+        productVariantDeletedWebhook.getWebhookManifest(apiBaseURL),
+        productUpdatedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 
