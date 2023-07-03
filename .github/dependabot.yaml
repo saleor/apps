@@ -2,95 +2,95 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
-      interval: "weekly"
+      interval: "daily"
 
   # Packages
   - package-ecosystem: "npm"
     directory: "/packages/eslint-config-saleor"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/packages/shared"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/packages/ui"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
     directory: "/packages/react-hook-form-macaw"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
 
   # Apps
   - package-ecosystem: "npm"
     directory: "/apps/cms"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
   - package-ecosystem: "npm"
     directory: apps/crm
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/data-importer
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/emails-and-messages
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/invoices
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/klaviyo
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/monitoring
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "pip"
     directory: apps/monitoring/backend
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "docker"
     directory: apps/monitoring/backend
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/products-feed
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/search
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
     directory: apps/slack
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     schedule:
       interval: weekly
   - package-ecosystem: "npm"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     directory: apps/taxes
     schedule:
       interval: weekly
