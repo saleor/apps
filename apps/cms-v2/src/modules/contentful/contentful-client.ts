@@ -1,5 +1,9 @@
 import { createClient, ContentfulClientApi } from "contentful";
 
+/**
+ * Wrapper facade of
+ * https://www.npmjs.com/package/contentful
+ */
 export class ContentfulClient {
   private client: ContentfulClientApi<undefined>;
 

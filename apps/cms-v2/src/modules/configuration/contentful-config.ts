@@ -1,23 +1,23 @@
 import { z } from "zod";
 
-export const ContentfulConfigSchema = z.object({
-  productVariantFieldsMapping: z
-    .object({
+export const ContentfulConfigSchema = z
+  .object({
+    contentId: z.string(),
+    productVariantFieldsMapping: z.object({
       variantId: z.string().min(1),
       name: z.string().min(1),
       productId: z.string().min(1),
       productName: z.string().min(1),
       productSlug: z.string().min(1),
       channels: z.string().min(1),
-    })
-    .nullable(),
-});
+    }),
+  })
+  .nullable();
+
 export type ContentfulConfigSchemaType = z.infer<typeof ContentfulConfigSchema>;
 
 export class AppConfigV2 {
-  private rootData: ContentfulConfigSchemaType = {
-    productVariantFieldsMapping: null,
-  };
+  private rootData: ContentfulConfigSchemaType = null;
 
   constructor(initialData?: ContentfulConfigSchemaType) {
     if (initialData) {

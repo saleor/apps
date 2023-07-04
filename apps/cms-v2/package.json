@@ -12,7 +12,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "contentful":"10.3.1",
     "@datocms/cma-client-node": "2.0.0",
     "@saleor/app-sdk": "0.41.0",
     "@saleor/apps-shared": "workspace:*",
@@ -27,6 +26,7 @@
     "@trpc/server": "^10.18.0",
     "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.0",
+    "contentful": "10.3.1",
     "graphql": "16.6.0",
     "graphql-tag": "^2.12.6",
     "jsdom": "^20.0.3",
