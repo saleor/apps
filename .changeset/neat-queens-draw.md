@@ -15,4 +15,4 @@
 "saleor-app-crm": patch
 ---
 
-Update next.js to 13.4.8
+Updated Next.js to 13.4.8
