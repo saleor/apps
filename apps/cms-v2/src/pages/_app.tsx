@@ -13,7 +13,7 @@ import { ThemeSynchronizer } from "@/modules/theme/theme-synchronizer";
  * Ensure instance is a singleton.
  * TODO: This is React 18 issue, consider hiding this workaround inside app-sdk
  */
-const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
+export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,4 +43,4 @@ function NextApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default NextApp;
+export default trpcClient.withTRPC(NextApp);
