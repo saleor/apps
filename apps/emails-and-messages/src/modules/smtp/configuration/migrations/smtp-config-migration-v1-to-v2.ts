@@ -1,15 +1,11 @@
 import { AppConfigPrivateMetadataManager } from "../../../app-configuration/app-config-metadata-manager";
-import { AppConfig } from "../../../app-configuration/app-config-schema";
-import { ChannelConfiguration } from "../../../channels/channel-configuration-schema";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { MjmlPrivateMetadataManager } from "../mjml-metadata-manager";
-import { SmtpConfigV2 } from "./smtp-config-schema-v2";
-import { getChannelsAssignedToConfigId } from "../../../app-configuration/migrations/get-channels-assigned-to-config-id";
 import { smtpTransformV1toV2 } from "./smtp-transform-v1-to-v2";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "smtpConfigMigrationV1ToV2",
+  name: "smtpConfigMigrationV1ToV2",
 });
 
 interface SmtpConfigMigrationV1ToV1Args {

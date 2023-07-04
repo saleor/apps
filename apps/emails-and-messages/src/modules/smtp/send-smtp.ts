@@ -27,7 +27,7 @@ export const sendSmtp = async ({
   smtpConfiguration,
 }: SendSmtpArgs) => {
   const logger = createLogger({
-    fn: "sendSmtp",
+    name: "sendSmtp",
     event,
   });
 
@@ -35,24 +35,12 @@ export const sendSmtp = async ({
 
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
-    return {
-      errors: [
-        {
-          message: "No active settings for this event",
-        },
-      ],
-    };
+    return;
   }
 
   if (!eventSettings.active) {
     logger.debug("Event settings are not active, skipping");
-    return {
-      errors: [
-        {
-          message: "Event settings are not active",
-        },
-      ],
-    };
+    return;
   }
 
   logger.debug("Sending an email using MJML");
@@ -63,8 +51,6 @@ export const sendSmtp = async ({
     subject,
     payload
   );
-
-  logger.warn(`email subject ${emailSubject} ${subject}`);
 
   if (handlebarsSubjectErrors?.length) {
     logger.error("Error during the handlebars subject template compilation");
@@ -79,6 +65,8 @@ export const sendSmtp = async ({
       errors: [{ message: "Mjml subject message is empty, skipping" }],
     };
   }
+
+  logger.debug({ emailSubject }, "Subject compiled");
 
   const { template: mjmlTemplate, errors: handlebarsErrors } = compileHandlebarsTemplate(
     rawTemplate,
@@ -98,6 +86,8 @@ export const sendSmtp = async ({
       errors: [{ message: "Mjml template message is empty, skipping" }],
     };
   }
+
+  logger.debug("Handlebars template compiled");
 
   const { html: emailBodyHtml, errors: mjmlCompilationErrors } = compileMjml(mjmlTemplate);
 
@@ -120,6 +110,8 @@ export const sendSmtp = async ({
     };
   }
 
+  logger.debug("MJML template compiled");
+
   const { plaintext: emailBodyPlaintext } = htmlToPlaintext(emailBodyHtml);
 
   if (!emailBodyPlaintext || !emailBodyPlaintext?.length) {
@@ -128,6 +120,8 @@ export const sendSmtp = async ({
       errors: [{ message: "Email body could not be converted to plaintext" }],
     };
   }
+
+  logger.debug("Email body converted to plaintext");
 
   const sendEmailSettings: SendMailArgs = {
     mailData: {
@@ -156,5 +150,5 @@ export const sendSmtp = async ({
   if (smtpErrors?.length) {
     return { errors: smtpErrors };
   }
-  logger.debug(response?.response);
+  logger.debug(response?.response, "Email sent");
 };

@@ -32,15 +32,15 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   subscriptionQueryAst: OrderCreatedGraphqlSubscription,
 });
 
+const logger = createLogger({
+  name: orderCreatedWebhook.webhookPath,
+});
+
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
   context
 ) => {
-  const logger = createLogger({
-    webhook: orderCreatedWebhook.name,
-  });
-
   logger.debug("Webhook received");
 
   const { payload, authData } = context;
