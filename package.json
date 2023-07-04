@@ -22,7 +22,7 @@
     "eslint-config-saleor": "workspace:*",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
-    "next": "13.3.0",
+    "next": "13.4.8",
     "prettier": "^2.8.4",
     "syncpack": "10.5.1",
     "turbo": "1.10.3"
