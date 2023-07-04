@@ -34,7 +34,13 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
     messageEventTypesLabels[a.eventType].localeCompare(messageEventTypesLabels[b.eventType])
   );
 
-  const { control, register, handleSubmit, setError } = useForm<SendgridUpdateEventArray>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<SendgridUpdateEventArray>({
     defaultValues: {
       configurationId: configuration.id,
       events: eventsSorted,
@@ -132,6 +138,7 @@ export const SendgridEventsSection = ({ configuration }: SendgridEventsSectionPr
             </Table.Container>
           </Box>
           <BoxFooter>
+            {errors.events && <Text color={"iconCriticalDefault"}>{errors.events.message}</Text>}
             <Button type="submit">Save provider</Button>
           </BoxFooter>
         </BoxWithBorder>

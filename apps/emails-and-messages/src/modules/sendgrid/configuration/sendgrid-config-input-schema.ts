@@ -89,7 +89,19 @@ export type SendgridUpdateEvent = z.infer<typeof sendgridUpdateEventSchema>;
 
 export const sendgridUpdateEventArraySchema = z.object({
   configurationId: z.string(),
-  events: z.array(sendgridConfigurationEventSchema),
+  events: z
+    .array(sendgridConfigurationEventSchema)
+    /*
+     * Pass the validation if all the events are in one of two states:
+     * 1. Inactive
+     * 2. Active and have a template
+     */
+    .refine(
+      (data) => data.every((event) => event.active === false || (event.active && event.template)),
+      {
+        message: "All active events must have assigned template.",
+      }
+    ),
 });
 
 export type SendgridUpdateEventArray = z.infer<typeof sendgridUpdateEventArraySchema>;
