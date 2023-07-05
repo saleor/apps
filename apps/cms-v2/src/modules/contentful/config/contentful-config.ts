@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { randomBytes } from "crypto";
+import { ProviderConfig } from "./provider-config";
 
 export const ContentfulProviderConfigSchemaInput = z.object({
   configName: z.string(),
@@ -28,7 +29,7 @@ export type ContentfulProviderConfigSchemaInputType = z.infer<
 >;
 export type ContentfulProviderConfigSchemaType = z.infer<typeof ContentfulProviderConfigSchema>;
 
-export class ContentfulConfig {
+export class ContentfulConfig implements ProviderConfig<ContentfulProviderConfigSchemaType> {
   private rootData: ContentfulConfigSchemaType = {
     providers: [],
   };
@@ -54,5 +55,9 @@ export class ContentfulConfig {
     });
 
     this.rootData.providers.push(parsedConfig);
+  }
+
+  getProviders() {
+    return this.rootData.providers;
   }
 }
