@@ -2,6 +2,7 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { ProviderConfig } from "./provider-config";
 
+// todo - validate not unique mapping fields
 export const ContentfulProviderConfigSchemaInput = z.object({
   authToken: z.string(),
   spaceId: z.string(),

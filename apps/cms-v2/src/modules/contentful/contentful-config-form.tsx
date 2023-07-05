@@ -9,22 +9,22 @@ const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigSchemaInputType["productVariantFieldsMapping"]
 > = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
-export const ContentfulConfigForm = () => {
-  const { control, getValues, setValue, watch } = useForm<ContentfulProviderConfigSchemaInputType>({
-    defaultValues: {
-      authToken: "-YkYdPUk45ta_WBtMA_oHiWAqD06YJRwPKvAXA5B9zM", // todo,
-      spaceId: "10dzov555w1j",
-      configName: "",
-      contentId: "",
-      productVariantFieldsMapping: {
-        channels: "",
-        name: "",
-        productId: "",
-        productName: "",
-        productSlug: "",
-        variantId: "",
-      },
-    },
+const ContentfulConfigForm = ({
+  defaultValues,
+  onSubmit,
+}: {
+  defaultValues: ContentfulProviderConfigSchemaInputType;
+  onSubmit(values: ContentfulProviderConfigSchemaInputType): void;
+}) => {
+  const {
+    control,
+    getValues,
+    setValue,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ContentfulProviderConfigSchemaInputType>({
+    defaultValues: defaultValues,
   });
 
   const { mutate, data } = trpcClient.contentful.fetchContentTypesFromApi.useMutation({
@@ -32,8 +32,6 @@ export const ContentfulConfigForm = () => {
       setValue("contentId", data.items[0].sys.id ?? null);
     },
   });
-
-  console.log(data);
 
   const connectionEstablished = Boolean(data);
 
@@ -48,7 +46,14 @@ export const ContentfulConfigForm = () => {
   }, [selectedContentTypeId, data?.items]);
 
   return (
-    <Box as="form" display={"grid"} gap={4}>
+    <Box
+      as="form"
+      display={"grid"}
+      gap={4}
+      onSubmit={handleSubmit((vals) => {
+        onSubmit(vals);
+      })}
+    >
       <Input
         required
         control={control}
@@ -109,8 +114,8 @@ export const ContentfulConfigForm = () => {
               Map fields from Saleor to your contentful schema.
             </Text>
             <Text as="p" marginTop={2} marginBottom={4}>
-              All fields should be type of <Text variant="bodyEmp">Text</Text>.{" "}
-              <Text variant="bodyEmp">Channels</Text> should be type of JSON.
+              All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should
+              be type of <Text variant="bodyStrong">JSON</Text>.
             </Text>
             <Box
               marginBottom={4}
@@ -148,8 +153,37 @@ export const ContentfulConfigForm = () => {
                 </Box>
               ))}
           </Box>
+          <Box display={"flex"} justifyContent="flex-end">
+            <Button type="submit">Save</Button>
+          </Box>
         </Box>
       )}
     </Box>
+  );
+};
+
+export const ContentfulAddConfigForm = () => {
+  const { mutate } = trpcClient.contentful.addProvider.useMutation();
+
+  return (
+    <ContentfulConfigForm
+      onSubmit={(values) => {
+        mutate(values);
+      }}
+      defaultValues={{
+        authToken: "",
+        configName: "",
+        contentId: "",
+        productVariantFieldsMapping: {
+          channels: "",
+          name: "",
+          productId: "",
+          productName: "",
+          productSlug: "",
+          variantId: "",
+        },
+        spaceId: "",
+      }}
+    />
   );
 };

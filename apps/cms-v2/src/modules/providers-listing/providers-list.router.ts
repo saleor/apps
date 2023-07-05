@@ -16,12 +16,11 @@ export const providersListRouter = router({
 
     const contentfulSettingsManager = new ContentfulSettingsManager(mm);
     const contentfulConfig = await contentfulSettingsManager.get();
+    const contentfulProviders = contentfulConfig.getProviders();
 
-    return [
-      ...contentfulConfig.getProviders().map((provider) => ({
-        ...provider,
-        type: "contentful",
-      })),
-    ];
+    return {
+      contentful: contentfulProviders, // todo prune tokens
+      totalProvidersLength: contentfulProviders.length,
+    };
   }),
 });

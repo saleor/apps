@@ -10,7 +10,9 @@ export const ProvidersList = () => {
     return null;
   }
 
-  if (data.length === 0) {
+  console.log(data);
+
+  if (data.totalProvidersLength === 0) {
     return (
       <Box>
         <Text as="p" marginBottom={4}>
@@ -27,11 +29,42 @@ export const ProvidersList = () => {
     );
   }
 
+  // todo consider some better, reusable table
   return (
     <Box>
-      {data.map((config) => (
-        <Box>todo</Box>
-      ))}
+      {data.contentful.length && (
+        <Box>
+          <Text variant="heading" as="h2" marginBottom={4}>
+            Contentful
+          </Text>
+          <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4}>
+            <Text variant="caption">Config name</Text>
+            <Text variant="caption">Contenful space ID</Text>
+            <Text variant="caption">Contentful content ID</Text>
+            <div />
+
+            {data.contentful.map((contentfulProvider) => (
+              <>
+                <Text>{contentfulProvider.configName}</Text>
+                <Text>{contentfulProvider.spaceId}</Text>
+                <Text>{contentfulProvider.contentId}</Text>
+                <Button marginLeft="auto" variant="tertiary">
+                  Edit
+                </Button>
+              </>
+            ))}
+          </Box>
+        </Box>
+      )}
+      <Box marginTop={8} display="flex" justifyContent="flex-end">
+        <Button
+          onClick={() => {
+            push("/add-provider");
+          }}
+        >
+          Add CMS configuration
+        </Button>
+      </Box>
     </Box>
   );
 };

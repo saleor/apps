@@ -1,9 +1,7 @@
-import { ContentfulConfigForm } from "@/modules/contentful/contentful-config-form";
-import { ProvidersList } from "@/modules/providers-listing/providers-list";
-import { trpcClient } from "@/modules/trpc/trpc-client";
+import { ContentfulAddConfigForm } from "@/modules/contentful/contentful-config-form";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
@@ -30,7 +28,7 @@ const AddContentfulPage: NextPage = () => {
             <Text>Provide required information to configure Contentful CMS.</Text>
           </Box>
         }
-        mainContent={<ContentfulConfigForm />}
+        mainContent={<ContentfulAddConfigForm />}
       />
     </Box>
   );
