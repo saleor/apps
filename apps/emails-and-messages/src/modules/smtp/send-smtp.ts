@@ -140,6 +140,7 @@ export const sendSmtp = async ({
     smtpSettings: {
       host: smtpConfiguration.smtpHost,
       port: parseInt(smtpConfiguration.smtpPort, 10),
+      encryption: smtpConfiguration.encryption,
     },
   };
 
