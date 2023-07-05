@@ -2,7 +2,7 @@ import Handlebars from "handlebars";
 import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({
-  fn: "compileHandlebarsTemplate",
+  name: "compileHandlebarsTemplate",
 });
 
 export const compileHandlebarsTemplate = (template: string, variables: any) => {

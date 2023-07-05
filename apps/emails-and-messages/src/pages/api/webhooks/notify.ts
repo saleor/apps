@@ -4,6 +4,15 @@ import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { MessageEventTypes } from "../../../modules/event-handlers/message-event-types";
 
+// Notify webhook event groups multiple event types under the one webhook. We need to map it to events recognized by the App
+const notifyEventMapping: Record<string, MessageEventTypes> = {
+  account_confirmation: "ACCOUNT_CONFIRMATION",
+  account_delete: "ACCOUNT_DELETE",
+  account_password_reset: "ACCOUNT_PASSWORD_RESET",
+  account_change_email_request: "ACCOUNT_CHANGE_EMAIL_REQUEST",
+  account_change_email_confirm: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
+};
+
 /*
  * Notify event handles multiple event types which are recognized based on payload field `notify_event`.
  * Handler recognizes if event is one of the supported typed and sends appropriate message.
@@ -62,11 +71,11 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   query: "{}", // We are using the default payload instead of subscription
 });
 
-const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
-  const logger = createLogger({
-    webhook: notifyWebhook.name,
-  });
+const logger = createLogger({
+  name: notifyWebhook.webhookPath,
+});
 
+const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.debug("Webhook received");
 
   const { payload, authData } = context;
@@ -80,22 +89,12 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 
-  // Notify webhook event groups multiple event types under the one webhook. We need to map it to events recognized by the App
-  const notifyEventMapping: Record<string, MessageEventTypes> = {
-    account_confirmation: "ACCOUNT_CONFIRMATION",
-    account_delete: "ACCOUNT_DELETE",
-    account_password_reset: "ACCOUNT_PASSWORD_RESET",
-    account_change_email_request: "ACCOUNT_CHANGE_EMAIL_REQUEST",
-    account_change_email_confirm: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
-  };
-
   const event = notifyEventMapping[payload.notify_event];
 
   if (!event) {
-    logger.error(`The type of received notify event (${payload.notify_event}) is not supported.`);
-    return res
-      .status(200)
-      .json({ error: "Email recipient has not been specified in the event payload." });
+    // NOTIFY webhook sends multiple events to the same endpoint. The app supports only a subset of them.
+    logger.debug(`The type of received notify event (${payload.notify_event}) is not supported.`);
+    return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
 
   const client = createGraphQLClient({
