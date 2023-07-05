@@ -19,8 +19,8 @@ export class ContentfulClient {
     return this.client.getContentType(type);
   }
 
-  // todo list types on frontend
-  getContentTypes() {
+  // todo error handling
+  async getContentTypes() {
     return this.client.getContentTypes();
   }
 

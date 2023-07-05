@@ -4,6 +4,7 @@ import { ProviderConfig } from "./provider-config";
 
 export const ContentfulProviderConfigSchemaInput = z.object({
   authToken: z.string(),
+  spaceId: z.string(),
   configName: z.string(),
   contentId: z.string(),
   productVariantFieldsMapping: z.object({

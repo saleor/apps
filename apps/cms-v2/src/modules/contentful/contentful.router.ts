@@ -1,10 +1,12 @@
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createSettingsManager } from "../configuration/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { ContentfulProviderConfigSchemaInput } from "./config/contentful-config";
 import { ContentfulSettingsManager } from "./config/contentful-settings-manager";
+import { ContentfulClient } from "./contentful-client";
 
 // todo extract services to context
 export const contentfulRouter = router({
@@ -44,5 +46,22 @@ export const contentfulRouter = router({
       config?.addProvider(input);
 
       return settingsManager.set(config);
+    }),
+  fetchContentTypesFromApi: protectedClientProcedure
+    .input(
+      z.object({
+        contentfulToken: z.string(),
+        contentfulSpace: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const client = new ContentfulClient({
+        accessToken: input.contentfulToken,
+        space: input.contentfulSpace,
+      });
+
+      return client.getContentTypes().catch(() => {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      });
     }),
 });
