@@ -4,7 +4,10 @@ import { z } from "zod";
 import { createSettingsManager } from "../configuration/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { ContentfulProviderConfigSchemaInput } from "./config/contentful-config";
+import {
+  ContentfulProviderConfigSchemaInput,
+  ContentfulProviderConfigSchema,
+} from "./config/contentful-config";
 import { ContentfulSettingsManager } from "./config/contentful-settings-manager";
 import { ContentfulClient } from "./contentful-client";
 
@@ -47,6 +50,25 @@ export const contentfulRouter = router({
 
       return settingsManager.set(config);
     }),
+  updateProvider: protectedClientProcedure
+    .input(ContentfulProviderConfigSchema)
+    .mutation(async ({ input, ctx }) => {
+      const client = createGraphQLClient({
+        saleorApiUrl: ctx.saleorApiUrl,
+        token: ctx.appToken,
+      });
+
+      const mm = createSettingsManager(client, ctx.appId!);
+
+      const settingsManager = new ContentfulSettingsManager(mm);
+
+      const config = await settingsManager.get();
+
+      config?.updateProvider(input);
+
+      return settingsManager.set(config);
+    }),
+
   fetchContentTypesFromApi: protectedClientProcedure
     .input(
       z.object({

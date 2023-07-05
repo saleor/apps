@@ -1,5 +1,6 @@
 import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
+import React from "react";
 import { trpcClient } from "../trpc/trpc-client";
 
 export const ProvidersList = () => {
@@ -9,8 +10,6 @@ export const ProvidersList = () => {
   if (!data) {
     return null;
   }
-
-  console.log(data);
 
   if (data.totalProvidersLength === 0) {
     return (
@@ -44,14 +43,20 @@ export const ProvidersList = () => {
             <div />
 
             {data.contentful.map((contentfulProvider) => (
-              <>
+              <React.Fragment key={contentfulProvider.id}>
                 <Text>{contentfulProvider.configName}</Text>
                 <Text>{contentfulProvider.spaceId}</Text>
                 <Text>{contentfulProvider.contentId}</Text>
-                <Button marginLeft="auto" variant="tertiary">
+                <Button
+                  marginLeft="auto"
+                  variant="tertiary"
+                  onClick={() => {
+                    push("/edit-provider/contentful/" + contentfulProvider.id);
+                  }}
+                >
                   Edit
                 </Button>
-              </>
+              </React.Fragment>
             ))}
           </Box>
         </Box>

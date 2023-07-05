@@ -18,7 +18,7 @@ export const ContentfulProviderConfigSchemaInput = z.object({
   }),
 });
 
-const ContentfulProviderConfigSchema = ContentfulProviderConfigSchemaInput.extend({
+export const ContentfulProviderConfigSchema = ContentfulProviderConfigSchemaInput.extend({
   id: z.string(),
 });
 
@@ -58,6 +58,22 @@ export class ContentfulConfig implements ProviderConfig<ContentfulProviderConfig
     });
 
     this.rootData.providers.push(parsedConfig);
+
+    return this;
+  }
+
+  updateProvider(providerConfig: ContentfulProviderConfigSchemaType) {
+    const parsedConfig = ContentfulProviderConfigSchema.parse(providerConfig);
+
+    this.rootData.providers = this.rootData.providers.map((p) => {
+      if (p.id === parsedConfig.id) {
+        return parsedConfig;
+      } else {
+        return p;
+      }
+    });
+
+    return this;
   }
 
   getProviders() {

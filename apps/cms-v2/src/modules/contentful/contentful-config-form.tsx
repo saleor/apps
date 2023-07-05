@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { ContentfulProviderConfigSchemaInputType } from "./config/contentful-config";
 import { trpcClient } from "../trpc/trpc-client";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigSchemaInputType["productVariantFieldsMapping"]
@@ -44,6 +46,16 @@ const ContentfulConfigForm = ({
       return null;
     }
   }, [selectedContentTypeId, data?.items]);
+
+  /**
+   * For "edit" form variant, tokens already exist, so fetch immediately
+   */
+  useEffect(() => {
+    mutate({
+      contentfulSpace: defaultValues.spaceId,
+      contentfulToken: defaultValues.authToken,
+    });
+  }, [defaultValues.authToken, defaultValues.spaceId]);
 
   return (
     <Box
@@ -184,6 +196,42 @@ export const ContentfulAddConfigForm = () => {
         },
         spaceId: "",
       }}
+    />
+  );
+};
+
+export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => {
+  const { push } = useRouter();
+  const { notifySuccess } = useDashboardNotification();
+
+  const { data } = trpcClient.contentful.fetchProviderConfiguration.useQuery(
+    {
+      providerId: configId,
+    },
+    {
+      enabled: !!configId,
+    }
+  );
+  const { mutate } = trpcClient.contentful.updateProvider.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Updated configuration");
+      push("/configuration");
+    },
+  });
+
+  if (!data) {
+    return <Text>Loading</Text>;
+  }
+
+  return (
+    <ContentfulConfigForm
+      defaultValues={data}
+      onSubmit={(values) =>
+        mutate({
+          ...values,
+          id: configId,
+        })
+      }
     />
   );
 };
