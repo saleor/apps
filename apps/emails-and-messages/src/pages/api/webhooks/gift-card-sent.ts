@@ -57,15 +57,15 @@ export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPay
   subscriptionQueryAst: GiftCardSentGraphqlSubscription,
 });
 
+const logger = createLogger({
+  name: giftCardSentWebhook.webhookPath,
+});
+
 const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async (
   req,
   res,
   context
 ) => {
-  const logger = createLogger({
-    webhook: giftCardSentWebhook.name,
-  });
-
   logger.debug("Webhook received");
 
   const { payload, authData } = context;

@@ -34,15 +34,15 @@ export const orderCancelledWebhook = new SaleorAsyncWebhook<OrderCancelledWebhoo
   subscriptionQueryAst: OrderCancelledGraphqlSubscription,
 });
 
+const logger = createLogger({
+  name: orderCancelledWebhook.webhookPath,
+});
+
 const handler: NextWebhookApiHandler<OrderCancelledWebhookPayloadFragment> = async (
   req,
   res,
   context
 ) => {
-  const logger = createLogger({
-    webhook: orderCancelledWebhook.name,
-  });
-
   logger.debug("Webhook received");
 
   const { payload, authData } = context;

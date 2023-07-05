@@ -43,15 +43,15 @@ export const invoiceSentWebhook = new SaleorAsyncWebhook<InvoiceSentWebhookPaylo
   subscriptionQueryAst: InvoiceSentGraphqlSubscription,
 });
 
+const logger = createLogger({
+  name: invoiceSentWebhook.name,
+});
+
 const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async (
   req,
   res,
   context
 ) => {
-  const logger = createLogger({
-    webhook: invoiceSentWebhook.name,
-  });
-
   logger.debug("Webhook received");
 
   const { payload, authData } = context;

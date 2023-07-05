@@ -3,7 +3,7 @@ import { createLogger } from "@saleor/apps-shared";
 import { SmtpEncryptionType } from "./configuration/migrations/mjml-config-schema-v1";
 
 const logger = createLogger({
-  fn: "sendEmailWithSmtp",
+  name: "sendEmailWithSmtp",
 });
 
 export interface SendMailArgs {

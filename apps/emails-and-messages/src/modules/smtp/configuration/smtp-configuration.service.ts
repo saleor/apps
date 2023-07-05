@@ -8,7 +8,7 @@ import { filterConfigurations } from "../../app-configuration/filter-configurati
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 
 const logger = createLogger({
-  service: "SmtpConfigurationService",
+  name: "SmtpConfigurationService",
 });
 
 export type SmtpConfigurationServiceErrorType =

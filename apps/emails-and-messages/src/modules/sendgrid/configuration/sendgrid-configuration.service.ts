@@ -12,7 +12,7 @@ import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 
 const logger = createLogger({
-  service: "SendgridConfigurationService",
+  name: "SendgridConfigurationService",
 });
 
 export type SendgridConfigurationServiceErrorType =
