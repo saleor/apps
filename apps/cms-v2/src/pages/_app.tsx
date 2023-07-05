@@ -8,6 +8,7 @@ import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 import { GraphQLProvider } from "@/modules/graphql/GraphQLProvider";
 import { ThemeSynchronizer } from "@/modules/theme/theme-synchronizer";
+import { trpcClient } from "@/modules/trpc/trpc-client";
 
 /**
  * Ensure instance is a singleton.
