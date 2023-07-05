@@ -30,37 +30,19 @@ export const sendSendgrid = async ({
 
   if (!sendgridConfiguration.senderEmail) {
     logger.debug("Sender email has not been specified, skipping");
-    return {
-      errors: [
-        {
-          message: "Sender email has not been set up",
-        },
-      ],
-    };
+    return;
   }
 
   const eventSettings = sendgridConfiguration.events.find((e) => e.eventType === event);
 
   if (!eventSettings) {
     logger.debug("No active settings for this event, skipping");
-    return {
-      errors: [
-        {
-          message: "No active settings for this event",
-        },
-      ],
-    };
+    return;
   }
 
   if (!eventSettings.active) {
     logger.debug("Event settings are not active, skipping");
-    return {
-      errors: [
-        {
-          message: "Event settings are not active",
-        },
-      ],
-    };
+    return;
   }
 
   logger.debug("Sending an email using Sendgrid");

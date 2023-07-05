@@ -46,10 +46,25 @@ export const sendEventMessages = async ({
     featureFlagService,
   });
 
-  const availableSmtpConfigurations = await smtpConfigurationService.getConfigurations({
-    active: true,
-    availableInChannel: channel,
+  const sendgridConfigurationService = new SendgridConfigurationService({
+    metadataManager: new SendgridPrivateMetadataManager(
+      createSettingsManager(client, authData.appId),
+      authData.saleorApiUrl
+    ),
+    featureFlagService,
   });
+
+  // Fetch configurations for all providers concurrently
+  const [availableSmtpConfigurations, availableSendgridConfigurations] = await Promise.all([
+    smtpConfigurationService.getConfigurations({
+      active: true,
+      availableInChannel: channel,
+    }),
+    sendgridConfigurationService.getConfigurations({
+      active: true,
+      availableInChannel: channel,
+    }),
+  ]);
 
   for (const smtpConfiguration of availableSmtpConfigurations) {
     const smtpStatus = await sendSmtp({
@@ -66,19 +81,6 @@ export const sendEventMessages = async ({
   }
 
   logger.debug("Channel has assigned Sendgrid configuration");
-
-  const sendgridConfigurationService = new SendgridConfigurationService({
-    metadataManager: new SendgridPrivateMetadataManager(
-      createSettingsManager(client, authData.appId),
-      authData.saleorApiUrl
-    ),
-    featureFlagService,
-  });
-
-  const availableSendgridConfigurations = await sendgridConfigurationService.getConfigurations({
-    active: true,
-    availableInChannel: channel,
-  });
 
   for (const sendgridConfiguration of availableSendgridConfigurations) {
     const sendgridStatus = await sendSendgrid({
