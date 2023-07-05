@@ -1,30 +1,32 @@
-import { createClient, ContentfulClientApi } from "contentful";
+import { createClient, ClientAPI } from "contentful-management";
 
 /**
  * Wrapper facade of
  * https://www.npmjs.com/package/contentful
  */
 export class ContentfulClient {
-  private client: ContentfulClientApi<undefined>;
+  private client: ClientAPI;
+  private space: string;
 
   constructor(opts: { space: string; accessToken: string }) {
+    this.space = opts.space;
+
     this.client = createClient({
       accessToken: opts.accessToken,
-      space: opts.space,
     });
   }
 
-  // todo - fetch fields and propose them to the user
-  getContentType(type: string) {
-    return this.client.getContentType(type);
-  }
-
   // todo error handling
-  async getContentTypes() {
-    return this.client.getContentTypes();
+  async getContentTypes(env: string) {
+    return (await (await this.client.getSpace(this.space)).getEnvironment(env)).getContentTypes();
   }
 
-  ping() {
-    return this.getContentTypes(); // todo maybe there is cheaper method for that
+  // todo connect to form, add field
+  async getEnvironments() {
+    return (await this.client.getSpace(this.space)).getEnvironments();
+  }
+
+  uploadProduct() {
+    // todo
   }
 }
