@@ -16,7 +16,7 @@ export const ContentfulConfigSchema = z
 
 export type ContentfulConfigSchemaType = z.infer<typeof ContentfulConfigSchema>;
 
-export class AppConfigV2 {
+export class ContentfulConfig {
   private rootData: ContentfulConfigSchemaType = null;
 
   constructor(initialData?: ContentfulConfigSchemaType) {
@@ -26,7 +26,7 @@ export class AppConfigV2 {
   }
 
   static parse(serializedSchema: string) {
-    return new AppConfigV2(JSON.parse(serializedSchema));
+    return new ContentfulConfig(JSON.parse(serializedSchema));
   }
 
   serialize() {
