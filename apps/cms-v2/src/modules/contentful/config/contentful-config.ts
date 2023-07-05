@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { ProviderConfig } from "./provider-config";
 
 export const ContentfulProviderConfigSchemaInput = z.object({
+  authToken: z.string(),
   configName: z.string(),
   contentId: z.string(),
   productVariantFieldsMapping: z.object({
@@ -59,5 +60,9 @@ export class ContentfulConfig implements ProviderConfig<ContentfulProviderConfig
 
   getProviders() {
     return this.rootData.providers;
+  }
+
+  getProviderById(id: string) {
+    return this.getProviders().find((p) => p.id === id);
   }
 }
