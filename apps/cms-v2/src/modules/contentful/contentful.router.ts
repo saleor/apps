@@ -69,7 +69,7 @@ export const contentfulRouter = router({
       return settingsManager.set(config);
     }),
 
-  fetchContentTypesFromApi: protectedClientProcedure
+  fetchEnvironmentsFromApi: protectedClientProcedure
     .input(
       z.object({
         contentfulToken: z.string(),
@@ -82,7 +82,25 @@ export const contentfulRouter = router({
         space: input.contentfulSpace,
       });
 
-      return client.getContentTypes().catch(() => {
+      return client.getEnvironments();
+    }),
+  fetchContentTypesFromApi: protectedClientProcedure
+    .input(
+      z.object({
+        contentfulToken: z.string(),
+        contentfulSpace: z.string(),
+        contentfulEnv: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const client = new ContentfulClient({
+        accessToken: input.contentfulToken,
+        space: input.contentfulSpace,
+      });
+
+      return client.getContentTypes(input.contentfulEnv).catch((e) => {
+        console.error(e);
+
         throw new TRPCError({ code: "BAD_REQUEST" });
       });
     }),

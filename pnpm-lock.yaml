@@ -206,9 +206,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.0.0
         version: 4.0.0(vite@4.3.9)
-      contentful:
-        specifier: 10.3.1
-        version: 10.3.1
       contentful-management:
         specifier: 10.38.3
         version: 10.38.3
@@ -12488,13 +12485,6 @@ packages:
       - debug
     dev: false
 
-  /contentful-resolve-response@1.7.0:
-    resolution: {integrity: sha512-NIaQkXAdNWf/1wp13aqtrmHWHy71oCIIbynojGs9ONDtA7hBXC2yCEf2IjzfgOkrkEfOMvwDQHizD0WmL6FR8w==}
-    engines: {node: '>=4.7.2'}
-    dependencies:
-      fast-copy: 2.1.7
-    dev: false
-
   /contentful-sdk-core@7.1.0:
     resolution: {integrity: sha512-RzTPnRsbCdVAhyka3wa9sDsAu9YsxoerNgaMqd63Ljb7qpG2zkdHcP7NTfyIbuHDJNJdAQdifyafxfEEwP+q/w==}
     engines: {node: '>=12'}
@@ -12504,20 +12494,6 @@ packages:
       lodash.isstring: 4.0.1
       p-throttle: 4.1.1
       qs: 6.11.2
-    dev: false
-
-  /contentful@10.3.1:
-    resolution: {integrity: sha512-0qtxJd2KKYxeZoeaRBEfP6OJJXvzYTm5fnMqZECVYbVIhTemKHEMvNMqkIZ/3r6F1DxHMk3yVh2XMuhGxrvGUQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@contentful/rich-text-types': 16.2.0
-      axios: 0.26.1
-      contentful-resolve-response: 1.7.0
-      contentful-sdk-core: 7.1.0
-      json-stringify-safe: 5.0.1
-      type-fest: 3.12.0
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /convert-source-map@1.9.0:

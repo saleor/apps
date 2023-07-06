@@ -29,33 +29,47 @@ const ContentfulConfigForm = ({
     defaultValues: defaultValues,
   });
 
-  const { mutate, data } = trpcClient.contentful.fetchContentTypesFromApi.useMutation({
-    onSuccess(data) {
-      setValue("contentId", data.items[0].sys.id ?? null);
-    },
-  });
+  const { mutate: fetchContentTypes, data: contentTypesData } =
+    trpcClient.contentful.fetchContentTypesFromApi.useMutation({
+      onSuccess(data) {
+        setValue("contentId", data.items[0].sys.id ?? null);
+      },
+    });
 
-  const connectionEstablished = Boolean(data);
+  const { mutate: fetchEnvironments, data: environmentsData } =
+    trpcClient.contentful.fetchEnvironmentsFromApi.useMutation({
+      onSuccess(data) {
+        setValue("environment", data.items[0].sys.id);
+      },
+    });
 
   const selectedContentTypeId = watch("contentId");
 
   const availableFields = useMemo(() => {
     try {
-      return data?.items?.find((i) => i.sys.id === selectedContentTypeId)?.fields;
+      return contentTypesData?.items?.find((i) => i.sys.id === selectedContentTypeId)?.fields;
     } catch (e) {
       return null;
     }
-  }, [selectedContentTypeId, data?.items]);
+  }, [selectedContentTypeId, contentTypesData?.items]);
 
   /**
    * For "edit" form variant, tokens already exist, so fetch immediately
    */
   useEffect(() => {
-    mutate({
-      contentfulSpace: defaultValues.spaceId,
-      contentfulToken: defaultValues.authToken,
-    });
-  }, [defaultValues.authToken, defaultValues.spaceId]);
+    if (defaultValues.authToken && defaultValues.spaceId && defaultValues.environment) {
+      fetchContentTypes({
+        contentfulSpace: defaultValues.spaceId,
+        contentfulToken: defaultValues.authToken,
+        contentfulEnv: defaultValues.environment,
+      });
+
+      fetchEnvironments({
+        contentfulSpace: defaultValues.spaceId,
+        contentfulToken: defaultValues.authToken,
+      });
+    }
+  }, [defaultValues.authToken, defaultValues.spaceId, defaultValues.environment]);
 
   return (
     <Box
@@ -88,25 +102,62 @@ const ContentfulConfigForm = ({
           control={control}
           name="authToken"
           label="Contentful auth token"
-          helperText="TODO how to get token"
+          helperText="Personal access token todo tutorial"
         />
-        <Box display={"flex"} justifyContent="flex-end">
-          <Button
-            variant="secondary"
-            onClick={() => {
-              const values = getValues();
+        {!environmentsData && (
+          <Box display={"flex"} justifyContent="flex-end">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const values = getValues();
 
-              return mutate({
-                contentfulSpace: values.spaceId,
-                contentfulToken: values.authToken,
-              });
-            }}
-          >
-            Verify connection
-          </Button>
-        </Box>
+                return fetchEnvironments({
+                  contentfulSpace: values.spaceId,
+                  contentfulToken: values.authToken,
+                });
+              }}
+            >
+              Continue
+            </Button>
+          </Box>
+        )}
+        {environmentsData && (
+          <>
+            <Select
+              required
+              control={control}
+              name="environment"
+              label="Contentful environment"
+              helperText="TODO how to get token"
+              options={environmentsData.items.map((item) => ({
+                label: item.name,
+                value: item.sys.id,
+              }))}
+            />
+            {!contentTypesData && (
+              <Box display={"flex"} justifyContent="flex-end">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    const values = getValues();
+
+                    console.log(values);
+
+                    return fetchContentTypes({
+                      contentfulSpace: values.spaceId,
+                      contentfulToken: values.authToken,
+                      contentfulEnv: values.environment,
+                    });
+                  }}
+                >
+                  Continue
+                </Button>
+              </Box>
+            )}
+          </>
+        )}
       </Box>
-      {connectionEstablished && (
+      {contentTypesData && (
         <Box display={"grid"} gap={4} marginY={4}>
           <Text variant="heading">Configure fields mapping</Text>
           <Text as="p">First select content type you want to synchronize products with.</Text>
@@ -115,7 +166,7 @@ const ContentfulConfigForm = ({
             label="Content Type"
             control={control}
             name="contentId"
-            options={data?.items.map((contentType) => ({
+            options={contentTypesData?.items.map((contentType) => ({
               label: contentType.name,
               value: contentType.sys.id,
             }))}
@@ -175,7 +226,15 @@ const ContentfulConfigForm = ({
 };
 
 export const ContentfulAddConfigForm = () => {
-  const { mutate } = trpcClient.contentful.addProvider.useMutation();
+  const { push } = useRouter();
+  const { notifySuccess } = useDashboardNotification();
+
+  const { mutate } = trpcClient.contentful.addProvider.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Updated configuration");
+      push("/configuration");
+    },
+  });
 
   return (
     <ContentfulConfigForm
@@ -185,6 +244,7 @@ export const ContentfulAddConfigForm = () => {
       defaultValues={{
         authToken: "",
         configName: "",
+        environment: "",
         contentId: "",
         productVariantFieldsMapping: {
           channels: "",
