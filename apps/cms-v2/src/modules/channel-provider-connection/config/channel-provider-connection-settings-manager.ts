@@ -1,18 +1,20 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { ContentfulConfig } from "./contentful-config";
+import { ChannelProviderConnectionConfig } from "./channel-provider-connection-config";
 
-export class ContentfulSettingsManager {
-  private readonly metadataKey = "contentful-config-v1";
+export class ChannelProviderConnectionSettingsManager {
+  private readonly metadataKey = "channel-provider-connection-v1";
 
   constructor(private settingsManager: SettingsManager) {}
 
-  get(): Promise<ContentfulConfig> {
+  get(): Promise<ChannelProviderConnectionConfig> {
     return this.settingsManager.get(this.metadataKey).then((data) => {
-      return data ? ContentfulConfig.parse(data) : new ContentfulConfig();
+      return data
+        ? ChannelProviderConnectionConfig.parse(data)
+        : new ChannelProviderConnectionConfig();
     });
   }
 
-  set(config: ContentfulConfig) {
+  set(config: ChannelProviderConnectionConfig) {
     return this.settingsManager.set({
       key: this.metadataKey,
       value: config.serialize(),
