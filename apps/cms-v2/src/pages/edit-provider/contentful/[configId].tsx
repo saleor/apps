@@ -2,7 +2,7 @@ import { ContentfulEditConfigForm } from "@/modules/contentful/contentful-config
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 

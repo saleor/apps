@@ -11,12 +11,17 @@ const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigSchemaInputType["productVariantFieldsMapping"]
 > = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
+/**
+ * TODO - when space, token or env changes, refetch queries
+ */
 const ContentfulConfigForm = ({
   defaultValues,
   onSubmit,
+  onDelete,
 }: {
   defaultValues: ContentfulProviderConfigSchemaInputType;
   onSubmit(values: ContentfulProviderConfigSchemaInputType): void;
+  onDelete?(): void;
 }) => {
   const {
     control,
@@ -69,7 +74,13 @@ const ContentfulConfigForm = ({
         contentfulToken: defaultValues.authToken,
       });
     }
-  }, [defaultValues.authToken, defaultValues.spaceId, defaultValues.environment]);
+  }, [
+    defaultValues.authToken,
+    defaultValues.spaceId,
+    defaultValues.environment,
+    fetchContentTypes,
+    fetchEnvironments,
+  ]);
 
   return (
     <Box
@@ -216,7 +227,12 @@ const ContentfulConfigForm = ({
                 </Box>
               ))}
           </Box>
-          <Box display={"flex"} justifyContent="flex-end">
+          <Box display={"flex"} justifyContent="flex-end" gap={4}>
+            {onDelete && (
+              <Button onClick={onDelete} variant="tertiary">
+                Delete
+              </Button>
+            )}
             <Button type="submit">Save</Button>
           </Box>
         </Box>
@@ -279,12 +295,22 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
     },
   });
 
+  const { mutate: deleteProvider } = trpcClient.contentful.deleteProvider.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Removed configuration");
+      push("/configuration");
+    },
+  });
+
   if (!data) {
     return <Text>Loading</Text>;
   }
 
   return (
     <ContentfulConfigForm
+      onDelete={() => {
+        deleteProvider({ id: configId });
+      }}
       defaultValues={data}
       onSubmit={(values) =>
         mutate({

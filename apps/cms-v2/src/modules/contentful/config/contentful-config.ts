@@ -77,6 +77,12 @@ export class ContentfulConfig implements ProviderConfig<ContentfulProviderConfig
     return this;
   }
 
+  deleteProvider(id: string) {
+    this.rootData.providers = this.rootData.providers.filter((p) => p.id !== id);
+
+    return this;
+  }
+
   getProviders() {
     return this.rootData.providers;
   }

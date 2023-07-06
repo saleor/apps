@@ -69,6 +69,25 @@ export const contentfulRouter = router({
       return settingsManager.set(config);
     }),
 
+  deleteProvider: protectedClientProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const client = createGraphQLClient({
+        saleorApiUrl: ctx.saleorApiUrl,
+        token: ctx.appToken,
+      });
+
+      const mm = createSettingsManager(client, ctx.appId!);
+
+      const settingsManager = new ContentfulSettingsManager(mm);
+
+      const config = await settingsManager.get();
+
+      config?.deleteProvider(input.id);
+
+      return settingsManager.set(config);
+    }),
+
   fetchEnvironmentsFromApi: protectedClientProcedure
     .input(
       z.object({
