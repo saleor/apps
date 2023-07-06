@@ -1,5 +1,5 @@
+import { generateId } from "@/modules/shared/generate-id";
 import { z } from "zod";
-import { randomBytes } from "crypto";
 import { ProviderConfig } from "./provider-config";
 
 // todo - validate not unique mapping fields
@@ -55,7 +55,7 @@ export class ContentfulConfig implements ProviderConfig<ContentfulProviderConfig
   addProvider(providerConfig: ContentfulProviderConfigSchemaInputType) {
     const parsedConfig = ContentfulProviderConfigSchema.parse({
       ...providerConfig,
-      id: randomBytes(8).toString("hex"),
+      id: generateId(),
     });
 
     this.rootData.providers.push(parsedConfig);
