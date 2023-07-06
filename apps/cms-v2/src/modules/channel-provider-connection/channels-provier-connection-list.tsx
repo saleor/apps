@@ -2,6 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text, ArrowRightIcon } from "@saleor/macaw-ui/next";
 import { Select } from "@saleor/react-hook-form-macaw";
 import React, { forwardRef, useMemo, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
@@ -124,14 +125,8 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   );
 };
 
-const AddConnectionModal = forwardRef<
-  HTMLDialogElement,
-  {
-    onSubmit(values: FormSchema): void;
-    onClose(): void;
-  }
->((props, ref) => (
-  <Modal ref={ref}>
+const AddConnectionModal = (props: { onSubmit(values: FormSchema): void; onClose(): void }) => (
+  <Modal onClose={props.onClose}>
     <Text as="h2" variant="heading">
       Connect channel with Provider
     </Text>
@@ -154,11 +149,13 @@ const AddConnectionModal = forwardRef<
       </Button>
     </Box>
   </Modal>
-));
+);
 
 AddConnectionModal.displayName = "AddConnectionModal";
 
 export const ChannelProviderConnectionList = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const { data, refetch } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { mutate: removeConnection } =
     trpcClient.channelsProvidersConnection.removeConnection.useMutation({
@@ -167,7 +164,6 @@ export const ChannelProviderConnectionList = () => {
         notifySuccess("Success", "Removed connection");
       },
     });
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const { notifySuccess } = useDashboardNotification();
 
   // Prefetch
@@ -179,7 +175,7 @@ export const ChannelProviderConnectionList = () => {
       onSuccess() {
         notifySuccess("Success", "Added connection");
         refetch();
-        dialogRef.current?.close();
+        setDialogOpen(false);
       },
     });
 
@@ -211,13 +207,14 @@ export const ChannelProviderConnectionList = () => {
 
   return (
     <Box>
-      <AddConnectionModal
-        ref={dialogRef}
-        onClose={() => {
-          dialogRef.current?.close();
-        }}
-        onSubmit={handleFormSubmit}
-      />
+      {dialogOpen && (
+        <AddConnectionModal
+          onClose={() => {
+            setDialogOpen(false);
+          }}
+          onSubmit={handleFormSubmit}
+        />
+      )}
       {data.length === 0 && (
         <NoConnections
           onCreate={() => {
@@ -228,7 +225,13 @@ export const ChannelProviderConnectionList = () => {
       {data.length > 0 && <ConnectionsList onRemove={handleDelete} />}
       {data.length > 0 && (
         <Box display="flex" justifyContent="flex-end" marginTop={6}>
-          <Button onClick={() => dialogRef.current?.showModal()}>Add connection</Button>
+          <Button
+            onClick={() => {
+              setDialogOpen(true);
+            }}
+          >
+            Add connection
+          </Button>
         </Box>
       )}
     </Box>
