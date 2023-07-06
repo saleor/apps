@@ -13,6 +13,14 @@ const InvoiceSentWebhookPayload = gql`
   fragment InvoiceSentWebhookPayload on InvoiceSent {
     invoice {
       id
+      metadata {
+        key
+        value
+      }
+      privateMetadata {
+        key
+        value
+      }
       message
       externalUrl
       url
