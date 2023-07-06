@@ -3,6 +3,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
+import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted";
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
 
 export default createManifestHandler({
@@ -38,6 +39,7 @@ export default createManifestHandler({
         // TODO optimize - create webhooks dynamically
         productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
         productVariantUpdatedWebhook.getWebhookManifest(apiBaseURL),
+        productVariantDeletedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 

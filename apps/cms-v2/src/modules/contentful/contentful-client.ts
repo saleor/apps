@@ -70,6 +70,20 @@ export class ContentfulClient {
     return entry.update();
   }
 
+  async deleteProduct(opts: {
+    configuration: ContentfulProviderConfigSchemaType;
+    variant: Pick<WebhookProductVariantFragment, "id">;
+  }) {
+    const space = await this.client.getSpace(this.space);
+    const env = await space.getEnvironment(opts.configuration.environment);
+
+    const entry = await env.getEntry(opts.variant.id);
+
+    console.log(entry);
+
+    await entry.delete();
+  }
+
   async uploadProduct(opts: {
     configuration: ContentfulProviderConfigSchemaType;
     variant: WebhookProductVariantFragment;
