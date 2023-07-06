@@ -36,7 +36,7 @@ export const ProvidersList = () => {
           <Text variant="heading" as="h2" marginBottom={4}>
             Contentful
           </Text>
-          <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4}>
+          <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4} alignItems="center">
             <Text variant="caption">Config name</Text>
             <Text variant="caption">Contenful space ID</Text>
             <Text variant="caption">Contentful content ID</Text>

@@ -78,7 +78,7 @@ const Form = (props: { onSubmit(values: FormSchema): void }) => {
   );
 };
 
-const ConnectionsList = () => {
+const ConnectionsList = (props: { onEdit(connId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
@@ -95,9 +95,16 @@ const ConnectionsList = () => {
 
   return (
     <Box>
-      <Box display="grid" justifyContent={"space-between"} gridTemplateColumns={2} gap={4}>
+      <Box
+        display="grid"
+        justifyContent={"space-between"}
+        __gridTemplateColumns={"1fr 1fr auto"}
+        gap={4}
+        alignItems="center"
+      >
         <Text variant="caption">Saleor Channel</Text>
         <Text variant="caption">Target CMS</Text>
+        <div />
         {data?.map((conn) => {
           const provider = providersFlatList.find((p) => p.provider.id === conn.providerId);
 
@@ -108,6 +115,9 @@ const ConnectionsList = () => {
                 <Text>{provider?.provider.configName}</Text>
                 <Text color="textNeutralSubdued"> ({provider?.type})</Text>
               </Text>
+              <Button onClick={() => props.onEdit(conn.id)} variant="tertiary">
+                Edit
+              </Button>
             </React.Fragment>
           );
         })}
@@ -117,7 +127,7 @@ const ConnectionsList = () => {
 };
 
 export const ChannelProviderConnectionList = () => {
-  const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
+  const { data, refetch } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { notifySuccess } = useDashboardNotification();
 
@@ -129,6 +139,7 @@ export const ChannelProviderConnectionList = () => {
     trpcClient.channelsProvidersConnection.addConnection.useMutation({
       onSuccess() {
         notifySuccess("Success", "Added connection");
+        refetch();
         dialogRef.current?.close();
       },
     });
@@ -148,6 +159,10 @@ export const ChannelProviderConnectionList = () => {
       ...values,
       providerType,
     });
+  };
+
+  const handleEdit = (connId: string) => {
+    // todo
   };
 
   if (!data) {
@@ -196,7 +211,12 @@ export const ChannelProviderConnectionList = () => {
           }}
         />
       )}
-      {data.length > 0 && <ConnectionsList />}
+      {data.length > 0 && <ConnectionsList onEdit={handleEdit} />}
+      {data.length > 0 && (
+        <Box display="flex" justifyContent="flex-end" marginTop={6}>
+          <Button onClick={() => dialogRef.current?.showModal()}>Add connection</Button>
+        </Box>
+      )}
     </Box>
   );
 };
