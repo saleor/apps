@@ -1,3 +1,5 @@
+import { Contentful } from "@/modules/contentful/contentful";
+import { cmsTypes } from "@/modules/shared/cms-provider";
 import { generateId } from "@/modules/shared/generate-id";
 import { z } from "zod";
 
@@ -7,7 +9,7 @@ import { z } from "zod";
 const ConnectionSchemaInput = z.object({
   channelSlug: z.string(), // todo maybe channel ID
   providerId: z.string(),
-  providerType: z.enum(["contentful"]), // todo extract enum to shared
+  providerType: z.enum(cmsTypes),
 });
 
 const ConnectionSchema = ConnectionSchemaInput.extend({

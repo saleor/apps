@@ -1,10 +1,11 @@
-import { ProvidersList } from "@/modules/providers-listing/providers-list";
-import { trpcClient } from "@/modules/trpc/trpc-client";
+import { Contentful } from "@/modules/contentful/contentful";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+
+const providers = [Contentful];
 
 const AddProviderPage: NextPage = () => {
   const { push } = useRouter();
@@ -30,26 +31,28 @@ const AddProviderPage: NextPage = () => {
         }
         mainContent={
           <Box>
-            <Box display="flex" alignItems="center" gap={4}>
-              <Box>
-                <Text as="h2" marginBottom={4} variant="heading">
-                  Contentful
-                </Text>
-                <Text>
-                  More than a headless CMS, Contentful is the API-first composable content platform
-                  to create, manage and publish content on any digital channel.
-                </Text>
+            {providers.map((p) => (
+              <Box display="flex" alignItems="center" gap={4} key={p.type}>
+                <Box __width="30px" __height="30px" __flex="0 0 30px" alignSelf={"start"}>
+                  <Box width="100%" as="img" src={p.logoUrl} />
+                </Box>
+                <Box>
+                  <Text as="h2" marginBottom={4} variant="heading">
+                    {p.displayName}
+                  </Text>
+                  <Text>{p.description}</Text>
+                </Box>
+                <Button
+                  variant="secondary"
+                  whiteSpace="nowrap"
+                  onClick={() => {
+                    push(`/add-provider/${p.type}`);
+                  }}
+                >
+                  Set up {p.displayName}
+                </Button>
               </Box>
-              <Button
-                variant="secondary"
-                whiteSpace="nowrap"
-                onClick={() => {
-                  push("/add-provider/contentful");
-                }}
-              >
-                Set up Contentful
-              </Button>
-            </Box>
+            ))}
           </Box>
         }
       />

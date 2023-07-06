@@ -4,6 +4,7 @@ import { Select } from "@saleor/react-hook-form-macaw";
 import React, { forwardRef, useMemo, useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { createProvider } from "../shared/cms-provider";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
 import { ConnectionSchemaInputType } from "./config/channel-provider-connection-config";
@@ -105,14 +106,15 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
         <Text variant="caption">Target CMS</Text>
         <div />
         {data?.map((conn) => {
-          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId);
+          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId)!;
+          const providerName = createProvider(provider?.type).displayName;
 
           return (
             <React.Fragment key={conn.id}>
               <Text>{channels?.find((c) => c.slug === conn.channelSlug)?.name}</Text>
               <Text>
                 <Text>{provider?.provider.configName}</Text>
-                <Text color="textNeutralSubdued"> ({provider?.type})</Text>
+                <Text color="textNeutralSubdued"> ({providerName})</Text>
               </Text>
               <Button onClick={() => props.onRemove(conn.id)} variant="tertiary">
                 Remove
@@ -218,7 +220,7 @@ export const ChannelProviderConnectionList = () => {
       {data.length === 0 && (
         <NoConnections
           onCreate={() => {
-            dialogRef?.current?.showModal();
+            setDialogOpen(true);
           }}
         />
       )}
