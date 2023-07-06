@@ -2,6 +2,7 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
+import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -32,6 +33,10 @@ export default createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
+      webhooks: [
+        // TODO optimize - create webhooks dynamically
+        productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
+      ],
     };
 
     return manifest;

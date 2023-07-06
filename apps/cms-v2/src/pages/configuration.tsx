@@ -19,6 +19,7 @@ const ConfigurationPage: NextPage = () => {
         </Text>
       </Box>
       <AppSection
+        marginBottom={14}
         heading="Providers configuration"
         sideContent={
           <Box>
@@ -26,6 +27,31 @@ const ConfigurationPage: NextPage = () => {
           </Box>
         }
         mainContent={<ProvidersList />}
+      />
+      <AppSection
+        marginBottom={14}
+        heading="Automatic synchronization"
+        sideContent={
+          <Box>
+            <Text>
+              Map channels to providers to automatically sync every added, deleted or update product
+              variant.
+            </Text>
+          </Box>
+        }
+        mainContent={<Text>TODO</Text>}
+      />
+      <AppSection
+        heading="Initial sync"
+        sideContent={
+          <Box>
+            <Text>
+              Perform initial scan of product variants to push existing database yo selected
+              provider.
+            </Text>
+          </Box>
+        }
+        mainContent={<Text>TODO</Text>}
       />
     </Box>
   );
