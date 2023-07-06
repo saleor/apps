@@ -32,6 +32,44 @@ export class ContentfulClient {
     return (await this.client.getSpace(this.space)).getEnvironments();
   }
 
+  async updateProduct(opts: {
+    configuration: ContentfulProviderConfigSchemaType;
+    variant: WebhookProductVariantFragment;
+  }) {
+    const space = await this.client.getSpace(this.space);
+    const env = await space.getEnvironment(opts.configuration.environment);
+
+    const { channels, name, productId, productName, productSlug, variantId } =
+      opts.configuration.productVariantFieldsMapping;
+
+    const variant = opts.variant;
+
+    const entry = await env.getEntry(variant.id);
+
+    entry.fields = {
+      [name]: {
+        "en-US": variant.name,
+      },
+      [productId]: {
+        "en-US": variant.product.id,
+      },
+      [productName]: {
+        "en-US": variant.product.name,
+      },
+      [productSlug]: {
+        "en-US": variant.product.slug,
+      },
+      [variantId]: {
+        "en-US": variant.id,
+      },
+      [channels]: {
+        "en-US": variant.channelListings,
+      },
+    };
+
+    return entry.update();
+  }
+
   async uploadProduct(opts: {
     configuration: ContentfulProviderConfigSchemaType;
     variant: WebhookProductVariantFragment;
@@ -48,7 +86,7 @@ export class ContentfulClient {
      * todo add translations
      * todo - should it create published? is draft
      */
-    await env.createEntryWithId(opts.configuration.contentId, variant.id, {
+    return env.createEntryWithId(opts.configuration.contentId, variant.id, {
       fields: {
         [name]: {
           "en-US": variant.name,
@@ -70,5 +108,21 @@ export class ContentfulClient {
         },
       },
     });
+  }
+
+  async upsertProduct(opts: {
+    configuration: ContentfulProviderConfigSchemaType;
+    variant: WebhookProductVariantFragment;
+  }) {
+    try {
+      await this.uploadProduct(opts);
+    } catch (e: unknown) {
+      //@ts-ignore todo parse
+      const status = JSON.parse(e.message).status;
+
+      if (status === 409) {
+        this.updateProduct(opts);
+      }
+    }
   }
 }

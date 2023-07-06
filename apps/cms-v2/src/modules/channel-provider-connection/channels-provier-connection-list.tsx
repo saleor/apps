@@ -12,7 +12,7 @@ import { ConnectionSchemaInputType } from "./config/channel-provider-connection-
 const FORM_ID = "new-connection-form";
 
 const Header = () => (
-  <Text marginBottom={2} as="h2" variant="heading">
+  <Text marginBottom={4} as="h2" variant="heading">
     Channels Connections
   </Text>
 );
@@ -95,6 +95,7 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
 
   return (
     <Box>
+      <Header />
       <Box
         display="grid"
         justifyContent={"space-between"}

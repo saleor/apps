@@ -1,9 +1,9 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import {
-  ProductVariantCreatedWebhookPayloadFragment,
+  ProductVariantUpdatedWebhookPayloadFragment,
   WebhookProductVariantFragmentDoc,
-  ProductVariantCreatedWebhookPayloadFragmentDoc,
+  ProductVariantUpdatedWebhookPayloadFragmentDoc,
 } from "../../../../generated/graphql";
 
 import { saleorApp } from "@/saleor-app";
@@ -21,7 +21,7 @@ export const config = {
 
 gql`
   ${WebhookProductVariantFragmentDoc}
-  fragment ProductVariantCreatedWebhookPayload on ProductVariantCreated {
+  fragment ProductVariantUpdatedWebhookPayload on ProductVariantUpdated {
     productVariant {
       ...WebhookProductVariant
     }
@@ -29,19 +29,19 @@ gql`
 `;
 
 const Subscription = gql`
-  ${ProductVariantCreatedWebhookPayloadFragmentDoc}
-  subscription ProductVariantCreated {
+  ${ProductVariantUpdatedWebhookPayloadFragmentDoc}
+  subscription ProductVariantUpdated {
     event {
-      ...ProductVariantCreatedWebhookPayload
+      ...ProductVariantUpdatedWebhookPayload
     }
   }
 `;
 
-export const productVariantCreatedWebhook =
-  new SaleorAsyncWebhook<ProductVariantCreatedWebhookPayloadFragment>({
-    name: "CMS App - Product Variant Created",
-    webhookPath: "api/webhooks/product-variant-created",
-    event: "PRODUCT_VARIANT_CREATED",
+export const productVariantUpdatedWebhook =
+  new SaleorAsyncWebhook<ProductVariantUpdatedWebhookPayloadFragment>({
+    name: "CMS App - Product Variant Updated",
+    webhookPath: "api/webhooks/product-variant-updated",
+    event: "PRODUCT_VARIANT_UPDATED",
     apl: saleorApp.apl,
     query: Subscription,
   });
@@ -51,7 +51,7 @@ export const productVariantCreatedWebhook =
  * todo document that fields in contetnful should be unique
  * todo fetch metadata end decode it with payload
  */
-const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment> = async (
+const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadFragment> = async (
   req,
   res,
   context
@@ -99,7 +99,7 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
         space: contentfulConfig.spaceId,
       });
 
-      await contentfulCLient.uploadProduct({
+      await contentfulCLient.upsertProduct({
         configuration: contentfulConfig,
         variant: productVariant,
       });
@@ -109,6 +109,6 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default productVariantCreatedWebhook.createHandler(handler);
+export default productVariantUpdatedWebhook.createHandler(handler);
 
 // todo remove connection when provider removed
