@@ -12,6 +12,7 @@ export const BoxFooter = (props: BoxProps) => {
       gap={defaultPadding}
       flexDirection="row"
       justifyContent="flex-end"
+      alignItems="center"
       {...props}
     >
       {props.children}
