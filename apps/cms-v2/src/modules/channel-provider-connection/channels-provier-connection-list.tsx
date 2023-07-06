@@ -1,8 +1,9 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text, ArrowRightIcon } from "@saleor/macaw-ui/next";
 import { Select } from "@saleor/react-hook-form-macaw";
-import React, { useMemo, useRef } from "react";
+import React, { forwardRef, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
 import { ConnectionSchemaInputType } from "./config/channel-provider-connection-config";
 
@@ -29,15 +30,12 @@ const NoConnections = (props: { onCreate(): void }) => (
 type FormSchema = Omit<ConnectionSchemaInputType, "providerType">;
 
 // todo edit provider form variant
-const Form = (props: { onSubmit(values: FormSchema): void }) => {
+const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): void }) => {
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
 
   const { handleSubmit, control } = useForm<FormSchema>({
-    defaultValues: {
-      channelSlug: "",
-      providerId: "",
-    },
+    defaultValues: props.defaultValues,
   });
 
   // todo return flat from trpc
@@ -78,7 +76,7 @@ const Form = (props: { onSubmit(values: FormSchema): void }) => {
   );
 };
 
-const ConnectionsList = (props: { onEdit(connId: string): void }) => {
+const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
@@ -115,8 +113,8 @@ const ConnectionsList = (props: { onEdit(connId: string): void }) => {
                 <Text>{provider?.provider.configName}</Text>
                 <Text color="textNeutralSubdued"> ({provider?.type})</Text>
               </Text>
-              <Button onClick={() => props.onEdit(conn.id)} variant="tertiary">
-                Edit
+              <Button onClick={() => props.onRemove(conn.id)} variant="tertiary">
+                Remove
               </Button>
             </React.Fragment>
           );
@@ -126,8 +124,49 @@ const ConnectionsList = (props: { onEdit(connId: string): void }) => {
   );
 };
 
+const AddConnectionModal = forwardRef<
+  HTMLDialogElement,
+  {
+    onSubmit(values: FormSchema): void;
+    onClose(): void;
+  }
+>((props, ref) => (
+  <Modal ref={ref}>
+    <Text as="h2" variant="heading">
+      Connect channel with Provider
+    </Text>
+    <Text as="p" marginBottom={6}>
+      Once connected, operations on product variants on this channel will be sent to selected CMS
+      platform.
+    </Text>
+    <Form onSubmit={props.onSubmit} defaultValues={{ channelSlug: "", providerId: "" }} />
+    <Box display="flex" gap={4} justifyContent="flex-end" marginTop={8}>
+      <Button
+        variant="tertiary"
+        onClick={() => {
+          props.onClose();
+        }}
+      >
+        Close
+      </Button>
+      <Button variant="primary" type="submit" form={FORM_ID}>
+        Add connection
+      </Button>
+    </Box>
+  </Modal>
+));
+
+AddConnectionModal.displayName = "AddConnectionModal";
+
 export const ChannelProviderConnectionList = () => {
   const { data, refetch } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
+  const { mutate: removeConnection } =
+    trpcClient.channelsProvidersConnection.removeConnection.useMutation({
+      onSuccess() {
+        refetch();
+        notifySuccess("Success", "Removed connection");
+      },
+    });
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { notifySuccess } = useDashboardNotification();
 
@@ -161,8 +200,8 @@ export const ChannelProviderConnectionList = () => {
     });
   };
 
-  const handleEdit = (connId: string) => {
-    // todo
+  const handleDelete = (connId: string) => {
+    removeConnection({ id: connId });
   };
 
   if (!data) {
@@ -172,38 +211,13 @@ export const ChannelProviderConnectionList = () => {
 
   return (
     <Box>
-      <Box
-        padding={6}
-        borderWidth={1}
-        borderRadius={4}
-        borderColor="neutralHighlight"
-        as="dialog"
+      <AddConnectionModal
         ref={dialogRef}
-        __maxWidth="400px"
-        boxShadow={"modal"}
-      >
-        <Text as="h2" variant="heading">
-          Connect channel with Provider
-        </Text>
-        <Text as="p" marginBottom={6}>
-          Once connected, operations on product variants on this channel will be sent to selected
-          CMS platform.
-        </Text>
-        <Form onSubmit={handleFormSubmit} />
-        <Box display="flex" gap={4} justifyContent="flex-end" marginTop={8}>
-          <Button
-            variant="tertiary"
-            onClick={() => {
-              dialogRef.current?.close();
-            }}
-          >
-            Close
-          </Button>
-          <Button variant="primary" type="submit" form={FORM_ID}>
-            Add connection
-          </Button>
-        </Box>
-      </Box>
+        onClose={() => {
+          dialogRef.current?.close();
+        }}
+        onSubmit={handleFormSubmit}
+      />
       {data.length === 0 && (
         <NoConnections
           onCreate={() => {
@@ -211,7 +225,7 @@ export const ChannelProviderConnectionList = () => {
           }}
         />
       )}
-      {data.length > 0 && <ConnectionsList onEdit={handleEdit} />}
+      {data.length > 0 && <ConnectionsList onRemove={handleDelete} />}
       {data.length > 0 && (
         <Box display="flex" justifyContent="flex-end" marginTop={6}>
           <Button onClick={() => dialogRef.current?.showModal()}>Add connection</Button>

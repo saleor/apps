@@ -2,6 +2,7 @@ import { createSettingsManager } from "@/modules/configuration/metadata-manager"
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { z } from "zod";
 import { FetchChannelsDocument } from "../../../../generated/graphql";
 import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connection-config";
 import { ChannelProviderConnectionSettingsManager } from "./channel-provider-connection-settings-manager";
@@ -29,6 +30,23 @@ export const channelProviderConnectionRouter = router({
       const config = await configManager.get();
 
       config.addConnection(input);
+
+      configManager.set(config);
+    }),
+  removeConnection: protectedClientProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const configManager = new ChannelProviderConnectionSettingsManager(
+        createSettingsManager(ctx.apiClient, ctx.appId!)
+      );
+
+      const config = await configManager.get();
+
+      config.deleteConnection(input.id);
 
       configManager.set(config);
     }),
