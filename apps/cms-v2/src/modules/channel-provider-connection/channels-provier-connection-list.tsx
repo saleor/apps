@@ -1,7 +1,7 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text, ArrowRightIcon } from "@saleor/macaw-ui/next";
 import { Select } from "@saleor/react-hook-form-macaw";
-import { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { trpcClient } from "../trpc/trpc-client";
 import { ConnectionSchemaInputType } from "./config/channel-provider-connection-config";
@@ -78,6 +78,44 @@ const Form = (props: { onSubmit(values: FormSchema): void }) => {
   );
 };
 
+const ConnectionsList = () => {
+  const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
+  const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
+  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+
+  // todo extract to lib, getters, by id
+  const providersFlatList = useMemo(() => {
+    return [
+      ...(providers?.contentful.map((c) => ({
+        provider: c,
+        type: "contentful",
+      })) ?? []),
+    ];
+  }, [providers]);
+
+  return (
+    <Box>
+      <Box display="grid" justifyContent={"space-between"} gridTemplateColumns={2} gap={4}>
+        <Text variant="caption">Saleor Channel</Text>
+        <Text variant="caption">Target CMS</Text>
+        {data?.map((conn) => {
+          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId);
+
+          return (
+            <React.Fragment key={conn.id}>
+              <Text>{channels?.find((c) => c.slug === conn.channelSlug)?.name}</Text>
+              <Text>
+                <Text>{provider?.provider.configName}</Text>
+                <Text color="textNeutralSubdued"> ({provider?.type})</Text>
+              </Text>
+            </React.Fragment>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+};
+
 export const ChannelProviderConnectionList = () => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -113,6 +151,7 @@ export const ChannelProviderConnectionList = () => {
   };
 
   if (!data) {
+    // todo loading and error handling
     return null;
   }
 
@@ -157,6 +196,7 @@ export const ChannelProviderConnectionList = () => {
           }}
         />
       )}
+      {data.length > 0 && <ConnectionsList />}
     </Box>
   );
 };
