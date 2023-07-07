@@ -2,16 +2,16 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 import {
   ProductVariantCreatedWebhookPayloadFragment,
-  WebhookProductVariantFragmentDoc,
   ProductVariantCreatedWebhookPayloadFragmentDoc,
+  WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 
 import { saleorApp } from "@/saleor-app";
 
-import { createSettingsManager } from "@/modules/configuration/metadata-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { ContentfulClient } from "@/modules/contentful/contentful-client";
-import { AppConfigMetadataManager } from "@/modules/configuration";
+import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
+
+import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
 export const config = {
   api: {
@@ -58,46 +58,18 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
 ) => {
   const { authData, payload } = context;
 
-  const { productVariant } = payload;
-
-  if (!productVariant) {
+  if (!payload.productVariant) {
     // todo Sentry - should not happen
     return res.status(500).end();
   }
 
-  const configManager = AppConfigMetadataManager.createFromAuthData(authData);
-  const appConfig = await configManager.get();
+  const configContext = await createWebhookConfigContext({ authData });
 
-  const providers = appConfig.providers.getProviders();
-  const connections = appConfig.connections.getConnections();
-
-  connections.map(async (conn) => {
-    const isEnabled = productVariant.channelListings?.find(
-      (listing) => listing.channel.slug === conn.channelSlug
-    );
-
-    if (!isEnabled) {
-      return res.status(200).end();
-    }
-
-    if (conn.providerType === "contentful") {
-      const contentfulConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      const contentfulCLient = new ContentfulClient({
-        accessToken: contentfulConfig.authToken,
-        space: contentfulConfig.spaceId,
-      });
-
-      await contentfulCLient.uploadProduct({
-        configuration: contentfulConfig,
-        variant: productVariant,
-      });
-    }
-  });
+  await new WebhooksProcessorsDelegator({
+    context: configContext,
+  }).delegateVariantCreatedOperations(payload.productVariant);
 
   return res.status(200).end();
 };
 
 export default productVariantCreatedWebhook.createHandler(handler);
-
-// todo remove connection when provider removed

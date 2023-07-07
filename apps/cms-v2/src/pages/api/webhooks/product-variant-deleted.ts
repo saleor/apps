@@ -6,11 +6,10 @@ import {
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 
-import { AppConfigMetadataManager } from "@/modules/configuration";
-import { createSettingsManager } from "@/modules/configuration/metadata-manager";
 import { ContentfulClient } from "@/modules/contentful/contentful-client";
+import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { saleorApp } from "@/saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
 export const config = {
   api: {
@@ -57,36 +56,16 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
 ) => {
   const { authData, payload } = context;
 
-  const { productVariant } = payload;
-
-  if (!productVariant) {
+  if (!payload.productVariant) {
     // todo Sentry - should not happen
     return res.status(500).end();
   }
 
-  const configManager = AppConfigMetadataManager.createFromAuthData(authData);
-  const appConfig = await configManager.get();
+  const configContext = await createWebhookConfigContext({ authData });
 
-  const providers = appConfig.providers.getProviders();
-  const connections = appConfig.connections.getConnections();
-
-  connections.map(async (conn) => {
-    if (conn.providerType === "contentful") {
-      const contentfulConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      const contentfulCLient = new ContentfulClient({
-        accessToken: contentfulConfig.authToken,
-        space: contentfulConfig.spaceId,
-      });
-
-      console.log("will delete" + productVariant.id);
-
-      await contentfulCLient.deleteProduct({
-        configuration: contentfulConfig,
-        variant: { id: productVariant.id },
-      });
-    }
-  });
+  await new WebhooksProcessorsDelegator({
+    context: configContext,
+  }).delegateVariantDeletedOperations(payload.productVariant);
 
   return res.status(200).end();
 };

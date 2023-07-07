@@ -6,11 +6,9 @@ import {
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 
-import { AppConfigMetadataManager } from "@/modules/configuration";
-import { createSettingsManager } from "@/modules/configuration/metadata-manager";
-import { ContentfulClient } from "@/modules/contentful/contentful-client";
+import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
+import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -57,42 +55,15 @@ const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadFragment
 ) => {
   const { authData, payload } = context;
 
-  const { productVariant } = payload;
-
-  if (!productVariant) {
+  if (!payload.productVariant) {
     // todo Sentry - should not happen
     return res.status(500).end();
   }
+  const configContext = await createWebhookConfigContext({ authData });
 
-  const configManager = AppConfigMetadataManager.createFromAuthData(authData);
-  const appConfig = await configManager.get();
-
-  const providers = appConfig.providers.getProviders();
-  const connections = appConfig.connections.getConnections();
-
-  connections.map(async (conn) => {
-    const isEnabled = productVariant.channelListings?.find(
-      (listing) => listing.channel.slug === conn.channelSlug
-    );
-
-    if (!isEnabled) {
-      return res.status(200).end();
-    }
-
-    if (conn.providerType === "contentful") {
-      const contentfulConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      const contentfulCLient = new ContentfulClient({
-        accessToken: contentfulConfig.authToken,
-        space: contentfulConfig.spaceId,
-      });
-
-      await contentfulCLient.upsertProduct({
-        configuration: contentfulConfig,
-        variant: productVariant,
-      });
-    }
-  });
+  await new WebhooksProcessorsDelegator({
+    context: configContext,
+  }).delegateVariantUpdatedOperations(payload.productVariant);
 
   return res.status(200).end();
 };
