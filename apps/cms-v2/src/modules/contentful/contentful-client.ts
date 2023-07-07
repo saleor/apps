@@ -81,7 +81,7 @@ export class ContentfulClient {
 
     console.log(entry);
 
-    await entry.delete();
+    return await entry.delete();
   }
 
   async uploadProduct(opts: {
@@ -129,13 +129,13 @@ export class ContentfulClient {
     variant: WebhookProductVariantFragment;
   }) {
     try {
-      await this.uploadProduct(opts);
+      return await this.uploadProduct(opts);
     } catch (e: unknown) {
       //@ts-ignore todo parse
       const status = JSON.parse(e.message).status;
 
       if (status === 409) {
-        this.updateProduct(opts);
+        return this.updateProduct(opts);
       }
     }
   }

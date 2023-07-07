@@ -7,6 +7,10 @@ import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+const FormSchema = z.object({
+  connID: z.string().min(7),
+});
+
 const EmptyState = () => (
   <Box
     display="flex"
@@ -31,11 +35,7 @@ export const BulkSyncSection = () => {
     defaultValues: {
       connID: "",
     },
-    resolver: zodResolver(
-      z.object({
-        connID: z.string().min(7),
-      })
-    ),
+    resolver: zodResolver(FormSchema), // todo
   });
 
   if (!connections || !providers) {
