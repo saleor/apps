@@ -3,6 +3,9 @@ import { trpcClient } from "../trpc/trpc-client";
 import { createProvider } from "../shared/cms-provider";
 import { useForm } from "react-hook-form";
 import { Select } from "@saleor/react-hook-form-macaw";
+import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const EmptyState = () => (
   <Box
@@ -19,6 +22,8 @@ const EmptyState = () => (
 );
 
 export const BulkSyncSection = () => {
+  const { push } = useRouter();
+
   const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
 
@@ -26,6 +31,11 @@ export const BulkSyncSection = () => {
     defaultValues: {
       connID: "",
     },
+    resolver: zodResolver(
+      z.object({
+        connID: z.string().min(7),
+      })
+    ),
   });
 
   if (!connections || !providers) {
@@ -47,8 +57,17 @@ export const BulkSyncSection = () => {
       <Text as="p" variant="bodyStrong">
         Do not close the app until it is finished
       </Text>
-      <Box display="grid" gap={4} marginTop={4} as="form" onSubmit={handleSubmit((values) => {})}>
+      <Box
+        display="grid"
+        gap={4}
+        marginTop={4}
+        as="form"
+        onSubmit={handleSubmit((values) => {
+          push(`/bulk-sync/${values.connID}`);
+        })}
+      >
         <Select
+          required
           control={control}
           name="connID"
           label="Connection"

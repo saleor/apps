@@ -25,6 +25,9 @@ export const channelProviderConnectionRouter = router({
   fetchConnections: procedure.query(async ({ ctx }) => {
     return (await ctx.appConfigService.get()).connections.getConnections();
   }),
+  fetchConnection: procedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    return (await ctx.appConfigService.get()).connections.getConnectionById(input.id) ?? null;
+  }),
   addConnection: procedure
     .input(ChannelProviderConnectionConfigSchema.NewConnectionInput)
     .mutation(async ({ ctx, input }) => {

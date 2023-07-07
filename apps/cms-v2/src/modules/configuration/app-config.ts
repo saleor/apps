@@ -110,5 +110,9 @@ export class AppConfig {
         return conn.providerId !== providerId;
       });
     },
+
+    getConnectionById: (id: string) => {
+      return this.connections.getConnections().find((c) => c.id === id);
+    },
   };
 }
