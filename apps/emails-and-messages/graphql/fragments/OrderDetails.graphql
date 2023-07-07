@@ -5,6 +5,14 @@ fragment OrderDetails on Order {
   channel {
     slug
   }
+  metadata {
+    key
+    value
+  }
+  privateMetadata {
+    key
+    value
+  }
   user {
     email
     firstName
