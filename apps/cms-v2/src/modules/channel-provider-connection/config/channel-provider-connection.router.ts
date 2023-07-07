@@ -1,11 +1,20 @@
+import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
 import { createSettingsManager } from "@/modules/configuration/metadata-manager";
+import { ChannelProviderConnectionConfigSchema } from "@/modules/configuration/schemas/channel-provider-connection.schema";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { z } from "zod";
 import { FetchChannelsDocument } from "../../../../generated/graphql";
-import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connection-config";
-import { ChannelProviderConnectionSettingsManager } from "./channel-provider-connection-settings-manager";
+
+const procedure = protectedClientProcedure.use(({ ctx, next }) => {
+  const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
+
+  return next({
+    ctx: {
+      appConfigService: new AppConfigMetadataManager(settingsManager),
+    },
+  });
+});
 
 export const channelProviderConnectionRouter = router({
   fetchAllChannels: protectedClientProcedure.query(async ({ ctx }) => {
@@ -13,41 +22,29 @@ export const channelProviderConnectionRouter = router({
 
     return channels.data?.channels ?? [];
   }),
-  fetchConnections: protectedClientProcedure.query(async ({ ctx }) => {
-    const connections = await new ChannelProviderConnectionSettingsManager(
-      createSettingsManager(ctx.apiClient, ctx.appId!)
-    ).get();
-
-    return connections.getConnections();
+  fetchConnections: procedure.query(async ({ ctx }) => {
+    return (await ctx.appConfigService.get()).connections.getConnections();
   }),
-  addConnection: protectedClientProcedure
+  addConnection: procedure
     .input(ChannelProviderConnectionConfigSchema.NewConnectionInput)
     .mutation(async ({ ctx, input }) => {
-      const configManager = new ChannelProviderConnectionSettingsManager(
-        createSettingsManager(ctx.apiClient, ctx.appId!)
-      );
+      const config = await ctx.appConfigService.get();
 
-      const config = await configManager.get();
+      config.connections.addConnection(input);
 
-      config.addConnection(input);
-
-      configManager.set(config);
+      ctx.appConfigService.set(config);
     }),
-  removeConnection: protectedClientProcedure
+  removeConnection: procedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const configManager = new ChannelProviderConnectionSettingsManager(
-        createSettingsManager(ctx.apiClient, ctx.appId!)
-      );
+      const config = await ctx.appConfigService.get();
 
-      const config = await configManager.get();
+      config.connections.deleteConnection(input.id);
 
-      config.deleteConnection(input.id);
-
-      configManager.set(config);
+      ctx.appConfigService.set(config);
     }),
 });

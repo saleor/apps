@@ -1,15 +1,13 @@
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
+
 import { createSettingsManager } from "../configuration/metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import {
-  ContentfulProviderConfigSchemaInput,
-  ContentfulProviderConfigSchema,
-} from "./config/contentful-config";
-import { ContentfulSettingsManager } from "./config/contentful-settings-manager";
+
 import { ContentfulClient } from "./contentful-client";
+import { ContentfulProviderSchema } from "../configuration/schemas/contentful-provider.schema";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -17,12 +15,11 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   return next({
     ctx: {
       settingsManager,
-      contentfulSettingsManager: new ContentfulSettingsManager(settingsManager),
+      appConfigService: new AppConfigMetadataManager(settingsManager),
     },
   });
 });
 
-// todo extract services to context
 export const contentfulRouter = router({
   fetchProviderConfiguration: procedure
     .input(
@@ -31,42 +28,36 @@ export const contentfulRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const { contentfulSettingsManager } = ctx;
+      const config = await ctx.appConfigService.get();
 
-      const config = await contentfulSettingsManager.get();
-
-      return config.getProviderById(input.providerId);
+      return config.providers.getProviderById(input.providerId);
     }),
   addProvider: procedure
-    .input(ContentfulProviderConfigSchemaInput)
+    .input(ContentfulProviderSchema.ConfigInput)
     .mutation(async ({ input, ctx }) => {
-      const { contentfulSettingsManager } = ctx;
+      const config = await ctx.appConfigService.get();
 
-      const config = await contentfulSettingsManager.get();
+      config?.providers.addProvider(input);
 
-      config?.addProvider(input);
-
-      return contentfulSettingsManager.set(config);
+      return ctx.appConfigService.set(config);
     }),
   updateProvider: procedure
-    .input(ContentfulProviderConfigSchema)
+    .input(ContentfulProviderSchema.Config)
     .mutation(async ({ input, ctx }) => {
-      const { contentfulSettingsManager } = ctx;
+      const config = await ctx.appConfigService.get();
 
-      const config = await contentfulSettingsManager.get();
+      config?.providers.updateProvider(input);
 
-      config?.updateProvider(input);
-
-      return contentfulSettingsManager.set(config);
+      return ctx.appConfigService.set(config);
     }),
   deleteProvider: procedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const { contentfulSettingsManager } = ctx;
+    const { appConfigService, settingsManager } = ctx;
 
-    const config = await contentfulSettingsManager.get();
+    const config = await ctx.appConfigService.get();
 
-    config?.deleteProvider(input.id);
+    config.providers.deleteProvider(input.id);
 
-    return contentfulSettingsManager.set(config);
+    return ctx.appConfigService.set(config);
   }),
 
   fetchEnvironmentsFromApi: procedure

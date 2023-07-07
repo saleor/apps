@@ -1,6 +1,6 @@
 import { createClient, ClientAPI } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
-import { ContentfulProviderConfigSchemaType } from "./config/contentful-config";
+import { ContentfulProviderConfigSchemaType } from "../configuration/contentful-config";
 
 /**
  * Wrapper facade of

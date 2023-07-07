@@ -2,6 +2,37 @@ import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import React from "react";
 import { trpcClient } from "../trpc/trpc-client";
+import { ContentfulProviderConfigType } from "../configuration/schemas/contentful-provider.schema";
+
+const ContentfulTable = (props: { providers: ContentfulProviderConfigType[] }) => {
+  const { push } = useRouter();
+
+  return (
+    <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4} alignItems="center">
+      <Text variant="caption">Config name</Text>
+      <Text variant="caption">Contenful space ID</Text>
+      <Text variant="caption">Contentful content ID</Text>
+      <div />
+
+      {props.providers.map((provider) => (
+        <React.Fragment key={provider.id}>
+          <Text>{provider.configName}</Text>
+          <Text>{provider.spaceId}</Text>
+          <Text>{provider.contentId}</Text>
+          <Button
+            marginLeft="auto"
+            variant="tertiary"
+            onClick={() => {
+              push(`/edit-provider/${provider.type}/` + provider.id);
+            }}
+          >
+            Edit
+          </Button>
+        </React.Fragment>
+      ))}
+    </Box>
+  );
+};
 
 export const ProvidersList = () => {
   const { data } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
@@ -11,54 +42,36 @@ export const ProvidersList = () => {
     return null;
   }
 
-  if (data.totalProvidersLength === 0) {
+  if (data.length === 0) {
     return (
       <Box>
         <Text as="p" marginBottom={4}>
           No configurations yet
         </Text>
-        <Button
-          onClick={() => {
-            push("/add-provider");
-          }}
-        >
-          Add first CMS configuration
-        </Button>
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            onClick={() => {
+              push("/add-provider");
+            }}
+          >
+            Add first CMS configuration
+          </Button>
+        </Box>
       </Box>
     );
   }
 
+  const contentfulProviders = data.filter((p) => p.type === "contentful");
+
   // todo consider some better, reusable table
   return (
     <Box>
-      {data.contentful.length && (
+      {contentfulProviders.length && (
         <Box>
           <Text variant="heading" as="h2" marginBottom={4}>
             Contentful
           </Text>
-          <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4} alignItems="center">
-            <Text variant="caption">Config name</Text>
-            <Text variant="caption">Contenful space ID</Text>
-            <Text variant="caption">Contentful content ID</Text>
-            <div />
-
-            {data.contentful.map((contentfulProvider) => (
-              <React.Fragment key={contentfulProvider.id}>
-                <Text>{contentfulProvider.configName}</Text>
-                <Text>{contentfulProvider.spaceId}</Text>
-                <Text>{contentfulProvider.contentId}</Text>
-                <Button
-                  marginLeft="auto"
-                  variant="tertiary"
-                  onClick={() => {
-                    push("/edit-provider/contentful/" + contentfulProvider.id);
-                  }}
-                >
-                  Edit
-                </Button>
-              </React.Fragment>
-            ))}
-          </Box>
+          <ContentfulTable providers={contentfulProviders} />
         </Box>
       )}
       <Box marginTop={8} display="flex" justifyContent="flex-end">

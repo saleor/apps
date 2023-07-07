@@ -1,8 +1,9 @@
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { createSettingsManager } from "../configuration/metadata-manager";
-import { ContentfulSettingsManager } from "../contentful/config/contentful-settings-manager";
+
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
+import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
 
 // todo add more providers
 export const providersListRouter = router({
@@ -14,13 +15,10 @@ export const providersListRouter = router({
 
     const mm = createSettingsManager(client, ctx.appId!);
 
-    const contentfulSettingsManager = new ContentfulSettingsManager(mm);
-    const contentfulConfig = await contentfulSettingsManager.get();
-    const contentfulProviders = contentfulConfig.getProviders();
+    const settingsManager = new AppConfigMetadataManager(mm);
+    const config = await settingsManager.get();
+    const providers = config.providers.getProviders();
 
-    return {
-      contentful: contentfulProviders, // todo prune tokens
-      totalProvidersLength: contentfulProviders.length,
-    };
+    return providers;
   }),
 });

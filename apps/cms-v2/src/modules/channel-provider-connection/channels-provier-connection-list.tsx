@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { createProvider } from "../shared/cms-provider";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
-import { ConnectionSchemaInputType } from "./config/channel-provider-connection-config";
+import { ConnectionSchemaInputType } from "../configuration/channel-provider-connection-config";
 
 const FORM_ID = "new-connection-form";
 
@@ -83,6 +83,8 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
 
+  console.log(data);
+
   // todo extract to lib, getters, by id
   const providersFlatList = useMemo(() => {
     return [
@@ -107,7 +109,13 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
         <Text variant="caption">Target CMS</Text>
         <div />
         {data?.map((conn) => {
-          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId)!;
+          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId);
+
+          if (!provider) {
+            // todo error here
+            return null;
+          }
+
           const providerName = createProvider(provider?.type).displayName;
 
           return (

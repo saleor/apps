@@ -1,26 +1,28 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useForm } from "react-hook-form";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
-import { ContentfulProviderConfigSchemaInputType } from "./config/contentful-config";
+
 import { trpcClient } from "../trpc/trpc-client";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ContentfulProviderConfigInputType } from "../configuration/schemas/contentful-provider.schema";
 
 const mappingFieldsNames: Array<
-  keyof ContentfulProviderConfigSchemaInputType["productVariantFieldsMapping"]
+  keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
 > = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
 /**
  * TODO - when space, token or env changes, refetch queries
+ * TODO - error handling
  */
 const ContentfulConfigForm = ({
   defaultValues,
   onSubmit,
   onDelete,
 }: {
-  defaultValues: ContentfulProviderConfigSchemaInputType;
-  onSubmit(values: ContentfulProviderConfigSchemaInputType): void;
+  defaultValues: ContentfulProviderConfigInputType;
+  onSubmit(values: ContentfulProviderConfigInputType): void;
   onDelete?(): void;
 }) => {
   const {
@@ -30,7 +32,7 @@ const ContentfulConfigForm = ({
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<ContentfulProviderConfigSchemaInputType>({
+  } = useForm<ContentfulProviderConfigInputType>({
     defaultValues: defaultValues,
   });
 
@@ -258,6 +260,7 @@ export const ContentfulAddConfigForm = () => {
         mutate(values);
       }}
       defaultValues={{
+        type: "contentful",
         authToken: "",
         configName: "",
         environment: "",
