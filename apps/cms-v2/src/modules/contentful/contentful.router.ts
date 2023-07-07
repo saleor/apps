@@ -11,84 +11,65 @@ import {
 import { ContentfulSettingsManager } from "./config/contentful-settings-manager";
 import { ContentfulClient } from "./contentful-client";
 
+const procedure = protectedClientProcedure.use(({ ctx, next }) => {
+  const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
+
+  return next({
+    ctx: {
+      settingsManager,
+      contentfulSettingsManager: new ContentfulSettingsManager(settingsManager),
+    },
+  });
+});
+
 // todo extract services to context
 export const contentfulRouter = router({
-  fetchProviderConfiguration: protectedClientProcedure
+  fetchProviderConfiguration: procedure
     .input(
       z.object({
         providerId: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const client = createGraphQLClient({
-        saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken,
-      });
+      const { contentfulSettingsManager } = ctx;
 
-      const mm = createSettingsManager(client, ctx.appId!);
-
-      const settingsManager = new ContentfulSettingsManager(mm);
-      const config = await settingsManager.get();
+      const config = await contentfulSettingsManager.get();
 
       return config.getProviderById(input.providerId);
     }),
-  addProvider: protectedClientProcedure
+  addProvider: procedure
     .input(ContentfulProviderConfigSchemaInput)
     .mutation(async ({ input, ctx }) => {
-      const client = createGraphQLClient({
-        saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken,
-      });
+      const { contentfulSettingsManager } = ctx;
 
-      const mm = createSettingsManager(client, ctx.appId!);
-
-      const settingsManager = new ContentfulSettingsManager(mm);
-
-      const config = await settingsManager.get();
+      const config = await contentfulSettingsManager.get();
 
       config?.addProvider(input);
 
-      return settingsManager.set(config);
+      return contentfulSettingsManager.set(config);
     }),
-  updateProvider: protectedClientProcedure
+  updateProvider: procedure
     .input(ContentfulProviderConfigSchema)
     .mutation(async ({ input, ctx }) => {
-      const client = createGraphQLClient({
-        saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken,
-      });
+      const { contentfulSettingsManager } = ctx;
 
-      const mm = createSettingsManager(client, ctx.appId!);
-
-      const settingsManager = new ContentfulSettingsManager(mm);
-
-      const config = await settingsManager.get();
+      const config = await contentfulSettingsManager.get();
 
       config?.updateProvider(input);
 
-      return settingsManager.set(config);
+      return contentfulSettingsManager.set(config);
     }),
+  deleteProvider: procedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+    const { contentfulSettingsManager } = ctx;
 
-  deleteProvider: protectedClientProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const client = createGraphQLClient({
-        saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken,
-      });
+    const config = await contentfulSettingsManager.get();
 
-      const mm = createSettingsManager(client, ctx.appId!);
+    config?.deleteProvider(input.id);
 
-      const settingsManager = new ContentfulSettingsManager(mm);
+    return contentfulSettingsManager.set(config);
+  }),
 
-      const config = await settingsManager.get();
-
-      config?.deleteProvider(input.id);
-
-      return settingsManager.set(config);
-    }),
-
-  fetchEnvironmentsFromApi: protectedClientProcedure
+  fetchEnvironmentsFromApi: procedure
     .input(
       z.object({
         contentfulToken: z.string(),
@@ -103,7 +84,7 @@ export const contentfulRouter = router({
 
       return client.getEnvironments();
     }),
-  fetchContentTypesFromApi: protectedClientProcedure
+  fetchContentTypesFromApi: procedure
     .input(
       z.object({
         contentfulToken: z.string(),
