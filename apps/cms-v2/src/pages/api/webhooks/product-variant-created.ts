@@ -7,11 +7,11 @@ import {
 } from "../../../../generated/graphql";
 
 import { saleorApp } from "@/saleor-app";
-import { ContentfulSettingsManager } from "@/modules/contentful/config/contentful-settings-manager";
+
 import { createSettingsManager } from "@/modules/configuration/metadata-manager";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { ContentfulClient } from "@/modules/contentful/contentful-client";
-import { ChannelProviderConnectionSettingsManager } from "@/modules/channel-provider-connection/config/channel-provider-connection-settings-manager";
+import { AppConfigMetadataManager } from "@/modules/configuration";
 
 export const config = {
   api: {
@@ -73,14 +73,10 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
     authData.appId
   );
 
-  const contentfulSettingsManager = new ContentfulSettingsManager(settingsManager);
+  const appConfig = await new AppConfigMetadataManager(settingsManager).get();
 
-  const config = await contentfulSettingsManager.get();
-  const providers = config.getProviders();
-
-  const connections = await (
-    await new ChannelProviderConnectionSettingsManager(settingsManager).get()
-  ).getConnections();
+  const providers = appConfig.providers.getProviders();
+  const connections = appConfig.connections.getConnections();
 
   connections.map(async (conn) => {
     const isEnabled = productVariant.channelListings?.find(

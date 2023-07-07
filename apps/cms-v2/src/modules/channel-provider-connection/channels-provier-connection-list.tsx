@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { createProvider } from "../shared/cms-provider";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
-import { ConnectionSchemaInputType } from "../configuration/channel-provider-connection-config";
+import { ChannelProviderConnectionInputType } from "../configuration/schemas/channel-provider-connection.schema";
 
 const FORM_ID = "new-connection-form";
 
@@ -29,7 +29,7 @@ const NoConnections = (props: { onCreate(): void }) => (
   </Box>
 );
 
-type FormSchema = Omit<ConnectionSchemaInputType, "providerType">;
+type FormSchema = Omit<ChannelProviderConnectionInputType, "providerType">;
 
 // todo edit provider form variant
 const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): void }) => {
@@ -39,9 +39,6 @@ const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): 
   const { handleSubmit, control } = useForm<FormSchema>({
     defaultValues: props.defaultValues,
   });
-
-  // todo return flat from trpc
-  const flatProviders = [...(providers?.contentful ?? [])];
 
   return (
     <Box
@@ -54,6 +51,7 @@ const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): 
       alignItems="center"
     >
       <Select
+        required
         size="small"
         control={control}
         name="channelSlug"
@@ -65,11 +63,12 @@ const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): 
       />
       <ArrowRightIcon />
       <Select
+        required
         size="small"
         control={control}
         name="providerId"
         label="Provider"
-        options={flatProviders?.map((p) => ({
+        options={providers?.map((p) => ({
           value: p.id,
           label: p.configName,
         }))}
@@ -83,17 +82,9 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
 
-  console.log(data);
-
-  // todo extract to lib, getters, by id
-  const providersFlatList = useMemo(() => {
-    return [
-      ...(providers?.contentful.map((c) => ({
-        provider: c,
-        type: "contentful",
-      })) ?? []),
-    ];
-  }, [providers]);
+  if (!data || !providers) {
+    return null;
+  }
 
   return (
     <Box>
@@ -109,20 +100,20 @@ const ConnectionsList = (props: { onRemove(connId: string): void }) => {
         <Text variant="caption">Target CMS</Text>
         <div />
         {data?.map((conn) => {
-          const provider = providersFlatList.find((p) => p.provider.id === conn.providerId);
+          const provider = providers.find((p) => p.id === conn.providerId);
 
           if (!provider) {
             // todo error here
             return null;
           }
 
-          const providerName = createProvider(provider?.type).displayName;
+          const providerName = createProvider(provider.type).displayName;
 
           return (
             <React.Fragment key={conn.id}>
               <Text>{channels?.find((c) => c.slug === conn.channelSlug)?.name}</Text>
               <Text>
-                <Text>{provider?.provider.configName}</Text>
+                <Text>{provider.configName}</Text>
                 <Text color="textNeutralSubdued"> ({providerName})</Text>
               </Text>
               <Button onClick={() => props.onRemove(conn.id)} variant="tertiary">
@@ -190,16 +181,16 @@ export const ChannelProviderConnectionList = () => {
       },
     });
 
-  const handleFormSubmit = (values: FormSchema) => {
-    const providersIdType = [
-      ...(providers?.contentful.map((contentful) => ({
-        id: contentful.id,
-        type: "contentful",
-      })) ?? []),
-    ];
+  if (!providers) {
+    return null;
+  }
 
-    const providerType = providersIdType.find((p) => p.id === values.providerId)!
-      .type as "contentful"; // todo
+  const handleFormSubmit = (values: FormSchema) => {
+    const providerType = providers.find((p) => p.id === values.providerId)?.type;
+
+    if (!providerType) {
+      return; //todo
+    }
 
     addProviderMutate({
       ...values,

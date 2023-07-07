@@ -1,6 +1,6 @@
 import { createClient, ClientAPI } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
-import { ContentfulProviderConfigSchemaType } from "../configuration/contentful-config";
+import { ContentfulProviderConfigType } from "@/modules/configuration";
 
 /**
  * Wrapper facade of
@@ -33,7 +33,7 @@ export class ContentfulClient {
   }
 
   async updateProduct(opts: {
-    configuration: ContentfulProviderConfigSchemaType;
+    configuration: ContentfulProviderConfigType;
     variant: WebhookProductVariantFragment;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -71,7 +71,7 @@ export class ContentfulClient {
   }
 
   async deleteProduct(opts: {
-    configuration: ContentfulProviderConfigSchemaType;
+    configuration: ContentfulProviderConfigType;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -85,7 +85,7 @@ export class ContentfulClient {
   }
 
   async uploadProduct(opts: {
-    configuration: ContentfulProviderConfigSchemaType;
+    configuration: ContentfulProviderConfigType;
     variant: WebhookProductVariantFragment;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -125,7 +125,7 @@ export class ContentfulClient {
   }
 
   async upsertProduct(opts: {
-    configuration: ContentfulProviderConfigSchemaType;
+    configuration: ContentfulProviderConfigType;
     variant: WebhookProductVariantFragment;
   }) {
     try {
