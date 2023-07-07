@@ -26,11 +26,9 @@ export const BulkSyncView = (props: { connectionId: string }) => {
         <Text size="large">Do not close this page</Text>
       </Box>
 
-      {provider && (
-        <Box>
-          <Text></Text>
-        </Box>
-      )}
+      {provider && <Box>asd</Box>}
     </Box>
   );
 };
+
+// todo add zod resolvers to every form
