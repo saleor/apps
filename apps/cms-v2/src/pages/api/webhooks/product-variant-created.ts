@@ -65,15 +65,8 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
     return res.status(500).end();
   }
 
-  const settingsManager = createSettingsManager(
-    createGraphQLClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    }),
-    authData.appId
-  );
-
-  const appConfig = await new AppConfigMetadataManager(settingsManager).get();
+  const configManager = AppConfigMetadataManager.createFromAuthData(authData);
+  const appConfig = await configManager.get();
 
   const providers = appConfig.providers.getProviders();
   const connections = appConfig.connections.getConnections();

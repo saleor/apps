@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { createProvider } from "../shared/cms-provider";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
-import { ChannelProviderConnectionInputType } from "../configuration/schemas/channel-provider-connection.schema";
+import { ChannelProviderConnectionInputType } from "@/modules/configuration";
 
 const FORM_ID = "new-connection-form";
 
