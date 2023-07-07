@@ -1,0 +1,71 @@
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { trpcClient } from "../trpc/trpc-client";
+import { createProvider } from "../shared/cms-provider";
+import { useForm } from "react-hook-form";
+import { Select } from "@saleor/react-hook-form-macaw";
+
+const EmptyState = () => (
+  <Box
+    display="flex"
+    paddingY={4}
+    flexDirection={"column"}
+    gap={4}
+    alignItems={"center"}
+    justifyContent={"center"}
+  >
+    <Text variant="heading">No connections configured</Text>
+    <Text>Create a channel connection above to enable bulk synchronization.</Text>
+  </Box>
+);
+
+export const BulkSyncSection = () => {
+  const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
+  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+
+  const { control, handleSubmit } = useForm<{ connID: string }>({
+    defaultValues: {
+      connID: "",
+    },
+  });
+
+  if (!connections || !providers) {
+    return null; // todo loading / skeleton
+  }
+
+  if (connections.length === 0) {
+    return <EmptyState />;
+  }
+
+  return (
+    <Box>
+      <Text as="h2" marginBottom={6} variant="heading">
+        Bulk products synchronization
+      </Text>
+      <Text as="p">
+        Choose a connection and start synchronization. Process is running in the browser.
+      </Text>
+      <Text as="p" variant="bodyStrong">
+        Do not close the app until it is finished
+      </Text>
+      <Box display="grid" gap={4} marginTop={4} as="form" onSubmit={handleSubmit((values) => {})}>
+        <Select
+          control={control}
+          name="connID"
+          label="Connection"
+          options={connections.map((c) => {
+            const provider = providers.find((p) => p.id === c.providerId)!;
+            const providerDisplay = createProvider(provider.type);
+
+            return {
+              label: `${c.channelSlug} -> ${provider?.configName} (${providerDisplay.displayName})`,
+              value: c.id,
+            };
+          })}
+        />
+        <Box display="flex" justifyContent="flex-end">
+          <Button type="submit">Start sync</Button>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
