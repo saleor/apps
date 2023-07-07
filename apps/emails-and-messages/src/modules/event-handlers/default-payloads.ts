@@ -15,6 +15,18 @@ const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
   number: "198",
   userEmail: "adrian.king@example.com",
+  metadata: [
+    {
+      key: "metadata-example",
+      value: "Example value",
+    },
+  ],
+  privateMetadata: [
+    {
+      key: "private-metadata-example",
+      value: "Example value for private metadata",
+    },
+  ],
   channel: {
     slug: "default-channel",
   },
@@ -128,6 +140,18 @@ const orderFullyPaidPayload: OrderFullyPaidWebhookPayloadFragment = {
 const invoiceSentPayload: InvoiceSentWebhookPayloadFragment = {
   invoice: {
     id: "SW52b2ljZToxMDE=",
+    metadata: [
+      {
+        key: "metadata-example",
+        value: "Example value",
+      },
+    ],
+    privateMetadata: [
+      {
+        key: "private-metadata-example",
+        value: "Example value for private metadata",
+      },
+    ],
     message: null,
     externalUrl: null,
     url: "https://example.com/media/invoices/invoice-1032023-order-57b50a40-c4fb-4b43-b188-3bafde1770d9-fa968541-02fa-4317-b121-7205.pdf",
@@ -254,6 +278,18 @@ const giftCardSentPayload: GiftCardSentWebhookPayloadFragment = {
   sentToEmail: "user@example.com",
   giftCard: {
     code: "XXXX",
+    metadata: [
+      {
+        key: "metadata-example",
+        value: "Example value",
+      },
+    ],
+    privateMetadata: [
+      {
+        key: "private-metadata-example",
+        value: "Example value for private metadata",
+      },
+    ],
     tags: [],
     created: "2021-03-16T13:12:00+00:00",
     currentBalance: {

@@ -121,7 +121,7 @@ describe("WebhookManagementService", function () {
         name: invoiceSentWebhook.name,
         targetUrl: "https://example.com/api/webhooks/invoice-sent",
         query:
-          "subscription InvoiceSent { event { ...InvoiceSentWebhookPayload }}fragment InvoiceSentWebhookPayload on InvoiceSent { invoice { id message externalUrl url order { id } } order { ...OrderDetails }}fragment OrderDetails on Order { id number userEmail channel { slug } user { email firstName lastName } billingAddress { streetAddress1 city postalCode country { country } } shippingAddress { streetAddress1 city postalCode country { country } } lines { id productName variantName quantity thumbnail { url alt } unitPrice { gross { currency amount } } totalPrice { gross { currency amount } } } subtotal { gross { amount currency } } shippingPrice { gross { amount currency } } total { gross { amount currency } }}",
+          "subscription InvoiceSent { event { ...InvoiceSentWebhookPayload }}fragment InvoiceSentWebhookPayload on InvoiceSent { invoice { id metadata { key value } privateMetadata { key value } message externalUrl url order { id } } order { ...OrderDetails }}fragment OrderDetails on Order { id number userEmail channel { slug } metadata { key value } privateMetadata { key value } user { email firstName lastName } billingAddress { streetAddress1 city postalCode country { country } } shippingAddress { streetAddress1 city postalCode country { country } } lines { id productName variantName quantity thumbnail { url alt } unitPrice { gross { currency amount } } totalPrice { gross { currency amount } } } subtotal { gross { amount currency } } shippingPrice { gross { amount currency } } total { gross { amount currency } }}",
       },
     });
   });

@@ -15,6 +15,14 @@ const GiftCardSentWebhookPayload = gql`
       created
       usedByEmail
       isActive
+      metadata {
+        key
+        value
+      }
+      privateMetadata {
+        key
+        value
+      }
       initialBalance {
         currency
         amount
