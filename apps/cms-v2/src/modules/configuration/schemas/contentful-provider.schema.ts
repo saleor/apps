@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Contentful } from "../../contentful/contentful";
+import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const ContentfulProviderConfigSchemaInput = z.object({
   type: z.literal(Contentful.type),
@@ -8,14 +9,7 @@ const ContentfulProviderConfigSchemaInput = z.object({
   environment: z.string(),
   configName: z.string(),
   contentId: z.string(),
-  productVariantFieldsMapping: z.object({
-    variantId: z.string().min(1),
-    name: z.string().min(1),
-    productId: z.string().min(1),
-    productName: z.string().min(1),
-    productSlug: z.string().min(1),
-    channels: z.string().min(1),
-  }),
+  productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 
 const ContentfulProviderConfigSchema = ContentfulProviderConfigSchemaInput.extend({

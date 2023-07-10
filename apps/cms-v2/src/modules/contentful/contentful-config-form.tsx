@@ -7,6 +7,7 @@ import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { ContentfulProviderConfigInputType } from "../configuration/schemas/contentful-provider.schema";
+import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
 
 const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
@@ -207,7 +208,6 @@ const ContentfulConfigForm = ({
             </Box>
             {availableFields &&
               mappingFieldsNames.map((saleorField) => (
-                // TODO Add some better display of saleor fields + some hints
                 <Box
                   display="grid"
                   __gridTemplateColumns={"50% 50%"}
@@ -215,7 +215,7 @@ const ContentfulConfigForm = ({
                   key={saleorField}
                   alignItems="center"
                 >
-                  <Text>{saleorField}</Text>
+                  <Text>{printSaleorProductFields(saleorField)}</Text>
                   <Select
                     size="small"
                     control={control}

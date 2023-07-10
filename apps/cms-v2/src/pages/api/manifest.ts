@@ -12,7 +12,8 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      about: "TODO",
+      about:
+        "CMS App is a multi-integration app that connects Saleor with popular Content Management Systems.",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       brand: {
@@ -36,7 +37,9 @@ export default createManifestHandler({
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: [
-        // TODO optimize - create webhooks dynamically
+        /*
+         * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
+         */
         productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
         productVariantUpdatedWebhook.getWebhookManifest(apiBaseURL),
         productVariantDeletedWebhook.getWebhookManifest(apiBaseURL),

@@ -7,6 +7,8 @@ import { AppSection } from "../ui/app-section";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
+import { Breadcrumbs } from "@saleor/apps-ui";
+import { ArrowRightIcon } from "@saleor/macaw-ui";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -122,9 +124,17 @@ export const BulkSyncView = ({
 
   return (
     <Box>
-      <Text marginBottom={8} as="h1" variant="hero">
-        Products bulk synchronization
-      </Text>
+      <Breadcrumbs marginBottom={8}>
+        <Breadcrumbs.Item>Saleor App CMS</Breadcrumbs.Item>
+        <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
+        <Breadcrumbs.Item>Bulk Sync</Breadcrumbs.Item>
+        <Breadcrumbs.Item>
+          <Box display="flex" gap={2} alignItems="center">
+            {connection.channelSlug}
+            <ArrowRightIcon /> {configuration.configName}
+          </Box>
+        </Breadcrumbs.Item>
+      </Breadcrumbs>
 
       <AppSection
         marginBottom={8}
