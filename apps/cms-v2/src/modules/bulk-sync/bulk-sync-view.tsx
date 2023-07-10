@@ -1,12 +1,13 @@
-import { Box, Button, Text, WarningIcon } from "@saleor/macaw-ui/next";
-import { trpcClient } from "../trpc/trpc-client";
-import { useFetchAllProducts } from "./use-fetch-all-products";
-import { AppSection } from "../ui/app-section";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useState } from "react";
 import { RootConfigSchemaType } from "../configuration";
 import { ContentfulClient } from "../contentful/contentful-client";
-import { pRateLimit } from "p-ratelimit";
-import { VariantsSyncStatusList, VariantsSyncStatusListItem } from "./variants-sync-status-list";
+import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
+import { trpcClient } from "../trpc/trpc-client";
+import { AppSection } from "../ui/app-section";
+import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
+import { useFetchAllProducts } from "./use-fetch-all-products";
+import { VariantsSyncStatusList } from "./variants-sync-status-list";
 
 const Results = (props: {
   channelSlug: string;
@@ -14,38 +15,17 @@ const Results = (props: {
 }) => {
   const [started, setStarted] = useState(false);
 
-  const [productsStatusList, setProductsStatusList] = useState<VariantsSyncStatusListItem[] | null>(
-    null
-  );
+  const { products, finished } = useFetchAllProducts(started, props.channelSlug);
 
-  const { products, finished } = useFetchAllProducts(started, props.channelSlug, {
-    onFinished(products) {},
-    onBatchFetched(products) {},
-    onPageStart(cursor) {},
-  });
+  const { productsStatusList, setInitialProducts, setItemStatus } = useBulkSyncProductsState();
 
   useEffect(() => {
     if (!finished) {
       return;
     }
 
-    setProductsStatusList(
-      products.flatMap((p) => {
-        console.log(p);
-
-        const items: VariantsSyncStatusListItem[] =
-          p.variants?.map((v) => ({
-            productID: p.id,
-            productName: p.name,
-            status: "pending",
-            variantId: v.id,
-            variantName: v.name,
-          })) ?? [];
-
-        return items;
-      })
-    );
-  }, [products, finished]);
+    setInitialProducts(products);
+  }, [products, finished, setInitialProducts]);
 
   useEffect(() => {
     if (!finished) {
@@ -59,29 +39,10 @@ const Results = (props: {
       space: props.providerConfig.spaceId,
     });
 
-    const limit = pRateLimit({
-      interval: 1000, // 1000 ms == 1 second
-      rate: 2, // 5 API calls per interval
-      concurrency: 2, // no more than 10 running at once
-      // maxDelay: 5000, // an API call delayed > 2 sec is rejected
-    });
-
-    // todo rate limiting
     const promises = products.flatMap((product) => {
       return product.variants?.map((variant) => {
-        return limit(() => {
-          setProductsStatusList((items) =>
-            items!.map((item) => {
-              if (item.variantId === variant.id) {
-                return {
-                  ...item,
-                  status: "uploading",
-                };
-              }
-
-              return item;
-            })
-          );
+        return contentfulRateLimiter(() => {
+          setItemStatus(variant.id, "uploading");
 
           return contentful
             .upsertProduct({
@@ -99,35 +60,13 @@ const Results = (props: {
             })
             .then((r) => {
               if (r?.metadata) {
-                setProductsStatusList((items) =>
-                  items!.map((item) => {
-                    if (item.variantId === variant.id) {
-                      return {
-                        ...item,
-                        status: "success",
-                      };
-                    }
-
-                    return item;
-                  })
-                );
+                setItemStatus(variant.id, "success");
               }
             })
             .catch((e) => {
               console.error(e);
 
-              setProductsStatusList((items) =>
-                items!.map((item) => {
-                  if (item.variantId === variant.id) {
-                    return {
-                      ...item,
-                      status: "error",
-                    };
-                  }
-
-                  return item;
-                })
-              );
+              setItemStatus(variant.id, "error");
             });
         });
       });

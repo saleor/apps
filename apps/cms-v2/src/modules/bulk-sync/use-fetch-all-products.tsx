@@ -10,15 +10,7 @@ import {
 /**
  * Original source - apps/search
  */
-export const useFetchAllProducts = (
-  started: boolean,
-  channelSlug: string,
-  hooks: {
-    onFinished(products: BulkImportProductFragment[]): void;
-    onBatchFetched(batch: BulkImportProductFragment[]): void;
-    onPageStart(cursor?: string): void;
-  }
-) => {
+export const useFetchAllProducts = (started: boolean, channelSlug: string) => {
   const { appBridgeState } = useAppBridge();
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
 
@@ -42,8 +34,6 @@ export const useFetchAllProducts = (
     }
 
     const getProducts = async (cursor?: string): Promise<void> => {
-      hooks.onPageStart(cursor);
-
       const response = await client
         .query(FetchProductsPaginatedDocument, {
           after: cursor,
@@ -52,8 +42,6 @@ export const useFetchAllProducts = (
         .toPromise();
 
       const newProducts = response?.data?.products?.edges.map((e) => e.node) ?? [];
-
-      hooks.onBatchFetched(newProducts);
 
       if (newProducts.length > 0) {
         setProducts((ps) => [...ps, ...newProducts]);
@@ -64,7 +52,6 @@ export const useFetchAllProducts = (
       ) {
         return getProducts(response.data.products?.pageInfo.endCursor);
       } else {
-        hooks.onFinished(products);
         setFinished(true);
 
         return;
