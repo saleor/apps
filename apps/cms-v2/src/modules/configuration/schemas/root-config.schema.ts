@@ -1,11 +1,17 @@
 import { z } from "zod";
 import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connection.schema";
 import { ContentfulProviderSchema } from "./contentful-provider.schema";
+import { DatocmsProviderSchema } from "./datocms-provider.schema";
 
-/**
- * Add more for each provider
- */
-const ProvidersSchema = z.array(ContentfulProviderSchema.Config); // todo union
+const ProvidersSchema = z.array(
+  z.union([
+    /**
+     * Add more for each provider
+     */
+    ContentfulProviderSchema.Config,
+    DatocmsProviderSchema.Config,
+  ])
+);
 
 /**
  * Store entire app config in single file

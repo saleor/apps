@@ -6,14 +6,15 @@ import { ContentfulProviderConfigType } from "@/modules/configuration";
  * Wrapper facade of
  * https://www.npmjs.com/package/contentful
  *
- * todo cache space and env
- * todo tests
- * todo logs
+ * TODO cache space and env
+ * TODO tests
+ * TODO logs
  */
 export class ContentfulClient {
   private client: ClientAPI;
   private space: string;
 
+  // todo consider passing and storing entire config
   constructor(opts: { space: string; accessToken: string }) {
     this.space = opts.space;
 

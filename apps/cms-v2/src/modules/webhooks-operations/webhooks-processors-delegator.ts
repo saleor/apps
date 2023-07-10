@@ -1,6 +1,7 @@
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
-import { RootConfigSchemaType } from "../configuration";
+import { AnyProviderConfigSchemaType } from "../configuration";
 import { ContentfulWebhooksProcessor } from "../contentful/contentful-webhooks-processor";
+import { DatocmsWebhooksProcessor } from "../datocms/datocms-webhooks-processor";
 import { WebhookContext } from "./create-webhook-config-context";
 
 export class WebhooksProcessorsDelegator {
@@ -10,10 +11,13 @@ export class WebhooksProcessorsDelegator {
     }
   ) {}
 
-  private createProcessorFromConfig(config: RootConfigSchemaType["providers"][0]) {
+  private createProcessorFromConfig(config: AnyProviderConfigSchemaType) {
     switch (config.type) {
       case "contentful": {
         return new ContentfulWebhooksProcessor(config);
+      }
+      case "datocms": {
+        return new DatocmsWebhooksProcessor(config);
       }
     }
   }

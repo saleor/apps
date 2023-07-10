@@ -1,4 +1,5 @@
 import { Contentful } from "../contentful/contentful";
+import { Datocms } from "../datocms/datocms";
 
 export interface CMSProvider {
   type: string;
@@ -7,10 +8,15 @@ export interface CMSProvider {
   description: string;
 }
 
-export const createProvider = (type: typeof Contentful.type | string): CMSProvider => {
+export type CMSType = typeof Contentful.type | typeof Datocms.type;
+
+export const createProvider = (type: CMSType | string): CMSProvider => {
   switch (type) {
     case "contentful": {
       return Contentful;
+    }
+    case "datocms": {
+      return Datocms;
     }
     default: {
       throw new Error("Unknown provider");
@@ -18,5 +24,4 @@ export const createProvider = (type: typeof Contentful.type | string): CMSProvid
   }
 };
 
-export type CMSType = typeof Contentful.type;
-export const cmsTypes = [Contentful.type] as const;
+export const cmsTypes = [Contentful.type, Datocms.type] as const;
