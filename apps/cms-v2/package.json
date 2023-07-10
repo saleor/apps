@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-crm-v2",
+  "name": "saleor-app-cms-v2",
   "version": "0.1.0",
   "scripts": {
     "build": "pnpm generate && next build",
@@ -12,6 +12,8 @@
     "test": "vitest"
   },
   "dependencies": {
+    "react-error-boundary": "4.0.10",
+    "p-ratelimit": "1.0.1",
     "@datocms/cma-client-node": "2.0.0",
     "@hookform/resolvers": "^3.1.0",
     "@saleor/app-sdk": "0.41.0",

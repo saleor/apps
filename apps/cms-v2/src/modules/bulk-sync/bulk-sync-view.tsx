@@ -5,41 +5,50 @@ import { AppSection } from "../ui/app-section";
 import { useEffect, useState } from "react";
 import { RootConfigSchemaType } from "../configuration";
 import { ContentfulClient } from "../contentful/contentful-client";
-
-const formatLog = (log: string) =>
-  `${Intl.DateTimeFormat("en-US", { timeStyle: "medium" }).format(new Date())} - ${log}`;
+import { pRateLimit } from "p-ratelimit";
+import { VariantsSyncStatusList, VariantsSyncStatusListItem } from "./variants-sync-status-list";
 
 const Results = (props: {
   channelSlug: string;
   providerConfig: RootConfigSchemaType["providers"][0];
 }) => {
-  const [logs, setLogs] = useState<string[]>([]);
-  const [fetchFinished, setFetchFinished] = useState(false);
-
-  const addLog = (log: string) => setLogs((logs) => [...logs, formatLog(log)]);
-
   const [started, setStarted] = useState(false);
-  const { products } = useFetchAllProducts(started, props.channelSlug, {
-    onFinished() {
-      console.log("finish");
-      setStarted(false);
 
-      addLog("Finished fetching all products for channel: " + props.channelSlug);
+  const [productsStatusList, setProductsStatusList] = useState<VariantsSyncStatusListItem[] | null>(
+    null
+  );
 
-      setFetchFinished(true);
-    },
-    onBatchFetched(products) {
-      const newLogs = products.map((p) => formatLog(`Fetched product: ${p.id} (${p.name})`));
-
-      setLogs((logs) => [...logs, ...newLogs]);
-    },
-    onPageStart(cursor) {
-      addLog(`Started fetching products page with cursor: ${cursor ?? "Empty"}`);
-    },
+  const { products, finished } = useFetchAllProducts(started, props.channelSlug, {
+    onFinished(products) {},
+    onBatchFetched(products) {},
+    onPageStart(cursor) {},
   });
 
   useEffect(() => {
-    if (!fetchFinished) {
+    if (!finished) {
+      return;
+    }
+
+    setProductsStatusList(
+      products.flatMap((p) => {
+        console.log(p);
+
+        const items: VariantsSyncStatusListItem[] =
+          p.variants?.map((v) => ({
+            productID: p.id,
+            productName: p.name,
+            status: "pending",
+            variantId: v.id,
+            variantName: v.name,
+          })) ?? [];
+
+        return items;
+      })
+    );
+  }, [products, finished]);
+
+  useEffect(() => {
+    if (!finished) {
       return;
     }
 
@@ -50,39 +59,84 @@ const Results = (props: {
       space: props.providerConfig.spaceId,
     });
 
+    const limit = pRateLimit({
+      interval: 1000, // 1000 ms == 1 second
+      rate: 2, // 5 API calls per interval
+      concurrency: 2, // no more than 10 running at once
+      // maxDelay: 5000, // an API call delayed > 2 sec is rejected
+    });
+
     // todo rate limiting
-    const promises = products.map((product) => {
+    const promises = products.flatMap((product) => {
       return product.variants?.map((variant) => {
-        return contentful
-          .upsertProduct({
-            configuration: props.providerConfig,
-            variant: {
-              id: variant.id,
-              name: variant.name,
-              channelListings: variant.channelListings,
-              product: {
-                id: product.id,
-                name: product.name,
-                slug: product.slug,
+        return limit(() => {
+          setProductsStatusList((items) =>
+            items!.map((item) => {
+              if (item.variantId === variant.id) {
+                return {
+                  ...item,
+                  status: "uploading",
+                };
+              }
+
+              return item;
+            })
+          );
+
+          return contentful
+            .upsertProduct({
+              configuration: props.providerConfig,
+              variant: {
+                id: variant.id,
+                name: variant.name,
+                channelListings: variant.channelListings,
+                product: {
+                  id: product.id,
+                  name: product.name,
+                  slug: product.slug,
+                },
               },
-            },
-          })
-          .then((r) => {
-            if (r?.metadata) {
-              addLog(`✅ Uploaded variant ${variant.id}`);
-            }
-          })
-          .catch((e) => {
-            console.error(e);
-            addLog(`❌ Failed to upload variant ${variant.id}`); //todo print error
-          });
+            })
+            .then((r) => {
+              if (r?.metadata) {
+                setProductsStatusList((items) =>
+                  items!.map((item) => {
+                    if (item.variantId === variant.id) {
+                      return {
+                        ...item,
+                        status: "success",
+                      };
+                    }
+
+                    return item;
+                  })
+                );
+              }
+            })
+            .catch((e) => {
+              console.error(e);
+
+              setProductsStatusList((items) =>
+                items!.map((item) => {
+                  if (item.variantId === variant.id) {
+                    return {
+                      ...item,
+                      status: "error",
+                    };
+                  }
+
+                  return item;
+                })
+              );
+            });
+        });
       });
     });
 
     Promise.all(promises).then(() => {
-      addLog("Completed upload");
+      console.log("all");
     });
-  }, [fetchFinished, products]);
+  }, [finished, products]);
 
   return (
     <Box>
@@ -91,18 +145,7 @@ const Results = (props: {
           <Button onClick={() => setStarted(true)}>Start sync</Button>
         </Box>
       )}
-      {logs.length > 0 && (
-        <Box>
-          <Text as="p" marginBottom={4} variant="heading">
-            Logs
-          </Text>
-          {logs.map((l) => (
-            <Text style={{ fontFamily: "monospace" }} size="small" as="p" key={l}>
-              {l}
-            </Text>
-          ))}
-        </Box>
-      )}
+      {productsStatusList && <VariantsSyncStatusList marginTop={8} variants={productsStatusList} />}
     </Box>
   );
 };

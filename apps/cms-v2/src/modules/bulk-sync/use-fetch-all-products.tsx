@@ -14,7 +14,7 @@ export const useFetchAllProducts = (
   started: boolean,
   channelSlug: string,
   hooks: {
-    onFinished(): void;
+    onFinished(products: BulkImportProductFragment[]): void;
     onBatchFetched(batch: BulkImportProductFragment[]): void;
     onPageStart(cursor?: string): void;
   }
@@ -23,6 +23,7 @@ export const useFetchAllProducts = (
   const saleorApiUrl = appBridgeState?.saleorApiUrl!;
 
   const [products, setProducts] = useState<BulkImportProductFragment[]>([]);
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
     if (!started) {
@@ -63,7 +64,8 @@ export const useFetchAllProducts = (
       ) {
         return getProducts(response.data.products?.pageInfo.endCursor);
       } else {
-        hooks.onFinished();
+        hooks.onFinished(products);
+        setFinished(true);
 
         return;
       }
@@ -72,5 +74,5 @@ export const useFetchAllProducts = (
     getProducts(undefined);
   }, [appBridgeState?.token, saleorApiUrl, started, channelSlug]);
 
-  return { products };
+  return { products, finished };
 };
