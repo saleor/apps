@@ -86,7 +86,7 @@ export const BulkSyncView = ({
       space: configuration.spaceId,
     });
 
-    const promises = products.flatMap((product) => {
+    products.flatMap((product) => {
       return product.variants?.map((variant) => {
         return contentfulRateLimiter(() => {
           setItemStatus(variant.id, "uploading");
@@ -118,11 +118,7 @@ export const BulkSyncView = ({
         });
       });
     });
-
-    Promise.all(promises).then(() => {
-      console.log("all");
-    });
-  }, [state, products]);
+  }, [state, products, configuration, setItemStatus]);
 
   return (
     <Box>
@@ -166,7 +162,8 @@ export const BulkSyncView = ({
 
       {(state === "fetched" || state === "uploading") && productsStatusList && (
         <AppSection
-          heading="Upload to the CMS"
+          heading="2. Upload to the CMS"
+          sideContent={<Text>Send listed variants to the CMS</Text>}
           mainContent={
             <Box>
               <Text as="h2" marginBottom={4} variant="heading">

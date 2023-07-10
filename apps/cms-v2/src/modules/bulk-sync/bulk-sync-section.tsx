@@ -35,7 +35,7 @@ export const BulkSyncSection = () => {
     defaultValues: {
       connID: "",
     },
-    resolver: zodResolver(FormSchema), // todo
+    resolver: zodResolver(FormSchema),
   });
 
   if (!connections || !providers) {

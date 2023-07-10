@@ -7,7 +7,11 @@ import { useForm } from "react-hook-form";
 import { createProvider } from "../shared/cms-provider";
 import { Modal } from "../shared/modal";
 import { trpcClient } from "../trpc/trpc-client";
-import { ChannelProviderConnectionInputType } from "@/modules/configuration";
+import {
+  ChannelProviderConnectionInputType,
+  ChannelProviderConnectionConfigSchema,
+} from "@/modules/configuration";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const FORM_ID = "new-connection-form";
 
@@ -38,6 +42,9 @@ const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): 
 
   const { handleSubmit, control } = useForm<FormSchema>({
     defaultValues: props.defaultValues,
+    resolver: zodResolver(
+      ChannelProviderConnectionConfigSchema.NewConnectionInput.omit({ providerType: true })
+    ),
   });
 
   return (
