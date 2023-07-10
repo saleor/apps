@@ -4,6 +4,7 @@ import {
   FetchAppPermissionsQuery,
   PermissionEnum,
 } from "../../generated/graphql";
+import { createLogger } from "@saleor/apps-shared";
 
 gql`
   query FetchAppPermissions {
@@ -15,13 +16,18 @@ gql`
   }
 `;
 
+const logger = createLogger({
+  name: "fetchAppPermissions",
+});
+
 export async function fetchAppPermissions(client: Client): Promise<PermissionEnum[]> {
   const { error, data } = await client
     .query<FetchAppPermissionsQuery>(FetchAppPermissionsDocument, {})
     .toPromise();
 
   if (error) {
-    return [];
+    logger.error(error, "Error fetching app permissions");
+    throw new Error("Could not fetch the app permissions");
   }
 
   return data?.app?.permissions?.map((p) => p.code) || [];
