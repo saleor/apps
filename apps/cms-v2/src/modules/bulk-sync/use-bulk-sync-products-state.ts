@@ -12,8 +12,6 @@ export const useBulkSyncProductsState = () => {
     setInitialProducts: useCallback((products: BulkImportProductFragment[]) => {
       setProductsStatusList(
         products.flatMap((p) => {
-          console.log(p);
-
           const items: VariantsSyncStatusListItem[] =
             p.variants?.map((v) => ({
               productID: p.id,

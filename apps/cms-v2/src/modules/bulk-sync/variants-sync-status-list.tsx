@@ -1,3 +1,4 @@
+import { SemanticChip } from "@saleor/apps-ui";
 import { Box, BoxProps, Text } from "@saleor/macaw-ui/next";
 
 export type VariantsSyncStatusListItem = {
@@ -13,23 +14,30 @@ type Props = {
 } & BoxProps;
 
 const Row = (props: BoxProps) => (
-  <Box padding={2} display="grid" __gridTemplateColumns={"2fr 2fr 1fr"} gap={4} {...props} />
+  <Box
+    padding={2}
+    display="grid"
+    __gridTemplateColumns={"2fr 2fr 1fr"}
+    gap={4}
+    alignItems="center"
+    {...props}
+  />
 );
 
 export const VariantsSyncStatusList = ({ variants, ...props }: Props) => {
   const renderStatus = (status: VariantsSyncStatusListItem["status"]) => {
     switch (status) {
       case "pending": {
-        return <Text>Waiting...</Text>;
+        return null;
       }
       case "success": {
-        return <Text>Uploaded ✅</Text>;
+        return <SemanticChip variant="success">Uploaded</SemanticChip>;
       }
       case "error": {
-        return <Text>Error ❌</Text>;
+        return <SemanticChip variant="error">Error</SemanticChip>;
       }
       case "uploading": {
-        return <Text>Uploading 🚀</Text>;
+        return <SemanticChip variant="default">Uploading</SemanticChip>;
       }
     }
   };
