@@ -13,3 +13,5 @@ export const RootConfigSchema = z.object({
 });
 
 export type RootConfigSchemaType = z.infer<typeof RootConfigSchema>;
+
+export type AnyProviderConfigSchemaType = RootConfigSchemaType["providers"][0];

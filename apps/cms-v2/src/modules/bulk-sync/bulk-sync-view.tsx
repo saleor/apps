@@ -1,6 +1,10 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useState } from "react";
-import { RootConfigSchemaType } from "../configuration";
+import {
+  AnyProviderConfigSchemaType,
+  ChannelProviderConnectionType,
+  RootConfigSchemaType,
+} from "../configuration";
 import { ContentfulClient } from "../contentful/contentful-client";
 import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
 import { trpcClient } from "../trpc/trpc-client";
@@ -89,32 +93,28 @@ const Results = (props: {
   );
 };
 
-export const BulkSyncView = (props: { connectionId: string }) => {
-  const { data: connection } = trpcClient.channelsProvidersConnection.fetchConnection.useQuery({
-    id: props.connectionId,
-  });
-
-  const { data: provider } = trpcClient.providersList.fetchConfiguration.useQuery(
-    {
-      id: connection?.providerId ?? "",
-    },
-    {
-      enabled: !!connection,
-    }
-  );
-
+export const BulkSyncView = ({
+  configuration,
+  connection,
+}: {
+  configuration: AnyProviderConfigSchemaType;
+  connection: ChannelProviderConnectionType;
+}) => {
   return (
     <Box>
-      <Text marginBottom={4} as="h1" variant="hero">
+      <Text marginBottom={8} as="h1" variant="hero">
         Products bulk synchronization
       </Text>
 
-      {provider && connection && (
-        <AppSection
-          mainContent={<Results channelSlug={connection.channelSlug} providerConfig={provider} />}
-          heading="Sync products"
-        />
-      )}
+      <AppSection
+        mainContent={
+          <Results channelSlug={connection.channelSlug} providerConfig={configuration} />
+        }
+        heading="1. Fetch products"
+        sideContent={
+          <Text>First pre-fetch all Product Variants from Saleor. Do not close the app.</Text>
+        }
+      />
     </Box>
   );
 };
