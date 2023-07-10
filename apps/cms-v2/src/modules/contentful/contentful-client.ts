@@ -27,7 +27,6 @@ export class ContentfulClient {
     return (await (await this.client.getSpace(this.space)).getEnvironment(env)).getContentTypes();
   }
 
-  // todo connect to form, add field
   async getEnvironments() {
     return (await this.client.getSpace(this.space)).getEnvironments();
   }

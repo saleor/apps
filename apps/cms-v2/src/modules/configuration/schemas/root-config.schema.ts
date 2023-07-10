@@ -3,12 +3,17 @@ import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connec
 import { ContentfulProviderSchema } from "./contentful-provider.schema";
 
 /**
+ * Add more for each provider
+ */
+const ProvidersSchema = z.array(ContentfulProviderSchema.Config); // todo union
+
+/**
  * Store entire app config in single file
  * - Only one request
  * - Always transactional
  */
 export const RootConfigSchema = z.object({
-  providers: z.array(ContentfulProviderSchema.Config), // todo union
+  providers: ProvidersSchema,
   connections: z.array(ChannelProviderConnectionConfigSchema.Connection),
 });
 

@@ -35,7 +35,6 @@ const NoConnections = (props: { onCreate(): void }) => (
 
 type FormSchema = Omit<ChannelProviderConnectionInputType, "providerType">;
 
-// todo edit provider form variant
 const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): void }) => {
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();

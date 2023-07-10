@@ -71,5 +71,3 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
 };
 
 export default productVariantDeletedWebhook.createHandler(handler);
-
-// todo remove connection when provider removed
