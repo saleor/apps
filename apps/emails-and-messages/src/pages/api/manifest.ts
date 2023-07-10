@@ -28,7 +28,7 @@ export default createManifestHandler({
       homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.emails-and-messages",
       name: "Emails & Messages",
-      permissions: ["MANAGE_ORDERS", "MANAGE_USERS"],
+      permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
       /**
        * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
        */

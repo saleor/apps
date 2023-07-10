@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useForm } from "react-hook-form";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { getEventFormStatus } from "../../../lib/get-event-form-status";
+import { ManagePermissionsTextLink } from "../../../components/manage-permissions-text-link";
 
 interface SmtpEventsSectionProps {
   configuration: SmtpConfiguration;
@@ -29,6 +31,7 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
   const router = useRouter();
 
   const { data: featureFlags } = trpcClient.app.featureFlags.useQuery();
+  const { data: appPermissions } = trpcClient.app.appPermissions.useQuery();
 
   // Sort events by displayed label
   const eventsSorted = configuration.events.sort((a, b) =>
@@ -87,8 +90,12 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
               </Table.Header>
               <Table.Body>
                 {eventsSorted.map((event, index) => {
-                  const isUnsupported =
-                    !featureFlags?.giftCardSentEvent && event.eventType === "GIFT_CARD_SENT";
+                  const { isDisabled, requiredSaleorVersion, missingPermission } =
+                    getEventFormStatus({
+                      appPermissions,
+                      featureFlags: featureFlags,
+                      eventType: event.eventType,
+                    });
 
                   return (
                     <Table.Row key={event.eventType}>
@@ -98,14 +105,22 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
                             <input
                               type="checkbox"
                               {...register(`events.${index}.active`)}
-                              disabled={isUnsupported}
+                              disabled={isDisabled}
                             />
                           </Tooltip.Trigger>
-                          {isUnsupported && (
+                          {requiredSaleorVersion ? (
                             <Tooltip.Content side="left">
-                              Event is available in Saleor version 3.13 and above only.
+                              The feature requires Saleor version {requiredSaleorVersion}. Update
+                              the instance to enable.
                               <Tooltip.Arrow />
                             </Tooltip.Content>
+                          ) : (
+                            missingPermission && (
+                              <Tooltip.Content side="left">
+                                <ManagePermissionsTextLink missingPermission={missingPermission} />
+                                <Tooltip.Arrow />
+                              </Tooltip.Content>
+                            )
                           )}
                         </Tooltip>
                       </Table.Cell>
@@ -121,7 +136,7 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
                               smtpUrls.eventConfiguration(configuration.id, event.eventType)
                             );
                           }}
-                          disabled={isUnsupported}
+                          disabled={isDisabled}
                         >
                           Edit template
                         </Button>
