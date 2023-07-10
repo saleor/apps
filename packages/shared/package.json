@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "scripts": {
     "lint:fix": "eslint --fix ."
   },

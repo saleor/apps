@@ -1,5 +1,20 @@
 # saleor-app-crm
 
+## 1.7.0
+
+### Minor Changes
+
+- a1f083c: Filled "about" field in App Manifest. Dashboard will display it in app details page now.
+- 47102ba: Added additional ENV variables (see each app's .env.example), that can overwrite app base URL. This change allows easy apps development using Docker
+
+### Patch Changes
+
+- 2d77bca: Updated Next.js to 13.4.8
+- 6299e06: Update @saleor/app-sdk to 0.41.0
+- Updated dependencies [2d77bca]
+- Updated dependencies [6299e06]
+  - @saleor/apps-shared@1.7.3
+
 ## 1.6.0
 
 ### Minor Changes

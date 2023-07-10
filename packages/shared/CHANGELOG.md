@@ -1,5 +1,12 @@
 # @saleor/apps-shared
 
+## 1.7.3
+
+### Patch Changes
+
+- 2d77bca: Updated Next.js to 13.4.8
+- 6299e06: Update @saleor/app-sdk to 0.41.0
+
 ## 1.7.2
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # saleor-app-taxes
 
+## 1.10.0
+
+### Minor Changes
+
+- a1f083c: Filled "about" field in App Manifest. Dashboard will display it in app details page now.
+- d2b21cc: Added the usage of stored tax code combinations in the create order webhook flow. This doesn't effect the tax calculation, but makes sure the mapped product line has the correct tax code.
+- 47102ba: Added additional ENV variables (see each app's .env.example), that can overwrite app base URL. This change allows easy apps development using Docker
+
+### Patch Changes
+
+- 2d77bca: Updated Next.js to 13.4.8
+- 6299e06: Update @saleor/app-sdk to 0.41.0
+- Updated dependencies [2d77bca]
+- Updated dependencies [6299e06]
+  - @saleor/apps-shared@1.7.3
+  - @saleor/apps-ui@1.1.3
+  - @saleor/react-hook-form-macaw@0.2.0
+
 ## 1.9.0
 
 ### Minor Changes
