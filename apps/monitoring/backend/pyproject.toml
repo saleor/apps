@@ -6,7 +6,7 @@ authors = ["Przemysław Łada <przemyslaw.lada@saleor.io>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.92.0"
+fastapi = "^0.100.0"
 uvicorn = {extras = ["standard"], version = "^0.20.0"}
 python-dotenv = "^0.21.0"
 python-json-logger = "^2.0.4"
