@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.3
+
+### Patch Changes
+
+- 2d77bca: Updated Next.js to 13.4.8
+
 ## 0.4.2
 
 ### Patch Changes
