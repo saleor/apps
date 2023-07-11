@@ -13,6 +13,10 @@ export class DatoCMSClient {
     return this.client.itemTypes.list(); // todo connect to frontend
   }
 
+  getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
+    return this.client.fields.list({ type: "item_type", id: itemTypeID });
+  }
+
   uploadProduct({
     configuration,
     variant,

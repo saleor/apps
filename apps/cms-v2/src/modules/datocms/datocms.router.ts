@@ -80,4 +80,20 @@ export const datocmsRouter = router({
 
       return client.getContentTypes();
     }),
+  fetchContentTypeFields: procedure
+    .input(
+      z.object({
+        contentTypeID: z.string(),
+        apiToken: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const client = new DatoCMSClient({
+        apiToken: input.apiToken,
+      });
+
+      return client.getFieldsForContentType({
+        itemTypeID: input.contentTypeID,
+      });
+    }),
 });

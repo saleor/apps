@@ -161,8 +161,6 @@ const ContentfulConfigForm = ({
                   onClick={() => {
                     const values = getValues();
 
-                    console.log(values);
-
                     return fetchContentTypes({
                       contentfulSpace: values.spaceId,
                       contentfulToken: values.authToken,
