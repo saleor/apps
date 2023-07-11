@@ -1,11 +1,12 @@
 import { Contentful } from "@/modules/contentful/contentful";
+import { Datocms } from "@/modules/datocms/datocms";
+import { CMSProvider, CMSProviders } from "@/modules/shared/cms-provider";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-
-const providers = [Contentful];
+import React from "react";
 
 const AddProviderPage: NextPage = () => {
   const { push } = useRouter();
@@ -30,9 +31,15 @@ const AddProviderPage: NextPage = () => {
           </Box>
         }
         mainContent={
-          <Box>
-            {providers.map((p) => (
-              <Box display="flex" alignItems="center" gap={4} key={p.type}>
+          <Box
+            display="grid"
+            __gridTemplateColumns="auto auto auto"
+            alignItems="center"
+            gap={6}
+            rowGap={12}
+          >
+            {CMSProviders.map((p) => (
+              <React.Fragment key={p.type}>
                 <Box __width="30px" __height="30px" __flex="0 0 30px" alignSelf={"start"}>
                   <Box width="100%" as="img" src={p.logoUrl} />
                 </Box>
@@ -51,7 +58,7 @@ const AddProviderPage: NextPage = () => {
                 >
                   Set up {p.displayName}
                 </Button>
-              </Box>
+              </React.Fragment>
             ))}
           </Box>
         }

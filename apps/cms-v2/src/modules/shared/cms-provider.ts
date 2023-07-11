@@ -25,3 +25,5 @@ export const createProvider = (type: CMSType | string): CMSProvider => {
 };
 
 export const cmsTypes = [Contentful.type, Datocms.type] as const;
+
+export const CMSProviders = [Contentful, Datocms];
