@@ -1,8 +1,9 @@
 import { BulkImportProductFragment } from "../../../generated/graphql";
 import { AnyProviderConfigSchemaType, ContentfulProviderConfigType } from "../configuration";
-import { DatocmsProviderConfigInputType } from "../configuration/schemas/datocms-provider.schema";
+import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
 import { ContentfulClient } from "../contentful/contentful-client";
 import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
+import { DatoCMSClientBrowser } from "../datocms/datocms-client-browser";
 
 type Hooks = {
   onUploadStart?: (context: { variantId: string }) => void;
@@ -67,10 +68,47 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
 
 // todo extract
 export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
-  constructor(private config: DatocmsProviderConfigInputType) {}
+  constructor(private config: DatocmsProviderConfigType) {}
 
   async uploadProducts(products: BulkImportProductFragment[], hooks: Hooks): Promise<void> {
-    throw new Error("Method not implemented.");
+    const client = new DatoCMSClientBrowser({
+      apiToken: this.config.authToken,
+    });
+
+    products.flatMap((product) =>
+      product.variants?.map((variant) => {
+        if (hooks.onUploadStart) {
+          hooks.onUploadStart({ variantId: variant.id });
+        }
+
+        return client
+          .upsertProduct({
+            configuration: this.config,
+            variant: {
+              id: variant.id,
+              name: variant.name,
+              channelListings: variant.channelListings,
+              product: {
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+              },
+            },
+          })
+          .then((r) => {
+            console.log(r);
+
+            if (hooks.onUploadSuccess) {
+              hooks.onUploadSuccess({ variantId: variant.id });
+            }
+          })
+          .catch((e) => {
+            if (hooks.onUploadError) {
+              hooks.onUploadError({ variantId: variant.id, error: e });
+            }
+          });
+      })
+    );
   }
 }
 
