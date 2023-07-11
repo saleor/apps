@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnyProviderConfigSchemaType, ChannelProviderConnectionType } from "../configuration";
 import { ContentfulClient } from "../contentful/contentful-client";
 import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
@@ -10,6 +10,7 @@ import { VariantsSyncStatusList } from "./variants-sync-status-list";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { ArrowRightIcon } from "@saleor/macaw-ui";
 import { ButtonsBox } from "../ui/buttons-box";
+import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -59,6 +60,7 @@ export const BulkSyncView = ({
   configuration: AnyProviderConfigSchemaType;
   connection: ChannelProviderConnectionType;
 }) => {
+  const processor = useRef(BulkSyncProcessorFactory.create(configuration));
   const [state, setState] = useState<State>("initial");
 
   const { products, finished: saleorProductsFetchFinished } = useFetchAllProducts(
@@ -82,44 +84,17 @@ export const BulkSyncView = ({
       return;
     }
 
-    // todo make abstraction
-
-    const contentful = new ContentfulClient({
-      accessToken: configuration.authToken,
-      space: configuration.spaceId,
-    });
-
-    products.flatMap((product) => {
-      return product.variants?.map((variant) => {
-        return contentfulRateLimiter(() => {
-          setItemStatus(variant.id, "uploading");
-
-          return contentful
-            .upsertProduct({
-              configuration,
-              variant: {
-                id: variant.id,
-                name: variant.name,
-                channelListings: variant.channelListings,
-                product: {
-                  id: product.id,
-                  name: product.name,
-                  slug: product.slug,
-                },
-              },
-            })
-            .then((r) => {
-              if (r?.metadata) {
-                setItemStatus(variant.id, "success");
-              }
-            })
-            .catch((e) => {
-              console.error(e);
-
-              setItemStatus(variant.id, "error");
-            });
-        });
-      });
+    processor.current.uploadProducts(products, {
+      onUploadStart({ variantId }) {
+        setItemStatus(variantId, "uploading");
+      },
+      onUploadSuccess({ variantId }) {
+        setItemStatus(variantId, "success");
+      },
+      onUploadError({ error, variantId }) {
+        // todo handle error
+        setItemStatus(variantId, "error");
+      },
     });
   }, [state, products, configuration, setItemStatus]);
 
