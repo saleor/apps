@@ -138,6 +138,23 @@ const defaultOrderFullyPaidMjmlTemplate = `<mjml>
   </mj-body>
 </mjml>`;
 
+const defaultOrderRefundedMjmlTemplate = `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="16px">
+          Hello!
+        </mj-text>
+        <mj-text>
+          Order {{ order.number}} has been refunded.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    ${addressSection}
+    ${orderLinesSection}  
+  </mj-body>
+</mjml>`;
+
 const defaultOrderCancelledMjmlTemplate = `<mjml>
   <mj-body>
     <mj-section>
@@ -286,6 +303,7 @@ export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ORDER_CREATED: defaultOrderCreatedMjmlTemplate,
   ORDER_FULFILLED: defaultOrderFulfilledMjmlTemplate,
   ORDER_FULLY_PAID: defaultOrderFullyPaidMjmlTemplate,
+  ORDER_REFUNDED: defaultOrderRefundedMjmlTemplate,
 };
 
 export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
@@ -301,4 +319,5 @@ export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ORDER_CREATED: "Order {{ order.number }} has been created",
   ORDER_FULFILLED: "Order {{ order.number }} has been fulfilled",
   ORDER_FULLY_PAID: "Order {{ order.number }} has been fully paid",
+  ORDER_REFUNDED: "Order {{ order.number }} has been refunded",
 };

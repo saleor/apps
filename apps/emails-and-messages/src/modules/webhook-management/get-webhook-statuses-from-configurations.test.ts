@@ -2,6 +2,7 @@ import { expect, describe, it } from "vitest";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
 import { SendgridConfiguration } from "../sendgrid/configuration/sendgrid-config-schema";
+import { webhookStatusesFactory } from "./webhook-status-dict";
 
 export const nonActiveSmtpConfiguration: SmtpConfiguration = {
   id: "1685343953413npk9p",
@@ -169,16 +170,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
         smtpConfigurations: [],
         sendgridConfigurations: [],
       })
-    ).toStrictEqual({
-      invoiceSentWebhook: false,
-      notifyWebhook: false,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderCreatedWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    ).toStrictEqual(webhookStatusesFactory({}));
   });
 
   it("Statuses should be set to false, when no active configurations passed", async () => {
@@ -187,16 +179,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
         smtpConfigurations: [nonActiveSmtpConfiguration],
         sendgridConfigurations: [nonActiveSendgridConfiguration],
       })
-    ).toStrictEqual({
-      invoiceSentWebhook: false,
-      notifyWebhook: false,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderCreatedWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    ).toStrictEqual(webhookStatusesFactory({}));
   });
 
   it("Statuses should be set to false, when configuration is not active even if events were activated", async () => {
@@ -210,16 +193,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
         smtpConfigurations: [smtpConfiguration],
         sendgridConfigurations: [nonActiveSendgridConfiguration],
       })
-    ).toStrictEqual({
-      invoiceSentWebhook: false,
-      notifyWebhook: false,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderCreatedWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    ).toStrictEqual(webhookStatusesFactory({}));
   });
 
   it("Status of the event should be set to true, when at least one active configuration has activated it", async () => {
@@ -241,16 +215,7 @@ describe("getWebhookStatusesFromConfigurations", function () {
         smtpConfigurations: [nonActiveSmtpConfiguration, smtpConfiguration],
         sendgridConfigurations: [nonActiveSendgridConfiguration],
       })
-    ).toStrictEqual({
-      invoiceSentWebhook: true,
-      notifyWebhook: false,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderCreatedWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    ).toStrictEqual(webhookStatusesFactory({ enabledWebhooks: ["invoiceSentWebhook"] }));
   });
 
   it("Status of the NOTIFY webhooks should be set to true, when at least one active configuration has activated one of its related events", async () => {
@@ -278,15 +243,6 @@ describe("getWebhookStatusesFromConfigurations", function () {
         smtpConfigurations: [nonActiveSmtpConfiguration, smtpConfiguration],
         sendgridConfigurations: [nonActiveSendgridConfiguration],
       })
-    ).toStrictEqual({
-      invoiceSentWebhook: false,
-      notifyWebhook: true,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderCreatedWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    ).toStrictEqual(webhookStatusesFactory({ enabledWebhooks: ["notifyWebhook"] }));
   });
 });

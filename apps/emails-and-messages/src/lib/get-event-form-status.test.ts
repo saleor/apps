@@ -1,4 +1,4 @@
-import { vi, expect, describe, it } from "vitest";
+import { expect, describe, it } from "vitest";
 import { getEventFormStatus } from "./get-event-form-status";
 import { PermissionEnum } from "../../generated/graphql";
 
@@ -10,6 +10,7 @@ describe("getEventFormStatus", function () {
         appPermissions: [PermissionEnum.ManageGiftCard],
         featureFlags: {
           giftCardSentEvent: true,
+          orderRefundedEvent: true,
         },
       })
     ).toEqual({
@@ -22,6 +23,7 @@ describe("getEventFormStatus", function () {
         appPermissions: [],
         featureFlags: {
           giftCardSentEvent: false,
+          orderRefundedEvent: true,
         },
       })
     ).toEqual({
@@ -38,6 +40,7 @@ describe("getEventFormStatus", function () {
         appPermissions: [],
         featureFlags: {
           giftCardSentEvent: true,
+          orderRefundedEvent: true,
         },
       })
     ).toEqual({
@@ -54,6 +57,7 @@ describe("getEventFormStatus", function () {
         appPermissions: [PermissionEnum.ManageGiftCard],
         featureFlags: {
           giftCardSentEvent: false,
+          orderRefundedEvent: true,
         },
       })
     ).toEqual({
