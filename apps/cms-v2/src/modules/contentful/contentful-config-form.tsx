@@ -18,6 +18,8 @@ const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
 > = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
+type FormSchema = Omit<ContentfulProviderConfigInputType, "type">;
+
 /**
  * TODO - when space, token or env changes, refetch queries
  * TODO - error handling
@@ -28,8 +30,8 @@ const ContentfulConfigForm = ({
   onSubmit,
   onDelete,
 }: {
-  defaultValues: ContentfulProviderConfigInputType;
-  onSubmit(values: ContentfulProviderConfigInputType): void;
+  defaultValues: FormSchema;
+  onSubmit(values: FormSchema): void;
   onDelete?(): void;
 }) => {
   const {
@@ -39,7 +41,7 @@ const ContentfulConfigForm = ({
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<ContentfulProviderConfigInputType>({
+  } = useForm<FormSchema>({
     defaultValues: defaultValues,
     resolver: zodResolver(ContentfulProviderSchema.ConfigInput.omit({ type: true })),
   });
@@ -262,10 +264,12 @@ export const ContentfulAddConfigForm = () => {
   return (
     <ContentfulConfigForm
       onSubmit={(values) => {
-        mutate(values);
+        mutate({
+          ...values,
+          type: "contentful",
+        });
       }}
       defaultValues={{
-        type: "contentful",
         authToken: "",
         configName: "",
         environment: "",
@@ -314,6 +318,10 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
     return <Text>Loading</Text>;
   }
 
+  if (data.type !== "contentful") {
+    throw new Error("Trying to fill contentful form with non contentful data");
+  }
+
   return (
     <ContentfulConfigForm
       onDelete={() => {
@@ -324,6 +332,7 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
         mutate({
           ...values,
           id: configId,
+          type: "contentful",
         })
       }
     />

@@ -6,7 +6,7 @@ import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
 import { z } from "zod";
 
-// todo add more providers
+//todo move here all crud operations
 export const providersListRouter = router({
   fetchAllProvidersConfigurations: protectedClientProcedure.query(async ({ ctx }) => {
     const mm = createSettingsManager(ctx.apiClient, ctx.appId!);

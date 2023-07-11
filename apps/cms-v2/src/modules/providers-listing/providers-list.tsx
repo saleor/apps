@@ -4,27 +4,33 @@ import React from "react";
 import { trpcClient } from "../trpc/trpc-client";
 import { ContentfulProviderConfigType } from "../configuration/schemas/contentful-provider.schema";
 import { ButtonsBox } from "../ui/buttons-box";
+import { createProvider } from "../shared/cms-provider";
+import { AnyProviderConfigSchemaType } from "../configuration";
 
-const ContentfulTable = (props: { providers: ContentfulProviderConfigType[] }) => {
+const ProvidersTable = (props: { providers: AnyProviderConfigSchemaType[] }) => {
   const { push } = useRouter();
 
   return (
-    <Box display="grid" __gridTemplateColumns="repeat(4, auto)" gap={4} alignItems="center">
+    <Box display="grid" __gridTemplateColumns="repeat(2, auto)" gap={4} alignItems="center">
       <Text variant="caption">Config name</Text>
-      <Text variant="caption">Contenful space ID</Text>
-      <Text variant="caption">Contentful content ID</Text>
+
       <div />
 
       {props.providers.map((provider) => (
         <React.Fragment key={provider.id}>
-          <Text>{provider.configName}</Text>
-          <Text>{provider.spaceId}</Text>
-          <Text>{provider.contentId}</Text>
+          <Box>
+            <Text as="p" variant="bodyStrong">
+              {provider.configName}
+            </Text>
+            <Text as="p" variant="caption">
+              {createProvider(provider.type).displayName}
+            </Text>
+          </Box>
           <Button
             marginLeft="auto"
             variant="tertiary"
             onClick={() => {
-              push(`/edit-provider/${provider.type}/` + provider.id);
+              push(`/edit-provider/` + provider.id);
             }}
           >
             Edit
@@ -62,17 +68,15 @@ export const ProvidersList = () => {
     );
   }
 
-  const contentfulProviders = data.filter((p) => p.type === "contentful");
-
   // todo consider some better, reusable table
   return (
     <Box>
-      {contentfulProviders.length && (
+      {data.length && (
         <Box>
           <Text variant="heading" as="h2" marginBottom={4}>
             Contentful
           </Text>
-          <ContentfulTable providers={contentfulProviders} />
+          <ProvidersTable providers={data} />
         </Box>
       )}
       <ButtonsBox marginTop={8}>
