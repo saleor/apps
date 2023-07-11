@@ -5,6 +5,7 @@ import packageJson from "../../../package.json";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
 import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted";
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
+import { productUpdatedWebhook } from "./webhooks/product-updated";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -36,13 +37,26 @@ export default createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
+      /*
+       * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
+       */
       webhooks: [
-        /*
-         * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
+        /**
+         * Create variant in CMS
          */
         productVariantCreatedWebhook.getWebhookManifest(apiBaseURL),
+        /**
+         * Update variant in CMS
+         */
         productVariantUpdatedWebhook.getWebhookManifest(apiBaseURL),
+        /**
+         * Delete variant in CMS
+         */
         productVariantDeletedWebhook.getWebhookManifest(apiBaseURL),
+        /**
+         * Detect changes in parent product (slug, name) and create/update all variants in CMS
+         */
+        productUpdatedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 

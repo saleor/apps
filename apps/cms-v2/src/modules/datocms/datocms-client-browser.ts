@@ -7,7 +7,10 @@ type Context = {
   variant: WebhookProductVariantFragment;
 };
 
-// todo error handling
+/*
+ * todo error handling
+ * todo maybe shared operations between clients can be used
+ */
 export class DatoCMSClientBrowser {
   private client: Client;
 
