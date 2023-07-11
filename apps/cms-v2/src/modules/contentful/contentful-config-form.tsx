@@ -6,8 +6,12 @@ import { trpcClient } from "../trpc/trpc-client";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { ContentfulProviderConfigInputType } from "../configuration/schemas/contentful-provider.schema";
+import {
+  ContentfulProviderConfigInputType,
+  ContentfulProviderSchema,
+} from "../configuration/schemas/contentful-provider.schema";
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
@@ -16,6 +20,7 @@ const mappingFieldsNames: Array<
 /**
  * TODO - when space, token or env changes, refetch queries
  * TODO - error handling
+ * TODO - refactor smaller hooks
  */
 const ContentfulConfigForm = ({
   defaultValues,
@@ -35,6 +40,7 @@ const ContentfulConfigForm = ({
     formState: { errors },
   } = useForm<ContentfulProviderConfigInputType>({
     defaultValues: defaultValues,
+    resolver: zodResolver(ContentfulProviderSchema.ConfigInput.omit({ type: true })),
   });
 
   const { mutate: fetchContentTypes, data: contentTypesData } =

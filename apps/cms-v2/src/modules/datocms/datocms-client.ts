@@ -9,6 +9,10 @@ export class DatoCMSClient {
     this.client = buildClient({ apiToken: opts.apiToken });
   }
 
+  getContentTypes() {
+    return this.client.itemTypes.list(); // todo connect to frontend
+  }
+
   uploadProduct({
     configuration,
     variant,
