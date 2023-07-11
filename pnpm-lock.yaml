@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -516,8 +512,8 @@ importers:
         specifier: 13.4.8
         version: 13.4.8(@babel/core@7.22.8)(react-dom@18.2.0)(react@18.2.0)
       nodemailer:
-        specifier: ^6.9.1
-        version: 6.9.1
+        specifier: ^6.9.3
+        version: 6.9.3
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -589,8 +585,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       '@types/nodemailer':
-        specifier: ^6.4.7
-        version: 6.4.7
+        specifier: ^6.4.8
+        version: 6.4.8
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -9900,8 +9896,8 @@ packages:
   /@types/node@18.15.3:
     resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
 
-  /@types/nodemailer@6.4.7:
-    resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
+  /@types/nodemailer@6.4.8:
+    resolution: {integrity: sha512-oVsJSCkqViCn8/pEu2hfjwVO+Gb3e+eTWjg3PcjeFKRItfKpKwHphQqbYmPQrlMk+op7pNNWPbsJIEthpFN/OQ==}
     dependencies:
       '@types/node': 18.15.3
     dev: true
@@ -17093,8 +17089,8 @@ packages:
   /node-releases@2.0.12:
     resolution: {integrity: sha512-QzsYKWhXTWx8h1kIvqfnC++o0pEmpRQA/aenALsL2F4pqNVr7YzcdMlDij5WBnwftRbJCNJL/O7zdKaxKPHqgQ==}
 
-  /nodemailer@6.9.1:
-    resolution: {integrity: sha512-qHw7dOiU5UKNnQpXktdgQ1d3OFgRAekuvbJLcdG5dnEo/GtcTHRYM7+UfJARdOFU9WUQO8OiIamgWPmiSFHYAA==}
+  /nodemailer@6.9.3:
+    resolution: {integrity: sha512-fy9v3NgTzBngrMFkDsKEj0r02U7jm6XfC3b52eoNV+GCrGj+s8pt5OqhiJdWKuw51zCTdiNR/IUD1z33LIIGpg==}
     engines: {node: '>=6.0.0'}
     dev: false
 
@@ -21349,3 +21345,7 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
