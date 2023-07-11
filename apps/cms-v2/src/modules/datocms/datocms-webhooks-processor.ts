@@ -4,7 +4,6 @@ import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhook
 import { DatoCMSClient } from "./datocms-client";
 
 /*
- * todo product_updated webhook
  * todo error handling
  */
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {

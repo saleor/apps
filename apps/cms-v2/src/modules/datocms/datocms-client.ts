@@ -1,13 +1,16 @@
-import { buildClient, Client } from "@datocms/cma-client-node";
-import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
+import { buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-node";
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
 
 type Context = {
   configuration: DatocmsProviderConfigType;
   variant: WebhookProductVariantFragment;
 };
 
-// todo error handling
+/*
+ * todo error handling
+ * todo share logic with browser client if possible (inject client)
+ */
 export class DatoCMSClient {
   private client: Client;
 
@@ -44,6 +47,24 @@ export class DatoCMSClient {
     });
   }
 
+  private mapVariantToDatoCMSFields({
+    configuration,
+    variant,
+  }: Context): SimpleSchemaTypes.ItemCreateSchema {
+    const fieldsMap = configuration.productVariantFieldsMapping;
+
+    return {
+      item_type: { type: "item_type", id: configuration.itemType },
+      // todo rename to variantNAme
+      [fieldsMap.name]: variant.name,
+      [fieldsMap.productId]: variant.product.id,
+      [fieldsMap.productName]: variant.product.name,
+      [fieldsMap.productSlug]: variant.product.slug,
+      [fieldsMap.variantId]: variant.id,
+      [fieldsMap.channels]: JSON.stringify(variant.channelListings),
+    };
+  }
+
   async deleteProduct({ configuration, variant }: Context) {
     const product = await this.getItemBySaleorVariantId({
       variantFieldName: configuration.productVariantFieldsMapping.variantId, // todo rename to variantName
@@ -58,20 +79,8 @@ export class DatoCMSClient {
     this.client.items.rawDestroy(product[0].id);
   }
 
-  uploadProduct({ configuration, variant }: Context) {
-    // todo shared mapper between providers
-    const fieldsMap = configuration.productVariantFieldsMapping;
-
-    return this.client.items.create({
-      item_type: { type: "item_type", id: configuration.itemType },
-      // todo rename to variantNAme
-      [fieldsMap.name]: variant.name,
-      [fieldsMap.productId]: variant.product.id,
-      [fieldsMap.productName]: variant.product.name,
-      [fieldsMap.productSlug]: variant.product.slug,
-      [fieldsMap.variantId]: variant.id,
-      [fieldsMap.channels]: JSON.stringify(variant.channelListings),
-    });
+  uploadProduct(context: Context) {
+    return this.client.items.create(this.mapVariantToDatoCMSFields(context));
   }
 
   async updateProduct({ configuration, variant }: Context) {
@@ -83,19 +92,13 @@ export class DatoCMSClient {
 
     const product = products[0]; // todo throw otherwise
 
-    // todo shared mapper between providers
-    const fieldsMap = configuration.productVariantFieldsMapping;
-
-    this.client.items.update(product.id, {
-      item_type: { type: "item_type", id: configuration.itemType },
-      // todo rename to variantNAme
-      [fieldsMap.name]: variant.name,
-      [fieldsMap.productId]: variant.product.id,
-      [fieldsMap.productName]: variant.product.name,
-      [fieldsMap.productSlug]: variant.product.slug,
-      [fieldsMap.variantId]: variant.id,
-      [fieldsMap.channels]: JSON.stringify(variant.channelListings),
-    });
+    this.client.items.update(
+      product.id,
+      this.mapVariantToDatoCMSFields({
+        configuration,
+        variant,
+      })
+    );
   }
 
   upsertProduct({ configuration, variant }: Context) {

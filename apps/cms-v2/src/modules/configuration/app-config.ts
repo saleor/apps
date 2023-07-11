@@ -43,6 +43,9 @@ export class AppConfig {
         return ContentfulProviderSchema.ConfigInput;
       case "datocms":
         return DatocmsProviderSchema.ConfigInput;
+      default: {
+        throw new Error("Failed to build input schema");
+      }
     }
   }
 
@@ -52,6 +55,9 @@ export class AppConfig {
         return ContentfulProviderSchema.Config;
       case "datocms":
         return DatocmsProviderSchema.Config;
+      default: {
+        throw new Error("Failed to build provdier schema");
+      }
     }
   }
 

@@ -30,5 +30,5 @@ export const RootConfigSchema = z.object({
 
 export type RootConfigSchemaType = z.infer<typeof RootConfigSchema>;
 
-export type AnyProviderConfigSchemaType = RootConfigSchemaType["providers"][0];
+export type AnyProviderConfigSchemaType = z.infer<typeof AnyProviderConfigSchema>;
 export type AnyProviderInputSchemaType = z.infer<typeof AnyProvidersInput>;

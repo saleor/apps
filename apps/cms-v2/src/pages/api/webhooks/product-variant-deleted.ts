@@ -6,10 +6,9 @@ import {
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 
-import { ContentfulClient } from "@/modules/contentful/contentful-client";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
-import { saleorApp } from "@/saleor-app";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
+import { saleorApp } from "@/saleor-app";
 
 export const config = {
   api: {

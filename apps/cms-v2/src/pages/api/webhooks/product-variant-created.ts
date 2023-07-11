@@ -8,11 +8,9 @@ import {
 
 import { saleorApp } from "@/saleor-app";
 
-import { ContentfulClient } from "@/modules/contentful/contentful-client";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
-import { DatocmsWebhooksProcessor } from "@/modules/datocms/datocms-webhooks-processor";
 
 export const config = {
   api: {

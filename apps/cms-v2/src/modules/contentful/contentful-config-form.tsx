@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import {
   ContentfulProviderConfigInputType,
+  ContentfulProviderConfigType,
   ContentfulProviderSchema,
 } from "../configuration/schemas/contentful-provider.schema";
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
@@ -327,7 +328,7 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
       onDelete={() => {
         deleteProvider({ id: configId });
       }}
-      defaultValues={data}
+      defaultValues={data as ContentfulProviderConfigType}
       onSubmit={(values) =>
         mutate({
           ...values,

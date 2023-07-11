@@ -5,7 +5,7 @@ import React, { forwardRef, useMemo, useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createProvider } from "../shared/cms-provider";
-import { Modal } from "../shared/modal";
+import { Modal } from "../ui/modal";
 import { trpcClient } from "../trpc/trpc-client";
 import {
   ChannelProviderConnectionInputType,

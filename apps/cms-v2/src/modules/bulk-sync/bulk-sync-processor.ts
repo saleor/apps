@@ -116,7 +116,7 @@ export const BulkSyncProcessorFactory = {
   create(config: AnyProviderConfigSchemaType): BulkSyncProcessor {
     switch (config.type) {
       case "contentful":
-        return new ContentfulBulkSyncProcessor(config);
+        return new ContentfulBulkSyncProcessor(config as ContentfulProviderConfigType); // todo should be inferred from switch
       case "datocms":
         return new DatocmsBulkSyncProcessor(config);
       default:

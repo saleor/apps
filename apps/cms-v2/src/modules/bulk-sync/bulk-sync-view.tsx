@@ -1,16 +1,14 @@
+import { Breadcrumbs } from "@saleor/apps-ui";
+import { ArrowRightIcon } from "@saleor/macaw-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useRef, useState } from "react";
 import { AnyProviderConfigSchemaType, ChannelProviderConnectionType } from "../configuration";
-import { ContentfulClient } from "../contentful/contentful-client";
-import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
 import { AppSection } from "../ui/app-section";
+import { ButtonsBox } from "../ui/buttons-box";
+import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
-import { Breadcrumbs } from "@saleor/apps-ui";
-import { ArrowRightIcon } from "@saleor/macaw-ui";
-import { ButtonsBox } from "../ui/buttons-box";
-import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (

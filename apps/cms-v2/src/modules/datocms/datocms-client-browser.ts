@@ -1,4 +1,4 @@
-import { buildClient, Client } from "@datocms/cma-client-browser";
+import { buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-browser";
 import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
 
@@ -18,11 +18,13 @@ export class DatoCMSClientBrowser {
     this.client = buildClient({ apiToken: opts.apiToken });
   }
 
-  uploadProduct({ configuration, variant }: Context) {
-    // todo shared mapper between providers
+  private mapVariantToDatoCMSFields({
+    configuration,
+    variant,
+  }: Context): SimpleSchemaTypes.ItemCreateSchema {
     const fieldsMap = configuration.productVariantFieldsMapping;
 
-    return this.client.items.create({
+    return {
       item_type: { type: "item_type", id: configuration.itemType },
       // todo rename to variantNAme
       [fieldsMap.name]: variant.name,
@@ -31,7 +33,11 @@ export class DatoCMSClientBrowser {
       [fieldsMap.productSlug]: variant.product.slug,
       [fieldsMap.variantId]: variant.id,
       [fieldsMap.channels]: JSON.stringify(variant.channelListings),
-    });
+    };
+  }
+
+  uploadProduct(context: Context) {
+    return this.client.items.create(this.mapVariantToDatoCMSFields(context));
   }
 
   async updateProduct({ configuration, variant }: Context) {
@@ -43,19 +49,13 @@ export class DatoCMSClientBrowser {
 
     const product = products[0]; // todo throw otherwise
 
-    // todo shared mapper between providers
-    const fieldsMap = configuration.productVariantFieldsMapping;
-
-    this.client.items.update(product.id, {
-      item_type: { type: "item_type", id: configuration.itemType },
-      // todo rename to variantNAme
-      [fieldsMap.name]: variant.name,
-      [fieldsMap.productId]: variant.product.id,
-      [fieldsMap.productName]: variant.product.name,
-      [fieldsMap.productSlug]: variant.product.slug,
-      [fieldsMap.variantId]: variant.id,
-      [fieldsMap.channels]: JSON.stringify(variant.channelListings),
-    });
+    this.client.items.update(
+      product.id,
+      this.mapVariantToDatoCMSFields({
+        configuration,
+        variant,
+      })
+    );
   }
 
   private getItemBySaleorVariantId({

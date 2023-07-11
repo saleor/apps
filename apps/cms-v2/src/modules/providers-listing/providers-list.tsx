@@ -1,11 +1,10 @@
-import { Box, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import React from "react";
-import { trpcClient } from "../trpc/trpc-client";
-import { ContentfulProviderConfigType } from "../configuration/schemas/contentful-provider.schema";
-import { ButtonsBox } from "../ui/buttons-box";
-import { createProvider } from "../shared/cms-provider";
 import { AnyProviderConfigSchemaType } from "../configuration";
+import { createProvider } from "../shared/cms-provider";
+import { trpcClient } from "../trpc/trpc-client";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const ProvidersTable = (props: { providers: AnyProviderConfigSchemaType[] }) => {
   const { push } = useRouter();
@@ -68,7 +67,6 @@ export const ProvidersList = () => {
     );
   }
 
-  // todo consider some better, reusable table
   return (
     <Box>
       {data.length && (
