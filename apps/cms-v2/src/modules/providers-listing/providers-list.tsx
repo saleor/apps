@@ -11,7 +11,7 @@ const ProvidersTable = (props: { providers: AnyProviderConfigSchemaType[] }) => 
 
   return (
     <Box display="grid" __gridTemplateColumns="repeat(2, auto)" gap={4} alignItems="center">
-      <Text variant="caption">Config name</Text>
+      <Text variant="caption">Configuration name</Text>
 
       <div />
 
@@ -72,7 +72,7 @@ export const ProvidersList = () => {
       {data.length && (
         <Box>
           <Text variant="heading" as="h2" marginBottom={4}>
-            Contentful
+            Providers configurations
           </Text>
           <ProvidersTable providers={data} />
         </Box>

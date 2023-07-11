@@ -14,6 +14,7 @@ import {
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonsBox } from "../ui/buttons-box";
+import { TextLink } from "@saleor/apps-ui";
 
 const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
@@ -118,15 +119,29 @@ const ContentfulConfigForm = ({
           control={control}
           name="spaceId"
           label="Contentful space ID"
-          helperText="TODO how to get space id"
+          helperText={
+            <Text>
+              Check{" "}
+              <TextLink href="https://www.contentful.com/help/find-space-id/" newTab>
+                how to get space ID
+              </TextLink>
+            </Text>
+          }
         />
         <Input
           required
           type="password"
           control={control}
           name="authToken"
-          label="Contentful auth token"
-          helperText="Personal access token todo tutorial"
+          label="Content Management Personal token"
+          helperText={
+            <Text>
+              Check{" "}
+              <TextLink href="https://www.contentful.com/help/personal-access-tokens/" newTab>
+                how to generate token
+              </TextLink>
+            </Text>
+          }
         />
         {!environmentsData && (
           <ButtonsBox>
@@ -223,7 +238,14 @@ const ContentfulConfigForm = ({
                   key={saleorField}
                   alignItems="center"
                 >
-                  <Text>{printSaleorProductFields(saleorField)}</Text>
+                  <Box>
+                    <Text as="p" variant="bodyStrong">
+                      {printSaleorProductFields(saleorField)}
+                    </Text>
+                    <Text variant="caption">
+                      {saleorField === "channels" ? "JSON field" : "Text field"}
+                    </Text>
+                  </Box>
                   <Select
                     size="small"
                     control={control}

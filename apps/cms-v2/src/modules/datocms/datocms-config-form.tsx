@@ -2,7 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
 import { DatocmsProviderConfigInputType } from "../configuration/schemas/datocms-provider.schema";
@@ -138,7 +138,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           control={control}
           name="authToken"
           label="DatoCMS token"
-          helperText="TODO exlaination how to get this token "
+          helperText="Project -> Settings -> API Tokens -> Full-access API token."
         />
         {!contentTypesData && fetchContentTypesButton}
       </Box>
@@ -150,59 +150,73 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             options={contentTypesSelectOptions}
             name="itemType"
             control={control}
+            helperText="Model that will keep Saleor data. You should create one just for Saleor data."
           />
-          <Text as="p" variant="heading" size="small">
-            Map fields from Saleor to your contentful schema.
-          </Text>
-          <Text as="p" marginTop={2} marginBottom={4}>
-            All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
-            type of <Text variant="bodyStrong">JSON</Text>.
-          </Text>
-          <Box
-            marginBottom={4}
-            display="grid"
-            __gridTemplateColumns={"50% 50%"}
-            borderBottomWidth={1}
-            borderBottomStyle="solid"
-            borderColor="neutralHighlight"
-            padding={2}
-          >
-            <Text variant="caption">Saleor Field</Text>
-            <Text variant="caption">Contentful field</Text>
-          </Box>
-          {fieldsData &&
-            mappingFieldsNames.map((saleorField) => (
-              // todo extract this table to component
+
+          {fieldsData && (
+            <React.Fragment>
+              <Text as="p" variant="heading" size="small">
+                Map fields from Saleor to your contentful schema.
+              </Text>
+              <Text as="p" marginTop={2} marginBottom={4}>
+                All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should
+                be type of <Text variant="bodyStrong">JSON</Text>.
+              </Text>
               <Box
+                marginBottom={4}
                 display="grid"
                 __gridTemplateColumns={"50% 50%"}
+                borderBottomWidth={1}
+                borderBottomStyle="solid"
+                borderColor="neutralHighlight"
                 padding={2}
-                key={saleorField}
-                alignItems="center"
               >
-                <Text>{printSaleorProductFields(saleorField)}</Text>
-                <Select
-                  size="small"
-                  control={control}
-                  name={`productVariantFieldsMapping.${saleorField}`}
-                  label="DatoCMS Field"
-                  options={fieldsData.map((f) => ({
-                    label: f.label,
-                    value: f.api_key,
-                  }))}
-                />
+                <Text variant="caption">Saleor Field</Text>
+                <Text variant="caption">Contentful field</Text>
               </Box>
-            ))}
+              {mappingFieldsNames.map((saleorField) => (
+                // todo extract this table to component
+                <Box
+                  display="grid"
+                  __gridTemplateColumns={"50% 50%"}
+                  padding={2}
+                  key={saleorField}
+                  alignItems="center"
+                >
+                  <Box>
+                    <Text as="p" variant="bodyStrong">
+                      {printSaleorProductFields(saleorField)}
+                    </Text>
+                    <Text variant="caption">
+                      {saleorField === "channels" ? "JSON field" : "Text field"}
+                    </Text>
+                  </Box>
+                  <Select
+                    size="small"
+                    control={control}
+                    name={`productVariantFieldsMapping.${saleorField}`}
+                    label="DatoCMS Field"
+                    options={fieldsData.map((f) => ({
+                      label: f.label,
+                      value: f.api_key,
+                    }))}
+                  />
+                </Box>
+              ))}
+            </React.Fragment>
+          )}
         </Box>
       )}
-      <ButtonsBox>
-        {onDelete && (
-          <Button onClick={onDelete} variant="tertiary">
-            Delete
-          </Button>
-        )}
-        <Button type="submit">Save</Button>
-      </ButtonsBox>
+      {contentTypesSelectOptions && (
+        <ButtonsBox>
+          {onDelete && (
+            <Button onClick={onDelete} variant="tertiary">
+              Delete
+            </Button>
+          )}
+          <Button type="submit">Save</Button>
+        </ButtonsBox>
+      )}
     </Box>
   );
 };
