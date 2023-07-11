@@ -1,8 +1,6 @@
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
-import { AnyProviderConfigSchemaType } from "../configuration";
-import { ContentfulWebhooksProcessor } from "../contentful/contentful-webhooks-processor";
-import { DatocmsWebhooksProcessor } from "../datocms/datocms-webhooks-processor";
 import { WebhookContext } from "./create-webhook-config-context";
+import { WebhookProcessorFactory } from "./webhook-processor-factory";
 
 export class WebhooksProcessorsDelegator {
   constructor(
@@ -11,23 +9,20 @@ export class WebhooksProcessorsDelegator {
     }
   ) {}
 
-  private createProcessorFromConfig(config: AnyProviderConfigSchemaType) {
-    switch (config.type) {
-      case "contentful": {
-        return new ContentfulWebhooksProcessor(config);
-      }
-      case "datocms": {
-        return new DatocmsWebhooksProcessor(config);
-      }
-    }
-  }
-
   private extractChannelSlugsFromProductVariant(productVariant: WebhookProductVariantFragment) {
     return productVariant.channelListings?.map((c) => c.channel.slug);
   }
 
+  private mapConnectionsToProcessors(connections: WebhookContext["connections"]) {
+    return connections.map((conn) => {
+      const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId)!;
+
+      return WebhookProcessorFactory.createFromConfig(providerConfig);
+    });
+  }
+
   async delegateVariantCreatedOperations(productVariant: WebhookProductVariantFragment) {
-    const { connections, providers } = this.opts.context;
+    const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
@@ -38,11 +33,7 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug)
     );
 
-    const processors = connectionsToInclude.map((conn) => {
-      const providerConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      return this.createProcessorFromConfig(providerConfig);
-    });
+    const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
     return Promise.all(
       processors.map((processor) => {
@@ -52,7 +43,7 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantUpdatedOperations(productVariant: WebhookProductVariantFragment) {
-    const { connections, providers } = this.opts.context;
+    const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
@@ -63,11 +54,7 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug)
     );
 
-    const processors = connectionsToInclude.map((conn) => {
-      const providerConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      return this.createProcessorFromConfig(providerConfig);
-    });
+    const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
     return Promise.all(
       processors.map((processor) => {
@@ -77,13 +64,9 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantDeletedOperations(productVariant: WebhookProductVariantFragment) {
-    const { connections, providers } = this.opts.context;
+    const { connections } = this.opts.context;
 
-    const processors = connections.map((conn) => {
-      const providerConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      return this.createProcessorFromConfig(providerConfig);
-    });
+    const processors = this.mapConnectionsToProcessors(connections);
 
     return Promise.all(
       processors.map((processor) => {
@@ -93,13 +76,9 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateProductUpdatedOperations(product: WebhookProductFragment) {
-    const { connections, providers } = this.opts.context;
+    const { connections } = this.opts.context;
 
-    const processors = connections.map((conn) => {
-      const providerConfig = providers.find((p) => p.id === conn.providerId)!;
-
-      return this.createProcessorFromConfig(providerConfig);
-    });
+    const processors = this.mapConnectionsToProcessors(connections);
 
     return Promise.all(
       processors.map((processor) => {
