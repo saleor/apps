@@ -225,7 +225,6 @@ const AddFormVariant = () => {
           type: "datocms",
         });
       }}
-      onDelete={console.log}
       defaultValues={{
         authToken: "",
         configName: "",

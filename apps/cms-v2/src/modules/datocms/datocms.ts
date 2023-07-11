@@ -2,7 +2,7 @@ import { CMSProvider } from "../shared/cms-provider";
 import logo from "./datocms.svg";
 
 export const Datocms = {
-  type: "datocms",
+  type: "datocms" as const,
   logoUrl: logo.src,
   displayName: "DatoCMS",
   description:

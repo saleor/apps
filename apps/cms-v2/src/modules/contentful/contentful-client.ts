@@ -79,8 +79,6 @@ export class ContentfulClient {
 
     const entry = await env.getEntry(opts.variant.id);
 
-    console.log(entry);
-
     return await entry.delete();
   }
 

@@ -1,5 +1,5 @@
 import "@saleor/macaw-ui/next/style";
-import "@/styles.css";
+import "@/modules/theme/styles.css";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import React, { useEffect } from "react";
 import { AppProps } from "next/app";

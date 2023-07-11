@@ -2,7 +2,7 @@ import { CMSProvider } from "../shared/cms-provider";
 import logo from "./contentful-logo.svg";
 
 export const Contentful = {
-  type: "contentful",
+  type: "contentful" as const,
   logoUrl: logo.src as string,
   displayName: "Contentful",
   description:
