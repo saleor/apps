@@ -68,7 +68,7 @@ export const sendgridConfigurationRouter = router({
       try {
         return ctx.sendgridConfigurationService.getConfiguration(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   getConfigurations: protectedWithConfigurationServices
@@ -81,7 +81,7 @@ export const sendgridConfigurationRouter = router({
       try {
         return ctx.sendgridConfigurationService.getConfigurations(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   createConfiguration: protectedWithConfigurationServices
@@ -109,7 +109,7 @@ export const sendgridConfigurationRouter = router({
       try {
         await ctx.sendgridConfigurationService.deleteConfiguration(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   getEventConfiguration: protectedWithConfigurationServices
@@ -126,7 +126,7 @@ export const sendgridConfigurationRouter = router({
           eventType: input.eventType,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   updateBasicInformation: protectedWithConfigurationServices
@@ -140,7 +140,7 @@ export const sendgridConfigurationRouter = router({
       try {
         return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   updateApiConnection: protectedWithConfigurationServices
@@ -154,7 +154,7 @@ export const sendgridConfigurationRouter = router({
       try {
         return await ctx.sendgridConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -192,7 +192,7 @@ export const sendgridConfigurationRouter = router({
           sender: input.sender,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   updateChannels: protectedWithConfigurationServices
@@ -213,7 +213,7 @@ export const sendgridConfigurationRouter = router({
           },
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -234,7 +234,7 @@ export const sendgridConfigurationRouter = router({
           eventConfiguration,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -256,7 +256,7 @@ export const sendgridConfigurationRouter = router({
           events: input.events,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 });

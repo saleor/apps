@@ -1,7 +1,7 @@
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchConfiguration } from "../lib/configuration";
 import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";

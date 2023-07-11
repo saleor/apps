@@ -71,7 +71,7 @@ export const smtpConfigurationRouter = router({
       try {
         return ctx.smtpConfigurationService.getConfiguration(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   getConfigurations: protectedWithConfigurationServices
@@ -84,7 +84,7 @@ export const smtpConfigurationRouter = router({
       try {
         return ctx.smtpConfigurationService.getConfigurations(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   createConfiguration: protectedWithConfigurationServices
@@ -102,7 +102,7 @@ export const smtpConfigurationRouter = router({
       try {
         return await ctx.smtpConfigurationService.createConfiguration(newConfiguration);
       } catch (e) {
-        console.log("erroro", e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   deleteConfiguration: protectedWithConfigurationServices
@@ -116,7 +116,7 @@ export const smtpConfigurationRouter = router({
       try {
         await ctx.smtpConfigurationService.deleteConfiguration(input);
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   getEventConfiguration: protectedWithConfigurationServices
@@ -133,7 +133,7 @@ export const smtpConfigurationRouter = router({
           eventType: input.eventType,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -192,7 +192,7 @@ export const smtpConfigurationRouter = router({
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -207,7 +207,7 @@ export const smtpConfigurationRouter = router({
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -222,7 +222,7 @@ export const smtpConfigurationRouter = router({
       try {
         return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -244,7 +244,7 @@ export const smtpConfigurationRouter = router({
           },
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 
@@ -265,7 +265,7 @@ export const smtpConfigurationRouter = router({
           eventConfiguration,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
   updateEventArray: protectedWithConfigurationServices
@@ -286,7 +286,7 @@ export const smtpConfigurationRouter = router({
           events: input.events,
         });
       } catch (e) {
-        throwTrpcErrorFromConfigurationServiceError(e);
+        return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
 });
