@@ -4,7 +4,10 @@ import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-prov
 import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
 
-// todo product_updated webhook
+/*
+ * todo product_updated webhook
+ * todo error handling
+ */
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client: DatoCMSClient;
 
@@ -15,7 +18,10 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    throw new Error("Not implemented"); // todo
+    await this.client.updateProduct({
+      configuration: this.providerConfig,
+      variant: productVariant,
+    });
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     await this.client.uploadProduct({
@@ -24,6 +30,9 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
     });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    throw new Error("Not implemented"); // todo
+    await this.client.deleteProduct({
+      configuration: this.providerConfig,
+      variant: productVariant,
+    });
   }
 }
