@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { trpcClient } from "../trpc/trpc-client";
 import { ContentfulProviderConfigType } from "../configuration/schemas/contentful-provider.schema";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const ContentfulTable = (props: { providers: ContentfulProviderConfigType[] }) => {
   const { push } = useRouter();
@@ -48,7 +49,7 @@ export const ProvidersList = () => {
         <Text as="p" marginBottom={4}>
           No configurations yet
         </Text>
-        <Box display="flex" justifyContent="flex-end">
+        <ButtonsBox>
           <Button
             onClick={() => {
               push("/add-provider");
@@ -56,7 +57,7 @@ export const ProvidersList = () => {
           >
             Add first CMS configuration
           </Button>
-        </Box>
+        </ButtonsBox>
       </Box>
     );
   }
@@ -74,7 +75,7 @@ export const ProvidersList = () => {
           <ContentfulTable providers={contentfulProviders} />
         </Box>
       )}
-      <Box marginTop={8} display="flex" justifyContent="flex-end">
+      <ButtonsBox marginTop={8}>
         <Button
           onClick={() => {
             push("/add-provider");
@@ -82,7 +83,7 @@ export const ProvidersList = () => {
         >
           Add CMS configuration
         </Button>
-      </Box>
+      </ButtonsBox>
     </Box>
   );
 };

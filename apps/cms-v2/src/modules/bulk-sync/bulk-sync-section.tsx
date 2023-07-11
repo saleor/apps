@@ -6,6 +6,7 @@ import { Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const FormSchema = z.object({
   connID: z.string().min(7),
@@ -81,9 +82,9 @@ export const BulkSyncSection = () => {
             };
           })}
         />
-        <Box display="flex" justifyContent="flex-end">
+        <ButtonsBox>
           <Button type="submit">Start sync</Button>
-        </Box>
+        </ButtonsBox>
       </Box>
     </Box>
   );

@@ -12,6 +12,7 @@ import {
 } from "../configuration/schemas/contentful-provider.schema";
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const mappingFieldsNames: Array<
   keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
@@ -125,7 +126,7 @@ const ContentfulConfigForm = ({
           helperText="Personal access token todo tutorial"
         />
         {!environmentsData && (
-          <Box display={"flex"} justifyContent="flex-end">
+          <ButtonsBox>
             <Button
               variant="secondary"
               onClick={() => {
@@ -139,7 +140,7 @@ const ContentfulConfigForm = ({
             >
               Continue
             </Button>
-          </Box>
+          </ButtonsBox>
         )}
         {environmentsData && (
           <>
@@ -155,7 +156,7 @@ const ContentfulConfigForm = ({
               }))}
             />
             {!contentTypesData && (
-              <Box display={"flex"} justifyContent="flex-end">
+              <ButtonsBox>
                 <Button
                   variant="secondary"
                   onClick={() => {
@@ -170,7 +171,7 @@ const ContentfulConfigForm = ({
                 >
                   Continue
                 </Button>
-              </Box>
+              </ButtonsBox>
             )}
           </>
         )}
@@ -233,14 +234,14 @@ const ContentfulConfigForm = ({
                 </Box>
               ))}
           </Box>
-          <Box display={"flex"} justifyContent="flex-end" gap={4}>
+          <ButtonsBox>
             {onDelete && (
               <Button onClick={onDelete} variant="tertiary">
                 Delete
               </Button>
             )}
             <Button type="submit">Save</Button>
-          </Box>
+          </ButtonsBox>
         </Box>
       )}
     </Box>

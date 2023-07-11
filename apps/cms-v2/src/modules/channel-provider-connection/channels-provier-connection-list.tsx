@@ -12,6 +12,7 @@ import {
   ChannelProviderConnectionConfigSchema,
 } from "@/modules/configuration";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const FORM_ID = "new-connection-form";
 
@@ -27,9 +28,9 @@ const NoConnections = (props: { onCreate(): void }) => (
     <Text marginBottom={4} as="p">
       No channels connected yet
     </Text>
-    <Box display="flex" justifyContent="flex-end">
+    <ButtonsBox>
       <Button onClick={props.onCreate}>Create first connection</Button>
-    </Box>
+    </ButtonsBox>
   </Box>
 );
 
@@ -143,7 +144,7 @@ const AddConnectionModal = (props: { onSubmit(values: FormSchema): void; onClose
       platform.
     </Text>
     <Form onSubmit={props.onSubmit} defaultValues={{ channelSlug: "", providerId: "" }} />
-    <Box display="flex" gap={4} justifyContent="flex-end" marginTop={8}>
+    <ButtonsBox marginTop={8}>
       <Button
         variant="tertiary"
         onClick={() => {
@@ -155,7 +156,7 @@ const AddConnectionModal = (props: { onSubmit(values: FormSchema): void; onClose
       <Button variant="primary" type="submit" form={FORM_ID}>
         Add connection
       </Button>
-    </Box>
+    </ButtonsBox>
   </Modal>
 );
 
@@ -232,7 +233,7 @@ export const ChannelProviderConnectionList = () => {
       )}
       {data.length > 0 && <ConnectionsList onRemove={handleDelete} />}
       {data.length > 0 && (
-        <Box display="flex" justifyContent="flex-end" marginTop={6}>
+        <ButtonsBox marginTop={6}>
           <Button
             onClick={() => {
               setDialogOpen(true);
@@ -240,7 +241,7 @@ export const ChannelProviderConnectionList = () => {
           >
             Add connection
           </Button>
-        </Box>
+        </ButtonsBox>
       )}
     </Box>
   );

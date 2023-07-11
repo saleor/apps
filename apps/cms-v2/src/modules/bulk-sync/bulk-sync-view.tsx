@@ -9,6 +9,7 @@ import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { ArrowRightIcon } from "@saleor/macaw-ui";
+import { ButtonsBox } from "../ui/buttons-box";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -18,9 +19,9 @@ const FetchProductsStep = (props: { onButtonClick(): void }) => {
       </Text>
       <Text as="p">Click the button to start fetching products from Saleor API</Text>
       <Text as="p">After products are fetched, you will be able to upload them to the CMS</Text>
-      <Box display="flex" justifyContent="flex-end">
+      <ButtonsBox>
         <Button onClick={props.onButtonClick}>Prefetch products</Button>
-      </Box>
+      </ButtonsBox>
     </Box>
   );
 };

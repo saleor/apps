@@ -5,6 +5,7 @@ import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { trpcClient } from "../trpc/trpc-client";
 import { useEffect, useMemo } from "react";
 import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
+import { ButtonsBox } from "../ui/buttons-box";
 
 type FormShape = Omit<DatocmsProviderConfigInputType, "type">;
 
@@ -82,7 +83,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
   }, [selectedContentType, getValues, fetchContentTypeFields]);
 
   const fetchContentTypesButton = (
-    <Box display={"flex"} justifyContent="flex-end">
+    <ButtonsBox>
       <Button
         variant="secondary"
         onClick={() => {
@@ -95,7 +96,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       >
         Continue
       </Button>
-    </Box>
+    </ButtonsBox>
   );
 
   return (
@@ -179,14 +180,14 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             ))}
         </Box>
       )}
-      <Box display={"flex"} justifyContent="flex-end" gap={4}>
+      <ButtonsBox>
         {onDelete && (
           <Button onClick={onDelete} variant="tertiary">
             Delete
           </Button>
         )}
         <Button type="submit">Save</Button>
-      </Box>
+      </ButtonsBox>
     </Box>
   );
 };
