@@ -1,6 +1,5 @@
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { ArrowRightIcon } from "@saleor/macaw-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useRef, useState } from "react";
 import { AnyProviderConfigSchemaType, ChannelProviderConnectionType } from "../configuration";
 import { AppSection } from "../ui/app-section";
