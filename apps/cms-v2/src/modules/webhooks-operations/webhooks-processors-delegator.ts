@@ -1,4 +1,4 @@
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { AnyProviderConfigSchemaType } from "../configuration";
 import { ContentfulWebhooksProcessor } from "../contentful/contentful-webhooks-processor";
 import { DatocmsWebhooksProcessor } from "../datocms/datocms-webhooks-processor";
@@ -88,6 +88,22 @@ export class WebhooksProcessorsDelegator {
     return Promise.all(
       processors.map((processor) => {
         return processor.onProductVariantDeleted(productVariant);
+      })
+    );
+  }
+
+  async delegateProductUpdatedOperations(product: WebhookProductFragment) {
+    const { connections, providers } = this.opts.context;
+
+    const processors = connections.map((conn) => {
+      const providerConfig = providers.find((p) => p.id === conn.providerId)!;
+
+      return this.createProcessorFromConfig(providerConfig);
+    });
+
+    return Promise.all(
+      processors.map((processor) => {
+        return processor.onProductUpdated(product);
       })
     );
   }

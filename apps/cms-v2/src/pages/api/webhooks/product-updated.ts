@@ -3,15 +3,12 @@ import { gql } from "urql";
 import {
   ProductUpdatedWebhookPayloadFragment,
   ProductUpdatedWebhookPayloadFragmentDoc,
-  ProductVariantUpdatedWebhookPayloadFragment,
-  ProductVariantUpdatedWebhookPayloadFragmentDoc,
   WebhookProductFragmentDoc,
-  WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 
+import { saleorApp } from "@/saleor-app";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
-import { saleorApp } from "@/saleor-app";
 
 export const config = {
   api: {
@@ -45,11 +42,6 @@ export const productUpdatedWebhook = new SaleorAsyncWebhook<ProductUpdatedWebhoo
   query: Subscription,
 });
 
-/*
- * todo extract services, delegate to providers
- * todo document that fields in contetnful should be unique
- * todo fetch metadata end decode it with payload
- */
 const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = async (
   req,
   res,
@@ -57,9 +49,16 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
 ) => {
   const { authData, payload } = context;
 
-  // todo
+  if (!payload.product) {
+    // todo Sentry - should not happen
+    return res.status(500).end();
+  }
 
-  console.log("todo");
+  const configContext = await createWebhookConfigContext({ authData });
+
+  await new WebhooksProcessorsDelegator({
+    context: configContext,
+  }).delegateProductUpdatedOperations(payload.product);
 
   return res.status(200).end();
 };

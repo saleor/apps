@@ -1,4 +1,4 @@
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ContentfulProviderConfigType } from "../configuration";
 import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhooks-processor";
 import { ContentfulClient } from "./contentful-client";
@@ -30,5 +30,24 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       configuration: this.providerConfig,
       variant: productVariant,
     });
+  }
+
+  async onProductUpdated(product: WebhookProductFragment): Promise<void> {
+    await Promise.all(
+      (product.variants ?? []).map((variant) => {
+        return this.client.upsertProduct({
+          configuration: this.providerConfig,
+          variant: {
+            id: variant.id,
+            name: variant.name,
+            product: {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+            },
+          },
+        });
+      })
+    );
   }
 }

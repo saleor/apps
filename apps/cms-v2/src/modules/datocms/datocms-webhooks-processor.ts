@@ -1,4 +1,4 @@
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ContentfulProviderConfigType } from "../configuration";
 import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
 import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhooks-processor";
@@ -34,5 +34,24 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
       configuration: this.providerConfig,
       variant: productVariant,
     });
+  }
+
+  async onProductUpdated(product: WebhookProductFragment): Promise<void> {
+    await Promise.all(
+      (product.variants ?? []).map((variant) => {
+        return this.client.upsertProduct({
+          configuration: this.providerConfig,
+          variant: {
+            id: variant.id,
+            name: variant.name,
+            product: {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+            },
+          },
+        });
+      })
+    );
   }
 }

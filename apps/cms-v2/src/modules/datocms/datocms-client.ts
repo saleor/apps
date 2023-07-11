@@ -97,6 +97,20 @@ export class DatoCMSClient {
       [fieldsMap.channels]: JSON.stringify(variant.channelListings),
     });
   }
+
+  upsertProduct({ configuration, variant }: Context) {
+    return this.uploadProduct({ configuration, variant }).catch((err) => {
+      const isUniqueIdError = err.response.body.data.find(
+        (validation: any) => validation.attributes.details.code === "VALIDATION_UNIQUE"
+      ); // todo parse error with zod
+
+      if (isUniqueIdError) {
+        return this.updateProduct({ configuration, variant });
+      } else {
+        throw new Error(err);
+      }
+    });
+  }
 }
 
 // todo docs & description - dato must have unique Variant ID field
