@@ -1,7 +1,9 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { DatocmsProviderConfigInputType } from "../configuration/schemas/datocms-provider.schema";
 import { useForm } from "react-hook-form";
-import { Input } from "@saleor/react-hook-form-macaw";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { trpcClient } from "../trpc/trpc-client";
+import { useMemo } from "react";
 
 type FormShape = Omit<DatocmsProviderConfigInputType, "type">;
 
@@ -11,6 +13,34 @@ type PureFormProps = {
   onDelete?(): void;
 };
 
+const useDatoCmsRemoteFields = () => {
+  const { mutate: fetchContentTypes, data: contentTypesData } =
+    trpcClient.datocms.fetchContentTypes.useMutation();
+
+  const contentTypesSelectOptions = useMemo(() => {
+    if (!contentTypesData) {
+      return null;
+    }
+
+    return contentTypesData.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+  }, [contentTypesData]);
+
+  console.log(contentTypesData);
+
+  return {
+    fetchContentTypes,
+    contentTypesData,
+    contentTypesSelectOptions,
+  };
+};
+
+/*
+ * todo react on token error
+ * todo react on token change, refresh mutation
+ */
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
   const {
     control,
@@ -22,6 +52,26 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
   } = useForm<FormShape>({
     defaultValues: defaultValues,
   });
+
+  const { contentTypesData, fetchContentTypes, contentTypesSelectOptions } =
+    useDatoCmsRemoteFields();
+
+  const fetchContentTypesButton = (
+    <Box display={"flex"} justifyContent="flex-end">
+      <Button
+        variant="secondary"
+        onClick={() => {
+          const values = getValues();
+
+          return fetchContentTypes({
+            apiToken: values.authToken,
+          });
+        }}
+      >
+        Continue
+      </Button>
+    </Box>
+  );
 
   return (
     <Box
@@ -49,6 +99,15 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           label="DatoCMS token"
           helperText="TODO exlaination how to get this token "
         />
+        {!contentTypesData && fetchContentTypesButton}
+        {contentTypesSelectOptions && (
+          <Select
+            label="Item type"
+            options={contentTypesSelectOptions}
+            name="itemType"
+            control={control}
+          />
+        )}
       </Box>
     </Box>
   );

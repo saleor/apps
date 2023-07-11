@@ -3,12 +3,14 @@ import {
   ChannelProviderConnectionConfigSchema,
   ChannelProviderConnectionInputType,
 } from "./schemas/channel-provider-connection.schema";
+import { ContentfulProviderSchema } from "./schemas/contentful-provider.schema";
+import { DatocmsProviderSchema } from "./schemas/datocms-provider.schema";
 import {
-  ContentfulProviderConfigInputType,
-  ContentfulProviderConfigType,
-  ContentfulProviderSchema,
-} from "./schemas/contentful-provider.schema";
-import { RootConfigSchema, RootConfigSchemaType } from "./schemas/root-config.schema";
+  AnyProviderConfigSchemaType,
+  AnyProviderInputSchemaType,
+  RootConfigSchema,
+  RootConfigSchemaType,
+} from "./schemas/root-config.schema";
 
 /**
  * TODO
@@ -35,24 +37,46 @@ export class AppConfig {
     return JSON.stringify(this.rootData);
   }
 
+  private getProviderInputSchema(input: AnyProviderInputSchemaType) {
+    switch (input.type) {
+      case "contentful":
+        return ContentfulProviderSchema.ConfigInput;
+      case "datocms":
+        return DatocmsProviderSchema.ConfigInput;
+    }
+  }
+
+  private getProviderSchema(input: AnyProviderConfigSchemaType) {
+    switch (input.type) {
+      case "contentful":
+        return ContentfulProviderSchema.Config;
+      case "datocms":
+        return DatocmsProviderSchema.Config;
+    }
+  }
+
   providers = {
     checkProviderExists: (id: string) => {
       return !!this.rootData.providers.find((p) => p.id === id);
     },
 
-    addProvider: (providerConfigInput: ContentfulProviderConfigInputType) => {
-      const parsedConfig = ContentfulProviderSchema.Config.parse({
-        ...providerConfigInput,
+    addProvider: (providerConfigInput: AnyProviderInputSchemaType) => {
+      const inputSchema = this.getProviderInputSchema(providerConfigInput);
+
+      const parsedConfig = inputSchema.parse(providerConfigInput);
+
+      this.rootData.providers.push({
+        ...parsedConfig,
         id: generateId(),
       });
-
-      this.rootData.providers.push(parsedConfig);
 
       return this;
     },
 
-    updateProvider: (providerConfig: ContentfulProviderConfigType) => {
-      const parsedConfig = ContentfulProviderSchema.Config.parse(providerConfig);
+    updateProvider: (providerConfig: AnyProviderConfigSchemaType) => {
+      const schema = this.getProviderSchema(providerConfig);
+
+      const parsedConfig = schema.parse(providerConfig);
 
       this.rootData.providers = this.rootData.providers.map((p) => {
         if (p.id === parsedConfig.id) {

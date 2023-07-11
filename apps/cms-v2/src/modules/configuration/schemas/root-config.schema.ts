@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connection.schema";
-import { ContentfulProviderSchema } from "./contentful-provider.schema";
-import { DatocmsProviderSchema } from "./datocms-provider.schema";
+import {
+  ContentfulProviderSchema,
+  ContentfulProviderConfigInputType,
+} from "./contentful-provider.schema";
+import { DatocmsProviderConfigInputType, DatocmsProviderSchema } from "./datocms-provider.schema";
 
 const ProvidersSchema = z.array(
   z.union([
@@ -26,3 +29,6 @@ export const RootConfigSchema = z.object({
 export type RootConfigSchemaType = z.infer<typeof RootConfigSchema>;
 
 export type AnyProviderConfigSchemaType = RootConfigSchemaType["providers"][0];
+export type AnyProviderInputSchemaType =
+  | ContentfulProviderConfigInputType
+  | DatocmsProviderConfigInputType;
