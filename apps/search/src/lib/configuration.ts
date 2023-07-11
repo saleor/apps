@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 import { AppConfigurationFields } from "../domain/configuration";
 
