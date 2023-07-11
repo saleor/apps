@@ -20,46 +20,12 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   });
 });
 
+/**
+ * Operations specific for Contentful service.
+ *
+ * For configruration see providers-list.router.ts
+ */
 export const contentfulRouter = router({
-  fetchProviderConfiguration: procedure
-    .input(
-      z.object({
-        providerId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const config = await ctx.appConfigService.get();
-
-      return config.providers.getProviderById(input.providerId);
-    }),
-  addProvider: procedure
-    .input(ContentfulProviderSchema.ConfigInput)
-    .mutation(async ({ input, ctx }) => {
-      const config = await ctx.appConfigService.get();
-
-      config?.providers.addProvider(input);
-
-      return ctx.appConfigService.set(config);
-    }),
-  updateProvider: procedure
-    .input(ContentfulProviderSchema.Config)
-    .mutation(async ({ input, ctx }) => {
-      const config = await ctx.appConfigService.get();
-
-      config?.providers.updateProvider(input);
-
-      return ctx.appConfigService.set(config);
-    }),
-  deleteProvider: procedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const { appConfigService, settingsManager } = ctx;
-
-    const config = await ctx.appConfigService.get();
-
-    config.providers.deleteProvider(input.id);
-
-    return ctx.appConfigService.set(config);
-  }),
-
   fetchEnvironmentsFromApi: procedure
     .input(
       z.object({

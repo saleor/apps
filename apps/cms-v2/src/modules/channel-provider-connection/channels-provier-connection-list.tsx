@@ -38,7 +38,7 @@ type FormSchema = Omit<ChannelProviderConnectionInputType, "providerType">;
 
 const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): void }) => {
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
-  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+  const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   const { handleSubmit, control } = useForm<FormSchema>({
     defaultValues: props.defaultValues,
@@ -87,7 +87,7 @@ const Form = (props: { defaultValues: FormSchema; onSubmit(values: FormSchema): 
 const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
-  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+  const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   if (!data || !providers) {
     return null;
@@ -177,7 +177,7 @@ export const ChannelProviderConnectionList = () => {
 
   // Prefetch
   trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
-  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+  const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   const { mutate: addProviderMutate } =
     trpcClient.channelsProvidersConnection.addConnection.useMutation({

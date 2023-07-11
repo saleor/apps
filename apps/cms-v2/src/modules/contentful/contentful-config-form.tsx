@@ -254,7 +254,7 @@ export const ContentfulAddConfigForm = () => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
-  const { mutate } = trpcClient.contentful.addProvider.useMutation({
+  const { mutate } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
       push("/configuration");
@@ -292,22 +292,22 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
-  const { data } = trpcClient.contentful.fetchProviderConfiguration.useQuery(
+  const { data } = trpcClient.providersConfigs.getOne.useQuery(
     {
-      providerId: configId,
+      id: configId,
     },
     {
       enabled: !!configId,
     }
   );
-  const { mutate } = trpcClient.contentful.updateProvider.useMutation({
+  const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
       push("/configuration");
     },
   });
 
-  const { mutate: deleteProvider } = trpcClient.contentful.deleteProvider.useMutation({
+  const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Removed configuration");
       push("/configuration");

@@ -22,7 +22,7 @@ const BulkSyncPage: NextPage = () => {
     );
 
   const { data: provider, isLoading: providerLoading } =
-    trpcClient.providersList.fetchConfiguration.useQuery(
+    trpcClient.providersConfigs.getOne.useQuery(
       {
         id: connection?.providerId ?? "",
       },

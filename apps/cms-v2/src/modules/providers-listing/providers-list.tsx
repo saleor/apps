@@ -42,7 +42,7 @@ const ProvidersTable = (props: { providers: AnyProviderConfigSchemaType[] }) => 
 };
 
 export const ProvidersList = () => {
-  const { data } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+  const { data } = trpcClient.providersConfigs.getAll.useQuery();
   const { push } = useRouter();
 
   if (!data) {

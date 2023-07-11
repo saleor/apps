@@ -30,7 +30,7 @@ export const BulkSyncSection = () => {
   const { push } = useRouter();
 
   const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
-  const { data: providers } = trpcClient.providersList.fetchAllProvidersConfigurations.useQuery();
+  const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   const { control, handleSubmit } = useForm<{ connID: string }>({
     defaultValues: {

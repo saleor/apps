@@ -210,7 +210,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 const AddFormVariant = () => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
-  const { mutate: addProvider } = trpcClient.datocms.addProvider.useMutation({
+  const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
       push("/configuration");
@@ -247,22 +247,22 @@ const EditFormVariant = (props: { configId: string }) => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
-  const { data } = trpcClient.datocms.fetchProviderConfiguration.useQuery(
+  const { data } = trpcClient.providersConfigs.getOne.useQuery(
     {
-      providerId: props.configId,
+      id: props.configId,
     },
     {
       enabled: !!props.configId,
     }
   );
-  const { mutate } = trpcClient.datocms.updateProvider.useMutation({
+  const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
       push("/configuration");
     },
   });
 
-  const { mutate: deleteProvider } = trpcClient.datocms.deleteProvider.useMutation({
+  const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Removed configuration");
       push("/configuration");

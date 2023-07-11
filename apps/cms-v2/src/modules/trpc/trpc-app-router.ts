@@ -7,7 +7,7 @@ import { router } from "./trpc-server";
 export const appRouter = router({
   contentful: contentfulRouter,
   datocms: datocmsRouter,
-  providersList: providersListRouter,
+  providersConfigs: providersListRouter,
   channelsProvidersConnection: channelProviderConnectionRouter,
 });
 

@@ -14,7 +14,7 @@ const AddContentfulPage: NextPage = () => {
   const { push, query } = useRouter();
   const configId = query["configId"] as string;
 
-  const { data, isLoading, isFetched } = trpcClient.providersList.fetchConfiguration.useQuery(
+  const { data, isLoading, isFetched } = trpcClient.providersConfigs.getOne.useQuery(
     {
       id: configId,
     },

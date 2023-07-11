@@ -18,20 +18,20 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
 });
 
 export const providersListRouter = router({
-  fetchAllProvidersConfigurations: procedure.query(async ({ ctx: { appConfigService } }) => {
+  getAll: procedure.query(async ({ ctx: { appConfigService } }) => {
     const config = await appConfigService.get();
     const providers = config.providers.getProviders();
 
     return providers;
   }),
-  fetchConfiguration: procedure
+  getOne: procedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx: { appConfigService }, input }) => {
       const config = await appConfigService.get();
 
       return config.providers.getProviderById(input.id) ?? null;
     }),
-  addConfiguration: procedure
+  addOne: procedure
     .input(AnyProvidersInput)
     .mutation(async ({ ctx: { appConfigService }, input }) => {
       const config = await appConfigService.get();
@@ -40,7 +40,7 @@ export const providersListRouter = router({
 
       await appConfigService.set(config);
     }),
-  updateProvider: procedure
+  updateOne: procedure
     .input(AnyProviderConfigSchema)
     .mutation(async ({ input, ctx: { appConfigService } }) => {
       const config = await appConfigService.get();
@@ -49,7 +49,7 @@ export const providersListRouter = router({
 
       return appConfigService.set(config);
     }),
-  deleteProvider: procedure
+  deleteOne: procedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx: { appConfigService } }) => {
       const config = await appConfigService.get();
