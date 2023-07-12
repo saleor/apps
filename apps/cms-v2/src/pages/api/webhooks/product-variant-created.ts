@@ -12,6 +12,8 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
+import * as Sentry from "@sentry/nextjs";
+
 export const config = {
   api: {
     bodyParser: false,
@@ -58,7 +60,8 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
-    // todo Sentry - should not happen
+    Sentry.captureException("ProductVariant not found in payload");
+
     return res.status(500).end();
   }
 

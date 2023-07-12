@@ -29,11 +29,13 @@ const EditProviderPage: NextPage = () => {
   }, [data]);
 
   if (isLoading) {
-    return null; // todo loading
+    return <Text>Loading...</Text>;
   }
 
   if (isFetched && !data) {
-    push("/configuration"); // todo 404 notification or page?
+    push("/404");
+
+    return null;
   }
 
   const renderEditForm = () => {
