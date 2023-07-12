@@ -1,14 +1,14 @@
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useRef, useState } from "react";
-import { ProvidersConfig, ChannelProviderConnectionConfig } from "../configuration";
+import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configuration";
+import { AppHeader } from "../ui/app-header";
 import { AppSection } from "../ui/app-section";
 import { ButtonsBox } from "../ui/buttons-box";
 import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
-import { AppHeader } from "../ui/app-header";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -170,5 +170,3 @@ export const BulkSyncView = ({
     </Box>
   );
 };
-
-// todo add zod resolvers to every form

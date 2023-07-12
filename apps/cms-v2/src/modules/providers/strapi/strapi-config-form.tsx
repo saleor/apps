@@ -1,8 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { StrapiProviderConfig } from "../../configuration";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
@@ -37,6 +37,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
     formState: { errors },
   } = useForm<FormShape>({
     defaultValues: defaultValues,
+    resolver: zodResolver(StrapiProviderConfig.Schema.Input.omit({ type: true })),
   });
 
   return (

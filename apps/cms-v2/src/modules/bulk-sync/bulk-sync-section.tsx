@@ -40,7 +40,7 @@ export const BulkSyncSection = () => {
   });
 
   if (!connections || !providers) {
-    return null; // todo loading / skeleton
+    return <Text>Loading...</Text>;
   }
 
   if (connections.length === 0) {

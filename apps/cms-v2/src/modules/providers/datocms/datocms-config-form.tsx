@@ -8,6 +8,7 @@ import { printSaleorProductFields } from "../../configuration/print-saleor-produ
 import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type FormShape = Omit<DatocmsProviderConfig.InputShape, "type">;
 
@@ -63,6 +64,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
     formState: { errors },
   } = useForm<FormShape>({
     defaultValues: defaultValues,
+    resolver: zodResolver(DatocmsProviderConfig.Schema.Input.omit({ type: true })),
   });
 
   const {
