@@ -1,6 +1,6 @@
 import Strapi from "strapi-sdk-js";
 import { StrapiProviderConfig } from "@/modules/configuration";
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { z } from "zod";
 
 // partial response

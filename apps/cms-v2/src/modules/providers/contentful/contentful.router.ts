@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
+import { AppConfigMetadataManager } from "../../configuration/app-config-metadata-manager";
 
-import { createSettingsManager } from "../configuration/metadata-manager";
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { router } from "../trpc/trpc-server";
+import { createSettingsManager } from "../../configuration/metadata-manager";
+import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
+import { router } from "../../trpc/trpc-server";
 
 import { ContentfulClient } from "./contentful-client";
-import { ContentfulProviderSchema } from "../configuration/schemas/contentful-provider.schema";
+import { ContentfulProviderSchema } from "../../configuration/schemas/contentful-provider.schema";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);

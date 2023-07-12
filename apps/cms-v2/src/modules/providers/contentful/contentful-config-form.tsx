@@ -2,7 +2,7 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useForm } from "react-hook-form";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 
-import { trpcClient } from "../trpc/trpc-client";
+import { trpcClient } from "../../trpc/trpc-client";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
@@ -10,10 +10,10 @@ import {
   ContentfulProviderConfigInputType,
   ContentfulProviderConfigType,
   ContentfulProviderSchema,
-} from "../configuration/schemas/contentful-provider.schema";
-import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
+} from "../../configuration/schemas/contentful-provider.schema";
+import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ButtonsBox } from "../ui/buttons-box";
+import { ButtonsBox } from "../../ui/buttons-box";
 import { TextLink } from "@saleor/apps-ui";
 
 const mappingFieldsNames: Array<

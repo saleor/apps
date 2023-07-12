@@ -1,6 +1,9 @@
-import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
-import { StrapiProviderConfig } from "../configuration/schemas/strapi-provider.schema";
-import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhooks-processor";
+import {
+  WebhookProductFragment,
+  WebhookProductVariantFragment,
+} from "../../../../generated/graphql";
+import { StrapiProviderConfig } from "../../configuration/schemas/strapi-provider.schema";
+import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { StrapiClient } from "./strapi-client";
 
 export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {

@@ -1,4 +1,4 @@
-import { Datocms } from "@/modules/datocms/datocms";
+import { Datocms } from "@/modules/providers/datocms/datocms";
 import { z } from "zod";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 

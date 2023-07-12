@@ -1,6 +1,6 @@
 import { buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-browser";
-import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { DatocmsProviderConfigType } from "../../configuration/schemas/datocms-provider.schema";
+import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 
 type Context = {
   configuration: DatocmsProviderConfigType;

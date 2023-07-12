@@ -1,4 +1,4 @@
-import { Strapi } from "@/modules/strapi/strapi";
+import { Strapi } from "@/modules/providers/strapi/strapi";
 import { z } from "zod";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 

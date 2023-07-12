@@ -1,5 +1,5 @@
 import { createClient, ClientAPI } from "contentful-management";
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { ContentfulProviderConfigType } from "@/modules/configuration";
 
 /**

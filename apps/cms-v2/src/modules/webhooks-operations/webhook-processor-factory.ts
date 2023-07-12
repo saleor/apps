@@ -1,7 +1,7 @@
 import { AnyProviderConfigSchemaType, ContentfulProviderConfigType } from "../configuration";
-import { ContentfulWebhooksProcessor } from "../contentful/contentful-webhooks-processor";
-import { DatocmsWebhooksProcessor } from "../datocms/datocms-webhooks-processor";
-import { StrapiWebhooksProcessor } from "../strapi/strapi-webhooks-processor";
+import { ContentfulWebhooksProcessor } from "../providers/contentful/contentful-webhooks-processor";
+import { DatocmsWebhooksProcessor } from "../providers/datocms/datocms-webhooks-processor";
+import { StrapiWebhooksProcessor } from "../providers/strapi/strapi-webhooks-processor";
 
 export const WebhookProcessorFactory = {
   createFromConfig(config: AnyProviderConfigSchemaType) {

@@ -1,6 +1,9 @@
-import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
-import { ContentfulProviderConfigType } from "../configuration";
-import { ProductWebhooksProcessor } from "../webhooks-operations/product-webhooks-processor";
+import {
+  WebhookProductFragment,
+  WebhookProductVariantFragment,
+} from "../../../../generated/graphql";
+import { ContentfulProviderConfigType } from "../../configuration";
+import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { ContentfulClient } from "./contentful-client";
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {

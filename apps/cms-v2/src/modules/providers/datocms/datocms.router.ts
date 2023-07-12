@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { router } from "../trpc/trpc-server";
+import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
+import { router } from "../../trpc/trpc-server";
 
 import { DatoCMSClient } from "./datocms-client";
 

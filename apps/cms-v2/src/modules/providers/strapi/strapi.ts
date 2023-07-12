@@ -1,4 +1,4 @@
-import { CMSProvider } from "../shared/cms-provider";
+import { CMSProvider } from "../../shared/cms-provider";
 import logo from "./strapi-logo.svg";
 
 export const Strapi = {

@@ -4,10 +4,10 @@ import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { StrapiProviderConfig } from "../configuration";
-import { printSaleorProductFields } from "../configuration/print-saleor-product-fields";
-import { trpcClient } from "../trpc/trpc-client";
-import { ButtonsBox } from "../ui/buttons-box";
+import { StrapiProviderConfig } from "../../configuration";
+import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
+import { trpcClient } from "../../trpc/trpc-client";
+import { ButtonsBox } from "../../ui/buttons-box";
 
 type FormShape = Omit<StrapiProviderConfig.InputShape, "type">;
 

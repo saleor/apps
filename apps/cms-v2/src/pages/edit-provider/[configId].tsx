@@ -1,7 +1,7 @@
-import { ContentfulEditConfigForm } from "@/modules/contentful/contentful-config-form";
-import { DatoCMSConfigForm } from "@/modules/datocms/datocms-config-form";
+import { ContentfulEditConfigForm } from "@/modules/providers/contentful/contentful-config-form";
+import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
 import { createProvider } from "@/modules/shared/cms-provider";
-import { StrapiConfigForm } from "@/modules/strapi/strapi-config-form";
+import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";

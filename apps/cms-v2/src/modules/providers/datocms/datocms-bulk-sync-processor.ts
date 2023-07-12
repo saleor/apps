@@ -1,18 +1,17 @@
-import { BulkImportProductFragment } from "../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../bulk-sync/bulk-sync-processor";
-import { StrapiProviderConfig } from "../configuration";
-import { StrapiClient } from "./strapi-client";
+import { BulkImportProductFragment } from "../../../../generated/graphql";
+import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
+import { DatocmsProviderConfigType } from "../../configuration";
+import { DatoCMSClientBrowser } from "./datocms-client-browser";
 
-export class StrapiBulkSyncProcessor implements BulkSyncProcessor {
-  constructor(private config: StrapiProviderConfig.FullShape) {}
+export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
+  constructor(private config: DatocmsProviderConfigType) {}
 
   async uploadProducts(
     products: BulkImportProductFragment[],
     hooks: BulkSyncProcessorHooks
   ): Promise<void> {
-    const client = new StrapiClient({
-      token: this.config.authToken,
-      url: this.config.url,
+    const client = new DatoCMSClientBrowser({
+      apiToken: this.config.authToken,
     });
 
     products.flatMap((product) =>

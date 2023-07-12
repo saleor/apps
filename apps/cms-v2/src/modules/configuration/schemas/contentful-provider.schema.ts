@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Contentful } from "../../contentful/contentful";
+import { Contentful } from "../../providers/contentful/contentful";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const ContentfulProviderConfigSchemaInput = z.object({

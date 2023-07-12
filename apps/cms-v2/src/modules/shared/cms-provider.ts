@@ -1,6 +1,6 @@
-import { Contentful } from "../contentful/contentful";
-import { Datocms } from "../datocms/datocms";
-import { Strapi } from "../strapi/strapi";
+import { Contentful } from "../providers/contentful/contentful";
+import { Datocms } from "../providers/datocms/datocms";
+import { Strapi } from "../providers/strapi/strapi";
 
 export interface CMSProvider {
   type: string;

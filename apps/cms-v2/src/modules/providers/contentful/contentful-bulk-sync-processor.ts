@@ -1,6 +1,6 @@
-import { BulkImportProductFragment } from "../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../bulk-sync/bulk-sync-processor";
-import { ContentfulProviderConfigType } from "../configuration";
+import { BulkImportProductFragment } from "../../../../generated/graphql";
+import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
+import { ContentfulProviderConfigType } from "../../configuration";
 import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
 
