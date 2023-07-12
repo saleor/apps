@@ -9,9 +9,10 @@ export interface CMSProvider {
   description: string;
 }
 
+export type CMS = typeof Contentful | typeof Datocms | typeof Strapi;
 export type CMSType = typeof Contentful.type | typeof Datocms.type | typeof Strapi.type;
 
-export const createProvider = (type: CMSType | string): CMSProvider => {
+export const createProvider = (type: CMSType | string): CMS => {
   switch (type) {
     case "contentful": {
       return Contentful;

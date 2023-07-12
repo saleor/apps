@@ -120,9 +120,9 @@ const ContentfulConfigForm = ({
           name="spaceId"
           label="Contentful space ID"
           helperText={
-            <Text>
+            <Text variant="caption" color="textNeutralSubdued">
               Check{" "}
-              <TextLink href="https://www.contentful.com/help/find-space-id/" newTab>
+              <TextLink size="small" href="https://www.contentful.com/help/find-space-id/" newTab>
                 how to get space ID
               </TextLink>
             </Text>
@@ -135,9 +135,13 @@ const ContentfulConfigForm = ({
           name="authToken"
           label="Content Management Personal token"
           helperText={
-            <Text>
+            <Text variant="caption" color="textNeutralSubdued">
               Check{" "}
-              <TextLink href="https://www.contentful.com/help/personal-access-tokens/" newTab>
+              <TextLink
+                size="small"
+                href="https://www.contentful.com/help/personal-access-tokens/"
+                newTab
+              >
                 how to generate token
               </TextLink>
             </Text>
@@ -167,7 +171,20 @@ const ContentfulConfigForm = ({
               control={control}
               name="environment"
               label="Contentful environment"
-              helperText="TODO how to get token"
+              helperText={
+                <Text variant="caption" color="textNeutralSubdued">
+                  Check your environment{" "}
+                  <TextLink
+                    newTab
+                    size="small"
+                    href={`https://app.contentful.com/spaces/${getValues(
+                      "spaceId"
+                    )}/settings/environments`}
+                  >
+                    here
+                  </TextLink>
+                </Text>
+              }
               options={environmentsData.items.map((item) => ({
                 label: item.name,
                 value: item.sys.id,

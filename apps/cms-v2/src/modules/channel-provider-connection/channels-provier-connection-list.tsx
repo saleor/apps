@@ -22,15 +22,19 @@ const Header = () => (
   </Text>
 );
 
-const NoConnections = (props: { onCreate(): void }) => (
+const NoConnections = (props: { onCreate(): void; enabled: boolean }) => (
   <Box>
     <Header />
     <Text marginBottom={4} as="p">
-      No channels connected yet
+      No channels connected yet.{" "}
+      {!props.enabled &&
+        "Ensure you have created a provider configuration that can be connected first."}
     </Text>
-    <ButtonsBox>
-      <Button onClick={props.onCreate}>Create first connection</Button>
-    </ButtonsBox>
+    {props.enabled && (
+      <ButtonsBox>
+        <Button onClick={props.onCreate}>Create first connection</Button>
+      </ButtonsBox>
+    )}
   </Box>
 );
 
@@ -226,6 +230,7 @@ export const ChannelProviderConnectionList = () => {
       )}
       {data.length === 0 && (
         <NoConnections
+          enabled={providers.length > 0}
           onCreate={() => {
             setDialogOpen(true);
           }}
