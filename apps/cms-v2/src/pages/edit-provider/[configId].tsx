@@ -9,8 +9,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-// todo dynamically set form and provider
-const AddContentfulPage: NextPage = () => {
+const EditProviderPage: NextPage = () => {
   const { push, query } = useRouter();
   const configId = query["configId"] as string;
 
@@ -43,6 +42,9 @@ const AddContentfulPage: NextPage = () => {
       case "datocms": {
         return <DatoCMSConfigForm.EditVariant configId={configId} />;
       }
+      case "strapi": {
+        return <Text>todo</Text>;
+      }
       default: {
         return null;
       }
@@ -68,4 +70,4 @@ const AddContentfulPage: NextPage = () => {
   );
 };
 
-export default AddContentfulPage;
+export default EditProviderPage;

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const InputSchema = z.object({
+  configName: z.string(),
   type: z.literal(Strapi.type),
   url: z.string().url(),
   authToken: z.string(),
@@ -21,6 +22,6 @@ export namespace StrapiProviderConfig {
 
   export const Schema = {
     Input: InputSchema,
-    Full: InputSchema,
+    Full: FullSchema,
   };
 }

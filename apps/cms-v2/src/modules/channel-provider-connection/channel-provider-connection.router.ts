@@ -4,7 +4,7 @@ import { ChannelProviderConnectionConfigSchema } from "@/modules/configuration/s
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
 import { z } from "zod";
-import { FetchChannelsDocument } from "../../../../generated/graphql";
+import { FetchChannelsDocument } from "../../../generated/graphql";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);

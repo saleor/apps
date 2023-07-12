@@ -7,7 +7,7 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   private client: StrapiClient;
 
   constructor(private config: StrapiProviderConfig.FullShape) {
-    this.client = new StrapiClient({ url: config.url });
+    this.client = new StrapiClient({ url: config.url, token: config.authToken });
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
