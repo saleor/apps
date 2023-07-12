@@ -1,9 +1,14 @@
 import { BulkImportProductFragment } from "../../../generated/graphql";
-import { AnyProviderConfigSchemaType, ContentfulProviderConfigType } from "../configuration";
+import {
+  AnyProviderConfigSchemaType,
+  ContentfulProviderConfigType,
+  StrapiProviderConfig,
+} from "../configuration";
 import { DatocmsProviderConfigType } from "../configuration/schemas/datocms-provider.schema";
 import { ContentfulClient } from "../contentful/contentful-client";
 import { contentfulRateLimiter } from "../contentful/contentful-rate-limiter";
 import { DatoCMSClientBrowser } from "../datocms/datocms-client-browser";
+import { StrapiClient } from "../strapi/strapi-client";
 
 type Hooks = {
   onUploadStart?: (context: { variantId: string }) => void;
@@ -110,6 +115,50 @@ export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
   }
 }
 
+export class StrapiBulkSyncProcessor implements BulkSyncProcessor {
+  constructor(private config: StrapiProviderConfig.FullShape) {}
+
+  async uploadProducts(products: BulkImportProductFragment[], hooks: Hooks): Promise<void> {
+    const client = new StrapiClient({
+      token: this.config.authToken,
+      url: this.config.url,
+    });
+
+    products.flatMap((product) =>
+      product.variants?.map((variant) => {
+        if (hooks.onUploadStart) {
+          hooks.onUploadStart({ variantId: variant.id });
+        }
+
+        return client
+          .upsertProduct({
+            configuration: this.config,
+            variant: {
+              id: variant.id,
+              name: variant.name,
+              channelListings: variant.channelListings,
+              product: {
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+              },
+            },
+          })
+          .then((r) => {
+            if (hooks.onUploadSuccess) {
+              hooks.onUploadSuccess({ variantId: variant.id });
+            }
+          })
+          .catch((e) => {
+            if (hooks.onUploadError) {
+              hooks.onUploadError({ variantId: variant.id, error: e });
+            }
+          });
+      })
+    );
+  }
+}
+
 export const BulkSyncProcessorFactory = {
   create(config: AnyProviderConfigSchemaType): BulkSyncProcessor {
     switch (config.type) {
@@ -117,6 +166,8 @@ export const BulkSyncProcessorFactory = {
         return new ContentfulBulkSyncProcessor(config);
       case "datocms":
         return new DatocmsBulkSyncProcessor(config);
+      case "strapi":
+        return new StrapiBulkSyncProcessor(config);
       default:
         throw new Error(`Unknown provider`);
     }
