@@ -137,7 +137,8 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           required
           control={control}
           name="authToken"
-          label="DatoCMS token"
+          type="password"
+          label="API Token"
           helperText="Project -> Settings -> API Tokens -> Full-access API token."
         />
         {!contentTypesData && fetchContentTypesButton}

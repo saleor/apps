@@ -88,4 +88,58 @@ export class StrapiClient {
       console.error(e);
     }
   }
+
+  async updateProduct({
+    configuration,
+    variant,
+    strapiProductId,
+  }: {
+    strapiProductId?: number;
+    configuration: StrapiProviderConfig.FullShape;
+    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+  }) {
+    let strapiProductIdToUpdate = strapiProductId;
+
+    if (!strapiProductIdToUpdate) {
+      const strapiProduct = await this.getProduct(configuration, variant.id);
+
+      if (!strapiProduct) {
+        return;
+      }
+
+      strapiProductIdToUpdate = strapiProduct.id;
+    }
+
+    try {
+      const result = await this.client.update(configuration.itemType, strapiProductIdToUpdate, {
+        // todo extract to common mapping function
+        [configuration.productVariantFieldsMapping.name]: variant.name,
+        [configuration.productVariantFieldsMapping.variantId]: variant.id,
+        [configuration.productVariantFieldsMapping.productName]: variant.product.name,
+        [configuration.productVariantFieldsMapping.productId]: variant.product.id,
+        [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
+        [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
+      });
+
+      return result;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async upsertProduct({
+    configuration,
+    variant,
+  }: {
+    configuration: StrapiProviderConfig.FullShape;
+    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+  }) {
+    const strapiProduct = await this.getProduct(configuration, variant.id);
+
+    if (strapiProduct) {
+      return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
+    } else {
+      return this.uploadProduct({ configuration, variant });
+    }
+  }
 }

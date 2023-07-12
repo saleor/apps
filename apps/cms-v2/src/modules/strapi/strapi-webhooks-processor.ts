@@ -11,7 +11,7 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    throw new Error("Method not implemented.");
+    this.client.updateProduct({ configuration: this.config, variant: productVariant });
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.client.uploadProduct({ configuration: this.config, variant: productVariant });
@@ -21,6 +21,21 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    throw new Error("Method not implemented.");
+    await Promise.all(
+      (product.variants ?? []).map((variant) => {
+        return this.client.upsertProduct({
+          configuration: this.config,
+          variant: {
+            id: variant.id,
+            name: variant.name,
+            product: {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+            },
+          },
+        });
+      })
+    );
   }
 }
