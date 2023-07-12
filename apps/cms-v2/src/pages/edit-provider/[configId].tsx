@@ -1,6 +1,7 @@
 import { ContentfulEditConfigForm } from "@/modules/contentful/contentful-config-form";
 import { DatoCMSConfigForm } from "@/modules/datocms/datocms-config-form";
 import { createProvider } from "@/modules/shared/cms-provider";
+import { StrapiConfigForm } from "@/modules/strapi/strapi-config-form";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
@@ -43,7 +44,7 @@ const EditProviderPage: NextPage = () => {
         return <DatoCMSConfigForm.EditVariant configId={configId} />;
       }
       case "strapi": {
-        return <Text>todo</Text>;
+        return <StrapiConfigForm.EditVariant configId={configId} />;
       }
       default: {
         return null;

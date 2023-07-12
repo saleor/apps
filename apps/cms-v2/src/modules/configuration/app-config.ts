@@ -11,6 +11,7 @@ import {
   RootConfigSchema,
   RootConfigSchemaType,
 } from "./schemas/root-config.schema";
+import { StrapiProviderConfig } from "./schemas/strapi-provider.schema";
 
 /**
  * TODO
@@ -43,6 +44,8 @@ export class AppConfig {
         return ContentfulProviderSchema.ConfigInput;
       case "datocms":
         return DatocmsProviderSchema.ConfigInput;
+      case "strapi":
+        return StrapiProviderConfig.Schema.Input;
       default: {
         throw new Error("Failed to build input schema");
       }
@@ -55,6 +58,8 @@ export class AppConfig {
         return ContentfulProviderSchema.Config;
       case "datocms":
         return DatocmsProviderSchema.Config;
+      case "strapi":
+        return StrapiProviderConfig.Schema.Full;
       default: {
         throw new Error("Failed to build provdier schema");
       }

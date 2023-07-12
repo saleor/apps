@@ -14,7 +14,7 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
     throw new Error("Method not implemented.");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    throw new Error("Method not implemented.");
+    this.client.uploadProduct({ configuration: this.config, variant: productVariant });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     throw new Error("Method not implemented.");

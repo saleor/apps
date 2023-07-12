@@ -1,3 +1,4 @@
+import { StrapiConfigForm } from "@/modules/strapi/strapi-config-form";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
@@ -25,7 +26,7 @@ const AddStrapiPage: NextPage = () => {
             <Text>Provide required information to configure Strapi CMS.</Text>
           </Box>
         }
-        mainContent={"todo"}
+        mainContent={<StrapiConfigForm.AddVariant />}
       />
     </Box>
   );

@@ -1,6 +1,7 @@
 import { AnyProviderConfigSchemaType, ContentfulProviderConfigType } from "../configuration";
 import { ContentfulWebhooksProcessor } from "../contentful/contentful-webhooks-processor";
 import { DatocmsWebhooksProcessor } from "../datocms/datocms-webhooks-processor";
+import { StrapiWebhooksProcessor } from "../strapi/strapi-webhooks-processor";
 
 export const WebhookProcessorFactory = {
   createFromConfig(config: AnyProviderConfigSchemaType) {
@@ -10,6 +11,9 @@ export const WebhookProcessorFactory = {
       }
       case "datocms": {
         return new DatocmsWebhooksProcessor(config);
+      }
+      case "strapi": {
+        return new StrapiWebhooksProcessor(config);
       }
       default: {
         throw new Error("Failed to build webhook processor.");

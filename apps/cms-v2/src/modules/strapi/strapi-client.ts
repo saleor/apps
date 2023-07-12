@@ -9,9 +9,12 @@ export class StrapiClient {
   constructor(options: { url: string; token: string }) {
     this.client = new Strapi({
       url: options.url,
+      axiosOptions: {
+        headers: {
+          Authorization: `Bearer ${options.token}`,
+        },
+      },
     });
-
-    this.client.setToken(options.token);
   }
 
   async uploadProduct({
@@ -21,12 +24,22 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
   }): Promise<void> {
-    const result = await this.client.create(configuration.itemType, {
-      [configuration.productVariantFieldsMapping.name]: variant.name,
-      [configuration.productVariantFieldsMapping.variantId]: variant.id,
-      [configuration.productVariantFieldsMapping.productName]: variant.product.name,
-      [configuration.productVariantFieldsMapping.productId]: variant.product.id,
-      [configuration.productVariantFieldsMapping.channels]: variant.channelListings, // todo check if shouldnt be stringified
-    });
+    try {
+      console.log(configuration);
+
+      const result = await this.client.create(configuration.itemType, {
+        // todo extract to common mapping function
+        [configuration.productVariantFieldsMapping.name]: variant.name,
+        [configuration.productVariantFieldsMapping.variantId]: variant.id,
+        [configuration.productVariantFieldsMapping.productName]: variant.product.name,
+        [configuration.productVariantFieldsMapping.productId]: variant.product.id,
+        [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
+        [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
+      });
+
+      console.log(result);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
