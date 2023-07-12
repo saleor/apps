@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useRef, useState } from "react";
-import { AnyProviderConfigSchemaType, ChannelProviderConnectionType } from "../configuration";
+import { ProvidersConfig, ChannelProviderConnectionConfig } from "../configuration";
 import { AppSection } from "../ui/app-section";
 import { ButtonsBox } from "../ui/buttons-box";
 import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
@@ -55,8 +55,8 @@ export const BulkSyncView = ({
   configuration,
   connection,
 }: {
-  configuration: AnyProviderConfigSchemaType;
-  connection: ChannelProviderConnectionType;
+  configuration: ProvidersConfig.AnyFullShape;
+  connection: ChannelProviderConnectionConfig.FullShape;
 }) => {
   const processor = useRef(BulkSyncProcessorFactory.create(configuration));
   const [state, setState] = useState<State>("initial");

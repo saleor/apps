@@ -1,5 +1,5 @@
 import { BulkImportProductFragment } from "../../../generated/graphql";
-import { AnyProviderConfigSchemaType } from "../configuration";
+import { ProvidersConfig } from "../configuration";
 import { ContentfulBulkSyncProcessor } from "../providers/contentful/contentful-bulk-sync-processor";
 import { DatocmsBulkSyncProcessor } from "../providers/datocms/datocms-bulk-sync-processor";
 import { StrapiBulkSyncProcessor } from "../providers/strapi/strapi-bulk-sync-processor";
@@ -19,7 +19,7 @@ export interface BulkSyncProcessor {
 
 // todo extract to shared
 export const BulkSyncProcessorFactory = {
-  create(config: AnyProviderConfigSchemaType): BulkSyncProcessor {
+  create(config: ProvidersConfig.AnyFullShape): BulkSyncProcessor {
     switch (config.type) {
       case "contentful":
         return new ContentfulBulkSyncProcessor(config);

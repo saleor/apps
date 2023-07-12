@@ -6,7 +6,7 @@ import { StrapiProviderConfig } from "./strapi-provider.schema";
 
 // todo move to shared bootstrap?
 export namespace ProvidersConfig {
-  export const AnyProviderConfigSchema = z.union([
+  const AnyFull = z.union([
     /**
      * Add more for each provider
      */
@@ -15,16 +15,18 @@ export namespace ProvidersConfig {
     StrapiProviderConfig.Schema.Full,
   ]);
 
-  export const AnyProvidersListSchema = z.array(AnyProviderConfigSchema);
+  export const Schema = {
+    AnyFull: AnyFull,
+    AnyInput: z.union([
+      ContentfulProviderConfig.Schema.Input,
+      DatocmsProviderConfig.Schema.Input,
+      StrapiProviderConfig.Schema.Input,
+    ]),
+    AnyFullList: z.array(AnyFull),
+  };
 
-  export const AnyProvidersInput = z.union([
-    ContentfulProviderConfig.Schema.Input,
-    DatocmsProviderConfig.Schema.Input,
-    StrapiProviderConfig.Schema.Input,
-  ]);
-
-  export type AnyProviderConfigSchemaType = z.infer<typeof AnyProviderConfigSchema>;
-  export type AnyProviderInputSchemaType = z.infer<typeof AnyProvidersInput>;
+  export type AnyFullShape = z.infer<typeof Schema.AnyFull>;
+  export type AnyInputShape = z.infer<typeof Schema.AnyInput>;
 }
 
 export namespace RootConfig {
@@ -34,11 +36,9 @@ export namespace RootConfig {
    * - Always transactional
    */
   export const Schema = z.object({
-    providers: ProvidersConfig.AnyProvidersListSchema,
+    providers: ProvidersConfig.Schema.AnyFullList,
     connections: z.array(ChannelProviderConnectionConfig.Schema.Full),
   });
 
   export type Shape = z.infer<typeof Schema>;
-
-  export type RootConfigSchemaType = z.infer<typeof Schema>;
 }

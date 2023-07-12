@@ -1,11 +1,9 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { AppConfigMetadataManager, RootConfigSchemaType } from "../configuration";
+import { AppConfigMetadataManager, RootConfig } from "../configuration";
 
-export type WebhookContext = {
-  providers: RootConfigSchemaType["providers"];
-  connections: RootConfigSchemaType["connections"];
-};
+export type WebhookContext = Pick<RootConfig.Shape, "connections" | "providers">;
 
+// todo its the same as Root config so maybe remove it
 export const createWebhookConfigContext = async ({
   authData,
 }: {

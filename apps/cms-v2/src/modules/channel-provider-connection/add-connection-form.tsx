@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, Box } from "@saleor/macaw-ui/next";
 import { Select } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
-import {
-  ChannelProviderConnectionConfigSchema,
-  ChannelProviderConnectionInputType,
-} from "../configuration";
+import { ChannelProviderConnectionConfig } from "../configuration";
 import { trpcClient } from "../trpc/trpc-client";
 
-export type AddConnectionFormSchema = Omit<ChannelProviderConnectionInputType, "providerType">;
+export type AddConnectionFormSchema = Omit<
+  ChannelProviderConnectionConfig.InputShape,
+  "providerType"
+>;
 
 export const AddConnectionFormID = "new-connection-form";
 
@@ -22,7 +22,7 @@ export const AddConnectionForm = (props: {
   const { handleSubmit, control } = useForm<AddConnectionFormSchema>({
     defaultValues: props.defaultValues,
     resolver: zodResolver(
-      ChannelProviderConnectionConfigSchema.NewConnectionInput.omit({ providerType: true })
+      ChannelProviderConnectionConfig.Schema.Input.omit({ providerType: true })
     ),
   });
 

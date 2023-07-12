@@ -1,13 +1,13 @@
-import { AnyProviderConfigSchemaType, ContentfulProviderConfigType } from "../configuration";
+import { ProvidersConfig } from "../configuration";
 import { ContentfulWebhooksProcessor } from "../providers/contentful/contentful-webhooks-processor";
 import { DatocmsWebhooksProcessor } from "../providers/datocms/datocms-webhooks-processor";
 import { StrapiWebhooksProcessor } from "../providers/strapi/strapi-webhooks-processor";
 
 export const WebhookProcessorFactory = {
-  createFromConfig(config: AnyProviderConfigSchemaType) {
+  createFromConfig(config: ProvidersConfig.AnyFullShape) {
     switch (config.type) {
       case "contentful": {
-        return new ContentfulWebhooksProcessor(config as ContentfulProviderConfigType);
+        return new ContentfulWebhooksProcessor(config);
       }
       case "datocms": {
         return new DatocmsWebhooksProcessor(config);

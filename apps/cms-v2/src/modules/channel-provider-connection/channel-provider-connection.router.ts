@@ -1,6 +1,6 @@
 import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
 import { createSettingsManager } from "@/modules/configuration/metadata-manager";
-import { ChannelProviderConnectionConfigSchema } from "@/modules/configuration/schemas/channel-provider-connection.schema";
+import { ChannelProviderConnectionConfig } from "@/modules/configuration/schemas/channel-provider-connection.schema";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
 import { z } from "zod";
@@ -29,7 +29,7 @@ export const channelProviderConnectionRouter = router({
     return (await ctx.appConfigService.get()).connections.getConnectionById(input.id) ?? null;
   }),
   addConnection: procedure
-    .input(ChannelProviderConnectionConfigSchema.NewConnectionInput)
+    .input(ChannelProviderConnectionConfig.Schema.Input)
     .mutation(async ({ ctx, input }) => {
       const config = await ctx.appConfigService.get();
 

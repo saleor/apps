@@ -1,9 +1,9 @@
 import { buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-node";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-import { DatocmsProviderConfigType } from "../../configuration/schemas/datocms-provider.schema";
+import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 
 type Context = {
-  configuration: DatocmsProviderConfigType;
+  configuration: DatocmsProviderConfig.FullShape;
   variant: WebhookProductVariantFragment;
 };
 

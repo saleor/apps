@@ -1,7 +1,6 @@
 import { Box, BoxProps } from "@saleor/macaw-ui/next";
 import { forwardRef } from "react";
 
-// todo make custom overlay to make it always open / rerenderd
 export const Modal = ({ onClose, ...rest }: { onClose(): void } & BoxProps) => {
   return (
     <>

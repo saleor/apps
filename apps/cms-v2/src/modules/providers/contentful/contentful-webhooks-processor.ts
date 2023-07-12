@@ -2,14 +2,14 @@ import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { ContentfulProviderConfigType } from "../../configuration";
+import { ContentfulProviderConfig } from "../../configuration";
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { ContentfulClient } from "./contentful-client";
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   private client: ContentfulClient;
 
-  constructor(private providerConfig: ContentfulProviderConfigType) {
+  constructor(private providerConfig: ContentfulProviderConfig.FullShape) {
     this.client = new ContentfulClient({
       accessToken: providerConfig.authToken,
       space: providerConfig.spaceId,

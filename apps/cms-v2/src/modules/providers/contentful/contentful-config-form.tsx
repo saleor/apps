@@ -6,21 +6,17 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import {
-  ContentfulProviderConfigInputType,
-  ContentfulProviderConfigType,
-  ContentfulProviderSchema,
-} from "../../configuration/schemas/contentful-provider.schema";
+import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonsBox } from "../../ui/buttons-box";
 import { TextLink } from "@saleor/apps-ui";
 
 const mappingFieldsNames: Array<
-  keyof ContentfulProviderConfigInputType["productVariantFieldsMapping"]
+  keyof ContentfulProviderConfig.InputShape["productVariantFieldsMapping"]
 > = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
-type FormSchema = Omit<ContentfulProviderConfigInputType, "type">;
+type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
 
 /**
  * TODO - when space, token or env changes, refetch queries
@@ -45,7 +41,7 @@ const ContentfulConfigForm = ({
     formState: { errors },
   } = useForm<FormSchema>({
     defaultValues: defaultValues,
-    resolver: zodResolver(ContentfulProviderSchema.ConfigInput.omit({ type: true })),
+    resolver: zodResolver(ContentfulProviderConfig.Schema.Input.omit({ type: true })),
   });
 
   const { mutate: fetchContentTypes, data: contentTypesData } =
@@ -367,7 +363,7 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
       onDelete={() => {
         deleteProvider({ id: configId });
       }}
-      defaultValues={data as ContentfulProviderConfigType}
+      defaultValues={data}
       onSubmit={(values) =>
         mutate({
           ...values,

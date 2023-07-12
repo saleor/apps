@@ -1,6 +1,6 @@
 import { createClient, ClientAPI } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-import { ContentfulProviderConfigType } from "@/modules/configuration";
+import { ContentfulProviderConfig } from "@/modules/configuration";
 
 /**
  * Wrapper facade of
@@ -14,7 +14,6 @@ export class ContentfulClient {
   private client: ClientAPI;
   private space: string;
 
-  // todo consider passing and storing entire config
   constructor(opts: { space: string; accessToken: string }) {
     this.space = opts.space;
 
@@ -33,7 +32,7 @@ export class ContentfulClient {
   }
 
   async updateProduct(opts: {
-    configuration: ContentfulProviderConfigType;
+    configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -71,7 +70,7 @@ export class ContentfulClient {
   }
 
   async deleteProduct(opts: {
-    configuration: ContentfulProviderConfigType;
+    configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -83,7 +82,7 @@ export class ContentfulClient {
   }
 
   async uploadProduct(opts: {
-    configuration: ContentfulProviderConfigType;
+    configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
     const space = await this.client.getSpace(this.space);
@@ -123,7 +122,7 @@ export class ContentfulClient {
   }
 
   async upsertProduct(opts: {
-    configuration: ContentfulProviderConfigType;
+    configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
     try {

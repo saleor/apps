@@ -1,10 +1,10 @@
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
-import { DatocmsProviderConfigType } from "../../configuration";
+import { DatocmsProviderConfig } from "../../configuration";
 import { DatoCMSClientBrowser } from "./datocms-client-browser";
 
 export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
-  constructor(private config: DatocmsProviderConfigType) {}
+  constructor(private config: DatocmsProviderConfig.FullShape) {}
 
   async uploadProducts(
     products: BulkImportProductFragment[],

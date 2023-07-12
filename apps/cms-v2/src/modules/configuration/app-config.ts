@@ -1,16 +1,8 @@
 import { generateId } from "../shared/generate-id";
-import {
-  ChannelProviderConnectionConfigSchema,
-  ChannelProviderConnectionInputType,
-} from "./schemas/channel-provider-connection.schema";
-import { ContentfulProviderSchema } from "./schemas/contentful-provider.schema";
-import { DatocmsProviderSchema } from "./schemas/datocms-provider.schema";
-import {
-  AnyProviderConfigSchemaType,
-  AnyProviderInputSchemaType,
-  RootConfigSchema,
-  RootConfigSchemaType,
-} from "./schemas/root-config.schema";
+import { ChannelProviderConnectionConfig } from "./schemas/channel-provider-connection.schema";
+import { ContentfulProviderConfig } from "./schemas/contentful-provider.schema";
+import { DatocmsProviderConfig } from "./schemas/datocms-provider.schema";
+import { ProvidersConfig, RootConfig } from "./schemas/root-config.schema";
 import { StrapiProviderConfig } from "./schemas/strapi-provider.schema";
 
 /**
@@ -19,14 +11,14 @@ import { StrapiProviderConfig } from "./schemas/strapi-provider.schema";
  * - extract and delegate smaller configs?
  */
 export class AppConfig {
-  private rootData: RootConfigSchemaType = {
+  private rootData: RootConfig.Shape = {
     providers: [],
     connections: [],
   };
 
-  constructor(initialData?: RootConfigSchemaType) {
+  constructor(initialData?: RootConfig.Shape) {
     if (initialData) {
-      this.rootData = RootConfigSchema.parse(initialData);
+      this.rootData = RootConfig.Schema.parse(initialData);
     }
   }
 
@@ -38,12 +30,12 @@ export class AppConfig {
     return JSON.stringify(this.rootData);
   }
 
-  private getProviderInputSchema(input: AnyProviderInputSchemaType) {
+  private getProviderInputSchema(input: ProvidersConfig.AnyInputShape) {
     switch (input.type) {
       case "contentful":
-        return ContentfulProviderSchema.ConfigInput;
+        return ContentfulProviderConfig.Schema.Input;
       case "datocms":
-        return DatocmsProviderSchema.ConfigInput;
+        return DatocmsProviderConfig.Schema.Input;
       case "strapi":
         return StrapiProviderConfig.Schema.Input;
       default: {
@@ -52,12 +44,12 @@ export class AppConfig {
     }
   }
 
-  private getProviderSchema(input: AnyProviderConfigSchemaType) {
+  private getProviderSchema(input: ProvidersConfig.AnyFullShape) {
     switch (input.type) {
       case "contentful":
-        return ContentfulProviderSchema.Config;
+        return ContentfulProviderConfig.Schema.Full;
       case "datocms":
-        return DatocmsProviderSchema.Config;
+        return DatocmsProviderConfig.Schema.Full;
       case "strapi":
         return StrapiProviderConfig.Schema.Full;
       default: {
@@ -71,7 +63,7 @@ export class AppConfig {
       return !!this.rootData.providers.find((p) => p.id === id);
     },
 
-    addProvider: (providerConfigInput: AnyProviderInputSchemaType) => {
+    addProvider: (providerConfigInput: ProvidersConfig.AnyInputShape) => {
       const inputSchema = this.getProviderInputSchema(providerConfigInput);
 
       const parsedConfig = inputSchema.parse(providerConfigInput);
@@ -84,7 +76,7 @@ export class AppConfig {
       return this;
     },
 
-    updateProvider: (providerConfig: AnyProviderConfigSchemaType) => {
+    updateProvider: (providerConfig: ProvidersConfig.AnyFullShape) => {
       const schema = this.getProviderSchema(providerConfig);
 
       const parsedConfig = schema.parse(providerConfig);
@@ -125,17 +117,17 @@ export class AppConfig {
       return this;
     },
 
-    addConnection: (input: ChannelProviderConnectionInputType) => {
+    addConnection: (input: ChannelProviderConnectionConfig.InputShape) => {
       if (!this.providers.checkProviderExists(input.providerId)) {
         throw new Error("Provider doesnt exist");
       }
 
-      const parsed = ChannelProviderConnectionConfigSchema.Connection.parse({
-        ...input,
+      const parsed = ChannelProviderConnectionConfig.Schema.Input.parse(input);
+
+      this.rootData.connections.push({
+        ...parsed,
         id: generateId(),
       });
-
-      this.rootData.connections.push(parsed);
 
       return this;
     },

@@ -2,7 +2,7 @@ import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { DatocmsProviderConfigType } from "../../configuration/schemas/datocms-provider.schema";
+import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
 
@@ -12,7 +12,7 @@ import { DatoCMSClient } from "./datocms-client";
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client: DatoCMSClient;
 
-  constructor(private providerConfig: DatocmsProviderConfigType) {
+  constructor(private providerConfig: DatocmsProviderConfig.FullShape) {
     this.client = new DatoCMSClient({
       apiToken: providerConfig.authToken,
     });

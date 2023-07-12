@@ -4,7 +4,7 @@ import { z } from "zod";
 import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { AnyProviderConfigSchema, AnyProvidersInput } from "../configuration";
+import { ProvidersConfig } from "../configuration";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -32,7 +32,7 @@ export const providersListRouter = router({
       return config.providers.getProviderById(input.id) ?? null;
     }),
   addOne: procedure
-    .input(AnyProvidersInput)
+    .input(ProvidersConfig.Schema.AnyInput)
     .mutation(async ({ ctx: { appConfigService }, input }) => {
       const config = await appConfigService.get();
 
@@ -41,7 +41,7 @@ export const providersListRouter = router({
       await appConfigService.set(config);
     }),
   updateOne: procedure
-    .input(AnyProviderConfigSchema)
+    .input(ProvidersConfig.Schema.AnyFull)
     .mutation(async ({ input, ctx: { appConfigService } }) => {
       const config = await appConfigService.get();
 
