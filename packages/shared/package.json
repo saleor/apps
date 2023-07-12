@@ -32,7 +32,7 @@
   },
   "main": "index.ts",
   "peerDependencies": {
-    "@saleor/app-sdk": "0.40.1",
+    "@saleor/app-sdk": "0.41.0",
     "next": "13.3.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
