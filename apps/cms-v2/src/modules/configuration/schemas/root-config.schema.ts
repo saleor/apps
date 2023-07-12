@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ChannelProviderConnectionConfigSchema } from "./channel-provider-connection.schema";
 import { ContentfulProviderSchema } from "./contentful-provider.schema";
 import { DatocmsProviderSchema } from "./datocms-provider.schema";
+import { StrapiProviderConfig } from "./strapi-provider.schema";
 
 export const AnyProviderConfigSchema = z.union([
   /**
@@ -9,6 +10,7 @@ export const AnyProviderConfigSchema = z.union([
    */
   ContentfulProviderSchema.Config,
   DatocmsProviderSchema.Config,
+  StrapiProviderConfig.Schema.Full,
 ]);
 
 const AnyProvidersListSchema = z.array(AnyProviderConfigSchema);
@@ -16,6 +18,7 @@ const AnyProvidersListSchema = z.array(AnyProviderConfigSchema);
 export const AnyProvidersInput = z.union([
   ContentfulProviderSchema.ConfigInput,
   DatocmsProviderSchema.ConfigInput,
+  StrapiProviderConfig.Schema.Input,
 ]);
 
 /**
