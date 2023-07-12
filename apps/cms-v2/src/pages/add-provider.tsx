@@ -1,6 +1,5 @@
-import { Contentful } from "@/modules/contentful/contentful";
-import { Datocms } from "@/modules/datocms/datocms";
-import { CMSProvider, CMSProviders } from "@/modules/shared/cms-provider";
+import { CMSProviders } from "@/modules/shared/cms-provider";
+import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
@@ -13,16 +12,10 @@ const AddProviderPage: NextPage = () => {
 
   return (
     <Box>
-      <Box marginBottom={14}>
-        <Breadcrumbs>
-          <Breadcrumbs.Item>Saleor App CMS</Breadcrumbs.Item>
-          <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
-          <Breadcrumbs.Item>Add Provider</Breadcrumbs.Item>
-        </Breadcrumbs>
-        <Text as="p" marginTop={4}>
-          Connect Saleor Products to your favorite CMS platforms
-        </Text>
-      </Box>
+      <AppHeader
+        text="Connect CMS platforms to the App."
+        breadcrumbs={[<Breadcrumbs.Item>Add Provider</Breadcrumbs.Item>]}
+      />
       <AppSection
         heading="Select CMS provider"
         sideContent={

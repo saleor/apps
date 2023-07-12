@@ -8,35 +8,46 @@ import { Text } from "@saleor/macaw-ui/next";
 const BulkSyncPage: NextPage = () => {
   const { query } = useRouter();
   const id = query["connection-id"] as string | undefined;
+  const { push } = useRouter();
 
   const parsedID = z.string().optional().parse(id);
 
-  const { data: connection, isLoading: connectionLoading } =
-    trpcClient.channelsProvidersConnection.fetchConnection.useQuery(
-      {
-        id: parsedID ?? "",
-      },
-      {
-        enabled: !!parsedID,
-      }
-    );
+  const {
+    data: connection,
+    isLoading: connectionLoading,
+    isSuccess: connectionFetched,
+  } = trpcClient.channelsProvidersConnection.fetchConnection.useQuery(
+    {
+      id: parsedID ?? "",
+    },
+    {
+      enabled: !!parsedID,
+    }
+  );
 
-  const { data: provider, isLoading: providerLoading } =
-    trpcClient.providersConfigs.getOne.useQuery(
-      {
-        id: connection?.providerId ?? "",
-      },
-      {
-        enabled: !!connection,
-      }
-    );
+  const {
+    data: provider,
+    isLoading: providerLoading,
+    isSuccess: providerFetched,
+  } = trpcClient.providersConfigs.getOne.useQuery(
+    {
+      id: connection?.providerId ?? "",
+    },
+    {
+      enabled: !!connection,
+    }
+  );
 
-  if (connectionLoading || providerLoading) {
-    return <Text>Loading</Text>;
+  if ((providerFetched && !provider) || (connectionFetched && !connection)) {
+    push("/404");
+    return null;
   }
 
-  if (!id ?? !provider ?? !connection) {
-    // todo redirect if not found / wrong url
+  if (connectionLoading || providerLoading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!(provider && connection)) {
     return null;
   }
 

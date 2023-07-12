@@ -8,6 +8,7 @@ import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
+import { AppHeader } from "../ui/app-header";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -97,17 +98,18 @@ export const BulkSyncView = ({
 
   return (
     <Box>
-      <Breadcrumbs marginBottom={8}>
-        <Breadcrumbs.Item>Saleor App CMS</Breadcrumbs.Item>
-        <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
-        <Breadcrumbs.Item>Bulk Sync</Breadcrumbs.Item>
-        <Breadcrumbs.Item>
-          <Box display="flex" gap={2} alignItems="center">
-            {connection.channelSlug}
-            <ArrowRightIcon /> {configuration.configName}
-          </Box>
-        </Breadcrumbs.Item>
-      </Breadcrumbs>
+      <AppHeader
+        text="Perform bulk products sync between Saleor and your CMS"
+        breadcrumbs={[
+          <Breadcrumbs.Item>Bulk Sync</Breadcrumbs.Item>,
+          <Breadcrumbs.Item>
+            <Box display="flex" gap={2} alignItems="center">
+              {connection.channelSlug}
+              <ArrowRightIcon /> {configuration.configName}
+            </Box>
+          </Breadcrumbs.Item>,
+        ]}
+      />
 
       <AppSection
         marginBottom={8}

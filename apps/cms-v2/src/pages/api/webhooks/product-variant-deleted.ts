@@ -10,6 +10,8 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
 
+import * as Sentry from "@sentry/nextjs";
+
 export const config = {
   api: {
     bodyParser: false,
@@ -44,9 +46,8 @@ export const productVariantDeletedWebhook =
   });
 
 /*
- * todo extract services, delegate to providers
- * todo document that fields in contetnful should be unique
- * todo fetch metadata end decode it with payload
+ * TODO: document that fields in contetnful should be unique
+ * TODO: fetch metadata end decode it with payload, so we spare one call
  */
 const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
   req,
@@ -56,7 +57,8 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
-    // todo Sentry - should not happen
+    Sentry.captureException("Product variant not found in payload");
+
     return res.status(500).end();
   }
 

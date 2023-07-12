@@ -1,6 +1,7 @@
 const { z } = require("zod");
 const { withSentryConfig } = require("@sentry/nextjs");
 
+// todo
 const RequiredEnvs = z.object({});
 
 /** @type {import('next').NextConfig} */

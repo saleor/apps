@@ -10,6 +10,8 @@ import { saleorApp } from "@/saleor-app";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
+import * as Sentry from "@sentry/nextjs";
+
 export const config = {
   api: {
     bodyParser: false,
@@ -50,7 +52,8 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   const { authData, payload } = context;
 
   if (!payload.product) {
-    // todo Sentry - should not happen
+    Sentry.captureException("Product not found in payload");
+
     return res.status(500).end();
   }
 

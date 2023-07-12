@@ -2,6 +2,7 @@ import { ContentfulAddConfigForm } from "@/modules/contentful/contentful-config-
 import { DatoCMSConfigForm } from "@/modules/datocms/datocms-config-form";
 import { CMSType, createProvider } from "@/modules/shared/cms-provider";
 import { StrapiConfigForm } from "@/modules/strapi/strapi-config-form";
+import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
@@ -34,22 +35,19 @@ const AddProviderPage: NextPage = () => {
 
   return (
     <Box>
-      <Box marginBottom={14}>
-        <Breadcrumbs>
-          <Breadcrumbs.Item>Saleor App CMS</Breadcrumbs.Item>
-          <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
-          <Breadcrumbs.Item href="/add-provider">Add Provider</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{provider.displayName}</Breadcrumbs.Item>
-        </Breadcrumbs>
-        <Text as="p" marginTop={4}>
-          Connect Saleor Products to your favorite CMS platforms
-        </Text>
-      </Box>
+      <AppHeader
+        text={`Connect ${provider.displayName} CMS to the App.`}
+        breadcrumbs={[
+          <Breadcrumbs.Item href="/add-provider">Add Provider</Breadcrumbs.Item>,
+          <Breadcrumbs.Item>{provider.displayName}</Breadcrumbs.Item>,
+        ]}
+      />
+
       <AppSection
         heading={`Set up ${provider.displayName}`}
         sideContent={
           <Box>
-            <Text>Provide required information to configure DatoCMS.</Text>
+            <Text>Provide required information to configure {provider.displayName}.</Text>
           </Box>
         }
         mainContent={resolveProviderForm(provider.type)}

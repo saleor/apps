@@ -3,6 +3,7 @@ import { DatoCMSConfigForm } from "@/modules/datocms/datocms-config-form";
 import { createProvider } from "@/modules/shared/cms-provider";
 import { StrapiConfigForm } from "@/modules/strapi/strapi-config-form";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Text, Button } from "@saleor/macaw-ui/next";
@@ -54,18 +55,14 @@ const EditProviderPage: NextPage = () => {
 
   return (
     <Box>
-      <Box marginBottom={14}>
-        <Breadcrumbs>
-          <Breadcrumbs.Item>Saleor App CMS</Breadcrumbs.Item>
-          <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
-          <Breadcrumbs.Item>Edit Provider</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{provider?.displayName}</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{data?.configName}</Breadcrumbs.Item>
-        </Breadcrumbs>
-        <Text as="p" marginTop={4}>
-          Connect Saleor Products to your favorite CMS platforms
-        </Text>
-      </Box>
+      <AppHeader
+        text={`Edit connected provider`}
+        breadcrumbs={[
+          <Breadcrumbs.Item>Edit Provider</Breadcrumbs.Item>,
+          <Breadcrumbs.Item>{provider?.displayName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item>{data?.configName}</Breadcrumbs.Item>,
+        ]}
+      />
       <AppSection heading="Edit CMS configuration" mainContent={renderEditForm()} />
     </Box>
   );
