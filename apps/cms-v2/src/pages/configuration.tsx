@@ -1,5 +1,5 @@
 import { BulkSyncSection } from "@/modules/bulk-sync/bulk-sync-section";
-import { ChannelProviderConnectionList } from "@/modules/channel-provider-connection/channels-provier-connection-list";
+import { ChannelProviderConnectionList } from "@/modules/channel-provider-connection/channels-provider-connection-list";
 import { ProvidersList } from "@/modules/providers-listing/providers-list";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";

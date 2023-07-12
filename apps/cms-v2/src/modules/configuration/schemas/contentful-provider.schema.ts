@@ -2,7 +2,7 @@ import { z } from "zod";
 import { Contentful } from "../../providers/contentful/contentful";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
-const ContentfulProviderConfigSchemaInput = z.object({
+const InputSchema = z.object({
   type: z.literal(Contentful.type),
   authToken: z.string(),
   spaceId: z.string(),
@@ -12,14 +12,16 @@ const ContentfulProviderConfigSchemaInput = z.object({
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 
-const ContentfulProviderConfigSchema = ContentfulProviderConfigSchemaInput.extend({
+const FullSchema = InputSchema.extend({
   id: z.string(),
 });
 
-export type ContentfulProviderConfigInputType = z.infer<typeof ContentfulProviderConfigSchemaInput>;
-export type ContentfulProviderConfigType = z.infer<typeof ContentfulProviderConfigSchema>;
+export namespace ContentfulProviderConfig {
+  export type InputShape = z.infer<typeof InputSchema>;
+  export type FullShape = z.infer<typeof FullSchema>;
 
-export const ContentfulProviderSchema = {
-  Config: ContentfulProviderConfigSchema,
-  ConfigInput: ContentfulProviderConfigSchemaInput,
-};
+  export const Schema = {
+    Input: InputSchema,
+    Full: FullSchema,
+  };
+}

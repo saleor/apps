@@ -1,20 +1,22 @@
 import { z } from "zod";
 import { cmsTypes } from "../../shared/cms-provider";
 
-const ConnectionInput = z.object({
-  channelSlug: z.string(), // todo maybe channel ID
+const InputSchema = z.object({
+  channelSlug: z.string(),
   providerId: z.string(),
   providerType: z.enum(cmsTypes),
 });
 
-const Connection = ConnectionInput.extend({
+const FullSchema = InputSchema.extend({
   id: z.string(),
 });
 
-export const ChannelProviderConnectionConfigSchema = {
-  NewConnectionInput: ConnectionInput,
-  Connection: Connection,
-};
+export namespace ChannelProviderConnectionConfig {
+  export type InputShape = z.infer<typeof InputSchema>;
+  export type FullShape = z.infer<typeof FullSchema>;
 
-export type ChannelProviderConnectionInputType = z.infer<typeof ConnectionInput>;
-export type ChannelProviderConnectionType = z.infer<typeof Connection>;
+  export const Schema = {
+    Input: InputSchema,
+    Full: FullSchema,
+  };
+}

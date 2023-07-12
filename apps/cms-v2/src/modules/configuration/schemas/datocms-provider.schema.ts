@@ -2,7 +2,7 @@ import { Datocms } from "@/modules/providers/datocms/datocms";
 import { z } from "zod";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
-const DatocmsProviderConfigSchemaInput = z.object({
+const InputSchema = z.object({
   type: z.literal(Datocms.type),
   authToken: z.string(),
   configName: z.string(),
@@ -10,14 +10,16 @@ const DatocmsProviderConfigSchemaInput = z.object({
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 
-const DatocmsProviderConfigSchema = DatocmsProviderConfigSchemaInput.extend({
+const FullSchema = InputSchema.extend({
   id: z.string(),
 });
 
-export type DatocmsProviderConfigInputType = z.infer<typeof DatocmsProviderConfigSchemaInput>;
-export type DatocmsProviderConfigType = z.infer<typeof DatocmsProviderConfigSchema>;
+export namespace DatocmsProviderConfig {
+  export type InputShape = z.infer<typeof InputSchema>;
+  export type FullShape = z.infer<typeof FullSchema>;
 
-export const DatocmsProviderSchema = {
-  Config: DatocmsProviderConfigSchema,
-  ConfigInput: DatocmsProviderConfigSchemaInput,
-};
+  export const Schema = {
+    Input: InputSchema,
+    Full: FullSchema,
+  };
+}

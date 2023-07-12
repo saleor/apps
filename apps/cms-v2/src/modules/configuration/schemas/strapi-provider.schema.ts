@@ -15,7 +15,6 @@ const FullSchema = InputSchema.extend({
   id: z.string(),
 });
 
-// todo refactor others?
 export namespace StrapiProviderConfig {
   export type InputShape = z.infer<typeof InputSchema>;
   export type FullShape = z.infer<typeof FullSchema>;
