@@ -57,8 +57,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -172,8 +172,8 @@ importers:
         specifier: ^3.0.80
         version: 3.0.80
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -314,8 +314,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -444,8 +444,8 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.40.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -613,8 +613,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -764,8 +764,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -885,8 +885,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1000,8 +1000,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1142,8 +1142,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1275,8 +1275,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1402,8 +1402,8 @@ importers:
         specifier: ^2.9.10
         version: 2.9.11(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1550,8 +1550,8 @@ importers:
         specifier: ^1.35.1
         version: 1.35.1
       '@saleor/app-sdk':
-        specifier: 0.40.1
-        version: 0.40.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -1690,8 +1690,8 @@ importers:
         specifier: 4.0.0-alpha.61
         version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
         specifier: ^0.7.2
         version: 0.7.3(@material-ui/core@4.12.4)(@material-ui/icons@4.11.3)(@material-ui/lab@4.0.0-alpha.61)(@types/react@18.2.5)(react-dom@18.2.0)(react-helmet@6.1.0)(react@18.2.0)
@@ -1736,8 +1736,8 @@ importers:
         version: 5.1.6
     devDependencies:
       '@saleor/app-sdk':
-        specifier: 0.41.0
-        version: 0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.95
         version: 0.8.0-pre.95(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
@@ -8230,8 +8230,8 @@ packages:
     resolution: {integrity: sha512-V+MvGwaHH03hYhY+k6Ef/xKd6RYlc4q8WBx+2ANmipHJcKuktNcI/NgEsJgdSUF6Lw32njT6OnrRsKYCdgHjYw==}
     dev: true
 
-  /@saleor/app-sdk@0.40.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-iZuIxux8vdK08/ZcAluE5EnAH2t8ZhKaOkdRitr/dvxuEYGBxW+j8d3YiK20nQy3Eb7al6KlQRWbyHsnYQAULQ==}
+  /@saleor/app-sdk@0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-src182fAPKqoC59i/E9udbNWNOEXKpabiaOvDqJvIsripShDI3moosfG3TfwQ8qQOXhwApb5QmTAaiown0+GMw==}
     peerDependencies:
       next: '>=12'
       react: '>=17'
@@ -8239,29 +8239,7 @@ packages:
     dependencies:
       '@changesets/cli': 2.26.2
       debug: 4.3.4
-      fast-glob: 3.2.12
-      graphql: 16.6.0
-      jose: 4.14.4
-      next: 13.4.8(@babel/core@7.22.8)(react-dom@18.2.0)(react@18.2.0)
-      raw-body: 2.5.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      retes: 0.33.0
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@saleor/app-sdk@0.41.0(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-9Yc73N8QvqfHlhsPzuWqwlbl+o/gq/VJ+HB2OUro68zTF+rapEssb79OUGLp2JmnTlM4xovCiPwPlDsW8nVSqw==}
-    peerDependencies:
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      '@changesets/cli': 2.26.2
-      debug: 4.3.4
-      fast-glob: 3.2.12
+      fast-glob: 3.3.0
       graphql: 16.6.0
       jose: 4.14.4
       next: 13.4.8(@babel/core@7.22.8)(react-dom@18.2.0)(react@18.2.0)
@@ -11479,7 +11457,7 @@ packages:
       streamsearch: 1.1.0
 
   /bytes@3.0.0:
-    resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
+    resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
     engines: {node: '>= 0.8'}
     dev: true
 
@@ -13554,6 +13532,7 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.5
+    dev: true
 
   /fast-glob@3.3.0:
     resolution: {integrity: sha512-ChDuvbOypPuNjO8yIDf36x7BlZX1smcUMTTcyoIjycexOxd6DFsKsg21qVBzEmr3G7fUKIRy2/psii+CIUt7FA==}
@@ -18141,7 +18120,7 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
-      '@babel/runtime': 7.22.5
+      '@babel/runtime': 7.22.6
       react: 18.2.0
     dev: true
 
@@ -18866,7 +18845,7 @@ packages:
     resolution: {integrity: sha512-I6V1G2JkJ2JFIFSVuultNXepf7BW8SCaSUOq5IETM2fDjFim5Dg5F1zU/QbplNW0mqkk8QCw+I722v3nPkpRlA==}
     dependencies:
       busboy: 1.6.0
-      zod: 3.21.4
+      zod: 3.20.2
 
   /reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
@@ -21345,7 +21324,6 @@ packages:
 
   /zod@3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
-    dev: true
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
