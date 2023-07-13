@@ -2,7 +2,8 @@ import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import React from "react";
 import { ProvidersConfig } from "../configuration";
-import { createProvider } from "../shared/cms-provider";
+
+import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
 import { ButtonsBox } from "../ui/buttons-box";
 
@@ -22,7 +23,7 @@ const ProvidersTable = (props: { providers: ProvidersConfig.AnyFullShape[] }) =>
               {provider.configName}
             </Text>
             <Text as="p" variant="caption">
-              {createProvider(provider.type).displayName}
+              {ProvidersResolver.createProviderMeta(provider.type).displayName}
             </Text>
           </Box>
           <Button

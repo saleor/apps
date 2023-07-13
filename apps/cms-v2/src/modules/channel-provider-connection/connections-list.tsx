@@ -1,8 +1,9 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React from "react";
-import { createProvider } from "../shared/cms-provider";
+
 import { trpcClient } from "../trpc/trpc-client";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
+import { ProvidersResolver } from "../providers/providers-resolver";
 
 export const ConnectionsList = (props: { onRemove(connId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
@@ -33,7 +34,7 @@ export const ConnectionsList = (props: { onRemove(connId: string): void }) => {
             throw new Error("Provider not found");
           }
 
-          const providerName = createProvider(provider.type).displayName;
+          const providerName = ProvidersResolver.createProviderMeta(provider.type).displayName;
 
           return (
             <React.Fragment key={conn.id}>

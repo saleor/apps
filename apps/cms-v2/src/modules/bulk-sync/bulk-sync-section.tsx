@@ -1,12 +1,13 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../trpc/trpc-client";
-import { createProvider } from "../shared/cms-provider";
+
 import { useForm } from "react-hook-form";
 import { Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ButtonsBox } from "../ui/buttons-box";
+import { ProvidersResolver } from "../providers/providers-resolver";
 
 const FormSchema = z.object({
   connID: z.string().min(7),
@@ -74,7 +75,7 @@ export const BulkSyncSection = () => {
           label="Connection"
           options={connections.map((c) => {
             const provider = providers.find((p) => p.id === c.providerId)!;
-            const providerDisplay = createProvider(provider.type);
+            const providerDisplay = ProvidersResolver.createProviderMeta(provider.type);
 
             return {
               label: `${c.channelSlug} -> ${provider?.configName} (${providerDisplay.displayName})`,

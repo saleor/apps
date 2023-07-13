@@ -1,4 +1,4 @@
-import { CMSProviders } from "@/modules/shared/cms-provider";
+import { CMSProviders } from "@/modules/providers/providers-registry";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";

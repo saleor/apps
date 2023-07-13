@@ -1,9 +1,7 @@
+import { ProvidersResolver } from "../providers/providers-resolver";
 import { generateId } from "../shared/generate-id";
 import { ChannelProviderConnectionConfig } from "./schemas/channel-provider-connection.schema";
-import { ContentfulProviderConfig } from "./schemas/contentful-provider.schema";
-import { DatocmsProviderConfig } from "./schemas/datocms-provider.schema";
 import { ProvidersConfig, RootConfig } from "./schemas/root-config.schema";
-import { StrapiProviderConfig } from "./schemas/strapi-provider.schema";
 
 /**
  * TODO
@@ -30,41 +28,13 @@ export class AppConfig {
     return JSON.stringify(this.rootData);
   }
 
-  private getProviderInputSchema(input: ProvidersConfig.AnyInputShape) {
-    switch (input.type) {
-      case "contentful":
-        return ContentfulProviderConfig.Schema.Input;
-      case "datocms":
-        return DatocmsProviderConfig.Schema.Input;
-      case "strapi":
-        return StrapiProviderConfig.Schema.Input;
-      default: {
-        throw new Error("Failed to build input schema");
-      }
-    }
-  }
-
-  private getProviderSchema(input: ProvidersConfig.AnyFullShape) {
-    switch (input.type) {
-      case "contentful":
-        return ContentfulProviderConfig.Schema.Full;
-      case "datocms":
-        return DatocmsProviderConfig.Schema.Full;
-      case "strapi":
-        return StrapiProviderConfig.Schema.Full;
-      default: {
-        throw new Error("Failed to build provdier schema");
-      }
-    }
-  }
-
   providers = {
     checkProviderExists: (id: string) => {
       return !!this.rootData.providers.find((p) => p.id === id);
     },
 
     addProvider: (providerConfigInput: ProvidersConfig.AnyInputShape) => {
-      const inputSchema = this.getProviderInputSchema(providerConfigInput);
+      const inputSchema = ProvidersResolver.getProviderInputSchema(providerConfigInput.type);
 
       const parsedConfig = inputSchema.parse(providerConfigInput);
 
@@ -77,7 +47,7 @@ export class AppConfig {
     },
 
     updateProvider: (providerConfig: ProvidersConfig.AnyFullShape) => {
-      const schema = this.getProviderSchema(providerConfig);
+      const schema = ProvidersResolver.getProviderSchema(providerConfig.type);
 
       const parsedConfig = schema.parse(providerConfig);
 

@@ -1,6 +1,7 @@
 import { Text } from "@saleor/macaw-ui/next";
-import { CMSProvider } from "../../shared/cms-provider";
+
 import logo from "./contentful-logo.svg";
+import { CMSProviderMeta } from "../providers-resolver";
 
 export const Contentful = {
   formSideInfo: <Text>App will save each variant with the same ID as variant ID.</Text>,
@@ -9,4 +10,4 @@ export const Contentful = {
   displayName: "Contentful",
   description:
     "More than a headless CMS, Contentful is the API-first composable content platform to create, manage and publish content on any digital channel.",
-} satisfies CMSProvider;
+} satisfies CMSProviderMeta;

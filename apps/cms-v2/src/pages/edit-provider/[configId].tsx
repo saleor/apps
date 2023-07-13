@@ -1,6 +1,7 @@
 import { ContentfulConfigForm } from "@/modules/providers/contentful/contentful-config-form";
 import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
-import { createProvider } from "@/modules/shared/cms-provider";
+import { ProvidersResolver } from "@/modules/providers/providers-resolver";
+
 import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
@@ -25,7 +26,7 @@ const EditProviderPage: NextPage = () => {
   );
 
   const provider = useMemo(() => {
-    return data ? createProvider(data.type) : null;
+    return data ? ProvidersResolver.createProviderMeta(data.type) : null;
   }, [data]);
 
   if (isLoading) {

@@ -5,10 +5,11 @@ import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configurati
 import { AppHeader } from "../ui/app-header";
 import { AppSection } from "../ui/app-section";
 import { ButtonsBox } from "../ui/buttons-box";
-import { BulkSyncProcessorFactory } from "./bulk-sync-processor";
+
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
+import { ProvidersResolver } from "../providers/providers-resolver";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -58,7 +59,7 @@ export const BulkSyncView = ({
   configuration: ProvidersConfig.AnyFullShape;
   connection: ChannelProviderConnectionConfig.FullShape;
 }) => {
-  const processor = useRef(BulkSyncProcessorFactory.create(configuration));
+  const processor = useRef(ProvidersResolver.createBulkSyncProcessor(configuration));
   const [state, setState] = useState<State>("initial");
 
   const { products, finished: saleorProductsFetchFinished } = useFetchAllProducts(

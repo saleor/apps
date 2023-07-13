@@ -1,5 +1,5 @@
+import { cmsTypes } from "@/modules/providers/providers-registry";
 import { z } from "zod";
-import { cmsTypes } from "../../shared/cms-provider";
 
 const InputSchema = z.object({
   channelSlug: z.string(),

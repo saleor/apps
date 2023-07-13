@@ -1,6 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { CMSProvider } from "../../shared/cms-provider";
+
 import logo from "./strapi-logo.svg";
+import { CMSProviderMeta } from "../providers-resolver";
 
 export const Strapi = {
   formSideInfo: (
@@ -17,4 +18,4 @@ export const Strapi = {
   displayName: "Strapi",
   description:
     "Strapi is the leading open-source headless CMS. 100% JavaScript and fully customizable.",
-} satisfies CMSProvider;
+} satisfies CMSProviderMeta;

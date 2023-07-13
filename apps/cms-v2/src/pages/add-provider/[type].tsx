@@ -1,6 +1,8 @@
 import { ContentfulConfigForm } from "@/modules/providers/contentful/contentful-config-form";
 import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
-import { CMSType, createProvider } from "@/modules/shared/cms-provider";
+import { CMSType } from "@/modules/providers/providers-registry";
+import { ProvidersResolver } from "@/modules/providers/providers-resolver";
+
 import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
@@ -28,7 +30,7 @@ const AddProviderPage: NextPage = () => {
   const { query } = useRouter();
 
   const provider = useMemo(() => {
-    return query.type ? createProvider(query.type as string) : null;
+    return query.type ? ProvidersResolver.createProviderMeta(query.type as string) : null;
   }, [query.type]);
 
   if (!provider) return null;
