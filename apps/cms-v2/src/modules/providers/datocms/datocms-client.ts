@@ -1,4 +1,4 @@
-import { buildClient, Client, SimpleSchemaTypes, ApiError } from "@datocms/cma-client-node";
+import { buildClient, Client, SimpleSchemaTypes, ApiError } from "@datocms/cma-client-browser";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { createLogger } from "@saleor/apps-shared";
@@ -13,7 +13,6 @@ type Context = {
 
 /*
  * todo error handling
- * todo share logic with browser client if possible (inject client)
  */
 export class DatoCMSClient {
   private client: Client;

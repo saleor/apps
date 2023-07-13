@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@datocms/cma-client-browser": "2.0.0",
-    "@datocms/cma-client-node": "2.0.0",
     "@hookform/resolvers": "^3.1.0",
     "@saleor/app-sdk": "0.41.0",
     "@saleor/apps-shared": "workspace:*",

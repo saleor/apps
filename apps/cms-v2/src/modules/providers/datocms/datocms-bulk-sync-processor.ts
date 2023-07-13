@@ -1,7 +1,7 @@
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 import { DatocmsProviderConfig } from "../../configuration";
-import { DatoCMSClientBrowser } from "./datocms-client-browser";
+import { DatoCMSClient } from "./datocms-client";
 
 export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
   constructor(private config: DatocmsProviderConfig.FullShape) {}
@@ -10,7 +10,7 @@ export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
     products: BulkImportProductFragment[],
     hooks: BulkSyncProcessorHooks
   ): Promise<void> {
-    const client = new DatoCMSClientBrowser({
+    const client = new DatoCMSClient({
       apiToken: this.config.authToken,
     });
 

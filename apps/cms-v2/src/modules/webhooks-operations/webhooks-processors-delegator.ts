@@ -1,6 +1,6 @@
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
+import { ProvidersResolver } from "../providers/providers-resolver";
 import { WebhookContext } from "./create-webhook-config-context";
-import { WebhookProcessorFactory } from "./webhook-processor-factory";
 
 export class WebhooksProcessorsDelegator {
   constructor(
@@ -17,7 +17,7 @@ export class WebhooksProcessorsDelegator {
     return connections.map((conn) => {
       const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId)!;
 
-      return WebhookProcessorFactory.createFromConfig(providerConfig);
+      return ProvidersResolver.createWebhooksProcessor(providerConfig);
     });
   }
 

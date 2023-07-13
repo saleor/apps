@@ -167,9 +167,6 @@ importers:
       '@datocms/cma-client-browser':
         specifier: 2.0.0
         version: 2.0.0
-      '@datocms/cma-client-node':
-        specifier: 2.0.0
-        version: 2.0.0
       '@hookform/resolvers':
         specifier: ^3.1.0
         version: 3.1.0(react-hook-form@7.44.3)
@@ -5781,18 +5778,6 @@ packages:
     resolution: {integrity: sha512-2PJeAq5/mBlpk3hM2iRQ9tRIXvfdwbONDBls8QiB7miMkxODErRPvtYk7FBG0b9i89AWLjUGGyLGaVN5FHPUeQ==}
     dependencies:
       '@datocms/cma-client': 1.3.5
-      '@datocms/rest-client-utils': 1.3.3
-      got: 11.8.6
-      mime-types: 2.1.35
-      tmp-promise: 3.0.3
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@datocms/cma-client-node@2.0.0:
-    resolution: {integrity: sha512-mBZsJwZQRXlleACObVNUbjU6vJHtEAeOoR/DOMmgMdrorrnepGpIuLoOF/2GFa1KevA+cISvBRCDmw+nJCfuFQ==}
-    dependencies:
-      '@datocms/cma-client': 2.0.0
       '@datocms/rest-client-utils': 1.3.3
       got: 11.8.6
       mime-types: 2.1.35

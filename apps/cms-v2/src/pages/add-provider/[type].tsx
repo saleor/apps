@@ -12,20 +12,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-// todo extract to shared config
-const resolveProviderForm = (type: CMSType) => {
-  switch (type) {
-    case "datocms":
-      return <DatoCMSConfigForm.AddVariant />;
-    case "contentful":
-      return <ContentfulConfigForm.AddVariant />;
-    case "strapi":
-      return <StrapiConfigForm.AddVariant />;
-    default:
-      throw new Error("Invalid CMS type, form not found");
-  }
-};
-
 const AddProviderPage: NextPage = () => {
   const { query } = useRouter();
 
@@ -34,6 +20,8 @@ const AddProviderPage: NextPage = () => {
   }, [query.type]);
 
   if (!provider) return null;
+
+  const FormComponent = ProvidersResolver.getAddNewProviderFormComponent(provider.type);
 
   return (
     <Box>
@@ -55,7 +43,7 @@ const AddProviderPage: NextPage = () => {
             {provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}
           </Box>
         }
-        mainContent={resolveProviderForm(provider.type)}
+        mainContent={<FormComponent />}
       />
     </Box>
   );

@@ -1,13 +1,10 @@
-import { ContentfulConfigForm } from "@/modules/providers/contentful/contentful-config-form";
-import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
 import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 
-import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Box, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -43,22 +40,7 @@ const EditProviderPage: NextPage = () => {
     return null;
   }
 
-  const renderEditForm = () => {
-    switch (data?.type) {
-      case "contentful": {
-        return <ContentfulConfigForm.EditVariant configId={configId} />;
-      }
-      case "datocms": {
-        return <DatoCMSConfigForm.EditVariant configId={configId} />;
-      }
-      case "strapi": {
-        return <StrapiConfigForm.EditVariant configId={configId} />;
-      }
-      default: {
-        return null;
-      }
-    }
-  };
+  const EditForm = ProvidersResolver.getEditProviderFormComponent(provider.type);
 
   return (
     <Box>
@@ -72,7 +54,7 @@ const EditProviderPage: NextPage = () => {
       />
       <AppSection
         heading="Edit CMS configuration"
-        mainContent={renderEditForm()}
+        mainContent={<EditForm configId={configId} />}
         sideContent={
           <Box>{provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}</Box>
         }
