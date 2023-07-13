@@ -1,6 +1,6 @@
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 
-export const featureFlags = ["giftCardSentEvent"] as const;
+export const featureFlags = ["giftCardSentEvent", "orderRefundedEvent"] as const;
 
 export type FeatureFlag = (typeof featureFlags)[number];
 
@@ -17,5 +17,6 @@ interface GetFeatureFlagsArgs {
 export const getFeatureFlags = ({ saleorVersion }: GetFeatureFlagsArgs): FeatureFlagsState => {
   return {
     giftCardSentEvent: new SaleorVersionCompatibilityValidator(">=3.13").isValid(saleorVersion),
+    orderRefundedEvent: new SaleorVersionCompatibilityValidator(">=3.14").isValid(saleorVersion),
   };
 };

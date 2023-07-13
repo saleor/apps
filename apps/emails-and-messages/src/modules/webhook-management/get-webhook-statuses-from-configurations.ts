@@ -1,6 +1,7 @@
 import { SendgridConfiguration } from "../sendgrid/configuration/sendgrid-config-schema";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import { AppWebhook, eventToWebhookMapping } from "./webhook-management-service";
+import { webhookStatusesFactory } from "./webhook-status-dict";
 
 /*
  * Returns dictionary of webhook statuses based on passed configurations.
@@ -14,16 +15,7 @@ export const getWebhookStatusesFromConfigurations = ({
   sendgridConfigurations: SendgridConfiguration[];
 }) => {
   // TODO: this dict should be generated in one place instead of manually edited
-  const statuses: Record<AppWebhook, boolean> = {
-    giftCardSentWebhook: false,
-    invoiceSentWebhook: false,
-    notifyWebhook: false,
-    orderCancelledWebhook: false,
-    orderConfirmedWebhook: false,
-    orderCreatedWebhook: false,
-    orderFulfilledWebhook: false,
-    orderFullyPaidWebhook: false,
-  };
+  const statuses: Record<AppWebhook, boolean> = webhookStatusesFactory({});
 
   smtpConfigurations.forEach(async (config) => {
     if (!config.active) {
