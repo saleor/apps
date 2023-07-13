@@ -1,7 +1,17 @@
 import { CMSProvider } from "../../shared/cms-provider";
 import logo from "./datocms.svg";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 export const Datocms = {
+  formSideInfo: (
+    <Box>
+      <Text as="p" marginBottom={2}>
+        App will use Saleor Product Variant as a unique identifier. It will be saved as one of the
+        fields. Please ensure you map Variant ID to field that is UNIQUE in DatoCMS.
+      </Text>
+      <Text>Otherwise, products may be duplicated</Text>
+    </Box>
+  ),
   type: "datocms" as const,
   logoUrl: logo.src,
   displayName: "DatoCMS",

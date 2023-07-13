@@ -38,6 +38,10 @@ const EditProviderPage: NextPage = () => {
     return null;
   }
 
+  if (!provider) {
+    return null;
+  }
+
   const renderEditForm = () => {
     switch (data?.type) {
       case "contentful": {
@@ -60,12 +64,18 @@ const EditProviderPage: NextPage = () => {
       <AppHeader
         text={`Edit connected provider`}
         breadcrumbs={[
-          <Breadcrumbs.Item>Edit Provider</Breadcrumbs.Item>,
-          <Breadcrumbs.Item>{provider?.displayName}</Breadcrumbs.Item>,
-          <Breadcrumbs.Item>{data?.configName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="editprovider">Edit Provider</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="displayname">{provider?.displayName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="configname">{data?.configName}</Breadcrumbs.Item>,
         ]}
       />
-      <AppSection heading="Edit CMS configuration" mainContent={renderEditForm()} />
+      <AppSection
+        heading="Edit CMS configuration"
+        mainContent={renderEditForm()}
+        sideContent={
+          <Box>{provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}</Box>
+        }
+      />
     </Box>
   );
 };

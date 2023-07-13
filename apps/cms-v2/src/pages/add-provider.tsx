@@ -14,7 +14,7 @@ const AddProviderPage: NextPage = () => {
     <Box>
       <AppHeader
         text="Connect CMS platforms to the App."
-        breadcrumbs={[<Breadcrumbs.Item>Add Provider</Breadcrumbs.Item>]}
+        breadcrumbs={[<Breadcrumbs.Item key="provider">Add Provider</Breadcrumbs.Item>]}
       />
       <AppSection
         heading="Select CMS provider"

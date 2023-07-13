@@ -9,7 +9,7 @@ type Context = {
 
 /*
  * todo error handling
- * todo maybe shared operations between clients can be used
+ * TODO: Wrap native client with DI and create 1 client
  */
 export class DatoCMSClientBrowser {
   private client: Client;
@@ -26,7 +26,6 @@ export class DatoCMSClientBrowser {
 
     return {
       item_type: { type: "item_type", id: configuration.itemType },
-      // todo rename to variantNAme
       [fieldsMap.variantName]: variant.name,
       [fieldsMap.productId]: variant.product.id,
       [fieldsMap.productName]: variant.product.name,
@@ -47,13 +46,15 @@ export class DatoCMSClientBrowser {
       contentType: configuration.itemType,
     });
 
-    const product = products[0]; // todo throw otherwise
-
-    this.client.items.update(
-      product.id,
-      this.mapVariantToDatoCMSFields({
-        configuration,
-        variant,
+    return Promise.all(
+      products.map((p) => {
+        return this.client.items.update(
+          p.id,
+          this.mapVariantToDatoCMSFields({
+            configuration,
+            variant,
+          })
+        );
       })
     );
   }

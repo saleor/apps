@@ -1,7 +1,9 @@
+import { Text } from "@saleor/macaw-ui/next";
 import { CMSProvider } from "../../shared/cms-provider";
 import logo from "./contentful-logo.svg";
 
 export const Contentful = {
+  formSideInfo: <Text>App will save each variant with the same ID as variant ID.</Text>,
   type: "contentful" as const,
   logoUrl: logo.src as string,
   displayName: "Contentful",

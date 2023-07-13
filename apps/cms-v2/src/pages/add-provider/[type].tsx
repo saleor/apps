@@ -38,8 +38,10 @@ const AddProviderPage: NextPage = () => {
       <AppHeader
         text={`Connect ${provider.displayName} CMS to the App.`}
         breadcrumbs={[
-          <Breadcrumbs.Item href="/add-provider">Add Provider</Breadcrumbs.Item>,
-          <Breadcrumbs.Item>{provider.displayName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="add" href="/add-provider">
+            Add Provider
+          </Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="displayname">{provider.displayName}</Breadcrumbs.Item>,
         ]}
       />
 
@@ -48,6 +50,7 @@ const AddProviderPage: NextPage = () => {
         sideContent={
           <Box>
             <Text>Provide required information to configure {provider.displayName}.</Text>
+            {provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}
           </Box>
         }
         mainContent={resolveProviderForm(provider.type)}
