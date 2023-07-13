@@ -2,7 +2,7 @@ import { SaleorProviderFieldsMappingKey } from "./schemas/saleor-provider-fields
 
 export const printSaleorProductFields = (fieldName: SaleorProviderFieldsMappingKey) => {
   switch (fieldName) {
-    case "name": {
+    case "variantName": {
       return "Variant Name";
     }
     case "channels": {

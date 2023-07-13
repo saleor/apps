@@ -75,7 +75,7 @@ export class StrapiClient {
     try {
       const result = await this.client.create(configuration.itemType, {
         // todo extract to common mapping function
-        [configuration.productVariantFieldsMapping.name]: variant.name,
+        [configuration.productVariantFieldsMapping.variantName]: variant.name,
         [configuration.productVariantFieldsMapping.variantId]: variant.id,
         [configuration.productVariantFieldsMapping.productName]: variant.product.name,
         [configuration.productVariantFieldsMapping.productId]: variant.product.id,
@@ -113,7 +113,7 @@ export class StrapiClient {
     try {
       const result = await this.client.update(configuration.itemType, strapiProductIdToUpdate, {
         // todo extract to common mapping function
-        [configuration.productVariantFieldsMapping.name]: variant.name,
+        [configuration.productVariantFieldsMapping.variantName]: variant.name,
         [configuration.productVariantFieldsMapping.variantId]: variant.id,
         [configuration.productVariantFieldsMapping.productName]: variant.product.name,
         [configuration.productVariantFieldsMapping.productId]: variant.product.id,

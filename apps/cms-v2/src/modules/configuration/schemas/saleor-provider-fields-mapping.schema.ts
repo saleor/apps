@@ -5,7 +5,7 @@ import { z } from "zod";
  */
 export const SaleorProviderFieldsMappingSchema = z.object({
   variantId: z.string().min(1),
-  name: z.string().min(1),
+  variantName: z.string().min(1),
   productId: z.string().min(1),
   productName: z.string().min(1),
   productSlug: z.string().min(1),
@@ -14,3 +14,12 @@ export const SaleorProviderFieldsMappingSchema = z.object({
 
 export type SaleorProviderFieldsMappingType = z.infer<typeof SaleorProviderFieldsMappingSchema>;
 export type SaleorProviderFieldsMappingKey = keyof SaleorProviderFieldsMappingType;
+
+export const SaleorProviderFieldsMappingKeys: Array<SaleorProviderFieldsMappingKey> = [
+  "variantName",
+  "productId",
+  "productName",
+  "productSlug",
+  "variantId",
+  "channels",
+];

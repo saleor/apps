@@ -37,8 +37,14 @@ export class ContentfulClient {
     variant: WebhookProductVariantFragment,
     productVariantFieldsMapping: ContentfulProviderConfig.FullShape["productVariantFieldsMapping"]
   ) => {
-    const { channels, name, productId, productName, productSlug, variantId } =
-      productVariantFieldsMapping;
+    const {
+      channels,
+      variantName: name,
+      productId,
+      productName,
+      productSlug,
+      variantId,
+    } = productVariantFieldsMapping;
 
     return {
       [name]: {

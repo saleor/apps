@@ -27,7 +27,7 @@ export class DatoCMSClientBrowser {
     return {
       item_type: { type: "item_type", id: configuration.itemType },
       // todo rename to variantNAme
-      [fieldsMap.name]: variant.name,
+      [fieldsMap.variantName]: variant.name,
       [fieldsMap.productId]: variant.product.id,
       [fieldsMap.productName]: variant.product.name,
       [fieldsMap.productSlug]: variant.product.slug,

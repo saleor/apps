@@ -1,3 +1,5 @@
+import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
@@ -8,14 +10,8 @@ import { printSaleorProductFields } from "../../configuration/print-saleor-produ
 import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 type FormShape = Omit<DatocmsProviderConfig.InputShape, "type">;
-
-// todo extract where schema is
-const mappingFieldsNames: Array<
-  keyof DatocmsProviderConfig.InputShape["productVariantFieldsMapping"]
-> = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
 
 type PureFormProps = {
   defaultValues: FormShape;
@@ -177,7 +173,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
                 <Text variant="caption">Saleor Field</Text>
                 <Text variant="caption">Contentful field</Text>
               </Box>
-              {mappingFieldsNames.map((saleorField) => (
+              {SaleorProviderFieldsMappingKeys.map((saleorField) => (
                 // todo extract this table to component
                 <Box
                   display="grid"
@@ -248,7 +244,7 @@ const AddFormVariant = () => {
         itemType: "",
         productVariantFieldsMapping: {
           channels: "",
-          name: "",
+          variantName: "",
           productId: "",
           productName: "",
           productSlug: "",

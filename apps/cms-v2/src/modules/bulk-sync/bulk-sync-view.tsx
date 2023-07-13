@@ -101,8 +101,8 @@ export const BulkSyncView = ({
       <AppHeader
         text="Perform bulk products sync between Saleor and your CMS"
         breadcrumbs={[
-          <Breadcrumbs.Item>Bulk Sync</Breadcrumbs.Item>,
-          <Breadcrumbs.Item>
+          <Breadcrumbs.Item key="bulk-sync">Bulk Sync</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="connection-name">
             <Box display="flex" gap={2} alignItems="center">
               {connection.channelSlug}
               <ArrowRightIcon /> {configuration.configName}

@@ -11,10 +11,7 @@ import { printSaleorProductFields } from "../../configuration/print-saleor-produ
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonsBox } from "../../ui/buttons-box";
 import { TextLink } from "@saleor/apps-ui";
-
-const mappingFieldsNames: Array<
-  keyof ContentfulProviderConfig.InputShape["productVariantFieldsMapping"]
-> = ["name", "productId", "productName", "productSlug", "variantId", "channels"];
+import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
 
 type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
 
@@ -243,7 +240,7 @@ const ContentfulConfigForm = ({
               <Text variant="caption">Contentful field</Text>
             </Box>
             {availableFields &&
-              mappingFieldsNames.map((saleorField) => (
+              SaleorProviderFieldsMappingKeys.map((saleorField) => (
                 <Box
                   display="grid"
                   __gridTemplateColumns={"50% 50%"}
@@ -312,7 +309,7 @@ export const ContentfulAddConfigForm = () => {
         contentId: "",
         productVariantFieldsMapping: {
           channels: "",
-          name: "",
+          variantName: "",
           productId: "",
           productName: "",
           productSlug: "",
