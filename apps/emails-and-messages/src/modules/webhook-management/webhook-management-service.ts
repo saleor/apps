@@ -12,7 +12,7 @@ import { createLogger } from "@saleor/apps-shared";
 import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
-import { FeatureFlagsState } from "../feature-flag-service/get-feature-flags";
+import { orderRefundedWebhook } from "../../pages/api/webhooks/order-refunded";
 
 export const AppWebhooks = {
   giftCardSentWebhook,
@@ -23,6 +23,7 @@ export const AppWebhooks = {
   orderCreatedWebhook,
   orderFulfilledWebhook,
   orderFullyPaidWebhook,
+  orderRefundedWebhook,
 };
 
 export type AppWebhook = keyof typeof AppWebhooks;
@@ -40,6 +41,7 @@ export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
   ORDER_CREATED: "orderCreatedWebhook",
   ORDER_FULFILLED: "orderFulfilledWebhook",
   ORDER_FULLY_PAID: "orderFullyPaidWebhook",
+  ORDER_REFUNDED: "orderRefundedWebhook",
 };
 
 const logger = createLogger({

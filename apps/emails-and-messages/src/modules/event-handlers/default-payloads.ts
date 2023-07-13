@@ -8,6 +8,7 @@ import {
   OrderFullyPaidWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
   GiftCardSentWebhookPayloadFragment,
+  OrderRefundedWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { NotifyEventPayload } from "../../pages/api/webhooks/notify";
 
@@ -134,6 +135,10 @@ const orderFulfilledPayload: OrderFulfilledWebhookPayloadFragment = {
 };
 
 const orderFullyPaidPayload: OrderFullyPaidWebhookPayloadFragment = {
+  order: exampleOrderPayload,
+};
+
+const orderRefundedPayload: OrderRefundedWebhookPayloadFragment = {
   order: exampleOrderPayload,
 };
 
@@ -312,16 +317,17 @@ const giftCardSentPayload: GiftCardSentWebhookPayloadFragment = {
 };
 
 export const examplePayloads: Record<MessageEventTypes, any> = {
-  ORDER_CREATED: orderCreatedPayload,
-  ORDER_CONFIRMED: orderConfirmedPayload,
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: accountChangeEmailConfirmPayload,
+  ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,
+  ACCOUNT_CONFIRMATION: accountConfirmationPayload,
+  ACCOUNT_DELETE: accountDeletePayload,
+  ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
+  GIFT_CARD_SENT: giftCardSentPayload,
+  INVOICE_SENT: invoiceSentPayload,
   ORDER_CANCELLED: orderCancelledPayload,
+  ORDER_CONFIRMED: orderConfirmedPayload,
+  ORDER_CREATED: orderCreatedPayload,
   ORDER_FULFILLED: orderFulfilledPayload,
   ORDER_FULLY_PAID: orderFullyPaidPayload,
-  INVOICE_SENT: invoiceSentPayload,
-  GIFT_CARD_SENT: giftCardSentPayload,
-  ACCOUNT_CONFIRMATION: accountConfirmationPayload,
-  ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
-  ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: accountChangeEmailConfirmPayload,
-  ACCOUNT_DELETE: accountDeletePayload,
+  ORDER_REFUNDED: orderRefundedPayload,
 };
