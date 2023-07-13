@@ -1,9 +1,0 @@
-{
-    "todo-tree.filtering.excludeGlobs": [
-        "**/node_modules/*/**",
-        "**/.next/*/**"
-    ],
-    "files.exclude": {
-        "**/.next/*/**": true
-    }
-}

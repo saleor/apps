@@ -1,6 +1,5 @@
 import { Contentful } from "./contentful/contentful";
 import { Datocms } from "./datocms/datocms";
-
 import { Strapi } from "./strapi/strapi";
 
 export type CMS = typeof Contentful | typeof Datocms | typeof Strapi;
