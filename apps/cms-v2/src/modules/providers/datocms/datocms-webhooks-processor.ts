@@ -19,19 +19,19 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.updateProduct({
+    await this.client.updateProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.uploadProduct({
+    await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.deleteProduct({
+    await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });

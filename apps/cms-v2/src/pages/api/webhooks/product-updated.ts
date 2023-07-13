@@ -11,6 +11,7 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
 import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -49,6 +50,11 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   res,
   context
 ) => {
+  const logger = createLogger({
+    name: "ProductUpdatedWebhook",
+    apiUrl: context.authData.saleorApiUrl,
+  });
+
   const { authData, payload } = context;
 
   if (!payload.product) {
@@ -56,6 +62,8 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
 
     return res.status(500).end();
   }
+
+  logger.info("Webhook called");
 
   const configContext = await createWebhookConfigContext({ authData });
 

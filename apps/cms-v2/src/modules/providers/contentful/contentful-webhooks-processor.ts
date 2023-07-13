@@ -17,19 +17,19 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.upsertProduct({
+    await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.upsertProduct({
+    await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    await this.client.deleteProduct({
+    await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
@@ -38,7 +38,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
     await Promise.all(
       (product.variants ?? []).map((variant) => {
-        return this.client.upsertProduct({
+        return this.client.upsertProductVariant({
           configuration: this.providerConfig,
           variant: {
             id: variant.id,

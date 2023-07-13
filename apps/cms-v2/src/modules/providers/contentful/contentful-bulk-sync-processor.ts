@@ -1,3 +1,4 @@
+import { createLogger } from "@saleor/apps-shared";
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 import { ContentfulProviderConfig } from "../../configuration";
@@ -5,6 +6,8 @@ import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
 
 export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
+  private logger = createLogger({ name: "ContentfulBulkSyncProcessor" });
+
   constructor(private config: ContentfulProviderConfig.FullShape) {}
 
   async uploadProducts(
@@ -24,7 +27,7 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
           }
 
           return contentful
-            .upsertProduct({
+            .upsertProductVariant({
               configuration: this.config,
               variant: {
                 id: variant.id,
@@ -45,7 +48,7 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
               }
             })
             .catch((e) => {
-              console.error(e); // todo logger
+              this.logger.trace(e, "Error while uploading product to Contentful");
 
               if (hooks.onUploadError) {
                 hooks.onUploadError({ variantId: variant.id, error: e });

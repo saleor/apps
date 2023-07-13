@@ -1,18 +1,26 @@
 import { createClient, ClientAPI } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { ContentfulProviderConfig } from "@/modules/configuration";
+import { z } from "zod";
+
+import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "@saleor/apps-shared";
+
+const ContentfulErrorMessageSchema = z.object({
+  status: z.number(),
+});
 
 /**
  * Wrapper facade of
  * https://www.npmjs.com/package/contentful
  *
- * TODO cache space and env
- * TODO tests
- * TODO logs
+ * TODO: tests
  */
 export class ContentfulClient {
   private client: ClientAPI;
   private space: string;
+
+  private logger = createLogger({ name: "ContentfulClient" });
 
   constructor(opts: { space: string; accessToken: string }) {
     this.space = opts.space;
@@ -22,30 +30,17 @@ export class ContentfulClient {
     });
   }
 
-  // todo error handling
-  async getContentTypes(env: string) {
-    return (await (await this.client.getSpace(this.space)).getEnvironment(env)).getContentTypes();
-  }
-
-  async getEnvironments() {
-    return (await this.client.getSpace(this.space)).getEnvironments();
-  }
-
-  async updateProduct(opts: {
-    configuration: ContentfulProviderConfig.FullShape;
-    variant: WebhookProductVariantFragment;
-  }) {
-    const space = await this.client.getSpace(this.space);
-    const env = await space.getEnvironment(opts.configuration.environment);
-
+  /**
+   * Support on en-US locale now
+   */
+  private mapVariantToConfiguredFields = (
+    variant: WebhookProductVariantFragment,
+    productVariantFieldsMapping: ContentfulProviderConfig.FullShape["productVariantFieldsMapping"]
+  ) => {
     const { channels, name, productId, productName, productSlug, variantId } =
-      opts.configuration.productVariantFieldsMapping;
+      productVariantFieldsMapping;
 
-    const variant = opts.variant;
-
-    const entry = await env.getEntry(variant.id);
-
-    entry.fields = {
+    return {
       [name]: {
         "en-US": variant.name,
       },
@@ -65,14 +60,48 @@ export class ContentfulClient {
         "en-US": variant.channelListings,
       },
     };
+  };
+
+  async getContentTypes(env: string) {
+    this.logger.trace("Attempting to get content types");
+
+    return (await (await this.client.getSpace(this.space)).getEnvironment(env)).getContentTypes();
+  }
+
+  async getEnvironments() {
+    this.logger.trace("Attempting to get environments");
+
+    return (await this.client.getSpace(this.space)).getEnvironments();
+  }
+
+  async updateProductVariant({
+    configuration,
+    variant,
+  }: {
+    configuration: ContentfulProviderConfig.FullShape;
+    variant: WebhookProductVariantFragment;
+  }) {
+    this.logger.debug("Attempting to update product variant");
+
+    const space = await this.client.getSpace(this.space);
+    const env = await space.getEnvironment(configuration.environment);
+
+    const entry = await env.getEntry(variant.id);
+
+    entry.fields = this.mapVariantToConfiguredFields(
+      variant,
+      configuration.productVariantFieldsMapping
+    );
 
     return entry.update();
   }
 
-  async deleteProduct(opts: {
+  async deleteProductVariant(opts: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
+    this.logger.debug("Attempting to delete product variant");
+
     const space = await this.client.getSpace(this.space);
     const env = await space.getEnvironment(opts.configuration.environment);
 
@@ -81,58 +110,56 @@ export class ContentfulClient {
     return await entry.delete();
   }
 
-  async uploadProduct(opts: {
+  async uploadProductVariant({
+    configuration,
+    variant,
+  }: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
+    this.logger.debug("Attempting to upload product variant");
+
     const space = await this.client.getSpace(this.space);
-    const env = await space.getEnvironment(opts.configuration.environment);
-
-    const { channels, name, productId, productName, productSlug, variantId } =
-      opts.configuration.productVariantFieldsMapping;
-
-    const variant = opts.variant;
+    const env = await space.getEnvironment(configuration.environment);
 
     /*
      * todo add translations
      * todo - should it create published? is draft
      */
-    return env.createEntryWithId(opts.configuration.contentId, variant.id, {
-      fields: {
-        [name]: {
-          "en-US": variant.name,
-        },
-        [productId]: {
-          "en-US": variant.product.id,
-        },
-        [productName]: {
-          "en-US": variant.product.name,
-        },
-        [productSlug]: {
-          "en-US": variant.product.slug,
-        },
-        [variantId]: {
-          "en-US": variant.id,
-        },
-        [channels]: {
-          "en-US": variant.channelListings,
-        },
-      },
+    return env.createEntryWithId(configuration.contentId, variant.id, {
+      fields: this.mapVariantToConfiguredFields(variant, configuration.productVariantFieldsMapping),
     });
   }
 
-  async upsertProduct(opts: {
+  async upsertProductVariant(opts: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    try {
-      return await this.uploadProduct(opts);
-    } catch (e: unknown) {
-      //@ts-ignore todo parse
-      const status = JSON.parse(e.message).status;
+    this.logger.debug("Attempting to upsert product variant");
 
-      if (status === 409) {
-        return this.updateProduct(opts);
+    try {
+      this.logger.trace("Attempting to upload product variant first");
+
+      return await this.uploadProductVariant(opts);
+    } catch (e: unknown) {
+      this.logger.trace("Upload failed");
+
+      if (typeof e !== "object" || e === null) {
+        Sentry.captureMessage("Contentful error is not expected shape");
+        Sentry.captureException(e);
+
+        throw e;
+      }
+
+      const parsedError = ContentfulErrorMessageSchema.parse(JSON.parse((e as Error).message));
+
+      if (parsedError.status === 409) {
+        this.logger.trace("Contentful returned 409 status, will try to update instead");
+
+        return this.updateProductVariant(opts);
+      } else {
+        Sentry.captureMessage("Contentful error failed and is not handled");
+        throw e;
       }
     }
   }
