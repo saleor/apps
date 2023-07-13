@@ -1,13 +1,24 @@
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
+import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { WebhookContext } from "./create-webhook-config-context";
+import { ProductWebhooksProcessor } from "./product-webhooks-processor";
+
+type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhooksProcessor;
 
 export class WebhooksProcessorsDelegator {
+  private processorFactory: ProcessorFactory = ProvidersResolver.createWebhooksProcessor;
+
   constructor(
     private opts: {
       context: WebhookContext;
+      injectProcessorFactory?: ProcessorFactory;
     }
-  ) {}
+  ) {
+    if (opts.injectProcessorFactory) {
+      this.processorFactory = opts.injectProcessorFactory;
+    }
+  }
 
   private extractChannelSlugsFromProductVariant(productVariant: WebhookProductVariantFragment) {
     return productVariant.channelListings?.map((c) => c.channel.slug);
@@ -17,7 +28,7 @@ export class WebhooksProcessorsDelegator {
     return connections.map((conn) => {
       const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId)!;
 
-      return ProvidersResolver.createWebhooksProcessor(providerConfig);
+      return this.processorFactory(providerConfig);
     });
   }
 

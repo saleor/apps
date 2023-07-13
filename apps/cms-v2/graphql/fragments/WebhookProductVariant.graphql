@@ -1,14 +1,12 @@
 fragment WebhookProductVariant on ProductVariant {
   id
   name
-  sku 
   product {
     id
     name
     slug
   }
   channelListings {
-    id
     channel {
       id
       slug

@@ -2,23 +2,17 @@ fragment WebhookProduct on Product {
   id
   name
   slug
-  media {
-    url
-  }
   channelListings {
     id
     channel {
       id
       slug
     }
-    isPublished
   }
   variants {
     id
     name
-    sku
     channelListings {
-      id
       channel {
         id
         slug
@@ -27,10 +21,6 @@ fragment WebhookProduct on Product {
         amount
         currency
       }
-    }
-    metadata {
-      key
-      value
     }
   }
 }
