@@ -41,7 +41,7 @@ export class DatoCMSClientBrowser {
 
   async updateProduct({ configuration, variant }: Context) {
     const products = await this.getItemBySaleorVariantId({
-      variantFieldName: configuration.productVariantFieldsMapping.variantId, // todo rename to variantName
+      variantFieldName: configuration.productVariantFieldsMapping.variantId,
       variantID: variant.id,
       contentType: configuration.itemType,
     });
@@ -84,7 +84,7 @@ export class DatoCMSClientBrowser {
     return this.uploadProduct({ configuration, variant }).catch((err) => {
       const isUniqueIdError = err.response.body.data.find(
         (validation: any) => validation.attributes.details.code === "VALIDATION_UNIQUE"
-      ); // todo parse error with zod
+      ); // todo parse error with zod - share behavior
 
       if (isUniqueIdError) {
         return this.updateProduct({ configuration, variant });
@@ -94,5 +94,3 @@ export class DatoCMSClientBrowser {
     });
   }
 }
-
-// todo docs & description - dato must have unique Variant ID field

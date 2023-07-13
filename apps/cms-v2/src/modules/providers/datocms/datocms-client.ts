@@ -26,7 +26,7 @@ export class DatoCMSClient {
   getContentTypes() {
     this.logger.trace("Trying to get content types");
 
-    return this.client.itemTypes.list(); // todo connect to frontend
+    return this.client.itemTypes.list();
   }
 
   getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
@@ -36,11 +36,11 @@ export class DatoCMSClient {
   }
 
   private getItemBySaleorVariantId({
-    variantFieldName,
+    variantIdFieldName: variantFieldName,
     variantID,
     contentType,
   }: {
-    variantFieldName: string;
+    variantIdFieldName: string;
     variantID: string;
     contentType: string;
   }) {
@@ -66,7 +66,6 @@ export class DatoCMSClient {
 
     return {
       item_type: { type: "item_type", id: configuration.itemType },
-      // todo rename to variantNAme
       [fieldsMap.variantName]: variant.name,
       [fieldsMap.productId]: variant.product.id,
       [fieldsMap.productName]: variant.product.name,
@@ -80,7 +79,7 @@ export class DatoCMSClient {
     this.logger.debug("Trying to delete product variant");
 
     const remoteProducts = await this.getItemBySaleorVariantId({
-      variantFieldName: configuration.productVariantFieldsMapping.variantId, // todo rename to variantName
+      variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       variantID: variant.id,
       contentType: configuration.itemType,
     });
@@ -112,7 +111,7 @@ export class DatoCMSClient {
 
   async updateProductVariant({ configuration, variant }: Context) {
     const products = await this.getItemBySaleorVariantId({
-      variantFieldName: configuration.productVariantFieldsMapping.variantId, // todo rename to variantName
+      variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       variantID: variant.id,
       contentType: configuration.itemType,
     });
@@ -181,5 +180,3 @@ export class DatoCMSClient {
     });
   }
 }
-
-// todo docs & description - dato must have unique Variant ID field

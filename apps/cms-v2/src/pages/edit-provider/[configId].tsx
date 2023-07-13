@@ -1,4 +1,4 @@
-import { ContentfulEditConfigForm } from "@/modules/providers/contentful/contentful-config-form";
+import { ContentfulConfigForm } from "@/modules/providers/contentful/contentful-config-form";
 import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
 import { createProvider } from "@/modules/shared/cms-provider";
 import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
@@ -45,7 +45,7 @@ const EditProviderPage: NextPage = () => {
   const renderEditForm = () => {
     switch (data?.type) {
       case "contentful": {
-        return <ContentfulEditConfigForm configId={configId} />;
+        return <ContentfulConfigForm.EditVariant configId={configId} />;
       }
       case "datocms": {
         return <DatoCMSConfigForm.EditVariant configId={configId} />;

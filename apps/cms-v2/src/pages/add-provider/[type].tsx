@@ -1,4 +1,4 @@
-import { ContentfulAddConfigForm } from "@/modules/providers/contentful/contentful-config-form";
+import { ContentfulConfigForm } from "@/modules/providers/contentful/contentful-config-form";
 import { DatoCMSConfigForm } from "@/modules/providers/datocms/datocms-config-form";
 import { CMSType, createProvider } from "@/modules/shared/cms-provider";
 import { StrapiConfigForm } from "@/modules/providers/strapi/strapi-config-form";
@@ -16,7 +16,7 @@ const resolveProviderForm = (type: CMSType) => {
     case "datocms":
       return <DatoCMSConfigForm.AddVariant />;
     case "contentful":
-      return <ContentfulAddConfigForm />;
+      return <ContentfulConfigForm.AddVariant />;
     case "strapi":
       return <StrapiConfigForm.AddVariant />;
     default:

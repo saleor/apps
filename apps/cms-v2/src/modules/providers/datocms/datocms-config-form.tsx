@@ -308,7 +308,6 @@ const EditFormVariant = (props: { configId: string }) => {
   );
 };
 
-// todo make the same with contentful
 export const DatoCMSConfigForm = {
   PureVariant: PureForm,
   AddVariant: AddFormVariant,

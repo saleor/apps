@@ -56,7 +56,7 @@ export class StrapiClient {
     variant,
   }: {
     configuration: StrapiProviderConfig.FullShape;
-    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+    variant: WebhookProductVariantFragment;
   }) {
     const strapiProduct = await this.getProduct(configuration, variant.id);
 
@@ -70,7 +70,7 @@ export class StrapiClient {
     variant,
   }: {
     configuration: StrapiProviderConfig.FullShape;
-    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+    variant: WebhookProductVariantFragment;
   }) {
     try {
       const result = await this.client.create(configuration.itemType, {
@@ -96,7 +96,7 @@ export class StrapiClient {
   }: {
     strapiProductId?: number;
     configuration: StrapiProviderConfig.FullShape;
-    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+    variant: WebhookProductVariantFragment;
   }) {
     let strapiProductIdToUpdate = strapiProductId;
 
@@ -112,7 +112,6 @@ export class StrapiClient {
 
     try {
       const result = await this.client.update(configuration.itemType, strapiProductIdToUpdate, {
-        // todo extract to common mapping function
         [configuration.productVariantFieldsMapping.variantName]: variant.name,
         [configuration.productVariantFieldsMapping.variantId]: variant.id,
         [configuration.productVariantFieldsMapping.productName]: variant.product.name,
@@ -132,7 +131,7 @@ export class StrapiClient {
     variant,
   }: {
     configuration: StrapiProviderConfig.FullShape;
-    variant: WebhookProductVariantFragment; // todo probably rename fragment not to inclue "webhook" because its used also in other places?  })
+    variant: WebhookProductVariantFragment;
   }) {
     const strapiProduct = await this.getProduct(configuration, variant.id);
 

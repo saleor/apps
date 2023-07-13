@@ -20,7 +20,7 @@ type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
  * TODO - error handling
  * TODO - refactor smaller hooks
  */
-const ContentfulConfigForm = ({
+const PureForm = ({
   defaultValues,
   onSubmit,
   onDelete,
@@ -283,7 +283,7 @@ const ContentfulConfigForm = ({
   );
 };
 
-export const ContentfulAddConfigForm = () => {
+const AddVariant = () => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
@@ -295,7 +295,7 @@ export const ContentfulAddConfigForm = () => {
   });
 
   return (
-    <ContentfulConfigForm
+    <ContentfulConfigForm.PureVariant
       onSubmit={(values) => {
         mutate({
           ...values,
@@ -321,7 +321,7 @@ export const ContentfulAddConfigForm = () => {
   );
 };
 
-export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => {
+const EditVariant = ({ configId }: { configId: string }) => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
@@ -356,7 +356,7 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
   }
 
   return (
-    <ContentfulConfigForm
+    <ContentfulConfigForm.PureVariant
       onDelete={() => {
         deleteProvider({ id: configId });
       }}
@@ -370,4 +370,10 @@ export const ContentfulEditConfigForm = ({ configId }: { configId: string }) => 
       }
     />
   );
+};
+
+export const ContentfulConfigForm = {
+  PureVariant: PureForm,
+  AddVariant,
+  EditVariant,
 };
