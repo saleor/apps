@@ -26,6 +26,13 @@
   <a href="https://github.com/saleor/apps/discussions/categories/integrations-features">✍️ Propose an app</a>
 </div>
 
+<br/>
+<div align="center">
+  
+[![Discord Badge](https://dcbadge.vercel.app/api/server/H52JTZAtSH)](https://discord.gg/H52JTZAtSH)
+
+</div>
+
 ## Overview
 
 This repository serves as a starting point in the exploration of Saleor apps.
