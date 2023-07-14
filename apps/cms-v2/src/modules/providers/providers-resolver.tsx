@@ -1,5 +1,10 @@
 import { BulkSyncProcessor } from "../bulk-sync/bulk-sync-processor";
-import { ContentfulProviderConfig, ProvidersConfig, StrapiProviderConfig } from "../configuration";
+import {
+  BuilderIoProviderConfig,
+  ContentfulProviderConfig,
+  ProvidersConfig,
+  StrapiProviderConfig,
+} from "../configuration";
 import { ContentfulBulkSyncProcessor } from "./contentful/contentful-bulk-sync-processor";
 import { DatocmsBulkSyncProcessor } from "./datocms/datocms-bulk-sync-processor";
 import { StrapiBulkSyncProcessor } from "./strapi/strapi-bulk-sync-processor";
@@ -14,6 +19,7 @@ import { CMS, CMSType } from "./providers-registry";
 import { Strapi } from "./strapi/strapi";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";
 import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
+import { BuilderIo } from "./builder.io/builder-io";
 
 /**
  * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.
@@ -28,6 +34,10 @@ export const ProvidersResolver = {
         return new DatocmsBulkSyncProcessor(config);
       case "strapi":
         return new StrapiBulkSyncProcessor(config);
+      case "builder.io": {
+        throw new Error("Builder.io is not implemented");
+      }
+
       default:
         throw new Error(`Unknown provider`);
     }
@@ -40,6 +50,8 @@ export const ProvidersResolver = {
         return DatocmsProviderConfig.Schema.Input;
       case "strapi":
         return StrapiProviderConfig.Schema.Input;
+      case "builder.io":
+        return BuilderIoProviderConfig.Schema.Input;
       default: {
         throw new Error("Failed to build input schema");
       }
@@ -53,12 +65,14 @@ export const ProvidersResolver = {
         return DatocmsProviderConfig.Schema.Full;
       case "strapi":
         return StrapiProviderConfig.Schema.Full;
+      case "builder.io":
+        return BuilderIoProviderConfig.Schema.Full;
       default: {
         throw new Error("Failed to build provdier schema");
       }
     }
   },
-  createProviderMeta(type: CMSType | string): CMS {
+  createProviderMeta(type: CMSType): CMS {
     switch (type) {
       case "contentful": {
         return Contentful;
@@ -68,6 +82,9 @@ export const ProvidersResolver = {
       }
       case "strapi": {
         return Strapi;
+      }
+      case "builder.io": {
+        return BuilderIo;
       }
       default: {
         throw new Error("Unknown provider");
@@ -84,6 +101,9 @@ export const ProvidersResolver = {
       }
       case "strapi": {
         return new StrapiWebhooksProcessor(config);
+      }
+      case "builder.io": {
+        throw new Error("Builder.io is not implemented");
       }
       default: {
         throw new Error("Failed to build webhook processor.");
@@ -117,6 +137,13 @@ export const ProvidersResolver = {
           )
         );
       }
+      case "builder.io": {
+        return dynamic(() =>
+          import("./builder.io/builder-io-config-form").then(
+            (module) => module.BuilderIoConfigForm.EditVariant
+          )
+        );
+      }
       default: {
         throw new Error("Provider form not registered");
       }
@@ -141,6 +168,13 @@ export const ProvidersResolver = {
       case "strapi": {
         return dynamic(() =>
           import("./strapi/strapi-config-form").then((module) => module.StrapiConfigForm.AddVariant)
+        );
+      }
+      case "builder.io": {
+        return dynamic(() =>
+          import("./builder.io/builder-io-config-form").then(
+            (module) => module.BuilderIoConfigForm.AddVariant
+          )
         );
       }
       default: {

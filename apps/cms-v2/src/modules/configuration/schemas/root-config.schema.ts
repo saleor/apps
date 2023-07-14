@@ -14,6 +14,7 @@ export namespace ProvidersConfig {
     ContentfulProviderConfig.Schema.Full,
     DatocmsProviderConfig.Schema.Full,
     StrapiProviderConfig.Schema.Full,
+    BuilderIoProviderConfig.Schema.Full,
   ]);
 
   export const Schema = {
@@ -22,6 +23,7 @@ export namespace ProvidersConfig {
       ContentfulProviderConfig.Schema.Input,
       DatocmsProviderConfig.Schema.Input,
       StrapiProviderConfig.Schema.Input,
+      BuilderIoProviderConfig.Schema.Input,
     ]),
     AnyFullList: z.array(AnyFull),
   };
