@@ -19,14 +19,10 @@ import { CMS, CMSType } from "./providers-registry";
 import { Strapi } from "./strapi/strapi";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";
 
-export interface CMSProviderMeta {
-  type: string;
-  displayName: string;
-  logoUrl: string;
-  description: string;
-  formSideInfo?: ReactElement;
-}
-
+/**
+ * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.
+ * Frontend/UI must be dynamic, to render async chunk. Otherwise there is a circular dependency.
+ */
 export const ProvidersResolver = {
   createBulkSyncProcessor(config: ProvidersConfig.AnyFullShape): BulkSyncProcessor {
     switch (config.type) {

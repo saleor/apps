@@ -31,7 +31,7 @@ export default createManifestHandler({
       ],
       homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.cms2",
-      name: "CMS",
+      name: "CMS 2",
       permissions: ["MANAGE_PRODUCTS"],
       requiredSaleorVersion: ">=3.10 <4",
       supportUrl: "https://github.com/saleor/apps/discussions",

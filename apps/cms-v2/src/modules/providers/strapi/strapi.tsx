@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 
 import logo from "./strapi-logo.svg";
-import { CMSProviderMeta } from "../providers-resolver";
+import { CMSProviderMeta } from "../cms-provider-meta";
 
 export const Strapi = {
   formSideInfo: (

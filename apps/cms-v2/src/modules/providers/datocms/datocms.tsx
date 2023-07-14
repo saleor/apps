@@ -1,5 +1,6 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { CMSProviderMeta } from "../providers-resolver";
+
+import { CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./datocms.svg";
 
 export const Datocms = {
