@@ -6,14 +6,27 @@ import { ContentfulProviderConfig } from "../../configuration";
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { ContentfulClient } from "./contentful-client";
 
-export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
-  private client: ContentfulClient;
+export type ContentfulClientStrip = Pick<
+  ContentfulClient,
+  "upsertProductVariant" | "deleteProductVariant"
+>;
 
-  constructor(private providerConfig: ContentfulProviderConfig.FullShape) {
-    this.client = new ContentfulClient({
-      accessToken: providerConfig.authToken,
-      space: providerConfig.spaceId,
-    });
+export type ContentfulClientFactory = (
+  config: ContentfulProviderConfig.FullShape
+) => ContentfulClientStrip;
+
+export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
+  private client: ContentfulClientStrip;
+
+  constructor(
+    private providerConfig: ContentfulProviderConfig.FullShape,
+    clientFactory: ContentfulClientFactory = () =>
+      new ContentfulClient({
+        accessToken: providerConfig.authToken,
+        space: providerConfig.spaceId,
+      })
+  ) {
+    this.client = clientFactory(providerConfig);
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
