@@ -1,8 +1,9 @@
+import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
+
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
 

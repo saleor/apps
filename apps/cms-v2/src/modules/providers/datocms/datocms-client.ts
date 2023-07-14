@@ -1,10 +1,10 @@
 import { buildClient, Client, SimpleSchemaTypes, ApiError } from "@datocms/cma-client-browser";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
 
 import * as Sentry from "@sentry/nextjs";
+import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 
 type Context = {
   configuration: DatocmsProviderConfig.FullShape;

@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
-import { DatocmsProviderConfig } from "../../configuration/schemas/datocms-provider.schema";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 
 type FormShape = Omit<DatocmsProviderConfig.InputShape, "type">;
 

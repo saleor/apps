@@ -1,10 +1,5 @@
 import { BulkSyncProcessor } from "../bulk-sync/bulk-sync-processor";
-import {
-  ContentfulProviderConfig,
-  DatocmsProviderConfig,
-  ProvidersConfig,
-  StrapiProviderConfig,
-} from "../configuration";
+import { ContentfulProviderConfig, ProvidersConfig, StrapiProviderConfig } from "../configuration";
 import { ContentfulBulkSyncProcessor } from "./contentful/contentful-bulk-sync-processor";
 import { DatocmsBulkSyncProcessor } from "./datocms/datocms-bulk-sync-processor";
 import { StrapiBulkSyncProcessor } from "./strapi/strapi-bulk-sync-processor";
@@ -18,6 +13,7 @@ import { DatocmsWebhooksProcessor } from "./datocms/datocms-webhooks-processor";
 import { CMS, CMSType } from "./providers-registry";
 import { Strapi } from "./strapi/strapi";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";
+import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
 
 /**
  * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.

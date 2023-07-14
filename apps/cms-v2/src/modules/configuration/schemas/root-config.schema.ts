@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { ChannelProviderConnectionConfig } from "./channel-provider-connection.schema";
 import { ContentfulProviderConfig } from "./contentful-provider.schema";
-import { DatocmsProviderConfig } from "./datocms-provider.schema";
+import { BuilderIoProviderConfig } from "./builder-provider.schema";
 import { StrapiProviderConfig } from "./strapi-provider.schema";
+import { DatocmsProviderConfig } from "./datocms-provider.schema";
 
 // todo move to shared bootstrap?
 export namespace ProvidersConfig {
