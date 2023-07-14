@@ -50,6 +50,7 @@ const mockGetEnvironment = vi.fn();
 const mockGetEnvironments = vi.fn();
 const mockGetEnvEntry = vi.fn();
 const mockGetContentTypes = vi.fn();
+const mockCreateEntryWithId = vi.fn();
 
 const mockContentfulSdk: ContentfulApiClientChunk = {
   getSpace: mockGetSpace.mockReturnValue(
@@ -59,6 +60,7 @@ const mockContentfulSdk: ContentfulApiClientChunk = {
           items: [{}],
         }),
         getEntry: mockGetEnvEntry.mockReturnValue({}),
+        createEntryWithId: mockCreateEntryWithId.mockReturnValue({}),
       }),
       getEnvironments: mockGetEnvironments.mockReturnValue({}),
     })
@@ -115,6 +117,8 @@ describe("ContentfulClient", () => {
         variant: mockVariant,
       });
 
+      expect(mockGetEnvEntry).toHaveBeenCalledWith(mockVariant.id);
+
       /**
        * Fields must reflect mapping config to variant real data
        *
@@ -161,7 +165,131 @@ describe("ContentfulClient", () => {
         variant: { id: mockVariant.id },
       });
 
+      expect(mockGetEnvEntry).toHaveBeenCalledWith(mockVariant.id);
       expect(mockEntry.delete).toHaveBeenCalled();
+    });
+  });
+
+  describe("uploadProductVariant", () => {
+    it("Calls contentful createEntryWithId method with correct mapped fields", async () => {
+      const mockConfig = getMockContenfulConfiguration();
+      const mockMapping = mockConfig.productVariantFieldsMapping;
+
+      const mockVariant = getMockWebhookProductVariant();
+
+      await contentfulClient.uploadProductVariant({
+        configuration: mockConfig,
+        variant: mockVariant,
+      });
+
+      expect(mockCreateEntryWithId).toHaveBeenCalledWith(mockConfig.contentId, mockVariant.id, {
+        fields: {
+          [mockMapping.productId]: {
+            "en-US": mockVariant.product.id,
+          },
+          [mockMapping.productName]: {
+            "en-US": mockVariant.product.name,
+          },
+          [mockMapping.productSlug]: {
+            "en-US": mockVariant.product.slug,
+          },
+          [mockMapping.variantId]: {
+            "en-US": mockVariant.id,
+          },
+          [mockMapping.variantName]: {
+            "en-US": mockVariant.name,
+          },
+          [mockMapping.channels]: {
+            "en-US": mockVariant.channelListings,
+          },
+        },
+      });
+    });
+  });
+
+  describe("upsertProductVariant", () => {
+    it("Calls standard create method on SDK if entry does not exist", async () => {
+      const mockConfig = getMockContenfulConfiguration();
+      const mockMapping = mockConfig.productVariantFieldsMapping;
+
+      const mockVariant = getMockWebhookProductVariant();
+
+      await contentfulClient.upsertProductVariant({
+        configuration: mockConfig,
+        variant: mockVariant,
+      });
+
+      expect(mockGetEnvEntry).not.toHaveBeenCalled();
+      expect(mockCreateEntryWithId).toHaveBeenCalledWith(mockConfig.contentId, mockVariant.id, {
+        fields: {
+          [mockMapping.productId]: {
+            "en-US": mockVariant.product.id,
+          },
+          [mockMapping.productName]: {
+            "en-US": mockVariant.product.name,
+          },
+          [mockMapping.productSlug]: {
+            "en-US": mockVariant.product.slug,
+          },
+          [mockMapping.variantId]: {
+            "en-US": mockVariant.id,
+          },
+          [mockMapping.variantName]: {
+            "en-US": mockVariant.name,
+          },
+          [mockMapping.channels]: {
+            "en-US": mockVariant.channelListings,
+          },
+        },
+      });
+    });
+
+    it("Calls update method if SDK returned 409 error", async () => {
+      const mockConfig = getMockContenfulConfiguration();
+      const mockMapping = mockConfig.productVariantFieldsMapping;
+
+      const mockVariant = getMockWebhookProductVariant();
+
+      mockCreateEntryWithId.mockRejectedValue({
+        message: JSON.stringify({
+          status: 409,
+        }),
+      });
+
+      const mockEntry = {
+        fields: {},
+        update: vi.fn().mockReturnValue(Promise.resolve({})),
+      };
+
+      mockGetEnvEntry.mockReturnValue(mockEntry);
+
+      await contentfulClient.upsertProductVariant({
+        configuration: mockConfig,
+        variant: mockVariant,
+      });
+
+      expect(mockEntry.fields).toEqual({
+        [mockMapping.productId]: {
+          "en-US": mockVariant.product.id,
+        },
+        [mockMapping.productName]: {
+          "en-US": mockVariant.product.name,
+        },
+        [mockMapping.productSlug]: {
+          "en-US": mockVariant.product.slug,
+        },
+        [mockMapping.variantId]: {
+          "en-US": mockVariant.id,
+        },
+        [mockMapping.variantName]: {
+          "en-US": mockVariant.name,
+        },
+        [mockMapping.channels]: {
+          "en-US": mockVariant.channelListings,
+        },
+      });
+
+      expect(mockEntry.update).toHaveBeenCalledWith();
     });
   });
 });

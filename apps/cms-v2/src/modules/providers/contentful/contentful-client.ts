@@ -154,8 +154,8 @@ export class ContentfulClient {
     const env = await space.getEnvironment(configuration.environment);
 
     /*
-     * todo add translations
-     * todo - should it create published? is draft
+     * TODO: add translations
+     * TODO: - should it create published? is draft
      */
     return env.createEntryWithId(configuration.contentId, variant.id, {
       fields: this.mapVariantToConfiguredFields(variant, configuration.productVariantFieldsMapping),
