@@ -6,7 +6,7 @@ import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";
 import { orderCancelledWebhook } from "../../pages/api/webhooks/order-cancelled";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
-import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
+import { webhookStatusesFactory } from "./webhook-status-dict";
 
 describe("WebhookManagementService", function () {
   const mockedClient = {} as Client;
@@ -76,16 +76,9 @@ describe("WebhookManagementService", function () {
 
     const statuses = await webhookManagementService.getWebhooksStatus();
 
-    expect(statuses).toStrictEqual({
-      invoiceSentWebhook: true,
-      notifyWebhook: false,
-      orderCancelledWebhook: false,
-      orderConfirmedWebhook: false,
-      orderCreatedWebhook: false,
-      orderFulfilledWebhook: false,
-      orderFullyPaidWebhook: false,
-      giftCardSentWebhook: false,
-    });
+    expect(statuses).toStrictEqual(
+      webhookStatusesFactory({ enabledWebhooks: ["invoiceSentWebhook"] })
+    );
     expect(fetchAppWebhooksMock).toBeCalledTimes(1);
   });
 
