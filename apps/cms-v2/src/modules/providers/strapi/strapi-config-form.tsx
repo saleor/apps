@@ -49,12 +49,31 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Provide conntection details</Text>
-        <Input required control={control} name="authToken" label="Auth token" helperText="todo" />
-        <Input required control={control} name="url" label="API Url" helperText="todo" />
+        <Input
+          required
+          control={control}
+          name="authToken"
+          label="Auth token"
+          helperText="Token with full permissions for the content type you want Saleor to store product."
+        />
+        <Input
+          required
+          control={control}
+          name="url"
+          label="API Url"
+          helperText="Base api URL, usually without /api suffix"
+          placeholder="https://your-strapi-url.com"
+        />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Configure fields mapping</Text>
-        <Input label="Item type" name="itemType" control={control} helperText="todo" />
+        <Input
+          label="Item type"
+          name="itemType"
+          control={control}
+          placeholder="saleor-products"
+          helperText="Plural name of the content type you want Saleor to send product to. E.g. 'products' or 'product-variants'"
+        />
 
         <Text as="p" variant="heading" size="small">
           Map fields from Saleor to your contentful schema.
