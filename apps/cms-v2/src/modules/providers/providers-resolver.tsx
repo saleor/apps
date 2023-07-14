@@ -72,7 +72,7 @@ export const ProvidersResolver = {
       }
     }
   },
-  createProviderMeta(type: CMSType): CMS {
+  createProviderMeta(type: CMSType | string): CMS {
     switch (type) {
       case "contentful": {
         return Contentful;

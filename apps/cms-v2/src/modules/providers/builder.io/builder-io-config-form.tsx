@@ -139,8 +139,7 @@ const AddFormVariant = () => {
       }}
       defaultValues={{
         configName: "",
-        authToken: "",
-        url: "",
+        apiKey: "",
         itemType: "",
         productVariantFieldsMapping: {
           channels: "",
