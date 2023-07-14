@@ -10,6 +10,23 @@ const ContentfulErrorMessageSchema = z.object({
   status: z.number(),
 });
 
+type ConstructorOptions = {
+  space: string;
+  accessToken: string;
+};
+
+export type ContentfulApiClientChunk = Pick<ClientAPI, "getSpace">;
+
+/**
+ * Allow injecting mocked client instead of mocking whole module
+ */
+type SdkClientFactory = (opts: ConstructorOptions) => ContentfulApiClientChunk;
+
+const defaultSdkClientFactory: SdkClientFactory = (opts) =>
+  createClient({
+    accessToken: opts.accessToken,
+  });
+
 /**
  * Wrapper facade of
  * https://www.npmjs.com/package/contentful
@@ -17,17 +34,15 @@ const ContentfulErrorMessageSchema = z.object({
  * TODO: tests
  */
 export class ContentfulClient {
-  private client: ClientAPI;
+  private client: ContentfulApiClientChunk;
   private space: string;
 
   private logger = createLogger({ name: "ContentfulClient" });
 
-  constructor(opts: { space: string; accessToken: string }) {
+  constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
 
-    this.client = createClient({
-      accessToken: opts.accessToken,
-    });
+    this.client = clientFactory(opts);
   }
 
   /**
@@ -71,7 +86,17 @@ export class ContentfulClient {
   async getContentTypes(env: string) {
     this.logger.trace("Attempting to get content types");
 
-    return (await (await this.client.getSpace(this.space)).getEnvironment(env)).getContentTypes();
+    try {
+      const space = await this.client.getSpace(this.space);
+      const environment = await space.getEnvironment(env);
+      const contentTypes = await environment.getContentTypes();
+
+      return contentTypes;
+    } catch (err) {
+      this.logger.error(err);
+
+      throw err;
+    }
   }
 
   async getEnvironments() {
