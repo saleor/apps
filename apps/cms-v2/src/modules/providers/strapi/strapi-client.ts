@@ -2,6 +2,7 @@ import Strapi from "strapi-sdk-js";
 import { StrapiProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { z } from "zod";
+import { createLogger } from "@saleor/apps-shared";
 
 // partial response
 const strapiFindOperationResult = z.object({
@@ -15,6 +16,7 @@ const strapiFindOperationResult = z.object({
 // todo error handling, tests
 export class StrapiClient {
   private client: Strapi;
+  private logger = createLogger({ name: "StrapiClient" });
 
   constructor(options: { url: string; token: string }) {
     this.client = new Strapi({
@@ -43,11 +45,7 @@ export class StrapiClient {
           return null; // product was not found, maybe it was not indexed first
         }
 
-        if (parsedResponse.data.length > 1) {
-          // error / sentry, product not unique. delete all?
-        }
-
-        return parsedResponse.data[0];
+        return parsedResponse.data;
       });
   }
 
@@ -58,11 +56,19 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const strapiProduct = await this.getProducts(configuration, variant.id);
+    const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    if (strapiProduct) {
-      return this.client.delete(configuration.itemType, strapiProduct.id);
+    this.logger.trace({ strapiProducts }, "Fetched products from strapi that will be deleted");
+
+    if (!strapiProducts) {
+      return;
     }
+
+    return Promise.all(
+      strapiProducts.map((strapiProduct) =>
+        this.client.delete(configuration.itemType, strapiProduct.id)
+      )
+    );
   }
 
   async uploadProduct({
@@ -72,6 +78,8 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
+    this.logger.trace({ variantId: variant.id }, "Will upload product variant");
+
     try {
       const result = await this.client.create(configuration.itemType, {
         // todo extract to common mapping function
@@ -98,29 +106,33 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    let strapiProductIdToUpdate = strapiProductId;
+    let strapiProductIdsToUpdate = strapiProductId ? [strapiProductId] : null;
 
-    if (!strapiProductIdToUpdate) {
-      const strapiProduct = await this.getProducts(configuration, variant.id);
+    if (!strapiProductIdsToUpdate) {
+      const strapiProducts = await this.getProducts(configuration, variant.id);
 
-      if (!strapiProduct) {
+      if (!strapiProducts) {
         return;
       }
 
-      strapiProductIdToUpdate = strapiProduct.id;
+      strapiProductIdsToUpdate = strapiProducts.map((strapiProduct) => strapiProduct.id);
     }
 
-    try {
-      const result = await this.client.update(configuration.itemType, strapiProductIdToUpdate, {
-        [configuration.productVariantFieldsMapping.variantName]: variant.name,
-        [configuration.productVariantFieldsMapping.variantId]: variant.id,
-        [configuration.productVariantFieldsMapping.productName]: variant.product.name,
-        [configuration.productVariantFieldsMapping.productId]: variant.product.id,
-        [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
-        [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
-      });
+    this.logger.trace({ strapiProductIdsToUpdate }, "Will try to update strapi products");
 
-      return result;
+    try {
+      return Promise.all(
+        strapiProductIdsToUpdate.map((strapiProductId) => {
+          return this.client.update(configuration.itemType, strapiProductId, {
+            [configuration.productVariantFieldsMapping.variantName]: variant.name,
+            [configuration.productVariantFieldsMapping.variantId]: variant.id,
+            [configuration.productVariantFieldsMapping.productName]: variant.product.name,
+            [configuration.productVariantFieldsMapping.productId]: variant.product.id,
+            [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
+            [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
+          });
+        })
+      );
     } catch (e) {
       console.error(e);
     }
@@ -133,10 +145,16 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const strapiProduct = await this.getProducts(configuration, variant.id);
+    const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    if (strapiProduct) {
-      return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
+    this.logger.trace({ strapiProducts }, "Will try to upsert strapi products");
+
+    if (strapiProducts) {
+      return Promise.all(
+        strapiProducts.map((strapiProduct) => {
+          return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
+        })
+      );
     } else {
       return this.uploadProduct({ configuration, variant });
     }
