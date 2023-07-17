@@ -37,6 +37,7 @@ export class BuilderIoClient {
         },
         body: JSON.stringify({
           data: this.mapVariantToFields(variant),
+          published: "published",
         }),
       });
     } catch (err) {
@@ -59,6 +60,7 @@ export class BuilderIoClient {
         },
         body: JSON.stringify({
           data: this.mapVariantToFields(variant),
+          published: "published",
         }),
       });
     } catch (err) {
@@ -68,29 +70,63 @@ export class BuilderIoClient {
     }
   }
 
-  async updateProductVariant(builderIoEntryId: string, variant: WebhookProductVariantFragment) {
-    // todo fetch id and call updateProductVariantCall
+  async updateProductVariant(variant: WebhookProductVariantFragment) {
+    const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
+
+    this.logger.debug(
+      {
+        entriesToUpdate,
+      },
+      "Trying to update variants in builder.io with following IDs"
+    );
+
+    return Promise.all(
+      entriesToUpdate.map((id) => {
+        return this.updateProductVariantCall(id, variant);
+      })
+    );
   }
 
   async upsertProductVariant(variant: WebhookProductVariantFragment) {
-    return this.uploadProductVariant(variant);
-    // todo: update if exists
+    const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
+
+    if (entriesToUpdate.length === 0) {
+      this.logger.debug("Didnt find any entries to update, will upload new variant");
+
+      return this.uploadProductVariant(variant);
+    } else {
+      this.logger.debug({ entriesToUpdate }, "Found entries in builder.io, will update them");
+
+      return Promise.all(
+        entriesToUpdate.map((id) => {
+          return this.updateProductVariantCall(id, variant);
+        })
+      );
+    }
   }
 
   async deleteProductVariant(variantId: string) {
-    console.log({ variantId });
-    const idToDelete = await this.fetchBuilderIoEntryId(variantId);
+    const idsToDelete = await this.fetchBuilderIoEntryIds(variantId);
 
-    console.log({ idToDelete });
+    this.logger.debug({ ids: idsToDelete }, "Will try to delete items in Builder.io");
 
-    // todo fech id first
-    throw new Error("Not implemented");
+    return Promise.all(
+      idsToDelete.map((id) =>
+        fetch(this.endpoint + `/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.config.privateApiKey}`,
+          },
+        })
+      )
+    );
   }
 
   /**
    * Can return more than 1. Builder doesnt have unique fields.
    */
-  private fetchBuilderIoEntryId(variantId: string) {
+  private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
     this.logger.trace(
       {
         modelName: this.config.modelName,
@@ -101,9 +137,12 @@ export class BuilderIoClient {
     );
 
     return fetch(
-      `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=true`
+      `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=false&cacheSeconds=0`
     )
       .then((res) => res.json())
+      .then((data) => {
+        return data.results.map((result: any) => result.id) as string[];
+      })
       .catch((err) => {
         this.logger.error(err, "Failed to fetch builder.io entry id");
         throw err;

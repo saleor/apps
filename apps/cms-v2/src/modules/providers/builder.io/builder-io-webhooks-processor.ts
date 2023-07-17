@@ -9,7 +9,7 @@ import { BuilderIoClient } from "./builder-io.client";
 
 export type BuilderioClientStrip = Pick<
   BuilderIoClient,
-  "upsertProductVariant" | "deleteProductVariant"
+  "upsertProductVariant" | "deleteProductVariant" | "updateProductVariant"
 >;
 
 export type BuilderIoClientFactory = (
@@ -52,7 +52,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
-        return this.client.upsertProductVariant({
+        return this.client.updateProductVariant({
           id: variant.id,
           name: variant.name,
           product: {

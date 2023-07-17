@@ -8,6 +8,7 @@ import { BuilderIoProviderConfig, SaleorProviderFieldsMappingKeys } from "../../
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<BuilderIoProviderConfig.InputShape, "type">;
 const FormSchema = BuilderIoProviderConfig.Schema.Input.omit({ type: true });
@@ -48,14 +49,28 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           control={control}
           name="privateApiKey"
           label="Private API key (write API)"
-          helperText="API Key with write access" // todo https://builder.io/account/space
+          helperText={
+            <Text variant="caption">
+              You can find it in and generate in{" "}
+              <TextLink size="small" newTab href="https://builder.io/account/space">
+                account settings
+              </TextLink>
+            </Text>
+          }
         />
         <Input
           required
           control={control}
           name="publicApiKey"
           label="Public API key (read API)"
-          helperText="todo where to find"
+          helperText={
+            <Text variant="caption">
+              You can find it in{" "}
+              <TextLink size="small" newTab href="https://builder.io/account/space">
+                account settings
+              </TextLink>
+            </Text>
+          }
         />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
