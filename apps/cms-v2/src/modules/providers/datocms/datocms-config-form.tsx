@@ -130,7 +130,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide conntection details</Text>
+        <Text variant="heading">Provide connection details</Text>
         <Input
           required
           control={control}

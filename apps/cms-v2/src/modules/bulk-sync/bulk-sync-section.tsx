@@ -10,7 +10,7 @@ import { ButtonsBox } from "../ui/buttons-box";
 import { ProvidersResolver } from "../providers/providers-resolver";
 
 const FormSchema = z.object({
-  connID: z.string().min(7),
+  connectionId: z.string().min(7),
 });
 
 const EmptyState = () => (
@@ -33,9 +33,9 @@ export const BulkSyncSection = () => {
   const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
-  const { control, handleSubmit } = useForm<{ connID: string }>({
+  const { control, handleSubmit } = useForm<z.infer<typeof FormSchema>>({
     defaultValues: {
-      connID: "",
+      connectionId: "",
     },
     resolver: zodResolver(FormSchema),
   });
@@ -65,13 +65,13 @@ export const BulkSyncSection = () => {
         marginTop={4}
         as="form"
         onSubmit={handleSubmit((values) => {
-          push(`/bulk-sync/${values.connID}`);
+          push(`/bulk-sync/${values.connectionId}`);
         })}
       >
         <Select
           required
           control={control}
-          name="connID"
+          name="connectionId"
           label="Connection"
           options={connections.map((c) => {
             const provider = providers.find((p) => p.id === c.providerId)!;

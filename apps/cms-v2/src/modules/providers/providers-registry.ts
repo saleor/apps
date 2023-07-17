@@ -5,11 +5,7 @@ import { Strapi } from "./strapi/strapi";
 
 export type CMS = typeof Contentful | typeof Datocms | typeof Strapi | typeof BuilderIo;
 
-export type CMSType =
-  | typeof Contentful.type
-  | typeof Datocms.type
-  | typeof Strapi.type
-  | typeof BuilderIo.type;
+export type CMSType = CMS["type"];
 
 export const cmsTypes = [Contentful.type, Datocms.type, Strapi.type, BuilderIo.type] as const;
 

@@ -26,8 +26,8 @@ const ConfigurationPage: NextPage = () => {
         sideContent={
           <Box>
             <Text>
-              Map channels to providers to automatically sync every added, deleted or update product
-              variant.
+              Map channels to providers to automatically sync every added, deleted or updated
+              product variant.
             </Text>
           </Box>
         }
@@ -38,13 +38,13 @@ const ConfigurationPage: NextPage = () => {
         sideContent={
           <Box>
             <Text as="p">
-              Perform initial scan of product variants to push existing database yo selected
+              Perform an initial scan of product variants to push existing database to selected
               provider.
             </Text>
             <Text as="p">Its recommended to run this flow initially, once app is configured.</Text>
             <Text as="p" color="iconCriticalDefault">
-              Warning - removed products will not be removed in CMS. To create a fully updated
-              state, first prune CMS content.
+              Warning: removing products in Saleor will not remove them in CMS. To create a fully
+              updated.
             </Text>
           </Box>
         }

@@ -68,8 +68,8 @@ export const ChannelProviderConnectionList = () => {
     });
   };
 
-  const handleDelete = (connId: string) => {
-    removeConnection({ id: connId });
+  const handleDelete = (connectionId: string) => {
+    removeConnection({ id: connectionId });
   };
 
   if (!connectionsData) {

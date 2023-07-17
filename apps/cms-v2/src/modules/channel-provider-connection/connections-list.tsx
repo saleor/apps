@@ -5,7 +5,7 @@ import { trpcClient } from "../trpc/trpc-client";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
 import { ProvidersResolver } from "../providers/providers-resolver";
 
-export const ConnectionsList = (props: { onRemove(connId: string): void }) => {
+export const ConnectionsList = (props: { onRemove(connectionId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: channels } = trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();

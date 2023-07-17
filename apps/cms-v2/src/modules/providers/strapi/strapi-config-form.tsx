@@ -48,7 +48,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide conntection details</Text>
+        <Text variant="heading">Provide connection details</Text>
         <Input
           required
           control={control}
@@ -76,7 +76,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         />
 
         <Text as="p" variant="heading" size="small">
-          Map fields from Saleor to your contentful schema.
+          Map fields from Saleor to your Strapi schema.
         </Text>
         <Text as="p" marginTop={2} marginBottom={4}>
           All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be

@@ -50,7 +50,7 @@ const SaleorProductsFetchedStep = (props: { productsNo: number; variantsNo: numb
   );
 };
 
-type State = "initial" | "fetching" | "fetched" | "uploading";
+type Status = "initial" | "fetching" | "fetched" | "uploading";
 
 export const BulkSyncView = ({
   configuration,
@@ -60,7 +60,7 @@ export const BulkSyncView = ({
   connection: ChannelProviderConnectionConfig.FullShape;
 }) => {
   const processor = useRef(ProvidersResolver.createBulkSyncProcessor(configuration));
-  const [state, setState] = useState<State>("initial");
+  const [state, setState] = useState<Status>("initial");
 
   const { products, finished: saleorProductsFetchFinished } = useFetchAllProducts(
     state === "fetching",

@@ -27,7 +27,7 @@ export class StrapiClient {
     });
   }
 
-  private getProduct(configuration: StrapiProviderConfig.FullShape, saleorVariantId: string) {
+  private getProducts(configuration: StrapiProviderConfig.FullShape, saleorVariantId: string) {
     return this.client
       .find(configuration.itemType, {
         filters: {
@@ -58,7 +58,7 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const strapiProduct = await this.getProduct(configuration, variant.id);
+    const strapiProduct = await this.getProducts(configuration, variant.id);
 
     if (strapiProduct) {
       return this.client.delete(configuration.itemType, strapiProduct.id);
@@ -101,7 +101,7 @@ export class StrapiClient {
     let strapiProductIdToUpdate = strapiProductId;
 
     if (!strapiProductIdToUpdate) {
-      const strapiProduct = await this.getProduct(configuration, variant.id);
+      const strapiProduct = await this.getProducts(configuration, variant.id);
 
       if (!strapiProduct) {
         return;
@@ -133,7 +133,7 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const strapiProduct = await this.getProduct(configuration, variant.id);
+    const strapiProduct = await this.getProducts(configuration, variant.id);
 
     if (strapiProduct) {
       return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
