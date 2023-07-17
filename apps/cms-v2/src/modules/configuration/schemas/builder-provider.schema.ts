@@ -4,9 +4,10 @@ import { BuilderIo } from "@/modules/providers/builder.io/builder-io";
 
 const InputSchema = z.object({
   type: z.literal(BuilderIo.type),
-  apiKey: z.string(),
-  configName: z.string(),
-  modelName: z.string(),
+  privateApiKey: z.string().min(1),
+  publicApiKey: z.string().min(1),
+  configName: z.string().min(1),
+  modelName: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 

@@ -46,9 +46,16 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         <Input
           required
           control={control}
-          name="apiKey"
-          label="Private API key"
+          name="privateApiKey"
+          label="Private API key (write API)"
           helperText="API Key with write access" // todo https://builder.io/account/space
+        />
+        <Input
+          required
+          control={control}
+          name="publicApiKey"
+          label="Public API key (read API)"
+          helperText="todo where to find"
         />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
@@ -139,7 +146,8 @@ const AddFormVariant = () => {
       }}
       defaultValues={{
         configName: "",
-        apiKey: "",
+        publicApiKey: "",
+        privateApiKey: "",
         modelName: "",
         productVariantFieldsMapping: {
           channels: "",

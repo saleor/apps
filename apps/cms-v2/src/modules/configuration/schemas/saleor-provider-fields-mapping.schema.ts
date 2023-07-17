@@ -16,10 +16,10 @@ export type SaleorProviderFieldsMappingType = z.infer<typeof SaleorProviderField
 export type SaleorProviderFieldsMappingKey = keyof SaleorProviderFieldsMappingType;
 
 export const SaleorProviderFieldsMappingKeys: Array<SaleorProviderFieldsMappingKey> = [
+  "variantId",
   "variantName",
   "productId",
   "productName",
   "productSlug",
-  "variantId",
   "channels",
 ];
