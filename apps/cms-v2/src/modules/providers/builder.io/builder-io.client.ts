@@ -7,7 +7,7 @@ export class BuilderIoClient {
   private logger = createLogger({ name: "BuilderIoClient" });
 
   constructor(private config: BuilderIoProviderConfig.FullShape) {
-    this.endpoint = `https://builder.io/api/v1/write/${config.itemType}`; // todo: rename to MODEL NAME
+    this.endpoint = `https://builder.io/api/v1/write/${config.modelName}`; // todo: rename to MODEL NAME
   }
 
   private mapVariantToFields(variant: WebhookProductVariantFragment) {

@@ -56,7 +56,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         <Input
           required
           control={control}
-          name="itemType"
+          name="modelName"
           label="CMS Data model name"
           helperText="Structured content model name. E.g. 'products' or 'product-variants'"
           placeholder="saleor-variant"
@@ -140,7 +140,7 @@ const AddFormVariant = () => {
       defaultValues={{
         configName: "",
         apiKey: "",
-        itemType: "",
+        modelName: "",
         productVariantFieldsMapping: {
           channels: "",
           variantName: "",

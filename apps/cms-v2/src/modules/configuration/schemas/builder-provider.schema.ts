@@ -6,7 +6,7 @@ const InputSchema = z.object({
   type: z.literal(BuilderIo.type),
   apiKey: z.string(),
   configName: z.string(),
-  itemType: z.string(),
+  modelName: z.string(),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 
