@@ -2,8 +2,8 @@ import { cmsTypes } from "@/modules/providers/providers-registry";
 import { z } from "zod";
 
 const InputSchema = z.object({
-  channelSlug: z.string(),
-  providerId: z.string(),
+  channelSlug: z.string().min(1),
+  providerId: z.string().min(1),
   providerType: z.enum(cmsTypes),
 });
 

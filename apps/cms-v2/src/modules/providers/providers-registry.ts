@@ -16,9 +16,4 @@ export type CMSType =
 export const cmsTypes = [Contentful.type, Datocms.type, Strapi.type, BuilderIo.type] as const;
 
 // todo move to providers-resolver?
-export const CMSProviders = [
-  Contentful,
-  Datocms,
-  Strapi,
-  //  BuilderIo
-] as const;
+export const CMSProviders = [Contentful, Datocms, Strapi, BuilderIo] as const;
