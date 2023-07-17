@@ -20,6 +20,7 @@ import { Strapi } from "./strapi/strapi";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";
 import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
 import { BuilderIo } from "./builder.io/builder-io";
+import { BuilderIoWebhooksProcessor } from "./builder.io/builder-io-webhooks-processor";
 
 /**
  * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.
@@ -103,7 +104,7 @@ export const ProvidersResolver = {
         return new StrapiWebhooksProcessor(config);
       }
       case "builder.io": {
-        throw new Error("Builder.io is not implemented");
+        return new BuilderIoWebhooksProcessor(config);
       }
       default: {
         throw new Error("Failed to build webhook processor.");

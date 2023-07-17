@@ -1,3 +1,4 @@
+import { createLogger } from "@saleor/apps-shared";
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
@@ -8,6 +9,7 @@ type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhook
 
 export class WebhooksProcessorsDelegator {
   private processorFactory: ProcessorFactory = ProvidersResolver.createWebhooksProcessor;
+  private logger = createLogger({ name: "WebhooksProcessorsDelegator" });
 
   constructor(
     private opts: {
@@ -18,6 +20,8 @@ export class WebhooksProcessorsDelegator {
     if (opts.injectProcessorFactory) {
       this.processorFactory = opts.injectProcessorFactory;
     }
+
+    this.logger.trace("WebhooksProcessorsDelegator created");
   }
 
   private extractChannelSlugsFromProductVariant(productVariant: WebhookProductVariantFragment) {
@@ -26,17 +30,27 @@ export class WebhooksProcessorsDelegator {
 
   private mapConnectionsToProcessors(connections: WebhookContext["connections"]) {
     return connections.map((conn) => {
-      const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId)!;
+      const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId);
+
+      if (!providerConfig) {
+        this.logger.error({ connection: conn }, "Cant resolve provider from connection");
+
+        throw new Error("Cant resolve provider from connection");
+      }
 
       return this.processorFactory(providerConfig);
     });
   }
 
   async delegateVariantCreatedOperations(productVariant: WebhookProductVariantFragment) {
+    this.logger.trace("delegateVariantCreatedOperations called");
+
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
+      this.logger.trace("No related channels found for variant, skipping");
+
       return;
     }
 
@@ -44,10 +58,22 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug)
     );
 
+    this.logger.trace(
+      { connections: connectionsToInclude.length },
+      "Resolved a number of connections to include"
+    );
+
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
+
+    this.logger.trace(
+      { processors: processors.length },
+      "Resolved a number of processor to delegate to"
+    );
 
     return Promise.all(
       processors.map((processor) => {
+        this.logger.trace("Calling processor.onProductVariantCreated");
+
         return processor.onProductVariantCreated(productVariant);
       })
     );
