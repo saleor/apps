@@ -23,7 +23,7 @@ export function Select<TFieldValues extends FieldValues = FieldValues>({
           {...rest}
           {...field}
           options={options}
-          value={value || ""}
+          value={value || ""} // todo update macaw and fallback to null instead ""
           name={name}
           required={required}
           type={type}
