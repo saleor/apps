@@ -1,13 +1,21 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BulkImportProductFragment } from "../../../generated/graphql";
 import { VariantsSyncStatusListItem } from "./variants-sync-status-list";
 
 export const useBulkSyncProductsState = () => {
+  const [finished, setFinished] = useState(false);
   const [productsStatusList, setProductsStatusList] = useState<VariantsSyncStatusListItem[] | null>(
     null
   );
 
+  useEffect(() => {
+    if (productsStatusList?.every((item) => item.status === "success" || item.status === "error")) {
+      setFinished(true);
+    }
+  }, [productsStatusList]);
+
   return {
+    finished,
     productsStatusList,
     setInitialProducts: useCallback((products: BulkImportProductFragment[]) => {
       setProductsStatusList(
