@@ -4,9 +4,9 @@ import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapp
 
 const InputSchema = z.object({
   type: z.literal(Datocms.type),
-  authToken: z.string(),
-  configName: z.string(),
-  itemType: z.string(),
+  authToken: z.string().min(1),
+  configName: z.string().min(1),
+  itemType: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 
