@@ -7,5 +7,5 @@
 "App: Slack": "apps/slack/**/*"
 "App: Taxes": "apps/taxes/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
-"App: CMS": "apps/cms/**/*"
+"App: CMS": ["apps/cms/**/*", "apps/cms-v2/**/*"]
 "App: CRM": "apps/crm/**/*"

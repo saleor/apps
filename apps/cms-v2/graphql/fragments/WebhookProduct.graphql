@@ -1,0 +1,26 @@
+fragment WebhookProduct on Product {
+  id
+  name
+  slug
+  channelListings {
+    id
+    channel {
+      id
+      slug
+    }
+  }
+  variants {
+    id
+    name
+    channelListings {
+      channel {
+        id
+        slug
+      }
+      price {
+        amount
+        currency
+      }
+    }
+  }
+}

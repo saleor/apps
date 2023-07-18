@@ -13,6 +13,7 @@ const BaseTextLink = (props: TextLinkProps) => {
       <Text
         transition={"ease"}
         variant={"bodyStrong"}
+        size={props.size}
         color={{
           default: "text3Decorative",
           hover: "text1Decorative",

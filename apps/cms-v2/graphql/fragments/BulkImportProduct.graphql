@@ -1,0 +1,19 @@
+fragment BulkImportProduct on Product {
+  id
+  name
+  slug
+  variants {
+    id
+    name
+    channelListings {
+      channel {
+        id
+        slug
+      }
+      price {
+        amount
+        currency
+      }
+    }
+  }
+}
