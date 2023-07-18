@@ -38,7 +38,11 @@ export const contentfulRouter = router({
         space: input.contentfulSpace,
       });
 
-      return client.getEnvironments();
+      return client.getEnvironments().catch((e) => {
+        console.error(e);
+
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      });
     }),
   fetchContentTypesFromApi: procedure
     .input(

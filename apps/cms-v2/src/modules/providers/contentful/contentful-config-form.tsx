@@ -17,7 +17,6 @@ type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
 
 /**
  * TODO - when space, token or env changes, refetch queries
- * TODO - error handling
  * TODO - refactor smaller hooks
  */
 const PureForm = ({
@@ -29,22 +28,34 @@ const PureForm = ({
   onSubmit(values: FormSchema): void;
   onDelete?(): void;
 }) => {
-  const {
-    control,
-    getValues,
-    setValue,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormSchema>({
-    defaultValues: defaultValues,
-    resolver: zodResolver(ContentfulProviderConfig.Schema.Input.omit({ type: true })),
-  });
+  const { notifyError } = useDashboardNotification();
+
+  const { control, getValues, setValue, watch, handleSubmit, setError, clearErrors } =
+    useForm<FormSchema>({
+      defaultValues: defaultValues,
+      resolver: zodResolver(ContentfulProviderConfig.Schema.Input.omit({ type: true })),
+    });
 
   const { mutate: fetchContentTypes, data: contentTypesData } =
     trpcClient.contentful.fetchContentTypesFromApi.useMutation({
       onSuccess(data) {
         setValue("contentId", data.items[0].sys.id ?? null);
+
+        clearErrors(["authToken", "spaceId"]);
+      },
+      onError() {
+        setError("authToken", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+        setError("spaceId", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+        notifyError(
+          "Error",
+          "Could not fetch content types from Contentful. Please check your credentials."
+        );
       },
     });
 
@@ -52,6 +63,22 @@ const PureForm = ({
     trpcClient.contentful.fetchEnvironmentsFromApi.useMutation({
       onSuccess(data) {
         setValue("environment", data.items[0].sys.id);
+
+        clearErrors(["authToken", "spaceId"]);
+      },
+      onError() {
+        setError("authToken", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+        setError("spaceId", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+        notifyError(
+          "Error",
+          "Could not fetch environments from Contentful. Please check your credentials."
+        );
       },
     });
 
