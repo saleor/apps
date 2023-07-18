@@ -47,6 +47,13 @@ updates:
     commit-message:
       prefix: "[skip ci]"
   - package-ecosystem: "npm"
+    directory: "/apps/cms-v2"
+    open-pull-requests-limit: 1
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "[skip ci]"
+  - package-ecosystem: "npm"
     directory: apps/crm
     open-pull-requests-limit: 1
     schedule:
