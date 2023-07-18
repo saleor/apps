@@ -130,8 +130,9 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated configuration");
-      push("/configuration");
+      push("/configuration").then(() => {
+        notifySuccess("Success", "Saved configuration");
+      });
     },
   });
 
@@ -175,15 +176,17 @@ const EditFormVariant = (props: { configId: string }) => {
   );
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated configuration");
-      push("/configuration");
+      push("/configuration").then(() => {
+        notifySuccess("Success", "Updated configuration");
+      });
     },
   });
 
   const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Removed configuration");
-      push("/configuration");
+      push("/configuration").then(() => {
+        notifySuccess("Success", "Removed configuration");
+      });
     },
   });
 
