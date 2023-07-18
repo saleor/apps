@@ -3,6 +3,7 @@ import { StrapiProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { z } from "zod";
 import { createLogger } from "@saleor/apps-shared";
+import { FieldsMapper } from "../fields-mapper";
 
 // partial response
 const strapiFindOperationResult = z.object({
@@ -80,21 +81,12 @@ export class StrapiClient {
   }) {
     this.logger.trace({ variantId: variant.id }, "Will upload product variant");
 
-    try {
-      const result = await this.client.create(configuration.itemType, {
-        // todo extract to common mapping function
-        [configuration.productVariantFieldsMapping.variantName]: variant.name,
-        [configuration.productVariantFieldsMapping.variantId]: variant.id,
-        [configuration.productVariantFieldsMapping.productName]: variant.product.name,
-        [configuration.productVariantFieldsMapping.productId]: variant.product.id,
-        [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
-        [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
-      });
+    const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
+      variant,
+      configMapping: configuration.productVariantFieldsMapping,
+    });
 
-      return result;
-    } catch (e) {
-      console.error(e);
-    }
+    return this.client.create(configuration.itemType, mappedFields);
   }
 
   async updateProduct({
@@ -120,22 +112,16 @@ export class StrapiClient {
 
     this.logger.trace({ strapiProductIdsToUpdate }, "Will try to update strapi products");
 
-    try {
-      return Promise.all(
-        strapiProductIdsToUpdate.map((strapiProductId) => {
-          return this.client.update(configuration.itemType, strapiProductId, {
-            [configuration.productVariantFieldsMapping.variantName]: variant.name,
-            [configuration.productVariantFieldsMapping.variantId]: variant.id,
-            [configuration.productVariantFieldsMapping.productName]: variant.product.name,
-            [configuration.productVariantFieldsMapping.productId]: variant.product.id,
-            [configuration.productVariantFieldsMapping.channels]: variant.channelListings,
-            [configuration.productVariantFieldsMapping.productSlug]: variant.product.slug,
-          });
-        })
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
+      variant,
+      configMapping: configuration.productVariantFieldsMapping,
+    });
+
+    return Promise.all(
+      strapiProductIdsToUpdate.map((strapiProductId) => {
+        return this.client.update(configuration.itemType, strapiProductId, mappedFields);
+      })
+    );
   }
 
   async upsertProduct({

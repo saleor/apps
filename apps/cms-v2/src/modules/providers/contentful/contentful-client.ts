@@ -30,8 +30,6 @@ const defaultSdkClientFactory: SdkClientFactory = (opts) =>
 /**
  * Wrapper facade of
  * https://www.npmjs.com/package/contentful
- *
- * TODO: tests
  */
 export class ContentfulClient {
   private client: ContentfulApiClientChunk;
@@ -46,7 +44,7 @@ export class ContentfulClient {
   }
 
   /**
-   * Support on en-US locale now
+   * Support only en-US locale now
    */
   private mapVariantToConfiguredFields = (
     variant: WebhookProductVariantFragment,

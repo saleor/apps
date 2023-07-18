@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import * as Sentry from "@sentry/nextjs";
 import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
+import { FieldsMapper } from "../fields-mapper";
 
 type Context = {
   configuration: DatocmsProviderConfig.FullShape;
@@ -61,16 +62,21 @@ export class DatoCMSClient {
     configuration,
     variant,
   }: Context): SimpleSchemaTypes.ItemCreateSchema {
-    const fieldsMap = configuration.productVariantFieldsMapping;
+    const fields = FieldsMapper.mapProductVariantToConfigurationFields({
+      variant,
+      configMapping: configuration.productVariantFieldsMapping,
+    });
+
+    /**
+     * Dato requires JSON to be stringified first so overwrite this single fields
+     */
+    fields[configuration.productVariantFieldsMapping.channels] = JSON.stringify(
+      variant.channelListings
+    );
 
     return {
       item_type: { type: "item_type", id: configuration.itemType },
-      [fieldsMap.variantName]: variant.name,
-      [fieldsMap.productId]: variant.product.id,
-      [fieldsMap.productName]: variant.product.name,
-      [fieldsMap.productSlug]: variant.product.slug,
-      [fieldsMap.variantId]: variant.id,
-      [fieldsMap.channels]: JSON.stringify(variant.channelListings),
+      ...fields,
     };
   }
 

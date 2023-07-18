@@ -230,10 +230,6 @@ const EditFormVariant = (props: { configId: string }) => {
   );
 };
 
-/*
- * todo make the same with contentful
- * todo improve copy
- */
 export const BuilderIoConfigForm = {
   PureVariant: PureForm,
   AddVariant: AddFormVariant,

@@ -91,7 +91,7 @@ export const BulkSyncView = ({
         setItemStatus(variantId, "success");
       },
       onUploadError({ error, variantId }) {
-        // todo handle error
+        // User will be notified about the error in the UI
         setItemStatus(variantId, "error");
       },
     });

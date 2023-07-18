@@ -18,14 +18,7 @@ type PureFormProps = {
 };
 
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
-  const {
-    control,
-    getValues,
-    setValue,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormShape>({
+  const { control, handleSubmit } = useForm<FormShape>({
     defaultValues: defaultValues,
     resolver: zodResolver(StrapiProviderConfig.Schema.Input.omit({ type: true })),
   });
