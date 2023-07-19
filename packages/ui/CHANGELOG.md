@@ -1,5 +1,14 @@
 # @saleor/apps-ui
 
+## 1.1.4
+
+### Patch Changes
+
+- 70cb741: Update Zod to 3.21.4
+- e7c2d3a: Updated and ESLint dependencies
+- 3c6cd4c: Updated the @saleor/app-sdk package to version 0.41.1.
+- 6210447: Updated tRPC packages to 10.34.0
+
 ## 1.1.3
 
 ### Patch Changes
