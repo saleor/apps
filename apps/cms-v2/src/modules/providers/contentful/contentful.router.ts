@@ -7,6 +7,8 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { router } from "../../trpc/trpc-server";
 
 import { ContentfulClient } from "./contentful-client";
+import { createFlatProxy } from "@trpc/server/shared";
+import { createLogger } from "@saleor/apps-shared";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -15,6 +17,7 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
     ctx: {
       settingsManager,
       appConfigService: new AppConfigMetadataManager(settingsManager),
+      logger: createLogger({ name: "contentfulRouter" }),
     },
   });
 });
@@ -38,7 +41,11 @@ export const contentfulRouter = router({
         space: input.contentfulSpace,
       });
 
-      return client.getEnvironments();
+      return client.getEnvironments().catch((e) => {
+        ctx.logger.error("Failed to fetch environments");
+
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      });
     }),
   fetchContentTypesFromApi: procedure
     .input(
@@ -55,7 +62,7 @@ export const contentfulRouter = router({
       });
 
       return client.getContentTypes(input.contentfulEnv).catch((e) => {
-        console.error(e);
+        ctx.logger.error("Failed to fetch content types");
 
         throw new TRPCError({ code: "BAD_REQUEST" });
       });

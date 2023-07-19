@@ -5,7 +5,6 @@ import { BuilderIoProviderConfig } from "./builder-provider.schema";
 import { StrapiProviderConfig } from "./strapi-provider.schema";
 import { DatocmsProviderConfig } from "./datocms-provider.schema";
 
-// todo move to shared bootstrap?
 export namespace ProvidersConfig {
   const AnyFull = z.union([
     /**

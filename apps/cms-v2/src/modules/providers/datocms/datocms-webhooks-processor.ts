@@ -6,12 +6,14 @@ import {
 
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
+import { createLogger } from "@saleor/apps-shared";
 
 /*
  * todo error handling
  */
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client: DatoCMSClient;
+  private logger = createLogger({ name: "DatocmsWebhooksProcessor" });
 
   constructor(private providerConfig: DatocmsProviderConfig.FullShape) {
     this.client = new DatoCMSClient({
@@ -20,18 +22,25 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantUpdated called");
+
     await this.client.updateProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
+
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantCreated called");
+
     await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantDeleted called");
+
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
@@ -39,6 +48,8 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
+    this.logger.trace("onProductUpdated called");
+
     await Promise.all(
       (product.variants ?? []).map((variant) => {
         return this.client.upsertProduct({

@@ -1,6 +1,7 @@
 import { BuilderIoProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { createLogger } from "@saleor/apps-shared";
+import { FieldsMapper } from "../fields-mapper";
 
 // https://www.builder.io/c/docs/write-api
 export class BuilderIoClient {
@@ -12,17 +13,10 @@ export class BuilderIoClient {
   }
 
   private mapVariantToFields(variant: WebhookProductVariantFragment) {
-    const { channels, productId, productName, productSlug, variantId, variantName } =
-      this.config.productVariantFieldsMapping;
-
-    return {
-      [channels]: variant.channelListings,
-      [productId]: variant.product.id,
-      [productName]: variant.product.name,
-      [productSlug]: variant.product.slug,
-      [variantId]: variant.id,
-      [variantName]: variant.name,
-    };
+    return FieldsMapper.mapProductVariantToConfigurationFields({
+      variant,
+      configMapping: this.config.productVariantFieldsMapping,
+    });
   }
 
   async uploadProductVariant(variant: WebhookProductVariantFragment) {

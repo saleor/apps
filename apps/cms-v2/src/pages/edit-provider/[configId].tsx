@@ -3,6 +3,7 @@ import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
+import { Skeleton } from "@/modules/ui/skeleton";
 import { Breadcrumbs } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
@@ -27,7 +28,7 @@ const EditProviderPage: NextPage = () => {
   }, [data]);
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Skeleton.Section />;
   }
 
   if (isFetched && !data) {
@@ -37,7 +38,7 @@ const EditProviderPage: NextPage = () => {
   }
 
   if (!provider) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   const EditForm = ProvidersResolver.getEditProviderFormComponent(provider.type);

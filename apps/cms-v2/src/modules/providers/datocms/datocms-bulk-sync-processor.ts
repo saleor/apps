@@ -3,6 +3,7 @@ import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 
 import { DatoCMSClient } from "./datocms-client";
+import { createLogger } from "@saleor/apps-shared";
 
 export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
   constructor(private config: DatocmsProviderConfig.FullShape) {}
