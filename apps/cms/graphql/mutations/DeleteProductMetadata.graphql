@@ -1,9 +1,0 @@
-mutation DeleteMetadata($id: ID!, $keys: [String!]!) {
-  deleteMetadata(id: $id, keys: $keys) {
-    errors {
-      field
-      message
-      code
-    }
-  }
-}
