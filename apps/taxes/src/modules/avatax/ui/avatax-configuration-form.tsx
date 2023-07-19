@@ -10,6 +10,7 @@ import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";
 import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-credentials-fragment";
 import { HelperText } from "./form-helper-text";
+import { FormSection } from "./form-section";
 
 type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
@@ -57,10 +58,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
           <Divider marginY={8} />
           <AvataxConfigurationAddressFragment />
           <Divider marginY={8} />
-          <Text marginBottom={4} as="h3" variant="heading">
-            Tax codes
-          </Text>
-          <Box paddingY={4} display={"grid"} gridTemplateColumns={2} gap={12}>
+          <FormSection title="Tax codes">
             <div>
               <Input
                 control={control}
@@ -75,7 +73,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
                 </TextLink>
               </HelperText>
             </div>
-          </Box>
+          </FormSection>
           <Divider marginY={8} />
 
           <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>

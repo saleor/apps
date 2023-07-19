@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { HelperText } from "./form-helper-text";
@@ -6,16 +6,14 @@ import { TextLink } from "@saleor/apps-ui";
 import { AppToggle } from "../../ui/app-toggle";
 import { useFormContext } from "react-hook-form";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { FormSection } from "./form-section";
 
 export const AvataxConfigurationCredentialsFragment = () => {
   const { control, formState } = useFormContext<AvataxConfig>();
 
   return (
     <>
-      <Text marginBottom={4} as="h3" variant="heading">
-        Credentials
-      </Text>
-      <Box display="grid" gridTemplateColumns={2} gap={12}>
+      <FormSection title="Credentials">
         <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
           <div>
             <Input
@@ -100,7 +98,7 @@ export const AvataxConfigurationCredentialsFragment = () => {
             name="isAutocommit"
           />
         </Box>
-      </Box>
+      </FormSection>
     </>
   );
 };
