@@ -37,15 +37,11 @@ const ConfigurationPage: NextPage = () => {
         heading="Initial sync"
         sideContent={
           <Box>
-            <Text as="p">
+            <Text as="p" marginBottom={2}>
               Perform an initial scan of product variants to push existing database to selected
               provider.
             </Text>
             <Text as="p">Its recommended to run this flow initially, once app is configured.</Text>
-            <Text as="p" color="iconCriticalDefault">
-              Warning: removing products in Saleor will not remove them in CMS. To create a fully
-              updated.
-            </Text>
           </Box>
         }
         mainContent={<BulkSyncSection />}

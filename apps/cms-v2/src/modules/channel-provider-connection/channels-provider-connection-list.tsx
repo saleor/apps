@@ -7,6 +7,7 @@ import { AddConnectionFormSchema } from "./add-connection-form";
 import { AddConnectionModal } from "./add-connection-modal";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
 import { ConnectionsList } from "./connections-list";
+import { Skeleton } from "../ui/skeleton";
 
 const NoConnections = (props: { onCreate(): void; enabled: boolean }) => (
   <Box>
@@ -52,7 +53,7 @@ export const ChannelProviderConnectionList = () => {
     });
 
   if (!providers) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   const handleFormSubmit = (values: AddConnectionFormSchema) => {

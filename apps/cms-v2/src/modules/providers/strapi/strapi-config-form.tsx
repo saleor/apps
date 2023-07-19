@@ -8,6 +8,7 @@ import { SaleorProviderFieldsMappingKeys, StrapiProviderConfig } from "../../con
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { Skeleton } from "@/modules/ui/skeleton";
 
 type FormShape = Omit<StrapiProviderConfig.InputShape, "type">;
 
@@ -191,7 +192,7 @@ const EditFormVariant = (props: { configId: string }) => {
   });
 
   if (!data) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   if (data.type !== "strapi") {

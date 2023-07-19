@@ -9,6 +9,7 @@ import { printSaleorProductFields } from "../../configuration/print-saleor-produ
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
 import { TextLink } from "@saleor/apps-ui";
+import { Skeleton } from "@/modules/ui/skeleton";
 
 type FormShape = Omit<BuilderIoProviderConfig.InputShape, "type">;
 const FormSchema = BuilderIoProviderConfig.Schema.Input.omit({ type: true });
@@ -207,7 +208,7 @@ const EditFormVariant = (props: { configId: string }) => {
   });
 
   if (!data) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   if (data.type !== "builder.io") {
