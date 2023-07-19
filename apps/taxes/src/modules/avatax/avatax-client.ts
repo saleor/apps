@@ -82,4 +82,8 @@ export class AvataxClient {
 
     return taxCodeService.getTaxCodes();
   }
+
+  async ping() {
+    return this.client.ping();
+  }
 }
