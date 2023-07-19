@@ -1,9 +1,0 @@
-query FetchProductVariantMetadata($id: ID!) {
-  productVariant(id: $id) {
-    id
-    metadata {
-      key
-      value
-    }
-  }
-}
