@@ -89,27 +89,6 @@ updates:
     commit-message:
       prefix: "[skip ci]"
   - package-ecosystem: "npm"
-    directory: apps/monitoring
-    open-pull-requests-limit: 1
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "[skip ci]"
-  - package-ecosystem: "pip"
-    directory: apps/monitoring/backend
-    open-pull-requests-limit: 1
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "[skip ci]"
-  - package-ecosystem: "docker"
-    directory: apps/monitoring/backend
-    open-pull-requests-limit: 1
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "[skip ci]"
-  - package-ecosystem: "npm"
     directory: apps/products-feed
     open-pull-requests-limit: 1
     commit-message:
