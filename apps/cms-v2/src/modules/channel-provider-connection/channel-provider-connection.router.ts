@@ -5,6 +5,7 @@ import { protectedClientProcedure } from "@/modules/trpc/protected-client-proced
 import { router } from "@/modules/trpc/trpc-server";
 import { z } from "zod";
 import { FetchChannelsDocument } from "../../../generated/graphql";
+import { TRPCError } from "@trpc/server";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -33,7 +34,24 @@ export const channelProviderConnectionRouter = router({
     .mutation(async ({ ctx, input }) => {
       const config = await ctx.appConfigService.get();
 
-      config.connections.addConnection(input);
+      try {
+        config.connections.addConnection(input);
+      } catch (e) {
+        switch ((e as { cause: string }).cause) {
+          case "PROVIDER_DOESNT_EXIST":
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              cause: "PROVIDER_DOESNT_EXIST",
+              message: "Provider doesnt exist",
+            });
+          case "CONNECTION_ALREADY_EXISTS":
+            throw new TRPCError({
+              code: "CONFLICT",
+              cause: "CONNECTION_EXISTS",
+              message: "Connection already exists",
+            });
+        }
+      }
 
       ctx.appConfigService.set(config);
     }),
