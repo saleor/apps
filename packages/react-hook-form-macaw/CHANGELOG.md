@@ -1,5 +1,12 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.1
+
+### Patch Changes
+
+- 70cb741: Update Zod to 3.21.4
+- e7c2d3a: Updated and ESLint dependencies
+
 ## 0.2.0
 
 ### Minor Changes

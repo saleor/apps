@@ -1,5 +1,17 @@
 # saleor-app-data-importer
 
+## 1.9.1
+
+### Patch Changes
+
+- 70cb741: Update Zod to 3.21.4
+- e7c2d3a: Updated and ESLint dependencies
+- 3c6cd4c: Updated the @saleor/app-sdk package to version 0.41.1.
+- Updated dependencies [70cb741]
+- Updated dependencies [e7c2d3a]
+- Updated dependencies [3c6cd4c]
+  - @saleor/apps-shared@1.7.4
+
 ## 1.9.0
 
 ### Minor Changes

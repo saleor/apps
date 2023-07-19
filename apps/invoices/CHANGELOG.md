@@ -1,5 +1,19 @@
 # saleor-app-invoices
 
+## 1.15.1
+
+### Patch Changes
+
+- 70cb741: Update Zod to 3.21.4
+- e7c2d3a: Updated and ESLint dependencies
+- 3c6cd4c: Updated the @saleor/app-sdk package to version 0.41.1.
+- 6210447: Updated tRPC packages to 10.34.0
+- 6210447: Updated @tanstack/react-query 4.29.19
+- Updated dependencies [70cb741]
+- Updated dependencies [e7c2d3a]
+- Updated dependencies [3c6cd4c]
+  - @saleor/apps-shared@1.7.4
+
 ## 1.15.0
 
 ### Minor Changes

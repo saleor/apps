@@ -1,5 +1,13 @@
 # @saleor/apps-shared
 
+## 1.7.4
+
+### Patch Changes
+
+- 70cb741: Update Zod to 3.21.4
+- e7c2d3a: Updated and ESLint dependencies
+- 3c6cd4c: Updated the @saleor/app-sdk package to version 0.41.1.
+
 ## 1.7.3
 
 ### Patch Changes
