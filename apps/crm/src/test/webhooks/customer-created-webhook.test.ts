@@ -9,6 +9,7 @@ import {
   IMailchimpConfigSettingsManagerV1,
   MailchimpConfigType,
 } from "../../modules/mailchimp/mailchimp-config-settings-manager";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Mock settings manager. Consider mocking graphQL api instead
@@ -48,25 +49,29 @@ describe("CUSTOMER_CREATED webhook", () => {
   it("Call Mailchimp client to add customer with properly mapped data and tags", async () => {
     const { req, res } = createMocks({});
 
-    await customerCreatedHandler(req, res, {
-      authData: mockAuthData,
-      payload: {
-        user: {
-          id: "user-id",
-          email: "someuser@gmail.com",
-          firstName: "John",
-          lastName: "Doe",
-          privateMetadata: [
-            {
-              key: "mailchimp_tags",
-              value: JSON.stringify(["tag1"]),
-            },
-          ],
+    await customerCreatedHandler(
+      req as unknown as NextApiRequest,
+      res as unknown as NextApiResponse,
+      {
+        authData: mockAuthData,
+        payload: {
+          user: {
+            id: "user-id",
+            email: "someuser@gmail.com",
+            firstName: "John",
+            lastName: "Doe",
+            privateMetadata: [
+              {
+                key: "mailchimp_tags",
+                value: JSON.stringify(["tag1"]),
+              },
+            ],
+          },
         },
-      },
-      event: "CUSTOMER_CREATED",
-      baseUrl: "localhost:3000",
-    });
+        event: "CUSTOMER_CREATED",
+        baseUrl: "localhost:3000",
+      }
+    );
 
     return expect(mailchimp_marketing.lists.addListMember).toHaveBeenCalledWith("saleor", {
       email_address: "someuser@gmail.com",
