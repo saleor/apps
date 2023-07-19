@@ -11,13 +11,14 @@ export default {
     name: "@storybook/react-vite",
     options: {},
   },
-  staticDirs: [
-    {
-      from: "../public",
-      to: "/assets",
-    },
-    "./public",
-  ],
+  // This causes a build error TODO:
+  // staticDirs: [
+  //   {
+  //     from: "../public",
+  //     to: "/assets",
+  //   },
+  //   "./public",
+  // ],
   features: {
     storyStoreV7: true,
   },

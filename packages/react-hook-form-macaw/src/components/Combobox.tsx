@@ -1,7 +1,7 @@
 import { Combobox as $Combobox, type ComboboxProps as $ComboboxProps } from "@saleor/macaw-ui/next";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
-export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<$ComboboxProps, "name"> & {
+export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<$ComboboxProps<T>, "name"> & {
   name: FieldPath<T>;
   control: Control<T>;
 };
@@ -23,7 +23,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
           {...rest}
           {...field}
           options={options}
-          value={value || ""}
+          value={value || null}
           name={name}
           required={required}
           type={type}
