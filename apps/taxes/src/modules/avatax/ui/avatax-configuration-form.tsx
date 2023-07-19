@@ -10,6 +10,7 @@ import { AvataxConfigurationAddressFragment } from "./avatax-configuration-addre
 import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-credentials-fragment";
 import { HelperText } from "./form-helper-text";
 import { AvataxConfigurationTaxesFragment } from "./avatax-configuration-taxes-fragment";
+import { atom, useAtom } from "jotai";
 
 type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
@@ -18,7 +19,14 @@ type AvataxConfigurationFormProps = {
   leftButton: React.ReactNode;
 };
 
+const statusAtom = atom<"not_authenticated" | "authenticated">("not_authenticated");
+
+export const useAvataxConfigurationStatus = () => {
+  return useAtom(statusAtom);
+};
+
 export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
+  const [status] = useAvataxConfigurationStatus();
   const formMethods = useForm({
     defaultValues: defaultAvataxConfig,
     resolver: zodResolver(avataxConfigSchema),
@@ -64,7 +72,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
             {props.leftButton}
 
             <Button
-              disabled={props.isLoading}
+              disabled={props.isLoading || status === "not_authenticated"}
               type="submit"
               variant="primary"
               data-testid="avatax-configuration-save-button"

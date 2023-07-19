@@ -1,15 +1,39 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { TextLink } from "@saleor/apps-ui";
+import { Box, Button } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
-import { HelperText } from "./form-helper-text";
-import { TextLink } from "@saleor/apps-ui";
-import { AppToggle } from "../../ui/app-toggle";
 import { useFormContext } from "react-hook-form";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AppToggle } from "../../ui/app-toggle";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { useAvataxConfigurationStatus } from "./avatax-configuration-form";
+import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
 
 export const AvataxConfigurationCredentialsFragment = () => {
-  const { control, formState } = useFormContext<AvataxConfig>();
+  const { control, formState, getValues } = useFormContext<AvataxConfig>();
+  const [status, setStatus] = useAvataxConfigurationStatus();
+  const { mutate: validateAuth, isLoading } =
+    trpcClient.avataxConnection.validateAuth.useMutation();
+  const { notifyError, notifySuccess } = useDashboardNotification();
+
+  const verifyCredentials = React.useCallback(() => {
+    const value = getValues();
+
+    validateAuth(
+      { value },
+      {
+        onSuccess: () => {
+          notifySuccess("Credentials verified");
+          setStatus("authenticated");
+        },
+        onError: (error) => {
+          notifyError("Invalid credentials", error.message);
+        },
+      }
+    );
+  }, [getValues, notifyError, notifySuccess, setStatus, validateAuth]);
 
   return (
     <>
@@ -99,6 +123,14 @@ export const AvataxConfigurationCredentialsFragment = () => {
           />
         </Box>
       </FormSection>
+      <Box display="flex" justifyContent={"flex-end"}>
+        <Button
+          variant={status === "not_authenticated" ? "primary" : "secondary"}
+          onClick={verifyCredentials}
+        >
+          {isLoading ? "Verifying..." : "Verify"}
+        </Button>
+      </Box>
     </>
   );
 };

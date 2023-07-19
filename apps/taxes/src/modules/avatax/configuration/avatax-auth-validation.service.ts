@@ -12,11 +12,11 @@ export class AvataxAuthValidationService {
     });
   }
 
-  async validate(config: AvataxConfig): Promise<void> {
+  async validate(config: AvataxConfig) {
     const avataxClient = new AvataxClient(config);
 
     try {
-      avataxClient.ping();
+      return avataxClient.ping();
     } catch (error) {
       const errorResolver = new AvataxValidationErrorResolver();
 

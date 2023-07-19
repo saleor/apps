@@ -4,6 +4,8 @@ import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { avataxConfigSchema } from "./avatax-connection-schema";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
+import { AvataxAddressValidationService } from "./configuration/avatax-address-validation.service";
+import { AvataxAuthValidationService } from "./configuration/avatax-auth-validation.service";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -106,6 +108,42 @@ export const avataxConnectionRouter = router({
       const result = await ctx.connectionService.update(input.id, input.value);
 
       logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
+
+      return result;
+    }),
+  validateAddress: protectedClientProcedure
+    .input(z.object({ value: avataxConfigSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "avataxConnectionRouter.validateAddress",
+      });
+
+      logger.debug("Route validateAddress called");
+
+      const addressValidation = new AvataxAddressValidationService();
+
+      const result = await addressValidation.validate(input.value);
+
+      logger.info(`Avatax address was successfully validated`);
+
+      return result;
+    }),
+  validateAuth: protectedClientProcedure
+    .input(z.object({ value: avataxConfigSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger({
+        saleorApiUrl: ctx.saleorApiUrl,
+        procedure: "avataxConnectionRouter.validateAuth",
+      });
+
+      logger.debug("Route called");
+
+      const authValidation = new AvataxAuthValidationService();
+
+      const result = await authValidation.validate(input.value);
+
+      logger.info(`Avatax client was successfully validated`);
 
       return result;
     }),
