@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
-import { HelperText } from "./avatax-configuration-form";
+import { HelperText } from "./form-helper-text";
 import { TextLink } from "@saleor/apps-ui";
 import { AppToggle } from "../../ui/app-toggle";
 import { useFormContext } from "react-hook-form";

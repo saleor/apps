@@ -9,14 +9,7 @@ import { ProviderLabel } from "../../ui/provider-label";
 import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";
 import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-credentials-fragment";
-
-export const HelperText = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Text color="textNeutralSubdued" fontWeight={"captionLarge"}>
-      {children}
-    </Text>
-  );
-};
+import { HelperText } from "./form-helper-text";
 
 type AvataxConfigurationFormProps = {
   onSubmit: (data: AvataxConfig) => void;
