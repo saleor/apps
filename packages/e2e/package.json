@@ -1,7 +1,7 @@
 {
   "name": "@saleor/e2e",
   "description": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "",
   "scripts": {
     "e2e": "playwright test",

@@ -1,6 +1,6 @@
 {
   "name": "@saleor/react-hook-form-macaw",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "build-storybook": "storybook build",
     "lint:fix": "eslint --fix .",
