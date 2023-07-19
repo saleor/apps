@@ -6,12 +6,12 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxValidationResponseResolver } from "./avatax-validation-response-resolver";
 import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
 
-export class AvataxValidationService {
+export class AvataxAddressValidationService {
   private logger: Logger;
 
   constructor() {
     this.logger = createLogger({
-      name: "AvataxValidationService",
+      name: "AvataxAddressValidationService",
     });
   }
 

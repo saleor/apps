@@ -4,7 +4,7 @@ import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxConnectionRepository } from "./avatax-connection-repository";
-import { AvataxValidationService } from "./avatax-validation.service";
+import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 
 export class AvataxConnectionService {
   private logger: Logger;
@@ -28,11 +28,11 @@ export class AvataxConnectionService {
   }
 
   async create(config: AvataxConfig): Promise<{ id: string }> {
-    const validationService = new AvataxValidationService();
+    const validationService = new AvataxAuthValidationService();
 
     await validationService.validate(config);
 
-    return await this.avataxConnectionRepository.post(config);
+    return this.avataxConnectionRepository.post(config);
   }
 
   async update(id: string, nextConfigPartial: DeepPartial<AvataxConfig>): Promise<void> {
@@ -41,7 +41,7 @@ export class AvataxConnectionService {
     const { id: _, ...setting } = data;
     const prevConfig = setting.config;
 
-    const validationService = new AvataxValidationService();
+    const validationService = new AvataxAuthValidationService();
 
     // todo: add deepRightMerge
     const input: AvataxConfig = {
