@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { isInIframe } from "@saleor/apps-shared";
+import { ErrorNoLongerMaintained } from "../modules/ui/error-no-longer-maintained";
 
 /**
  * This is page publicly accessible from your app.
@@ -26,6 +27,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div>
+      <ErrorNoLongerMaintained />
       <h1>Saleor CMS Hub</h1>
       <p>This is Saleor App that allows to use external cms providers to sync products data.</p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
