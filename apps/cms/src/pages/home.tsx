@@ -6,6 +6,7 @@ import { ReactElement } from "react";
 import { AppTabNavButton } from "../modules/ui/app-tab-nav-button";
 import { makeStyles } from "@saleor/macaw-ui";
 import { Box, Typography } from "@material-ui/core";
+import { ErrorNoLongerMaintained } from "../modules/ui/error-no-longer-maintained";
 
 const useStyles = makeStyles({
   section: {
@@ -70,6 +71,7 @@ const HomePage: NextPageWithLayout = () => {
 HomePage.getLayout = function getLayout(page: ReactElement) {
   return (
     <main>
+      <ErrorNoLongerMaintained />
       <AppLayout>{page}</AppLayout>
     </main>
   );
