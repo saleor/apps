@@ -1,7 +1,13 @@
+# Deprecated
+
+This is v1 version of the CMS app. It's no longer maintained and will be removed.
+
+Please check [v2](../cms-v2/)
+
 ![CMS](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
 
 <div align="center">
-  <h1>CMS</h1>
+  <h1>CMS v1</h1>
 </div>
 
 # Overview
