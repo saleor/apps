@@ -6,34 +6,62 @@ import {
   AddConnectionFormID,
   AddConnectionFormSchema,
 } from "./add-connection-form";
+import { trpcClient } from "../trpc/trpc-client";
+import { Skeleton } from "../ui/skeleton";
 
 const defaultValues: AddConnectionFormSchema = { channelSlug: "", providerId: "" };
 
-export const AddConnectionModal = (props: {
-  onSubmit(values: AddConnectionFormSchema): void;
-  onClose(): void;
-}) => (
-  <Modal onClose={props.onClose}>
-    <Text as="h2" variant="heading">
-      Connect channel with Provider
-    </Text>
-    <Text as="p" marginBottom={6}>
-      Once connected, operations on product variants on this channel will be sent to selected CMS
-      platform.
-    </Text>
-    <AddConnectionForm onSubmit={props.onSubmit} defaultValues={defaultValues} />
-    <ButtonsBox marginTop={8}>
-      <Button
-        variant="tertiary"
-        onClick={() => {
-          props.onClose();
-        }}
-      >
-        Close
-      </Button>
-      <Button variant="primary" type="submit" form={AddConnectionFormID}>
-        Add connection
-      </Button>
-    </ButtonsBox>
-  </Modal>
-);
+export const AddConnectionModal = (props: { onSuccess(): void; onClose(): void }) => {
+  const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
+
+  if (!providers) {
+    return <Skeleton.Section />;
+  }
+
+  const { mutateAsync: addProviderMutate, isLoading } =
+    trpcClient.channelsProvidersConnection.addConnection.useMutation({
+      onSuccess() {
+        props.onSuccess();
+      },
+    });
+
+  const handleFormSubmit = async (values: AddConnectionFormSchema) => {
+    const providerType = providers.find((p) => p.id === values.providerId)?.type;
+
+    if (!providerType) {
+      throw new Error("Provider not found");
+    }
+
+    return addProviderMutate({
+      ...values,
+      providerType,
+    });
+  };
+
+  return (
+    <Modal onClose={props.onClose}>
+      <Text as="h2" variant="heading">
+        Connect channel with Provider
+      </Text>
+      <Text as="p" marginBottom={6}>
+        Once connected, operations on product variants on this channel will be sent to selected CMS
+        platform.
+      </Text>
+      <AddConnectionForm onSubmit={handleFormSubmit} defaultValues={defaultValues} />
+      <ButtonsBox marginTop={8}>
+        <Button
+          disabled={isLoading}
+          variant="tertiary"
+          onClick={() => {
+            props.onClose();
+          }}
+        >
+          Close
+        </Button>
+        <Button variant="primary" type="submit" form={AddConnectionFormID}>
+          Add connection
+        </Button>
+      </ButtonsBox>
+    </Modal>
+  );
+};

@@ -9,6 +9,7 @@ import { printSaleorProductFields } from "../../configuration/print-saleor-produ
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
 import { TextLink } from "@saleor/apps-ui";
+import { Skeleton } from "@/modules/ui/skeleton";
 
 type FormShape = Omit<BuilderIoProviderConfig.InputShape, "type">;
 const FormSchema = BuilderIoProviderConfig.Schema.Input.omit({ type: true });
@@ -20,7 +21,7 @@ type PureFormProps = {
 };
 
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
-  const { control, handleSubmit } = useForm<FormShape>({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues,
     resolver: zodResolver(FormSchema),
   });
@@ -146,7 +147,7 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated configuration");
+      notifySuccess("Success", "Saved configuration");
       push("/configuration");
     },
   });
@@ -204,7 +205,7 @@ const EditFormVariant = (props: { configId: string }) => {
   });
 
   if (!data) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   if (data.type !== "builder.io") {
@@ -230,10 +231,6 @@ const EditFormVariant = (props: { configId: string }) => {
   );
 };
 
-/*
- * todo make the same with contentful
- * todo improve copy
- */
 export const BuilderIoConfigForm = {
   PureVariant: PureForm,
   AddVariant: AddFormVariant,

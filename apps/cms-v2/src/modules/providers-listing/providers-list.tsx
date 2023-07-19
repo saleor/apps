@@ -6,6 +6,7 @@ import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
 import { ButtonsBox } from "../ui/buttons-box";
+import { Skeleton } from "../ui/skeleton";
 
 const ProvidersTable = (props: { providers: ProvidersConfig.AnyFullShape[] }) => {
   const { push } = useRouter();
@@ -46,7 +47,7 @@ export const ProvidersList = () => {
   const { push } = useRouter();
 
   if (!data) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   if (data.length === 0) {

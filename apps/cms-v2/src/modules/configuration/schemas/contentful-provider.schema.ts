@@ -4,11 +4,11 @@ import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapp
 
 const InputSchema = z.object({
   type: z.literal(Contentful.type),
-  authToken: z.string(),
-  spaceId: z.string(),
-  environment: z.string(),
-  configName: z.string(),
-  contentId: z.string(),
+  authToken: z.string().min(1),
+  spaceId: z.string().min(1),
+  environment: z.string().min(1),
+  configName: z.string().min(1),
+  contentId: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 

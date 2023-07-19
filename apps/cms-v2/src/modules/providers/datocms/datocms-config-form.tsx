@@ -19,12 +19,52 @@ type PureFormProps = {
   onDelete?(): void;
 };
 
-const useDatoCmsRemoteFields = () => {
+/*
+ * todo react on token change, refresh mutation
+ */
+const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
+  const { notifyError } = useDashboardNotification();
+
+  const { control, getValues, setValue, watch, handleSubmit, clearErrors, setError } = useForm({
+    defaultValues: defaultValues,
+    resolver: zodResolver(DatocmsProviderConfig.Schema.Input.omit({ type: true })),
+  });
+
   const { mutate: fetchContentTypes, data: contentTypesData } =
-    trpcClient.datocms.fetchContentTypes.useMutation();
+    trpcClient.datocms.fetchContentTypes.useMutation({
+      onSuccess(data) {
+        clearErrors("authToken");
+      },
+      onError() {
+        setError("authToken", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+
+        notifyError(
+          "Error",
+          "Could not fetch content types from DatoCMS. Please check your credentials."
+        );
+      },
+    });
 
   const { mutate: fetchContentTypeFields, data: fieldsData } =
-    trpcClient.datocms.fetchContentTypeFields.useMutation();
+    trpcClient.datocms.fetchContentTypeFields.useMutation({
+      onSuccess(data) {
+        clearErrors("authToken");
+      },
+      onError() {
+        setError("authToken", {
+          type: "custom",
+          message: "Invalid credentials",
+        });
+
+        notifyError(
+          "Error",
+          "Could not fetch content types from DatoCMS. Please check your credentials."
+        );
+      },
+    });
 
   const contentTypesSelectOptions = useMemo(() => {
     if (!contentTypesData) {
@@ -36,40 +76,6 @@ const useDatoCmsRemoteFields = () => {
       value: item.id,
     }));
   }, [contentTypesData]);
-
-  return {
-    fetchContentTypes,
-    contentTypesData,
-    contentTypesSelectOptions,
-    fetchContentTypeFields,
-    fieldsData,
-  };
-};
-
-/*
- * todo react on token error
- * todo react on token change, refresh mutation
- */
-const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
-  const {
-    control,
-    getValues,
-    setValue,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormShape>({
-    defaultValues: defaultValues,
-    resolver: zodResolver(DatocmsProviderConfig.Schema.Input.omit({ type: true })),
-  });
-
-  const {
-    contentTypesData,
-    fetchContentTypes,
-    contentTypesSelectOptions,
-    fetchContentTypeFields,
-    fieldsData,
-  } = useDatoCmsRemoteFields();
 
   const selectedContentType = watch("itemType");
 
@@ -225,7 +231,7 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated configuration");
+      notifySuccess("Success", "Saved configuration");
       push("/configuration");
     },
   });

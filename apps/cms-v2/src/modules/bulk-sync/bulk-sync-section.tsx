@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ButtonsBox } from "../ui/buttons-box";
 import { ProvidersResolver } from "../providers/providers-resolver";
+import { Skeleton } from "../ui/skeleton";
 
 const FormSchema = z.object({
   connectionId: z.string().min(7),
@@ -33,7 +34,7 @@ export const BulkSyncSection = () => {
   const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
-  const { control, handleSubmit } = useForm<z.infer<typeof FormSchema>>({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       connectionId: "",
     },
@@ -41,7 +42,7 @@ export const BulkSyncSection = () => {
   });
 
   if (!connections || !providers) {
-    return <Text>Loading...</Text>;
+    return <Skeleton.Section />;
   }
 
   if (connections.length === 0) {

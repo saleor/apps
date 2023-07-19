@@ -8,6 +8,7 @@ import { SaleorProviderFieldsMappingKeys, StrapiProviderConfig } from "../../con
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { Skeleton } from "@/modules/ui/skeleton";
 
 type FormShape = Omit<StrapiProviderConfig.InputShape, "type">;
 
@@ -18,14 +19,7 @@ type PureFormProps = {
 };
 
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
-  const {
-    control,
-    getValues,
-    setValue,
-    watch,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormShape>({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues,
     resolver: zodResolver(StrapiProviderConfig.Schema.Input.omit({ type: true })),
   });
@@ -137,7 +131,7 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated configuration");
+      notifySuccess("Success", "Saved configuration");
       push("/configuration");
     },
   });
@@ -195,7 +189,7 @@ const EditFormVariant = (props: { configId: string }) => {
   });
 
   if (!data) {
-    return null;
+    return <Skeleton.Section />;
   }
 
   if (data.type !== "strapi") {

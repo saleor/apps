@@ -3,6 +3,11 @@ import { generateId } from "../shared/generate-id";
 import { ChannelProviderConnectionConfig } from "./schemas/channel-provider-connection.schema";
 import { ProvidersConfig, RootConfig } from "./schemas/root-config.schema";
 
+export const Errors = {
+  CONNECTION_ALREADY_EXISTS: "CONNECTION_ALREADY_EXISTS",
+  PROVIDER_DOESNT_EXIST: "PROVIDER_DOESNT_EXIST",
+};
+
 /**
  * TODO
  * - test
@@ -89,10 +94,22 @@ export class AppConfig {
 
     addConnection: (input: ChannelProviderConnectionConfig.InputShape) => {
       if (!this.providers.checkProviderExists(input.providerId)) {
-        throw new Error("Provider doesnt exist");
+        const err = new Error("Provider doesnt exist");
+
+        err.cause = Errors.PROVIDER_DOESNT_EXIST;
+
+        throw err;
       }
 
       const parsed = ChannelProviderConnectionConfig.Schema.Input.parse(input);
+
+      if (this.checkConnectionExists(input)) {
+        const error = new Error("Connection already exists");
+
+        error.cause = Errors.CONNECTION_ALREADY_EXISTS;
+
+        throw error;
+      }
 
       this.rootData.connections.push({
         ...parsed,
@@ -112,4 +129,20 @@ export class AppConfig {
       return this.connections.getConnections().find((c) => c.id === id);
     },
   };
+
+  /**
+   * Returns true if exists
+   */
+  private checkConnectionExists(newConnection: ChannelProviderConnectionConfig.InputShape) {
+    /**
+     * Make array of strings so its easy to compare
+     */
+    const existingConnectionsAsStrings = this.connections
+      .getConnections()
+      .map((connection) => `${connection.channelSlug}-${connection.providerId}`);
+
+    const newConnectionAsString = `${newConnection.channelSlug}-${newConnection.providerId}`;
+
+    return existingConnectionsAsStrings.includes(newConnectionAsString);
+  }
 }

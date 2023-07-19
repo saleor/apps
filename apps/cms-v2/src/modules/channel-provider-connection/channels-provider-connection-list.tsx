@@ -7,6 +7,7 @@ import { AddConnectionFormSchema } from "./add-connection-form";
 import { AddConnectionModal } from "./add-connection-modal";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
 import { ConnectionsList } from "./connections-list";
+import { Skeleton } from "../ui/skeleton";
 
 const NoConnections = (props: { onCreate(): void; enabled: boolean }) => (
   <Box>
@@ -27,12 +28,13 @@ const NoConnections = (props: { onCreate(): void; enabled: boolean }) => (
 export const ChannelProviderConnectionList = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: connectionsData, refetch } =
+  const { data: connectionsData, refetch: refetchConnections } =
     trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
+
   const { mutate: removeConnection } =
     trpcClient.channelsProvidersConnection.removeConnection.useMutation({
       onSuccess() {
-        refetch();
+        refetchConnections();
         notifySuccess("Success", "Removed connection");
       },
     });
@@ -42,31 +44,9 @@ export const ChannelProviderConnectionList = () => {
   trpcClient.channelsProvidersConnection.fetchAllChannels.useQuery();
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
-  const { mutate: addProviderMutate } =
-    trpcClient.channelsProvidersConnection.addConnection.useMutation({
-      onSuccess() {
-        notifySuccess("Success", "Added connection");
-        refetch();
-        setDialogOpen(false);
-      },
-    });
-
   if (!providers) {
-    return null;
+    return <Skeleton.Section />;
   }
-
-  const handleFormSubmit = (values: AddConnectionFormSchema) => {
-    const providerType = providers.find((p) => p.id === values.providerId)?.type;
-
-    if (!providerType) {
-      throw new Error("Provider not found");
-    }
-
-    addProviderMutate({
-      ...values,
-      providerType,
-    });
-  };
 
   const handleDelete = (connectionId: string) => {
     removeConnection({ id: connectionId });
@@ -83,7 +63,11 @@ export const ChannelProviderConnectionList = () => {
           onClose={() => {
             setDialogOpen(false);
           }}
-          onSubmit={handleFormSubmit}
+          onSuccess={() => {
+            refetchConnections();
+            notifySuccess("Success", "Connection created");
+            setDialogOpen(false);
+          }}
         />
       )}
       {connectionsData.length === 0 && (

@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { Text } from "@saleor/macaw-ui/next";
+import { Skeleton } from "@/modules/ui/skeleton";
 
 const BulkSyncPage: NextPage = () => {
   const { query } = useRouter();
@@ -44,7 +45,7 @@ const BulkSyncPage: NextPage = () => {
   }
 
   if (connectionLoading || providerLoading) {
-    return <Text>Loading...</Text>;
+    return <Skeleton.Section />;
   }
 
   if (!(provider && connection)) {

@@ -5,9 +5,9 @@ import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapp
 const InputSchema = z.object({
   configName: z.string(),
   type: z.literal(Strapi.type),
-  url: z.string().url(),
-  authToken: z.string(),
-  itemType: z.string(),
+  url: z.string().url().min(1),
+  authToken: z.string().min(1),
+  itemType: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
 });
 

@@ -1,3 +1,4 @@
+import { createLogger } from "@saleor/apps-shared";
 import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
@@ -17,6 +18,7 @@ export type ContentfulClientFactory = (
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   private client: ContentfulClientStrip;
+  private logger = createLogger({ name: "ContentfulWebhooksProcessor" });
 
   constructor(
     private providerConfig: ContentfulProviderConfig.FullShape,
@@ -30,18 +32,24 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantUpdated called");
+
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantCreated called");
+
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
+    this.logger.trace("onProductVariantDeleted called");
+
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
@@ -49,6 +57,8 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
+    this.logger.trace("onProductUpdated called");
+
     await Promise.all(
       (product.variants ?? []).map((variant) => {
         return this.client.upsertProductVariant({

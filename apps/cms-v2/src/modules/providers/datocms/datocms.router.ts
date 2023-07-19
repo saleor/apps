@@ -4,6 +4,7 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { router } from "../../trpc/trpc-server";
 
 import { DatoCMSClient } from "./datocms-client";
+import { TRPCError } from "@trpc/server";
 
 /**
  * Operations specific for Datocms service.
@@ -22,7 +23,11 @@ export const datocmsRouter = router({
         apiToken: input.apiToken,
       });
 
-      return client.getContentTypes();
+      return client.getContentTypes().catch((err) => {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      });
     }),
 
   fetchContentTypeFields: protectedClientProcedure
@@ -37,8 +42,14 @@ export const datocmsRouter = router({
         apiToken: input.apiToken,
       });
 
-      return client.getFieldsForContentType({
-        itemTypeID: input.contentTypeID,
-      });
+      return client
+        .getFieldsForContentType({
+          itemTypeID: input.contentTypeID,
+        })
+        .catch((err) => {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+          });
+        });
     }),
 });

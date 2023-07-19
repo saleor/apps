@@ -80,6 +80,8 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantUpdatedOperations(productVariant: WebhookProductVariantFragment) {
+    this.logger.trace("delegateVariantUpdatedOperations called");
+
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
@@ -89,6 +91,11 @@ export class WebhooksProcessorsDelegator {
 
     const connectionsToInclude = connections.filter((conn) =>
       relatedVariantChannels.includes(conn.channelSlug)
+    );
+
+    this.logger.trace(
+      { connections: connectionsToInclude.length },
+      "Resolved a number of connections to include"
     );
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
@@ -101,7 +108,14 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantDeletedOperations(productVariant: WebhookProductVariantFragment) {
+    this.logger.trace("delegateVariantDeletedOperations called");
+
     const { connections } = this.opts.context;
+
+    this.logger.trace(
+      { connections: connections.length },
+      "Resolved a number of connections to include"
+    );
 
     const processors = this.mapConnectionsToProcessors(connections);
 
@@ -113,7 +127,14 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateProductUpdatedOperations(product: WebhookProductFragment) {
+    this.logger.trace("delegateProductUpdatedOperations called");
+
     const { connections } = this.opts.context;
+
+    this.logger.trace(
+      { connections: connections.length },
+      "Resolved a number of connections to include"
+    );
 
     const processors = this.mapConnectionsToProcessors(connections);
 

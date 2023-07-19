@@ -10,6 +10,7 @@ import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
 import { ProvidersResolver } from "../providers/providers-resolver";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -61,13 +62,21 @@ export const BulkSyncView = ({
 }) => {
   const processor = useRef(ProvidersResolver.createBulkSyncProcessor(configuration));
   const [state, setState] = useState<Status>("initial");
+  const { notifySuccess } = useDashboardNotification();
 
   const { products, finished: saleorProductsFetchFinished } = useFetchAllProducts(
     state === "fetching",
     connection.channelSlug
   );
 
-  const { productsStatusList, setInitialProducts, setItemStatus } = useBulkSyncProductsState();
+  const { productsStatusList, setInitialProducts, setItemStatus, finished } =
+    useBulkSyncProductsState();
+
+  useEffect(() => {
+    if (finished) {
+      notifySuccess("Bulk sync ended", "All products have been synced, please verify results");
+    }
+  }, [finished, notifySuccess]);
 
   useEffect(() => {
     if (!saleorProductsFetchFinished) {
@@ -91,7 +100,7 @@ export const BulkSyncView = ({
         setItemStatus(variantId, "success");
       },
       onUploadError({ error, variantId }) {
-        // todo handle error
+        // User will be notified about the error in the UI
         setItemStatus(variantId, "error");
       },
     });
