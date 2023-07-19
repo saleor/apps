@@ -19,7 +19,7 @@ type PureFormProps = {
 };
 
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
-  const { control, handleSubmit } = useForm<FormShape>({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues,
     resolver: zodResolver(StrapiProviderConfig.Schema.Input.omit({ type: true })),
   });
@@ -131,9 +131,8 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Saved configuration");
-      });
+      notifySuccess("Success", "Saved configuration");
+      push("/configuration");
     },
   });
 
@@ -177,17 +176,15 @@ const EditFormVariant = (props: { configId: string }) => {
   );
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Updated configuration");
-      });
+      notifySuccess("Success", "Updated configuration");
+      push("/configuration");
     },
   });
 
   const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Removed configuration");
-      });
+      notifySuccess("Success", "Removed configuration");
+      push("/configuration");
     },
   });
 

@@ -25,11 +25,10 @@ type PureFormProps = {
 const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
   const { notifyError } = useDashboardNotification();
 
-  const { control, getValues, setValue, watch, handleSubmit, clearErrors, setError } =
-    useForm<FormShape>({
-      defaultValues: defaultValues,
-      resolver: zodResolver(DatocmsProviderConfig.Schema.Input.omit({ type: true })),
-    });
+  const { control, getValues, setValue, watch, handleSubmit, clearErrors, setError } = useForm({
+    defaultValues: defaultValues,
+    resolver: zodResolver(DatocmsProviderConfig.Schema.Input.omit({ type: true })),
+  });
 
   const { mutate: fetchContentTypes, data: contentTypesData } =
     trpcClient.datocms.fetchContentTypes.useMutation({
@@ -232,9 +231,8 @@ const AddFormVariant = () => {
   const { notifySuccess } = useDashboardNotification();
   const { mutate: addProvider } = trpcClient.providersConfigs.addOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Saved configuration");
-      });
+      notifySuccess("Success", "Saved configuration");
+      push("/configuration");
     },
   });
 
@@ -277,17 +275,15 @@ const EditFormVariant = (props: { configId: string }) => {
   );
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Updated configuration");
-      });
+      notifySuccess("Success", "Updated configuration");
+      push("/configuration");
     },
   });
 
   const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
     onSuccess() {
-      push("/configuration").then(() => {
-        notifySuccess("Success", "Removed configuration");
-      });
+      notifySuccess("Success", "Removed configuration");
+      push("/configuration");
     },
   });
 

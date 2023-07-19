@@ -34,7 +34,7 @@ export const BulkSyncSection = () => {
   const { data: connections } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
-  const { control, handleSubmit } = useForm<z.infer<typeof FormSchema>>({
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       connectionId: "",
     },
