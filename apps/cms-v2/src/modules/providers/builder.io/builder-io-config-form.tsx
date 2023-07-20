@@ -46,6 +46,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Provide connection details</Text>
         <Input
+          type="password"
           required
           control={control}
           name="privateApiKey"
@@ -60,6 +61,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           }
         />
         <Input
+          type="password"
           required
           control={control}
           name="publicApiKey"
