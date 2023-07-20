@@ -1,5 +1,6 @@
 import {
   Multiselect as $Multiselect,
+  Option,
   type MultiselectProps as $MultiselectProps,
 } from "@saleor/macaw-ui/next";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
@@ -10,6 +11,7 @@ export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
 > & {
   name: FieldPath<T>;
   control: Control<T>;
+  options: Option[];
 };
 
 export function Multiselect<TFieldValues extends FieldValues = FieldValues>({
@@ -24,12 +26,22 @@ export function Multiselect<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field }, fieldState: { error } }) => (
+      render={({ field: { value, onChange, ...field }, fieldState: { error } }) => (
         <$Multiselect
           {...rest}
           {...field}
           options={options}
-          value={value || []}
+          value={
+            options.filter((o) => {
+              // TODO: Cant resolve array properly so casting needed
+              const v = (Array.isArray(value) ? value : [value]) as string[];
+
+              return v.includes(o.value);
+            }) || []
+          }
+          onChange={(values) => {
+            onChange(values.map((v) => v.value));
+          }}
           name={name}
           required={required}
           type={type}

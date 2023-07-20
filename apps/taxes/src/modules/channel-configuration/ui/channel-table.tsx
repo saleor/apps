@@ -1,9 +1,9 @@
-import { Select } from "@saleor/macaw-ui/next";
 import React from "react";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Table } from "../../ui/table";
 import { ChannelConfig } from "../channel-config";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Select } from "../../ui/_select";
 
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {
@@ -33,7 +33,7 @@ const SelectProvider = (channelConfig: ChannelConfig) => {
 
   return (
     <Select
-      value={value ?? ""}
+      value={value ?? null}
       onChange={(value) => changeValue(String(value))}
       options={[
         { value: "", label: "Not assigned" },
