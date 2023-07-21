@@ -1,15 +1,15 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConnectionService } from "./avatax-connection.service";
 
 export class PublicAvataxConnectionService {
   private readonly connectionService: AvataxConnectionService;
-  private readonly obfuscator: AvataxConnectionObfuscator;
+  private readonly obfuscator: AvataxObfuscator;
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.connectionService = new AvataxConnectionService(client, appId, saleorApiUrl);
-    this.obfuscator = new AvataxConnectionObfuscator();
+    this.obfuscator = new AvataxObfuscator();
   }
 
   async getAll() {
