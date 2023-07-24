@@ -68,3 +68,10 @@ export const WithHelpText: Story = {
     helperText: "Helper text",
   },
 };
+
+export const NoValue: Story = {
+  ...SelectTemplate,
+  args: {
+    value: null,
+  },
+};

@@ -81,7 +81,7 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
 
   return (
     <Select
-      value={value ?? ""}
+      value={value ?? null}
       disabled={isLoading}
       onChange={(value) => changeValue(String(value))}
       options={[

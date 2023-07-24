@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../../trpc/trpc-client";
-import { ComponentProps, useEffect, useState } from "react";
+import { ChangeEvent, ComponentProps, useEffect, useState } from "react";
 import { Section } from "../../../ui/section/section";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { MailchimpListPicker } from "../../mailchimp-list-picker/mailchimp-list-picker";
@@ -69,8 +69,8 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
     return null;
   }
 
-  const handleCheckboxChange = (checked: boolean) => {
-    checked
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.target.checked
       ? setLocalState({
           selected: true,
           listId: listsData[0].id,
@@ -106,7 +106,7 @@ export const WebhookConfiguration = (props: ComponentProps<typeof Box>) => {
         Each time customer is created, it will be added to selected audience list in Mailchimp
       </Text>
       <Box display="flex" gap={1.5} flexDirection="column">
-        <Checkbox onCheckedChange={handleCheckboxChange} checked={localState.selected}>
+        <Checkbox onChange={handleCheckboxChange} checked={localState.selected}>
           <Text marginRight="auto">Enable customers sync</Text>
         </Checkbox>
         <Box display="flex" alignItems="center">

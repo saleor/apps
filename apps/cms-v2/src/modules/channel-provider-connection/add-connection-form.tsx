@@ -57,10 +57,12 @@ export const AddConnectionForm = (props: {
           control={control}
           name="channelSlug"
           label="Channel"
-          options={channels?.map((c) => ({
-            value: c.slug,
-            label: c.name,
-          }))}
+          options={
+            channels?.map((c) => ({
+              value: c.slug,
+              label: c.name,
+            })) ?? []
+          }
         />
         <ArrowRightIcon />
         <Select
@@ -69,10 +71,12 @@ export const AddConnectionForm = (props: {
           control={control}
           name="providerId"
           label="Provider"
-          options={providers?.map((p) => ({
-            value: p.id,
-            label: p.configName,
-          }))}
+          options={
+            providers?.map((p) => ({
+              value: p.id,
+              label: p.configName,
+            })) ?? []
+          }
         />
       </Box>
       {errors.root?.serverError && (

@@ -84,12 +84,16 @@ export const UniversalChannelsSection = ({
                     onValueChange={onChange}
                   >
                     <Switch.Item id="1" value="restrict">
-                      <TableEditIcon size="medium" />
-                      <Text>Include</Text>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <TableEditIcon size="medium" />
+                        <Text>Include</Text>
+                      </Box>
                     </Switch.Item>
                     <Switch.Item id="2" value="exclude">
-                      <ProductsIcons size="medium" />
-                      <Text>Exclude</Text>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <ProductsIcons size="medium" />
+                        <Text>Exclude</Text>
+                      </Box>
                     </Switch.Item>
                   </Switch>
                 )}
