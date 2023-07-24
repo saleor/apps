@@ -15,7 +15,7 @@
     "@hookform/resolvers": "^3.1.0",
     "@saleor/app-sdk": "0.41.1",
     "@saleor/apps-shared": "workspace:*",
-    "@saleor/macaw-ui": "0.8.0-pre.95",
+    "@saleor/macaw-ui": "0.8.0-pre.106",
     "@sentry/nextjs": "7.55.2",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.34.0",
