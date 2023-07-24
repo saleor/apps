@@ -18,11 +18,14 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field: { value, ...field }, fieldState: { error } }) => (
+      render={({ field: { value, onChange, ...field }, fieldState: { error } }) => (
         <$Combobox
           {...rest}
           {...field}
           options={options}
+          onChange={(option) => {
+            onChange(option.value);
+          }}
           value={value || null}
           name={name}
           required={required}
