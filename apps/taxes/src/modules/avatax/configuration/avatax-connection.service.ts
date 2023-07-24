@@ -9,6 +9,8 @@ import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 export class AvataxConnectionService {
   private logger: Logger;
   private avataxConnectionRepository: AvataxConnectionRepository;
+  private authValidationService: AvataxAuthValidationService;
+
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
       name: "AvataxConnectionService",
@@ -17,6 +19,11 @@ export class AvataxConnectionService {
     const settingsManager = createSettingsManager(client, appId);
 
     this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);
+    this.authValidationService = new AvataxAuthValidationService();
+  }
+
+  private async checkIfAuthorized(input: AvataxConfig) {
+    await this.authValidationService.validate(input);
   }
 
   getAll(): Promise<AvataxConnection[]> {
@@ -27,12 +34,10 @@ export class AvataxConnectionService {
     return this.avataxConnectionRepository.get(id);
   }
 
-  async create(config: AvataxConfig): Promise<{ id: string }> {
-    const validationService = new AvataxAuthValidationService();
+  async create(input: AvataxConfig): Promise<{ id: string }> {
+    await this.checkIfAuthorized(input);
 
-    await validationService.validate(config);
-
-    return this.avataxConnectionRepository.post(config);
+    return this.avataxConnectionRepository.post(input);
   }
 
   async update(id: string, nextConfigPartial: DeepPartial<AvataxConfig>): Promise<void> {
@@ -40,8 +45,6 @@ export class AvataxConnectionService {
     // omit the key "id"  from the result
     const { id: _, ...setting } = data;
     const prevConfig = setting.config;
-
-    const validationService = new AvataxAuthValidationService();
 
     // todo: add deepRightMerge
     const input: AvataxConfig = {
@@ -57,7 +60,7 @@ export class AvataxConnectionService {
       },
     };
 
-    await validationService.validate(input);
+    await this.checkIfAuthorized(input);
 
     return this.avataxConnectionRepository.patch(id, { config: input });
   }

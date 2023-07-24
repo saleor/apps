@@ -13,15 +13,23 @@ const avataxCredentialsSchema = z.object({
   password: z.string().min(1, { message: "Password requires at least one character." }),
 });
 
-export const avataxConfigSchema = z.object({
-  name: z.string().min(1, { message: "Name requires at least one character." }),
+// All that is needed to create Avatax configuration.
+export const baseAvataxConfigSchema = z.object({
   isSandbox: z.boolean(),
-  companyCode: z.string().optional(),
-  isAutocommit: z.boolean(),
-  shippingTaxCode: z.string().optional(),
   credentials: avataxCredentialsSchema,
-  address: addressSchema,
 });
+
+export type BaseAvataxConfig = z.infer<typeof baseAvataxConfigSchema>;
+
+export const avataxConfigSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name requires at least one character." }),
+    companyCode: z.string().optional(),
+    isAutocommit: z.boolean(),
+    shippingTaxCode: z.string().optional(),
+    address: addressSchema,
+  })
+  .merge(baseAvataxConfigSchema);
 
 export type AvataxConfig = z.infer<typeof avataxConfigSchema>;
 

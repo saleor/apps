@@ -1,7 +1,8 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
+import { Provider } from "jotai";
+import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
 import { CreateAvataxConfiguration } from "../../../modules/avatax/ui/create-avatax-configuration";
 import { AppColumns } from "../../../modules/ui/app-columns";
-import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
 
 const Header = () => {
   return (
@@ -18,7 +19,9 @@ const NewAvataxPage = () => {
     <main>
       <AppColumns top={<Header />}>
         <AvataxInstructions />
-        <CreateAvataxConfiguration />
+        <Provider>
+          <CreateAvataxConfiguration />
+        </Provider>
       </AppColumns>
     </main>
   );

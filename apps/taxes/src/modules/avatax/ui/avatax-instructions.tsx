@@ -24,6 +24,10 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <br />
+          <Text>
+            You must verify your credentials by clicking the <b>Verify</b> button.
+          </Text>
+          <br />
           <br />
           <i>Address</i> will fail if:
           <br />
@@ -39,12 +43,18 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <br />
+          <Text>
+            You must verify your credentials by clicking the <b>Verify</b> button.
+          </Text>
           <br />
-          If the configuration fails, please visit the{" "}
-          <TextLink href="https://developer.avalara.com" newTab>
-            Avatax documentation
-          </TextLink>
-          .
+          <br />
+          <Text>
+            Verifying the Address will display suggestions that reflect the resolution of the
+            address by Avatax address validation service. Applying the suggestions is not required
+            but recommended. If the address is not valid, the calculation of taxes will fail.
+          </Text>
+          <br />
+          <br />
         </>
       }
     />

@@ -1,28 +1,38 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { AppCard } from "../../ui/app-card";
 import { ProviderLabel } from "../../ui/provider-label";
-import { AvataxConfig, avataxConfigSchema, defaultAvataxConfig } from "../avatax-connection-schema";
+import {
+  AvataxConfig,
+  BaseAvataxConfig,
+  avataxConfigSchema,
+  defaultAvataxConfig,
+} from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";
 import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-credentials-fragment";
-import { HelperText } from "./form-helper-text";
 import { AvataxConfigurationTaxesFragment } from "./avatax-configuration-taxes-fragment";
-import { atom, useAtom } from "jotai";
+import { HelperText } from "./form-helper-text";
+import { useAvataxConfigurationStatus } from "./configuration-status";
 
 type AvataxConfigurationFormProps = {
-  onSubmit: (data: AvataxConfig) => void;
+  submit: {
+    handleFn: (data: AvataxConfig) => void;
+    isLoading: boolean;
+  };
+  validateAddress: {
+    handleFn: (config: AvataxConfig) => Promise<AddressResolutionModel>;
+    isLoading: boolean;
+  };
+  validateCredentials: {
+    handleFn: (config: BaseAvataxConfig) => Promise<void>;
+    isLoading: boolean;
+  };
   defaultValues: AvataxConfig;
-  isLoading: boolean;
   leftButton: React.ReactNode;
-};
-
-const statusAtom = atom<"not_authenticated" | "authenticated">("not_authenticated");
-
-export const useAvataxConfigurationStatus = () => {
-  return useAtom(statusAtom);
 };
 
 export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
@@ -40,7 +50,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
 
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
-      props.onSubmit(data);
+      props.submit.handleFn(data);
     },
     [props]
   );
@@ -61,9 +71,15 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
           />
           <HelperText>Unique identifier for your provider.</HelperText>
           <Divider marginY={8} />
-          <AvataxConfigurationCredentialsFragment />
+          <AvataxConfigurationCredentialsFragment
+            onValidateCredentials={props.validateCredentials.handleFn}
+            isLoading={props.validateCredentials.isLoading}
+          />
           <Divider marginY={8} />
-          <AvataxConfigurationAddressFragment />
+          <AvataxConfigurationAddressFragment
+            onValidateAddress={props.validateAddress.handleFn}
+            isLoading={props.validateAddress.isLoading}
+          />
           <Divider marginY={8} />
           <AvataxConfigurationTaxesFragment />
           <Divider marginY={8} />
@@ -72,12 +88,12 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
             {props.leftButton}
 
             <Button
-              disabled={props.isLoading || status === "not_authenticated"}
+              disabled={props.submit.isLoading || status !== "address_verified"}
               type="submit"
               variant="primary"
               data-testid="avatax-configuration-save-button"
             >
-              {props.isLoading ? "Saving..." : "Save"}
+              {props.submit.isLoading ? "Saving..." : "Save"}
             </Button>
           </Box>
         </form>

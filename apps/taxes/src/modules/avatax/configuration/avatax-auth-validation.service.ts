@@ -1,6 +1,6 @@
 import { createLogger, Logger } from "../../../lib/logger";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { BaseAvataxConfig } from "../avatax-connection-schema";
 import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
 
 export class AvataxAuthValidationService {
@@ -12,11 +12,15 @@ export class AvataxAuthValidationService {
     });
   }
 
-  async validate(config: AvataxConfig) {
-    const avataxClient = new AvataxClient(config);
+  async validate(input: BaseAvataxConfig) {
+    const avataxClient = new AvataxClient(input);
 
     try {
-      return avataxClient.ping();
+      const result = await avataxClient.ping();
+
+      if (!result.authenticated) {
+        throw new Error("Invalid Avatax credentials.");
+      }
     } catch (error) {
       const errorResolver = new AvataxValidationErrorResolver();
 

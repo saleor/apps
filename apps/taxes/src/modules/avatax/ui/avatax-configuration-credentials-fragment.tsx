@@ -4,36 +4,51 @@ import { Box, Button } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { trpcClient } from "../../trpc/trpc-client";
 import { AppToggle } from "../../ui/app-toggle";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { useAvataxConfigurationStatus } from "./avatax-configuration-form";
+import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
+import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
 
-export const AvataxConfigurationCredentialsFragment = () => {
-  const { control, formState, getValues } = useFormContext<AvataxConfig>();
-  const [status, setStatus] = useAvataxConfigurationStatus();
-  const { mutate: validateAuth, isLoading } =
-    trpcClient.avataxConnection.validateAuth.useMutation();
+type AvataxConfigurationCredentialsFragmentProps = {
+  onValidateCredentials: (input: BaseAvataxConfig) => Promise<void>;
+  isLoading: boolean;
+};
+
+export const AvataxConfigurationCredentialsFragment = (
+  props: AvataxConfigurationCredentialsFragmentProps
+) => {
+  const { control, formState, getValues, watch } = useFormContext<AvataxConfig>();
+  const [_, setStatus] = useAvataxConfigurationStatus();
+
   const { notifyError, notifySuccess } = useDashboardNotification();
 
-  const verifyCredentials = React.useCallback(() => {
+  React.useEffect(() => {
+    const subscription = watch((_, { name }) => {
+      // Force user to reverify when credentials are changed
+      if (name === "credentials.password" || name === "credentials.username") {
+        setStatus("not_authenticated");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setStatus, watch]);
+
+  const verifyCredentials = React.useCallback(async () => {
     const value = getValues();
 
-    validateAuth(
-      { value },
-      {
-        onSuccess: () => {
-          notifySuccess("Credentials verified");
-          setStatus("authenticated");
-        },
-        onError: (error) => {
-          notifyError("Invalid credentials", error.message);
-        },
-      }
-    );
-  }, [getValues, notifyError, notifySuccess, setStatus, validateAuth]);
+    try {
+      await props.onValidateCredentials({
+        credentials: value.credentials,
+        isSandbox: value.isSandbox,
+      });
+      notifySuccess("Credentials verified");
+      setStatus("authenticated");
+    } catch (error) {
+      notifyError("Invalid credentials");
+      setStatus("not_authenticated");
+    }
+  }, [getValues, notifyError, notifySuccess, props, setStatus]);
 
   return (
     <>
@@ -124,11 +139,8 @@ export const AvataxConfigurationCredentialsFragment = () => {
         </Box>
       </FormSection>
       <Box display="flex" justifyContent={"flex-end"}>
-        <Button
-          variant={status === "not_authenticated" ? "primary" : "secondary"}
-          onClick={verifyCredentials}
-        >
-          {isLoading ? "Verifying..." : "Verify"}
+        <Button variant="secondary" onClick={verifyCredentials}>
+          {props.isLoading ? "Verifying..." : "Verify"}
         </Button>
       </Box>
     </>

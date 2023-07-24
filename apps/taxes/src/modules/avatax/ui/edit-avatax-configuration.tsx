@@ -4,13 +4,16 @@ import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConnectionObfuscator } from "../avatax-connection-obfuscator";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxObfuscator } from "../avatax-obfuscator";
+import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
+import { useAvataxConfigurationStatus } from "./configuration-status";
 
-const avataxObfuscator = new AvataxConnectionObfuscator();
+const avataxObfuscator = new AvataxObfuscator();
 
 export const EditAvataxConfiguration = () => {
+  const [_, setStatus] = useAvataxConfigurationStatus();
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -18,6 +21,11 @@ export const EditAvataxConfiguration = () => {
 
   const { refetch: refetchProvidersConfigurationData } =
     trpcClient.providersConfiguration.getAll.useQuery();
+
+  React.useEffect(() => {
+    // When editing, we know the address is verified (because it was validated when creating the configuration)
+    setStatus("address_verified");
+  }, [setStatus]);
 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const { mutate: patchMutation, isLoading: isPatchLoading } =
@@ -59,6 +67,7 @@ export const EditAvataxConfiguration = () => {
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
       patchMutation({
+        // todo: remove obfuscation
         value: avataxObfuscator.filterOutObfuscated(data),
         id: configurationId,
       });
@@ -74,6 +83,25 @@ export const EditAvataxConfiguration = () => {
     deleteMutation({ id: configurationId });
     // }
   };
+
+  const validateAddressMutation = trpcClient.avataxConnection.editValidateAddress.useMutation({});
+
+  const validateAddressHandler = React.useCallback(
+    async (config: AvataxConfig) => {
+      return validateAddressMutation.mutateAsync({ id: configurationId, value: config });
+    },
+    [configurationId, validateAddressMutation]
+  );
+
+  const validateCredentialsMutation =
+    trpcClient.avataxConnection.editValidateCredentials.useMutation({});
+
+  const validateCredentialsHandler = React.useCallback(
+    async (config: BaseAvataxConfig) => {
+      return validateCredentialsMutation.mutateAsync({ id: configurationId, value: config });
+    },
+    [configurationId, validateCredentialsMutation]
+  );
 
   if (isGetLoading) {
     // todo: replace with skeleton once its available in Macaw
@@ -93,8 +121,18 @@ export const EditAvataxConfiguration = () => {
   }
   return (
     <AvataxConfigurationForm
-      isLoading={isPatchLoading}
-      onSubmit={submitHandler}
+      submit={{
+        isLoading: isPatchLoading,
+        handleFn: submitHandler,
+      }}
+      validateAddress={{
+        isLoading: validateAddressMutation.isLoading,
+        handleFn: validateAddressHandler,
+      }}
+      validateCredentials={{
+        isLoading: validateCredentialsMutation.isLoading,
+        handleFn: validateCredentialsHandler,
+      }}
       defaultValues={data.config}
       leftButton={
         <Button onClick={deleteHandler} variant="error" data-testid="delete-avatax-button">

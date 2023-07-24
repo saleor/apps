@@ -1,3 +1,4 @@
+import { Provider } from "jotai";
 import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
 import { EditAvataxConfiguration } from "../../../modules/avatax/ui/edit-avatax-configuration";
 import { AppColumns } from "../../../modules/ui/app-columns";
@@ -12,7 +13,9 @@ const EditAvataxPage = () => {
     <main>
       <AppColumns top={<Header />}>
         <AvataxInstructions />
-        <EditAvataxConfiguration />
+        <Provider>
+          <EditAvataxConfiguration />
+        </Provider>
       </AppColumns>
     </main>
   );

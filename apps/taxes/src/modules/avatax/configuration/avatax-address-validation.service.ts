@@ -7,18 +7,17 @@ import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolve
 export class AvataxAddressValidationService {
   private logger: Logger;
 
-  constructor() {
+  constructor(private avataxClient: AvataxClient) {
     this.logger = createLogger({
       name: "AvataxAddressValidationService",
     });
   }
 
-  async validate(config: AvataxConfig) {
-    const avataxClient = new AvataxClient(config);
-    const address = avataxAddressFactory.fromChannelAddress(config.address);
+  async validate(address: AvataxConfig["address"]) {
+    const formattedAddress = avataxAddressFactory.fromChannelAddress(address);
 
     try {
-      return avataxClient.validateAddress({ address });
+      return this.avataxClient.validateAddress({ address: formattedAddress });
 
       // const responseResolver = new AvataxValidationResponseResolver();
     } catch (error) {

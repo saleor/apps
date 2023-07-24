@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
-import { useAvataxConfigurationStatus } from "./avatax-configuration-form";
+import { useAvataxConfigurationStatus } from "./configuration-status";
 
 export const AvataxConfigurationTaxesFragment = () => {
   const { control, formState } = useFormContext<AvataxConfig>();
