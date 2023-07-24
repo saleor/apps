@@ -121,7 +121,17 @@ export const AvataxConfigurationCredentialsFragment = (
             }
             name="isSandbox"
           />
-
+          <AppToggle
+            control={control}
+            label="Document recording"
+            helperText={
+              <HelperText>
+                When turned off, the document type will always be set to <i>SalesOrder</i>. This
+                means the transactions will not be recorded in Avatax.
+              </HelperText>
+            }
+            name="isDocumentRecording"
+          />
           <AppToggle
             control={control}
             label="Autocommit"

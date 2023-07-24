@@ -10,6 +10,14 @@ import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-create
 export const SHIPPING_ITEM_CODE = "Shipping";
 
 export class AvataxOrderCreatedPayloadTransformer {
+  private matchDocumentType(config: AvataxConfig): DocumentType {
+    if (!config.isDocumentRecording) {
+      // isDocumentRecording = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
+      return DocumentType.SalesOrder;
+    }
+
+    return DocumentType.SalesInvoice;
+  }
   transform(
     order: OrderCreatedSubscriptionFragment,
     avataxConfig: AvataxConfig,
@@ -19,7 +27,7 @@ export class AvataxOrderCreatedPayloadTransformer {
 
     return {
       model: {
-        type: DocumentType.SalesInvoice,
+        type: this.matchDocumentType(avataxConfig),
         customerCode:
           order.user?.id ??
           "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,

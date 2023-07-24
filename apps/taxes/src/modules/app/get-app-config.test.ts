@@ -14,6 +14,7 @@ const mockedProviders: ProviderConnections = [
       companyCode: "DEFAULT",
       isAutocommit: false,
       isSandbox: true,
+      isDocumentRecording: true,
       name: "avatax-1",
       shippingTaxCode: "FR000000",
       credentials: {

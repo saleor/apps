@@ -8,6 +8,11 @@ import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-reposito
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 export class AvataxCalculateTaxesPayloadTransformer {
+  private matchDocumentType(config: AvataxConfig): DocumentType {
+    // always return SalesOrder
+    return DocumentType.SalesOrder;
+  }
+
   transform(
     taxBase: TaxBaseFragment,
     avataxConfig: AvataxConfig,
@@ -17,7 +22,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
 
     return {
       model: {
-        type: DocumentType.SalesOrder,
+        type: this.matchDocumentType(avataxConfig),
         customerCode: taxBase.sourceObject.user?.id ?? "",
         companyCode: avataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit

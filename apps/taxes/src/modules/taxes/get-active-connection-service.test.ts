@@ -21,6 +21,7 @@ const mockedProviders: ProviderConnections = [
     provider: "avatax",
     id: "1",
     config: {
+      isDocumentRecording: true,
       companyCode: "DEFAULT",
       isAutocommit: false,
       isSandbox: true,

@@ -12,6 +12,7 @@ import {
 
 const MOCK_AVATAX_CONFIG: AvataxConfig = {
   companyCode: "DEFAULT",
+  isDocumentRecording: true,
   isAutocommit: false,
   isSandbox: true,
   name: "Avatax-1",
@@ -129,8 +130,6 @@ describe("getTransactionCodeFromMetadata", () => {
   });
 });
 
-const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
-
 const MOCKED_ORDER_FULFILLED_PAYLOAD: {
   order: OrderFulfilledSubscriptionFragment;
 } = {
@@ -138,16 +137,35 @@ const MOCKED_ORDER_FULFILLED_PAYLOAD: {
 };
 
 describe("AvataxOrderFulfilledPayloadTransformer", () => {
-  it("returns transformed payload", () => {
-    const mappedPayload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
-
-    expect(mappedPayload).toEqual({
-      transactionCode: "transaction-code",
-      companyCode: "DEFAULT",
-      documentType: DocumentType.SalesInvoice,
-      model: {
-        commit: true,
-      },
+  it("returns document type of SalesOrder when isDocumentRecording is false", () => {
+    const transformer = new AvataxOrderFulfilledPayloadTransformer({
+      ...MOCK_AVATAX_CONFIG,
+      isDocumentRecording: false,
     });
-  });
+
+    const payload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
+
+    expect(payload.documentType).toBe(DocumentType.SalesOrder);
+  }),
+    it("returns document type of SalesInvoice when isDocumentRecording is true", () => {
+      const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
+
+      const payload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
+
+      expect(payload.documentType).toBe(DocumentType.SalesInvoice);
+    }),
+    it("returns transformed payload", () => {
+      const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
+
+      const mappedPayload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
+
+      expect(mappedPayload).toEqual({
+        transactionCode: "transaction-code",
+        companyCode: "DEFAULT",
+        documentType: DocumentType.SalesInvoice,
+        model: {
+          commit: true,
+        },
+      });
+    });
 });
