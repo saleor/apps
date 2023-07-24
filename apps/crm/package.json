@@ -17,7 +17,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.106",
     "@sentry/nextjs": "7.55.2",
-    "@tanstack/react-query": "4.29.19",
+    "@tanstack/react-query": "4.32.0",
     "@trpc/client": "10.34.0",
     "@trpc/next": "10.34.0",
     "@trpc/react-query": "10.34.0",
