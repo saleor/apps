@@ -17,7 +17,11 @@ export class AvataxAddressValidationService {
     const formattedAddress = avataxAddressFactory.fromChannelAddress(address);
 
     try {
-      return this.avataxClient.validateAddress({ address: formattedAddress });
+      const response = await this.avataxClient.validateAddress({ address: formattedAddress });
+
+      this.logger.debug({ response }, "Address validation response");
+
+      return response;
 
       // const responseResolver = new AvataxValidationResponseResolver();
     } catch (error) {

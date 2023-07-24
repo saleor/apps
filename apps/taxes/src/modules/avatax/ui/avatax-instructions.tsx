@@ -12,7 +12,7 @@ export const AvataxInstructions = () => {
           <br />
           <br />
           <i>Credentials</i> will fail if:
-          <Box as="ol" margin={0}>
+          <Box as="ol" margin={1}>
             <li>
               <Text>- The username or password are incorrect.</Text>
             </li>
@@ -25,13 +25,15 @@ export const AvataxInstructions = () => {
           </Box>
           <br />
           <Text>
-            You must verify your credentials by clicking the <b>Verify</b> button.
+            You must verify the credentials by clicking the <b>Verify</b> button.
           </Text>
+          <br />
+          <br />
           <br />
           <br />
           <i>Address</i> will fail if:
           <br />
-          <Box as="ol" margin={0}>
+          <Box as="ol" margin={1}>
             <li>
               <Text>
                 - The address does not match{" "}
@@ -44,7 +46,7 @@ export const AvataxInstructions = () => {
           </Box>
           <br />
           <Text>
-            You must verify your credentials by clicking the <b>Verify</b> button.
+            You must verify the address by clicking the <b>Verify</b> button.
           </Text>
           <br />
           <br />

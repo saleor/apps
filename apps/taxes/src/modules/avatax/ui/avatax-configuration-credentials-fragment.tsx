@@ -9,6 +9,7 @@ import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
+import { errorUtils } from "../../../lib/error-utils";
 
 type AvataxConfigurationCredentialsFragmentProps = {
   onValidateCredentials: (input: BaseAvataxConfig) => Promise<void>;
@@ -44,8 +45,9 @@ export const AvataxConfigurationCredentialsFragment = (
       });
       notifySuccess("Credentials verified");
       setStatus("authenticated");
-    } catch (error) {
-      notifyError("Invalid credentials");
+    } catch (e) {
+      notifyError("Invalid credentials", errorUtils.resolveTrpcClientError(e));
+
       setStatus("not_authenticated");
     }
   }, [getValues, notifyError, notifySuccess, props, setStatus]);

@@ -4,10 +4,11 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { errorUtils } from "../../../lib/error-utils";
 import { CountrySelect } from "../../ui/country-select";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { FormSection } from "./form-section";
 import { useAvataxConfigurationStatus } from "./configuration-status";
+import { FormSection } from "./form-section";
 
 const FieldSuggestion = ({ suggestion }: { suggestion: string }) => {
   return (
@@ -38,6 +39,27 @@ function extractSuggestionsFromResponse(response: AddressResolutionModel): Addre
   };
 }
 
+// todo: test
+function resolveAddressResolutionMessage(response: AddressResolutionModel): {
+  type: "success" | "info";
+  message: string;
+} {
+  if (!response.messages) {
+    // When address was resolved completely, it has no messages.
+    return {
+      type: "success",
+      message: "The address was resolved successfully.",
+    };
+  }
+
+  const message = response.messages?.[0];
+
+  return {
+    type: "info",
+    message: message?.summary ?? "The address was not resolved completely.",
+  };
+}
+
 type AvataxConfigurationAddressFragmentProps = {
   onValidateAddress: (address: AvataxConfig) => Promise<AddressResolutionModel>;
   isLoading: boolean;
@@ -46,11 +68,34 @@ type AvataxConfigurationAddressFragmentProps = {
 export const AvataxConfigurationAddressFragment = (
   props: AvataxConfigurationAddressFragmentProps
 ) => {
-  const { control, formState, getValues, setValue } = useFormContext<AvataxConfig>();
+  const { control, formState, getValues, setValue, watch } = useFormContext<AvataxConfig>();
   const [status, setStatus] = useAvataxConfigurationStatus();
   const [suggestions, setSuggestions] = React.useState<AddressSuggestions>();
 
-  const { notifyError, notifySuccess } = useDashboardNotification();
+  const { notifyError, notifySuccess, notifyInfo } = useDashboardNotification();
+
+  React.useEffect(() => {
+    const subscription = watch((_, { name, type }) => {
+      // Force user to reverify when address is changed
+      if (
+        /*
+         * Type is undefined when the fields change is programmatic, so in "applyClickHandler". We don't want to
+         * reverify in this case.
+         */
+        type !== undefined &&
+        (name === "address.city" ||
+          name === "address.country" ||
+          name === "address.state" ||
+          name === "address.street" ||
+          name === "address.zip")
+      ) {
+        setSuggestions(undefined);
+        setStatus("authenticated");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setStatus, watch]);
 
   const verifyClickHandler = React.useCallback(async () => {
     const config = getValues();
@@ -58,14 +103,23 @@ export const AvataxConfigurationAddressFragment = (
     try {
       const result = await props.onValidateAddress(config);
 
-      notifySuccess("Address verified");
+      const { type, message } = resolveAddressResolutionMessage(result);
+
+      if (type === "info") {
+        notifyInfo("Address verified", message);
+      }
+
+      if (type === "success") {
+        notifySuccess("Address verified", message);
+      }
+
       setSuggestions(extractSuggestionsFromResponse(result));
       setStatus("address_valid");
-    } catch (error) {
+    } catch (e) {
       setStatus("address_invalid");
-      notifyError("Invalid address");
+      notifyError("Invalid address", errorUtils.resolveTrpcClientError(e));
     }
-  }, [getValues, notifyError, notifySuccess, props, setStatus]);
+  }, [getValues, notifyError, notifyInfo, notifySuccess, props, setStatus]);
 
   const applyClickHandler = React.useCallback(() => {
     setStatus("address_verified");
