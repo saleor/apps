@@ -9,6 +9,7 @@ import { CountrySelect } from "../../ui/country-select";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { FormSection } from "./form-section";
+import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 
 const FieldSuggestion = ({ suggestion }: { suggestion: string }) => {
   return (
@@ -20,45 +21,9 @@ const FieldSuggestion = ({ suggestion }: { suggestion: string }) => {
   );
 };
 
-type AddressSuggestions = AvataxConfig["address"];
+export type AddressSuggestions = AvataxConfig["address"];
 
-// todo: test
-function extractSuggestionsFromResponse(response: AddressResolutionModel): AddressSuggestions {
-  const address = response.validatedAddresses?.[0];
-
-  if (!address) {
-    throw new Error("No address found");
-  }
-
-  return {
-    street: address.line1 + " " + address.line2 + " " + address.line3,
-    city: address.city ?? "",
-    state: address.region ?? "",
-    country: address.country ?? "",
-    zip: address.postalCode ?? "",
-  };
-}
-
-// todo: test
-function resolveAddressResolutionMessage(response: AddressResolutionModel): {
-  type: "success" | "info";
-  message: string;
-} {
-  if (!response.messages) {
-    // When address was resolved completely, it has no messages.
-    return {
-      type: "success",
-      message: "The address was resolved successfully.",
-    };
-  }
-
-  const message = response.messages?.[0];
-
-  return {
-    type: "info",
-    message: message?.summary ?? "The address was not resolved completely.",
-  };
-}
+const avataxAddressResolutionProcessor = new AvataxAddressResolutionProcessor();
 
 type AvataxConfigurationAddressFragmentProps = {
   onValidateAddress: (address: AvataxConfig) => Promise<AddressResolutionModel>;
@@ -103,7 +68,8 @@ export const AvataxConfigurationAddressFragment = (
     try {
       const result = await props.onValidateAddress(config);
 
-      const { type, message } = resolveAddressResolutionMessage(result);
+      const { type, message } =
+        avataxAddressResolutionProcessor.resolveAddressResolutionMessage(result);
 
       if (type === "info") {
         notifyInfo("Address verified", message);
@@ -113,7 +79,7 @@ export const AvataxConfigurationAddressFragment = (
         notifySuccess("Address verified", message);
       }
 
-      setSuggestions(extractSuggestionsFromResponse(result));
+      setSuggestions(avataxAddressResolutionProcessor.extractSuggestionsFromResponse(result));
       setStatus("address_valid");
     } catch (e) {
       setStatus("address_invalid");
