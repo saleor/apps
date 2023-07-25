@@ -24,13 +24,20 @@ export function getTransactionCodeFromMetadata(
 
 export class AvataxOrderFulfilledPayloadTransformer {
   constructor(private readonly config: AvataxConfig) {}
+  private matchDocumentType(config: AvataxConfig): DocumentType {
+    if (!config.isDocumentRecordingEnabled) {
+      return DocumentType.SalesOrder;
+    }
+
+    return DocumentType.SalesInvoice;
+  }
   transform({ order }: AvataxOrderFulfilledPayload): AvataxOrderFulfilledTarget {
     const transactionCode = getTransactionCodeFromMetadata(order.privateMetadata);
 
     return {
       transactionCode,
       companyCode: this.config.companyCode ?? "",
-      documentType: DocumentType.SalesInvoice,
+      documentType: this.matchDocumentType(this.config),
       model: {
         commit: true,
       },

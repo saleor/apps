@@ -6,6 +6,7 @@ const defaultAvataxConfig: AvataxConfig = {
   isSandbox: true,
   name: "Avatax-1",
   shippingTaxCode: "FR000000",
+  isDocumentRecordingEnabled: true,
   address: {
     country: "US",
     zip: "95008",

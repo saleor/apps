@@ -8,6 +8,16 @@ import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-reposito
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 export class AvataxCalculateTaxesPayloadTransformer {
+  private matchDocumentType(config: AvataxConfig): DocumentType {
+    /*
+     * * For calculating taxes, we always use DocumentType.SalesOrder because it doesn't cause transaction recording.
+     * * The full flow is described here: https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/design-document-workflow/should-i-commit/
+     * * config.isDocumentRecordingEnabledEnabled is used to determine if the transaction should be recorded (hence if the document type should be SalesOrder).
+     * * Given that we never want to record the transaction in calculate taxes, we always return DocumentType.SalesOrder.
+     */
+    return DocumentType.SalesOrder;
+  }
+
   transform(
     taxBase: TaxBaseFragment,
     avataxConfig: AvataxConfig,
@@ -17,7 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
 
     return {
       model: {
-        type: DocumentType.SalesOrder,
+        type: this.matchDocumentType(avataxConfig),
         customerCode: taxBase.sourceObject.user?.id ?? "",
         companyCode: avataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
