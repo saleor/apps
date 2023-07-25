@@ -1,5 +1,14 @@
 # saleor-app-crm
 
+## 1.7.2
+
+### Patch Changes
+
+- 2fab86b: Updated graphql package to 16.7.1 and @graphql-codegen related dependencies to the latest version.
+- aa6fec1: Updated Macaw UI to pre-106
+- Updated dependencies [aa6fec1]
+  - @saleor/apps-shared@1.7.5
+
 ## 1.7.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.1.5
+
+### Patch Changes
+
+- aa6fec1: Updated Macaw UI to pre-106
+
 ## 1.1.4
 
 ### Patch Changes

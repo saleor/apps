@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.11.2
+
+### Patch Changes
+
+- 2fab86b: Updated graphql package to 16.7.1 and @graphql-codegen related dependencies to the latest version.
+- aa6fec1: Updated Macaw UI to pre-106
+- Updated dependencies [aa6fec1]
+- Updated dependencies [aa6fec1]
+  - @saleor/react-hook-form-macaw@0.2.2
+  - @saleor/apps-shared@1.7.5
+  - @saleor/apps-ui@1.1.5
+
 ## 1.11.1
 
 ### Patch Changes
