@@ -36,6 +36,42 @@ const addressSection = `<mj-section>
 </mj-section>
 `;
 
+const addressSectionForNotify = `<mj-section>
+  <mj-column>
+    <mj-table>
+      <thead>
+        <tr>
+          <th>
+            Billing address
+          </th>
+          <th>
+            Shipping address
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {{#if order.billing_address}}
+              {{ order.billing_address.street_address_1 }}
+            {{else}}
+              No billing address
+            {{/if}}
+          </td>
+          <td>
+            {{#if order.shipping_address}}
+              {{ order.shipping_address.street_address_1}}
+            {{else}}
+              No shipping required
+            {{/if}}
+          </td>
+        </tr>
+      </tbody>
+    </mj-table>
+  </mj-column>
+</mj-section>
+`;
+
 const orderLinesSection = `<mj-section>
   <mj-column>
     <mj-table>
@@ -95,7 +131,7 @@ const defaultOrderFulfilledMjmlTemplate = `<mjml>
           Hello!
         </mj-text>
         <mj-text>
-          Order {{ order.number}} has been fulfilled.
+          Order {{ order.number }} has been fulfilled.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -129,7 +165,7 @@ const defaultOrderFullyPaidMjmlTemplate = `<mjml>
           Hello!
         </mj-text>
         <mj-text>
-          Order {{ order.number}} has been fully paid.
+          Order {{ order.number }} has been fully paid.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -146,7 +182,7 @@ const defaultOrderRefundedMjmlTemplate = `<mjml>
           Hello!
         </mj-text>
         <mj-text>
-          Order {{ order.number}} has been refunded.
+          Order {{ order.number }} has been refunded.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -163,7 +199,7 @@ const defaultOrderCancelledMjmlTemplate = `<mjml>
             Hello!
         </mj-text>
         <mj-text>
-          Order {{ order.number}} has been cancelled.
+          Order {{ order.number }} has been cancelled.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -290,6 +326,27 @@ const defaultAccountDeleteMjmlTemplate = `<mjml>
   </mj-body>
 </mjml>`;
 
+const defaultOrderFulfillmentUpdatedMjmlTemplate = `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="16px">
+            Hello!
+        </mj-text>
+        <mj-text>
+          Fulfillment for the order {{ order.number }} has been updated.
+        </mj-text>
+        {{#if fulfillment.tracking_number }}
+          <mj-text>
+            Tracking number: {{ fulfillment.tracking_number }}
+          </mj-text>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+    ${addressSectionForNotify}
+  </mj-body>
+</mjml>`;
+
 export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
   ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
@@ -302,6 +359,7 @@ export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ORDER_CONFIRMED: defaultOrderConfirmedMjmlTemplate,
   ORDER_CREATED: defaultOrderCreatedMjmlTemplate,
   ORDER_FULFILLED: defaultOrderFulfilledMjmlTemplate,
+  ORDER_FULFILLMENT_UPDATE: defaultOrderFulfillmentUpdatedMjmlTemplate,
   ORDER_FULLY_PAID: defaultOrderFullyPaidMjmlTemplate,
   ORDER_REFUNDED: defaultOrderRefundedMjmlTemplate,
 };
@@ -318,6 +376,7 @@ export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ORDER_CONFIRMED: "Order {{ order.number }} has been confirmed",
   ORDER_CREATED: "Order {{ order.number }} has been created",
   ORDER_FULFILLED: "Order {{ order.number }} has been fulfilled",
+  ORDER_FULFILLMENT_UPDATE: "Fulfillment for order {{ order.number }} has been updated",
   ORDER_FULLY_PAID: "Order {{ order.number }} has been fully paid",
   ORDER_REFUNDED: "Order {{ order.number }} has been refunded",
 };

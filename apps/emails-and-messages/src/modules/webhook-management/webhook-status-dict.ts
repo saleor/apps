@@ -1,4 +1,4 @@
-import { AppWebhook, AppWebhooks } from "./webhook-management-service";
+import { AppWebhook } from "./webhook-management-service";
 
 export type WebhookStatuses = Record<AppWebhook, boolean>;
 
