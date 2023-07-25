@@ -26,7 +26,8 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <Text as="p" marginBottom={8}>
-            You must verify the credentials by clicking the <b>Verify</b> button.
+            You must verify the credentials by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
           </Text>
           <Text as="p">
             <i>Address</i> will fail if:
@@ -43,7 +44,8 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <Text as="p" marginBottom={4}>
-            You must verify the address by clicking the <b>Verify</b> button.
+            You must verify the address by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
           </Text>
           <Text as="p" marginBottom={4}>
             Verifying the Address will display suggestions that reflect the resolution of the
