@@ -51,20 +51,32 @@ export const CreateAvataxConfiguration = () => {
     [createMutation]
   );
 
+  const submit = React.useMemo(() => {
+    return {
+      isLoading: isCreateLoading,
+      handleFn: submitHandler,
+    };
+  }, [isCreateLoading, submitHandler]);
+
+  const validateAddress = React.useMemo(() => {
+    return {
+      isLoading: validateAddressMutation.isLoading,
+      handleFn: validateAddressHandler,
+    };
+  }, [validateAddressHandler, validateAddressMutation]);
+
+  const validateCredentials = React.useMemo(() => {
+    return {
+      isLoading: validateCredentialsMutation.isLoading,
+      handleFn: validateCredentialsHandler,
+    };
+  }, [validateCredentialsHandler, validateCredentialsMutation]);
+
   return (
     <AvataxConfigurationForm
-      submit={{
-        isLoading: isCreateLoading,
-        handleFn: submitHandler,
-      }}
-      validateAddress={{
-        isLoading: validateAddressMutation.isLoading,
-        handleFn: validateAddressHandler,
-      }}
-      validateCredentials={{
-        isLoading: validateCredentialsMutation.isLoading,
-        handleFn: validateCredentialsHandler,
-      }}
+      submit={submit}
+      validateAddress={validateAddress}
+      validateCredentials={validateCredentials}
       defaultValues={defaultAvataxConfig}
       leftButton={
         <Button

@@ -103,6 +103,27 @@ export const EditAvataxConfiguration = () => {
     [configurationId, validateCredentialsMutation]
   );
 
+  const submit = React.useMemo(() => {
+    return {
+      isLoading: isPatchLoading,
+      handleFn: submitHandler,
+    };
+  }, [isPatchLoading, submitHandler]);
+
+  const validateAddress = React.useMemo(() => {
+    return {
+      isLoading: validateAddressMutation.isLoading,
+      handleFn: validateAddressHandler,
+    };
+  }, [validateAddressHandler, validateAddressMutation]);
+
+  const validateCredentials = React.useMemo(() => {
+    return {
+      isLoading: validateCredentialsMutation.isLoading,
+      handleFn: validateCredentialsHandler,
+    };
+  }, [validateCredentialsHandler, validateCredentialsMutation]);
+
   if (isGetLoading) {
     // todo: replace with skeleton once its available in Macaw
     return (
@@ -119,20 +140,12 @@ export const EditAvataxConfiguration = () => {
       </Box>
     );
   }
+
   return (
     <AvataxConfigurationForm
-      submit={{
-        isLoading: isPatchLoading,
-        handleFn: submitHandler,
-      }}
-      validateAddress={{
-        isLoading: validateAddressMutation.isLoading,
-        handleFn: validateAddressHandler,
-      }}
-      validateCredentials={{
-        isLoading: validateCredentialsMutation.isLoading,
-        handleFn: validateCredentialsHandler,
-      }}
+      submit={submit}
+      validateAddress={validateAddress}
+      validateCredentials={validateCredentials}
       defaultValues={data.config}
       leftButton={
         <Button onClick={deleteHandler} variant="error" data-testid="delete-avatax-button">
