@@ -22,17 +22,17 @@ const transformer = new AvataxOrderCreatedPayloadTransformer();
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 describe("AvataxOrderCreatedPayloadTransformer", () => {
-  it("returns document type of SalesInvoice when isDocumentRecording is true", () => {
+  it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", () => {
     const payload = transformer.transform(orderMock, avataxConfigMock, []);
 
     expect(payload.model.type).toBe(DocumentType.SalesInvoice);
   }),
-    it("returns document type of SalesOrder when isDocumentRecording is false", () => {
+    it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", () => {
       const payload = transformer.transform(
         orderMock,
         {
           ...avataxConfigMock,
-          isDocumentRecording: false,
+          isDocumentRecordingEnabled: false,
         },
         []
       );

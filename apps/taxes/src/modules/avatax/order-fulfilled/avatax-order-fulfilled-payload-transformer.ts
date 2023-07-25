@@ -25,7 +25,7 @@ export function getTransactionCodeFromMetadata(
 export class AvataxOrderFulfilledPayloadTransformer {
   constructor(private readonly config: AvataxConfig) {}
   private matchDocumentType(config: AvataxConfig): DocumentType {
-    if (!config.isDocumentRecording) {
+    if (!config.isDocumentRecordingEnabled) {
       return DocumentType.SalesOrder;
     }
 

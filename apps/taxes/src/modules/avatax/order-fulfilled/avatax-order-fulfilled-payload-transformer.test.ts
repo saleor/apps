@@ -12,7 +12,7 @@ import {
 
 const MOCK_AVATAX_CONFIG: AvataxConfig = {
   companyCode: "DEFAULT",
-  isDocumentRecording: true,
+  isDocumentRecordingEnabled: true,
   isAutocommit: false,
   isSandbox: true,
   name: "Avatax-1",
@@ -137,17 +137,17 @@ const MOCKED_ORDER_FULFILLED_PAYLOAD: {
 };
 
 describe("AvataxOrderFulfilledPayloadTransformer", () => {
-  it("returns document type of SalesOrder when isDocumentRecording is false", () => {
+  it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", () => {
     const transformer = new AvataxOrderFulfilledPayloadTransformer({
       ...MOCK_AVATAX_CONFIG,
-      isDocumentRecording: false,
+      isDocumentRecordingEnabled: false,
     });
 
     const payload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);
 
     expect(payload.documentType).toBe(DocumentType.SalesOrder);
   }),
-    it("returns document type of SalesInvoice when isDocumentRecording is true", () => {
+    it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", () => {
       const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
 
       const payload = transformer.transform(MOCKED_ORDER_FULFILLED_PAYLOAD);

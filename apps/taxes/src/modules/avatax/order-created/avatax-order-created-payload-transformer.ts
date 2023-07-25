@@ -11,8 +11,8 @@ export const SHIPPING_ITEM_CODE = "Shipping";
 
 export class AvataxOrderCreatedPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
-    if (!config.isDocumentRecording) {
-      // isDocumentRecording = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
+    if (!config.isDocumentRecordingEnabled) {
+      // isDocumentRecordingEnabled = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
       return DocumentType.SalesOrder;
     }
 
