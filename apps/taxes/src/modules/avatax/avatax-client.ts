@@ -1,12 +1,12 @@
 import Avatax from "avatax";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import packageJson from "../../../package.json";
 import { createLogger, Logger } from "../../lib/logger";
-import { AvataxConfig } from "./avatax-connection-schema";
-import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
-import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
+import { BaseAvataxConfig } from "./avatax-connection-schema";
 
 type AvataxSettings = {
   appName: string;
@@ -29,10 +29,10 @@ const defaultAvataxSettings: AvataxSettings = {
   timeout: 5000,
 };
 
-const createAvataxSettings = (config: AvataxConfig): AvataxSettings => {
+const createAvataxSettings = ({ isSandbox }: { isSandbox: boolean }): AvataxSettings => {
   const settings: AvataxSettings = {
     ...defaultAvataxSettings,
-    environment: config.isSandbox ? "sandbox" : "production",
+    environment: isSandbox ? "sandbox" : "production",
   };
 
   return settings;
@@ -57,10 +57,10 @@ export class AvataxClient {
   private client: Avatax;
   private logger: Logger;
 
-  constructor(config: AvataxConfig) {
+  constructor(baseConfig: BaseAvataxConfig) {
     this.logger = createLogger({ name: "AvataxClient" });
-    const settings = createAvataxSettings(config);
-    const avataxClient = new Avatax(settings).withSecurity(config.credentials);
+    const settings = createAvataxSettings({ isSandbox: baseConfig.isSandbox });
+    const avataxClient = new Avatax(settings).withSecurity(baseConfig.credentials);
 
     this.client = avataxClient;
   }
@@ -81,5 +81,9 @@ export class AvataxClient {
     const taxCodeService = new AvataxClientTaxCodeService(this.client);
 
     return taxCodeService.getTaxCodes();
+  }
+
+  async ping() {
+    return this.client.ping();
   }
 }

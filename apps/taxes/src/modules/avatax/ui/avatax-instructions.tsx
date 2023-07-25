@@ -8,11 +8,13 @@ export const AvataxInstructions = () => {
       title="Avatax Configuration"
       description={
         <>
-          The form consists of two sections: <i>Credentials</i> and <i>Address</i>.
-          <br />
-          <br />
-          <i>Credentials</i> will fail if:
-          <Box as="ol" margin={0}>
+          <Text as="p" marginBottom={8}>
+            The form consists of two sections: <i>Credentials</i> and <i>Address</i>.
+          </Text>
+          <Text as="p">
+            <i>Credentials</i> will fail if:
+          </Text>
+          <Box as="ol" marginBottom={1}>
             <li>
               <Text>- The username or password are incorrect.</Text>
             </li>
@@ -23,11 +25,14 @@ export const AvataxInstructions = () => {
               </Text>
             </li>
           </Box>
-          <br />
-          <br />
-          <i>Address</i> will fail if:
-          <br />
-          <Box as="ol" margin={0}>
+          <Text as="p" marginBottom={8}>
+            You must verify the credentials by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
+          </Text>
+          <Text as="p">
+            <i>Address</i> will fail if:
+          </Text>
+          <Box as="ol" marginTop={1} marginBottom={2} marginX={1}>
             <li>
               <Text>
                 - The address does not match{" "}
@@ -38,13 +43,15 @@ export const AvataxInstructions = () => {
               </Text>
             </li>
           </Box>
-          <br />
-          <br />
-          If the configuration fails, please visit the{" "}
-          <TextLink href="https://developer.avalara.com" newTab>
-            Avatax documentation
-          </TextLink>
-          .
+          <Text as="p" marginBottom={4}>
+            You must verify the address by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
+          </Text>
+          <Text as="p" marginBottom={4}>
+            Verifying the Address will display suggestions that reflect the resolution of the
+            address by Avatax address validation service. Applying the suggestions is not required
+            but recommended. If the address is not valid, the calculation of taxes will fail.
+          </Text>
         </>
       }
     />

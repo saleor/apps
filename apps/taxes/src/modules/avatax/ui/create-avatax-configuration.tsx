@@ -1,6 +1,6 @@
 import React from "react";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfig, BaseAvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
@@ -25,6 +25,25 @@ export const CreateAvataxConfiguration = () => {
       },
     });
 
+  const validateAddressMutation = trpcClient.avataxConnection.createValidateAddress.useMutation({});
+
+  const validateAddressHandler = React.useCallback(
+    async (config: AvataxConfig) => {
+      return validateAddressMutation.mutateAsync({ value: config });
+    },
+    [validateAddressMutation]
+  );
+
+  const validateCredentialsMutation =
+    trpcClient.avataxConnection.createValidateCredentials.useMutation({});
+
+  const validateCredentialsHandler = React.useCallback(
+    async (config: BaseAvataxConfig) => {
+      return validateCredentialsMutation.mutateAsync({ value: config });
+    },
+    [validateCredentialsMutation]
+  );
+
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
       createMutation({ value: data });
@@ -32,10 +51,32 @@ export const CreateAvataxConfiguration = () => {
     [createMutation]
   );
 
+  const submit = React.useMemo(() => {
+    return {
+      isLoading: isCreateLoading,
+      handleFn: submitHandler,
+    };
+  }, [isCreateLoading, submitHandler]);
+
+  const validateAddress = React.useMemo(() => {
+    return {
+      isLoading: validateAddressMutation.isLoading,
+      handleFn: validateAddressHandler,
+    };
+  }, [validateAddressHandler, validateAddressMutation]);
+
+  const validateCredentials = React.useMemo(() => {
+    return {
+      isLoading: validateCredentialsMutation.isLoading,
+      handleFn: validateCredentialsHandler,
+    };
+  }, [validateCredentialsHandler, validateCredentialsMutation]);
+
   return (
     <AvataxConfigurationForm
-      isLoading={isCreateLoading}
-      onSubmit={submitHandler}
+      submit={submit}
+      validateAddress={validateAddress}
+      validateCredentials={validateCredentials}
       defaultValues={defaultAvataxConfig}
       leftButton={
         <Button

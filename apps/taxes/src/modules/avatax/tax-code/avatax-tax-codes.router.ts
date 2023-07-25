@@ -14,11 +14,11 @@ export const avataxTaxCodesRouter = router({
       name: "avataxTaxCodesRouter.getAllForId",
     });
 
-    const connectionService = new AvataxConnectionService(
-      ctx.apiClient,
-      ctx.appId!,
-      ctx.saleorApiUrl
-    );
+    const connectionService = new AvataxConnectionService({
+      appId: ctx.appId!,
+      client: ctx.apiClient,
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
 
     const connection = await connectionService.getById(input.connectionId);
     const taxCodesService = new AvataxTaxCodesService(connection.config);

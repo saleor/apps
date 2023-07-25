@@ -26,9 +26,9 @@ const Description = ({
       <Text as="h3" variant="heading">
         {title}
       </Text>
-      <Text as="p" variant="body">
+      <Box fontWeight={"bodyMedium"} fontSize={"bodyMedium"}>
         {description}
-      </Text>
+      </Box>
     </Box>
   );
 };
