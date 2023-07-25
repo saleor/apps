@@ -2,10 +2,11 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
-import { CreateTransactionArgs } from "../avatax-client";
+import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -18,16 +19,20 @@ export class AvataxCalculateTaxesPayloadTransformer {
     return DocumentType.SalesOrder;
   }
 
-  transform(
+  async transform(
     taxBase: TaxBaseFragment,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches
-  ): CreateTransactionArgs {
+  ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
+    const avataxClient = new AvataxClient(avataxConfig);
+    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.privateMetadata);
 
     return {
       model: {
         type: this.matchDocumentType(avataxConfig),
+        entityUseCode,
         customerCode: taxBase.sourceObject.user?.id ?? "",
         companyCode: avataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit

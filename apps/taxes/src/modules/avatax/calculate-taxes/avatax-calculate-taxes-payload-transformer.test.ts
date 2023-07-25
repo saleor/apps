@@ -7,11 +7,11 @@ const mockGenerator = new AvataxCalculateTaxesMockGenerator();
 const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 describe("AvataxCalculateTaxesPayloadTransformer", () => {
-  it("returns document type of SalesInvoice", () => {
+  it("returns document type of SalesInvoice", async () => {
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-    const payload = new AvataxCalculateTaxesPayloadTransformer().transform(
+    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
       taxBaseMock,
       avataxConfigMock,
       matchesMock

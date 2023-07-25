@@ -22,13 +22,13 @@ const transformer = new AvataxOrderCreatedPayloadTransformer();
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 describe("AvataxOrderCreatedPayloadTransformer", () => {
-  it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", () => {
-    const payload = transformer.transform(orderMock, avataxConfigMock, []);
+  it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", async () => {
+    const payload = await transformer.transform(orderMock, avataxConfigMock, []);
 
     expect(payload.model.type).toBe(DocumentType.SalesInvoice);
   }),
-    it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", () => {
-      const payload = transformer.transform(
+    it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", async () => {
+      const payload = await transformer.transform(
         orderMock,
         {
           ...avataxConfigMock,
@@ -39,16 +39,17 @@ describe("AvataxOrderCreatedPayloadTransformer", () => {
 
       expect(payload.model.type).toBe(DocumentType.SalesOrder);
     });
-  it("returns lines with discounted: true when there are discounts", () => {
-    const payload = transformer.transform(discountedOrderMock, avataxConfigMock, []);
+  it("returns lines with discounted: true when there are discounts", async () => {
+    const payload = await transformer.transform(discountedOrderMock, avataxConfigMock, []);
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);
     const check = linesWithoutShipping.every((line) => line.discounted === true);
 
     expect(check).toBe(true);
   });
-  it("returns lines with discounted: false when there are no discounts", () => {
-    const payload = transformer.transform(orderMock, avataxConfigMock, []);
+  it("returns lines with discounted: false when there are no discounts", async () => {
+    const transformer = new AvataxOrderCreatedPayloadTransformer();
+    const payload = await transformer.transform(orderMock, avataxConfigMock, []);
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);
     const check = linesWithoutShipping.every((line) => line.discounted === false);
