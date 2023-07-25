@@ -27,7 +27,7 @@ export const avataxConfigSchema = z
     companyCode: z.string().optional(),
     isAutocommit: z.boolean(),
     shippingTaxCode: z.string().optional(),
-    isDocumentRecordingEnabled: z.boolean(),
+    isDocumentRecordingEnabled: z.boolean().default(true),
     address: addressSchema,
   })
   .merge(baseAvataxConfigSchema);
