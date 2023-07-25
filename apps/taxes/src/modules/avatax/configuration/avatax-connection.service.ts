@@ -5,11 +5,11 @@ import { createSettingsManager } from "../../app/metadata-manager";
 import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxConnectionRepository } from "./avatax-connection-repository";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
+import { AvataxClient } from "../avatax-client";
 
 export class AvataxConnectionService {
   private logger: Logger;
   private avataxConnectionRepository: AvataxConnectionRepository;
-  private authValidationService: AvataxAuthValidationService;
 
   constructor(client: Client, appId: string, saleorApiUrl: string) {
     this.logger = createLogger({
@@ -19,11 +19,13 @@ export class AvataxConnectionService {
     const settingsManager = createSettingsManager(client, appId);
 
     this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);
-    this.authValidationService = new AvataxAuthValidationService();
   }
 
   private async checkIfAuthorized(input: AvataxConfig) {
-    await this.authValidationService.validate(input);
+    const avataxClient = new AvataxClient(input);
+    const authValidationService = new AvataxAuthValidationService(avataxClient);
+
+    await authValidationService.validate();
   }
 
   getAll(): Promise<AvataxConnection[]> {

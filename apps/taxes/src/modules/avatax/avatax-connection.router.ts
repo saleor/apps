@@ -176,11 +176,11 @@ export const avataxConnectionRouter = router({
         procedure: "avataxConnectionRouter.validateAuth",
       });
 
-      const authValidation = new AvataxEditAuthValidationService(
-        ctx.apiClient,
-        ctx.appId!,
-        ctx.saleorApiUrl
-      );
+      const authValidation = new AvataxEditAuthValidationService({
+        appId: ctx.appId!,
+        client: ctx.apiClient,
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       await authValidation.validate(input.id, input.value);
 
@@ -194,9 +194,11 @@ export const avataxConnectionRouter = router({
         procedure: "avataxConnectionRouter.createValidateAuth",
       });
 
-      const authValidation = new AvataxAuthValidationService();
+      const avataxClient = new AvataxClient(input.value);
 
-      const result = await authValidation.validate(input.value);
+      const authValidation = new AvataxAuthValidationService(avataxClient);
+
+      const result = await authValidation.validate();
 
       logger.info(`Avatax client was successfully validated`);
 
