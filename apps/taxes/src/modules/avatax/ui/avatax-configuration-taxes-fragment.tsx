@@ -9,7 +9,7 @@ import { useAvataxConfigurationStatus } from "./configuration-status";
 
 export const AvataxConfigurationTaxesFragment = () => {
   const { control, formState } = useFormContext<AvataxConfig>();
-  const [status] = useAvataxConfigurationStatus();
+  const { status } = useAvataxConfigurationStatus();
   const disabled = status === "not_authenticated";
 
   return (

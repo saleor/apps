@@ -36,7 +36,7 @@ type AvataxConfigurationFormProps = {
 };
 
 export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => {
-  const [status] = useAvataxConfigurationStatus();
+  const { status } = useAvataxConfigurationStatus();
   const formMethods = useForm({
     defaultValues: defaultAvataxConfig,
     resolver: zodResolver(avataxConfigSchema),

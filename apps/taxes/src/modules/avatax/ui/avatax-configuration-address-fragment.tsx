@@ -34,7 +34,7 @@ export const AvataxConfigurationAddressFragment = (
   props: AvataxConfigurationAddressFragmentProps
 ) => {
   const { control, formState, getValues, setValue, watch } = useFormContext<AvataxConfig>();
-  const [status, setStatus] = useAvataxConfigurationStatus();
+  const { status, setStatus } = useAvataxConfigurationStatus();
   const [suggestions, setSuggestions] = React.useState<AddressSuggestions>();
 
   const { notifyError, notifySuccess, notifyInfo } = useDashboardNotification();

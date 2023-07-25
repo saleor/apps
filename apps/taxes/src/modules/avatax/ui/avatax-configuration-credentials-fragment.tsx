@@ -4,12 +4,12 @@ import { Box, Button } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { errorUtils } from "../../../lib/error-utils";
 import { AppToggle } from "../../ui/app-toggle";
 import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
-import { errorUtils } from "../../../lib/error-utils";
 
 type AvataxConfigurationCredentialsFragmentProps = {
   onValidateCredentials: (input: BaseAvataxConfig) => Promise<void>;
@@ -20,7 +20,7 @@ export const AvataxConfigurationCredentialsFragment = (
   props: AvataxConfigurationCredentialsFragmentProps
 ) => {
   const { control, formState, getValues, watch } = useFormContext<AvataxConfig>();
-  const [_, setStatus] = useAvataxConfigurationStatus();
+  const { setStatus } = useAvataxConfigurationStatus();
 
   const { notifyError, notifySuccess } = useDashboardNotification();
 

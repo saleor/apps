@@ -5,5 +5,7 @@ const statusAtom = atom<
 >("not_authenticated");
 
 export const useAvataxConfigurationStatus = () => {
-  return useAtom(statusAtom);
+  const [status, setStatus] = useAtom(statusAtom);
+
+  return { status, setStatus };
 };

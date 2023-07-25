@@ -12,7 +12,7 @@ import { useAvataxConfigurationStatus } from "./configuration-status";
 const avataxObfuscator = new AvataxObfuscator();
 
 export const EditAvataxConfiguration = () => {
-  const [_, setStatus] = useAvataxConfigurationStatus();
+  const { setStatus } = useAvataxConfigurationStatus();
 
   const router = useRouter();
   const { id } = router.query;
