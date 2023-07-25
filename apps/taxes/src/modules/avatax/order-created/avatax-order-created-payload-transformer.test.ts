@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { AvataxOrderCreatedMockGenerator } from "./avatax-order-created-mock-generator";
 import { AvataxOrderCreatedPayloadTransformer } from "./avatax-order-created-payload-transformer";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 const mockGenerator = new AvataxOrderCreatedMockGenerator();
 
@@ -16,12 +17,29 @@ const discountedOrderMock = mockGenerator.generateOrder({
   ],
 });
 
+const transformer = new AvataxOrderCreatedPayloadTransformer();
+
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 describe("AvataxOrderCreatedPayloadTransformer", () => {
-  it("returns lines with discounted: true when there are discounts", () => {
-    const transformer = new AvataxOrderCreatedPayloadTransformer();
+  it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", () => {
+    const payload = transformer.transform(orderMock, avataxConfigMock, []);
 
+    expect(payload.model.type).toBe(DocumentType.SalesInvoice);
+  }),
+    it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", () => {
+      const payload = transformer.transform(
+        orderMock,
+        {
+          ...avataxConfigMock,
+          isDocumentRecordingEnabled: false,
+        },
+        []
+      );
+
+      expect(payload.model.type).toBe(DocumentType.SalesOrder);
+    });
+  it("returns lines with discounted: true when there are discounts", () => {
     const payload = transformer.transform(discountedOrderMock, avataxConfigMock, []);
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);
@@ -30,7 +48,6 @@ describe("AvataxOrderCreatedPayloadTransformer", () => {
     expect(check).toBe(true);
   });
   it("returns lines with discounted: false when there are no discounts", () => {
-    const transformer = new AvataxOrderCreatedPayloadTransformer();
     const payload = transformer.transform(orderMock, avataxConfigMock, []);
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);

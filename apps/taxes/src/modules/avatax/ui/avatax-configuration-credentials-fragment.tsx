@@ -121,7 +121,24 @@ export const AvataxConfigurationCredentialsFragment = (
             }
             name="isSandbox"
           />
-
+          <AppToggle
+            control={control}
+            label="Document recording"
+            helperText={
+              <HelperText>
+                When turned off, the document type will always be set to <i>SalesOrder</i>. This
+                means the transactions will not be recorded in Avatax. Read more{" "}
+                <TextLink
+                  href="https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/disable-document-recording/"
+                  newTab
+                >
+                  here
+                </TextLink>
+                .
+              </HelperText>
+            }
+            name="isDocumentRecordingEnabled"
+          />
           <AppToggle
             control={control}
             label="Autocommit"

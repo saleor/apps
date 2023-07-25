@@ -12,6 +12,8 @@ export const HelperText = ({
     <Text
       color={disabled ? "textNeutralDisabled" : "textNeutralSubdued"}
       fontWeight={"captionLarge"}
+      marginTop={2}
+      as="p"
     >
       {children}
     </Text>
