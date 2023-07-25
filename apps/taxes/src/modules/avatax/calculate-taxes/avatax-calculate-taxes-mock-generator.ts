@@ -106,6 +106,7 @@ const defaultTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
+    privateMetadata: [],
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },

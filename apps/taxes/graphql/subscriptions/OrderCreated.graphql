@@ -64,6 +64,10 @@ fragment OrderCreatedSubscription on Order {
       amount
     }
   }
+  privateMetadata {
+    key
+    value
+  }
 }
 fragment OrderCreatedEventSubscription on Event {
   __typename
