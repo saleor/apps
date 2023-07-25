@@ -30,11 +30,11 @@ const postInputSchema = z.object({
 const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      connectionService: new PublicAvataxConnectionService(
-        ctx.apiClient,
-        ctx.appId!,
-        ctx.saleorApiUrl
-      ),
+      connectionService: new PublicAvataxConnectionService({
+        appId: ctx.appId!,
+        client: ctx.apiClient,
+        saleorApiUrl: ctx.saleorApiUrl,
+      }),
     },
   })
 );
@@ -129,11 +129,11 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Route called");
 
-      const addressValidationService = new AvataxEditAddressValidationService(
-        ctx.apiClient,
-        ctx.appId!,
-        ctx.saleorApiUrl
-      );
+      const addressValidationService = new AvataxEditAddressValidationService({
+        appId: ctx.appId!,
+        client: ctx.apiClient,
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       const result = await addressValidationService.validate(input.id, input.value);
 

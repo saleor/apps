@@ -7,8 +7,16 @@ import { TaxJarConnectionService } from "./taxjar-connection.service";
 export class PublicTaxJarConnectionService {
   private readonly connectionService: TaxJarConnectionService;
   private readonly obfuscator = new TaxJarConnectionObfuscator();
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
-    this.connectionService = new TaxJarConnectionService(client, appId, saleorApiUrl);
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
+    this.connectionService = new TaxJarConnectionService({ client, appId, saleorApiUrl });
     this.obfuscator = new TaxJarConnectionObfuscator();
   }
 

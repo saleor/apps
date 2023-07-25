@@ -7,8 +7,16 @@ import { AvataxConnectionService } from "./avatax-connection.service";
 export class PublicAvataxConnectionService {
   private readonly connectionService: AvataxConnectionService;
   private readonly obfuscator: AvataxObfuscator;
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
-    this.connectionService = new AvataxConnectionService(client, appId, saleorApiUrl);
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
+    this.connectionService = new AvataxConnectionService({ client, appId, saleorApiUrl });
     this.obfuscator = new AvataxObfuscator();
   }
 

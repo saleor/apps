@@ -11,7 +11,15 @@ export class AvataxConnectionService {
   private logger: Logger;
   private avataxConnectionRepository: AvataxConnectionRepository;
 
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
     this.logger = createLogger({
       name: "AvataxConnectionService",
     });

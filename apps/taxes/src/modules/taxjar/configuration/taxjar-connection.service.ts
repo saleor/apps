@@ -9,7 +9,15 @@ import { TaxJarValidationService } from "./taxjar-validation.service";
 export class TaxJarConnectionService {
   private logger: Logger;
   private taxJarConnectionRepository: TaxJarConnectionRepository;
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
     this.logger = createLogger({
       name: "TaxJarConnectionService",
     });

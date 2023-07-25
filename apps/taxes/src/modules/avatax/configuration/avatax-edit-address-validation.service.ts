@@ -5,10 +5,30 @@ import { AvataxAddressValidationService } from "./avatax-address-validation.serv
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
 
 export class AvataxEditAddressValidationService {
-  constructor(private client: Client, private appId: string, private saleorApiUrl: string) {}
+  private client: Client;
+  private appId: string;
+  private saleorApiUrl: string;
+
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
+    this.client = client;
+    this.appId = appId;
+    this.saleorApiUrl = saleorApiUrl;
+  }
 
   async validate(id: string, input: AvataxConfig) {
-    const transformer = new AvataxPatchInputTransformer(this.client, this.appId, this.saleorApiUrl);
+    const transformer = new AvataxPatchInputTransformer({
+      client: this.client,
+      appId: this.appId,
+      saleorApiUrl: this.saleorApiUrl,
+    });
 
     const config = await transformer.patchInput(id, input);
 

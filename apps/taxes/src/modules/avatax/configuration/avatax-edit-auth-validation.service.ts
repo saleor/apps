@@ -29,7 +29,11 @@ export class AvataxEditAuthValidationService {
   }
 
   async validate(id: string, input: Pick<AvataxConfig, "credentials" | "isSandbox">) {
-    const transformer = new AvataxPatchInputTransformer(this.client, this.appId, this.saleorApiUrl);
+    const transformer = new AvataxPatchInputTransformer({
+      client: this.client,
+      appId: this.appId,
+      saleorApiUrl: this.saleorApiUrl,
+    });
     const credentials = await transformer.patchCredentials(id, input.credentials);
     const avataxClient = new AvataxClient({ ...input, credentials });
 

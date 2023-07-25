@@ -13,11 +13,19 @@ export class AvataxPatchInputTransformer {
   private connection: AvataxConnectionService;
   private obfuscator: Obfuscator;
 
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
     this.logger = createLogger({
       name: "AvataxPatchInputTransformer",
     });
-    this.connection = new AvataxConnectionService(client, appId, saleorApiUrl);
+    this.connection = new AvataxConnectionService({ client, appId, saleorApiUrl });
     this.obfuscator = new Obfuscator();
   }
 
