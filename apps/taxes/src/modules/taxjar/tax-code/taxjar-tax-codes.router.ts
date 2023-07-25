@@ -15,11 +15,11 @@ export const taxJarTaxCodesRouter = router({
       name: "taxjarTaxCodesRouter.getAllForId",
     });
 
-    const connectionService = new TaxJarConnectionService(
-      ctx.apiClient,
-      ctx.appId!,
-      ctx.saleorApiUrl
-    );
+    const connectionService = new TaxJarConnectionService({
+      appId: ctx.appId!,
+      client: ctx.apiClient,
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
 
     const connection = await connectionService.getById(input.connectionId);
     const taxCodesService = new TaxJarTaxCodesService(connection.config);

@@ -9,9 +9,25 @@ export class PublicProviderConnectionsService {
   private avataxConnectionService: PublicAvataxConnectionService;
   private taxJarConnectionService: PublicTaxJarConnectionService;
   private logger: Logger;
-  constructor(client: Client, appId: string, saleorApiUrl: string) {
-    this.avataxConnectionService = new PublicAvataxConnectionService(client, appId, saleorApiUrl);
-    this.taxJarConnectionService = new PublicTaxJarConnectionService(client, appId, saleorApiUrl);
+  constructor({
+    client,
+    appId,
+    saleorApiUrl,
+  }: {
+    client: Client;
+    appId: string;
+    saleorApiUrl: string;
+  }) {
+    this.avataxConnectionService = new PublicAvataxConnectionService({
+      client,
+      appId,
+      saleorApiUrl,
+    });
+    this.taxJarConnectionService = new PublicTaxJarConnectionService({
+      client,
+      appId,
+      saleorApiUrl,
+    });
     this.logger = createLogger({
       name: "PublicProviderConnectionsService",
       metadataKey: TAX_PROVIDER_KEY,

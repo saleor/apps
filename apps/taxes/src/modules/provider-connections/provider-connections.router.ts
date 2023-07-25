@@ -9,11 +9,11 @@ export const providerConnectionsRouter = router({
       name: "providerConnectionsRouter.getAll",
     });
 
-    const items = await new PublicProviderConnectionsService(
-      ctx.apiClient,
-      ctx.appId!,
-      ctx.saleorApiUrl
-    ).getAll();
+    const items = await new PublicProviderConnectionsService({
+      appId: ctx.appId!,
+      client: ctx.apiClient,
+      saleorApiUrl: ctx.saleorApiUrl,
+    }).getAll();
 
     logger.info("Returning tax providers configuration");
 
