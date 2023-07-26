@@ -27,7 +27,7 @@ export class AvataxOrderCreatedPayloadTransformer {
     const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-    const entityUseCode = await entityTypeMatcher.match(order.privateMetadata);
+    const entityUseCode = await entityTypeMatcher.match(order.metadata);
 
     return {
       model: {

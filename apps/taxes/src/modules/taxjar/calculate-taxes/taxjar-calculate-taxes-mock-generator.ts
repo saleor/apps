@@ -95,7 +95,7 @@ const taxIncludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
-    privateMetadata: [],
+    metadata: [],
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },
@@ -193,7 +193,7 @@ const taxExcludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
-    privateMetadata: [],
+    metadata: [],
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },

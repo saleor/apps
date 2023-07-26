@@ -13,7 +13,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     /*
      * * For calculating taxes, we always use DocumentType.SalesOrder because it doesn't cause transaction recording.
      * * The full flow is described here: https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/design-document-workflow/should-i-commit/
-     * * config.isDocumentRecordingEnabledEnabled is used to determine if the transaction should be recorded (hence if the document type should be SalesOrder).
+     * * config.isDocumentRecordingEnabled is used to determine if the transaction should be recorded (hence if the document type should be SalesOrder).
      * * Given that we never want to record the transaction in calculate taxes, we always return DocumentType.SalesOrder.
      */
     return DocumentType.SalesOrder;
@@ -27,7 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.privateMetadata);
+    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.metadata);
 
     return {
       model: {

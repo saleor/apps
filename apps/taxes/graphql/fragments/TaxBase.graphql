@@ -61,7 +61,7 @@ fragment TaxBase on TaxableObject {
   }
   sourceObject {
     ... on Checkout {
-      privateMetadata {
+      metadata {
         key
         value
       }
@@ -70,7 +70,7 @@ fragment TaxBase on TaxableObject {
       }
     }
     ... on Order {
-      privateMetadata {
+      metadata {
         key
         value
       }
