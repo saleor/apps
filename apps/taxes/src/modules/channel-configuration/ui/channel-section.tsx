@@ -1,3 +1,4 @@
+import { Text } from "@saleor/macaw-ui/next";
 import { Section } from "../../ui/app-section";
 import { ChannelList } from "./channel-list";
 import { AppDashboardLink } from "../../ui/app-dashboard-link";
@@ -9,15 +10,17 @@ const Intro = () => {
       data-testid="channel-intro"
       description={
         <>
-          This table displays all the channels configured to use the tax app as the tax calculation
-          method.
-          <br />
-          <br />
-          You can change the tax configuration method for each channel in the{" "}
-          <AppDashboardLink data-testid="configuration-taxes-text-link" href="/taxes/channels">
-            Configuration → Taxes
-          </AppDashboardLink>{" "}
-          view.
+          <Text as="p" marginBottom={4}>
+            This table displays all the channels configured to use the tax app as the tax
+            calculation method.
+          </Text>
+          <Text as="p">
+            You can change the tax configuration method for each channel in the{" "}
+            <AppDashboardLink data-testid="configuration-taxes-text-link" href="/taxes/channels">
+              Configuration → Taxes
+            </AppDashboardLink>{" "}
+            view.
+          </Text>
         </>
       }
     />

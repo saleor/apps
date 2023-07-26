@@ -8,11 +8,13 @@ export const TaxJarInstructions = () => {
       title={"TaxJar Configuration"}
       description={
         <>
-          The form consists of two sections: <i>Credentials</i> and <i>Address</i>.
-          <br />
-          <br />
-          <i>Credentials</i> will fail if:
-          <Box as="ol" margin={0}>
+          <Text as="p" marginBottom={4}>
+            The form consists of two sections: <i>Credentials</i> and <i>Address</i>.
+          </Text>
+          <Text as="p">
+            <i>Credentials</i> will fail if:
+          </Text>
+          <Box as="ol" margin={0} marginBottom={4}>
             <li>
               <Text>- The API Key is incorrect.</Text>
             </li>
@@ -20,10 +22,10 @@ export const TaxJarInstructions = () => {
               <Text>- The API Key does not match &quot;sandbox mode&quot; setting.</Text>
             </li>
           </Box>
-          <br />
-          <br />
-          <i>Address</i> will fail if:
-          <Box as="ol" margin={0}>
+          <Text as="p" marginBottom={4}>
+            <i>Address</i> will fail if:
+          </Text>
+          <Box as="ol" margin={0} marginBottom={4}>
             <li>
               <Text>
                 - The address does not match{" "}
@@ -34,13 +36,13 @@ export const TaxJarInstructions = () => {
               </Text>
             </li>
           </Box>
-          <br />
-          <br />
-          If the configuration fails, please visit the{" "}
-          <TextLink href="https://developers.taxjar.com/api/reference/" newTab>
-            TaxJar documentation
-          </TextLink>
-          .
+          <Text as="p" marginBottom={4}>
+            If the configuration fails, please visit the{" "}
+            <TextLink href="https://developers.taxjar.com/api/reference/" newTab>
+              TaxJar documentation
+            </TextLink>
+            .
+          </Text>
         </>
       }
     />
