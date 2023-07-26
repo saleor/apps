@@ -344,7 +344,6 @@ const orderLineMonospaceTeePayloadFragment: NotifyPayloadFulfillmentUpdate["orde
     id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
     weight: "",
     is_preorder: false,
-    preorder_global_threshold: null,
     preorder_end_date: null,
     first_image: {
       original: {
