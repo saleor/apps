@@ -1,5 +1,18 @@
 # saleor-app-emails-and-messages
 
+## 1.9.2
+
+### Patch Changes
+
+- aa6fec1: Fixed badly aligned Toggles. Now icon and label are centered
+- 2fab86b: Updated graphql package to 16.7.1 and @graphql-codegen related dependencies to the latest version.
+- aa6fec1: Updated Macaw UI to pre-106
+- Updated dependencies [aa6fec1]
+- Updated dependencies [aa6fec1]
+  - @saleor/react-hook-form-macaw@0.2.2
+  - @saleor/apps-shared@1.7.5
+  - @saleor/apps-ui@1.1.5
+
 ## 1.9.1
 
 ### Patch Changes

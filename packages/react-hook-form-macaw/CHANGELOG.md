@@ -1,5 +1,12 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.2
+
+### Patch Changes
+
+- aa6fec1: Updated Macaw UI to pre-106
+- aa6fec1: Updated Macaw UI bindings to reflect breaking changes in Select APIs
+
 ## 0.2.1
 
 ### Patch Changes
