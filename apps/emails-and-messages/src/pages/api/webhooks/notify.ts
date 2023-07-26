@@ -4,7 +4,10 @@ import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
 
-// TODO: explain this event
+/*
+ * The Notify webhook is triggered on multiple Saleor events.
+ * Type of the message is determined by `notify_event` field in the payload.
+ */
 
 export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   name: "notify",
@@ -32,10 +35,10 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 
+  // Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
   const event = notifyEventMapping[payload.notify_event];
 
   if (!event) {
-    // NOTIFY webhook sends multiple events to the same endpoint. The app supports only a subset of them.
     logger.debug(`The type of received notify event (${payload.notify_event}) is not supported.`);
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }

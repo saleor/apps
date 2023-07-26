@@ -10,11 +10,6 @@ export const notifyEventMapping: Record<string, MessageEventTypes> = {
   order_fulfillment_update: "ORDER_FULFILLMENT_UPDATE",
 };
 
-/*
- * Notify event handles multiple event types which are recognized based on payload field `notify_event`.
- * Handler recognizes if event is one of the supported typed and sends appropriate message.
- */
-
 interface IssuingPrincipal {
   id?: string;
   type?: string;
