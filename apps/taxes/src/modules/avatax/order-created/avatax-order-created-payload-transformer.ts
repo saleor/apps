@@ -2,10 +2,11 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
-import { CreateTransactionArgs } from "../avatax-client";
+import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-created-payload-lines-transformer";
+import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -18,16 +19,20 @@ export class AvataxOrderCreatedPayloadTransformer {
 
     return DocumentType.SalesInvoice;
   }
-  transform(
+  async transform(
     order: OrderCreatedSubscriptionFragment,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches
-  ): CreateTransactionArgs {
+  ): Promise<CreateTransactionArgs> {
     const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
+    const avataxClient = new AvataxClient(avataxConfig);
+    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
 
     return {
       model: {
         type: this.matchDocumentType(avataxConfig),
+        entityUseCode,
         customerCode:
           order.user?.id ??
           "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,

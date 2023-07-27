@@ -86,4 +86,11 @@ export class AvataxClient {
   async ping() {
     return this.client.ping();
   }
+
+  async getEntityUseCode(useCode: string) {
+    return this.client.listEntityUseCodes({
+      // https://developer.avalara.com/avatax/filtering-in-rest/
+      filter: `code eq ${useCode}`,
+    });
+  }
 }

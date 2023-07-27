@@ -95,6 +95,7 @@ const taxIncludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
+    avataxEntityCode: null,
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },
@@ -148,6 +149,7 @@ const taxExcludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjUxZDc2ZDY1LTFhYTgtNGEzMi1hNWJhLTJkZDMzNjVhZDhlZQ==",
+
         orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQ5",
           product: {
@@ -170,6 +172,7 @@ const taxExcludedTaxBase: TaxBase = {
       sourceLine: {
         __typename: "OrderLine",
         id: "T3JkZXJMaW5lOjlhMGJjZDhmLWFiMGQtNDJhOC04NTBhLTEyYjQ2YjJiNGIyZg==",
+
         orderProductVariant: {
           id: "UHJvZHVjdFZhcmlhbnQ6MzQw",
           product: {
@@ -190,6 +193,7 @@ const taxExcludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
+    avataxEntityCode: null,
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },

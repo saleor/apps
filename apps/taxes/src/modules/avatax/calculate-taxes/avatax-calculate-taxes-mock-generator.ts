@@ -106,6 +106,7 @@ const defaultTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
+    avataxEntityCode: null,
     user: {
       id: "VXNlcjoyMDg0NTEwNDEw",
     },
