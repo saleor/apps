@@ -9,6 +9,8 @@ import {
   InvoiceSentWebhookPayloadFragment,
   GiftCardSentWebhookPayloadFragment,
   OrderRefundedWebhookPayloadFragment,
+  LanguageCodeEnum,
+  OrderStatus,
 } from "../../../generated/graphql";
 import {
   NotifyPayloadAccountChangeEmailRequest,
@@ -21,6 +23,11 @@ import {
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
   number: "198",
+  status: OrderStatus.Unfulfilled,
+  languageCodeEnum: LanguageCodeEnum.En,
+  created: "",
+  displayGrossPrices: true,
+  isShippingRequired: true,
   userEmail: "adrian.king@example.com",
   metadata: [
     {
@@ -41,9 +48,15 @@ const exampleOrderPayload: OrderDetailsFragment = {
     email: "adrian.king@example.com",
     firstName: "Adrian",
     lastName: "King",
+    languageCode: LanguageCodeEnum.En,
   },
   billingAddress: {
+    firstName: "Adrian",
+    lastName: "King",
     streetAddress1: "59314 Mary Well Suite 281",
+    streetAddress2: "",
+    companyName: "",
+    cityArea: "",
     city: "METROPOLIS",
     postalCode: "71653",
     country: {
@@ -51,7 +64,12 @@ const exampleOrderPayload: OrderDetailsFragment = {
     },
   },
   shippingAddress: {
+    firstName: "Adrian",
+    lastName: "King",
     streetAddress1: "59314 Mary Well Suite 281",
+    streetAddress2: "",
+    companyName: "",
+    cityArea: "",
     city: "METROPOLIS",
     postalCode: "71653",
     country: {
@@ -73,27 +91,13 @@ const exampleOrderPayload: OrderDetailsFragment = {
           currency: "USD",
           amount: 5,
         },
-      },
-      totalPrice: {
-        gross: {
+        net: {
           currency: "USD",
-          amount: 5,
+          amount: 4,
         },
-      },
-    },
-    {
-      id: "T3JkZXJMaW5lOjVhYmEzMTBkLTZkMzEtNDNlNy1hZjAyLTdlNGUwM2UzYmI4ZA==",
-      productName: "Code Division T-shirt",
-      variantName: "L",
-      quantity: 1,
-      thumbnail: {
-        url: "https://placehold.jp/150x150.png",
-        alt: "",
-      },
-      unitPrice: {
-        gross: {
+        tax: {
           currency: "USD",
-          amount: 5,
+          amount: 1,
         },
       },
       totalPrice: {
@@ -101,24 +105,96 @@ const exampleOrderPayload: OrderDetailsFragment = {
           currency: "USD",
           amount: 5,
         },
+        net: {
+          currency: "USD",
+          amount: 4,
+        },
+        tax: {
+          currency: "USD",
+          amount: 1,
+        },
       },
+      isShippingRequired: true,
+      translatedProductName: "Black Hoodie",
+      translatedVariantName: "XL",
+      quantityFulfilled: 0,
+      taxRate: 10,
+      unitDiscountValue: 0,
+      unitDiscount: {
+        amount: 0,
+        currency: "USD",
+      },
+      undiscountedUnitPrice: {
+        gross: {
+          currency: "USD",
+          amount: 5,
+        },
+        net: {
+          currency: "USD",
+          amount: 4,
+        },
+        tax: {
+          currency: "USD",
+          amount: 1,
+        },
+      },
+      metadata: [],
+      privateMetadata: [],
     },
   ],
   subtotal: {
     gross: {
-      amount: 10,
+      amount: 5,
+      currency: "USD",
+    },
+    net: {
+      amount: 4,
+      currency: "USD",
+    },
+    tax: {
+      amount: 1,
       currency: "USD",
     },
   },
   shippingPrice: {
     gross: {
-      amount: 61.62,
+      amount: 10,
+      currency: "USD",
+    },
+    net: {
+      amount: 8,
+      currency: "USD",
+    },
+    tax: {
+      amount: 2,
+      currency: "USD",
+    },
+  },
+  undiscountedTotal: {
+    gross: {
+      amount: 15,
+      currency: "USD",
+    },
+    net: {
+      amount: 12,
+      currency: "USD",
+    },
+    tax: {
+      amount: 3,
       currency: "USD",
     },
   },
   total: {
     gross: {
-      amount: 71.62,
+      amount: 15,
+      currency: "USD",
+    },
+    net: {
+      amount: 12,
+      currency: "USD",
+    },
+    tax: {
+      amount: 3,
       currency: "USD",
     },
   },

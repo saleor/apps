@@ -1,7 +1,11 @@
 fragment OrderDetails on Order {
   id
   number
+  status
+  languageCodeEnum
   userEmail
+  created
+  redirectUrl
   channel {
     slug
   }
@@ -17,28 +21,103 @@ fragment OrderDetails on Order {
     email
     firstName
     lastName
+    languageCode
   }
   billingAddress {
+    firstName
+    lastName
+    companyName
     streetAddress1
+    streetAddress2
     city
+    cityArea
     postalCode
     country {
       country
     }
+    phone
   }
   shippingAddress {
+    firstName
+    lastName
+    companyName
     streetAddress1
+    streetAddress2
     city
+    cityArea
     postalCode
     country {
       country
     }
+    phone
   }
   lines {
     id
+    digitalContentUrl {
+      id
+      url
+    }
+    isShippingRequired
+    metadata {
+      key
+      value
+    }
+    privateMetadata {
+      key
+      value
+    }
     productName
+    translatedProductName
     variantName
+    translatedVariantName
+    productSku
+    variant {
+      preorder{
+        endDate
+      }
+      weight{
+        unit
+        value
+      }
+      attributes {
+        attribute {
+          id
+          name
+          slug
+        }
+        values {
+          id
+          name
+          slug
+          file {
+            url
+            contentType
+          }
+        }
+      }
+      product {
+        attributes {
+          attribute {
+            id
+            name
+            slug
+          }
+          values {
+            id
+            name
+            slug
+            file{
+              url
+              contentType
+            }
+            
+          }
+        }
+      }
+    }
     quantity
+    quantityFulfilled
+    taxRate
     thumbnail {
       url
       alt
@@ -48,9 +127,46 @@ fragment OrderDetails on Order {
         currency
         amount
       }
+      net {
+        currency
+        amount
+      }
+      tax {
+        currency
+        amount
+      }
     }
     totalPrice {
       gross {
+        currency
+        amount
+      }
+      net {
+        currency
+        amount
+      }
+      tax {
+        currency
+        amount
+      }
+    }
+    unitDiscount {
+      currency
+      amount
+    }
+    unitDiscountReason
+    unitDiscountType
+    unitDiscountValue
+    undiscountedUnitPrice{
+      gross {
+        currency
+        amount
+      }
+      net {
+        currency
+        amount
+      }
+      tax {
         currency
         amount
       }
@@ -61,11 +177,27 @@ fragment OrderDetails on Order {
       amount
       currency
     }
+    net {
+      currency
+      amount
+    }
+    tax {
+      currency
+      amount
+    }
   }
   shippingPrice {
     gross {
       amount
       currency
+    }
+    net {
+      currency
+      amount
+    }
+    tax {
+      currency
+      amount
     }
   }
   total {
@@ -73,5 +205,30 @@ fragment OrderDetails on Order {
       amount
       currency
     }
+    net {
+      currency
+      amount
+    }
+    tax {
+      currency
+      amount
+    }
   }
+  undiscountedTotal {
+    gross {
+      amount
+      currency
+    }
+    net {
+      currency
+      amount
+    }
+    tax {
+      currency
+      amount
+    }
+  }
+  displayGrossPrices
+  isShippingRequired
+  shippingMethodName
 }
