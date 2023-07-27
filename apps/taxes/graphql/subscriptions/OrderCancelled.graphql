@@ -1,0 +1,32 @@
+fragment OrderCancelledSubscription on Order {
+  id
+  privateMetadata {
+    key
+    value
+  }
+  channel {
+    id
+    slug
+  }
+}
+
+fragment OrderCancelledEventSubscription on Event {
+  __typename
+  ... on OrderCancelled {
+    order {
+      ...OrderCancelledSubscription
+    }
+    recipient {
+      privateMetadata {
+        key
+        value
+      }
+    }
+  }
+}
+
+subscription OrderCancelledSubscription {
+  event {
+    ...OrderCancelledEventSubscription
+  }
+}
