@@ -61,19 +61,13 @@ fragment TaxBase on TaxableObject {
   }
   sourceObject {
     ... on Checkout {
-      metadata {
-        key
-        value
-      }
+      avataxEntityCode: metafield(key: "avataxEntityCode")
       user {
         id
       }
     }
     ... on Order {
-      metadata {
-        key
-        value
-      }
+      avataxEntityCode: metafield(key: "avataxEntityCode")
       user {
         id
       }

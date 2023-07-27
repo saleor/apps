@@ -18,19 +18,6 @@ export class AvataxEntityTypeMatcher {
     });
   }
 
-  private readEntityCodeFromMetadata(metadata: Array<{ key: string; value: string }>) {
-    const entityCodeMetadata = metadata.find(
-      (metadataItem) => metadataItem.key === AVATAX_ENTITY_CODE
-    );
-
-    if (!entityCodeMetadata) {
-      // Entity code will not always be present in the metadata. We don't want to throw an error.
-      return undefined;
-    }
-
-    return entityCodeMetadata.value;
-  }
-
   private returnFallback() {
     // Empty string will be treated as non existing entity code.
     return "";
@@ -43,9 +30,7 @@ export class AvataxEntityTypeMatcher {
     return result.value?.[0].code || this.returnFallback();
   }
 
-  async match(metadata: Array<{ key: string; value: string }> | undefined = []) {
-    const entityCode = this.readEntityCodeFromMetadata(metadata);
-
+  async match(entityCode: string | null | undefined) {
     if (!entityCode) {
       return this.returnFallback();
     }

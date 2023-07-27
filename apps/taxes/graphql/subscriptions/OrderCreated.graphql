@@ -64,10 +64,7 @@ fragment OrderCreatedSubscription on Order {
       amount
     }
   }
-  metadata {
-    key
-    value
-  }
+  avataxEntityCode: metafield(key: "avataxEntityCode")
 }
 fragment OrderCreatedEventSubscription on Event {
   __typename

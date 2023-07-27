@@ -27,7 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.metadata);
+    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.avataxEntityCode);
 
     return {
       model: {

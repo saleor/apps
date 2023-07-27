@@ -4,19 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 
 const mockGetEntityUseCode = vi.fn();
 
-const mockedMetadata = [
-  {
-    key: "avataxEntityCode",
-    value: "entityCode",
-  },
-  {
-    key: "somethingElse",
-    value: "otherTestValue",
-  },
-];
-
 describe("AvataxEntityTypeMatcher", () => {
-  it("returns empty string when entity code is not present in metadata", async () => {
+  it("returns empty string when no entity code", async () => {
     const mockAvataxClient = {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
         Promise.resolve({ value: [{ code: "entityCode" }] })
@@ -24,7 +13,7 @@ describe("AvataxEntityTypeMatcher", () => {
     } as any as AvataxClient;
 
     const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
-    const result = await matcher.match([]);
+    const result = await matcher.match(null);
 
     expect(result).toBe("");
   });
@@ -35,7 +24,7 @@ describe("AvataxEntityTypeMatcher", () => {
 
     const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
 
-    const result = await matcher.match(mockedMetadata);
+    const result = await matcher.match("entityCode");
 
     expect(result).toBe("");
   });
@@ -48,7 +37,7 @@ describe("AvataxEntityTypeMatcher", () => {
 
     const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
 
-    const result = await matcher.match(mockedMetadata);
+    const result = await matcher.match("entityCode");
 
     expect(result).toBe("entityCode");
   });
