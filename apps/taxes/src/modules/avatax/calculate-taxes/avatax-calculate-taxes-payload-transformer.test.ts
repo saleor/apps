@@ -7,11 +7,11 @@ const mockGenerator = new AvataxCalculateTaxesMockGenerator();
 const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 describe("AvataxCalculateTaxesPayloadTransformer", () => {
-  it("returns document type of SalesInvoice", () => {
+  it("returns document type of SalesInvoice", async () => {
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-    const payload = new AvataxCalculateTaxesPayloadTransformer().transform(
+    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
       taxBaseMock,
       avataxConfigMock,
       matchesMock
@@ -19,11 +19,11 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
 
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
   });
-  it("when discounts, calculates the sum of discounts", () => {
+  it("when discounts, calculates the sum of discounts", async () => {
     const taxBaseMock = mockGenerator.generateTaxBase({ discounts: [{ amount: { amount: 10 } }] });
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-    const payload = new AvataxCalculateTaxesPayloadTransformer().transform(
+    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
       taxBaseMock,
       avataxConfigMock,
       matchesMock
@@ -31,11 +31,13 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
 
     expect(payload.model.discount).toEqual(10);
   });
-  it("when no discounts, the sum of discount is 0", () => {
+  it("when no discounts, the sum of discount is 0", async () => {
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+    const avataxConfigMock = mockGenerator.generateAvataxConfig();
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-    const payload = new AvataxCalculateTaxesPayloadTransformer().transform(
+    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
       taxBaseMock,
       avataxConfigMock,
       matchesMock
