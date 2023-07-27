@@ -3,17 +3,13 @@ import {
   OrderCreatedEventSubscriptionFragment,
   OrderStatus,
   UntypedOrderCreatedSubscriptionDocument,
-  UpdateMetadataDocument,
-  UpdateMetadataMutation,
-  UpdateMetadataMutationVariables,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 
 export const config = {
   api: {
@@ -33,35 +29,6 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
   query: UntypedOrderCreatedSubscriptionDocument,
   webhookPath: "/api/webhooks/order-created",
 });
-
-/**
- * We need to store the provider order id in the Saleor order metadata so that we can
- * update the provider order when the Saleor order is fulfilled.
- */
-async function updateOrderMetadataWithExternalId(
-  client: Client,
-  orderId: string,
-  externalId: string
-) {
-  const variables: UpdateMetadataMutationVariables = {
-    id: orderId,
-    input: [
-      {
-        key: PROVIDER_ORDER_ID_KEY,
-        value: externalId,
-      },
-    ],
-  };
-  const { error } = await client
-    .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, variables)
-    .toPromise();
-
-  if (error) {
-    throw error;
-  }
-
-  return { ok: true };
-}
 
 export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
@@ -95,7 +62,9 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
       token,
     });
 
-    await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
+    const orderMetadataManager = new OrderMetadataManager(client);
+
+    await orderMetadataManager.updateOrderMetadataWithExternalId(payload.order.id, createdOrder.id);
     logger.info("Updated order metadata with externalId");
 
     return webhookResponse.success();
