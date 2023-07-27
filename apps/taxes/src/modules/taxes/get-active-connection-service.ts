@@ -1,6 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
+  OrderCancelledEventSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
@@ -54,6 +55,10 @@ class ActiveTaxProviderService implements ProviderWebhookService {
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
     return this.client.fulfillOrder(payload);
+  }
+
+  async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
+    return this.client.cancelOrder(payload);
   }
 }
 

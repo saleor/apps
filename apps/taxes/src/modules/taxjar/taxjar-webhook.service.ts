@@ -1,4 +1,8 @@
-import { OrderCreatedSubscriptionFragment, TaxBaseFragment } from "../../../generated/graphql";
+import {
+  OrderCancelledEventSubscriptionFragment,
+  OrderCreatedSubscriptionFragment,
+  TaxBaseFragment,
+} from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
@@ -40,6 +44,12 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   // * TaxJar doesn't require any action on order fulfillment
   async fulfillOrder() {
+    return { ok: true };
+  }
+
+  async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
+    // todo: implement
+    this.logger.debug("cancelOrder", payload);
     return { ok: true };
   }
 }
