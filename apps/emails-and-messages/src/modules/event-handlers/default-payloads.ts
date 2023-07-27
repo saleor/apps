@@ -10,7 +10,13 @@ import {
   GiftCardSentWebhookPayloadFragment,
   OrderRefundedWebhookPayloadFragment,
 } from "../../../generated/graphql";
-import { NotifyEventPayload } from "../../pages/api/webhooks/notify";
+import {
+  NotifyPayloadAccountChangeEmailRequest,
+  NotifyPayloadAccountConfirmation,
+  NotifyPayloadAccountDelete,
+  NotifyPayloadAccountPasswordReset,
+  NotifyPayloadFulfillmentUpdate,
+} from "../../lib/notify-event-types";
 
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
@@ -167,7 +173,7 @@ const invoiceSentPayload: InvoiceSentWebhookPayloadFragment = {
   order: exampleOrderPayload,
 };
 
-const accountConfirmationPayload: NotifyEventPayload = {
+const accountConfirmationPayload: NotifyPayloadAccountConfirmation = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -189,7 +195,7 @@ const accountConfirmationPayload: NotifyEventPayload = {
   logo_url: "",
 };
 
-const accountPasswordResetPayload: NotifyEventPayload = {
+const accountPasswordResetPayload: NotifyPayloadAccountPasswordReset = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -211,7 +217,7 @@ const accountPasswordResetPayload: NotifyEventPayload = {
   logo_url: "",
 };
 
-const accountChangeEmailRequestPayload: NotifyEventPayload = {
+const accountChangeEmailRequestPayload: NotifyPayloadAccountChangeEmailRequest = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -227,15 +233,15 @@ const accountChangeEmailRequestPayload: NotifyEventPayload = {
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   old_email: "test@example.com1",
   new_email: "new.email@example.com1",
-  redirect_url:
-    "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  reset_url:
+    "http://example.com/reset?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
   domain: "demo.saleor.cloud",
   site_name: "Saleor e-commerce",
   logo_url: "",
 };
 
-const accountChangeEmailConfirmPayload: NotifyEventPayload = {
+const accountChangeEmailConfirmPayload: NotifyPayloadAccountChangeEmailRequest = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -248,14 +254,18 @@ const accountChangeEmailConfirmPayload: NotifyEventPayload = {
     language_code: "en",
   },
   recipient_email: "user@example.com",
+  old_email: "old@example.com",
+  new_email: "new@example.com",
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  reset_url:
+    "http://example.com/reset?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
   domain: "demo.saleor.cloud",
   site_name: "Saleor e-commerce",
   logo_url: "",
 };
 
-const accountDeletePayload: NotifyEventPayload = {
+const accountDeletePayload: NotifyPayloadAccountDelete = {
   user: {
     id: "VXNlcjoxOTY=",
     email: "user@example.com",
@@ -271,6 +281,184 @@ const accountDeletePayload: NotifyEventPayload = {
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   delete_url:
     "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const orderLineMonospaceTeePayloadFragment: NotifyPayloadFulfillmentUpdate["order"]["lines"][0] = {
+  id: "T3JkZXJMaW5lOjIwMDg4MmMzLWU3NjItNGE0NS05ZjUxLTUyZDAxYTE2ODZjOQ==",
+  product: {
+    id: "UHJvZHVjdDoxMzQ=",
+    attributes: [
+      {
+        assignment: {
+          attribute: {
+            slug: "material",
+            name: "Material",
+          },
+        },
+        values: [
+          {
+            name: "Cotton",
+            value: "",
+            slug: "cotton",
+            file_url: null,
+          },
+        ],
+      },
+    ],
+    weight: "",
+    first_image: {
+      original: {
+        "32": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/32/",
+        "64": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/64/",
+        "128": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/128/",
+        "256": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/256/",
+        "512": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/512/",
+        "1024": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/1024/",
+        "2048": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/2048/",
+        "4096": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/4096/",
+      },
+    },
+    images: [
+      {
+        original: {
+          "32": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/32/",
+          "64": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/64/",
+          "128": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/128/",
+          "256": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/256/",
+          "512": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/512/",
+          "1024": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/1024/",
+          "2048": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/2048/",
+          "4096": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE4/4096/",
+        },
+      },
+    ],
+  },
+  product_name: "Monospace Tee",
+  translated_product_name: "Monospace Tee",
+  variant_name: "S",
+  variant: {
+    id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
+    weight: "",
+    is_preorder: false,
+    preorder_end_date: null,
+    first_image: {
+      original: {
+        "32": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/32/",
+        "64": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/64/",
+        "128": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/128/",
+        "256": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/256/",
+        "512": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/512/",
+        "1024": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/1024/",
+        "2048": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/2048/",
+        "4096": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/4096/",
+      },
+    },
+    images: [
+      {
+        original: {
+          "32": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/32/",
+          "64": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/64/",
+          "128": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/128/",
+          "256": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/256/",
+          "512": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/512/",
+          "1024": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/1024/",
+          "2048": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/2048/",
+          "4096": "https://example.eu.saleor.cloud/thumbnail/UHJvZHVjdE1lZGlhOjE3/4096/",
+        },
+      },
+    ],
+  },
+  translated_variant_name: "S",
+  product_sku: "328223580",
+  product_variant_id: "UHJvZHVjdFZhcmlhbnQ6MzQ4",
+  quantity: 1,
+  quantity_fulfilled: 1,
+  currency: "PLN",
+  unit_price_net_amount: "90.00",
+  unit_price_gross_amount: "90.00",
+  unit_tax_amount: "0.00",
+  total_gross_amount: "90.00",
+  total_net_amount: "90.00",
+  total_tax_amount: "0.00",
+  tax_rate: "0.0000",
+  is_shipping_required: true,
+  is_digital: false,
+  digital_url: null,
+  unit_discount_value: "0.000",
+  unit_discount_reason: null,
+  unit_discount_type: "fixed",
+  unit_discount_amount: "0.000",
+  metadata: {},
+};
+
+const addressPayloadFragment: NotifyPayloadFulfillmentUpdate["order"]["billing_address"] = {
+  first_name: "Caitlin",
+  last_name: "Johnson",
+  company_name: "",
+  street_address_1: "8518 Pamela Track Apt. 164",
+  street_address_2: "",
+  city: "APRILSHIRE",
+  city_area: "",
+  postal_code: "28290",
+  country: "US",
+  country_area: "NC",
+  phone: "",
+};
+
+const orderPayloadFragment: NotifyPayloadFulfillmentUpdate["order"] = {
+  private_metadata: {},
+  metadata: {},
+  status: "fulfilled",
+  language_code: "en",
+  currency: "PLN",
+  total_net_amount: "468.68",
+  undiscounted_total_net_amount: "468.68",
+  total_gross_amount: "468.68",
+  undiscounted_total_gross_amount: "468.68",
+  display_gross_prices: true,
+  id: "T3JkZXI6MzU4YzcxNTktZmZlYy00ODI3LWI2MzYtYTNmYTEwMTA2MTI5",
+  token: "358c7159-ffec-4827-b636-a3fa10106129",
+  number: 231,
+  channel_slug: "channel-pln",
+  created: "2023-07-13 10:54:32.527314+00:00",
+  shipping_price_net_amount: "18.680",
+  shipping_price_gross_amount: "18.680",
+  order_details_url: "",
+  email: "caitlin.johnson@example.com",
+  subtotal_gross_amount: "450.00",
+  subtotal_net_amount: "450.00",
+  tax_amount: "0.00",
+  lines: [orderLineMonospaceTeePayloadFragment],
+  billing_address: addressPayloadFragment,
+  shipping_address: addressPayloadFragment,
+  shipping_method_name: "FedEx",
+  collection_point_name: null,
+  voucher_discount: null,
+  discount_amount: 0,
+};
+
+const fulfillmentPayloadFragment = {
+  is_tracking_number_url: false,
+  tracking_number: "1111-1111-1111-1111",
+};
+
+const fulfillmentUpdatePayload: NotifyPayloadFulfillmentUpdate = {
+  fulfillment: fulfillmentPayloadFragment,
+  order: orderPayloadFragment,
+  physical_lines: [
+    {
+      id: "XXXXXXXX",
+      order_line: orderLineMonospaceTeePayloadFragment,
+      quantity: 1,
+    },
+  ],
+  digital_lines: [],
+  recipient_email: "user@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
   domain: "demo.saleor.cloud",
   site_name: "Saleor e-commerce",
@@ -329,5 +517,6 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ORDER_CREATED: orderCreatedPayload,
   ORDER_FULFILLED: orderFulfilledPayload,
   ORDER_FULLY_PAID: orderFullyPaidPayload,
+  ORDER_FULFILLMENT_UPDATE: fulfillmentUpdatePayload,
   ORDER_REFUNDED: orderRefundedPayload,
 };
