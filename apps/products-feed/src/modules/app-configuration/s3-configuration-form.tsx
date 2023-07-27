@@ -14,10 +14,11 @@ type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;
 type Props = {
   initialData: S3BucketConfiguration;
   onSubmit(data: S3BucketConfiguration): Promise<void>;
+  onValidate(data: S3BucketConfiguration): Promise<void>;
 };
 
 export const S3ConfigurationForm = (props: Props) => {
-  const { handleSubmit, control } = useForm<S3BucketConfiguration>({
+  const { handleSubmit, control, getValues } = useForm<S3BucketConfiguration>({
     defaultValues: props.initialData,
     resolver: zodResolver(AppConfigSchema.s3Bucket),
   });
@@ -53,9 +54,14 @@ export const S3ConfigurationForm = (props: Props) => {
         placeholder={"eu-west-1"}
       />
 
-      <Button type="submit" variant="primary" alignSelf={"end"}>
-        Save bucket configuration
-      </Button>
+      <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
+        <Button variant="secondary" onClick={() => props.onValidate(getValues())}>
+          Test credentials
+        </Button>
+        <Button type="submit" variant="primary">
+          Save bucket configuration
+        </Button>
+      </Box>
     </Box>
   );
 };
@@ -67,10 +73,25 @@ export const ConnectedS3ConfigurationForm = () => {
     onSuccess() {
       notifySuccess("Success", "Updated S3 configuration");
     },
-    onError() {
+    onError({ message }) {
+      if (message) {
+        notifyError("Error", message);
+        return;
+      }
       notifyError("Error", "Failed to update, please refresh and try again");
     },
   });
+
+  const { mutate: testConfigurationMutate } =
+    trpcClient.appConfiguration.testS3BucketConfiguration.useMutation({
+      onSuccess() {
+        notifySuccess("Configuration is valid");
+      },
+      onError({ message }) {
+        notifyError("Error", message);
+      },
+    });
+
   const { data, isLoading } = trpcClient.appConfiguration.fetch.useQuery();
 
   const handleSubmit = useCallback(
@@ -78,6 +99,13 @@ export const ConnectedS3ConfigurationForm = () => {
       mutate(data);
     },
     [mutate]
+  );
+
+  const handleValidate = useCallback(
+    async (data: S3BucketConfiguration) => {
+      testConfigurationMutate(data);
+    },
+    [testConfigurationMutate]
   );
 
   const formData: S3BucketConfiguration = useMemo(() => {
@@ -97,5 +125,11 @@ export const ConnectedS3ConfigurationForm = () => {
     return <Text>Loading...</Text>;
   }
 
-  return <S3ConfigurationForm onSubmit={handleSubmit} initialData={formData} />;
+  return (
+    <S3ConfigurationForm
+      onSubmit={handleSubmit}
+      initialData={formData}
+      onValidate={handleValidate}
+    />
+  );
 };
