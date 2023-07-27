@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
+  OrderCancelledEventSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
@@ -49,5 +50,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     const response = await adapter.send({ order });
 
     return response;
+  }
+
+  async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
+    // todo: implement
+    this.logger.debug("cancelOrder", payload);
+    return { ok: true };
   }
 }
