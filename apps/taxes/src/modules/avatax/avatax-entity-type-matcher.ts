@@ -7,7 +7,6 @@ import { AvataxClient } from "./avatax-client";
  */
 const AVATAX_ENTITY_CODE = "avataxEntityCode";
 
-// todo: test
 export class AvataxEntityTypeMatcher {
   private client: AvataxClient;
   private logger: Logger;
