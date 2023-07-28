@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 
 import React, { useCallback, useMemo } from "react";
-import { Input } from "@saleor/react-hook-form-macaw";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpcClient } from "../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { awsRegionList } from "../file-storage/s3/aws-region-list";
 
 type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;
 
@@ -45,13 +46,11 @@ export const S3ConfigurationForm = (props: Props) => {
 
       <Input size={"small"} name={"bucketName"} control={control} label="Bucket name" />
 
-      <Input
-        size={"small"}
-        name={"region"}
+      <Select
         control={control}
-        label="Bucket region"
-        helperText={"Use the region code, e.g. 'eu-west-1'"}
-        placeholder={"eu-west-1"}
+        label="Region"
+        name={"region"}
+        options={awsRegionList.map((region) => ({ label: region, value: region }))}
       />
 
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
