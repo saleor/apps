@@ -13,6 +13,7 @@ import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
+import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -57,8 +58,8 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.fulfillOrder(payload);
   }
 
-  async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
-    return this.client.cancelOrder(payload);
+  async cancelOrder(payload: OrderCancelledPayload) {
+    this.client.cancelOrder(payload);
   }
 }
 

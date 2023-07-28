@@ -53,6 +53,11 @@ export type ValidateAddressArgs = {
   address: AvataxAddress;
 };
 
+export type VoidTransactionArgs = {
+  transactionCode: string;
+  companyCode: string;
+};
+
 export class AvataxClient {
   private client: Avatax;
   private logger: Logger;
@@ -71,6 +76,16 @@ export class AvataxClient {
 
   async commitTransaction(args: CommitTransactionArgs) {
     return this.client.commitTransaction(args);
+  }
+
+  async voidTransaction({
+    transactionCode,
+    companyCode,
+  }: {
+    transactionCode: string;
+    companyCode: string;
+  }) {
+    return this.client.voidTransaction({ transactionCode, companyCode });
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
