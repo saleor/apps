@@ -3,6 +3,7 @@ import {
   ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { isNotNil } from "../isNotNil";
+import { safeParseJson } from "../safe-parse-json";
 
 type PartialChannelListing = {
   channel: {
@@ -59,7 +60,9 @@ export function categoryHierarchicalFacets({ product }: ProductVariantWebhookPay
 }
 
 export function formatMetadata({ product }: ProductVariantWebhookPayloadFragment) {
-  return Object.fromEntries(product.metadata?.map(({ key, value }) => [key, value]) || []);
+  return Object.fromEntries(
+    product.metadata?.map(({ key, value }) => [key, safeParseJson(value)]) || []
+  );
 }
 
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
@@ -123,7 +126,7 @@ export function productAndVariantToAlgolia({
     productName: product.name,
     variantName: variant.name,
     attributes,
-    description: product.description,
+    description: safeParseJson(product.description),
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: listing?.price?.amount,

@@ -29,4 +29,9 @@ fragment ProductVariantData on ProductVariant {
   product {
     ...ProductData
   }
+  
+  metadata {
+    key,
+    value
+  }
 }
