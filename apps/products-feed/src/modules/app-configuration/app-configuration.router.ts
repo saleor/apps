@@ -5,6 +5,9 @@ import { createLogger } from "@saleor/apps-shared";
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
 import { AppConfigSchema } from "./app-config";
 import { z } from "zod";
+import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
+import { checkBucketAccess } from "../file-storage/s3/check-bucket-access";
+import { TRPCError } from "@trpc/server";
 
 export const appConfigurationRouter = router({
   /**
@@ -17,13 +20,54 @@ export const appConfigurationRouter = router({
       return c.getRootConfig();
     });
   }),
+  testS3BucketConfiguration: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(AppConfigSchema.s3Bucket)
+    .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
+      const logger = createLogger({ saleorApiUrl: saleorApiUrl });
+
+      logger.debug("Validate the credentials");
+
+      const s3Client = createS3ClientFromConfiguration(input);
+
+      try {
+        await checkBucketAccess({
+          bucketName: input.bucketName,
+          s3Client,
+        });
+      } catch {
+        logger.debug("Validation failed");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not access the S3 bucket using the provided credentials",
+        });
+      }
+    }),
+
   setS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
       const logger = createLogger({ saleorApiUrl: saleorApiUrl });
 
-      logger.debug(input, "Input");
+      logger.debug("Validate credentials");
+
+      const s3Client = createS3ClientFromConfiguration(input);
+
+      try {
+        await checkBucketAccess({
+          bucketName: input.bucketName,
+          s3Client,
+        });
+      } catch {
+        logger.debug("Validation failed");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not access the S3 bucket using the provided credentials",
+        });
+      }
+
+      logger.debug("Credentials validated, saving");
 
       const config = await getConfig();
 
