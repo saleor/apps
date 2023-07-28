@@ -1,6 +1,4 @@
 import {
-  FetchOrderExternalIdDocument,
-  FetchOrderExternalIdQuery,
   UpdateMetadataDocument,
   UpdateMetadataMutation,
   UpdateMetadataMutationVariables,
@@ -36,17 +34,5 @@ export class OrderMetadataManager {
     }
 
     return { ok: true };
-  }
-
-  async readExternalIdFromOrderMetadata(orderId: string) {
-    const { error, data } = await this.client
-      .query<FetchOrderExternalIdQuery>(FetchOrderExternalIdDocument, { id: orderId })
-      .toPromise();
-
-    if (error) {
-      throw error;
-    }
-
-    return data?.order?.externalId;
   }
 }
