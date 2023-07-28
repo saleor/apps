@@ -1,10 +1,10 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
 import {
-  OrderCancelledEventSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
+import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
 
@@ -14,5 +14,5 @@ export interface ProviderWebhookService {
   calculateTaxes: (payload: TaxBaseFragment) => Promise<CalculateTaxesResponse>;
   createOrder: (payload: OrderCreatedSubscriptionFragment) => Promise<CreateOrderResponse>;
   fulfillOrder: (payload: OrderFulfilledSubscriptionFragment) => Promise<{ ok: boolean }>;
-  cancelOrder: (payload: OrderCancelledEventSubscriptionFragment) => Promise<any>;
+  cancelOrder: (payload: OrderCancelledPayload) => Promise<void>;
 }

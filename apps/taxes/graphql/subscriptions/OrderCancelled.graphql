@@ -1,9 +1,6 @@
 fragment OrderCancelledSubscription on Order {
   id
-  privateMetadata {
-    key
-    value
-  }
+  externalId: metafield(key: "externalId")
   channel {
     id
     slug

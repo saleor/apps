@@ -13,7 +13,7 @@ export const config = {
   },
 };
 
-type OrderCancelledPayload = Extract<
+export type OrderCancelledPayload = Extract<
   OrderCancelledEventSubscriptionFragment,
   { __typename: "OrderCancelled" }
 >;
