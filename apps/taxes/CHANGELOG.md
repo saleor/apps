@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.12.0
+
+### Minor Changes
+
+- a725720: Added the possibility to pass entityUseCode as order `avataxEntityCode` metadata field. This makes tax exempting groups of customers possible.
+
 ## 1.11.0
 
 ### Minor Changes
