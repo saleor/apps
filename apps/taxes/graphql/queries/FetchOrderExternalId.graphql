@@ -1,0 +1,5 @@
+query FetchOrderExternalId($orderId: ID!) {
+  order(id: $orderId) {
+    externalId: metafield(key: "externalId")
+  }
+}
