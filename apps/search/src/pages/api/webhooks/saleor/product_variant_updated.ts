@@ -1,15 +1,14 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   ProductVariantUpdated,
   ProductVariantUpdatedDocument,
 } from "../../../../../generated/graphql";
 import { saleorApp } from "../../../../../saleor-app";
+import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
 import { AlgoliaSearchProvider } from "../../../../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../../../../lib/algolia/getAlgoliaConfiguration";
-import { createDebug } from "../../../../lib/debug";
 import { createLogger } from "../../../../lib/logger";
-import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
-import { createGraphQLClient } from "@saleor/apps-shared";
 
 export const config = {
   api: {
