@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "1.10.2",
+  "version": "1.10.3",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
