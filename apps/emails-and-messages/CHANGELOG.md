@@ -1,5 +1,12 @@
 # saleor-app-emails-and-messages
 
+## 1.9.3
+
+### Patch Changes
+
+- c07ddb3: Added support for the new event: fulfillment updated.
+- 54901f8: Added new fields to the order related payload: attributes, price details, translated names
+
 ## 1.9.2
 
 ### Patch Changes

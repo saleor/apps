@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.10.3
+
+### Patch Changes
+
+- 07999ea: Changed input type for region in the AWS credentials section. Region can be now selected from the list, instead of text input.
+- 43d7e47: Added validation for AWS credentials. If provided configuration for S3 Bucket is invalid, it won't be saved.
+
 ## 1.10.2
 
 ### Patch Changes
