@@ -3,6 +3,8 @@ import {
   ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { isNotNil } from "../isNotNil";
+import { safeParseJson } from "../safe-parse-json";
+import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
 
 type PartialChannelListing = {
   channel: {
@@ -56,10 +58,6 @@ export function categoryHierarchicalFacets({ product }: ProductVariantWebhookPay
   }
 
   return categoryLvlMapping;
-}
-
-export function formatMetadata({ product }: ProductVariantWebhookPayloadFragment) {
-  return Object.fromEntries(product.metadata?.map(({ key, value }) => [key, value]) || []);
 }
 
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
@@ -123,13 +121,15 @@ export function productAndVariantToAlgolia({
     productName: product.name,
     variantName: variant.name,
     attributes,
-    description: product.description,
+    description: safeParseJson(product.description),
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: listing?.price?.amount,
     categories: categoryHierarchicalFacets(variant),
     collections: product.collections?.map((collection) => collection.name) || [],
-    metadata: formatMetadata(variant),
+    metadata: metadataToAlgoliaAttribute(variant.product.metadata),
+    variantMetadata: metadataToAlgoliaAttribute(variant.metadata),
+    otherVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
   };
 
   return document;
