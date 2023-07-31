@@ -33,22 +33,23 @@ export default orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
   logger.info("Handler called with payload");
 
+  if (!payload.order) {
+    return webhookResponse.error(new Error("Insufficient order data"));
+  }
+
   try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
-    const channelSlug = payload.order?.channel.slug;
+    const channelSlug = payload.order.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
     logger.info("Fetched taxProvider");
 
-    if (!payload.order) {
-      return webhookResponse.error(new Error("Insufficient order data"));
-    }
     await taxProvider.cancelOrder(payload);
 
     logger.info("Order cancelled");
 
     return webhookResponse.success();
   } catch (error) {
-    return webhookResponse.error(new Error("Error while fulfilling tax provider order"));
+    return webhookResponse.error(new Error("Error while cancelling tax provider order"));
   }
 });

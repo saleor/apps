@@ -48,7 +48,6 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   }
 
   async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
-    // todo: implement
-    this.logger.debug("cancelOrder", payload);
+    // TaxJar isn't implemented yet
   }
 }
