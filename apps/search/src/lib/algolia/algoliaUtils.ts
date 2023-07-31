@@ -129,7 +129,7 @@ export function productAndVariantToAlgolia({
     collections: product.collections?.map((collection) => collection.name) || [],
     metadata: metadataToAlgoliaAttribute(variant.product.metadata),
     variantMetadata: metadataToAlgoliaAttribute(variant.metadata),
-    allVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
+    otherVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
   };
 
   return document;
