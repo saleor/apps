@@ -15,7 +15,7 @@ export class AvataxOrderCancelledPayloadTransformer {
 
     return {
       transactionCode,
-      companyCode: this.config.companyCode ?? "",
+      companyCode: this.config.companyCode ?? "", // If companyCode is not defined, we set the value to empty string so that the default company is used.
     };
   }
 }
