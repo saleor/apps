@@ -13,14 +13,14 @@ describe("AvataxOrderCancelledPayloadTransformer", () => {
 
     expect(() => transformer.transform(payload)).toThrow("Order is required");
   });
-  it("throws an error when no externalId is present", () => {
+  it("throws an error when no avataxId is present", () => {
     const payload = { order: {} } as any as OrderCancelledPayload;
     const transformer = new AvataxOrderCancelledPayloadTransformer(avataxMockConfig);
 
     expect(() => transformer.transform(payload)).toThrow();
   });
   it("returns a valid AvataxOrderCancelledTarget", () => {
-    const payload = { order: { externalId: "123" } } as any as OrderCancelledPayload;
+    const payload = { order: { avataxId: "123" } } as any as OrderCancelledPayload;
     const transformer = new AvataxOrderCancelledPayloadTransformer(avataxMockConfig);
 
     const target = transformer.transform(payload);

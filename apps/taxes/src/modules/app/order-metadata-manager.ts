@@ -1,10 +1,11 @@
+import { Client } from "urql";
 import {
   UpdateMetadataDocument,
   UpdateMetadataMutation,
   UpdateMetadataMutationVariables,
 } from "../../../generated/graphql";
-import { Client } from "urql";
-import { PROVIDER_ORDER_ID_KEY } from "../avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
+
+const PROVIDER_ORDER_ID_KEY = "avataxId";
 
 export class OrderMetadataManager {
   private privateOrderIdKey = PROVIDER_ORDER_ID_KEY;
