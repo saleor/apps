@@ -2,11 +2,7 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
 import { OrderFulfilledSubscriptionFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
-import {
-  AvataxOrderFulfilledPayloadTransformer,
-  PROVIDER_ORDER_ID_KEY,
-  getTransactionCodeFromMetadata,
-} from "./avatax-order-fulfilled-payload-transformer";
+import { AvataxOrderFulfilledPayloadTransformer } from "./avatax-order-fulfilled-payload-transformer";
 
 // todo: add AvataxOrderFulfilledMockGenerator
 
@@ -30,19 +26,12 @@ const MOCK_AVATAX_CONFIG: AvataxConfig = {
   },
 };
 
-const MOCKED_METADATA: OrderFulfilledSubscriptionFragment["privateMetadata"] = [
-  {
-    key: PROVIDER_ORDER_ID_KEY,
-    value: "transaction-code",
-  },
-];
-
 type OrderFulfilled = OrderFulfilledSubscriptionFragment;
 
 const ORDER_FULFILLED_MOCK: OrderFulfilled = {
   id: "T3JkZXI6OTU4MDA5YjQtNDUxZC00NmQ1LThhMWUtMTRkMWRmYjFhNzI5",
   created: "2023-04-11T11:03:09.304109+00:00",
-  privateMetadata: MOCKED_METADATA,
+  avataxId: "transaction-code",
   channel: {
     id: "Q2hhbm5lbDoy",
     slug: "channel-pln",
@@ -120,16 +109,6 @@ const ORDER_FULFILLED_MOCK: OrderFulfilled = {
   ],
 };
 
-describe("getTransactionCodeFromMetadata", () => {
-  it("returns transaction code", () => {
-    expect(getTransactionCodeFromMetadata(MOCKED_METADATA)).toBe("transaction-code");
-  });
-
-  it("throws error when transaction code not found", () => {
-    expect(() => getTransactionCodeFromMetadata([])).toThrowError();
-  });
-});
-
 const MOCKED_ORDER_FULFILLED_PAYLOAD: {
   order: OrderFulfilledSubscriptionFragment;
 } = {
@@ -137,6 +116,19 @@ const MOCKED_ORDER_FULFILLED_PAYLOAD: {
 };
 
 describe("AvataxOrderFulfilledPayloadTransformer", () => {
+  it("throws error when no avataxId", () => {
+    const transformer = new AvataxOrderFulfilledPayloadTransformer(MOCK_AVATAX_CONFIG);
+
+    expect(() =>
+      transformer.transform({
+        ...MOCKED_ORDER_FULFILLED_PAYLOAD,
+        order: {
+          ...MOCKED_ORDER_FULFILLED_PAYLOAD.order,
+          avataxId: null,
+        },
+      })
+    ).toThrow();
+  });
   it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", () => {
     const transformer = new AvataxOrderFulfilledPayloadTransformer({
       ...MOCK_AVATAX_CONFIG,

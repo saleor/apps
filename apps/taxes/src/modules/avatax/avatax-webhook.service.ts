@@ -55,7 +55,6 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async cancelOrder(payload: OrderCancelledPayload) {
-    this.logger.debug("cancelOrder", payload);
     const adapter = new AvataxOrderCancelledAdapter(this.config);
 
     await adapter.send(payload);

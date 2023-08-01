@@ -1,6 +1,6 @@
 fragment OrderCancelledSubscription on Order {
   id
-  externalId: metafield(key: "externalId")
+  avataxId: metafield(key: "avataxId")
   channel {
     id
     slug
