@@ -2,4 +2,4 @@
 "saleor-app-products-feed": minor
 ---
 
-Added new feature: Attributes required by the Google Merchant can now be mapped to product attributes.
+Added configuration for choosing which product attributes should be used for generating Google Product Feed. Supported feed attributes: Brand, Color, Size, Material, Pattern.
