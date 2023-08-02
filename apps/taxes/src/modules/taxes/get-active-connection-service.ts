@@ -1,8 +1,13 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
+<<<<<<< HEAD
   OrderConfirmedSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
+=======
+  OrderCancelledEventSubscriptionFragment,
+  OrderConfirmedSubscriptionFragment,
+>>>>>>> d92b62e6 (refactor: :truck: order_created -> order_confirmed)
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
@@ -13,7 +18,12 @@ import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
+<<<<<<< HEAD
 import { ProviderWebhookService } from "./tax-provider-webhook";
+=======
+import { CreateOrderResponse, ProviderWebhookService } from "./tax-provider-webhook";
+import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+>>>>>>> d92b62e6 (refactor: :truck: order_created -> order_confirmed)
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
