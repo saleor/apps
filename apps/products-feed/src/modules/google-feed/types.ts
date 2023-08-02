@@ -16,6 +16,7 @@ export type ProductEntry = {
   color?: string;
   size?: string;
   brand?: string;
+  pattern?: string;
 };
 
 export type ShopDetailsEntry = {

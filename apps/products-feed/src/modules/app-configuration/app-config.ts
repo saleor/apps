@@ -5,6 +5,7 @@ const attributeMappingSchema = z.object({
   colorAttributeIds: z.array(z.string()),
   sizeAttributeIds: z.array(z.string()),
   materialAttributeIds: z.array(z.string()),
+  patternAttributeIds: z.array(z.string()),
 });
 
 const s3ConfigSchema = z.object({

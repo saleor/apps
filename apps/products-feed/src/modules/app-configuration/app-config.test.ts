@@ -32,6 +32,7 @@ describe("AppConfig", function () {
         attributeMapping: {
           brandAttributeIds: [],
           colorAttributeIds: [],
+          patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
@@ -55,6 +56,7 @@ describe("AppConfig", function () {
         attributeMapping: {
           brandAttributeIds: [],
           colorAttributeIds: [],
+          patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
@@ -83,6 +85,7 @@ describe("AppConfig", function () {
         attributeMapping: {
           brandAttributeIds: [],
           colorAttributeIds: [],
+          patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
@@ -103,6 +106,7 @@ describe("AppConfig", function () {
         attributeMapping: {
           brandAttributeIds: [],
           colorAttributeIds: [],
+          patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
@@ -129,6 +133,7 @@ describe("AppConfig", function () {
       attributeMapping: {
         brandAttributeIds: [],
         colorAttributeIds: [],
+        patternAttributeIds: [],
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
       },
@@ -153,6 +158,7 @@ describe("AppConfig", function () {
         attributeMapping: {
           brandAttributeIds: [],
           colorAttributeIds: [],
+          patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: ["size-id"],
         },
@@ -181,6 +187,7 @@ describe("AppConfig", function () {
       expect(instance.getAttributeMapping()).toEqual({
         brandAttributeIds: [],
         colorAttributeIds: [],
+        patternAttributeIds: [],
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
       });

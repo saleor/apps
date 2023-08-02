@@ -161,16 +161,6 @@ const ConfigurationPage: NextPage = () => {
             </Paragraph>
             <ul>
               <li>
-                <TextLink href="https://support.google.com/merchants/answer/6324410" newTab>
-                  Material
-                </TextLink>
-              </li>
-              <li>
-                <TextLink href="https://support.google.com/merchants/answer/6324492" newTab>
-                  Size
-                </TextLink>
-              </li>
-              <li>
                 <TextLink href="https://support.google.com/merchants/answer/6324351" newTab>
                   Brand
                 </TextLink>
@@ -178,6 +168,21 @@ const ConfigurationPage: NextPage = () => {
               <li>
                 <TextLink href="https://support.google.com/merchants/answer/6324487" newTab>
                   Color
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324410" newTab>
+                  Material
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324483" newTab>
+                  Pattern
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324492" newTab>
+                  Size
                 </TextLink>
               </li>
             </ul>

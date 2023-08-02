@@ -67,6 +67,7 @@ export const generateGoogleXmlFeed = ({
       material: attributes?.material,
       color: attributes?.color,
       brand: attributes?.brand,
+      pattern: attributes?.pattern,
       size: attributes?.size,
     });
   });

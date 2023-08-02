@@ -49,6 +49,11 @@ export const getMappedAttributes = ({
   );
   const colorValue = attributeArrayToValueString(colorAttributes);
 
+  const patternAttributes = attributes.filter((a) =>
+    mapping.patternAttributeIds.includes(a.attribute.id)
+  );
+  const patternValue = attributeArrayToValueString(patternAttributes);
+
   const sizeAttributes = attributes.filter((a) =>
     mapping.sizeAttributeIds.includes(a.attribute.id)
   );
@@ -59,5 +64,6 @@ export const getMappedAttributes = ({
     brand: brandValue,
     color: colorValue,
     size: sizeValue,
+    pattern: patternValue,
   };
 };

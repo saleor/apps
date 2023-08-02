@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
-import { generateGoogleXmlFeed } from "./generate-google-xml-feed";
 import { attributeArrayToValueString, getMappedAttributes } from "./attribute-mapping";
 
 const productBase: GoogleFeedProductVariantFragment["product"] = {
@@ -32,9 +31,15 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
     },
     {
       attribute: {
-        id: "Size",
+        id: "size",
       },
       values: [{ name: "XL" }],
+    },
+    {
+      attribute: {
+        id: "pattern",
+      },
+      values: [{ name: "plain" }],
     },
   ],
 };
@@ -145,6 +150,7 @@ describe("attribute-mapping", () => {
           attributeMapping: {
             brandAttributeIds: ["brand-id"],
             colorAttributeIds: ["color-id"],
+            patternAttributeIds: ["pattern-id"],
             materialAttributeIds: ["material-id"],
             sizeAttributeIds: ["size-id"],
           },
@@ -154,6 +160,7 @@ describe("attribute-mapping", () => {
         color: undefined,
         size: undefined,
         brand: undefined,
+        pattern: undefined,
       });
     });
 
@@ -229,6 +236,16 @@ describe("attribute-mapping", () => {
                   },
                 ],
               },
+              {
+                attribute: {
+                  id: "pattern-id",
+                },
+                values: [
+                  {
+                    name: "Plain",
+                  },
+                ],
+              },
             ],
           },
           attributeMapping: {
@@ -236,6 +253,7 @@ describe("attribute-mapping", () => {
             colorAttributeIds: ["color-base-id", "color-secondary-id"],
             materialAttributeIds: ["material-id"],
             sizeAttributeIds: ["size-id"],
+            patternAttributeIds: ["pattern-id"],
           },
         })
       ).toStrictEqual({
@@ -243,6 +261,7 @@ describe("attribute-mapping", () => {
         color: "Red/Black",
         size: "XL",
         brand: "Saleor",
+        pattern: "Plain",
       });
     });
   });

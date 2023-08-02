@@ -44,8 +44,8 @@ export const AttributeMappingConfigurationForm = (props: Props) => {
       />
       <Multiselect
         control={control}
-        name="sizeAttributeIds"
-        label="Size attributes"
+        name="colorAttributeIds"
+        label="Color attributes"
         options={options}
       />
       <Multiselect
@@ -56,11 +56,16 @@ export const AttributeMappingConfigurationForm = (props: Props) => {
       />
       <Multiselect
         control={control}
-        name="colorAttributeIds"
-        label="Color attributes"
+        name="patternAttributeIds"
+        label="Pattern attributes"
         options={options}
       />
-
+      <Multiselect
+        control={control}
+        name="sizeAttributeIds"
+        label="Size attributes"
+        options={options}
+      />
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button type="submit" variant="primary">
           Save mapping
@@ -105,6 +110,7 @@ export const ConnectedAttributeMappingForm = () => {
       colorAttributeIds: [],
       sizeAttributeIds: [],
       brandAttributeIds: [],
+      patternAttributeIds: [],
       materialAttributeIds: [],
     };
   }, [data]);

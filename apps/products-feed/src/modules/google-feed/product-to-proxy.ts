@@ -145,6 +145,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  if (p.pattern) {
+    item.push({
+      "g:pattern": [
+        {
+          "#text": p.pattern,
+        },
+      ],
+    });
+  }
+
   return {
     item,
   };
