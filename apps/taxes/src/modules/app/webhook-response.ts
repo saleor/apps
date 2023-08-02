@@ -1,5 +1,7 @@
 import { NextApiResponse } from "next";
 
+import { AvalaraError } from "avatax/lib/AvaTaxClient";
+import { ZodError } from "zod";
 import { createLogger, Logger } from "../../lib/logger";
 
 class WebhookErrorResolver {
@@ -8,16 +10,30 @@ class WebhookErrorResolver {
     this.logger = createLogger({ event: "WebhookErrorResolver" });
   }
 
-  private resolveError(error: unknown) {
+  private resolveErrorMessage(error: unknown) {
+    if (error instanceof ZodError) {
+      this.logger.error(error.message, "Unexpected Zod error caught:");
+      this.logger.debug(error.stack, "Error details:");
+      return error.message;
+    }
+
+    if (error instanceof AvalaraError) {
+      this.logger.error(error.message, "Unexpected Avalara error caught:");
+      this.logger.debug(error.stack, "Error stack:");
+      this.logger.debug(error.target, "Error target:");
+      return error.message;
+    }
+
     if (error instanceof Error) {
       this.logger.error(error.stack, "Unexpected error caught:");
       return error.message;
     }
+
     return "Internal server error";
   }
 
   resolve(error: unknown) {
-    return this.resolveError(error);
+    return this.resolveErrorMessage(error);
   }
 }
 
