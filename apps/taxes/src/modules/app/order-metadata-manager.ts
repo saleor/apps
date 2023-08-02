@@ -1,8 +1,8 @@
 import { Client } from "urql";
 import {
-  UpdateMetadataDocument,
-  UpdateMetadataMutation,
-  UpdateMetadataMutationVariables,
+  UpdatePublicMetadataDocument,
+  UpdatePublicMetadataMutation,
+  UpdatePublicMetadataMutationVariables,
 } from "../../../generated/graphql";
 
 const PROVIDER_ORDER_ID_KEY = "avataxId";
@@ -17,7 +17,7 @@ export class OrderMetadataManager {
    * update the provider order when the Saleor order is fulfilled.
    */
   async updateOrderMetadataWithExternalId(orderId: string, externalId: string) {
-    const variables: UpdateMetadataMutationVariables = {
+    const variables: UpdatePublicMetadataMutationVariables = {
       id: orderId,
       input: [
         {
@@ -27,7 +27,7 @@ export class OrderMetadataManager {
       ],
     };
     const { error } = await this.client
-      .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, variables)
+      .mutation<UpdatePublicMetadataMutation>(UpdatePublicMetadataDocument, variables)
       .toPromise();
 
     if (error) {
