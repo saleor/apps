@@ -141,6 +141,7 @@ export const appConfigurationRouter = router({
       const fetcher = new AttributeFetcher(apiClient);
 
       const result = await fetcher.fetchAllAttributes().catch((e) => {
+        logger.error(e, "Can't fetch the attributes");
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Can't fetch the attributes",
