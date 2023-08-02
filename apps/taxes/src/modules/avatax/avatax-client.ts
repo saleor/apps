@@ -3,8 +3,8 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
-import { createLogger, Logger } from "../../lib/logger";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
 
@@ -14,11 +14,7 @@ type AvataxSettings = {
   environment: "sandbox" | "production";
   machineName: string;
   timeout: number;
-  logOptions?: {
-    logEnabled: boolean;
-    logLevel: number;
-    logRequestAndResponseInfo: boolean;
-  };
+  logOptions?: LogOptions;
 };
 
 const defaultAvataxSettings: AvataxSettings = {
@@ -60,10 +56,8 @@ export type VoidTransactionArgs = {
 
 export class AvataxClient {
   private client: Avatax;
-  private logger: Logger;
 
   constructor(baseConfig: BaseAvataxConfig) {
-    this.logger = createLogger({ name: "AvataxClient" });
     const settings = createAvataxSettings({ isSandbox: baseConfig.isSandbox });
     const avataxClient = new Avatax(settings).withSecurity(baseConfig.credentials);
 

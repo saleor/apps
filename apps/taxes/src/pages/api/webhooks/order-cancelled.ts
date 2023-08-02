@@ -42,7 +42,7 @@ export default orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =>
     const channelSlug = payload.order.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Fetched taxProvider");
+    logger.info("Cancelling order...");
 
     await taxProvider.cancelOrder(payload);
 

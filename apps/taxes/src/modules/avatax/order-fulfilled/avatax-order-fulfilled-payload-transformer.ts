@@ -20,7 +20,7 @@ export class AvataxOrderFulfilledPayloadTransformer {
 
     return {
       transactionCode,
-      companyCode: this.config.companyCode ?? "",
+      companyCode: this.config.companyCode,
       documentType: this.matchDocumentType(this.config),
       model: {
         commit: true,
