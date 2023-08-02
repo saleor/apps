@@ -109,6 +109,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  if (p.salePrice?.length) {
+    item.push({
+      "g:sale_price": [
+        {
+          "#text": p.salePrice,
+        },
+      ],
+    });
+  }
+
   if (p.material) {
     item.push({
       "g:material": [

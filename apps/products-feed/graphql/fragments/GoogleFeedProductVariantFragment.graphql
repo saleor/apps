@@ -3,6 +3,12 @@ fragment GoogleFeedProductVariant on ProductVariant {
   name
   sku
   pricing {
+    priceUndiscounted{
+      gross {
+        currency
+        amount
+      }
+    }
     price {
       gross {
         currency
