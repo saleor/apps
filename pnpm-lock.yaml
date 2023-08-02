@@ -1331,8 +1331,8 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
       avatax:
-        specifier: ^23.3.2
-        version: 23.3.2
+        specifier: ^23.7.0
+        version: 23.7.0
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -11433,8 +11433,8 @@ packages:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
 
-  /avatax@23.3.2:
-    resolution: {integrity: sha512-WGjSIQNvdM0XSyukjb+QIxB1z4xaEOdaGmPhXwLJYgxIuJlDw7Uq1nHUHo+yeHKZk3dKGzCyrFaa8N1Wx9nSbQ==}
+  /avatax@23.7.0:
+    resolution: {integrity: sha512-34CuafkIgzfj6B8gTMmeUN5iYWdgHtSKRwIRWIYFcP/OpUMDOGB0WMMdGrZUgthLjYCWOkQdi2QReWuM/TSROg==}
     dependencies:
       '@types/node-fetch': 2.6.4
       form-data: 4.0.0

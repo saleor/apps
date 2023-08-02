@@ -25,7 +25,7 @@
     "@trpc/react-query": "10.34.0",
     "@trpc/server": "10.34.0",
     "@urql/exchange-auth": "^2.1.4",
-    "avatax": "^23.3.2",
+    "avatax": "^23.7.0",
     "clsx": "^1.2.1",
     "dotenv": "^16.3.1",
     "graphql": "16.7.1",
