@@ -43,8 +43,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Fetched taxProvider");
-
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       return webhookResponse.error(new Error("Insufficient order data"));
@@ -53,6 +51,8 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     if (payload.order.status === OrderStatus.Fulfilled) {
       return webhookResponse.error(new Error("Skipping fulfilled order to prevent duplication"));
     }
+
+    logger.info("Creating order...");
 
     const createdOrder = await taxProvider.createOrder(payload.order);
 
