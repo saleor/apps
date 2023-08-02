@@ -12,6 +12,10 @@ export type ProductEntry = {
   googleProductCategory?: string;
   availability: "in_stock" | "out_of_stock" | "preorder" | "backorder";
   category: string;
+  material?: string;
+  color?: string;
+  size?: string;
+  brand?: string;
 };
 
 export type ShopDetailsEntry = {
