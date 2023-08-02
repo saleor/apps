@@ -1,7 +1,7 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
-import { orderCreatedTransactionMock } from "./avatax-order-created-response-transaction-mock";
+import { orderConfirmedTransactionMock } from "./avatax-order-confirmed-response-transaction-mock";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { defaultOrder } from "../../../mocks";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
@@ -14,23 +14,23 @@ const defaultChannelConfig: ChannelConfig = {
   },
 };
 
-const defaultOrderCreatedResponse: TransactionModel = orderCreatedTransactionMock;
+const defaultOrderConfirmedResponse: TransactionModel = orderConfirmedTransactionMock;
 
 const testingScenariosMap = {
   default: {
     order: defaultOrder,
     channelConfig: defaultChannelConfig,
-    response: defaultOrderCreatedResponse,
+    response: defaultOrderConfirmedResponse,
   },
 };
 
 type TestingScenario = keyof typeof testingScenariosMap;
 
-export class AvataxOrderCreatedMockGenerator {
+export class AvataxOrderConfirmedMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
   generateOrder = (
-    overrides: Partial<OrderCreatedSubscriptionFragment> = {}
-  ): OrderCreatedSubscriptionFragment =>
+    overrides: Partial<OrderConfirmedSubscriptionFragment> = {}
+  ): OrderConfirmedSubscriptionFragment =>
     structuredClone({
       ...testingScenariosMap[this.scenario].order,
       ...overrides,

@@ -1,14 +1,14 @@
 import {
   OrderCancelledEventSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
+  OrderConfirmedSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
-import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
-import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
+import { CreateOrderResponse, ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AuthData } from "@saleor/app-sdk/APL";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
@@ -34,8 +34,8 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     return response;
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const adapter = new TaxJarOrderCreatedAdapter(this.config, this.authData);
+  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+    const adapter = new TaxJarOrderConfirmedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order });
 

@@ -1,7 +1,7 @@
 import { OrderLineFragment } from "../../../../generated/graphql";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 
-export class TaxJarOrderCreatedTaxCodeMatcher {
+export class TaxJarOrderConfirmedTaxCodeMatcher {
   private mapTaxClassWithTaxMatch(taxClassId: string, matches: TaxJarTaxCodeMatches) {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }

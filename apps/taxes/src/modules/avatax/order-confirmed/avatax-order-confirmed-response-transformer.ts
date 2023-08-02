@@ -2,7 +2,7 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
-export class AvataxOrderCreatedResponseTransformer {
+export class AvataxOrderConfirmedResponseTransformer {
   transform(response: TransactionModel): CreateOrderResponse {
     return {
       id: taxProviderUtils.resolveOptionalOrThrow(

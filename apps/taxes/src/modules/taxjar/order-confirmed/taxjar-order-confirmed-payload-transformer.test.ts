@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { TaxJarOrderCreatedMockGenerator } from "./taxjar-order-created-mock-generator";
+import { TaxJarOrderConfirmedMockGenerator } from "./taxjar-order-confirmed-mock-generator";
 import {
-  TaxJarOrderCreatedPayloadTransformer,
+  TaxJarOrderConfirmedPayloadTransformer,
   sumPayloadLines,
-} from "./taxjar-order-created-payload-transformer";
+} from "./taxjar-order-confirmed-payload-transformer";
 
-const mockGenerator = new TaxJarOrderCreatedMockGenerator();
+const mockGenerator = new TaxJarOrderConfirmedMockGenerator();
 
-describe("TaxJarOrderCreatedPayloadTransformer", () => {
+describe("TaxJarOrderConfirmedPayloadTransformer", () => {
   it("returns the correct order amount", () => {
     const orderMock = mockGenerator.generateOrder();
     const providerConfig = mockGenerator.generateProviderConfig();
-    const transformer = new TaxJarOrderCreatedPayloadTransformer();
+    const transformer = new TaxJarOrderConfirmedPayloadTransformer();
     const transformedPayload = transformer.transform(orderMock, providerConfig, []);
 
     expect(transformedPayload.params.amount).toBe(239.17);

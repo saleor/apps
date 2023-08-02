@@ -1,11 +1,11 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
-import { AvataxOrderCreatedPayloadTransformer } from "./avatax-order-created-payload-transformer";
+import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 
-export class AvataxOrderCreatedPayloadService {
+export class AvataxOrderConfirmedPayloadService {
   constructor(private authData: AuthData) {}
 
   private getMatches() {
@@ -15,11 +15,11 @@ export class AvataxOrderCreatedPayloadService {
   }
 
   async getPayload(
-    order: OrderCreatedSubscriptionFragment,
+    order: OrderConfirmedSubscriptionFragment,
     avataxConfig: AvataxConfig
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
-    const payloadTransformer = new AvataxOrderCreatedPayloadTransformer();
+    const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer();
 
     return payloadTransformer.transform(order, avataxConfig, matches);
   }

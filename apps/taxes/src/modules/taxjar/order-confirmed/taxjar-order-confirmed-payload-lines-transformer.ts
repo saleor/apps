@@ -1,15 +1,15 @@
 import { LineItem } from "taxjar/dist/util/types";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
-import { TaxJarOrderCreatedTaxCodeMatcher } from "./taxjar-order-created-tax-code-matcher";
+import { TaxJarOrderConfirmedTaxCodeMatcher } from "./taxjar-order-confirmed-tax-code-matcher";
 
-export class TaxJarOrderCreatedPayloadLinesTransformer {
+export class TaxJarOrderConfirmedPayloadLinesTransformer {
   transform(
-    lines: OrderCreatedSubscriptionFragment["lines"],
+    lines: OrderConfirmedSubscriptionFragment["lines"],
     matches: TaxJarTaxCodeMatches
   ): LineItem[] {
     return lines.map((line) => {
-      const matcher = new TaxJarOrderCreatedTaxCodeMatcher();
+      const matcher = new TaxJarOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
 
       return {

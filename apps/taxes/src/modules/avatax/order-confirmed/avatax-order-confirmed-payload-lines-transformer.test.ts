@@ -1,16 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-created-payload-lines-transformer";
-import { avataxConfigMock } from "./avatax-order-created-payload-transformer.test";
+import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
+import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxOrderCreatedMockGenerator } from "./avatax-order-created-mock-generator";
+import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 
-const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
-const mockGenerator = new AvataxOrderCreatedMockGenerator();
+const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
+const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const orderMock = mockGenerator.generateOrder();
 
 const matches: AvataxTaxCodeMatches = [];
 
-describe("AvataxOrderCreatedPayloadLinesTransformer", () => {
+describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
   const lines = linesTransformer.transform(orderMock, avataxConfigMock, matches);
 
   it("returns the correct number of lines", () => {

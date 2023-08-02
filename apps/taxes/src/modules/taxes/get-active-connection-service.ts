@@ -2,7 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
   OrderCancelledEventSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
+  OrderConfirmedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
@@ -12,7 +12,7 @@ import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
-import { ProviderWebhookService } from "./tax-provider-webhook";
+import { CreateOrderResponse, ProviderWebhookService } from "./tax-provider-webhook";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 
 // todo: refactor to a factory
@@ -50,8 +50,8 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.calculateTaxes(payload);
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment) {
-    return this.client.createOrder(order);
+  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+    return this.client.confirmOrder(order);
   }
 
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {

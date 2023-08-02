@@ -1,8 +1,8 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import {
-  OrderCreatedEventSubscriptionFragment,
+  OrderConfirmedEventSubscriptionFragment,
   OrderStatus,
-  UntypedOrderCreatedSubscriptionDocument,
+  UntypedOrderConfirmedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
@@ -17,20 +17,20 @@ export const config = {
   },
 };
 
-type OrderCreatedPayload = Extract<
-  OrderCreatedEventSubscriptionFragment,
-  { __typename: "OrderCreated" }
+type OrderConfirmedPayload = Extract<
+  OrderConfirmedEventSubscriptionFragment,
+  { __typename: "OrderConfirmed" }
 >;
 
-export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPayload>({
-  name: "OrderCreated",
+export const orderConfirmedAsyncWebhook = new SaleorAsyncWebhook<OrderConfirmedPayload>({
+  name: "OrderConfirmed",
   apl: saleorApp.apl,
-  event: "ORDER_CREATED",
-  query: UntypedOrderCreatedSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-created",
+  event: "ORDER_CONFIRMED",
+  query: UntypedOrderConfirmedSubscriptionDocument,
+  webhookPath: "/api/webhooks/order-confirmed",
 });
 
-export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
+export default orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
   const { saleorApiUrl, token } = authData;
@@ -54,9 +54,9 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     logger.info("Creating order...");
 
-    const createdOrder = await taxProvider.createOrder(payload.order);
+    const confirmedOrder = await taxProvider.confirmOrder(payload.order);
 
-    logger.info({ createdOrder }, "Order created");
+    logger.info({ confirmedOrder }, "Order confirmed");
     const client = createGraphQLClient({
       saleorApiUrl,
       token,
@@ -64,7 +64,10 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     const orderMetadataManager = new OrderMetadataManager(client);
 
-    await orderMetadataManager.updateOrderMetadataWithExternalId(payload.order.id, createdOrder.id);
+    await orderMetadataManager.updateOrderMetadataWithExternalId(
+      payload.order.id,
+      confirmedOrder.id
+    );
     logger.info("Updated order metadata with externalId");
 
     return webhookResponse.success();

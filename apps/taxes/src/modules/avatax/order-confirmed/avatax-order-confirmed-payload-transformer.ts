@@ -1,16 +1,16 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-created-payload-lines-transformer";
+import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
-export class AvataxOrderCreatedPayloadTransformer {
+export class AvataxOrderConfirmedPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
     if (!config.isDocumentRecordingEnabled) {
       // isDocumentRecordingEnabled = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
@@ -20,11 +20,11 @@ export class AvataxOrderCreatedPayloadTransformer {
     return DocumentType.SalesInvoice;
   }
   async transform(
-    order: OrderCreatedSubscriptionFragment,
+    order: OrderConfirmedSubscriptionFragment,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches
   ): Promise<CreateTransactionArgs> {
-    const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
+    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);

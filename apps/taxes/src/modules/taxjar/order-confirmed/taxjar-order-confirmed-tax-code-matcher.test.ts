@@ -1,6 +1,6 @@
 import { OrderLineFragment } from "../../../../generated/graphql";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
-import { TaxJarOrderCreatedTaxCodeMatcher } from "./taxjar-order-created-tax-code-matcher";
+import { TaxJarOrderConfirmedTaxCodeMatcher } from "./taxjar-order-confirmed-tax-code-matcher";
 import { describe, expect, it } from "vitest";
 
 const mockedLine: OrderLineFragment = {
@@ -42,15 +42,15 @@ const matches: TaxJarTaxCodeMatches = [
   },
 ];
 
-describe("TaxJarOrderCreatedTaxCodeMatcher", () => {
+describe("TaxJarOrderConfirmedTaxCodeMatcher", () => {
   it("should return empty string if tax class is not found", () => {
-    const matcher = new TaxJarOrderCreatedTaxCodeMatcher();
+    const matcher = new TaxJarOrderConfirmedTaxCodeMatcher();
 
     expect(matcher.match(mockedLine, matches)).toEqual("");
   });
   it("should return tax code if tax class is found", () => {
     const line = structuredClone({ ...mockedLine, taxClass: { id: "tax-class-id" } });
-    const matcher = new TaxJarOrderCreatedTaxCodeMatcher();
+    const matcher = new TaxJarOrderConfirmedTaxCodeMatcher();
 
     expect(matcher.match(line, matches)).toEqual("P0000000");
   });
