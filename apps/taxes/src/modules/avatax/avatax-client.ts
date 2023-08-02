@@ -7,6 +7,7 @@ import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
+import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 
 type AvataxSettings = {
   appName: string;
@@ -79,7 +80,12 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
-    return this.client.voidTransaction({ transactionCode, companyCode });
+    return this.client.voidTransaction({
+      transactionCode,
+      companyCode,
+      // todo: check voidreasoncode
+      model: { code: VoidReasonCode.Unspecified },
+    });
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
