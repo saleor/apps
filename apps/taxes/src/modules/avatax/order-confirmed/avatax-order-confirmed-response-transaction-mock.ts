@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
-export const orderCreatedTransactionMock = {
+export const orderConfirmedTransactionMock = {
   id: 85026453274669,
   code: "31fa9e94-e8df-429b-b303-549e7bc10f1e",
   companyId: 7799660,

@@ -1,19 +1,19 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { SHIPPING_ITEM_CODE } from "./avatax-order-created-payload-transformer";
-import { AvataxOrderCreatedTaxCodeMatcher } from "./avatax-order-created-tax-code-matcher";
+import { SHIPPING_ITEM_CODE } from "./avatax-order-confirmed-payload-transformer";
+import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
-export class AvataxOrderCreatedPayloadLinesTransformer {
+export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
-    order: OrderCreatedSubscriptionFragment,
+    order: OrderConfirmedSubscriptionFragment,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches
   ): LineItemModel[] {
     const productLines: LineItemModel[] = order.lines.map((line) => {
-      const matcher = new AvataxOrderCreatedTaxCodeMatcher();
+      const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
 
       return {

@@ -1,12 +1,12 @@
-import { OrderCreatedSubscriptionFragment, OrderLineFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 
 import { describe, expect, it } from "vitest";
-import { TaxJarOrderCreatedPayloadLinesTransformer } from "./taxjar-order-created-payload-lines-transformer";
+import { TaxJarOrderConfirmedPayloadLinesTransformer } from "./taxjar-order-confirmed-payload-lines-transformer";
 
-const transformer = new TaxJarOrderCreatedPayloadLinesTransformer();
+const transformer = new TaxJarOrderConfirmedPayloadLinesTransformer();
 
-const mockedLines: OrderCreatedSubscriptionFragment["lines"] = [
+const mockedLines: OrderConfirmedSubscriptionFragment["lines"] = [
   {
     productSku: "sku",
     productName: "Test product",
@@ -67,7 +67,7 @@ const matches: TaxJarTaxCodeMatches = [
   },
 ];
 
-describe("TaxJarOrderCreatedPayloadLinesTransformer", () => {
+describe("TaxJarOrderConfirmedPayloadLinesTransformer", () => {
   it("should map payload lines correctly", () => {
     expect(transformer.transform(mockedLines, matches)).toEqual([
       {

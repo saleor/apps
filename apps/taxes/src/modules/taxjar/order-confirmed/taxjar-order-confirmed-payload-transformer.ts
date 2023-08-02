@@ -1,11 +1,11 @@
 import { LineItem } from "taxjar/dist/util/types";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import { TaxJarOrderCreatedTarget } from "./taxjar-order-created-adapter";
-import { TaxJarOrderCreatedPayloadLinesTransformer } from "./taxjar-order-created-payload-lines-transformer";
+import { TaxJarOrderConfirmedTarget } from "./taxjar-order-confirmed-adapter";
+import { TaxJarOrderConfirmedPayloadLinesTransformer } from "./taxjar-order-confirmed-payload-lines-transformer";
 
 export function sumPayloadLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
@@ -25,13 +25,13 @@ export function sumPayloadLines(lines: LineItem[]): number {
   );
 }
 
-export class TaxJarOrderCreatedPayloadTransformer {
+export class TaxJarOrderConfirmedPayloadTransformer {
   transform(
-    order: OrderCreatedSubscriptionFragment,
+    order: OrderConfirmedSubscriptionFragment,
     taxJarConfig: TaxJarConfig,
     matches: TaxJarTaxCodeMatches
-  ): TaxJarOrderCreatedTarget {
-    const linesTransformer = new TaxJarOrderCreatedPayloadLinesTransformer();
+  ): TaxJarOrderConfirmedTarget {
+    const linesTransformer = new TaxJarOrderConfirmedPayloadLinesTransformer();
     const lineItems = linesTransformer.transform(order.lines, matches);
     const lineSum = sumPayloadLines(lineItems);
     const shippingAmount = order.shippingPrice.gross.amount;

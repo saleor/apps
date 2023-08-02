@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { AvataxOrderCreatedMockGenerator } from "./avatax-order-created-mock-generator";
-import { AvataxOrderCreatedPayloadTransformer } from "./avatax-order-created-payload-transformer";
+import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
+import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 
-const mockGenerator = new AvataxOrderCreatedMockGenerator();
+const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 
 const orderMock = mockGenerator.generateOrder();
 const discountedOrderMock = mockGenerator.generateOrder({
@@ -17,11 +17,11 @@ const discountedOrderMock = mockGenerator.generateOrder({
   ],
 });
 
-const transformer = new AvataxOrderCreatedPayloadTransformer();
+const transformer = new AvataxOrderConfirmedPayloadTransformer();
 
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
-describe("AvataxOrderCreatedPayloadTransformer", () => {
+describe("AvataxOrderConfirmedPayloadTransformer", () => {
   it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", async () => {
     const payload = await transformer.transform(orderMock, avataxConfigMock, []);
 
@@ -48,7 +48,7 @@ describe("AvataxOrderCreatedPayloadTransformer", () => {
     expect(check).toBe(true);
   });
   it("returns lines with discounted: false when there are no discounts", async () => {
-    const transformer = new AvataxOrderCreatedPayloadTransformer();
+    const transformer = new AvataxOrderConfirmedPayloadTransformer();
     const payload = await transformer.transform(orderMock, avataxConfigMock, []);
 
     const linesWithoutShipping = payload.model.lines.slice(0, -1);

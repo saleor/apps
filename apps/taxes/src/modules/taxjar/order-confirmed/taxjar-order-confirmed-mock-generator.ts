@@ -1,11 +1,11 @@
 import { CreateOrderRes } from "taxjar/dist/types/returnTypes";
-import { OrderCreatedSubscriptionFragment, OrderStatus } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channel-configuration/channel-config";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { defaultOrder } from "../../../mocks";
-import { TaxJarConfig } from "../taxjar-connection-schema";
+import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
+import { TaxJarConfig } from "../taxjar-connection-schema";
 
-type Order = OrderCreatedSubscriptionFragment;
+type Order = OrderConfirmedSubscriptionFragment;
 
 // providerConfigMockGenerator class that other classes extend?
 const defaultProviderConfig: TaxJarConfig = {
@@ -23,7 +23,7 @@ const defaultProviderConfig: TaxJarConfig = {
   },
 };
 
-const defaultOrderCreatedResponse: CreateOrderRes = {
+const defaultOrderConfirmedResponse: CreateOrderRes = {
   order: {
     user_id: 314973,
     transaction_reference_id: null,
@@ -82,14 +82,14 @@ const defaultOrderCreatedResponse: CreateOrderRes = {
 const testingScenariosMap = {
   default: {
     order: defaultOrder,
-    response: defaultOrderCreatedResponse,
+    response: defaultOrderConfirmedResponse,
     providerConfig: defaultProviderConfig,
   },
 };
 
 type TestingScenario = keyof typeof testingScenariosMap;
 
-export class TaxJarOrderCreatedMockGenerator {
+export class TaxJarOrderConfirmedMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
   generateOrder = (overrides: Partial<Order> = {}): Order =>
     structuredClone({

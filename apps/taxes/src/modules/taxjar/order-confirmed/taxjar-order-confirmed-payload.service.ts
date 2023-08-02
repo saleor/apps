@@ -1,11 +1,11 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { OrderCreatedSubscriptionFragment } from "../../../../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { TaxJarTaxCodeMatchesService } from "../tax-code/taxjar-tax-code-matches.service";
 import { TaxJarConfig } from "../taxjar-connection-schema";
-import { TaxJarOrderCreatedPayloadTransformer } from "./taxjar-order-created-payload-transformer";
+import { TaxJarOrderConfirmedPayloadTransformer } from "./taxjar-order-confirmed-payload-transformer";
 import { CreateOrderArgs } from "../taxjar-client";
 
-export class TaxJarOrderCreatedPayloadService {
+export class TaxJarOrderConfirmedPayloadService {
   constructor(private authData: AuthData) {}
 
   private getMatches() {
@@ -15,11 +15,11 @@ export class TaxJarOrderCreatedPayloadService {
   }
 
   async getPayload(
-    order: OrderCreatedSubscriptionFragment,
+    order: OrderConfirmedSubscriptionFragment,
     taxJarConfig: TaxJarConfig
   ): Promise<CreateOrderArgs> {
     const matches = await this.getMatches();
-    const payloadTransformer = new TaxJarOrderCreatedPayloadTransformer();
+    const payloadTransformer = new TaxJarOrderConfirmedPayloadTransformer();
 
     return payloadTransformer.transform(order, taxJarConfig, matches);
   }
