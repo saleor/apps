@@ -84,6 +84,7 @@ export class GoogleFeedSettingsFetcher {
       storefrontUrl,
       productStorefrontUrl,
       s3BucketConfiguration: appConfig.getS3Config(),
+      attributeMapping: appConfig.getAttributeMapping(),
     };
   }
 }

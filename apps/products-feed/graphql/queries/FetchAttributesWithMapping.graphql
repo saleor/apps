@@ -1,0 +1,13 @@
+query FetchAttributesWithMapping($cursor: String){
+  attributes(first: 100, after: $cursor){
+    pageInfo{
+      hasNextPage
+      endCursor
+    }
+    edges{
+      node{
+        ...AttributeWithMappingFragment
+      }
+    }
+  }
+}

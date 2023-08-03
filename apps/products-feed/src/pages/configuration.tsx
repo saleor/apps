@@ -10,6 +10,7 @@ import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-co
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
 import { useRouter } from "next/router";
 import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
+import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
@@ -142,6 +143,49 @@ const ConfigurationPage: NextPage = () => {
                 Read more
               </TextLink>
             </Paragraph>
+          </Box>
+        }
+      />
+      <AppSection
+        data-testid={"attributes-mapping-section"}
+        __marginBottom="100px"
+        includePadding
+        heading={"Attributes mapping"}
+        mainContent={<ConnectedAttributeMappingForm />}
+        sideContent={
+          <Box>
+            <Paragraph size={"small"}>
+              Choose which product attributes should be used for the feed. If product has multiple
+              attribute values, for example &quot;Primary color&quot; and &quot;Secondary
+              color&quot;, both values will be used according to Google guidelines:
+            </Paragraph>
+            <ul>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324351" newTab>
+                  Brand
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324487" newTab>
+                  Color
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324410" newTab>
+                  Material
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324483" newTab>
+                  Pattern
+                </TextLink>
+              </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324492" newTab>
+                  Size
+                </TextLink>
+              </li>
+            </ul>
           </Box>
         }
       />
