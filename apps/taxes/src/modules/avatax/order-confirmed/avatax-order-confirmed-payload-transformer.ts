@@ -7,6 +7,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { AvataxOrderConfirmedCalculationDateResolver } from "./avatax-order-confirmed-calculation-date-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -19,15 +20,20 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     return DocumentType.SalesInvoice;
   }
+
   async transform(
     order: OrderConfirmedSubscriptionFragment,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches
   ): Promise<CreateTransactionArgs> {
-    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
+
+    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
+    const dateResolver = new AvataxOrderConfirmedCalculationDateResolver();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
+    const date = dateResolver.resolve(order);
 
     return {
       model: {
@@ -47,7 +53,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         email: order.user?.email ?? "",
         lines: linesTransformer.transform(order, avataxConfig, matches),
-        date: new Date(order.created),
+        date,
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount)
         ),
