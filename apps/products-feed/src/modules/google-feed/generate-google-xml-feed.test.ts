@@ -16,6 +16,7 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
   seoDescription: "Seo description",
   slug: "product-slug",
   thumbnail: { __typename: "Image", url: "" },
+  attributes: [],
 };
 
 const priceBase: GoogleFeedProductVariantFragment["pricing"] = {
@@ -46,6 +47,7 @@ describe("generateGoogleXmlFeed", () => {
           pricing: priceBase,
           name: "Product variant",
           product: productBase,
+          attributes: [],
         },
         {
           id: "id2",
@@ -55,6 +57,7 @@ describe("generateGoogleXmlFeed", () => {
           pricing: priceBase,
           name: "Product variant 2",
           product: productBase,
+          attributes: [],
         },
       ],
     });
@@ -68,6 +71,7 @@ describe("generateGoogleXmlFeed", () => {
           <description>Description</description>
           <item>
             <g:id>sku1</g:id>
+            <g:item_group_id>product-id</g:item_group_id>
             <title>Product - Product variant</title>
             <g:condition>new</g:condition>
             <g:availability>in_stock</g:availability>
@@ -78,6 +82,7 @@ describe("generateGoogleXmlFeed", () => {
           </item>
           <item>
             <g:id>sku2</g:id>
+            <g:item_group_id>product-id</g:item_group_id>
             <title>Product - Product variant 2</title>
             <g:condition>new</g:condition>
             <g:availability>out_of_stock</g:availability>
