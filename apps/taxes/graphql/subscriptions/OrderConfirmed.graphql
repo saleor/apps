@@ -66,6 +66,7 @@ fragment OrderConfirmedSubscription on Order {
   }
   avataxEntityCode: metafield(key: "avataxEntityCode")
   avataxTaxCalculationDate: metafield(key: "avataxTaxCalculationDate")
+  avataxDocumentCode: metafield(key: "avataxDocumentCode")
 }
 fragment OrderConfirmedEventSubscription on Event {
   __typename
