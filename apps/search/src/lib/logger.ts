@@ -1,13 +1,9 @@
-import { createLogger as _createLogger } from "@saleor/apps-shared";
+import pino from "pino";
 
-/**
- * Extend factory to add more settings specific for the app
- */
-export const logger = _createLogger(
-  {},
-  {
-    redact: ["token", "secretKey"],
-  }
-);
+const otelTransport = pino.transport({
+  target: "pino-opentelemetry-transport",
+});
+
+export const logger = pino(otelTransport);
 
 export const createLogger = logger.child.bind(logger);
