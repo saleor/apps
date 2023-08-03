@@ -11,6 +11,8 @@ export const register = async () => {
   }
 
   if (process.env.NEXT_RUNTIME === "nodejs") {
+    await import("./otel.ts");
+
     prisma.$connect().catch((e: any) => {
       console.error(e);
       console.error("Cant connect to database, will exit");

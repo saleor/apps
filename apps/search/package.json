@@ -19,6 +19,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.41.1",
+    "@opentelemetry/resources": "^1.15.1",
+    "@opentelemetry/sdk-node": "^0.41.1",
+    "@opentelemetry/sdk-trace-node": "^1.15.1",
+    "@opentelemetry/semantic-conventions": "^1.15.1",
     "@prisma/client": "^4.15.0",
     "@saleor/app-sdk": "0.41.0",
     "@saleor/apps-shared": "workspace:*",
