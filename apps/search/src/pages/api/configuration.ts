@@ -4,7 +4,7 @@ import { createClient } from "../../lib/graphql";
 import { saleorApp } from "../../../saleor-app";
 
 import { createProtectedHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
-import { createLogger } from "../../lib/logger";
+import { createLogger, logger as otelLogger } from "../../lib/logger";
 import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
@@ -28,11 +28,9 @@ export const handler = async (
 
   const client = createClient(saleorApiUrl, async () => Promise.resolve({ token: token }));
 
-  console.log(req.method);
-
   // todo extract endpoints, add trpc
   if (req.method === "GET") {
-    logger.debug("Returning configuration");
+    logger.info("Returning configuration");
 
     const configuration = await algoliaConfigurationRepository.getConfiguration(saleorApiUrl);
 
@@ -47,12 +45,13 @@ export const handler = async (
   } else if (req.method === "POST") {
     tracer.startActiveSpan("update-configuration", async (span) => {
       console.log("test log console");
+      otelLogger.warn("test warn");
 
       span.addEvent("update-configuration POST", {
         foo: "BAR",
       });
 
-      logger.debug("Updating the configuration - log logger pino");
+      logger.info("Updating the configuration - log logger pino");
 
       const { appId, secretKey, indexNamePrefix } = JSON.parse(req.body) as AppConfigurationFields;
 
