@@ -1,4 +1,8 @@
 fragment ProductVariantData on ProductVariant {
+  metadata {
+    key
+    value
+  }
   id
   name
   sku

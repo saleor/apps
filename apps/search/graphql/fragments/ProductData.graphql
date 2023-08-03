@@ -1,4 +1,7 @@
 fragment ProductData on Product {
+  variants {
+    id
+  }
   id
   name
   description
