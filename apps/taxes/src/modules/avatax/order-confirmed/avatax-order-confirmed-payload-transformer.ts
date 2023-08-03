@@ -8,6 +8,7 @@ import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-reposito
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxOrderConfirmedCalculationDateResolver } from "./avatax-order-confirmed-calculation-date-resolver";
+import { AvataxOrderConfirmedDocumentCodeResolver } from "./avatax-order-confirmed-document-code-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -31,12 +32,15 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
     const dateResolver = new AvataxOrderConfirmedCalculationDateResolver();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const documentCodeResolver = new AvataxOrderConfirmedDocumentCodeResolver();
 
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
     const date = dateResolver.resolve(order);
+    const code = documentCodeResolver.resolve(order);
 
     return {
       model: {
+        code,
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
         customerCode:
