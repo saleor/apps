@@ -26,7 +26,7 @@
     "@trpc/react-query": "10.34.0",
     "@trpc/server": "10.34.0",
     "@urql/exchange-auth": "^2.1.4",
-    "@vitejs/plugin-react": "4.0.0",
+    "@vitejs/plugin-react": "4.0.4",
     "contentful-management": "10.38.3",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
