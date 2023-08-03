@@ -3,6 +3,7 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { SimpleSpanProcessor } from "@opentelemetry/sdk-trace-node";
+import { trace } from "@opentelemetry/api";
 
 const sdk = new NodeSDK({
   resource: new Resource({
@@ -12,3 +13,5 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
+
+export const tracer = trace.getTracer("saleor.app.search");
