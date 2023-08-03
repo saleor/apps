@@ -1,15 +1,19 @@
 import { fillUrlTemplate } from "../feed-url/fill-url-template";
 import { GoogleProxyItem, ProductEntry } from "./types";
 
-/**
- * TODO Test
- */
 export const productToProxy = (p: ProductEntry) => {
   const item: GoogleProxyItem[] = [
     {
       "g:id": [
         {
-          "#text": p.sku || p.id,
+          "#text": p.sku || p.variantId,
+        },
+      ],
+    },
+    {
+      "g:item_group_id": [
+        {
+          "#text": p.id,
         },
       ],
     },
