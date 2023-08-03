@@ -12,7 +12,6 @@ import { AvataxConfig, defaultAvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
-import { AvataxOrderFulfilledAdapter } from "./order-fulfilled/avatax-order-fulfilled-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -39,14 +38,6 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
     const adapter = new AvataxOrderConfirmedAdapter(this.config, this.authData);
-
-    const response = await adapter.send({ order });
-
-    return response;
-  }
-
-  async fulfillOrder(order: OrderFulfilledSubscriptionFragment) {
-    const adapter = new AvataxOrderFulfilledAdapter(this.config);
 
     const response = await adapter.send({ order });
 
