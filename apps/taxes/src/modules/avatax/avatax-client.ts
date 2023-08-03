@@ -83,8 +83,7 @@ export class AvataxClient {
     return this.client.voidTransaction({
       transactionCode,
       companyCode,
-      // todo: check voidreasoncode
-      model: { code: VoidReasonCode.Unspecified },
+      model: { code: VoidReasonCode.DocVoided },
     });
   }
 
