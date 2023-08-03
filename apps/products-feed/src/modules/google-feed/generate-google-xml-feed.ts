@@ -3,11 +3,14 @@ import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
 import { EditorJsPlaintextRenderer } from "../editor-js/editor-js-plaintext-renderer";
+import { RootConfig } from "../app-configuration/app-config";
+import { getMappedAttributes } from "./attribute-mapping";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
   storefrontUrl: string;
   productStorefrontUrl: string;
+  attributeMapping?: RootConfig["attributeMapping"];
   shopName: string;
   shopDescription?: string;
 }
@@ -29,6 +32,7 @@ const formatCurrency = (currency: string, amount: number) => {
 };
 
 export const generateGoogleXmlFeed = ({
+  attributeMapping,
   productVariants,
   storefrontUrl,
   productStorefrontUrl,
@@ -36,6 +40,11 @@ export const generateGoogleXmlFeed = ({
   shopDescription,
 }: GenerateGoogleXmlFeedArgs) => {
   const items = productVariants.map((variant) => {
+    const attributes = getMappedAttributes({
+      attributeMapping: attributeMapping,
+      variant,
+    });
+
     const currency = variant.pricing?.price?.gross.currency;
     const amount = variant.pricing?.price?.gross.amount;
 
@@ -55,6 +64,11 @@ export const generateGoogleXmlFeed = ({
       googleProductCategory: variant.product.category?.googleCategoryId || "",
       price: price,
       imageUrl: variant.product.thumbnail?.url || "",
+      material: attributes?.material,
+      color: attributes?.color,
+      brand: attributes?.brand,
+      pattern: attributes?.pattern,
+      size: attributes?.size,
     });
   });
 

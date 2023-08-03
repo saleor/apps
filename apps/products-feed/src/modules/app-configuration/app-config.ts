@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const attributeMappingSchema = z.object({
+  brandAttributeIds: z.array(z.string()),
+  colorAttributeIds: z.array(z.string()),
+  sizeAttributeIds: z.array(z.string()),
+  materialAttributeIds: z.array(z.string()),
+  patternAttributeIds: z.array(z.string()),
+});
+
 const s3ConfigSchema = z.object({
   bucketName: z.string().min(1),
   secretAccessKey: z.string().min(1),
@@ -14,6 +22,7 @@ const urlConfigurationSchema = z.object({
 
 const rootAppConfigSchema = z.object({
   s3: s3ConfigSchema.nullable(),
+  attributeMapping: attributeMappingSchema.nullable(),
   channelConfig: z.record(z.object({ storefrontUrls: urlConfigurationSchema })),
 });
 
@@ -21,6 +30,7 @@ export const AppConfigSchema = {
   root: rootAppConfigSchema,
   s3Bucket: s3ConfigSchema,
   channelUrls: urlConfigurationSchema,
+  attributeMapping: attributeMappingSchema,
 };
 
 export type RootConfig = z.infer<typeof rootAppConfigSchema>;
@@ -31,6 +41,7 @@ export class AppConfig {
   private rootData: RootConfig = {
     channelConfig: {},
     s3: null,
+    attributeMapping: null,
   };
 
   constructor(initialData?: RootConfig) {
@@ -63,6 +74,18 @@ export class AppConfig {
     }
   }
 
+  setAttributeMapping(attributeMapping: z.infer<typeof attributeMappingSchema>) {
+    try {
+      this.rootData.attributeMapping = attributeMappingSchema.parse(attributeMapping);
+
+      return this;
+    } catch (e) {
+      console.error(e);
+
+      throw new Error("Invalid mapping config provided");
+    }
+  }
+
   setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof urlConfigurationSchema>) {
     try {
       const parsedConfig = urlConfigurationSchema.parse(urlsConfig);
@@ -87,5 +110,9 @@ export class AppConfig {
 
   getS3Config() {
     return this.rootData.s3;
+  }
+
+  getAttributeMapping() {
+    return this.rootData.attributeMapping;
   }
 }

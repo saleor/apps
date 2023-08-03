@@ -11,12 +11,30 @@ fragment GoogleFeedProductVariant on ProductVariant {
     }
   }
   quantityAvailable
+  attributes {
+    attribute {
+      id
+    }
+    values {
+      value
+      name
+    }
+  }
   product {
     id
     name
     slug
     description
     seoDescription
+    attributes{
+      attribute{
+        id
+      }
+      values{
+        value
+        name
+      }
+    }
     thumbnail {
       url
     }

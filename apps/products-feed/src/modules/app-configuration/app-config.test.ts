@@ -6,7 +6,11 @@ describe("AppConfig", function () {
     it("Constructs empty state", () => {
       const instance = new AppConfig();
 
-      expect(instance.getRootConfig()).toEqual({ channelConfig: {}, s3: null });
+      expect(instance.getRootConfig()).toEqual({
+        channelConfig: {},
+        s3: null,
+        attributeMapping: null,
+      });
     });
 
     it("Constructs from initial state", () => {
@@ -25,6 +29,13 @@ describe("AppConfig", function () {
             },
           },
         },
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: [],
+        },
       });
 
       expect(instance.getRootConfig()).toEqual({
@@ -41,6 +52,13 @@ describe("AppConfig", function () {
               storefrontUrl: "https://example.com/p/{productFeed}",
             },
           },
+        },
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: [],
         },
       });
     });
@@ -64,6 +82,13 @@ describe("AppConfig", function () {
           secretAccessKey: "secret",
         },
         channelConfig: {},
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: [],
+        },
       });
 
       const serialized = instance1.serialize();
@@ -78,6 +103,13 @@ describe("AppConfig", function () {
           secretAccessKey: "secret",
         },
         channelConfig: {},
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: [],
+        },
       });
     });
   });
@@ -98,6 +130,13 @@ describe("AppConfig", function () {
           },
         },
       },
+      attributeMapping: {
+        brandAttributeIds: [],
+        colorAttributeIds: [],
+        patternAttributeIds: [],
+        materialAttributeIds: [],
+        sizeAttributeIds: ["size-id"],
+      },
     });
 
     it("getRootConfig returns root config data", () => {
@@ -115,6 +154,13 @@ describe("AppConfig", function () {
               storefrontUrl: "https://example.com/p/{productFeed}",
             },
           },
+        },
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: ["size-id"],
         },
       });
     });
@@ -134,6 +180,16 @@ describe("AppConfig", function () {
         bucketName: "bucket",
         accessKeyId: "access",
         secretAccessKey: "secret",
+      });
+    });
+
+    it("getAttributeMapping gets attribute data", () => {
+      expect(instance.getAttributeMapping()).toEqual({
+        brandAttributeIds: [],
+        colorAttributeIds: [],
+        patternAttributeIds: [],
+        materialAttributeIds: [],
+        sizeAttributeIds: ["size-id"],
       });
     });
   });

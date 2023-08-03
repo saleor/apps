@@ -8,6 +8,7 @@ import { z } from "zod";
 import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
 import { checkBucketAccess } from "../file-storage/s3/check-bucket-access";
 import { TRPCError } from "@trpc/server";
+import { AttributeFetcher } from "./attribute-fetcher";
 
 export const appConfigurationRouter = router({
   /**
@@ -116,4 +117,39 @@ export const appConfigurationRouter = router({
         return null;
       }
     ),
+  setAttributeMapping: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(AppConfigSchema.attributeMapping)
+    .mutation(
+      async ({
+        ctx: { getConfig, apiClient, saleorApiUrl, appConfigMetadataManager, logger },
+        input,
+      }) => {
+        const config = await getConfig();
+
+        config.setAttributeMapping(input);
+
+        await appConfigMetadataManager.set(config.serialize());
+
+        return null;
+      }
+    ),
+
+  getAttributes: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .query(async ({ ctx: { logger, apiClient } }) => {
+      const fetcher = new AttributeFetcher(apiClient);
+
+      const result = await fetcher.fetchAllAttributes().catch((e) => {
+        logger.error(e, "Can't fetch the attributes");
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Can't fetch the attributes",
+        });
+      });
+
+      logger.debug("Returning attributes");
+
+      return result;
+    }),
 });

@@ -26,6 +26,7 @@ describe("GoogleFeedSettingsFetcher", () => {
           region: "region",
           secretAccessKey: "secretAccessKey",
         },
+        attributeMapping: null,
       });
 
       return appConfig.serialize();
@@ -48,6 +49,7 @@ describe("GoogleFeedSettingsFetcher", () => {
         accessKeyId: "accessKeyId",
         region: "region",
       },
+      attributeMapping: null,
     });
   });
 });

@@ -104,6 +104,57 @@ export const productToProxy = (p: ProductEntry) => {
       ],
     });
   }
+
+  if (p.material) {
+    item.push({
+      "g:material": [
+        {
+          "#text": p.material,
+        },
+      ],
+    });
+  }
+
+  if (p.brand) {
+    item.push({
+      "g:brand": [
+        {
+          "#text": p.brand,
+        },
+      ],
+    });
+  }
+
+  if (p.color) {
+    item.push({
+      "g:color": [
+        {
+          "#text": p.color,
+        },
+      ],
+    });
+  }
+
+  if (p.size) {
+    item.push({
+      "g:size": [
+        {
+          "#text": p.size,
+        },
+      ],
+    });
+  }
+
+  if (p.pattern) {
+    item.push({
+      "g:pattern": [
+        {
+          "#text": p.pattern,
+        },
+      ],
+    });
+  }
+
   return {
     item,
   };
