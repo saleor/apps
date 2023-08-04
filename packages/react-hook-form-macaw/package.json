@@ -8,7 +8,7 @@
     "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
-    "eslint": "8.44.0"
+    "eslint": "8.46.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
@@ -30,7 +30,7 @@
     "react-hook-form": "^7.43.9",
     "storybook": "^7.0.12",
     "typescript": "5.1.6",
-    "vite": "4.3.9",
+    "vite": "4.4.8",
     "webpack": "^5.82.1"
   },
   "main": "index.ts",

@@ -6,7 +6,7 @@ const config = {
   indent: "  ",
   semverGroups: [],
   semverRange: "",
-  dependencyTypes: ["dev", "overrides", "peer", "prod", "resolutions", "workspace"],
+  dependencyTypes: ["dev", "overrides", "peer", "prod", "resolutions"],
   sortAz: [
     "scripts",
     "contributors",
