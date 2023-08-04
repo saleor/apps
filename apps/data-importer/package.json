@@ -20,7 +20,7 @@
     "@saleor/macaw-ui": "0.8.0-pre.106",
     "@sentry/nextjs": "7.55.2",
     "@urql/exchange-auth": "^2.1.4",
-    "@vitejs/plugin-react": "4.0.0",
+    "@vitejs/plugin-react": "4.0.4",
     "clsx": "^1.2.1",
     "dot-object": "^2.1.4",
     "graphql": "16.7.1",
@@ -35,8 +35,8 @@
     "react-dom": "18.2.0",
     "urql": "^4.0.4",
     "usehooks-ts": "^2.9.1",
-    "vite": "4.3.9",
-    "vitest": "0.31.3",
+    "vite": "4.4.8",
+    "vitest": "0.34.1",
     "zod": "3.21.4"
   },
   "devDependencies": {
@@ -53,8 +53,7 @@
     "@types/dot-object": "^2.1.2",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitest/coverage-c8": "^0.28.4",
-    "eslint": "8.44.0",
+    "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.1.6"
   },

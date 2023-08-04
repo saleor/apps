@@ -25,7 +25,7 @@
     "@urql/exchange-auth": "^2.1.4",
     "@web-std/file": "^3.0.2",
     "clsx": "^1.2.1",
-    "eslint": "8.44.0",
+    "eslint": "8.46.0",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
     "microinvoice": "^1.0.6",
@@ -52,15 +52,14 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@types/rimraf": "^3.0.2",
-    "@vitejs/plugin-react": "4.0.0",
-    "@vitest/coverage-c8": "^0.28.4",
-    "dotenv": "^16.0.3",
+    "@vitejs/plugin-react": "4.0.4",
+    "dotenv": "^16.3.1",
     "eslint-config-saleor": "workspace:*",
     "jsdom": "^20.0.3",
     "rimraf": "^3.0.2",
     "typescript": "5.1.6",
-    "vite": "4.3.9",
-    "vitest": "0.31.3"
+    "vite": "4.4.8",
+    "vitest": "0.34.1"
   },
   "private": true,
   "saleor": {
