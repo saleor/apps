@@ -9,6 +9,7 @@ export type ProductEntry = {
   imageUrl?: string;
   condition?: "new" | "refurbished" | "used";
   price?: string;
+  salePrice?: string;
   googleProductCategory?: string;
   availability: "in_stock" | "out_of_stock" | "preorder" | "backorder";
   category: string;
