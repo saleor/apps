@@ -34,10 +34,6 @@ export class AppWebhookMigrator {
     this.mode = mode;
   }
 
-  async getAppWebhooks() {
-    return this.appWebhookRepository.getAll();
-  }
-
   private registerWebhookFromHandler(webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook) {
     const manifest = webhookHandler.getWebhookManifest(this.apiUrl);
 
@@ -52,10 +48,44 @@ export class AppWebhookMigrator {
     });
   }
 
-  async registerWebhookIfItDoesntExist(webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook) {
-    const webhooks = await this.getAppWebhooks();
+  private async deleteWebhookById(webhookId: string) {
+    console.log(`Webhook ${webhookId} will be deleted`);
+
+    if (this.mode === "migrate") {
+      const result = await this.appWebhookRepository.delete(webhookId);
+
+      console.log(`Webhook ${webhookId} deleted`);
+
+      return result;
+    }
+  }
+
+  async getAppWebhooks() {
+    const webhooks = await this.appWebhookRepository.getAll();
 
     console.log("Current app webhooks: ", webhooks);
+
+    return webhooks;
+  }
+
+  private async deleteFirstWebhookByName(webhookName: string) {
+    const webhooks = await this.getAppWebhooks();
+
+    const webhook = webhooks.find((webhook) => webhook.name === webhookName);
+
+    if (!webhook) {
+      console.log(`Webhook ${webhookName} not found`);
+
+      return;
+    }
+
+    await this.deleteWebhookById(webhook.id);
+  }
+
+  private async registerWebhookIfItDoesntExist(
+    webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
+  ) {
+    const webhooks = await this.getAppWebhooks();
 
     const webhookExists = webhooks.some((webhook) => webhook.name === webhookHandler.name);
 
@@ -74,7 +104,9 @@ export class AppWebhookMigrator {
   }
 
   async rollbackWebhookMigrations(webhookHandlers: (SaleorSyncWebhook | SaleorAsyncWebhook)[]) {
-    const webhooks = await this.getAppWebhooks();
+    const webhooks = await this.appWebhookRepository.getAll();
+
+    console.log("Current app webhooks: ", webhooks);
 
     const webhooksToDelete = webhooks.filter((webhook) => {
       const webhookHandler = webhookHandlers.find((handler) => handler.name === webhook.name);
@@ -84,12 +116,16 @@ export class AppWebhookMigrator {
 
     console.log("The following webhooks will be deleted: ", webhooksToDelete);
 
-    if (this.mode === "migrate") {
-      for (const webhook of webhooksToDelete) {
-        await this.appWebhookRepository.delete(webhook.id);
-
-        console.log(`Webhook ${webhook.name} deleted`);
-      }
+    for (const webhook of webhooksToDelete) {
+      await this.deleteWebhookById(webhook.id);
     }
+  }
+
+  async migrateWebhook(
+    prevWebhookName: string,
+    nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
+  ) {
+    await this.registerWebhookIfItDoesntExist(nextWebhookHandler);
+    await this.deleteFirstWebhookByName(prevWebhookName);
   }
 }
