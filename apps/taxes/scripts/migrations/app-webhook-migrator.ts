@@ -18,8 +18,12 @@ export class AppWebhookMigrator {
   private appWebhookRepository: AppWebhookRepository;
   private appId: string;
   private apiUrl: string;
+  private mode: "report" | "migrate";
 
-  constructor({ apiUrl, appToken, appId }: { apiUrl: string; appToken: string; appId: string }) {
+  constructor(
+    { apiUrl, appToken, appId }: { apiUrl: string; appToken: string; appId: string },
+    { mode }: { mode: "report" | "migrate" }
+  ) {
     this.appWebhookRepository = new AppWebhookRepository({
       apiUrl,
       appToken,
@@ -27,6 +31,7 @@ export class AppWebhookMigrator {
 
     this.appId = appId;
     this.apiUrl = apiUrl;
+    this.mode = mode;
   }
 
   async getAppWebhooks() {
@@ -51,19 +56,21 @@ export class AppWebhookMigrator {
     const webhooks = await this.getAppWebhooks();
 
     console.log("Current app webhooks: ", webhooks);
-    const manifest = webhookHandler.getWebhookManifest(this.apiUrl);
 
-    const webhookExists = webhooks.some((webhook) => webhook.name === manifest.name);
+    const webhookExists = webhooks.some((webhook) => webhook.name === webhookHandler.name);
 
     if (webhookExists) {
-      console.log(`Webhook ${manifest.name} already exists`);
+      console.log(`Webhook ${webhookHandler.name} already exists`);
 
       return;
     }
 
-    await this.registerWebhookFromHandler(webhookHandler);
+    console.log(`Webhook ${webhookHandler.name} will be registered`);
 
-    console.log(`Webhook ${manifest.name} registered`);
+    if (this.mode === "migrate") {
+      await this.registerWebhookFromHandler(webhookHandler);
+      console.log(`Webhook ${webhookHandler.name} registered`);
+    }
   }
 
   async rollbackWebhookMigrations(webhookHandlers: (SaleorSyncWebhook | SaleorAsyncWebhook)[]) {
@@ -75,16 +82,14 @@ export class AppWebhookMigrator {
       return !!webhookHandler;
     });
 
-    console.log("Webhooks to delete: ", webhooksToDelete);
+    console.log("The following webhooks will be deleted: ", webhooksToDelete);
 
-    /*
-     * for (const webhook of webhooksToDelete) {
-     *   await this.appWebhookRepository.delete(webhook.id);
-     */
+    if (this.mode === "migrate") {
+      for (const webhook of webhooksToDelete) {
+        await this.appWebhookRepository.delete(webhook.id);
 
-    /*
-     *   console.log(`Webhook ${webhook.name} deleted`);
-     * }
-     */
+        console.log(`Webhook ${webhook.name} deleted`);
+      }
+    }
   }
 }

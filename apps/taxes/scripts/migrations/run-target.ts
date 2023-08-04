@@ -3,6 +3,7 @@
 import * as dotenv from "dotenv";
 import { AppWebhookMigrator } from "./app-webhook-migrator";
 import { fetchCloudAplEnv, verifyRequiredEnvs } from "./migration-utils";
+import { orderConfirmedAsyncWebhook } from "../../src/pages/api/webhooks/order-confirmed";
 
 dotenv.config();
 
@@ -25,14 +26,17 @@ const runTarget = async (saleorApiUrl: string) => {
     process.exit(1);
   }
 
-  const webhookMigrator = new AppWebhookMigrator({
-    apiUrl: saleorApiUrl,
-    appToken: env.token,
-    appId: env.appId,
-  });
+  const webhookMigrator = new AppWebhookMigrator(
+    {
+      apiUrl: saleorApiUrl,
+      appToken: env.token,
+      appId: env.appId,
+    },
+    { mode: "report" }
+  );
 
   /*
-   * await webhookUpdater.registerWebhookIfItDoesntExist(orderConfirmedAsyncWebhook);
+   * await webhookMigrator.registerWebhookIfItDoesntExist(orderConfirmedAsyncWebhook);
    * await webhookMigrator.rollbackWebhookMigrations([orderConfirmedAsyncWebhook]);
    */
 };
