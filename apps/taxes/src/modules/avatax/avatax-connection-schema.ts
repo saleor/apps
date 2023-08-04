@@ -24,7 +24,7 @@ export type BaseAvataxConfig = z.infer<typeof baseAvataxConfigSchema>;
 export const avataxConfigSchema = z
   .object({
     name: z.string().min(1, { message: "Name requires at least one character." }),
-    companyCode: z.string(),
+    companyCode: z.string().min(1, { message: "Company code requires at least one character." }),
     isAutocommit: z.boolean(),
     shippingTaxCode: z.string().optional(),
     isDocumentRecordingEnabled: z.boolean().default(true),

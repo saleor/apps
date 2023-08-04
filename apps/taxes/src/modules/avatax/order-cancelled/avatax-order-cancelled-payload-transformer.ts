@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { OrderCancelledPayload } from "../../../pages/api/webhooks/order-cancelled";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
 
 export class AvataxOrderCancelledPayloadTransformer {
@@ -15,7 +15,7 @@ export class AvataxOrderCancelledPayloadTransformer {
 
     return {
       transactionCode,
-      companyCode: this.config.companyCode ?? "", // If companyCode is not defined, we set the value to empty string so that the default company is used.
+      companyCode: this.config.companyCode ?? defaultAvataxConfig.companyCode,
     };
   }
 }
