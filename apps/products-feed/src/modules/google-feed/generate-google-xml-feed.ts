@@ -5,6 +5,7 @@ import { shopDetailsToProxy } from "./shop-details-to-proxy";
 import { EditorJsPlaintextRenderer } from "../editor-js/editor-js-plaintext-renderer";
 import { RootConfig } from "../app-configuration/app-config";
 import { getMappedAttributes } from "./attribute-mapping";
+import { priceMapping } from "./price-mapping";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
@@ -14,22 +15,6 @@ interface GenerateGoogleXmlFeedArgs {
   shopName: string;
   shopDescription?: string;
 }
-
-/**
- * Price format has to be altered from the en format to the one expected by Google
- * eg. 1.00 USD, 5.00 PLN
- */
-const formatCurrency = (currency: string, amount: number) => {
-  return (
-    new Intl.NumberFormat("en-EN", {
-      useGrouping: false,
-      minimumFractionDigits: 2,
-      style: "decimal",
-      currencyDisplay: "code",
-      currency: currency,
-    }).format(amount) + ` ${currency}`
-  );
-};
 
 export const generateGoogleXmlFeed = ({
   attributeMapping,
@@ -45,10 +30,7 @@ export const generateGoogleXmlFeed = ({
       variant,
     });
 
-    const currency = variant.pricing?.price?.gross.currency;
-    const amount = variant.pricing?.price?.gross.amount;
-
-    const price = currency ? formatCurrency(currency, amount!) : undefined;
+    const pricing = priceMapping({ pricing: variant.pricing });
 
     return productToProxy({
       storefrontUrlTemplate: productStorefrontUrl,
@@ -62,13 +44,13 @@ export const generateGoogleXmlFeed = ({
         variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
       category: variant.product.category?.name || "unknown",
       googleProductCategory: variant.product.category?.googleCategoryId || "",
-      price: price,
       imageUrl: variant.product.thumbnail?.url || "",
       material: attributes?.material,
       color: attributes?.color,
       brand: attributes?.brand,
       pattern: attributes?.pattern,
       size: attributes?.size,
+      ...pricing,
     });
   });
 
