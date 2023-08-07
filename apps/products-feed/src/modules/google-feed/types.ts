@@ -1,11 +1,11 @@
 export type ProductEntry = {
   id: string;
+  title: string;
   sku?: string;
-  name: string;
   slug: string;
   variantId: string;
   description?: string;
-  storefrontUrlTemplate?: string;
+  link?: string;
   imageUrl?: string;
   condition?: "new" | "refurbished" | "used";
   price?: string;

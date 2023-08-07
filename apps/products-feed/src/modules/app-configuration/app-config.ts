@@ -1,11 +1,19 @@
 import { z } from "zod";
 
+const titleTemplateFieldSchema = z.string().default("{{variant.product.name}} - {{variant.name}}");
+
+export const titleTemplateInputSchema = z.object({
+  titleTemplate: titleTemplateFieldSchema,
+});
+
+export type TitleTemplateInput = z.infer<typeof titleTemplateInputSchema>;
+
 const attributeMappingSchema = z.object({
-  brandAttributeIds: z.array(z.string()),
-  colorAttributeIds: z.array(z.string()),
-  sizeAttributeIds: z.array(z.string()),
-  materialAttributeIds: z.array(z.string()),
-  patternAttributeIds: z.array(z.string()),
+  brandAttributeIds: z.array(z.string()).default([]),
+  colorAttributeIds: z.array(z.string()).default([]),
+  sizeAttributeIds: z.array(z.string()).default([]),
+  materialAttributeIds: z.array(z.string()).default([]),
+  patternAttributeIds: z.array(z.string()).default([]),
 });
 
 const s3ConfigSchema = z.object({
@@ -22,6 +30,7 @@ const urlConfigurationSchema = z.object({
 
 const rootAppConfigSchema = z.object({
   s3: s3ConfigSchema.nullable(),
+  titleTemplate: titleTemplateFieldSchema,
   attributeMapping: attributeMappingSchema.nullable(),
   channelConfig: z.record(z.object({ storefrontUrls: urlConfigurationSchema })),
 });
@@ -41,7 +50,8 @@ export class AppConfig {
   private rootData: RootConfig = {
     channelConfig: {},
     s3: null,
-    attributeMapping: null,
+    attributeMapping: attributeMappingSchema.parse({}),
+    titleTemplate: titleTemplateFieldSchema.parse(undefined),
   };
 
   constructor(initialData?: RootConfig) {
@@ -93,6 +103,8 @@ export class AppConfig {
       this.rootData.channelConfig[channelSlug] = {
         storefrontUrls: parsedConfig,
       };
+
+      return this;
     } catch (e) {
       console.error(e);
 
@@ -114,5 +126,15 @@ export class AppConfig {
 
   getAttributeMapping() {
     return this.rootData.attributeMapping;
+  }
+
+  setTitleTemplate(titleTemplate: z.infer<typeof titleTemplateFieldSchema>) {
+    this.rootData.titleTemplate = titleTemplate;
+
+    return this;
+  }
+
+  getTitleTemplate() {
+    return this.rootData.titleTemplate;
   }
 }

@@ -6,11 +6,14 @@ import { EditorJsPlaintextRenderer } from "../editor-js/editor-js-plaintext-rend
 import { RootConfig } from "../app-configuration/app-config";
 import { getMappedAttributes } from "./attribute-mapping";
 import { priceMapping } from "./price-mapping";
+import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
+import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
   storefrontUrl: string;
   productStorefrontUrl: string;
+  titleTemplate: string;
   attributeMapping?: RootConfig["attributeMapping"];
   shopName: string;
   shopDescription?: string;
@@ -20,6 +23,7 @@ export const generateGoogleXmlFeed = ({
   attributeMapping,
   productVariants,
   storefrontUrl,
+  titleTemplate,
   productStorefrontUrl,
   shopName,
   shopDescription,
@@ -32,10 +36,34 @@ export const generateGoogleXmlFeed = ({
 
     const pricing = priceMapping({ pricing: variant.pricing });
 
+    let title = "";
+
+    try {
+      title = renderHandlebarsTemplate({
+        data: {
+          variant,
+          googleAttributes: attributes,
+        },
+        template: titleTemplate,
+      });
+    } catch {}
+
+    let link = undefined;
+
+    try {
+      link = renderHandlebarsTemplate({
+        data: {
+          variant,
+          googleAttributes: attributes,
+        },
+        template: transformTemplateFormat({ template: productStorefrontUrl }),
+      });
+    } catch {}
+
     return productToProxy({
-      storefrontUrlTemplate: productStorefrontUrl,
+      link,
+      title: title || "",
       id: variant.product.id,
-      name: `${variant.product.name} - ${variant.name}`,
       slug: variant.product.slug,
       variantId: variant.id,
       sku: variant.sku || undefined,
