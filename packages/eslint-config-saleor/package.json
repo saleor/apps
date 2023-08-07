@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-saleor",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "devDependencies": {
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.8",

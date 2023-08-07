@@ -1,5 +1,39 @@
 # saleor-app-products-feed
 
+## 1.11.0
+
+### Minor Changes
+
+- 6a84b4b: Changed format of product URLs to Handlebars. Previous format can still be parsed, so this change does not affect existing configurations.
+
+  Old format: `http://example.com/{variantId}`
+  New format: `http://example.com/{{variant.id}}`
+
+- 6a84b4b: Added item title customization using Handlebars.
+- fc5e639: Feed format has been changed to leverage Product Group ID field:
+  - Product ID: feed items use SKU if available, product variant ID is used otherwise
+  - Product Group ID: product ID is used for all the items
+- 0b0297e: Updated pricing attributes according to the Google guidelines.
+
+  Was:
+
+  - Price: base or discounted price
+
+  Now:
+
+  - Price: always the base price. Attribute skipped if amount is equal to 0.
+  - Sale price: discounted price. Attribute skipped if value is the same as base price
+
+- aece073: Added configuration for choosing which product attributes should be used for generating Google Product Feed. Supported feed attributes: Brand, Color, Size, Material, Pattern.
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+- Updated dependencies [261957f]
+  - @saleor/react-hook-form-macaw@0.2.3
+  - @saleor/apps-shared@1.7.6
+  - @saleor/apps-ui@1.1.6
+
 ## 1.10.3
 
 ### Patch Changes
