@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.9.3
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+- Updated dependencies [261957f]
+  - @saleor/apps-shared@1.7.6
+
 ## 1.9.2
 
 ### Patch Changes

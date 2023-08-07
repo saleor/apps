@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.1.6
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+
 ## 1.1.5
 
 ### Patch Changes

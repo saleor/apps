@@ -1,5 +1,15 @@
 # saleor-app-taxes
 
+## 1.12.1
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+- Updated dependencies [261957f]
+  - @saleor/react-hook-form-macaw@0.2.3
+  - @saleor/apps-shared@1.7.6
+  - @saleor/apps-ui@1.1.6
+
 ## 1.12.0
 
 ### Minor Changes

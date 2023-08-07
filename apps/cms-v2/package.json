@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms-v2",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
