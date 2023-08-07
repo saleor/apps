@@ -9,7 +9,7 @@ const logger = createLogger({
 
 interface RenderHandlebarsTemplateArgs {
   template: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export const renderHandlebarsTemplate = ({ template, data }: RenderHandlebarsTemplateArgs) => {
