@@ -103,6 +103,8 @@ export class AppConfig {
       this.rootData.channelConfig[channelSlug] = {
         storefrontUrls: parsedConfig,
       };
+
+      return this;
     } catch (e) {
       console.error(e);
 
@@ -128,6 +130,8 @@ export class AppConfig {
 
   setTitleTemplate(titleTemplate: z.infer<typeof titleTemplateFieldSchema>) {
     this.rootData.titleTemplate = titleTemplate;
+
+    return this;
   }
 
   getTitleTemplate() {
