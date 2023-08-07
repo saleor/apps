@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const TitleFormattingConfigurationForm = (props: Props) => {
-  const { handleSubmit, control } = useForm<TitleTemplateInput>({
+  const { handleSubmit, control, getValues } = useForm<TitleTemplateInput>({
     defaultValues: props.initialData,
     resolver: zodResolver(AppConfigSchema.attributeMapping),
   });
@@ -37,9 +37,9 @@ export const TitleFormattingConfigurationForm = (props: Props) => {
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button
           variant="secondary"
-          onClick={handleSubmit((data) => {
-            props.onPreview(data);
-          })}
+          onClick={() => {
+            props.onPreview(getValues());
+          }}
         >
           Preview
         </Button>
