@@ -87,7 +87,8 @@ describe("generateGoogleXmlFeed", () => {
             <g:product_type>Category Name</g:product_type>
             <g:google_product_category>1</g:google_product_category>
             <link>https://example.com/p/product-slug</link>
-            <g:price>1.00 USD</g:price>
+            <g:price>2.00 USD</g:price>
+            <g:sale_price>1.00 USD</g:sale_price>
           </item>
           <item>
             <g:id>sku2</g:id>
@@ -98,7 +99,8 @@ describe("generateGoogleXmlFeed", () => {
             <g:product_type>Category Name</g:product_type>
             <g:google_product_category>1</g:google_product_category>
             <link>https://example.com/p/product-slug</link>
-            <g:price>1.00 USD</g:price>
+            <g:price>2.00 USD</g:price>
+            <g:sale_price>1.00 USD</g:sale_price>
           </item>
         </channel>
       </rss>"
