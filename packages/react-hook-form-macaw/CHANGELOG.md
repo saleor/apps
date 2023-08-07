@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.3
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+
 ## 0.2.2
 
 ### Patch Changes

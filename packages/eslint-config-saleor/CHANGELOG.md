@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.5
+
+### Patch Changes
+
+- 261957f: Updated dependencies: vite, vitest, eslint, prettier, dotenv, turbo, syncpack, changesets, lint staged
+
 ## 0.4.4
 
 ### Patch Changes
