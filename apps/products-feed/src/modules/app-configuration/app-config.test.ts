@@ -9,7 +9,14 @@ describe("AppConfig", function () {
       expect(instance.getRootConfig()).toEqual({
         channelConfig: {},
         s3: null,
-        attributeMapping: null,
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: [],
+        },
+        titleTemplate: "{{variant.product.name}} - {{variant.name}}",
       });
     });
 
@@ -25,7 +32,7 @@ describe("AppConfig", function () {
           test: {
             storefrontUrls: {
               productStorefrontUrl: "https://example.com",
-              storefrontUrl: "https://example.com/p/{productFeed}",
+              storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
             },
           },
         },
@@ -36,6 +43,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
+        titleTemplate: "{{ variant.name }}",
       });
 
       expect(instance.getRootConfig()).toEqual({
@@ -49,7 +57,7 @@ describe("AppConfig", function () {
           test: {
             storefrontUrls: {
               productStorefrontUrl: "https://example.com",
-              storefrontUrl: "https://example.com/p/{productFeed}",
+              storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
             },
           },
         },
@@ -60,6 +68,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
+        titleTemplate: "{{ variant.name }}",
       });
     });
 
@@ -89,6 +98,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
+        titleTemplate: "{{ variant.name }}",
       });
 
       const serialized = instance1.serialize();
@@ -110,6 +120,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
         },
+        titleTemplate: "{{ variant.name }}",
       });
     });
   });
@@ -126,7 +137,7 @@ describe("AppConfig", function () {
         test: {
           storefrontUrls: {
             productStorefrontUrl: "https://example.com",
-            storefrontUrl: "https://example.com/p/{productFeed}",
+            storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
           },
         },
       },
@@ -137,6 +148,7 @@ describe("AppConfig", function () {
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
       },
+      titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
     });
 
     it("getRootConfig returns root config data", () => {
@@ -151,7 +163,7 @@ describe("AppConfig", function () {
           test: {
             storefrontUrls: {
               productStorefrontUrl: "https://example.com",
-              storefrontUrl: "https://example.com/p/{productFeed}",
+              storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
             },
           },
         },
@@ -162,13 +174,14 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: ["size-id"],
         },
+        titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       });
     });
 
-    it("getUrlsForChannel gets data for given channel or undefined if doesnt exist", () => {
+    it("getUrlsForChannel gets data for given channel or undefined if doesn't exist", () => {
       expect(instance.getUrlsForChannel("test")).toEqual({
         productStorefrontUrl: "https://example.com",
-        storefrontUrl: "https://example.com/p/{productFeed}",
+        storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
       });
 
       expect(instance.getUrlsForChannel("not-existing")).toBeUndefined();
@@ -221,12 +234,12 @@ describe("AppConfig", function () {
 
       instance.setChannelUrls("test", {
         productStorefrontUrl: "https://example.com",
-        storefrontUrl: "https://example.com/p/{productFeed}",
+        storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
       });
 
       expect(instance.getUrlsForChannel("test")).toEqual({
         productStorefrontUrl: "https://example.com",
-        storefrontUrl: "https://example.com/p/{productFeed}",
+        storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
       });
 
       // @ts-expect-error

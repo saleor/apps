@@ -1,4 +1,3 @@
-import { fillUrlTemplate } from "../feed-url/fill-url-template";
 import { GoogleProxyItem, ProductEntry } from "./types";
 
 export const productToProxy = (p: ProductEntry) => {
@@ -20,7 +19,7 @@ export const productToProxy = (p: ProductEntry) => {
     {
       title: [
         {
-          "#text": p.name,
+          "#text": p.title,
         },
       ],
     },
@@ -74,16 +73,11 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
-  if (p.storefrontUrlTemplate?.length) {
+  if (p.link?.length) {
     item.push({
       link: [
         {
-          "#text": fillUrlTemplate({
-            urlTemplate: p.storefrontUrlTemplate,
-            productId: p.id,
-            productSlug: p.slug,
-            variantId: p.variantId,
-          }),
+          "#text": p.link,
         },
       ],
     });

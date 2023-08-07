@@ -81,6 +81,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let productStorefrontUrl: string;
   let bucketConfiguration: RootConfig["s3"] | undefined;
   let attributeMapping: RootConfig["attributeMapping"] | undefined;
+  let titleTemplate: RootConfig["titleTemplate"] | undefined;
 
   try {
     const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
@@ -90,6 +91,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     productStorefrontUrl = settings.productStorefrontUrl;
     bucketConfiguration = settings.s3BucketConfiguration;
     attributeMapping = settings.attributeMapping;
+    titleTemplate = settings.titleTemplate;
   } catch (error) {
     logger.warn("The application has not been configured");
 
@@ -184,6 +186,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     productStorefrontUrl,
     productVariants,
     attributeMapping,
+    titleTemplate,
   });
 
   logger.debug("Feed generated. Returning formatted XML");

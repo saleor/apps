@@ -9,7 +9,7 @@ describe("productToProxy", () => {
       category: "1",
       condition: "new",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
     });
 
@@ -32,7 +32,7 @@ describe("productToProxy", () => {
        * condition: "new",
        */
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
     });
 
@@ -52,7 +52,7 @@ describe("productToProxy", () => {
       category: "1",
       condition: "new",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
       description: "Product description",
     });
@@ -74,7 +74,7 @@ describe("productToProxy", () => {
       condition: "new",
       googleProductCategory: "1",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
     });
 
@@ -87,7 +87,7 @@ describe("productToProxy", () => {
     );
   });
 
-  it("Adds link section with filled product url template", () => {
+  it("Adds link section, when url is provided", () => {
     const result = productToProxy({
       slug: "slug",
       availability: "in_stock",
@@ -95,9 +95,9 @@ describe("productToProxy", () => {
       condition: "new",
       googleProductCategory: "1",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
-      storefrontUrlTemplate: "https://example.com/p/{productSlug}/{productId}/{variantId}",
+      link: "https://example.com/p/product-id",
     });
 
     expect(result.item).toEqual(
@@ -105,7 +105,7 @@ describe("productToProxy", () => {
         {
           link: expect.arrayContaining([
             {
-              "#text": "https://example.com/p/slug/product-id/variant-id",
+              "#text": "https://example.com/p/product-id",
             },
           ]),
         },
@@ -121,7 +121,7 @@ describe("productToProxy", () => {
       condition: "new",
       googleProductCategory: "1",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
       imageUrl: "https://image.example.com",
     });
@@ -143,7 +143,7 @@ describe("productToProxy", () => {
       condition: "new",
       googleProductCategory: "1",
       id: "product-id",
-      name: "Name",
+      title: "title",
       variantId: "variant-id",
       imageUrl: "https://image.example.com",
       price: "50.00 USD",

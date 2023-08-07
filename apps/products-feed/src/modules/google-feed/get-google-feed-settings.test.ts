@@ -10,13 +10,15 @@ describe("GoogleFeedSettingsFetcher", () => {
           testChannel: {
             storefrontUrls: {
               storefrontUrl: "https://example.com",
-              productStorefrontUrl: "https://example.com/p/{productSlug}/v/{variantId}",
+              productStorefrontUrl:
+                "https://example.com/p/{{ variant.product.slug }}/v/{{ variant.slug }}",
             },
           },
           anotherChannel: {
             storefrontUrls: {
               storefrontUrl: "https://another.example.com",
-              productStorefrontUrl: "https://another.example.com/p/{productSlug}/v/{variantId}",
+              productStorefrontUrl:
+                "https://another.example.com/p/{{ variant.product.slug }}/v/{{ variant.slug }}",
             },
           },
         },
@@ -27,6 +29,7 @@ describe("GoogleFeedSettingsFetcher", () => {
           secretAccessKey: "secretAccessKey",
         },
         attributeMapping: null,
+        titleTemplate: "{{ variant.name }}",
       });
 
       return appConfig.serialize();
@@ -42,7 +45,7 @@ describe("GoogleFeedSettingsFetcher", () => {
 
     expect(result).toEqual({
       storefrontUrl: "https://example.com",
-      productStorefrontUrl: "https://example.com/p/{productSlug}/v/{variantId}",
+      productStorefrontUrl: "https://example.com/p/{{ variant.product.slug }}/v/{{ variant.slug }}",
       s3BucketConfiguration: {
         bucketName: "bucketName",
         secretAccessKey: "secretAccessKey",
@@ -50,6 +53,7 @@ describe("GoogleFeedSettingsFetcher", () => {
         region: "region",
       },
       attributeMapping: null,
+      titleTemplate: "{{ variant.name }}",
     });
   });
 });

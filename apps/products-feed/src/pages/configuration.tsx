@@ -11,6 +11,7 @@ import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-c
 import { useRouter } from "next/router";
 import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
+import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
@@ -90,33 +91,57 @@ const ConfigurationPage: NextPage = () => {
           <Box>
             <Paragraph size={"small"}>App will generate separate feed for each channel</Paragraph>
             <Paragraph size={"small"}>
-              Provide your storefront homepage URL and product template. Use following placeholders:
+              Provide your storefront homepage URL and product template. Use{" "}
+              <TextLink href="https://handlebarsjs.com/" newTab>
+                Handlebars
+              </TextLink>{" "}
+              format. Example of the variables you can use:
             </Paragraph>
             <ul>
               <li>
                 <Text size={"small"}>
-                  <code>{"{productSlug}"}</code> - to inject slug of the product
+                  <code>{"{{ variant.product.slug }}"}</code> - product `slug`
                 </Text>
               </li>
               <li>
                 <Text size={"small"}>
-                  <code>{"{variantId}"}</code> - to inject id of the variant
-                </Text>
-              </li>
-              <li>
-                <Text size={"small"}>
-                  <code>{"{productId}"}</code> - to inject id of the product
+                  <code>{"{{ variant.id }}"}</code> - product variant id
                 </Text>
               </li>
             </ul>
             <Paragraph size={"small"}>For example following pattern:</Paragraph>
             <Paragraph size={"small"}>
-              <code>{"https://my-shop.com/p/{productSlug}/{variantId}"}</code>
+              <code>{"https://my-shop.com/p/{{ variant.product.slug}/{{ variant.id }}"}</code>
             </Paragraph>
             <Paragraph size={"small"}>Will produce:</Paragraph>
             <Paragraph size={"small"}>
               <code>{"https://my-shop.com/p/t-shirt/Xyp2asZ"}</code>
             </Paragraph>
+          </Box>
+        }
+      />
+      <AppSection
+        data-testid={"title-configuration-section"}
+        __marginBottom="100px"
+        includePadding
+        heading={"Item title"}
+        mainContent={
+          <Box>
+            <ConnectedTitleFormattingForm />
+          </Box>
+        }
+        sideContent={
+          <Box>
+            <Paragraph size={"small"}>
+              Customize title of the products. Use{" "}
+              <TextLink href="https://handlebarsjs.com/" newTab>
+                Handlebars
+              </TextLink>{" "}
+              format.
+            </Paragraph>
+            <TextLink href="https://support.google.com/merchants/answer/6324415" newTab>
+              Item title specification.
+            </TextLink>
           </Box>
         }
       />
