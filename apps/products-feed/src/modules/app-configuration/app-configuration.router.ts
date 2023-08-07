@@ -3,18 +3,20 @@ import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { createLogger } from "@saleor/apps-shared";
 
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
-import { AppConfigSchema } from "./app-config";
+import { AppConfigSchema, titleTemplateInputSchema } from "./app-config";
 import { z } from "zod";
 import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
 import { checkBucketAccess } from "../file-storage/s3/check-bucket-access";
 import { TRPCError } from "@trpc/server";
 import { AttributeFetcher } from "./attribute-fetcher";
+import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
+import { prepareExampleVariantData } from "./prepare-example-variant-data";
 
 export const appConfigurationRouter = router({
   /**
    * Prefer fetching all to avoid unnecessary calls. Routes are cached by react-query
    */
-  fetch: protectedClientProcedure.query(async ({ ctx: { logger, getConfig }, input }) => {
+  fetch: protectedClientProcedure.query(async ({ ctx: { logger, getConfig } }) => {
     return getConfig().then((c) => {
       logger.debug("Fetched config");
 
@@ -24,7 +26,7 @@ export const appConfigurationRouter = router({
   testS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
-    .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
+    .mutation(async ({ ctx: { saleorApiUrl }, input }) => {
       const logger = createLogger({ saleorApiUrl: saleorApiUrl });
 
       logger.debug("Validate the credentials");
@@ -98,7 +100,7 @@ export const appConfigurationRouter = router({
         /**
          * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
          *
-         * But this operation isnt expensive and users will not continously save this form
+         * But this operation isn't expensive and users will not continuously save this form
          */
         await updateCacheForConfigurations({
           client: apiClient,
@@ -120,21 +122,16 @@ export const appConfigurationRouter = router({
   setAttributeMapping: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.attributeMapping)
-    .mutation(
-      async ({
-        ctx: { getConfig, apiClient, saleorApiUrl, appConfigMetadataManager, logger },
-        input,
-      }) => {
-        const config = await getConfig();
+    .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
+      logger.debug("Setting attribute mapping");
+      const config = await getConfig();
 
-        config.setAttributeMapping(input);
+      config.setAttributeMapping(input);
 
-        await appConfigMetadataManager.set(config.serialize());
-
-        return null;
-      }
-    ),
-
+      await appConfigMetadataManager.set(config.serialize());
+      logger.debug("Attribute map set");
+      return null;
+    }),
   getAttributes: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .query(async ({ ctx: { logger, apiClient } }) => {
@@ -151,5 +148,60 @@ export const appConfigurationRouter = router({
       logger.debug("Returning attributes");
 
       return result;
+    }),
+  setTitleTemplate: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(titleTemplateInputSchema)
+    .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
+      logger.debug("Setting title template");
+      const config = await getConfig();
+
+      // Test render to prevent saving invalid template
+      try {
+        renderHandlebarsTemplate({
+          data: {},
+          template: input.titleTemplate,
+        });
+      } catch (err) {
+        logger.debug({ error: err }, "Template render failed");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Submitted template is invalid",
+        });
+      }
+
+      config.setTitleTemplate(input.titleTemplate);
+
+      await appConfigMetadataManager.set(config.serialize());
+
+      logger.debug("Template title set");
+      return null;
+    }),
+
+  renderTemplate: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(titleTemplateInputSchema)
+    .mutation(async ({ ctx: { getConfig, logger }, input }) => {
+      logger.debug(input, "renderTemplate called");
+      const config = await getConfig();
+
+      try {
+        const title = renderHandlebarsTemplate({
+          data: prepareExampleVariantData({
+            attributeMapping: config.getAttributeMapping(),
+          }),
+          template: input.titleTemplate,
+        });
+
+        logger.debug("Title rendered succeeded");
+
+        return { title };
+      } catch (err) {
+        logger.debug({ error: err }, "Template render failed");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Submitted template is invalid",
+        });
+      }
     }),
 });

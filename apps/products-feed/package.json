@@ -31,6 +31,7 @@
     "fast-xml-parser": "^4.0.15",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
+    "handlebars": "^4.7.7",
     "jsdom": "^20.0.3",
     "next": "13.4.8",
     "pino": "^8.14.1",
