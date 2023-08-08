@@ -1,33 +1,32 @@
 import { SaleorAsyncWebhook, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../../generated/graphql";
 import { AppWebhookRepository } from "./app-webhook-repository";
+import { AuthData } from "@saleor/app-sdk/APL";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
-/*
- * Previously, the Avatax transactions were created on ORDER_CREATED webhook and commited on ORDER_FULFILLED webhook.
- * Now, the Avatax transactions are created and commited (if `isAutocommit`: true) on ORDER_CONFIRMED webhook.
- * If transaction was created on ORDER_CREATED and we remove the ORDER_FULFILLED webhook, the transaction can never be commited.
- * Therefore, the `ORDER_FULFILLED` can't be removed.
- */
-/*
- * Migration plan:
- * ORDER_CREATED -> ORDER_CONFIRMED. Create ORDER_CONFIRMED webhook if doesn't exists. Delete ORDER_CREATED webhook.
- * ORDER_FULFILLED -> ❌. Delete ORDER_FULFILLED webhook some time.
- */
+type AppWebhookMigratorOptions = {
+  mode: "report" | "migrate";
+};
 
 export class AppWebhookMigrator {
   private appWebhookRepository: AppWebhookRepository;
   private appId: string;
   private apiUrl: string;
-  private mode: "report" | "migrate";
+  private mode: AppWebhookMigratorOptions["mode"];
 
   constructor(
-    { apiUrl, appToken, appId }: { apiUrl: string; appToken: string; appId: string },
-    { mode }: { mode: "report" | "migrate" }
-  ) {
-    this.appWebhookRepository = new AppWebhookRepository({
+    {
+      appWebhookRepository,
       apiUrl,
-      appToken,
-    });
+      appId,
+    }: {
+      apiUrl: string;
+      appId: string;
+      appWebhookRepository: AppWebhookRepository;
+    },
+    { mode }: AppWebhookMigratorOptions
+  ) {
+    this.appWebhookRepository = appWebhookRepository;
 
     this.appId = appId;
     this.apiUrl = apiUrl;
@@ -134,9 +133,23 @@ export class AppWebhookMigrator {
     nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
   ) {
     await this.registerWebhookIfItDoesntExist(nextWebhookHandler);
-    /*
-     * disabled until tested:
-     * await this.deleteFirstWebhookByName(prevWebhookName);
-     */
+    await this.deleteFirstWebhookByName(prevWebhookName);
   }
+}
+
+export function createAppWebhookMigrator(env: AuthData, options: AppWebhookMigratorOptions) {
+  const client = createGraphQLClient({
+    saleorApiUrl: env.saleorApiUrl,
+    token: env.token,
+  });
+  const appWebhookRepository = new AppWebhookRepository(client);
+
+  return new AppWebhookMigrator(
+    {
+      apiUrl: env.saleorApiUrl,
+      appId: env.appId,
+      appWebhookRepository,
+    },
+    options
+  );
 }

@@ -61,16 +61,7 @@ gql`
 `;
 
 export class AppWebhookRepository {
-  private client: Client;
-
-  constructor({ apiUrl, appToken }: { apiUrl: string; appToken: string }) {
-    const client = createGraphQLClient({
-      saleorApiUrl: apiUrl,
-      token: appToken,
-    });
-
-    this.client = client;
-  }
+  constructor(private client: Client) {}
 
   async getAll() {
     const { error, data } = await this.client
@@ -87,10 +78,9 @@ export class AppWebhookRepository {
   }
 
   async create(variables: CreateAppWebhookMutationVariables) {
-    const { error, data } = await this.client.mutation<CreateAppWebhookMutation>(
-      CreateAppWebhookDocument,
-      variables
-    );
+    const { error, data } = await this.client
+      .mutation<CreateAppWebhookMutation>(CreateAppWebhookDocument, variables)
+      .toPromise();
 
     if (error) {
       console.log({ method: "create", name: error.name, message: error.message });
@@ -102,12 +92,13 @@ export class AppWebhookRepository {
   }
 
   async delete(id: string) {
-    const { error, data } = await this.client.mutation<DeleteAppWebhookMutation>(
-      DeleteAppWebhookDocument,
-      {
+    const { error, data } = await this.client
+      .mutation<DeleteAppWebhookMutation>(DeleteAppWebhookDocument, {
         id,
-      } as DeleteAppWebhookMutationVariables
-    );
+      } as DeleteAppWebhookMutationVariables)
+      .toPromise();
+
+    console.log(data, error);
 
     if (error) {
       console.log({ method: "delete", name: error.name, message: error.message });
