@@ -28,7 +28,7 @@ const NoExistingConfigurations = () => {
 type ProviderType = "sendgrid" | "smtp";
 
 const providerLabels: Record<ProviderType, string> = {
-  sendgrid: "Sendgrid",
+  sendgrid: "SendGrid",
   smtp: "SMTP",
 };
 

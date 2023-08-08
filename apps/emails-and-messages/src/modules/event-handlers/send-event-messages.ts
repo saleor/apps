@@ -91,7 +91,7 @@ export const sendEventMessages = async ({
     });
 
     if (sendgridStatus?.errors.length) {
-      logger.error("Sendgrid errors");
+      logger.error("SendGrid errors");
       logger.error(sendgridStatus?.errors);
     }
   }

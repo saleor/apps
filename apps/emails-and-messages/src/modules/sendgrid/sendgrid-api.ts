@@ -7,7 +7,7 @@ export const fetchTemplates =
   async () => {
     if (!apiKey) {
       console.warn(
-        "The Sendgrid API key has not been set up yet. Skipping fetching available templates."
+        "The SendGrid API key has not been set up yet. Skipping fetching available templates."
       );
       return [];
     }
@@ -22,7 +22,7 @@ export const fetchTemplates =
     );
 
     if (!response.ok) {
-      console.error("Could not fetch available Sendgrid templates");
+      console.error("Could not fetch available SendGrid templates");
       return [];
     }
     try {
@@ -37,7 +37,7 @@ export const fetchTemplates =
 
       return templates;
     } catch (e) {
-      console.error("Could not parse the response from Sendgrid", e);
+      console.error("Could not parse the response from SendGrid", e);
       return [];
     }
   };
@@ -47,7 +47,7 @@ export const fetchSenders =
   async () => {
     if (!apiKey) {
       console.warn(
-        "The Sendgrid API key has not been set up yet. Skipping fetching available senders  ."
+        "The SendGrid API key has not been set up yet. Skipping fetching available senders  ."
       );
       return [];
     }
@@ -59,7 +59,7 @@ export const fetchSenders =
     });
 
     if (!response.ok) {
-      console.error("Could not fetch available Sendgrid senders");
+      console.error("Could not fetch available SendGrid senders");
       return [];
     }
     try {
@@ -76,7 +76,7 @@ export const fetchSenders =
 
       return senders;
     } catch (e) {
-      console.error("Could not parse the response from Sendgrid", e);
+      console.error("Could not parse the response from SendGrid", e);
       return [];
     }
   };

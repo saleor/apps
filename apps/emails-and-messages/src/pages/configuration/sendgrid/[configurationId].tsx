@@ -17,7 +17,7 @@ const LoadingView = () => {
     <BasicLayout
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
-        { name: "Sendgrid provider" },
+        { name: "SendGrid provider" },
         { name: "..." },
       ]}
     >
@@ -31,7 +31,7 @@ const NotFoundView = () => {
     <BasicLayout
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
-        { name: "Sendgrid provider" },
+        { name: "SendGrid provider" },
         { name: "Not found" },
       ]}
     >
@@ -78,13 +78,13 @@ const EditSendgridConfigurationPage: NextPage = () => {
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         {
-          name: `Sendgrid: ${configuration.name}`,
+          name: `SendGrid: ${configuration.name}`,
         },
       ]}
     >
       <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
-          <Text>Connect Sendgrid with Saleor.</Text>
+          <Text>Connect SendGrid with Saleor.</Text>
         </Box>
       </Box>
       <SendgridBasicInformationSection configuration={configuration} />

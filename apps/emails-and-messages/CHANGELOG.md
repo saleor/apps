@@ -63,7 +63,7 @@
 
   Added message to interface for users with missing permission or Saleor version without the support for this event.
 
-- e1980aa: Added validation for Sendgrid events form. Enabling event without a template is no longer allowed to avoid misconfiguration and undelivered emails.
+- e1980aa: Added validation for SendGrid events form. Enabling event without a template is no longer allowed to avoid misconfiguration and undelivered emails.
 - 6299e06: Update @saleor/app-sdk to 0.41.0
 - bda814b: Fixed issue with SMTP provider not sending emails on some ports.
 - 78670ce: Changed formatting in the debugging logs to be more concise.
@@ -109,9 +109,9 @@
 
 - a8834a1: Unified graphql version to 16.6
 - cce2fbc: Improved layout spacing across the application.
-- e106ab9: Added improved descriptions in the Sendgrid configuration views.
+- e106ab9: Added improved descriptions in the SendGrid configuration views.
 - a8834a1: Unified graphql codegen packages
-- e106ab9: Added improved descriptions in the Sendgrid configuration views.
+- e106ab9: Added improved descriptions in the SendGrid configuration views.
 - a8834a1: Removed unnecessary duplicated dependencies from apps and moved them to shared and root (types, eslint rules)
 - a8834a1: Updated dev dependencies - Typescript, Eslint and Turborepo
 - 928c727: Updated @saleor/macaw-ui to 0.8.0-pre.95. This version introduces change in spacing scale, so there may be slight changes in spacing
@@ -227,7 +227,7 @@
 
 ### Minor Changes
 
-- 14ac614: Enable Sendgrid support
+- 14ac614: Enable SendGrid support
 
 ### Patch Changes
 
