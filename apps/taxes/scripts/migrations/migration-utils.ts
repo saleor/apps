@@ -29,12 +29,3 @@ export const fetchCloudAplEnvs = () => {
 
   return saleorAPL.getAll();
 };
-
-export const fetchCloudAplEnv = (saleorApiUrl: string) => {
-  const saleorAPL = new SaleorCloudAPL({
-    token: process.env.SALEOR_CLOUD_TOKEN!,
-    resourceUrl: process.env.SALEOR_CLOUD_RESOURCE_URL!,
-  });
-
-  return saleorAPL.get(saleorApiUrl);
-};
