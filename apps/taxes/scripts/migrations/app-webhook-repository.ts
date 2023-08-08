@@ -7,6 +7,12 @@ import {
   DeleteAppWebhookDocument,
   DeleteAppWebhookMutation,
   DeleteAppWebhookMutationVariables,
+  DisableWebhookDocument,
+  DisableWebhookMutation,
+  DisableWebhookMutationVariables,
+  EnableWebhookDocument,
+  EnableWebhookMutation,
+  EnableWebhookMutationVariables,
   FetchAppWebhooksDocument,
   FetchAppWebhooksQuery,
 } from "../../generated/graphql";
@@ -60,6 +66,26 @@ gql`
   }
 `;
 
+gql`
+  mutation DisableWebhook($id: ID!) {
+    webhookUpdate(id: $id, input: { isActive: false }) {
+      webhook {
+        id
+      }
+    }
+  }
+`;
+
+gql`
+  mutation EnableWebhook($id: ID!) {
+    webhookUpdate(id: $id, input: { isActive: true }) {
+      webhook {
+        id
+      }
+    }
+  }
+`;
+
 export class AppWebhookRepository {
   constructor(private client: Client) {}
 
@@ -83,12 +109,44 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log({ method: "create", name: error.name, message: error.message });
+      console.log(`Was not able to create webhook for the app ${variables.appId}`, error.message);
 
       throw error;
     }
 
     return data?.webhookCreate?.webhook?.id;
+  }
+
+  async disable(id: string) {
+    const { error, data } = await this.client
+      .mutation<DisableWebhookMutation>(DisableWebhookDocument, {
+        id,
+      } as DisableWebhookMutationVariables)
+      .toPromise();
+
+    if (error) {
+      console.log(`Was not able to disable webhook ${id}`, error.message);
+
+      throw error;
+    }
+
+    return data?.webhookUpdate?.webhook?.id;
+  }
+
+  async enable(id: string) {
+    const { error, data } = await this.client
+      .mutation<EnableWebhookMutation>(EnableWebhookDocument, {
+        id,
+      } as EnableWebhookMutationVariables)
+      .toPromise();
+
+    if (error) {
+      console.log(`Was not able to enable webhook ${id}`, error.message);
+
+      throw error;
+    }
+
+    return data?.webhookUpdate?.webhook?.id;
   }
 
   async delete(id: string) {
@@ -101,7 +159,7 @@ export class AppWebhookRepository {
     console.log(data, error);
 
     if (error) {
-      console.log({ method: "delete", name: error.name, message: error.message });
+      console.log(`Was not able to delete webhook ${id}`, error.message);
 
       throw error;
     }

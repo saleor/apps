@@ -65,6 +65,19 @@ export class AppWebhookMigrator {
     }
   }
 
+  private async disableWebhookById(webhookId: string) {
+    console.log(`Webhook ${webhookId} will be disabled`);
+
+    if (this.mode === "migrate") {
+      await this.appWebhookRepository.disable(webhookId);
+
+      console.log(`Webhook ${webhookId} disabled`);
+    }
+  }
+
+  /**
+   * @returns all webhooks for the app
+   */
   async getAppWebhooks() {
     const webhooks = await this.appWebhookRepository.getAll();
 
@@ -73,7 +86,25 @@ export class AppWebhookMigrator {
     return webhooks;
   }
 
-  private async deleteFirstWebhookByName(webhookName: string) {
+  private async disableFirstWebhookByName(webhookName: string) {
+    const webhooks = await this.getAppWebhooks();
+
+    const webhook = webhooks.find((webhook) => webhook.name === webhookName);
+
+    if (!webhook) {
+      console.log(`Webhook ${webhookName} not found`);
+
+      return;
+    }
+
+    await this.disableWebhookById(webhook.id);
+  }
+
+  /**
+   * Deletes first app webhook that matches the name.
+   * @param webhookName - name of the webhook to delete
+   */
+  async DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME(webhookName: string) {
     const webhooks = await this.getAppWebhooks();
 
     const webhook = webhooks.find((webhook) => webhook.name === webhookName);
@@ -108,32 +139,42 @@ export class AppWebhookMigrator {
     }
   }
 
-  async rollbackWebhookMigrations(webhookHandlers: (SaleorSyncWebhook | SaleorAsyncWebhook)[]) {
+  /**
+   * Rolls back webhook migration by deleting the new webhook and enabling the old one.
+   * @param prevWebhookName - The name of the webhook we wanted to migrate from.
+   * @param nextWebhookHandler - The handler of the webhook we wanted to migrate to.
+   * @example rollbackWebhookMigrations("OrderCreated", orderConfirmedAsyncWebhook)
+   */
+  async rollbackWebhookMigrations(
+    prevWebhookName: string,
+    nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
+  ) {
     const webhooks = await this.appWebhookRepository.getAll();
 
-    console.log("Current app webhooks: ", webhooks);
+    const webhooksToRemove = webhooks.filter((webhook) => webhook.name === nextWebhookHandler.name);
+    const webhooksToEnable = webhooks.filter((webhook) => webhook.name === prevWebhookName);
 
-    const webhooksToDelete = webhooks.filter((webhook) => {
-      const webhookHandler = webhookHandlers.find((handler) => handler.name === webhook.name);
-
-      return !!webhookHandler;
-    });
-
-    console.log("The following webhooks will be deleted: ", webhooksToDelete);
-
-    for (const webhook of webhooksToDelete) {
+    for (const webhook of webhooksToRemove) {
       await this.deleteWebhookById(webhook.id);
     }
 
-    // todo: recreate deleted webhooks
+    for (const webhook of webhooksToEnable) {
+      await this.appWebhookRepository.enable(webhook.id);
+    }
   }
 
+  /**
+   * Replaces one webhook with another by disabling the first one and creating the second one.
+   * @param prevWebhookName - The name of the webhook we want to migrate from.
+   * @param nextWebhookHandler - The handler of the webhook we want to migrate to.
+   * @example migrateWebhook("OrderCreated", orderConfirmedAsyncWebhook)
+   */
   async migrateWebhook(
     prevWebhookName: string,
     nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
   ) {
     await this.registerWebhookIfItDoesntExist(nextWebhookHandler);
-    await this.deleteFirstWebhookByName(prevWebhookName);
+    await this.disableFirstWebhookByName(prevWebhookName);
   }
 }
 

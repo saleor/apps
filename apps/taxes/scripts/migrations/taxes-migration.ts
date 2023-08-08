@@ -1,3 +1,4 @@
+/* eslint-disable multiline-comment-style */
 import { orderConfirmedAsyncWebhook } from "../../src/pages/api/webhooks/order-confirmed";
 import { AppWebhookMigrator } from "./app-webhook-migrator";
 
@@ -14,5 +15,13 @@ import { AppWebhookMigrator } from "./app-webhook-migrator";
  */
 
 export async function migrateTaxes(webhookMigrator: AppWebhookMigrator) {
+  // Creates ORDER_CONFIRMED webhook for each Taxes App. Disables ORDER_CREATED webhook.
   await webhookMigrator.migrateWebhook("OrderCreated", orderConfirmedAsyncWebhook);
+
+  // If something went wrong, we can roll back the migration by uncommenting this line:
+  // await webhookMigrator.rollbackWebhookMigrations("OrderCreated", orderConfirmedAsyncWebhook);
+  // It will delete the ORDER_CONFIRMED webhook and enable the ORDER_CREATED webhook.
+
+  // When no issues were found, we can delete the old ORDER_CREATED webhooks by uncommenting this line:
+  // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
 }

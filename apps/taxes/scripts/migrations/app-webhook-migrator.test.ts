@@ -79,8 +79,8 @@ describe("AppWebhookMigrator", () => {
 
         expect(createMock).toHaveBeenCalled();
       });
-      it("calls delete", async () => {
-        const deleteMock = vitest.fn();
+      it("calls disable", async () => {
+        const disableMock = vitest.fn();
         const appWebhookRepository = {
           create: () => {},
           getAll: () => [
@@ -92,7 +92,7 @@ describe("AppWebhookMigrator", () => {
               asyncEvents: ["OrderCreated"],
             },
           ],
-          delete: deleteMock,
+          disable: disableMock,
         } as unknown as AppWebhookRepository;
 
         const appWebhookMigrator = new AppWebhookMigrator(
@@ -117,7 +117,7 @@ describe("AppWebhookMigrator", () => {
 
         await appWebhookMigrator.migrateWebhook("OrderCreated", webhookHandler);
 
-        expect(deleteMock).toHaveBeenCalled();
+        expect(disableMock).toHaveBeenCalled();
       });
     });
   });
@@ -139,24 +139,94 @@ describe("AppWebhookMigrator", () => {
           { mode: "report" }
         );
 
-        await appWebhookMigrator.rollbackWebhookMigrations([{} as unknown as SaleorSyncWebhook]);
+        await appWebhookMigrator.rollbackWebhookMigrations(
+          "OrderCreated",
+          {} as unknown as SaleorSyncWebhook
+        );
+
+        expect(deleteMock).not.toHaveBeenCalled();
+      });
+    });
+    describe("in migrate mode", async () => {
+      const deleteMock = vitest.fn();
+      const enableMock = vitest.fn();
+      const appWebhookRepository = {
+        delete: deleteMock,
+        enable: enableMock,
+        getAll: () => [
+          {
+            id: "id-1234",
+            name: "OrderConfirmed",
+          },
+
+          {
+            id: "id-5678",
+            name: "OrderCreated",
+          },
+          {
+            id: "id",
+            name: "OrderUpdated",
+          },
+        ],
+      } as unknown as AppWebhookRepository;
+
+      const appWebhookMigrator = new AppWebhookMigrator(
+        {
+          appWebhookRepository,
+          apiUrl: "apiUrl",
+          appId: "appId",
+        },
+        { mode: "migrate" }
+      );
+
+      await appWebhookMigrator.rollbackWebhookMigrations("OrderCreated", {
+        name: "OrderConfirmed",
+        targetUrl: `targetUrl`,
+        query: "query",
+        events: ["OrderConfirmed"],
+      } as unknown as SaleorSyncWebhook);
+
+      it("calls delete with the id that matches the handler", async () => {
+        expect(deleteMock).toHaveBeenCalledWith("id-1234");
+      });
+
+      it("calls enable with the id that matches the name of the previous webhook", async () => {
+        expect(enableMock).toHaveBeenCalledWith("id-5678");
+      });
+    });
+  });
+  describe("DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME", () => {
+    describe("in report mode", () => {
+      it("does not call delete", async () => {
+        const deleteMock = vitest.fn();
+        const appWebhookRepository = {
+          delete: deleteMock,
+          getAll: () => [],
+        } as unknown as AppWebhookRepository;
+
+        const appWebhookMigrator = new AppWebhookMigrator(
+          {
+            appWebhookRepository,
+            apiUrl: "apiUrl",
+            appId: "appId",
+          },
+          { mode: "report" }
+        );
+
+        await appWebhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
 
         expect(deleteMock).not.toHaveBeenCalled();
       });
     });
     describe("in migrate mode", () => {
-      it("calls delete for a matched webhook", async () => {
+      it("calls delete", async () => {
         const deleteMock = vitest.fn();
         const appWebhookRepository = {
           delete: deleteMock,
           getAll: () => [
             {
-              id: "id-1234",
               name: "OrderCreated",
-            },
-            {
-              id: "id",
-              name: "OrderUpdated",
+              id: "id-1234",
             },
           ],
         } as unknown as AppWebhookRepository;
@@ -170,14 +240,7 @@ describe("AppWebhookMigrator", () => {
           { mode: "migrate" }
         );
 
-        await appWebhookMigrator.rollbackWebhookMigrations([
-          {
-            name: "OrderCreated",
-            targetUrl: `targetUrl`,
-            query: "query",
-            events: ["OrderCreated"],
-          },
-        ] as unknown as SaleorSyncWebhook[]);
+        await appWebhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
 
         expect(deleteMock).toHaveBeenCalledWith("id-1234");
       });
