@@ -57,7 +57,7 @@ export const SendgridSenderSection = ({ configuration }: SendgridSenderSectionPr
         <Text as="p">
           Authenticating the sender is required to send emails. Configure your sender in{" "}
           <TextLink href="https://app.sendgrid.com/settings/sender_auth" newTab={true}>
-            Sendgrid dashboard
+            SendGrid dashboard
           </TextLink>{" "}
           and choose it from the list.
         </Text>
