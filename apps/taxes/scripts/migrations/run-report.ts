@@ -3,6 +3,7 @@
 import * as dotenv from "dotenv";
 import { AppWebhookMigrator } from "./app-webhook-migrator";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
+import { orderConfirmedAsyncWebhook } from "../../src/pages/api/webhooks/order-confirmed";
 
 dotenv.config();
 
@@ -19,10 +20,7 @@ const runReport = async () => {
     process.exit(1);
   });
 
-  // for testing purposes
-  const firstTenEnvs = allEnvs.slice(0, 10);
-
-  for (const env of firstTenEnvs) {
+  for (const env of allEnvs) {
     console.log("Working on env:", env);
 
     const webhookMigrator = new AppWebhookMigrator(
@@ -34,7 +32,7 @@ const runReport = async () => {
       { mode: "report" }
     );
 
-    webhookMigrator.getAppWebhooks();
+    webhookMigrator.migrateWebhook("OrderCreated", orderConfirmedAsyncWebhook);
   }
 };
 

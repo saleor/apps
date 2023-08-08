@@ -17,7 +17,6 @@ gql`
       webhooks {
         id
         name
-        subscriptionQuery
       }
     }
   }
@@ -79,7 +78,8 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.error(error);
+      console.log("Error while fetching app webhooks, returning empty array");
+
       return [];
     }
 
@@ -93,7 +93,8 @@ export class AppWebhookRepository {
     );
 
     if (error) {
-      console.error(error);
+      console.log({ method: "create", name: error.name, message: error.message });
+
       throw error;
     }
 
@@ -109,7 +110,8 @@ export class AppWebhookRepository {
     );
 
     if (error) {
-      console.error(error);
+      console.log({ method: "delete", name: error.name, message: error.message });
+
       throw error;
     }
 

@@ -37,10 +37,18 @@ export class AppWebhookMigrator {
   private registerWebhookFromHandler(webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook) {
     const manifest = webhookHandler.getWebhookManifest(this.apiUrl);
 
+    if (!manifest.query) {
+      throw new Error("Webhook query is required");
+    }
+
+    if (!manifest.name) {
+      throw new Error("Webhook name is required");
+    }
+
     return this.appWebhookRepository.create({
       appId: this.appId,
-      name: manifest.name ?? "",
-      query: manifest.query ?? "",
+      name: manifest.name,
+      query: manifest.query,
       targetUrl: manifest.targetUrl,
       asyncEvents: (manifest.asyncEvents ?? []) as WebhookEventTypeAsyncEnum[],
       syncEvents: (manifest.syncEvents ?? []) as WebhookEventTypeSyncEnum[],
@@ -52,18 +60,16 @@ export class AppWebhookMigrator {
     console.log(`Webhook ${webhookId} will be deleted`);
 
     if (this.mode === "migrate") {
-      const result = await this.appWebhookRepository.delete(webhookId);
+      await this.appWebhookRepository.delete(webhookId);
 
       console.log(`Webhook ${webhookId} deleted`);
-
-      return result;
     }
   }
 
   async getAppWebhooks() {
     const webhooks = await this.appWebhookRepository.getAll();
 
-    console.log("Current app webhooks: ", webhooks);
+    console.log(`Webhooks for app ${this.appId}: `, webhooks);
 
     return webhooks;
   }
@@ -119,6 +125,8 @@ export class AppWebhookMigrator {
     for (const webhook of webhooksToDelete) {
       await this.deleteWebhookById(webhook.id);
     }
+
+    // todo: recreate deleted webhooks
   }
 
   async migrateWebhook(
@@ -126,6 +134,9 @@ export class AppWebhookMigrator {
     nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
   ) {
     await this.registerWebhookIfItDoesntExist(nextWebhookHandler);
-    await this.deleteFirstWebhookByName(prevWebhookName);
+    /*
+     * disabled until tested:
+     * await this.deleteFirstWebhookByName(prevWebhookName);
+     */
   }
 }
