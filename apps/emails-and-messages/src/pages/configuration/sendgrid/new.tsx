@@ -43,16 +43,16 @@ const NewSendgridConfigurationPage: NextPage = () => {
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         { name: "Add provider" },
-        { name: "Sendgrid" },
+        { name: "SendGrid" },
       ]}
     >
       <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
         <Box>
-          <Text>Connect Sendgrid with Saleor.</Text>
+          <Text>Connect SendGrid with Saleor.</Text>
         </Box>
       </Box>
       <SectionWithDescription
-        title="Connect Sendgrid"
+        title="Connect SendGrid"
         description={
           <Box display="flex" flexDirection="column" gap={2}>
             <ConfigurationNameDescriptionText />
@@ -80,7 +80,7 @@ const NewSendgridConfigurationPage: NextPage = () => {
                 name="apiKey"
                 control={control}
                 label="API key"
-                helperText={"The API key can be generated in your Sendgrid dashboard"}
+                helperText={"The API key can be generated in your SendGrid dashboard"}
               />
             </Box>
             <BoxFooter>

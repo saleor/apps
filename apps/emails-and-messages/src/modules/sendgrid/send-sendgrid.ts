@@ -45,7 +45,7 @@ export const sendSendgrid = async ({
     return;
   }
 
-  logger.debug("Sending an email using Sendgrid");
+  logger.debug("Sending an email using SendGrid");
 
   const { template } = eventSettings;
 
@@ -77,7 +77,7 @@ export const sendSendgrid = async ({
     });
     logger.debug("Email has been send");
   } catch (error) {
-    logger.error("The Sendgrid API returned an error");
+    logger.error("The SendGrid API returned an error");
     logger.error(error);
     if (error instanceof Error) {
       return { errors: [{ message: error.message }] };

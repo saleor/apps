@@ -28,9 +28,9 @@ const ChooseProviderPage: NextPage = () => {
       <SectionWithDescription title="Choose provider">
         <Box display="grid" gridTemplateColumns={2} gap={3}>
           <ProviderSelectionBox
-            providerName="Sendgrid"
+            providerName="SendGrid"
             providerLogo={<SendgridLogo height={20} width={20} />}
-            providerDescription="Use dynamic templates created in Sendgrid dashboard to send messages. Event data will be forwarded to Sendgrid."
+            providerDescription="Use dynamic templates created in SendGrid dashboard to send messages. Event data will be forwarded to SendGrid."
             onClick={() => push(sendgridUrls.newConfiguration())}
           />
 
