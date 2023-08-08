@@ -2,10 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import {
   OrderCancelledEventSubscriptionFragment,
   OrderConfirmedSubscriptionFragment,
-<<<<<<< HEAD
   OrderCreatedSubscriptionFragment,
-=======
->>>>>>> d92b62e6 (refactor: :truck: order_created -> order_confirmed)
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
@@ -15,12 +12,6 @@ import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-conf
 import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
-<<<<<<< HEAD
-=======
-import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
-import { CreateOrderResponse, ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { AuthData } from "@saleor/app-sdk/APL";
->>>>>>> d92b62e6 (refactor: :truck: order_created -> order_confirmed)
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;

@@ -4,7 +4,7 @@ import { AppWebhookMigrator } from "./app-webhook-migrator";
 import { AppWebhookRepository } from "./app-webhook-repository";
 
 describe("AppWebhookMigrator", () => {
-  describe("migrateWebhook", () => {
+  describe("registerWebhookIfItDoesntExist", () => {
     describe("in report mode", () => {
       it("does not call create", async () => {
         const createMock = vitest.fn();
@@ -22,29 +22,9 @@ describe("AppWebhookMigrator", () => {
           { mode: "report" }
         );
 
-        await appWebhookMigrator.migrateWebhook("OrderCreated", {} as SaleorAsyncWebhook);
+        await appWebhookMigrator.registerWebhookIfItDoesntExist({} as SaleorAsyncWebhook);
 
         expect(createMock).not.toHaveBeenCalled();
-      });
-      it("does not call delete", async () => {
-        const deleteMock = vitest.fn();
-        const appWebhookRepository = {
-          delete: deleteMock,
-          getAll: () => [],
-        } as unknown as AppWebhookRepository;
-
-        const appWebhookMigrator = new AppWebhookMigrator(
-          {
-            appWebhookRepository,
-            apiUrl: "apiUrl",
-            appId: "appId",
-          },
-          { mode: "report" }
-        );
-
-        await appWebhookMigrator.migrateWebhook("OrderCreated", {} as SaleorAsyncWebhook);
-
-        expect(deleteMock).not.toHaveBeenCalled();
       });
     });
     describe("in migrate mode", () => {
@@ -75,49 +55,9 @@ describe("AppWebhookMigrator", () => {
           },
         } as unknown as SaleorAsyncWebhook;
 
-        await appWebhookMigrator.migrateWebhook("OrderCreated", webhookHandler);
+        await appWebhookMigrator.registerWebhookIfItDoesntExist(webhookHandler);
 
         expect(createMock).toHaveBeenCalled();
-      });
-      it("calls disable", async () => {
-        const disableMock = vitest.fn();
-        const appWebhookRepository = {
-          create: () => {},
-          getAll: () => [
-            {
-              id: "id",
-              name: "OrderCreated",
-              targetUrl: `targetUrl`,
-              query: "query",
-              asyncEvents: ["OrderCreated"],
-            },
-          ],
-          disable: disableMock,
-        } as unknown as AppWebhookRepository;
-
-        const appWebhookMigrator = new AppWebhookMigrator(
-          {
-            appWebhookRepository,
-            apiUrl: "apiUrl",
-            appId: "appId",
-          },
-          { mode: "migrate" }
-        );
-
-        const webhookHandler = {
-          getWebhookManifest: () => {
-            return {
-              name: "OrderCreated",
-              targetUrl: `targetUrl`,
-              query: "query",
-              asyncEvents: ["OrderCreated"],
-            };
-          },
-        } as unknown as SaleorAsyncWebhook;
-
-        await appWebhookMigrator.migrateWebhook("OrderCreated", webhookHandler);
-
-        expect(disableMock).toHaveBeenCalled();
       });
     });
   });

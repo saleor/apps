@@ -118,9 +118,12 @@ export class AppWebhookMigrator {
     await this.deleteWebhookById(webhook.id);
   }
 
-  private async registerWebhookIfItDoesntExist(
-    webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
-  ) {
+  /**
+   * Registers a webhook if it doesn't exist based on a handler.
+   * @param webhookHandler - The handler of the webhook we want to register.
+   * @example registerWebhookIfItDoesntExist(orderConfirmedAsyncWebhook)
+   */
+  async registerWebhookIfItDoesntExist(webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook) {
     const webhooks = await this.getAppWebhooks();
 
     const webhookExists = webhooks.some((webhook) => webhook.name === webhookHandler.name);
@@ -161,20 +164,6 @@ export class AppWebhookMigrator {
     for (const webhook of webhooksToEnable) {
       await this.appWebhookRepository.enable(webhook.id);
     }
-  }
-
-  /**
-   * Replaces one webhook with another by disabling the first one and creating the second one.
-   * @param prevWebhookName - The name of the webhook we want to migrate from.
-   * @param nextWebhookHandler - The handler of the webhook we want to migrate to.
-   * @example migrateWebhook("OrderCreated", orderConfirmedAsyncWebhook)
-   */
-  async migrateWebhook(
-    prevWebhookName: string,
-    nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
-  ) {
-    await this.registerWebhookIfItDoesntExist(nextWebhookHandler);
-    await this.disableFirstWebhookByName(prevWebhookName);
   }
 }
 
