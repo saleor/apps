@@ -7,8 +7,8 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { AvataxOrderConfirmedCalculationDateResolver } from "./avatax-order-confirmed-calculation-date-resolver";
-import { AvataxOrderConfirmedDocumentCodeResolver } from "./avatax-order-confirmed-document-code-resolver";
+import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
+import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -29,13 +29,13 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const avataxClient = new AvataxClient(avataxConfig);
 
     const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
-    const dateResolver = new AvataxOrderConfirmedCalculationDateResolver();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-    const documentCodeResolver = new AvataxOrderConfirmedDocumentCodeResolver();
+    const dateResolver = new AvataxCalculationDateResolver();
+    const documentCodeResolver = new AvataxDocumentCodeResolver();
 
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
-    const date = dateResolver.resolve(order);
-    const code = documentCodeResolver.resolve(order);
+    const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
+    const code = documentCodeResolver.resolve(order.avataxDocumentCode, order.id);
 
     return {
       model: {
