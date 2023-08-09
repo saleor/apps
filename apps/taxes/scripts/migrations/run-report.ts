@@ -21,11 +21,17 @@ const runReport = async () => {
   });
 
   for (const env of allEnvs) {
-    console.log("Working on env:", env);
+    try {
+      console.log("--------------------");
+      console.log(`Working on app: ${env.appId} on domain ${env.domain}`);
 
-    const webhookMigrator = createAppWebhookMigrator(env, { mode: "report" });
+      const webhookMigrator = createAppWebhookMigrator(env, { mode: "report" });
 
-    migrateTaxes(webhookMigrator);
+      await migrateTaxes(webhookMigrator);
+    } catch (error) {
+      console.log("Error while migrating webhook. Continuing with the next app.");
+      continue;
+    }
   }
 };
 

@@ -18,7 +18,8 @@ export async function migrateTaxes(webhookMigrator: AppWebhookMigrator) {
   // It will delete the ORDER_CONFIRMED webhooks created above.
 
   // 2nd step (after two weeks)
-  // 1. Delete the ORDER_CREATED and ORDER_FULFILLED webhooks by uncommenting this line:
+  // 1. Comment the 1st step code above.
+  // 2. Delete the ORDER_CREATED and ORDER_FULFILLED webhooks by uncommenting this line:
   // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
   // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderFulfilled");
 }

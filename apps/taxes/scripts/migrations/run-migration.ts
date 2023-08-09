@@ -7,8 +7,8 @@ import { migrateTaxes } from "./taxes-migration";
 
 dotenv.config();
 
-const runReport = async () => {
-  console.log("Starting runReport");
+const runMigration = async () => {
+  console.log("Starting runMigration");
 
   verifyRequiredEnvs();
 
@@ -21,12 +21,18 @@ const runReport = async () => {
   });
 
   for (const env of allEnvs) {
-    console.log("Working on env:", env);
+    try {
+      console.log("--------------------");
+      console.log(`Working on app: ${env.appId} on domain ${env.domain}`);
 
-    const webhookMigrator = createAppWebhookMigrator(env, { mode: "migrate" });
+      const webhookMigrator = createAppWebhookMigrator(env, { mode: "migrate" });
 
-    migrateTaxes(webhookMigrator);
+      await migrateTaxes(webhookMigrator);
+    } catch (error) {
+      console.log("Error while migrating webhook. Continuing with the next app.");
+      continue;
+    }
   }
 };
 
-runReport();
+runMigration();

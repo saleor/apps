@@ -77,6 +77,7 @@ export class AppWebhookMigrator {
 
   /**
    * @returns all webhooks for the app
+   * @throws error if fetching webhooks fails
    */
   async getAppWebhooks() {
     const webhooks = await this.appWebhookRepository.getAll();

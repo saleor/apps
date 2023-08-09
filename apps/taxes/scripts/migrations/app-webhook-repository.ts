@@ -95,9 +95,9 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log("Error while fetching app webhooks, returning empty array");
+      console.log("Was not able to fetch app webhooks", error.message);
 
-      return [];
+      throw error;
     }
 
     return data?.app?.webhooks ?? [];
