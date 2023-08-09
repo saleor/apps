@@ -23,7 +23,7 @@ const runReport = async () => {
   for (const env of allEnvs) {
     console.log("Working on env:", env);
 
-    const webhookMigrator = createAppWebhookMigrator(env, { mode: "report" });
+    const webhookMigrator = createAppWebhookMigrator(env, { mode: "migrate" });
 
     migrateTaxes(webhookMigrator);
   }
