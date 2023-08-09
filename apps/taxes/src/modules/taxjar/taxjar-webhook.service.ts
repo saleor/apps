@@ -1,15 +1,17 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import {
   OrderCancelledEventSubscriptionFragment,
   OrderConfirmedSubscriptionFragment,
+  OrderCreatedSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
+import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
+import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
+import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
-import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
-import { CreateOrderResponse, ProviderWebhookService } from "../taxes/tax-provider-webhook";
-import { AuthData } from "@saleor/app-sdk/APL";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -38,6 +40,17 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     const adapter = new TaxJarOrderConfirmedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order });
+
+    return response;
+  }
+
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
+  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
+    const adapter = new TaxJarOrderCreatedAdapter(this.config, this.authData);
+
+    const response = await adapter.send({ order: payload });
 
     return response;
   }

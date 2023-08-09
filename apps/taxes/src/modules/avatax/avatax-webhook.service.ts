@@ -1,6 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
   OrderConfirmedSubscriptionFragment,
+  OrderCreatedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
@@ -12,6 +13,7 @@ import { AvataxConfig, defaultAvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
+import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -48,5 +50,16 @@ export class AvataxWebhookService implements ProviderWebhookService {
     const adapter = new AvataxOrderCancelledAdapter(this.config);
 
     await adapter.send(payload);
+  }
+
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
+  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
+    const adapter = new AvataxOrderCreatedAdapter(this.config, this.authData);
+
+    const response = await adapter.send({ order: payload });
+
+    return response;
   }
 }

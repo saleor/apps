@@ -1,19 +1,18 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
-  OrderCancelledEventSubscriptionFragment,
+  OrderConfirmedSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
-  OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
 
+import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
-import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -50,12 +49,19 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.calculateTaxes(payload);
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment) {
-    return this.client.createOrder(order);
+  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+    return this.client.confirmOrder(order);
   }
 
   async cancelOrder(payload: OrderCancelledPayload) {
     this.client.cancelOrder(payload);
+  }
+
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
+  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
+    return this.client.DEPRECATED_createOrder(payload);
   }
 }
 

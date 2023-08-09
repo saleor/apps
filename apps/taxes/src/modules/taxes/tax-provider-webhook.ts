@@ -1,7 +1,7 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
 import {
   OrderConfirmedSubscriptionFragment,
-  OrderFulfilledSubscriptionFragment,
+  OrderCreatedSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
@@ -14,4 +14,10 @@ export interface ProviderWebhookService {
   calculateTaxes: (payload: TaxBaseFragment) => Promise<CalculateTaxesResponse>;
   confirmOrder: (payload: OrderConfirmedSubscriptionFragment) => Promise<CreateOrderResponse>;
   cancelOrder: (payload: OrderCancelledPayload) => Promise<void>;
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
+  DEPRECATED_createOrder: (
+    payload: OrderCreatedSubscriptionFragment
+  ) => Promise<CreateOrderResponse>;
 }

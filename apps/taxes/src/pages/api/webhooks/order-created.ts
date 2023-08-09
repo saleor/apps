@@ -30,6 +30,10 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
   webhookPath: "/api/webhooks/order-created",
 });
 
+/**
+ * This handler is responsible for creating an order in the tax provider.
+ * @deprecated This handler is deprecated and will be removed in the future.
+ */
 export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
@@ -54,7 +58,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     logger.info("Creating order...");
 
-    const createdOrder = await taxProvider.createOrder(payload.order);
+    const createdOrder = await taxProvider.DEPRECATED_createOrder(payload.order);
 
     logger.info({ createdOrder }, "Order created");
     const client = createGraphQLClient({
