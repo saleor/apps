@@ -1,19 +1,18 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
-  OrderCancelledEventSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
+  OrderConfirmedSubscriptionFragment,
   OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
-import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+import { CreateOrderResponse, ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxClient } from "./avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxOrderCreatedAdapter } from "./order-created/avatax-order-created-adapter";
-import { AvataxOrderFulfilledAdapter } from "./order-fulfilled/avatax-order-fulfilled-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
-import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
+import { AvataxOrderFulfilledAdapter } from "./order-fulfilled/avatax-order-fulfilled-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -38,8 +37,8 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return response;
   }
 
-  async createOrder(order: OrderCreatedSubscriptionFragment) {
-    const adapter = new AvataxOrderCreatedAdapter(this.config, this.authData);
+  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+    const adapter = new AvataxOrderConfirmedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order });
 

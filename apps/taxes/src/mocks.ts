@@ -1,6 +1,6 @@
-import { OrderCreatedSubscriptionFragment, OrderStatus } from "../generated/graphql";
+import { OrderConfirmedSubscriptionFragment, OrderStatus } from "../generated/graphql";
 
-export const defaultOrder: OrderCreatedSubscriptionFragment = {
+export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
   user: {
     id: "VXNlcjoyMDg0NTEwNDEw",
