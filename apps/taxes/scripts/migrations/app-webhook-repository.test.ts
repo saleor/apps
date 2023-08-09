@@ -5,7 +5,7 @@ import { CreateAppWebhookMutationVariables } from "../../generated/graphql";
 
 describe("AppWebhookRepository", () => {
   describe("getAll", () => {
-    it("returns an empty array when error returned", async () => {
+    it("throws error when error returned", async () => {
       const client = {
         query: () => ({
           toPromise: () => ({
@@ -18,7 +18,7 @@ describe("AppWebhookRepository", () => {
 
       const appWebhookRepository = new AppWebhookRepository(client);
 
-      expect(await appWebhookRepository.getAll()).toEqual([]);
+      await expect(appWebhookRepository.getAll()).rejects.toThrow();
     });
   });
   describe("delete", () => {
