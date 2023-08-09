@@ -18,6 +18,9 @@ type OrderFulfilledPayload = Extract<
   { __typename: "OrderFulfilled" }
 >;
 
+/**
+ * @deprecated This handler is deprecated and will be removed in the future.
+ */
 export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledPayload>({
   name: "OrderFulfilled",
   apl: saleorApp.apl,

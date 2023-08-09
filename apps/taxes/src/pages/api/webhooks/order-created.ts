@@ -22,6 +22,9 @@ type OrderCreatedPayload = Extract<
   { __typename: "OrderCreated" }
 >;
 
+/**
+ * @deprecated This handler is deprecated and will be removed in the future.
+ */
 export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPayload>({
   name: "OrderCreated",
   apl: saleorApp.apl,
@@ -30,10 +33,6 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
   webhookPath: "/api/webhooks/order-created",
 });
 
-/**
- * This handler is responsible for creating an order in the tax provider.
- * @deprecated This handler is deprecated and will be removed in the future.
- */
 export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
