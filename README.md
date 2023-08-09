@@ -48,10 +48,10 @@ This repository serves as a starting point in the exploration of Saleor apps.
 In the `apps` folder, you will find the following applications:
 
 - [crm](https://docs.saleor.io/docs/3.x/developer/app-store/apps/crm) - exports customers from Saleor to CRM.
-- [cms](./apps/cms) - exports products from Saleor to CMS.
+- [cms](https://docs.saleor.io/docs/3.x/developer/app-store/apps/cms) - exports products from Saleor to CMS.
 - [data-importer](./apps/data-importer) - import data from CSV to Saleor.
-- [emails-and-messages](./apps/emails-and-messages) - notifications and email communication with customers.
-- [invoices](./apps/invoices) - generate invoice PDF for each order.
+- [emails-and-messages](https://docs.saleor.io/docs/3.x/developer/app-store/apps/emails-and-messages/overview) - notifications and email communication with customers.
+- [invoices](https://docs.saleor.io/docs/3.x/developer/app-store/apps/invoices) - generate invoice PDF for each order.
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
 - [monitoring](./apps/monitoring) - send Saleor logs to 3rd party Monitoring services
 - [products-feed](./apps/products-feed) - generate products feed XML
