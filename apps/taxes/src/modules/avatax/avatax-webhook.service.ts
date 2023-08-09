@@ -47,6 +47,9 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return response;
   }
 
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
   async fulfillOrder(order: OrderFulfilledSubscriptionFragment) {
     const adapter = new AvataxOrderFulfilledAdapter(this.config);
 
@@ -64,7 +67,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
   /**
    * @deprecated This method is deprecated and will be removed in the future.
    */
-  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
+  async createOrder(payload: OrderCreatedSubscriptionFragment) {
     const adapter = new AvataxOrderCreatedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order: payload });

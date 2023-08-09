@@ -47,7 +47,7 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   /**
    * @deprecated This method is deprecated and will be removed in the future.
    */
-  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
+  async createOrder(payload: OrderCreatedSubscriptionFragment) {
     const adapter = new TaxJarOrderCreatedAdapter(this.config, this.authData);
 
     const response = await adapter.send({ order: payload });
@@ -55,7 +55,9 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     return response;
   }
 
-  // * TaxJar doesn't require any action on order fulfillment
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
   async fulfillOrder() {
     return { ok: true };
   }

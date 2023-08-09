@@ -58,7 +58,7 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
 
     logger.info("Creating order...");
 
-    const createdOrder = await taxProvider.DEPRECATED_createOrder(payload.order);
+    const createdOrder = await taxProvider.createOrder(payload.order);
 
     logger.info({ createdOrder }, "Order created");
     const client = createGraphQLClient({

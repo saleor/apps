@@ -3,6 +3,7 @@ import {
   MetadataItem,
   OrderConfirmedSubscriptionFragment,
   OrderCreatedSubscriptionFragment,
+  OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
@@ -53,6 +54,9 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.confirmOrder(order);
   }
 
+  /**
+   * @deprecated This method is deprecated and will be removed in the future.
+   */
   async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
     return this.client.fulfillOrder(payload);
   }
@@ -64,8 +68,8 @@ class ActiveTaxProviderService implements ProviderWebhookService {
   /**
    * @deprecated This method is deprecated and will be removed in the future.
    */
-  async DEPRECATED_createOrder(payload: OrderCreatedSubscriptionFragment) {
-    return this.client.DEPRECATED_createOrder(payload);
+  async createOrder(payload: OrderCreatedSubscriptionFragment) {
+    return this.client.createOrder(payload);
   }
 }
 
