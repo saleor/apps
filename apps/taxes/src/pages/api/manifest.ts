@@ -5,6 +5,7 @@ import packageJson from "../../../package.json";
 import { checkoutCalculateTaxesSyncWebhook } from "./webhooks/checkout-calculate-taxes";
 import { orderCalculateTaxesSyncWebhook } from "./webhooks/order-calculate-taxes";
 import { orderConfirmedAsyncWebhook } from "./webhooks/order-confirmed";
+import { orderFulfilledAsyncWebhook } from "./webhooks/order-fulfilled";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { orderCancelledAsyncWebhook } from "./webhooks/order-cancelled";
 
@@ -36,6 +37,7 @@ export default createManifestHandler({
         orderCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
         checkoutCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
         orderConfirmedAsyncWebhook.getWebhookManifest(apiBaseURL),
+        orderFulfilledAsyncWebhook.getWebhookManifest(apiBaseURL),
         orderCancelledAsyncWebhook.getWebhookManifest(apiBaseURL),
       ],
     };

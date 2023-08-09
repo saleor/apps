@@ -53,6 +53,10 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.confirmOrder(order);
   }
 
+  async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
+    return this.client.fulfillOrder(payload);
+  }
+
   async cancelOrder(payload: OrderCancelledPayload) {
     this.client.cancelOrder(payload);
   }

@@ -13,6 +13,7 @@ export type CreateOrderResponse = { id: string };
 export interface ProviderWebhookService {
   calculateTaxes: (payload: TaxBaseFragment) => Promise<CalculateTaxesResponse>;
   confirmOrder: (payload: OrderConfirmedSubscriptionFragment) => Promise<CreateOrderResponse>;
+  fulfillOrder: (payload: OrderFulfilledSubscriptionFragment) => Promise<{ ok: boolean }>;
   cancelOrder: (payload: OrderCancelledPayload) => Promise<void>;
   /**
    * @deprecated This method is deprecated and will be removed in the future.
