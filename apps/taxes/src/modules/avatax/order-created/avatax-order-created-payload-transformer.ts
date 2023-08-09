@@ -7,6 +7,8 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-created-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
+import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -24,15 +26,22 @@ export class AvataxOrderCreatedPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches
   ): Promise<CreateTransactionArgs> {
-    const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
+
+    const linesTransformer = new AvataxOrderCreatedPayloadLinesTransformer();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const dateResolver = new AvataxCalculationDateResolver();
+    const documentCodeResolver = new AvataxDocumentCodeResolver();
+
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
+    const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
+    const code = documentCodeResolver.resolve(order.avataxDocumentCode, order.id);
 
     return {
       model: {
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
+        code,
         customerCode:
           order.user?.id ??
           "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
@@ -47,7 +56,7 @@ export class AvataxOrderCreatedPayloadTransformer {
         currencyCode: order.total.currency,
         email: order.user?.email ?? "",
         lines: linesTransformer.transform(order, avataxConfig, matches),
-        date: new Date(order.created),
+        date,
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount)
         ),
