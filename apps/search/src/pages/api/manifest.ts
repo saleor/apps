@@ -8,6 +8,8 @@ import { webhookProductUpdated } from "./webhooks/saleor/product_updated";
 import { webhookProductVariantCreated } from "./webhooks/saleor/product_variant_created";
 import { webhookProductVariantDeleted } from "./webhooks/saleor/product_variant_deleted";
 import { webhookProductVariantUpdated } from "./webhooks/saleor/product_variant_updated";
+import { webhookProductVariantOutOfStock } from "./webhooks/saleor/product_variant_out_of_stock";
+import { webhookProductVariantBackInStock } from "./webhooks/saleor/product_variant_back_in_stock";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -56,6 +58,8 @@ export default createManifestHandler({
         webhookProductVariantCreated.getWebhookManifest(apiBaseURL),
         webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
         webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
+        webhookProductVariantOutOfStock.getWebhookManifest(apiBaseURL),
+        webhookProductVariantBackInStock.getWebhookManifest(apiBaseURL),
       ],
     };
 
