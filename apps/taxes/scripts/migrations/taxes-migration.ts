@@ -2,25 +2,23 @@
 import { orderConfirmedAsyncWebhook } from "../../src/pages/api/webhooks/order-confirmed";
 import { AppWebhookMigrator } from "./app-webhook-migrator";
 
-/*
- * Previously, the Avatax transactions were created on ORDER_CREATED webhook and commited on ORDER_FULFILLED webhook.
- * Now, the Avatax transactions are created and commited (if `isAutocommit`: true) on ORDER_CONFIRMED webhook.
- * If transaction was created on ORDER_CREATED and we remove the ORDER_FULFILLED webhook, the transaction can never be commited.
- * Therefore, the `ORDER_FULFILLED` can't be removed.
- */
-
 /**
- * Contains the migration logic for the Taxes App. It is expected to only write, not delete. The cleanup will be done some time later.
+ * Contains the migration logic for the Taxes App. In the 1st step, it is expected to only write, not delete. The cleanup will be done in the 2nd step.
  * @param webhookMigrator - The AppWebhookMigrator instance.
  */
 export async function migrateTaxes(webhookMigrator: AppWebhookMigrator) {
-  // Creates ORDER_CONFIRMED webhook for each Taxes App.
+  // Migration plan:
+  // 1st step
+  // 1. Create new ORDER_CONFIRMED webhooks for each Taxes App.
   await webhookMigrator.registerWebhookIfItDoesntExist(orderConfirmedAsyncWebhook);
 
+  // 2. Confirm if everything is working as expected.
   // If something went wrong, we can roll back the migration by uncommenting this line:
   // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME(orderConfirmedAsyncWebhook.name);
   // It will delete the ORDER_CONFIRMED webhooks created above.
 
-  // If everything went well, we can delete the ORDER_CREATED webhook by uncommenting this line:
+  // 2nd step (after two weeks)
+  // 1. Delete the ORDER_CREATED and ORDER_FULFILLED webhooks by uncommenting this line:
   // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
+  // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderFulfilled");
 }
