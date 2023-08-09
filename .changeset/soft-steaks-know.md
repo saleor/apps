@@ -7,6 +7,7 @@ Started the migration from `OrderCreated` to `OrderConfirmed` webhook event. In 
 The `OrderCreated` and `OrderFulfilled` handlers are deprecated. They will be removed on August 23, along with their corresponding webhooks. For now, both flows (`OrderCreated` -> `OrderFulfilled` and `OrderConfirmed`) are supported.
 
 **Actions needed**:
+
 The only scenario where you, as the user, may need to do something regarding this release is the following:
 
 1. You created an order that still needs to be fulfilled (therefore, the corresponding AvaTax transaction is not committed).
