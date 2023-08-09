@@ -12,8 +12,10 @@ export async function migrateTaxes(webhookMigrator: AppWebhookMigrator) {
   // 1. Create new ORDER_CONFIRMED webhooks for each Taxes App.
   await webhookMigrator.registerWebhookIfItDoesntExist(orderConfirmedAsyncWebhook);
 
-  // 2. Confirm if everything is working as expected.
-  // If something went wrong, we can roll back the migration by uncommenting this line:
+  // 2. To confirm if everything is working as expected, we can get all webhooks for apps and check if the ORDER_CONFIRMED webhooks were created.
+  // await webhookMigrator.getAppWebhooks();
+
+  // 3. If something went wrong, we can roll back the migration by uncommenting this line:
   // await webhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME(orderConfirmedAsyncWebhook.name);
   // It will delete the ORDER_CONFIRMED webhooks created above.
 
