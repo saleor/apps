@@ -73,6 +73,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     return webhookResponse.success();
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.error(new Error("Error while creating order in tax provider"));
+    return webhookResponse.error(error);
   }
 });

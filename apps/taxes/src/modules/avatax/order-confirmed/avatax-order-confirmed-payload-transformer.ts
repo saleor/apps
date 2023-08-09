@@ -35,7 +35,10 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
     const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
-    const code = documentCodeResolver.resolve(order.avataxDocumentCode, order.id);
+    const code = documentCodeResolver.resolve({
+      avataxDocumentCode: order.avataxDocumentCode,
+      orderId: order.id,
+    });
 
     return {
       model: {

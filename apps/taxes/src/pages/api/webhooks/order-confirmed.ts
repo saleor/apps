@@ -52,7 +52,7 @@ export default orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =>
       return webhookResponse.error(new Error("Skipping fulfilled order to prevent duplication"));
     }
 
-    logger.info("Creating order...");
+    logger.info("Confirming order...");
 
     const confirmedOrder = await taxProvider.confirmOrder(payload.order);
 
@@ -73,6 +73,6 @@ export default orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =>
     return webhookResponse.success();
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.error(new Error("Error while creating order in tax provider"));
+    return webhookResponse.error(error);
   }
 });
