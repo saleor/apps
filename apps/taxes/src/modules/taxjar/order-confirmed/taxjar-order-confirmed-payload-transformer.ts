@@ -7,6 +7,7 @@ import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderConfirmedTarget } from "./taxjar-order-confirmed-adapter";
 import { TaxJarOrderConfirmedPayloadLinesTransformer } from "./taxjar-order-confirmed-payload-lines-transformer";
 
+// todo: refactor to a move descriptive class
 export function sumPayloadLines(lines: LineItem[]): number {
   return numbers.roundFloatToTwoDecimals(
     lines.reduce(
