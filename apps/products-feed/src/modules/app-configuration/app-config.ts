@@ -1,3 +1,4 @@
+import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
 
 const titleTemplateFieldSchema = z.string().default("{{variant.product.name}} - {{variant.name}}");
@@ -30,8 +31,13 @@ const urlConfigurationSchema = z.object({
 
 const rootAppConfigSchema = z.object({
   s3: s3ConfigSchema.nullable(),
-  titleTemplate: titleTemplateFieldSchema,
-  attributeMapping: attributeMappingSchema.nullable(),
+  titleTemplate: titleTemplateFieldSchema
+    .optional()
+    .default(titleTemplateFieldSchema.parse(undefined)),
+  attributeMapping: attributeMappingSchema
+    .nullable()
+    .optional()
+    .default(attributeMappingSchema.parse({})),
   channelConfig: z.record(z.object({ storefrontUrls: urlConfigurationSchema })),
 });
 
@@ -46,6 +52,8 @@ export type RootConfig = z.infer<typeof rootAppConfigSchema>;
 
 export type ChannelUrlsConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
+const logger = createLogger({ name: "AppConfig" });
+
 export class AppConfig {
   private rootData: RootConfig = {
     channelConfig: {},
@@ -56,7 +64,12 @@ export class AppConfig {
 
   constructor(initialData?: RootConfig) {
     if (initialData) {
-      this.rootData = rootAppConfigSchema.parse(initialData);
+      try {
+        this.rootData = rootAppConfigSchema.parse(initialData);
+      } catch (e) {
+        logger.error(e, "Could not parse initial data");
+        throw new Error("Can't load the configuration");
+      }
     }
   }
 
@@ -78,8 +91,7 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      console.error(e);
-
+      logger.debug(e, "Invalid S3 config provided");
       throw new Error("Invalid S3 config provided");
     }
   }
@@ -90,8 +102,7 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      console.error(e);
-
+      logger.debug(e, "Invalid mapping config provided");
       throw new Error("Invalid mapping config provided");
     }
   }
@@ -106,9 +117,8 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      console.error(e);
-
-      throw new Error("Invalid payload");
+      logger.debug(e, "Invalid channels config provided");
+      throw new Error("Invalid channels config provided");
     }
   }
 
