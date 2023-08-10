@@ -18,6 +18,9 @@ type OrderFulfilledPayload = Extract<
   { __typename: "OrderFulfilled" }
 >;
 
+/**
+ * @deprecated This handler is deprecated and will be removed in the future.
+ */
 export const orderFulfilledAsyncWebhook = new SaleorAsyncWebhook<OrderFulfilledPayload>({
   name: "OrderFulfilled",
   apl: saleorApp.apl,
@@ -38,18 +41,18 @@ export default orderFulfilledAsyncWebhook.createHandler(async (req, res, ctx) =>
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Fetched taxProvider");
-
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       return webhookResponse.error(new Error("Insufficient order data"));
     }
+    logger.info("Fulfilling order...");
+
     await taxProvider.fulfillOrder(payload.order);
 
     logger.info("Order fulfilled");
 
     return webhookResponse.success();
   } catch (error) {
-    return webhookResponse.error(new Error("Error while fulfilling tax provider order"));
+    return webhookResponse.error(error);
   }
 });

@@ -3,7 +3,7 @@ import { Client, gql } from "urql";
 import {
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
-  UpdateMetadataDocument,
+  UpdatePrivateMetadataDocument,
 } from "../../../generated/graphql";
 
 gql`
@@ -45,7 +45,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 
 export async function mutateMetadata(client: Client, metadata: MetadataEntry[], appId: string) {
   const { error: mutationError, data: mutationData } = await client
-    .mutation(UpdateMetadataDocument, {
+    .mutation(UpdatePrivateMetadataDocument, {
       id: appId,
       input: metadata,
     })

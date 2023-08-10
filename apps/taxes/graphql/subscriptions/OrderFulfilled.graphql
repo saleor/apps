@@ -47,10 +47,7 @@ fragment OrderFulfilledSubscription on Order {
       amount
     }
   }
-  privateMetadata {
-    key
-    value
-  }
+  avataxId: metafield(key: "avataxId")
   lines {
     ...OrderLine
   }
