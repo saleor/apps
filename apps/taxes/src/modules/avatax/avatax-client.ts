@@ -1,5 +1,6 @@
 import Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
@@ -7,7 +8,6 @@ import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
-import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 
 type AvataxSettings = {
   appName: string;
@@ -66,7 +66,12 @@ export class AvataxClient {
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    return this.client.createTransaction({ model });
+    /*
+     * We use createOrAdjustTransaction instead of createTransaction because
+     * we must guarantee a way of idempotent update of the transaction due to the
+     * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
+     */
+    return this.client.createOrAdjustTransaction({ model: { createTransactionModel: model } });
   }
 
   async commitTransaction(args: CommitTransactionArgs) {
