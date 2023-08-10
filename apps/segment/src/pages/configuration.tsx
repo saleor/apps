@@ -1,3 +1,4 @@
+import { SegmentConfigForm } from "@/modules/configuration/segment-config-form/segment-config-form";
 import { AppHeader } from "@/modules/ui/app-header";
 import { AppSection } from "@/modules/ui/app-section";
 import { Box, Text } from "@saleor/macaw-ui/next";
@@ -9,9 +10,9 @@ const ConfigurationPage: NextPage = () => {
       <AppHeader />
       <AppSection
         marginBottom={14}
-        heading="todo"
-        sideContent={<Text>todo</Text>}
-        mainContent={<Text>todo</Text>}
+        heading="Segment.io configration"
+        sideContent={<Text>Provide Segment credentials to allow sending events.</Text>}
+        mainContent={<SegmentConfigForm />}
       />
     </Box>
   );
