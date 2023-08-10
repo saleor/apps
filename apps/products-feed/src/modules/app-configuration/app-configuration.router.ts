@@ -17,11 +17,19 @@ export const appConfigurationRouter = router({
    * Prefer fetching all to avoid unnecessary calls. Routes are cached by react-query
    */
   fetch: protectedClientProcedure.query(async ({ ctx: { logger, getConfig } }) => {
-    return getConfig().then((c) => {
-      logger.debug("Fetched config");
+    logger.debug("Fetching configuration");
 
-      return c.getRootConfig();
-    });
+    try {
+      const configuration = await getConfig();
+
+      logger.debug("Configuration fetched");
+      return configuration.getRootConfig();
+    } catch (e) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Can't fetch the configuration",
+      });
+    }
   }),
   testS3BucketConfiguration: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -38,6 +46,7 @@ export const appConfigurationRouter = router({
           bucketName: input.bucketName,
           s3Client,
         });
+        logger.debug("Verification succeeded");
       } catch {
         logger.debug("Validation failed");
         throw new TRPCError({
@@ -88,7 +97,7 @@ export const appConfigurationRouter = router({
       z.object({
         channelSlug: z.string(),
         urls: AppConfigSchema.channelUrls,
-      })
+      }),
     )
     .mutation(
       async ({
@@ -117,7 +126,7 @@ export const appConfigurationRouter = router({
         logger.debug("Saved config");
 
         return null;
-      }
+      },
     ),
   setAttributeMapping: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })

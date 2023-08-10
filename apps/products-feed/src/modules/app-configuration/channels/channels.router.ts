@@ -5,12 +5,14 @@ import { ChannelFragment } from "../../../../generated/graphql";
 
 export const channelsRouter = router({
   fetch: protectedClientProcedure.query(
-    async ({ ctx: { logger, apiClient }, input }): Promise<ChannelFragment[]> => {
+    async ({ ctx: { logger, apiClient } }): Promise<ChannelFragment[]> => {
       const fetcher = new ChannelsFetcher(apiClient);
 
-      logger.debug("Will fetch channels");
+      logger.debug("Fetching channels");
+      const channels = fetcher.fetchChannels().then((channels) => channels ?? []);
 
-      return fetcher.fetchChannels().then((channels) => channels ?? []);
-    }
+      logger.debug("Channels fetched successfully");
+      return channels;
+    },
   ),
 });
