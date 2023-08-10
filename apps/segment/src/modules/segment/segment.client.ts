@@ -28,4 +28,8 @@ export class SegmentClient {
   flush() {
     return this.client.closeAndFlush({ timeout: 1000 });
   }
+
+  ping() {
+    return this.client.ready;
+  }
 }

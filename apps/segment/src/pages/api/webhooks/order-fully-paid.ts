@@ -9,6 +9,7 @@ import {
 
 import { SegmentNotConfiguredError } from "@/errors";
 import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -25,6 +26,8 @@ export const orderFullyPaidWebhook =
     query: OrderFullyPaidDocument,
   });
 
+const logger = createLogger({ name: "orderFullyPaidWebhook" });
+
 const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> = async (
   req,
   res,
@@ -40,6 +43,8 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
 
   try {
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
+
+    logger.info("Sending order fully paid event to Segment");
 
     await segmentEventTracker.trackEvent(
       trackingEventFactory.createOrderCompletedEvent(payload.order),

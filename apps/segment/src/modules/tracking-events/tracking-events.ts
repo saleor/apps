@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { OrderBaseFragment } from "../../../generated/graphql";
 
+import * as Sentry from "@sentry/nextjs";
+
 export type TrackingBaseEvent = {
   type: string;
   userId: string;
@@ -12,9 +14,18 @@ const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
 
   const userId = user?.id ?? userEmail;
 
-  const parsedUserId = stringValidator.parse(userId); // todo throw if doesnt exist
+  try {
+    const parsedUserId = stringValidator.parse(userId);
 
-  return parsedUserId;
+    return parsedUserId;
+  } catch (e) {
+    Sentry.captureMessage(
+      "User ID resolution failed. Both user.id and userEmail are empty in order",
+    );
+    Sentry.captureException(e);
+
+    throw e;
+  }
 };
 
 /**

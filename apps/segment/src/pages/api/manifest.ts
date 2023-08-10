@@ -41,7 +41,7 @@ export default createManifestHandler({
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       /*
-       * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
+       * TODO Add webhooks disabled and enable then when configured
        */
       webhooks: [
         orderCreatedWebhook.getWebhookManifest(appBaseUrl),

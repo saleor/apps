@@ -8,6 +8,7 @@ import {
 } from "../../../../generated/graphql";
 import { SegmentNotConfiguredError } from "@/errors";
 import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -22,6 +23,8 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedSubscripti
   apl: saleorApp.apl,
   query: OrderCreatedDocument,
 });
+
+const logger = createLogger({ name: "orderCreatedWebhook" });
 
 const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = async (
   req,
@@ -38,6 +41,8 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
 
   try {
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
+
+    logger.info("Sending order created event to Segment");
 
     await segmentEventTracker.trackEvent(
       trackingEventFactory.createOrderCreatedEvent(payload.order),
