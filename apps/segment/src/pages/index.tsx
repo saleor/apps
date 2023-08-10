@@ -22,8 +22,8 @@ const IndexPage: NextPage = () => {
 
   return (
     <div>
-      <h1>Saleor App Segment.io</h1>
-      <p>This is Saleor App that allows product feed generation</p>
+      <h1>Saleor App - Twilio Segment integration</h1>
+      <p>This is Saleor App that synchronized order events to Segment</p>
       <p>Install app in your Saleor instance and open in with Dashboard</p>
     </div>
   );

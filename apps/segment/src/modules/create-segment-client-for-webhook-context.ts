@@ -2,6 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { AppConfigMetadataManager } from "./configuration/app-config-metadata-manager";
 import { SegmentEventsTracker } from "./tracking-events/segment-events-tracker";
 import { SegmentClient } from "./segment/segment.client";
+import { SegmentNotConfiguredError } from "@/errors";
 
 export const createSegmentClientForWebhookContext = async (context: { authData: AuthData }) => {
   const config = await AppConfigMetadataManager.createFromAuthData(context.authData).get();
@@ -9,7 +10,7 @@ export const createSegmentClientForWebhookContext = async (context: { authData: 
   const segmentKey = config.getConfig()?.segmentWriteKey;
 
   if (!segmentKey) {
-    throw new Error("Segment key not configured");
+    throw new SegmentNotConfiguredError();
   }
 
   return new SegmentEventsTracker(

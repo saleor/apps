@@ -9,18 +9,18 @@ type Props = PropsWithBox<{
 
 export const AppHeader = ({
   breadcrumbs,
-  text = "Send Saleor events to Segment.io",
+  text = "Send Saleor events to Twilio Segment",
   ...props
 }: Props) => {
   const breadcrumbsRender = breadcrumbs ? (
     <Breadcrumbs>
-      <Breadcrumbs.Item>Saleor x Segment.io</Breadcrumbs.Item>
+      <Breadcrumbs.Item>Saleor x Segment</Breadcrumbs.Item>
       <Breadcrumbs.Item href="/configuration">Configuration</Breadcrumbs.Item>
       {breadcrumbs}
     </Breadcrumbs>
   ) : (
     <Breadcrumbs>
-      <Breadcrumbs.Item>Saleor x Segment.io</Breadcrumbs.Item>
+      <Breadcrumbs.Item>Saleor x Segment</Breadcrumbs.Item>
       <Breadcrumbs.Item>Configuration</Breadcrumbs.Item>
     </Breadcrumbs>
   );

@@ -6,6 +6,8 @@ import {
   OrderCancelledDocument,
   OrderUpdatedSubscriptionPayloadFragment,
 } from "../../../../generated/graphql";
+import * as Sentry from "@sentry/nextjs";
+import { SegmentNotConfiguredError } from "@/errors";
 
 export const config = {
   api: {
@@ -30,7 +32,9 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
   const { authData, payload } = context;
 
   if (!payload.order) {
-    return res.status(400).end(); // todo send error and log and sentry
+    Sentry.captureException(new Error("Order not found in payload"));
+
+    return res.status(400).end();
   }
 
   try {
@@ -42,7 +46,15 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
 
     return res.status(200).end();
   } catch (e) {
-    return res.status(500).end(); // todo send error and log
+    if (e instanceof SegmentNotConfiguredError) {
+      // todo disable webhooks if not configured
+
+      return res.status(200).end();
+    }
+
+    Sentry.captureException(e);
+
+    return res.status(500).end();
   }
 };
 
