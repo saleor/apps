@@ -1,10 +1,11 @@
 import Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
-import { createLogger, Logger } from "../../lib/logger";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
 
@@ -14,11 +15,7 @@ type AvataxSettings = {
   environment: "sandbox" | "production";
   machineName: string;
   timeout: number;
-  logOptions?: {
-    logEnabled: boolean;
-    logLevel: number;
-    logRequestAndResponseInfo: boolean;
-  };
+  logOptions?: LogOptions;
 };
 
 const defaultAvataxSettings: AvataxSettings = {
@@ -53,12 +50,15 @@ export type ValidateAddressArgs = {
   address: AvataxAddress;
 };
 
+export type VoidTransactionArgs = {
+  transactionCode: string;
+  companyCode: string;
+};
+
 export class AvataxClient {
   private client: Avatax;
-  private logger: Logger;
 
   constructor(baseConfig: BaseAvataxConfig) {
-    this.logger = createLogger({ name: "AvataxClient" });
     const settings = createAvataxSettings({ isSandbox: baseConfig.isSandbox });
     const avataxClient = new Avatax(settings).withSecurity(baseConfig.credentials);
 
@@ -66,11 +66,30 @@ export class AvataxClient {
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    return this.client.createTransaction({ model });
+    /*
+     * We use createOrAdjustTransaction instead of createTransaction because
+     * we must guarantee a way of idempotent update of the transaction due to the
+     * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
+     */
+    return this.client.createOrAdjustTransaction({ model: { createTransactionModel: model } });
   }
 
   async commitTransaction(args: CommitTransactionArgs) {
     return this.client.commitTransaction(args);
+  }
+
+  async voidTransaction({
+    transactionCode,
+    companyCode,
+  }: {
+    transactionCode: string;
+    companyCode: string;
+  }) {
+    return this.client.voidTransaction({
+      transactionCode,
+      companyCode,
+      model: { code: VoidReasonCode.DocVoided },
+    });
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {

@@ -1,11 +1,12 @@
-import { OrderCreatedSubscriptionFragment, OrderStatus } from "../generated/graphql";
+import { OrderConfirmedSubscriptionFragment, OrderStatus } from "../generated/graphql";
 
-export const defaultOrder: OrderCreatedSubscriptionFragment = {
+export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
   user: {
     id: "VXNlcjoyMDg0NTEwNDEw",
     email: "happy.customer@saleor.io",
   },
+  number: "1234",
   avataxEntityCode: null,
   created: "2023-05-25T09:18:55.203440+00:00",
   status: OrderStatus.Unfulfilled,

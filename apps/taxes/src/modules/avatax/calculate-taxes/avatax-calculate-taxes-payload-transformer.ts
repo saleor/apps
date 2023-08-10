@@ -3,7 +3,7 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
@@ -34,7 +34,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
         customerCode: taxBase.sourceObject.user?.id ?? "",
-        companyCode: avataxConfig.companyCode,
+        companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {

@@ -3,17 +3,13 @@ import {
   OrderCreatedEventSubscriptionFragment,
   OrderStatus,
   UntypedOrderCreatedSubscriptionDocument,
-  UpdateMetadataDocument,
-  UpdateMetadataMutation,
-  UpdateMetadataMutationVariables,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { Client } from "urql";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { PROVIDER_ORDER_ID_KEY } from "../../../modules/avatax/order-fulfilled/avatax-order-fulfilled-payload-transformer";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 
 export const config = {
   api: {
@@ -26,6 +22,9 @@ type OrderCreatedPayload = Extract<
   { __typename: "OrderCreated" }
 >;
 
+/**
+ * @deprecated This handler is deprecated and will be removed in the future.
+ */
 export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPayload>({
   name: "OrderCreated",
   apl: saleorApp.apl,
@@ -33,35 +32,6 @@ export const orderCreatedAsyncWebhook = new SaleorAsyncWebhook<OrderCreatedPaylo
   query: UntypedOrderCreatedSubscriptionDocument,
   webhookPath: "/api/webhooks/order-created",
 });
-
-/**
- * We need to store the provider order id in the Saleor order metadata so that we can
- * update the provider order when the Saleor order is fulfilled.
- */
-async function updateOrderMetadataWithExternalId(
-  client: Client,
-  orderId: string,
-  externalId: string
-) {
-  const variables: UpdateMetadataMutationVariables = {
-    id: orderId,
-    input: [
-      {
-        key: PROVIDER_ORDER_ID_KEY,
-        value: externalId,
-      },
-    ],
-  };
-  const { error } = await client
-    .mutation<UpdateMetadataMutation>(UpdateMetadataDocument, variables)
-    .toPromise();
-
-  if (error) {
-    throw error;
-  }
-
-  return { ok: true };
-}
 
 export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
@@ -76,8 +46,6 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
     const channelSlug = payload.order?.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Fetched taxProvider");
-
     // todo: figure out what fields are needed and add validation
     if (!payload.order) {
       return webhookResponse.error(new Error("Insufficient order data"));
@@ -87,6 +55,8 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
       return webhookResponse.error(new Error("Skipping fulfilled order to prevent duplication"));
     }
 
+    logger.info("Creating order...");
+
     const createdOrder = await taxProvider.createOrder(payload.order);
 
     logger.info({ createdOrder }, "Order created");
@@ -95,12 +65,14 @@ export default orderCreatedAsyncWebhook.createHandler(async (req, res, ctx) => {
       token,
     });
 
-    await updateOrderMetadataWithExternalId(client, payload.order.id, createdOrder.id);
+    const orderMetadataManager = new OrderMetadataManager(client);
+
+    await orderMetadataManager.updateOrderMetadataWithExternalId(payload.order.id, createdOrder.id);
     logger.info("Updated order metadata with externalId");
 
     return webhookResponse.success();
   } catch (error) {
     logger.error({ error });
-    return webhookResponse.error(new Error("Error while creating order in tax provider"));
+    return webhookResponse.error(error);
   }
 });

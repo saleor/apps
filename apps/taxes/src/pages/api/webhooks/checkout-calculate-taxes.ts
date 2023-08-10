@@ -46,12 +46,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
   try {
     verifyCalculateTaxesPayload(payload);
     logger.debug("Payload validated succesfully");
-  } catch (error) {
-    logger.debug("Payload validation failed");
-    return webhookResponse.error(error);
-  }
 
-  try {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
     const activeConnectionService = getActiveConnectionService(
