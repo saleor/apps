@@ -1,0 +1,13 @@
+query FetchProductsPaginated($channel: String, $after: String) {
+  products(first: 100, channel: $channel, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        ...BulkImportProduct
+      }
+    }
+  }
+}
