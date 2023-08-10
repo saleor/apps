@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 /*
  * The providers sdk types claim to sometimes return undefined.
  * If it ever happens, we have nothing to fall back to, so we throw an error.
@@ -13,6 +15,11 @@ function resolveOptionalOrThrow<T>(value: T | undefined | null, error?: Error): 
   return value;
 }
 
+function resolveStringOrThrow(value: string | undefined | null): string {
+  return z.string().min(1, { message: "This field can not be empty." }).parse(value);
+}
+
 export const taxProviderUtils = {
   resolveOptionalOrThrow,
+  resolveStringOrThrow,
 };

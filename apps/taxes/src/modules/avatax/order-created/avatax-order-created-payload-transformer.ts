@@ -9,6 +9,7 @@ import { AvataxOrderCreatedPayloadLinesTransformer } from "./avatax-order-create
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -57,7 +58,7 @@ export class AvataxOrderCreatedPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
         },
         currencyCode: order.total.currency,
-        email: order.user?.email ?? "",
+        email: taxProviderUtils.resolveStringOrThrow(order.user?.email),
         lines: linesTransformer.transform(order, avataxConfig, matches),
         date,
         discount: discountUtils.sumDiscounts(
