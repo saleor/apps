@@ -1,0 +1,14 @@
+fragment OrderBase on Order {
+    id
+    user {
+        id
+        email
+    }
+    channel {
+        id
+        slug
+        name
+    }
+    userEmail
+    
+}

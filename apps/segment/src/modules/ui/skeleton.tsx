@@ -1,6 +1,9 @@
 import { Box, BoxProps } from "@saleor/macaw-ui/next";
 
-// TODO: Make it more generic, move to shared or contribute to macaw
+/*
+ * TODO: Make it more generic, move to shared or contribute to macaw
+ * todo use macaw skeleton
+ */
 const Section = (props: BoxProps) => {
   return (
     <Box display="grid" gap={2} {...props}>
