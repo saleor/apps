@@ -91,7 +91,7 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      logger.debug(e, "Invalid S3 config provided");
+      logger.info(e, "Invalid S3 config provided");
       throw new Error("Invalid S3 config provided");
     }
   }
@@ -102,7 +102,7 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      logger.debug(e, "Invalid mapping config provided");
+      logger.info(e, "Invalid mapping config provided");
       throw new Error("Invalid mapping config provided");
     }
   }
@@ -117,7 +117,7 @@ export class AppConfig {
 
       return this;
     } catch (e) {
-      logger.debug(e, "Invalid channels config provided");
+      logger.info(e, "Invalid channels config provided");
       throw new Error("Invalid channels config provided");
     }
   }
