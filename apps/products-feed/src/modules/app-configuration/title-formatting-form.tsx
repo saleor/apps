@@ -1,4 +1,4 @@
-import { AppConfigSchema, TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
+import { TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
 import { useForm } from "react-hook-form";
 
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
@@ -19,7 +19,7 @@ type Props = {
 export const TitleFormattingConfigurationForm = (props: Props) => {
   const { handleSubmit, control, getValues } = useForm<TitleTemplateInput>({
     defaultValues: props.initialData,
-    resolver: zodResolver(AppConfigSchema.attributeMapping),
+    resolver: zodResolver(titleTemplateInputSchema),
   });
 
   return (
@@ -55,12 +55,7 @@ export const ConnectedTitleFormattingForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const [preview, setPreview] = useState<string | undefined>();
 
-  const { data: attributes, isLoading: isAttributesLoading } =
-    trpcClient.appConfiguration.getAttributes.useQuery();
-
-  const { data, isLoading: isConfigurationLoading } = trpcClient.appConfiguration.fetch.useQuery();
-
-  const isLoading = isAttributesLoading || isConfigurationLoading;
+  const { data, isLoading } = trpcClient.appConfiguration.fetch.useQuery();
 
   const { mutate } = trpcClient.appConfiguration.setTitleTemplate.useMutation({
     onSuccess() {
@@ -84,14 +79,14 @@ export const ConnectedTitleFormattingForm = () => {
     async (data: TitleTemplateInput) => {
       mutate(data);
     },
-    [mutate]
+    [mutate],
   );
 
   const handlePreview = useCallback(
     async (data: TitleTemplateInput) => {
       previewMutate(data);
     },
-    [previewMutate]
+    [previewMutate],
   );
 
   const formData: TitleTemplateInput = useMemo(() => {
@@ -108,11 +103,9 @@ export const ConnectedTitleFormattingForm = () => {
     return <Text>Loading...</Text>;
   }
 
-  const showForm = !isLoading && attributes?.length;
-
   return (
     <>
-      {showForm ? (
+      {!isLoading ? (
         <TitleFormattingConfigurationForm
           onSubmit={handleSubmit}
           initialData={formData}
