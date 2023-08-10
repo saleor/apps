@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.9.5
+
+### Patch Changes
+
+- b8c5283: Changed capitalization of the name SendGrid in the UI.
+
 ## 1.9.4
 
 ### Patch Changes

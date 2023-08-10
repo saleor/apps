@@ -1,5 +1,31 @@
 # saleor-app-taxes
 
+## 1.13.0
+
+### Minor Changes
+
+- 416c92f: Changed `externalId` order metadata field to `avataxId`. It is now only responsible for storing the id of Avatax transaction.
+- 416c92f: Added support for reading document code from metadata field `avataxDocumentCode`. The default value is the order id from Saleor. The value for the document code is sliced to be under 20 characters. The requirement comes from Avatax API.
+- 416c92f: Added support for reading the tax calculation date from metadata field `avataxTaxCalculationDate`. The value has to be valid UTC datetime string (e.g. "2021-08-31T13:00:00.000Z").
+- 416c92f: Added `ORDER_CANCELLED` webhook handler with an implementation for Avatax. The transactions for corresponding orders in Saleor will be voided in the Avatax dashboard.
+- 416c92f: Started the migration from `OrderCreated` to `OrderConfirmed` webhook event. In the new flow, the provider transactions will be created based on the order confirmation (either automatic or manual) event. The value of the `commit` field will be set based on the "isAutocommit" setting in the provider configuration.
+
+  The `OrderCreated` and `OrderFulfilled` handlers are deprecated. They will be removed on August 23, along with their corresponding webhooks. For now, both flows (`OrderCreated` -> `OrderFulfilled` and `OrderConfirmed`) are supported.
+
+  **Actions needed**:
+
+  The only scenario where you, as the user, may need to do something regarding this release is the following:
+
+  1. You created an order that still needs to be fulfilled (therefore, the corresponding AvaTax transaction is not committed).
+  2. You are planning to fulfill the order after August 23 (which is the date when we will complete the migration).
+
+  In that case, **remember you will not be able to commit the transaction by fulfilling the order in Saleor**. In the new flow, the transactions are committed in AvaTax while confirming the Saleor order, based on the "isAutocommit" flag. What you have to do is the following:
+
+  1. Make sure "isAutocommit" is set to true.
+  2. Trigger the `OrderConfirmed` event (either by [`orderConfirm` mutation](https://docs.saleor.io/docs/3.x/api-reference/orders/mutations/order-confirm) or in the Dashboard).
+
+  The AvaTax transaction created on the `OrderCreated` event should be updated with `commit: true`.
+
 ## 1.12.1
 
 ### Patch Changes
