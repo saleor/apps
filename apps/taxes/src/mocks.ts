@@ -6,6 +6,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
     id: "VXNlcjoyMDg0NTEwNDEw",
     email: "happy.customer@saleor.io",
   },
+  number: "1234",
   avataxEntityCode: null,
   created: "2023-05-25T09:18:55.203440+00:00",
   status: OrderStatus.Unfulfilled,
