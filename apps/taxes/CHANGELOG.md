@@ -26,6 +26,8 @@
 
   The AvaTax transaction created on the `OrderCreated` event should be updated with `commit: true`.
 
+  You can read more about the webhook flow in the Taxes App and the migration itself in [our documentation](https://saleor-docs-git-taxes-order-created-to-confirmed-saleorcommerce.vercel.app/docs/3.x/developer/app-store/apps/taxes/architecture#migration).
+
 ## 1.12.1
 
 ### Patch Changes
