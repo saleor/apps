@@ -10,7 +10,7 @@
 - 416c92f: Added `ORDER_CANCELLED` webhook handler with an implementation for Avatax. The transactions for corresponding orders in Saleor will be voided in the Avatax dashboard.
 - 416c92f: Started the migration from `OrderCreated` to `OrderConfirmed` webhook event. In the new flow, the provider transactions will be created based on the order confirmation (either automatic or manual) event. The value of the `commit` field will be set based on the "isAutocommit" setting in the provider configuration.
 
-  The `OrderCreated` and `OrderFulfilled` handlers are deprecated. They will be removed on August 23, along with their corresponding webhooks. For now, both flows (`OrderCreated` -> `OrderFulfilled` and `OrderConfirmed`) are supported.
+  The `OrderCreated` and `OrderFulfilled` handlers are deprecated. They will be removed on August 24, along with their corresponding webhooks. For now, both flows (`OrderCreated` -> `OrderFulfilled` and `OrderConfirmed`) are supported.
 
   **Actions needed**:
 
