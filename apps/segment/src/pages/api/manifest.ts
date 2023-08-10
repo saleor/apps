@@ -3,6 +3,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
 import { orderCreatedWebhook } from "./webhooks/order-created";
+import { orderUpdatedWebhook } from "./webhooks/order-updated";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -38,7 +39,10 @@ export default createManifestHandler({
       /*
        * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
        */
-      webhooks: [orderCreatedWebhook.getWebhookManifest(appBaseUrl)],
+      webhooks: [
+        orderCreatedWebhook.getWebhookManifest(appBaseUrl),
+        orderUpdatedWebhook.getWebhookManifest(appBaseUrl),
+      ],
     };
 
     return manifest;

@@ -3,8 +3,8 @@ import { trackingEventFactory } from "@/modules/tracking-events/tracking-events"
 import { saleorApp } from "@/saleor-app";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import {
-  OrderCreatedDocument,
-  OrderCreatedSubscriptionPayloadFragment,
+  OrderUpdatedDocument,
+  OrderUpdatedSubscriptionPayloadFragment,
 } from "../../../../generated/graphql";
 
 export const config = {
@@ -13,15 +13,15 @@ export const config = {
   },
 };
 
-export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedSubscriptionPayloadFragment>({
-  name: "Order Created v1",
-  webhookPath: "api/webhooks/order-created",
-  event: "ORDER_CREATED",
+export const orderUpdatedWebhook = new SaleorAsyncWebhook<OrderUpdatedSubscriptionPayloadFragment>({
+  name: "Order Updated v1",
+  webhookPath: "api/webhooks/order-updated",
+  event: "ORDER_UPDATED",
   apl: saleorApp.apl,
-  query: OrderCreatedDocument,
+  query: OrderUpdatedDocument,
 });
 
-const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = async (
+const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = async (
   req,
   res,
   context,
@@ -36,7 +36,7 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
 
     await segmentEventTracker.trackEvent(
-      trackingEventFactory.createOrderCreatedEvent(payload.order),
+      trackingEventFactory.createOrderUpdatedEvent(payload.order),
     );
 
     return res.status(200).end();
@@ -45,4 +45,4 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
   }
 };
 
-export default orderCreatedWebhook.createHandler(handler);
+export default orderUpdatedWebhook.createHandler(handler);

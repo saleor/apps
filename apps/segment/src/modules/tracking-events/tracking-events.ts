@@ -9,23 +9,49 @@ export type TrackingBaseEvent = {
 };
 
 type OrderCreatedTrackingEvent = TrackingBaseEvent & {
-  type: "order-created";
+  /**
+   * https://segment.com/docs/connections/spec/ecommerce/v2/#core-ordering-overview
+   */
+  type: "Checkout Started";
 };
 
-const stringValidator = z.string().min(1);
+type OrderUpdatedTrackingEvent = TrackingBaseEvent & {
+  /**
+   * https://segment.com/docs/connections/spec/ecommerce/v2/#core-ordering-overview
+   */
+  type: "Order Updated";
+};
+
+const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
+  const stringValidator = z.string().min(1);
+
+  const userId = user?.id ?? userEmail;
+
+  const parsedUserId = stringValidator.parse(userId); // todo throw if doesnt exist
+
+  return parsedUserId;
+};
 
 // todo add more events
 export const trackingEventFactory = {
   createOrderCreatedEvent(orderBase: OrderBaseFragment): OrderCreatedTrackingEvent {
     const { user, userEmail, ...order } = orderBase;
 
-    const userId = user?.id ?? userEmail;
-
-    const parsedUserId = stringValidator.parse(userId); // todo throw if doesnt exist
+    return {
+      type: "Checkout Started",
+      userId: getUserId(orderBase),
+      payload: {
+        userEmail: orderBase.user?.email ?? orderBase.userEmail ?? undefined,
+        ...order,
+      },
+    };
+  },
+  createOrderUpdatedEvent(orderBase: OrderBaseFragment): OrderUpdatedTrackingEvent {
+    const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "order-created",
-      userId: parsedUserId,
+      type: "Order Updated",
+      userId: getUserId(orderBase),
       payload: {
         userEmail: orderBase.user?.email ?? orderBase.userEmail ?? undefined,
         ...order,
@@ -34,4 +60,4 @@ export const trackingEventFactory = {
   },
 };
 
-export type TrackingSaleorEvent = OrderCreatedTrackingEvent;
+export type TrackingSaleorEvent = OrderCreatedTrackingEvent | OrderUpdatedTrackingEvent;
