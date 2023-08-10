@@ -5,6 +5,7 @@ import packageJson from "../../../package.json";
 import { orderCreatedWebhook } from "./webhooks/order-created";
 import { orderUpdatedWebhook } from "./webhooks/order-updated";
 import { orderCancelledWebhook } from "./webhooks/order-cancelled";
+import { orderRefundedWebhook } from "./webhooks/order-refunded";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -44,6 +45,7 @@ export default createManifestHandler({
         orderCreatedWebhook.getWebhookManifest(appBaseUrl),
         orderUpdatedWebhook.getWebhookManifest(appBaseUrl),
         orderCancelledWebhook.getWebhookManifest(appBaseUrl),
+        orderRefundedWebhook.getWebhookManifest(appBaseUrl),
       ],
     };
 

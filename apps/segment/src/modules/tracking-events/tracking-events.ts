@@ -55,4 +55,15 @@ export const trackingEventFactory = {
       },
     };
   },
+  createOrderRefundedEvent(orderBase: OrderBaseFragment): TrackingBaseEvent {
+    const { user, userEmail, ...order } = orderBase;
+
+    return {
+      type: "Order Refunded",
+      userId: getUserId(orderBase),
+      payload: {
+        ...order,
+      },
+    };
+  },
 };
