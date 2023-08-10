@@ -7,22 +7,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui/next";
 import { ButtonsBox } from "@/modules/ui/buttons-box";
+import { trpcClient } from "@/modules/trpc/trpc-client";
+import { Skeleton } from "@/modules/ui/skeleton";
+import { useDashboardNotification } from "@saleor/apps-shared";
 
 const Schema = RootConfig.Schema.unwrap();
 
 type Shape = z.infer<typeof Schema>;
 
-const SegmentConfigFormBase = (props: { values: Shape }) => {
-  const { control } = useForm({
+const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): void }) => {
+  const { control, handleSubmit } = useForm({
     resolver: zodResolver(Schema),
     defaultValues: props.values,
   });
 
   return (
-    <Box as="form">
+    <Box as="form" onSubmit={handleSubmit(props.onSubmit)}>
       <Input
         control={control}
         name="segmentWriteKey"
+        type="password"
         label="Segment write key"
         helperText={
           <Text variant="caption" as="p" marginTop={2}>
@@ -41,7 +45,29 @@ const SegmentConfigFormBase = (props: { values: Shape }) => {
 };
 
 export const SegmentConfigForm = () => {
-  // todo fetch from trpc
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
-  return <SegmentConfigFormBase values={{ segmentWriteKey: "" }} />;
+  const { data: config, isLoading, refetch } = trpcClient.configuration.getConfig.useQuery();
+  const { mutate } = trpcClient.configuration.setConfig.useMutation({
+    onSuccess() {
+      notifySuccess("Configuration saved");
+      refetch();
+    },
+    onError() {
+      notifyError("Error saving configuration");
+    },
+  });
+
+  if (isLoading) {
+    return <Skeleton.Section />;
+  }
+
+  return (
+    <SegmentConfigFormBase
+      values={{ segmentWriteKey: config?.segmentWriteKey ?? "" }}
+      onSubmit={(values) => {
+        mutate(values.segmentWriteKey);
+      }}
+    />
+  );
 };

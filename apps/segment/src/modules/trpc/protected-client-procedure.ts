@@ -111,6 +111,7 @@ export const protectedClientProcedure = procedure
         apiClient: client,
         appToken: ctx.appToken,
         saleorApiUrl: ctx.saleorApiUrl,
+        appId: ctx.appId!,
       },
     });
   });

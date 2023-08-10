@@ -31,4 +31,8 @@ export class AppConfig {
 
     return this;
   }
+
+  getConfig() {
+    return this.rootData;
+  }
 }
