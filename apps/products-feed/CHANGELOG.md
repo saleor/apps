@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 1.11.1
+
+### Patch Changes
+
+- bb504d9: Fixed error on loading configuration created in the previous version of the app.
+- bb504d9: Fixed issue with saving changes in the title template form.
+- bb504d9: Improved error logging in the tRPC API.
+
 ## 1.11.0
 
 ### Minor Changes
