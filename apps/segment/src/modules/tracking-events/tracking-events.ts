@@ -66,4 +66,15 @@ export const trackingEventFactory = {
       },
     };
   },
+  createOrderCompletedEvent(orderBase: OrderBaseFragment): TrackingBaseEvent {
+    const { user, userEmail, ...order } = orderBase;
+
+    return {
+      type: "Order Completed",
+      userId: getUserId(orderBase),
+      payload: {
+        ...order,
+      },
+    };
+  },
 };

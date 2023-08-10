@@ -3,8 +3,8 @@ import { trackingEventFactory } from "@/modules/tracking-events/tracking-events"
 import { saleorApp } from "@/saleor-app";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import {
-  OrderRefundedDocument,
-  OrderRefundedSubscriptionPayloadFragment,
+  OrderFullyPaidDocument,
+  OrderFullyPaidSubscriptionPayloadFragment,
 } from "../../../../generated/graphql";
 
 export const config = {
@@ -13,16 +13,16 @@ export const config = {
   },
 };
 
-export const orderRefundedWebhook =
-  new SaleorAsyncWebhook<OrderRefundedSubscriptionPayloadFragment>({
-    name: "Order Refunded v1",
-    webhookPath: "api/webhooks/order-refunded",
-    event: "ORDER_REFUNDED",
+export const orderFullyPaidWebhook =
+  new SaleorAsyncWebhook<OrderFullyPaidSubscriptionPayloadFragment>({
+    name: "Order Fully Paid  v1",
+    webhookPath: "api/webhooks/order-fully-paid",
+    event: "ORDER_FULLY_PAID",
     apl: saleorApp.apl,
-    query: OrderRefundedDocument,
+    query: OrderFullyPaidDocument,
   });
 
-const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> = async (
+const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> = async (
   req,
   res,
   context,
@@ -37,7 +37,7 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
 
     await segmentEventTracker.trackEvent(
-      trackingEventFactory.createOrderRefundedEvent(payload.order),
+      trackingEventFactory.createOrderCompletedEvent(payload.order),
     );
 
     return res.status(200).end();
@@ -46,4 +46,4 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
   }
 };
 
-export default orderRefundedWebhook.createHandler(handler);
+export default orderFullyPaidWebhook.createHandler(handler);

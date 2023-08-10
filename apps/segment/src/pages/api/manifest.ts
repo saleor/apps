@@ -6,6 +6,7 @@ import { orderCreatedWebhook } from "./webhooks/order-created";
 import { orderUpdatedWebhook } from "./webhooks/order-updated";
 import { orderCancelledWebhook } from "./webhooks/order-cancelled";
 import { orderRefundedWebhook } from "./webhooks/order-refunded";
+import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -17,6 +18,7 @@ export default createManifestHandler({
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
       /*
+       * TODO: ADD LOGO
        * brand: {
        *   logo: {
        *     default: `${apiBaseURL}/logo.png`,
@@ -34,7 +36,7 @@ export default createManifestHandler({
       id: "saleor.app.segmentio",
       name: "Segment.io",
       permissions: ["MANAGE_ORDERS"],
-      requiredSaleorVersion: ">=3.10 <4",
+      requiredSaleorVersion: ">=3.14 <4",
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
@@ -46,6 +48,7 @@ export default createManifestHandler({
         orderUpdatedWebhook.getWebhookManifest(appBaseUrl),
         orderCancelledWebhook.getWebhookManifest(appBaseUrl),
         orderRefundedWebhook.getWebhookManifest(appBaseUrl),
+        orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
       ],
     };
 

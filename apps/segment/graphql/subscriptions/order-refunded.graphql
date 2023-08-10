@@ -1,4 +1,4 @@
-fragment OrderRefundedSubscriptionPayload on OrderCancelled {
+fragment OrderRefundedSubscriptionPayload on OrderRefunded {
   order {
       ...OrderBase
     }
