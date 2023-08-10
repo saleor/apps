@@ -35,6 +35,8 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
 
   const segmentKey = config.getConfig()?.segmentWriteKey;
 
+  console.log(payload);
+
   if (!segmentKey) {
     return res.status(200).end(); // not configured
   }

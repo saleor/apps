@@ -1,34 +1,34 @@
+import { z } from "zod";
 import { OrderBaseFragment } from "../../../generated/graphql";
 
 export type TrackingBaseEvent = {
   type: string;
   userId: string;
-  userEmail: string;
+  userEmail?: string;
   payload: Record<string, unknown>;
 };
 
 type OrderCreatedTrackingEvent = TrackingBaseEvent & {
   type: "order-created";
-  payload: {
-    orderId: string;
-    channelId: string;
-    channelSlug: string;
-  };
 };
+
+const stringValidator = z.string().min(1);
 
 // todo add more events
 export const trackingEventFactory = {
   createOrderCreatedEvent(orderBase: OrderBaseFragment): OrderCreatedTrackingEvent {
+    const { user, userEmail, ...order } = orderBase;
+
+    const userId = user?.id ?? userEmail;
+
+    const parsedUserId = stringValidator.parse(userId); // todo throw if doesnt exist
+
     return {
       type: "order-created",
-      // todo verify identity at this point, is possible to have this empty?
-      userId: orderBase.user?.id ?? orderBase.userEmail,
+      userId: parsedUserId,
       payload: {
-        orderId: orderBase.id,
-        channelId: orderBase.channel.id,
-        channelSlug: orderBase.channel.slug,
-        channelName: orderBase.channel.name,
-        userEmail: orderBase.user?.email ?? orderBase.userEmail,
+        userEmail: orderBase.user?.email ?? orderBase.userEmail ?? undefined,
+        ...order,
       },
     };
   },
