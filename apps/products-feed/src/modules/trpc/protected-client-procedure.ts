@@ -3,14 +3,15 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { createLogger, logger } from "@saleor/apps-shared";
+import { createLogger } from "@saleor/apps-shared";
 import { GraphqlClientFactory } from "../../lib/create-graphq-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
+import { attachLogger } from "./middlewares";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
-  logger.debug("attachAppToken middleware");
+  const logger = createLogger({ name: "attachAppToken" });
 
   if (!ctx.saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
@@ -21,6 +22,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
     });
   }
 
+  logger.debug("Getting auth data");
   const authData = await saleorApp.apl.get(ctx.saleorApiUrl);
 
   if (!authData) {
@@ -31,6 +33,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
       message: "Missing auth data",
     });
   }
+  logger.debug("Auth data found, attaching it to the context");
 
   return next({
     ctx: {
@@ -42,12 +45,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
 });
 
 const validateClientToken = middleware(async ({ ctx, next, meta }) => {
-  logger.debug(
-    {
-      permissions: meta?.requiredClientPermissions,
-    },
-    "Calling validateClientToken middleware with permissions required"
-  );
+  const logger = createLogger({ name: "validateClientToken" });
 
   if (!ctx.token) {
     throw new TRPCError({
@@ -71,29 +69,27 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
     });
   }
 
-  if (!ctx.ssr) {
-    try {
-      logger.debug("trying to verify JWT token from frontend");
-      logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
+  logger.debug(
+    {
+      permissions: meta?.requiredClientPermissions,
+    },
+    "Calling validateClientToken middleware with permissions required",
+  );
 
-      await verifyJWT({
-        appId: ctx.appId,
-        token: ctx.token,
-        saleorApiUrl: ctx.saleorApiUrl,
-        requiredPermissions: meta?.requiredClientPermissions ?? [],
-      });
-    } catch (e) {
-      logger.debug("JWT verification failed, throwing");
-      throw new ProtectedHandlerError("JWT verification failed: ", "JWT_VERIFICATION_FAILED");
-    }
+  try {
+    await verifyJWT({
+      appId: ctx.appId,
+      token: ctx.token,
+      saleorApiUrl: ctx.saleorApiUrl,
+      requiredPermissions: meta?.requiredClientPermissions ?? [],
+    });
+  } catch (e) {
+    logger.debug("JWT verification failed, throwing");
+    throw new ProtectedHandlerError("JWT verification failed: ", "JWT_VERIFICATION_FAILED");
   }
 
-  return next({
-    ctx: {
-      ...ctx,
-      saleorApiUrl: ctx.saleorApiUrl,
-    },
-  });
+  logger.debug("Token verified");
+  return next();
 });
 
 /**
@@ -103,11 +99,12 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  * otherwise jwks validation will fail (if createCaller used)
  */
 export const protectedClientProcedure = procedure
+  .use(attachLogger)
   .use(attachAppToken)
   .use(validateClientToken)
-  .use(async ({ ctx, next, path, type }) => {
+  .use(async ({ ctx, next }) => {
     const client = GraphqlClientFactory.fromAuthData({
-      token: ctx.appToken!,
+      token: ctx.appToken,
       saleorApiUrl: ctx.saleorApiUrl,
     });
 
@@ -125,12 +122,6 @@ export const protectedClientProcedure = procedure
 
           return metadata ? AppConfig.parse(metadata) : new AppConfig();
         },
-        logger: createLogger({
-          appId: ctx.appId,
-          apiUrl: ctx.saleorApiUrl,
-          type,
-          path,
-        }),
       },
     });
   });
