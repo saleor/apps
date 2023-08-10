@@ -21,7 +21,7 @@
     "@sentry/nextjs": "7.55.2",
     "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.4",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "dot-object": "^2.1.4",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
