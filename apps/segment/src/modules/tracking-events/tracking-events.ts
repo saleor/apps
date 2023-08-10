@@ -4,22 +4,7 @@ import { OrderBaseFragment } from "../../../generated/graphql";
 export type TrackingBaseEvent = {
   type: string;
   userId: string;
-  userEmail?: string;
   payload: Record<string, unknown>;
-};
-
-type OrderCreatedTrackingEvent = TrackingBaseEvent & {
-  /**
-   * https://segment.com/docs/connections/spec/ecommerce/v2/#core-ordering-overview
-   */
-  type: "Checkout Started";
-};
-
-type OrderUpdatedTrackingEvent = TrackingBaseEvent & {
-  /**
-   * https://segment.com/docs/connections/spec/ecommerce/v2/#core-ordering-overview
-   */
-  type: "Order Updated";
 };
 
 const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
@@ -32,32 +17,42 @@ const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
   return parsedUserId;
 };
 
-// todo add more events
+/**
+ * Semantic events from Segment:
+ * https://segment.com/docs/connections/spec/ecommerce/v2/
+ */
 export const trackingEventFactory = {
-  createOrderCreatedEvent(orderBase: OrderBaseFragment): OrderCreatedTrackingEvent {
+  createOrderCreatedEvent(orderBase: OrderBaseFragment): TrackingBaseEvent {
     const { user, userEmail, ...order } = orderBase;
 
     return {
       type: "Checkout Started",
       userId: getUserId(orderBase),
       payload: {
-        userEmail: orderBase.user?.email ?? orderBase.userEmail ?? undefined,
         ...order,
       },
     };
   },
-  createOrderUpdatedEvent(orderBase: OrderBaseFragment): OrderUpdatedTrackingEvent {
+  createOrderUpdatedEvent(orderBase: OrderBaseFragment): TrackingBaseEvent {
     const { user, userEmail, ...order } = orderBase;
 
     return {
       type: "Order Updated",
       userId: getUserId(orderBase),
       payload: {
-        userEmail: orderBase.user?.email ?? orderBase.userEmail ?? undefined,
+        ...order,
+      },
+    };
+  },
+  createOrderCancelledEvent(orderBase: OrderBaseFragment): TrackingBaseEvent {
+    const { user, userEmail, ...order } = orderBase;
+
+    return {
+      type: "Order Cancelled",
+      userId: getUserId(orderBase),
+      payload: {
         ...order,
       },
     };
   },
 };
-
-export type TrackingSaleorEvent = OrderCreatedTrackingEvent | OrderUpdatedTrackingEvent;

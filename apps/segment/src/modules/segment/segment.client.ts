@@ -17,13 +17,8 @@ export class SegmentClient {
     });
   }
 
-  // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#identify
-  identifyUser() {
-    // todo - where to use it
-  }
-
   // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#track
-  track(event: Pick<TrackParams, "properties" | "event"> & { userId: string; userEmail: string }) {
+  track(event: Pick<TrackParams, "properties" | "event"> & { userId: string }) {
     this.client.track({
       ...event,
       timestamp: new Date(),
