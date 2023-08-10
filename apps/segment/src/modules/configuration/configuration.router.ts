@@ -1,9 +1,8 @@
+import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
-import { RootConfig } from "./schemas/root-config.schema";
-import { createLogger } from "@saleor/apps-shared";
 
 const logger = createLogger({ name: "configuration.router" });
 
