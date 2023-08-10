@@ -23,12 +23,12 @@ export const trackingEventFactory = {
       type: "order-created",
       // todo verify identity at this point, is possible to have this empty?
       userId: orderBase.user?.id ?? orderBase.userEmail,
-      userEmail: orderBase.user?.email ?? orderBase.userEmail,
       payload: {
         orderId: orderBase.id,
         channelId: orderBase.channel.id,
         channelSlug: orderBase.channel.slug,
         channelName: orderBase.channel.name,
+        userEmail: orderBase.user?.email ?? orderBase.userEmail,
       },
     };
   },

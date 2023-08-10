@@ -2,6 +2,7 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
+import { orderCreatedWebhook } from "./webhooks/order-created";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -28,7 +29,7 @@ export default createManifestHandler({
       ],
       homepageUrl: "https://github.com/saleor/apps",
       id: "saleor.app.segmentio",
-      name: "CMS",
+      name: "Segment.io",
       permissions: ["MANAGE_ORDERS"],
       requiredSaleorVersion: ">=3.10 <4",
       supportUrl: "https://github.com/saleor/apps/discussions",
@@ -37,7 +38,7 @@ export default createManifestHandler({
       /*
        * TODO optimize - create webhooks dynamically, otherwise app will generate traffic not being configured first
        */
-      webhooks: [],
+      webhooks: [orderCreatedWebhook.getWebhookManifest(appBaseUrl)],
     };
 
     return manifest;

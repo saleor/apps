@@ -31,7 +31,11 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
         helperText={
           <Text variant="caption" as="p" marginTop={2}>
             Read about write keys in{" "}
-            <TextLink size="small" href="https://segment.com/docs/connections/find-writekey/">
+            <TextLink
+              newTab
+              size="small"
+              href="https://segment.com/docs/connections/find-writekey/"
+            >
               Segment documentation
             </TextLink>
           </Text>
