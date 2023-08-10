@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.2.0
+
+### Minor Changes
+
+- fe767a4: Changed public (manifest) name app to be "CMS" (previously it was "CMS 2", since two apps existed at the same time)
+
 ## 2.1.2
 
 ### Patch Changes
