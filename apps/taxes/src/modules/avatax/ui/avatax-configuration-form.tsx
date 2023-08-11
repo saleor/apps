@@ -14,9 +14,9 @@ import {
 } from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";
 import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-credentials-fragment";
-import { AvataxConfigurationTaxesFragment } from "./avatax-configuration-taxes-fragment";
-import { HelperText } from "./form-helper-text";
+import { AvataxConfigurationSettingsFragment } from "./avatax-configuration-settings-fragment";
 import { useAvataxConfigurationStatus } from "./configuration-status";
+import { HelperText } from "./form-helper-text";
 
 type AvataxConfigurationFormProps = {
   submit: {
@@ -76,12 +76,12 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
             isLoading={props.validateCredentials.isLoading}
           />
           <Divider marginY={8} />
+          <AvataxConfigurationSettingsFragment />
+          <Divider marginY={8} />
           <AvataxConfigurationAddressFragment
             onValidateAddress={props.validateAddress.handleFn}
             isLoading={props.validateAddress.isLoading}
           />
-          <Divider marginY={8} />
-          <AvataxConfigurationTaxesFragment />
           <Divider marginY={8} />
 
           <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
