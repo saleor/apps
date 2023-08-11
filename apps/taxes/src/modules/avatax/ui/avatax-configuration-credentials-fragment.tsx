@@ -82,7 +82,24 @@ export const AvataxConfigurationCredentialsFragment = (
             your Avalara Dashboard.
           </HelperText>
         </div>
-
+        <div>
+          <Input
+            control={control}
+            name="companyCode"
+            label="Company name"
+            helperText={formState.errors.companyCode?.message}
+          />
+          <HelperText>
+            When not provided, the default company will be used.{" "}
+            <TextLink
+              newTab
+              href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
+            >
+              Read more
+            </TextLink>{" "}
+            about company codes.
+          </HelperText>
+        </div>
         <AppToggle
           control={control}
           label="Use sandbox mode"

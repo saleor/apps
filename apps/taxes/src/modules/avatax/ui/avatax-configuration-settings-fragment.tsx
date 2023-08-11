@@ -55,25 +55,6 @@ export const AvataxConfigurationSettingsFragment = () => {
         <Input
           disabled={disabled}
           control={control}
-          name="companyCode"
-          label="Company name"
-          helperText={formState.errors.companyCode?.message}
-        />
-        <HelperText>
-          When not provided, the default company will be used.{" "}
-          <TextLink
-            newTab
-            href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
-          >
-            Read more
-          </TextLink>{" "}
-          about company codes.
-        </HelperText>
-      </div>
-      <div>
-        <Input
-          disabled={disabled}
-          control={control}
           name="shippingTaxCode"
           label="Shipping tax code"
           helperText={formState.errors.shippingTaxCode?.message}
