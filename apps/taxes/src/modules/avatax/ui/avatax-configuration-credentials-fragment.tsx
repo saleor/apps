@@ -86,11 +86,11 @@ export const AvataxConfigurationCredentialsFragment = (
           <Input
             control={control}
             name="companyCode"
-            label="Company name"
+            label="Company code"
             helperText={formState.errors.companyCode?.message}
           />
           <HelperText>
-            When not provided, the default company will be used.{" "}
+            When not provided, the default company code will be used.{" "}
             <TextLink
               newTab
               href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
@@ -105,14 +105,14 @@ export const AvataxConfigurationCredentialsFragment = (
           label="Use sandbox mode"
           helperText={
             <HelperText>
-              Toggling between{" "}
+              Choose between
               <TextLink
                 href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/authentication-in-avatax/sandbox-vs-production/"
                 newTab
               >
                 <q>Production</q> and <q>Sandbox</q>
               </TextLink>{" "}
-              environment.
+              environment according to your credentials.
             </HelperText>
           }
           name="isSandbox"
