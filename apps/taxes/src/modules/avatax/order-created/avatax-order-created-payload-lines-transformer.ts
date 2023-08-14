@@ -31,7 +31,7 @@ export class AvataxOrderCreatedPayloadLinesTransformer {
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      // * In Avatax, shipping is a regular line
+      // * In AvaTax, shipping is a regular line
       const shippingLine: LineItemModel = {
         amount: order.shippingPrice.gross.amount,
         taxIncluded: true,

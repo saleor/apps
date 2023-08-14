@@ -11,7 +11,7 @@ const MOCK_AVATAX_CONFIG: AvataxConfig = {
   isDocumentRecordingEnabled: true,
   isAutocommit: false,
   isSandbox: true,
-  name: "Avatax-1",
+  name: "AvaTax-1",
   shippingTaxCode: "FR000000",
   address: {
     country: "US",

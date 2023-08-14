@@ -48,7 +48,7 @@ export class AvataxOrderCreatedPayloadTransformer {
         code,
         customerCode:
           order.user?.id ??
-          "" /* In Saleor Avatax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
+          "" /* In Saleor AvaTax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
         companyCode: avataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,

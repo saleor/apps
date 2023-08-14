@@ -22,7 +22,7 @@ export const AvataxConfigurationSettingsFragment = () => {
         helperText={
           <HelperText>
             When turned off, the document type will always be set to <i>SalesOrder</i>. This means
-            the transactions will not be recorded in Avatax. Read more{" "}
+            the transactions will not be recorded in AvaTax. Read more{" "}
             <TextLink
               href="https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/disable-document-recording/"
               newTab
@@ -60,9 +60,9 @@ export const AvataxConfigurationSettingsFragment = () => {
           helperText={formState.errors.shippingTaxCode?.message}
         />
         <HelperText disabled={disabled}>
-          Tax code that for the shipping line sent to Avatax.{" "}
+          Tax code that for the shipping line sent to AvaTax.{" "}
           <TextLink newTab href="https://taxcode.avatax.avalara.com">
-            Must match Avatax tax codes format.
+            Must match AvaTax tax codes format.
           </TextLink>
         </HelperText>
       </div>

@@ -49,7 +49,7 @@ export const avataxConnectionRouter = router({
 
     await ctx.connectionService.verifyConnections();
 
-    logger.info("Avatax connections were successfully verified");
+    logger.info("AvaTax connections were successfully verified");
 
     return { ok: true };
   }),
@@ -62,7 +62,7 @@ export const avataxConnectionRouter = router({
 
     const result = await ctx.connectionService.getById(input.id);
 
-    logger.info(`Avatax configuration with an id: ${result.id} was successfully retrieved`);
+    logger.info(`AvaTax configuration with an id: ${result.id} was successfully retrieved`);
 
     return result;
   }),
@@ -76,7 +76,7 @@ export const avataxConnectionRouter = router({
 
     const result = await ctx.connectionService.create(input.value);
 
-    logger.info("Avatax configuration was successfully created");
+    logger.info("AvaTax configuration was successfully created");
 
     return result;
   }),
@@ -92,7 +92,7 @@ export const avataxConnectionRouter = router({
 
       const result = await ctx.connectionService.delete(input.id);
 
-      logger.info(`Avatax configuration with an id: ${input.id} was deleted`);
+      logger.info(`AvaTax configuration with an id: ${input.id} was deleted`);
 
       return result;
     }),
@@ -108,7 +108,7 @@ export const avataxConnectionRouter = router({
 
       const result = await ctx.connectionService.update(input.id, input.value);
 
-      logger.info(`Avatax configuration with an id: ${input.id} was successfully updated`);
+      logger.info(`AvaTax configuration with an id: ${input.id} was successfully updated`);
 
       return result;
     }),
@@ -137,7 +137,7 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidationService.validate(input.id, input.value);
 
-      logger.info(`Avatax address was successfully validated`);
+      logger.info(`AvaTax address was successfully validated`);
 
       return result;
     }),
@@ -157,7 +157,7 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidation.validate(input.value.address);
 
-      logger.info(`Avatax address was successfully validated`);
+      logger.info(`AvaTax address was successfully validated`);
 
       return result;
     }),
@@ -184,7 +184,7 @@ export const avataxConnectionRouter = router({
 
       await authValidation.validate(input.id, input.value);
 
-      logger.info(`Avatax client was successfully validated`);
+      logger.info(`AvaTax client was successfully validated`);
     }),
   createValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema }))
@@ -200,7 +200,7 @@ export const avataxConnectionRouter = router({
 
       const result = await authValidation.validate();
 
-      logger.info(`Avatax client was successfully validated`);
+      logger.info(`AvaTax client was successfully validated`);
 
       return result;
     }),

@@ -11,7 +11,7 @@ const providerConfig = {
     icon: TaxJarIcon,
   },
   avatax: {
-    label: "Avatax",
+    label: "AvaTax",
     icon: AvataxIcon,
   },
   stripeTax: {

@@ -16,7 +16,7 @@ export class AvataxAuthValidationService {
       const result = await this.avataxClient.ping();
 
       if (!result.authenticated) {
-        throw new Error("Invalid Avatax credentials.");
+        throw new Error("Invalid AvaTax credentials.");
       }
     } catch (error) {
       const errorResolver = new AvataxValidationErrorResolver();

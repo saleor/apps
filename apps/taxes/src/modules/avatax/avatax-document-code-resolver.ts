@@ -15,7 +15,7 @@ export class AvataxDocumentCodeResolver {
     const code = avataxDocumentCode ?? orderId;
 
     /*
-     * The requirement from Avatax API is that document code is a string that must be between 1 and 20 characters long.
+     * The requirement from AvaTax API is that document code is a string that must be between 1 and 20 characters long.
      * // todo: document that its sliced
      */
     return code.slice(0, 20);

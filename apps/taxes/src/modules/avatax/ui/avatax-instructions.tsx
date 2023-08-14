@@ -5,7 +5,7 @@ import { Section } from "../../ui/app-section";
 export const AvataxInstructions = () => {
   return (
     <Section.Description
-      title="Avatax Configuration"
+      title="AvaTax Configuration"
       description={
         <>
           <Text as="p" marginBottom={8}>
@@ -49,7 +49,7 @@ export const AvataxInstructions = () => {
           </Text>
           <Text as="p" marginBottom={4}>
             Verifying the Address will display suggestions that reflect the resolution of the
-            address by Avatax address validation service. Applying the suggestions is not required
+            address by AvaTax address validation service. Applying the suggestions is not required
             but recommended. If the address is not valid, the calculation of taxes will fail.
           </Text>
         </>

@@ -35,7 +35,7 @@ class ActiveTaxProviderService implements ProviderWebhookService {
       }
 
       case "avatax": {
-        this.logger.debug("Selecting Avatax as tax provider");
+        this.logger.debug("Selecting AvaTax as tax provider");
         this.client = new AvataxWebhookService(providerConnection.config, this.authData);
         break;
       }
