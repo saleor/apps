@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.2.1
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 2.2.0
 
 ### Minor Changes

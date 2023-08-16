@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-emails-and-messages",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",

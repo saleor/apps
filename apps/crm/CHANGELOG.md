@@ -1,5 +1,11 @@
 # saleor-app-crm
 
+## 1.7.4
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 1.7.3
 
 ### Patch Changes
