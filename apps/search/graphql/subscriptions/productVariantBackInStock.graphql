@@ -1,0 +1,16 @@
+subscription ProductVariantBackInStock {
+  event {
+    __typename
+    ... on ProductVariantBackInStock {
+      __typename
+      productVariant {
+        ...ProductVariantWebhookPayload
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}

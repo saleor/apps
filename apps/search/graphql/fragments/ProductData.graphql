@@ -24,6 +24,10 @@ fragment ProductData on Product {
   thumbnail {
     url
   }
+  media{
+    url
+    type
+  }
   attributes {
     ...ProductAttributesData
   }

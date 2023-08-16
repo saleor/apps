@@ -14,33 +14,6 @@ export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
         Once the App is configured, you will be able to perform initial index of your existing
         Saleor database.
       </Text>
-      <Text as="p">
-        The app supports following{" "}
-        <TextLink href={SALEOR_EVENTS_DOCS_URL} newTab>
-          events
-        </TextLink>{" "}
-        that will synchronize Algolia in the background:
-      </Text>
-      <ul>
-        <li>
-          <code>- PRODUCT_CREATED</code>
-        </li>
-        <li>
-          <code>- PRODUCT_UPDATED</code>
-        </li>
-        <li>
-          <code>- PRODUCT_DELETED</code>
-        </li>
-        <li>
-          <code>- PRODUCT_VARIANT_CREATED</code>
-        </li>
-        <li>
-          <code>- PRODUCT_VARIANT_UPDATED</code>
-        </li>
-        <li>
-          <code>- PRODUCT_VARIANT_DELETED</code>
-        </li>
-      </ul>
     </Box>
   );
 };
