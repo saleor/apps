@@ -1,0 +1,28 @@
+{
+  "extends": ["//"],
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "env": [
+        "APL",
+        "APP_DEBUG",
+        "NODE_ENV",
+        "SECRET_KEY",
+        "ALLOWED_DOMAIN_PATTERN",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "NEXT_PUBLIC_VERCEL_ENV",
+        "VERCEL_URL",
+        "PORT",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_DSN",
+        "SENTRY_AUTH_TOKEN",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SENTRY_ENVIRONMENT",
+        "APP_IFRAME_BASE_URL",
+        "APP_API_BASE_URL"
+      ]
+    }
+  }
+}
