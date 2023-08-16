@@ -1,21 +1,25 @@
-import { Accordion, Box, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Button, Text } from "@saleor/macaw-ui/next";
 import { EventDeliveryStatusEnum } from "../../generated/graphql";
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 import { SemanticChip } from "@saleor/apps-ui";
+import { useWebhooksUpdateMutation } from "../lib/useWebhooksUpdate";
 
 export const WebhooksStatus = () => {
-  const { data: webhooksData } = useWebhooksStatus();
+  const { data } = useWebhooksStatus();
+  const updateWebhooksMutation = useWebhooksUpdateMutation();
 
-  if (!webhooksData) {
+  if (!data) {
     return <Text>Loading...</Text>;
   }
+
+  const webhooksData = data.webhooks;
 
   return (
     <Box>
       <Accordion display={"grid"} gap={1.5}>
         {webhooksData.map((webhook) => {
           const failedEventDeliveries = webhook.eventDeliveries?.edges?.filter(
-            (e) => e.node.status === EventDeliveryStatusEnum.Failed
+            (e) => e.node.status === EventDeliveryStatusEnum.Failed,
           );
 
           const hasFailedDeliveries = failedEventDeliveries && failedEventDeliveries.length > 0;
@@ -87,6 +91,24 @@ export const WebhooksStatus = () => {
           );
         })}
       </Accordion>
+      {data.isUpdateNeeded && (
+        <Box
+          borderTopStyle="solid"
+          borderWidth={1}
+          borderColor="neutralDefault"
+          display="flex"
+          gap={4}
+          flexDirection="row"
+          justifyContent="flex-end"
+          alignItems="center"
+          paddingTop={4}
+        >
+          <Text variant="caption">
+            New app version installed. Update the webhooks and run product import again.
+          </Text>
+          <Button onClick={() => updateWebhooksMutation.mutate()}>Update webhooks</Button>
+        </Box>
+      )}
     </Box>
   );
 };
