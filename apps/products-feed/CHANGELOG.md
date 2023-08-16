@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.11.2
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 1.11.1
 
 ### Patch Changes

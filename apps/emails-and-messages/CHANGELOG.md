@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.9.6
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 1.9.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.15.4
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 1.15.3
 
 ### Patch Changes

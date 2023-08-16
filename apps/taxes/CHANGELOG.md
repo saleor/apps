@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.13.1
+
+### Patch Changes
+
+- 3002354: Added error logging for exceptions thrown at tRPC routes.
+
 ## 1.13.0
 
 ### Minor Changes
