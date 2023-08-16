@@ -35,9 +35,9 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
   const { authData, payload } = context;
 
   if (!payload.order) {
-    Sentry.captureException(new Error("Order not found in payload"));
+    Sentry.captureException(new Error("Order not found in payload. This should not happen."));
 
-    return res.status(400).end();
+    return res.status(200).end();
   }
 
   try {
