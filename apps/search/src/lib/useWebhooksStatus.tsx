@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 import { useCallback } from "react";
-import { OwnWebhookFragment } from "../../generated/graphql";
+import { WebhooksStatusResponse } from "../pages/api/webhooks-status";
 
 export const useWebhooksStatus = () => {
   const fetch: typeof window.fetch = useAuthenticatedFetch();
@@ -13,7 +13,7 @@ export const useWebhooksStatus = () => {
      */
   }, []);
 
-  return useQuery<OwnWebhookFragment[]>({
+  return useQuery<WebhooksStatusResponse>({
     queryKey: ["webhooks-status"],
     queryFn: fetchFn,
   });

@@ -1,6 +1,7 @@
 fragment OwnWebhook on Webhook {
   id
   isActive
+  name
   asyncEvents {
     name
     eventType

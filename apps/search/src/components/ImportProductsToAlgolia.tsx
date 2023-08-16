@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { useConfiguration } from "../lib/configuration";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
-import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 
 const BATCH_SIZE = 100;
 

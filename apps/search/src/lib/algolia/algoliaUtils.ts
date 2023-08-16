@@ -15,7 +15,7 @@ type PartialChannelListing = {
 
 export function channelListingToAlgoliaIndexId(
   channelListing: PartialChannelListing,
-  indexNamePrefix: string | undefined
+  indexNamePrefix: string | undefined,
 ) {
   /**
    * Index name should not start with . (dot)
@@ -113,6 +113,10 @@ export function productAndVariantToAlgolia({
 
   const listing = variant.channelListings?.find((l) => l.channel.slug === channel);
 
+  const inStock = !!variant.quantityAvailable;
+
+  const media = variant.product.media?.map((m) => ({ url: m.url, type: m.type })) || [];
+
   const document = {
     objectID: productAndVariantToObjectID(variant),
     productId: product.id,
@@ -121,10 +125,12 @@ export function productAndVariantToAlgolia({
     productName: product.name,
     variantName: variant.name,
     attributes,
+    media,
     description: safeParseJson(product.description),
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: listing?.price?.amount,
+    inStock,
     categories: categoryHierarchicalFacets(variant),
     collections: product.collections?.map((collection) => collection.name) || [],
     metadata: metadataToAlgoliaAttribute(variant.product.metadata),

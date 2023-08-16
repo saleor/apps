@@ -1,6 +1,6 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { FetchOwnWebhooksDocument } from "../../../generated/graphql";
+import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
 import {
@@ -12,6 +12,7 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SearchProvider } from "../../lib/searchProvider";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
+import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
@@ -27,13 +28,18 @@ type FactoryProps = {
   graphqlClientFactory: (saleorApiUrl: string, token: string) => Client;
 };
 
+export type WebhooksStatusResponse = {
+  webhooks: OwnWebhookFragment[];
+  isUpdateNeeded: boolean;
+};
+
 export const webhooksStatusHandlerFactory =
   ({
     settingsManagerFactory,
     webhookActivityTogglerFactory,
     algoliaSearchProviderFactory,
     graphqlClientFactory,
-  }: FactoryProps): NextProtectedApiHandler =>
+  }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
   async (req, res, { authData }) => {
     /**
      * Initialize services
@@ -93,7 +99,14 @@ export const webhooksStatusHandlerFactory =
         return res.status(500).end();
       }
 
-      return res.status(200).json(webhooks);
+      const isUpdateNeeded = isWebhookUpdateNeeded({
+        existingWebhookNames: webhooks.map((w) => w.name),
+      });
+
+      return res.status(200).json({
+        webhooks,
+        isUpdateNeeded,
+      });
     } catch (e) {
       console.error(e);
       return res.status(500).end();
@@ -114,5 +127,5 @@ export default createProtectedHandler(
     },
   }),
   saleorApp.apl,
-  []
+  [],
 );
