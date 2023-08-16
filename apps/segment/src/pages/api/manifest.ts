@@ -30,7 +30,7 @@ export default createManifestHandler({
          */
       ],
       homepageUrl: "https://github.com/saleor/apps",
-      id: "saleor.app.segmentio",
+      id: "saleor.app.segment",
       name: "Twilio Segment",
       permissions: ["MANAGE_ORDERS"],
       requiredSaleorVersion: ">=3.14 <4",
