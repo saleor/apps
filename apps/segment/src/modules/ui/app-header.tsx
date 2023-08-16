@@ -1,3 +1,4 @@
+import { TextLink } from "@saleor/apps-ui";
 import { Breadcrumbs } from "@saleor/apps-ui/src/breadcrumbs";
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
 import { ComponentProps, ReactElement } from "react";
@@ -14,7 +15,16 @@ export const AppHeader = ({ ...props }: Props) => {
       paddingBottom={6}
       {...props}
     >
-      <Text variant="title">Configuration</Text>
+      <Text as="h1" marginBottom={4} variant="title">
+        Configuration
+      </Text>
+      <Text>
+        Read the{" "}
+        <TextLink href="https://docs.saleor.io/docs/3.x/developer/app-store/apps/segment" newTab>
+          docs
+        </TextLink>{" "}
+        to learn more
+      </Text>
     </Box>
   );
 };
