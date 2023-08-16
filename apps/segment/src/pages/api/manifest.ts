@@ -17,14 +17,11 @@ export default createManifestHandler({
       about: "Seamlessly feed Segment with Saleor events",
       appUrl: iframeBaseUrl,
       author: "Saleor Commerce",
-      /*
-       * TODO: ADD LOGO
-       * brand: {
-       *   logo: {
-       *     default: `${apiBaseURL}/logo.png`,
-       *   },
-       * },
-       */
+      brand: {
+        logo: {
+          default: `${apiBaseURL}/logo.png`,
+        },
+      },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       extensions: [
         /**
