@@ -30,6 +30,7 @@ const appWebhooksResponseData: Pick<OperationResult<FetchOwnWebhooksQuery, any>,
     app: {
       webhooks: [
         {
+          name: "W1",
           id: "w1",
           isActive: true,
           asyncEvents: [
@@ -53,6 +54,7 @@ describe("webhooksStatusHandler", () => {
   const webhooksTogglerServiceMock: IWebhookActivityTogglerService = {
     disableOwnWebhooks: vi.fn(),
     enableOwnWebhooks: vi.fn(),
+    recreateOwnWebhooks: vi.fn(),
   };
 
   const algoliaSearchProviderMock: Pick<SearchProvider, "ping"> = {
