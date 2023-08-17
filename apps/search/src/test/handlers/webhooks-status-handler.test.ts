@@ -62,6 +62,7 @@ describe("webhooksStatusHandler", () => {
   const settingsManagerMock: SettingsManager = {
     get: vi.fn(),
     set: vi.fn(),
+    delete: vi.fn(),
   };
 
   let handler: NextProtectedApiHandler;
