@@ -17,7 +17,7 @@
     "@saleor/app-sdk": "0.41.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.118",
-    "@sentry/nextjs": "7.55.2",
+    "@sentry/nextjs": "7.64.0",
     "@urql/exchange-auth": "^2.1.4",
     "clsx": "^1.2.1",
     "graphql": "16.7.1",
