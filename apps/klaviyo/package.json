@@ -19,7 +19,6 @@
     "@saleor/macaw-ui": "0.8.0-pre.118",
     "@sentry/nextjs": "7.55.2",
     "@urql/exchange-auth": "^2.1.4",
-    "clsx": "^1.2.1",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
     "next": "13.4.8",

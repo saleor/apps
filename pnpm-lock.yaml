@@ -509,9 +509,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -666,9 +663,6 @@ importers:
       '@web-std/file':
         specifier: ^3.0.2
         version: 3.0.2
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -796,9 +790,6 @@ importers:
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -938,9 +929,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       fast-xml-parser:
         specifier: ^4.0.15
         version: 4.0.15
@@ -1161,7 +1149,7 @@ importers:
         version: 4.4.8(@types/node@18.15.3)
       vitest:
         specifier: 0.34.1
-        version: 0.34.1
+        version: 0.34.1(jsdom@20.0.3)
 
   apps/segment:
     dependencies:
@@ -1334,9 +1322,6 @@ importers:
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1479,9 +1464,6 @@ importers:
       avatax:
         specifier: ^23.7.0
         version: 23.7.0
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -1737,9 +1719,6 @@ importers:
       '@types/semver':
         specifier: ^7.5.0
         version: 7.5.0
-      clsx:
-        specifier: ^1.2.1
-        version: 1.2.1
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -4445,7 +4424,7 @@ packages:
     dependencies:
       '@babel/core': 7.22.9
       '@babel/helper-annotate-as-pure': 7.22.5
-      '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.22.9)
+      '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.22.5)
       '@babel/helper-environment-visitor': 7.22.5
       '@babel/helper-function-name': 7.22.5
       '@babel/helper-optimise-call-expression': 7.22.5
@@ -4678,7 +4657,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.22.9
-      '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.22.9)
+      '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.22.5)
       '@babel/helper-function-name': 7.22.5
       '@babel/helper-plugin-utils': 7.22.5
     dev: true
@@ -4818,7 +4797,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.22.9
-      '@babel/helper-module-transforms': 7.22.9(@babel/core@7.22.9)
+      '@babel/helper-module-transforms': 7.22.9(@babel/core@7.22.5)
       '@babel/helper-plugin-utils': 7.22.5
       '@babel/helper-simple-access': 7.22.5
     dev: true
@@ -6850,59 +6829,6 @@ packages:
       detect-indent: 6.1.0
       graphql: 16.7.1
       graphql-config: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)
-      inquirer: 8.2.5
-      is-glob: 4.0.3
-      jiti: 1.18.2
-      json-to-pretty-yaml: 1.2.2
-      listr2: 4.0.5
-      log-symbols: 4.1.0
-      micromatch: 4.0.5
-      shell-quote: 1.8.1
-      string-env-interpolation: 1.0.1
-      ts-log: 2.2.5
-      tslib: 2.6.0
-      yaml: 1.10.2
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@types/node'
-      - bufferutil
-      - cosmiconfig-toml-loader
-      - encoding
-      - enquirer
-      - supports-color
-      - utf-8-validate
-    dev: true
-
-  /@graphql-codegen/cli@4.0.1(@babel/core@7.22.9)(graphql@16.7.1):
-    resolution: {integrity: sha512-/H4imnGOl3hoPXLKmIiGUnXpmBmeIClSZie/YHDzD5N59cZlGGJlIOOrUlOTDpJx5JNU1MTQcRjyTToOYM5IfA==}
-    hasBin: true
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@babel/generator': 7.22.9
-      '@babel/template': 7.22.5
-      '@babel/types': 7.22.5
-      '@graphql-codegen/core': 4.0.0(graphql@16.7.1)
-      '@graphql-codegen/plugin-helpers': 5.0.0(graphql@16.7.1)
-      '@graphql-tools/apollo-engine-loader': 8.0.0(graphql@16.7.1)
-      '@graphql-tools/code-file-loader': 8.0.1(@babel/core@7.22.9)(graphql@16.7.1)
-      '@graphql-tools/git-loader': 8.0.1(@babel/core@7.22.9)(graphql@16.7.1)
-      '@graphql-tools/github-loader': 8.0.0(@babel/core@7.22.9)(graphql@16.7.1)
-      '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.7.1)
-      '@graphql-tools/json-file-loader': 8.0.0(graphql@16.7.1)
-      '@graphql-tools/load': 8.0.0(graphql@16.7.1)
-      '@graphql-tools/prisma-loader': 8.0.1(graphql@16.7.1)
-      '@graphql-tools/url-loader': 8.0.0(graphql@16.7.1)
-      '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
-      '@parcel/watcher': 2.1.0
-      '@whatwg-node/fetch': 0.8.8
-      chalk: 4.1.2
-      cosmiconfig: 8.1.3
-      debounce: 1.2.1
-      detect-indent: 6.1.0
-      graphql: 16.7.1
-      graphql-config: 5.0.2(graphql@16.7.1)
       inquirer: 8.2.5
       is-glob: 4.0.3
       jiti: 1.18.2
@@ -16746,16 +16672,6 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /meros@1.3.0:
-    resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
-    engines: {node: '>=13'}
-    peerDependencies:
-      '@types/node': '>=13'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dev: true
-
   /meros@1.3.0(@types/node@18.15.3):
     resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
     engines: {node: '>=13'}
@@ -21033,71 +20949,6 @@ packages:
       rollup: 3.27.0
     optionalDependencies:
       fsevents: 2.3.2
-
-  /vitest@0.34.1:
-    resolution: {integrity: sha512-G1PzuBEq9A75XSU88yO5G4vPT20UovbC/2osB2KEuV/FisSIIsw7m5y2xMdB7RsAGHAfg2lPmp2qKr3KWliVlQ==}
-    engines: {node: '>=v14.18.0'}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@vitest/browser': '*'
-      '@vitest/ui': '*'
-      happy-dom: '*'
-      jsdom: '*'
-      playwright: '*'
-      safaridriver: '*'
-      webdriverio: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
-        optional: true
-      playwright:
-        optional: true
-      safaridriver:
-        optional: true
-      webdriverio:
-        optional: true
-    dependencies:
-      '@types/chai': 4.3.5
-      '@types/chai-subset': 1.3.3
-      '@types/node': 18.15.3
-      '@vitest/expect': 0.34.1
-      '@vitest/runner': 0.34.1
-      '@vitest/snapshot': 0.34.1
-      '@vitest/spy': 0.34.1
-      '@vitest/utils': 0.34.1
-      acorn: 8.10.0
-      acorn-walk: 8.2.0
-      cac: 6.7.14
-      chai: 4.3.7
-      debug: 4.3.4
-      local-pkg: 0.4.3
-      magic-string: 0.30.2
-      pathe: 1.1.1
-      picocolors: 1.0.0
-      std-env: 3.3.3
-      strip-literal: 1.3.0
-      tinybench: 2.5.0
-      tinypool: 0.7.0
-      vite: 4.4.8(@types/node@18.15.3)
-      vite-node: 0.34.1(@types/node@18.15.3)
-      why-is-node-running: 2.2.2
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-    dev: true
 
   /vitest@0.34.1(jsdom@20.0.3):
     resolution: {integrity: sha512-G1PzuBEq9A75XSU88yO5G4vPT20UovbC/2osB2KEuV/FisSIIsw7m5y2xMdB7RsAGHAfg2lPmp2qKr3KWliVlQ==}
