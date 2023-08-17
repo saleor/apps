@@ -5,3 +5,4 @@ export * from "./src/use-dashboard-notification";
 export * from "./src/logger";
 export * from "./src/saleor-version-compatibility-validator";
 export * from "./src/create-graphql-client";
+export * from "./src/metadata-manager";
