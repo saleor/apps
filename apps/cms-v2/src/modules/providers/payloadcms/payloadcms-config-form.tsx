@@ -1,0 +1,217 @@
+import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { useRouter } from "next/router";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
+import { trpcClient } from "../../trpc/trpc-client";
+import { ButtonsBox } from "../../ui/buttons-box";
+
+type FormShape = Omit<PayloadCmsProviderConfig.InputShape, "type">;
+
+type PureFormProps = {
+  defaultValues: FormShape;
+  onSubmit(values: FormShape): void;
+  onDelete?(): void;
+};
+
+/*
+ * todo react on token change, refresh mutation
+ */
+const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
+  const { notifyError } = useDashboardNotification();
+
+  const { control, getValues, setValue, watch, handleSubmit, clearErrors, setError } = useForm({
+    defaultValues: defaultValues,
+    resolver: zodResolver(PayloadCmsProviderConfig.Schema.Input.omit({ type: true })),
+  });
+
+  return (
+    <Box
+      as="form"
+      display={"grid"}
+      gap={4}
+      onSubmit={handleSubmit((vals) => {
+        onSubmit(vals);
+      })}
+    >
+      <Input
+        required
+        control={control}
+        name="configName"
+        label="Configuration name"
+        helperText="Meaningful name that will help you understand it later. E.g. 'staging' or 'prod' "
+      />
+      <Box display={"grid"} gap={4} marginY={4}>
+        <Text variant="heading">Provide connection details</Text>
+        <Input
+          required
+          control={control}
+          name="authToken"
+          type="password"
+          label="JWT Auth Token"
+          helperText="todo"
+        />
+      </Box>
+      <Box display={"grid"} gap={4} marginY={4}>
+        <Text variant="heading">Configure fields mapping</Text>
+        <Select
+          label="Item type"
+          options={[]}
+          name="itemType"
+          control={control}
+          helperText="todo"
+        />
+
+        <React.Fragment>
+          <Text as="p" variant="heading" size="small">
+            Map fields from Saleor to your contentful schema.
+          </Text>
+          <Text as="p" marginTop={2} marginBottom={4}>
+            All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
+            type of <Text variant="bodyStrong">JSON</Text>.
+          </Text>
+          <Box
+            marginBottom={4}
+            display="grid"
+            __gridTemplateColumns={"50% 50%"}
+            borderBottomWidth={1}
+            borderBottomStyle="solid"
+            borderColor="neutralHighlight"
+            padding={2}
+          >
+            <Text variant="caption">Saleor Field</Text>
+            <Text variant="caption">Contentful field</Text>
+          </Box>
+          {SaleorProviderFieldsMappingKeys.map((saleorField) => (
+            // todo extract this table to component
+            <Box
+              display="grid"
+              __gridTemplateColumns={"50% 50%"}
+              padding={2}
+              key={saleorField}
+              alignItems="center"
+            >
+              <Box>
+                <Text as="p" variant="bodyStrong">
+                  {printSaleorProductFields(saleorField)}
+                </Text>
+                <Text variant="caption">
+                  {saleorField === "channels" ? "JSON field" : "Text field"}
+                </Text>
+              </Box>
+              <Select
+                size="small"
+                control={control}
+                name={`productVariantFieldsMapping.${saleorField}`}
+                label="CMS Field"
+                options={fieldsData.map((f) => ({
+                  label: f.label,
+                  value: f.api_key,
+                }))}
+              />
+            </Box>
+          ))}
+        </React.Fragment>
+      </Box>
+      (
+      <ButtonsBox>
+        {onDelete && (
+          <Button onClick={onDelete} variant="tertiary">
+            Delete
+          </Button>
+        )}
+        <Button type="submit">Save</Button>
+      </ButtonsBox>
+      )
+    </Box>
+  );
+};
+
+const AddFormVariant = () => {
+  const { push } = useRouter();
+  const { notifySuccess } = useDashboardNotification();
+
+  return (
+    <PureForm
+      onSubmit={(values) => {}}
+      defaultValues={{
+        authToken: "",
+        configName: "",
+        collectionName: "",
+        productVariantFieldsMapping: {
+          channels: "",
+          variantName: "",
+          productId: "",
+          productName: "",
+          productSlug: "",
+          variantId: "",
+        },
+      }}
+    />
+  );
+};
+
+const EditFormVariant = (props: { configId: string }) => {
+  const { push } = useRouter();
+  const { notifySuccess } = useDashboardNotification();
+
+  const { data } = trpcClient.providersConfigs.getOne.useQuery(
+    {
+      id: props.configId,
+    },
+    {
+      enabled: !!props.configId,
+    },
+  );
+
+  const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Updated configuration");
+      push("/configuration");
+    },
+  });
+
+  const { mutate: deleteProvider } = trpcClient.providersConfigs.deleteOne.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Removed configuration");
+      push("/configuration");
+    },
+  });
+
+  if (!data) {
+    return null;
+  }
+
+  if (data.type !== "payloadcms") {
+    throw new Error("Trying to fill Payload CMS form with non Payload CMS data");
+  }
+
+  return (
+    <PureForm
+      onDelete={() => {
+        deleteProvider({
+          id: props.configId,
+        });
+      }}
+      onSubmit={(values) => {
+        mutate({
+          ...values,
+          type: "payloadcms",
+          id: props.configId,
+        });
+      }}
+      defaultValues={data}
+    />
+  );
+};
+
+export const PayloadCMSConfigForm = {
+  PureVariant: PureForm,
+  AddVariant: AddFormVariant,
+  EditVariant: EditFormVariant,
+};
