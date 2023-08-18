@@ -20,6 +20,7 @@ const responseSchema = z.object({
   ),
 });
 
+// todo: fix JWT, handle product updated
 export class PayloadCMSClient {
   private logger = createLogger({ name: "PayloadCMSClient" });
 
@@ -29,7 +30,6 @@ export class PayloadCMSClient {
       configMapping: configuration.productVariantFieldsMapping,
     });
 
-    // todo check if it workds, especially json type
     return fields;
   }
 
