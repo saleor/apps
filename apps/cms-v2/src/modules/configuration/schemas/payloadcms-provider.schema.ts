@@ -8,6 +8,7 @@ const InputSchema = z.object({
   configName: z.string().min(1),
   collectionName: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
+  payloadApiUrl: z.string().url(),
 });
 
 const FullSchema = InputSchema.extend({

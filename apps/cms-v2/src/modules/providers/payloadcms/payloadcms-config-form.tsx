@@ -51,6 +51,13 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         <Input
           required
           control={control}
+          name="payloadApiUrl"
+          type="url"
+          label="API url"
+          helperText="todo"
+        />
+        <Input
+          control={control}
           name="authToken"
           type="password"
           label="JWT Auth Token"
@@ -59,13 +66,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Configure fields mapping</Text>
-        <Select
-          label="Item type"
-          options={[]}
-          name="itemType"
-          control={control}
-          helperText="todo"
-        />
+        <Input label="Collection Name" name="collectionName" control={control} helperText="todo" />
 
         <React.Fragment>
           <Text as="p" variant="heading" size="small">
@@ -104,21 +105,17 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
                   {saleorField === "channels" ? "JSON field" : "Text field"}
                 </Text>
               </Box>
-              <Select
+              <Input
                 size="small"
                 control={control}
                 name={`productVariantFieldsMapping.${saleorField}`}
                 label="CMS Field"
-                options={fieldsData.map((f) => ({
-                  label: f.label,
-                  value: f.api_key,
-                }))}
               />
             </Box>
           ))}
         </React.Fragment>
       </Box>
-      (
+
       <ButtonsBox>
         {onDelete && (
           <Button onClick={onDelete} variant="tertiary">
@@ -127,7 +124,6 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         )}
         <Button type="submit">Save</Button>
       </ButtonsBox>
-      )
     </Box>
   );
 };
@@ -136,10 +132,23 @@ const AddFormVariant = () => {
   const { push } = useRouter();
   const { notifySuccess } = useDashboardNotification();
 
+  const { mutate } = trpcClient.providersConfigs.addOne.useMutation({
+    onSuccess() {
+      notifySuccess("Success", "Added new configuration");
+      push("/configuration");
+    },
+  });
+
   return (
     <PureForm
-      onSubmit={(values) => {}}
+      onSubmit={(values) => {
+        mutate({
+          ...values,
+          type: "payloadcms",
+        });
+      }}
       defaultValues={{
+        payloadApiUrl: "",
         authToken: "",
         configName: "",
         collectionName: "",
