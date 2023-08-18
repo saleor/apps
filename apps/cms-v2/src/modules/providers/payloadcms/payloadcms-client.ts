@@ -102,16 +102,60 @@ export class PayloadCMSClient {
       method: "POST",
       body: JSON.stringify(this.mapVariantToPayloadFields(context)),
       headers: this.getHeaders(context),
-    }).catch((e) => {
-      console.error(e);
+    })
+      .then((r) => {
+        if (r.status >= 400) {
+          console.error(r);
+          throw new Error(`Error while uploading product variant: ${r.statusText}`);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
 
-      throw e;
-    });
+        throw e;
+      });
   }
 
-  async updateProductVariant({ configuration, variant }: Context) {}
+  async updateProductVariant({ configuration, variant }: Context) {
+    this.logger.debug("Trying to update product variant");
 
-  upsertProduct({ configuration, variant }: Context) {
+    const queryString = qs.stringify(
+      {
+        where: {
+          [configuration.productVariantFieldsMapping.variantId]: variant.id,
+        },
+      },
+      {
+        addQueryPrefix: true,
+      },
+    );
+
+    try {
+      const response = await fetch(this.constructCollectionUrl(configuration) + queryString, {
+        method: "PATCH",
+        body: JSON.stringify(this.mapVariantToPayloadFields({ configuration, variant })),
+        headers: this.getHeaders({ configuration, variant }),
+      });
+
+      const parsedResponse = await response.json();
+
+      console.log(parsedResponse);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async upsertProductVariant(context: Context) {
     this.logger.debug("Trying to upsert product variant");
+
+    try {
+      this.logger.debug("Trying to upload product variant");
+
+      await this.uploadProductVariant(context);
+    } catch (e) {
+      this.logger.debug("Trying to update product variant");
+
+      await this.updateProductVariant(context);
+    }
   }
 }

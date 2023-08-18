@@ -20,7 +20,12 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.trace("onProductVariantUpdated called");
 
-    throw new Error("Method not implemented.");
+    const client = new PayloadCMSClient();
+
+    await client.upsertProductVariant({
+      configuration: this.providerConfig,
+      variant: productVariant,
+    });
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
@@ -42,8 +47,6 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       configuration: this.providerConfig,
       variant: productVariant,
     });
-
-    throw new Error("Method not implemented.");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
