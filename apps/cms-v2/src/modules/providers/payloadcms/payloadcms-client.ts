@@ -1,19 +1,26 @@
 import { createLogger } from "@saleor/apps-shared";
-import { z } from "zod";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 
 import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
-import * as Sentry from "@sentry/nextjs";
 import { FieldsMapper } from "../fields-mapper";
 
 import qs from "qs";
+import { z } from "zod";
 
 type Context = {
   configuration: PayloadCmsProviderConfig.FullShape;
   variant: WebhookProductVariantFragment;
 };
 
-export class DatoCMSClient {
+const responseSchema = z.object({
+  docs: z.array(
+    z.object({
+      id: z.string(),
+    }),
+  ),
+});
+
+export class PayloadCMSClient {
   private logger = createLogger({ name: "PayloadCMSClient" });
 
   private mapVariantToPayloadFields({ configuration, variant }: Context) {
@@ -26,21 +33,15 @@ export class DatoCMSClient {
     return fields;
   }
 
-  getItemBySaleorVariantId({
-    collectionName,
-    variantID,
-    variantIdFieldName,
-    apiUrl,
-  }: {
-    variantIdFieldName: string;
-    variantID: string;
-    collectionName: string;
-    apiUrl: string;
-  }) {
+  private constructCollectionUrl(config: PayloadCmsProviderConfig.FullShape) {
+    return `${config.payloadApiUrl}/${config.collectionName}`;
+  }
+
+  getItemsBySaleorVariantId(context: Context) {
     const queryString = qs.stringify(
       {
         where: {
-          [variantIdFieldName]: variantID,
+          [context.configuration.productVariantFieldsMapping.variantId]: context.variant.id,
         },
       },
       {
@@ -48,114 +49,69 @@ export class DatoCMSClient {
       },
     );
 
-    return fetch(`${apiUrl}/${collectionName}${queryString}`).then((r) => r.json());
+    return fetch(`${this.constructCollectionUrl(context.configuration)}${queryString}`, {
+      headers: this.getHeaders(context),
+    }).then((r) => r.json());
   }
 
-  async deleteProductVariant({ configuration, variant }: Context) {
-    this.logger.debug("Trying to delete product variant");
+  async deleteProductVariant(context: Context) {
+    const queryString = qs.stringify(
+      {
+        where: {
+          [context.configuration.productVariantFieldsMapping.variantId]: context.variant.id,
+        },
+      },
+      {
+        addQueryPrefix: true,
+      },
+    );
 
-    const remoteProducts = await this.getItemBySaleorVariantId({
-      variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
-      variantID: variant.id,
-      collectionName: configuration.collectionName,
-      apiUrl: configuration.payloadApiUrl,
+    try {
+      const response = await fetch(
+        this.constructCollectionUrl(context.configuration) + queryString,
+        {
+          method: "DELETE",
+          headers: this.getHeaders(context),
+        },
+      );
+
+      const parsedResponse = await response.json();
+
+      console.log(parsedResponse);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  private getHeaders(context: Context) {
+    const headers = new Headers({
+      "Content-Type": "application/json",
     });
 
-    console.log(remoteProducts);
-
-    if (remoteProducts.length > 1) {
-      this.logger.warn(
-        "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
-      );
+    if (context.configuration.authToken.length > 0) {
+      headers.append("Authorization", `JWT ${context.configuration.authToken}`);
     }
 
-    if (remoteProducts.length === 0) {
-      this.logger.trace("No product found in Datocms, skipping deletion");
-
-      return;
-    }
-
-    return Promise.all(
-      remoteProducts.map((p) => {
-        return this.client.items.rawDestroy(p.id);
-      }),
-    );
+    return headers;
   }
 
   uploadProductVariant(context: Context) {
     this.logger.debug("Trying to upload product variant");
 
-    return this.client.items.create(this.mapVariantToDatoCMSFields(context));
-  }
+    return fetch(this.constructCollectionUrl(context.configuration), {
+      method: "POST",
+      body: JSON.stringify(this.mapVariantToPayloadFields(context)),
+      headers: this.getHeaders(context),
+    }).catch((e) => {
+      console.error(e);
 
-  async updateProductVariant({ configuration, variant }: Context) {
-    const products = await this.getItemBySaleorVariantId({
-      variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
-      variantID: variant.id,
-      contentType: configuration.itemType,
+      throw e;
     });
-
-    if (products.length > 1) {
-      this.logger.warn(
-        "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
-        {
-          variantID: variant.id,
-        },
-      );
-    }
-
-    return Promise.all(
-      products.map((product) => {
-        this.logger.trace("Trying to update variant", { datoID: product.id });
-
-        return this.client.items.update(
-          product.id,
-          this.mapVariantToDatoCMSFields({
-            configuration,
-            variant,
-          }),
-        );
-      }),
-    );
   }
+
+  async updateProductVariant({ configuration, variant }: Context) {}
 
   upsertProduct({ configuration, variant }: Context) {
     this.logger.debug("Trying to upsert product variant");
-
-    const DatoErrorBody = z.object({
-      data: z.array(
-        z.object({
-          validation: z.object({
-            attributes: z.object({
-              details: z.object({
-                code: z.string(),
-              }),
-            }),
-          }),
-        }),
-      ),
-    });
-
-    return this.uploadProductVariant({ configuration, variant }).catch((err: ApiError) => {
-      try {
-        const errorBody = DatoErrorBody.parse(err.response.body);
-
-        const isUniqueIdError = errorBody.data.find(
-          (d) => d.validation.attributes.details.code === "VALIDATION_UNIQUE",
-        );
-
-        if (isUniqueIdError) {
-          return this.updateProductVariant({ configuration, variant });
-        } else {
-          throw new Error(JSON.stringify(err.cause));
-        }
-      } catch (e) {
-        Sentry.captureException("Invalid error shape from DatoCMS", (c) => {
-          return c.setExtra("error", err);
-        });
-
-        throw new Error(err.humanMessage ?? "DatoCMS error - can upload product variant");
-      }
-    });
   }
 }
