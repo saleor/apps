@@ -30,7 +30,7 @@
     "contentful-management": "10.38.3",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
-    "jsdom": "^20.0.3",
+    "jsdom": "^22.1.0",
     "next": "13.4.8",
     "p-ratelimit": "1.0.1",
     "pino": "^8.14.1",
