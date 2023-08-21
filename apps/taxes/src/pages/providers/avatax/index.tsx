@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <Box>
       <Text as="p" variant="body">
-        Create new Avatax configuration
+        Create new AvaTax configuration
       </Text>
     </Box>
   );

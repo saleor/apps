@@ -54,14 +54,14 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
   "/providers/avatax": [
     ...newProviderBreadcrumbs,
     {
-      label: "Avatax",
+      label: "AvaTax",
       href: "/providers/avatax",
     },
   ],
   "/providers/avatax/matcher": [
     ...newProviderBreadcrumbs,
     {
-      label: "Avatax",
+      label: "AvaTax",
       href: "/providers/avatax",
     },
     {
@@ -72,7 +72,7 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
   "/providers/avatax/[id]": [
     ...newProviderBreadcrumbs,
     {
-      label: "Editing Avatax provider",
+      label: "Editing AvaTax provider",
       href: "/providers/avatax",
     },
   ],

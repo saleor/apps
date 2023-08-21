@@ -31,7 +31,7 @@ export const EditAvataxConfiguration = () => {
   const { mutate: patchMutation, isLoading: isPatchLoading } =
     trpcClient.avataxConnection.update.useMutation({
       onSuccess() {
-        notifySuccess("Success", "Updated Avatax configuration");
+        notifySuccess("Success", "Updated AvaTax configuration");
         refetchProvidersConfigurationData();
       },
       onError(error) {
@@ -42,7 +42,7 @@ export const EditAvataxConfiguration = () => {
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =
     trpcClient.avataxConnection.delete.useMutation({
       onSuccess() {
-        notifySuccess("Success", "Deleted Avatax configuration");
+        notifySuccess("Success", "Deleted AvaTax configuration");
         refetchProvidersConfigurationData();
         router.push("/configuration");
       },

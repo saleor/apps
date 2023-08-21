@@ -26,7 +26,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     });
 
     if (taxBase.shippingPrice.amount !== 0) {
-      // * In Avatax, shipping is a regular line
+      // * In AvaTax, shipping is a regular line
       const shippingLine: LineItemModel = {
         amount: taxBase.shippingPrice.amount,
         itemCode: SHIPPING_ITEM_CODE,

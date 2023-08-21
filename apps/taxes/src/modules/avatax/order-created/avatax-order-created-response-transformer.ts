@@ -8,7 +8,7 @@ export class AvataxOrderCreatedResponseTransformer {
       id: taxProviderUtils.resolveOptionalOrThrow(
         response.code,
         new Error(
-          "Could not update the order metadata with Avatax transaction code because it was not returned from the createTransaction mutation."
+          "Could not update the order metadata with AvaTax transaction code because it was not returned from the createTransaction mutation."
         )
       ),
     };

@@ -27,9 +27,9 @@ describe("AvataxValidationErrorResolver", () => {
     });
 
     expect(result).toBeInstanceOf(Error);
-    expect(result.message).toBe("Invalid Avatax credentials.");
+    expect(result.message).toBe("Invalid AvaTax credentials.");
   });
-  it("when other Avatax error, should return error with first message", () => {
+  it("when other AvaTax error, should return error with first message", () => {
     const result = errorResolver.resolve({
       code: "error",
       details: [
@@ -57,6 +57,6 @@ describe("AvataxValidationErrorResolver", () => {
     const result = errorResolver.resolve("error");
 
     expect(result).toBeInstanceOf(Error);
-    expect(result.message).toBe("Unknown error while validating Avatax configuration.");
+    expect(result.message).toBe("Unknown error while validating AvaTax configuration.");
   });
 });

@@ -26,12 +26,12 @@ export class AvataxValidationErrorResolver {
     const parseResult = avataxErrorSchema.safeParse(error);
     const isErrorParsed = parseResult.success;
 
-    // Avatax doesn't return a type for their error format, so we need to parse the error
+    // AvaTax doesn't return a type for their error format, so we need to parse the error
     if (isErrorParsed) {
       const { code, details } = parseResult.data;
 
       if (code === "AuthenticationException") {
-        return new Error("Invalid Avatax credentials.");
+        return new Error("Invalid AvaTax credentials.");
       }
 
       return new Error(details[0].message);
@@ -41,7 +41,7 @@ export class AvataxValidationErrorResolver {
       return error;
     }
 
-    this.logger.error("Unknown error while validating Avatax configuration.");
-    return new Error("Unknown error while validating Avatax configuration.");
+    this.logger.error("Unknown error while validating AvaTax configuration.");
+    return new Error("Unknown error while validating AvaTax configuration.");
   }
 }

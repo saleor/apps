@@ -48,7 +48,7 @@ export class PublicAvataxConnectionService {
     const connections = await this.connectionService.getAll();
 
     if (connections.length === 0) {
-      throw new Error("No Avatax connections found");
+      throw new Error("No AvaTax connections found");
     }
   }
 }
