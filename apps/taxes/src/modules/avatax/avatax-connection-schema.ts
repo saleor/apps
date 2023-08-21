@@ -13,7 +13,7 @@ const avataxCredentialsSchema = z.object({
   password: z.string().min(1, { message: "Password requires at least one character." }),
 });
 
-// All that is needed to create Avatax configuration.
+// All that is needed to create AvaTax configuration.
 export const baseAvataxConfigSchema = z.object({
   isSandbox: z.boolean(),
   credentials: avataxCredentialsSchema,

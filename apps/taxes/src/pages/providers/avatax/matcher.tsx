@@ -9,21 +9,21 @@ import { useRouter } from "next/router";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const Header = () => {
-  return <Section.Header>Match Saleor tax classes to Avatax tax codes</Section.Header>;
+  return <Section.Header>Match Saleor tax classes to AvaTax tax codes</Section.Header>;
 };
 
 const Description = () => {
   return (
     <Section.Description
-      title="Avatax tax code matcher"
+      title="AvaTax tax code matcher"
       description={
         <>
           <Text display="block" as="span" marginBottom={4}>
-            To extend the base tax rate of your products, you can map Saleor tax classes to Avatax
+            To extend the base tax rate of your products, you can map Saleor tax classes to AvaTax
             tax codes.
           </Text>
           <Text display="block" as="span" marginBottom={4}>
-            This way, the product&apos;s Saleor tax class will be used to determine the Avatax tax
+            This way, the product&apos;s Saleor tax class will be used to determine the AvaTax tax
             code needed to calculate the tax rate.
           </Text>
           <Text as="p" marginBottom={4}>
@@ -37,9 +37,9 @@ const Description = () => {
             view.
           </Text>
           <Text as="p" marginBottom={4}>
-            To learn more about Avatax tax codes, please visit{" "}
+            To learn more about AvaTax tax codes, please visit{" "}
             <TextLink href="https://taxcode.avatax.avalara.com/search?q=OF400000" newTab>
-              Avatax documentation
+              AvaTax documentation
             </TextLink>
             .
           </Text>
@@ -55,7 +55,7 @@ const AvataxMatcher = () => {
 
   const { isLoading } = trpcClient.avataxConnection.verifyConnections.useQuery(undefined, {
     onError: () => {
-      notifyError("Error", "You must configure Avatax first.");
+      notifyError("Error", "You must configure AvaTax first.");
       router.push("/configuration");
     },
   });

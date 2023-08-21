@@ -31,7 +31,7 @@ const useGetTaxCodes = () => {
 
   React.useEffect(() => {
     if (result.error) {
-      notifyError("Error", "Unable to fetch Avatax tax codes.");
+      notifyError("Error", "Unable to fetch AvaTax tax codes.");
       setTimeout(() => {
         router.push("/configuration");
       }, 1000);
@@ -61,7 +61,7 @@ const SelectTaxCode = ({ taxClassId }: { taxClassId: string }) => {
 
   const { mutate: updateMutation } = trpcClient.avataxMatches.upsert.useMutation({
     onSuccess() {
-      notifySuccess("Success", "Updated Avatax tax code matches");
+      notifySuccess("Success", "Updated AvaTax tax code matches");
     },
     onError(error) {
       notifyError("Error", error.message);
@@ -113,7 +113,7 @@ export const AvataxTaxCodeMatcherTable = () => {
         <Table.THead>
           <Table.TR>
             <Table.TH>Saleor tax class</Table.TH>
-            <Table.TH>Avatax tax code</Table.TH>
+            <Table.TH>AvaTax tax code</Table.TH>
           </Table.TR>
         </Table.THead>
         <Table.TBody>

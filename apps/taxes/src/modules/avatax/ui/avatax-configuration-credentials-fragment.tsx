@@ -55,107 +55,68 @@ export const AvataxConfigurationCredentialsFragment = (
   return (
     <>
       <FormSection title="Credentials">
-        <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
-          <div>
-            <Input
-              control={control}
-              name="credentials.username"
-              required
-              label="Username *"
-              helperText={formState.errors.credentials?.username?.message}
-            />
+        <div>
+          <Input
+            control={control}
+            name="credentials.username"
+            required
+            label="Username *"
+            helperText={formState.errors.credentials?.username?.message}
+          />
+          <HelperText>
+            You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i> in
+            your Avalara Dashboard.
+          </HelperText>
+        </div>
+        <div>
+          <Input
+            control={control}
+            name="credentials.password"
+            type="password"
+            required
+            label="Password *"
+            helperText={formState.errors.credentials?.password?.message}
+          />
+          <HelperText>
+            You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i> in
+            your Avalara Dashboard.
+          </HelperText>
+        </div>
+        <div>
+          <Input
+            control={control}
+            name="companyCode"
+            label="Company code"
+            helperText={formState.errors.companyCode?.message}
+          />
+          <HelperText>
+            When not provided, the default company code will be used.{" "}
+            <TextLink
+              newTab
+              href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
+            >
+              Read more
+            </TextLink>{" "}
+            about company codes.
+          </HelperText>
+        </div>
+        <AppToggle
+          control={control}
+          label="Use sandbox mode"
+          helperText={
             <HelperText>
-              You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
-              in your Avalara Dashboard.
-            </HelperText>
-          </div>
-          <div>
-            <Input
-              control={control}
-              name="credentials.password"
-              type="password"
-              required
-              label="Password *"
-              helperText={formState.errors.credentials?.password?.message}
-            />
-            <HelperText>
-              You can obtain it in the <i>API Keys</i> section of <i>Settings</i> → <i>License</i>{" "}
-              in your Avalara Dashboard.
-            </HelperText>
-          </div>
-
-          <div>
-            <Input
-              control={control}
-              name="companyCode"
-              label="Company name"
-              helperText={formState.errors.companyCode?.message}
-            />
-            <HelperText>
-              When not provided, the default company will be used.{" "}
+              Choose between
               <TextLink
+                href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/authentication-in-avatax/sandbox-vs-production/"
                 newTab
-                href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/simple-transactions/company-codes/"
               >
-                Read more
+                <q>Production</q> and <q>Sandbox</q>
               </TextLink>{" "}
-              about company codes.
+              environment according to your credentials.
             </HelperText>
-          </div>
-        </Box>
-        <Box paddingY={4} display={"flex"} flexDirection={"column"} gap={10}>
-          <AppToggle
-            control={control}
-            label="Use sandbox mode"
-            helperText={
-              <HelperText>
-                Toggling between{" "}
-                <TextLink
-                  href="https://developer.avalara.com/erp-integration-guide/sales-tax-badge/authentication-in-avatax/sandbox-vs-production/"
-                  newTab
-                >
-                  <q>Production</q> and <q>Sandbox</q>
-                </TextLink>{" "}
-                environment.
-              </HelperText>
-            }
-            name="isSandbox"
-          />
-          <AppToggle
-            control={control}
-            label="Document recording"
-            helperText={
-              <HelperText>
-                When turned off, the document type will always be set to <i>SalesOrder</i>. This
-                means the transactions will not be recorded in Avatax. Read more{" "}
-                <TextLink
-                  href="https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/disable-document-recording/"
-                  newTab
-                >
-                  here
-                </TextLink>
-                .
-              </HelperText>
-            }
-            name="isDocumentRecordingEnabled"
-          />
-          <AppToggle
-            control={control}
-            label="Autocommit"
-            helperText={
-              <HelperText>
-                If enabled, the order will be automatically{" "}
-                <TextLink
-                  href="https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit/"
-                  newTab
-                >
-                  commited to Avalara.
-                </TextLink>{" "}
-              </HelperText>
-            }
-            name="isAutocommit"
-          />
-        </Box>
+          }
+          name="isSandbox"
+        />
       </FormSection>
       <Box display="flex" justifyContent={"flex-end"}>
         <Button variant="secondary" onClick={verifyCredentials}>

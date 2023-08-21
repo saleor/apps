@@ -5,7 +5,7 @@ import { AppColumns } from "../../../modules/ui/app-columns";
 import { Section } from "../../../modules/ui/app-section";
 
 const Header = () => {
-  return <Section.Header>Edit your existing Avatax configuration</Section.Header>;
+  return <Section.Header>Edit your existing AvaTax configuration</Section.Header>;
 };
 
 const EditAvataxPage = () => {
