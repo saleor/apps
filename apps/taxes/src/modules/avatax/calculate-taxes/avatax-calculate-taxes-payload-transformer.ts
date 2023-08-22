@@ -1,11 +1,11 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
-import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { AvataxAddressResolver } from "../order-confirmed/avatax-address-resolver";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
@@ -34,6 +34,11 @@ export class AvataxCalculateTaxesPayloadTransformer {
     );
 
     const customerCode = avataxCustomerCode.resolve(payload.taxBase.sourceObject.user);
+    const addressResolver = new AvataxAddressResolver();
+    const addresses = addressResolver.resolve({
+      from: avataxConfig.address,
+      to: payload.taxBase.address!,
+    });
 
     return {
       model: {
@@ -43,10 +48,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
-        addresses: {
-          shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
-          shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
-        },
+        addresses,
         currencyCode: payload.taxBase.currency,
         lines: payloadLinesTransformer.transform(payload.taxBase, avataxConfig, matches),
         date: new Date(),

@@ -1,25 +1,3 @@
-fragment OrderLine on OrderLine {
-  productSku
-  productName
-  quantity
-  taxClass {
-    id
-  }
-  unitPrice {
-    net {
-      amount
-    }
-  }
-  totalPrice {
-    net {
-      amount
-    }
-    tax {
-      amount
-    }
-  }
-}
-
 fragment OrderConfirmedSubscription on Order {
   id
   number

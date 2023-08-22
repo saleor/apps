@@ -2,6 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+import { OrderRefundedPayload } from "../../pages/api/webhooks/order-refunded";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
@@ -9,6 +10,7 @@ import { ClientLogger, createClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 import { createLogger } from "../../logger";
+import { AvataxOrderRefundedAdapter } from "./order-refunded/avatax-order-refunded-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   private logger = createLogger("AvataxWebhookService");
@@ -61,5 +63,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     });
 
     await adapter.send(payload);
+  }
+
+  async refundOrder(payload: OrderRefundedPayload) {
+    const adapter = new AvataxOrderRefundedAdapter(this.config);
+
+    return adapter.send(payload);
   }
 }

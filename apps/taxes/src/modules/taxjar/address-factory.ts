@@ -8,7 +8,7 @@ function joinAddresses(address1: string, address2: string): string {
 }
 
 function mapSaleorAddressToTaxJarAddress(
-  address: SaleorAddress
+  address: SaleorAddress,
 ): Pick<TaxParams, "to_city" | "to_country" | "to_state" | "to_street" | "to_zip"> {
   return {
     to_street: joinAddresses(address.streetAddress1, address.streetAddress2),
@@ -20,7 +20,7 @@ function mapSaleorAddressToTaxJarAddress(
 }
 
 function mapChannelAddressToTaxJarAddress(
-  address: TaxJarConfig["address"]
+  address: TaxJarConfig["address"],
 ): Pick<TaxParams, "from_city" | "from_country" | "from_state" | "from_street" | "from_zip"> {
   return {
     from_city: address.city,
@@ -31,7 +31,7 @@ function mapChannelAddressToTaxJarAddress(
   };
 }
 
-function mapChannelAddressToAddressParams(address: TaxJarConfig["address"]): AddressParams {
+function mapChannelAddresstoParams(address: TaxJarConfig["address"]): AddressParams {
   return {
     city: address.city,
     country: address.country,
@@ -44,5 +44,5 @@ function mapChannelAddressToAddressParams(address: TaxJarConfig["address"]): Add
 export const taxJarAddressFactory = {
   fromSaleorToTax: mapSaleorAddressToTaxJarAddress,
   fromChannelToTax: mapChannelAddressToTaxJarAddress,
-  fromChannelToParams: mapChannelAddressToAddressParams,
+  fromChannelToParams: mapChannelAddresstoParams,
 };

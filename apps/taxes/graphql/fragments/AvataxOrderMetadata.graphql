@@ -1,0 +1,5 @@
+fragment AvataxOrderMetadata on Order {
+  avataxEntityCode: metafield(key: "avataxEntityCode")
+  avataxTaxCalculationDate: metafield(key: "avataxTaxCalculationDate")
+  avataxDocumentCode: metafield(key: "avataxDocumentCode")
+}

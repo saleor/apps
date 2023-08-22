@@ -1,0 +1,43 @@
+fragment OrderRefundedSubscription on Order {
+  id
+  avataxId: metafield(key: "avataxId")
+  ...AvataxOrderMetadata
+  user {
+    id
+    email
+  }
+  channel {
+    id
+    slug
+  }
+  transactions {
+    id
+    refundedAmount {
+      ...Money
+    }
+  }
+  shippingAddress {
+    ...Address
+  }
+}
+
+fragment OrderRefundedEventSubscription on Event {
+  __typename
+  ... on OrderRefunded {
+    order {
+      ...OrderRefundedSubscription
+    }
+    recipient {
+      privateMetadata {
+        key
+        value
+      }
+    }
+  }
+}
+
+subscription OrderRefundedSubscription {
+  event {
+    ...OrderRefundedEventSubscription
+  }
+}
