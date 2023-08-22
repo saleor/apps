@@ -1,0 +1,22 @@
+fragment OrderLine on OrderLine {
+  id
+  productSku
+  productName
+  quantity
+  taxClass {
+    id
+  }
+  unitPrice {
+    net {
+      amount
+    }
+  }
+  totalPrice {
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+  }
+}

@@ -8,6 +8,7 @@ import { orderConfirmedAsyncWebhook } from "./webhooks/order-confirmed";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { orderCancelledAsyncWebhook } from "./webhooks/order-cancelled";
 import { withOtel } from "@saleor/apps-otel";
+import { orderRefundedAsyncWebhook } from "./webhooks/order-refunded";
 
 export default withOtel(
   createManifestHandler({
@@ -39,6 +40,7 @@ export default withOtel(
           checkoutCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
           orderConfirmedAsyncWebhook.getWebhookManifest(apiBaseURL),
           orderCancelledAsyncWebhook.getWebhookManifest(apiBaseURL),
+          orderRefundedAsyncWebhook.getWebhookManifest(apiBaseURL),
         ],
       };
 

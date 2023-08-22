@@ -4,6 +4,7 @@ import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-reposito
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
 const mockedLine: OrderLineFragment = {
+  id: "T3JkZXJMaW5lOjE=",
   productSku: "sku",
   productName: "Test product",
   quantity: 1,

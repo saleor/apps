@@ -4,7 +4,7 @@ export class AvataxDocumentCodeResolver {
     orderId,
   }: {
     avataxDocumentCode: string | null | undefined;
-    orderId: string;
+    orderId: string | undefined;
   }): string {
     /*
      * The value for "code" can be provided in the metadata.
@@ -14,9 +14,12 @@ export class AvataxDocumentCodeResolver {
 
     const code = avataxDocumentCode ?? orderId;
 
+    if (!code) {
+      throw new Error("Order id or document code must be provided");
+    }
+
     /*
      * The requirement from AvaTax API is that document code is a string that must be between 1 and 20 characters long.
-     * // todo: document that its sliced
      */
     return code.slice(0, 20);
   }

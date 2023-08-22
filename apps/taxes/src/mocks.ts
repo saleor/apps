@@ -53,6 +53,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   },
   lines: [
     {
+      id: "T3JkZXJMaW5lOjE=",
       productSku: "328223580",
       productName: "Monospace Tee",
       quantity: 3,
@@ -71,6 +72,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       },
     },
     {
+      id: "T3JkZXJMaW5lOjI=",
       productSku: "328223581",
       productName: "Monospace Tee",
       quantity: 1,
@@ -89,6 +91,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       },
     },
     {
+      id: "T3JkZXJMaW5lOjM=",
       productSku: "118223581",
       productName: "Paul's Balance 420",
       quantity: 2,

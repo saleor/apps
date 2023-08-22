@@ -8,6 +8,7 @@ const transformer = new TaxJarOrderConfirmedPayloadLinesTransformer();
 
 const mockedLines: OrderConfirmedSubscriptionFragment["lines"] = [
   {
+    id: "T3JkZXJMaW5lOjE=",
     productSku: "sku",
     productName: "Test product",
     quantity: 1,
@@ -29,6 +30,7 @@ const mockedLines: OrderConfirmedSubscriptionFragment["lines"] = [
     },
   },
   {
+    id: "T3JkZXJMaW5lOjF=",
     productSku: "sku-2",
     productName: "Test product 2",
     quantity: 2,

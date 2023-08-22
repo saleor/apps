@@ -4,6 +4,7 @@ import { TaxJarOrderConfirmedTaxCodeMatcher } from "./taxjar-order-confirmed-tax
 import { describe, expect, it } from "vitest";
 
 const mockedLine: OrderLineFragment = {
+  id: "T3JkZXJMaW5lOjE=",
   productSku: "sku",
   productName: "Test product",
   quantity: 1,

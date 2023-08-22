@@ -1,7 +1,6 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
-import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
@@ -9,6 +8,7 @@ import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { AvataxAddressResolver } from "./avatax-address-resolver";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
@@ -42,6 +42,12 @@ export class AvataxOrderConfirmedPayloadTransformer {
     });
     const customerCode = avataxCustomerCode.resolve(order.user);
 
+    const addressResolver = new AvataxAddressResolver();
+    const addresses = addressResolver.resolve({
+      from: avataxConfig.address,
+      to: order.shippingAddress!,
+    });
+
     return {
       model: {
         code,
@@ -51,11 +57,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
-        addresses: {
-          shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
-          // billing or shipping address?
-          shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
-        },
+        addresses,
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
