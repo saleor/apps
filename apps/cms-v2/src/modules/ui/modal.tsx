@@ -1,5 +1,4 @@
 import { Box, BoxProps } from "@saleor/macaw-ui/next";
-import { forwardRef } from "react";
 
 export const Modal = ({ onClose, ...rest }: { onClose(): void } & BoxProps) => {
   return (
@@ -12,6 +11,8 @@ export const Modal = ({ onClose, ...rest }: { onClose(): void } & BoxProps) => {
         as="dialog"
         __maxWidth="400px"
         boxShadow={"modal"}
+        backgroundColor="surfaceNeutralPlain"
+        color="textNeutralDefault"
         open
         {...rest}
       />
