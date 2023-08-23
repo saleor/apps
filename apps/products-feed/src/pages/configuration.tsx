@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
 import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
+import { ConnectedImageConfigurationForm } from "../modules/app-configuration/image-configuration-form";
 
 const ConfigurationPage: NextPage = () => {
   useChannelsExistenceChecking();
@@ -208,6 +209,28 @@ const ConfigurationPage: NextPage = () => {
               <li>
                 <TextLink href="https://support.google.com/merchants/answer/6324492" newTab>
                   Size
+                </TextLink>
+              </li>
+            </ul>
+          </Box>
+        }
+      />
+
+      <AppSection
+        data-testid={"image-configuration-section"}
+        __marginBottom="100px"
+        includePadding
+        heading={"Image configuration"}
+        mainContent={<ConnectedImageConfigurationForm />}
+        sideContent={
+          <Box>
+            <Paragraph size={"small"}>
+              Configure size of the images submitted in the feed.
+            </Paragraph>
+            <ul>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324350?hl=en" newTab>
+                  Image link documentation
                 </TextLink>
               </li>
             </ul>

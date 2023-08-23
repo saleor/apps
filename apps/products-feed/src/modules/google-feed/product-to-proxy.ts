@@ -93,6 +93,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  for (const additional_image of p.additionalImageLinks) {
+    item.push({
+      "g:additional_image_link": [
+        {
+          "#text": additional_image,
+        },
+      ],
+    });
+  }
+
   if (p.price?.length) {
     item.push({
       "g:price": [

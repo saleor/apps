@@ -1,6 +1,14 @@
 import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
 
+const imageSizeFieldSchema = z.coerce.number().gte(256).default(1024);
+
+export const imageSizeInputSchema = z.object({
+  imageSize: imageSizeFieldSchema,
+});
+
+export type ImageSizeInput = z.infer<typeof imageSizeInputSchema>;
+
 const titleTemplateFieldSchema = z.string().default("{{variant.product.name}} - {{variant.name}}");
 
 export const titleTemplateInputSchema = z.object({
@@ -34,6 +42,7 @@ const rootAppConfigSchema = z.object({
   titleTemplate: titleTemplateFieldSchema
     .optional()
     .default(titleTemplateFieldSchema.parse(undefined)),
+  imageSize: imageSizeFieldSchema.optional().default(imageSizeFieldSchema.parse(undefined)),
   attributeMapping: attributeMappingSchema
     .nullable()
     .optional()
@@ -60,6 +69,7 @@ export class AppConfig {
     s3: null,
     attributeMapping: attributeMappingSchema.parse({}),
     titleTemplate: titleTemplateFieldSchema.parse(undefined),
+    imageSize: imageSizeFieldSchema.parse(undefined),
   };
 
   constructor(initialData?: RootConfig) {
@@ -146,5 +156,15 @@ export class AppConfig {
 
   getTitleTemplate() {
     return this.rootData.titleTemplate;
+  }
+
+  setImageSize(imageSize: z.infer<typeof imageSizeFieldSchema>) {
+    this.rootData.imageSize = imageSize;
+
+    return this;
+  }
+
+  getImageSize() {
+    return this.rootData.imageSize;
   }
 }

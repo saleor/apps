@@ -8,7 +8,7 @@ export class GoogleFeedSettingsFetcher {
   static createFromAuthData(authData: AuthData) {
     return new GoogleFeedSettingsFetcher({
       settingsManager: new AppConfigMetadataManager(
-        createSettingsManager(GraphqlClientFactory.fromAuthData(authData))
+        createSettingsManager(GraphqlClientFactory.fromAuthData(authData)),
       ),
     });
   }
@@ -46,6 +46,7 @@ export class GoogleFeedSettingsFetcher {
       s3BucketConfiguration: appConfig.getS3Config(),
       attributeMapping: appConfig.getAttributeMapping(),
       titleTemplate: appConfig.getTitleTemplate(),
+      imageSize: appConfig.getImageSize(),
     };
   }
 }

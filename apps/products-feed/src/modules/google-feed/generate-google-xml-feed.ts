@@ -8,6 +8,7 @@ import { priceMapping } from "./price-mapping";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
+import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
@@ -50,6 +51,12 @@ export const generateGoogleXmlFeed = ({
 
     let link = undefined;
 
+    const { additionalImages, thumbnailUrl } = getRelatedMedia({
+      productMedia: variant.product.media || [],
+      productVariantId: variant.id,
+      variantMediaMap: getVariantMediaMap({ variant }) || [],
+    });
+
     try {
       link = renderHandlebarsTemplate({
         data: {
@@ -72,7 +79,8 @@ export const generateGoogleXmlFeed = ({
         variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
       category: variant.product.category?.name || "unknown",
       googleProductCategory: variant.product.category?.googleCategoryId || "",
-      imageUrl: variant.product.thumbnail?.url || "",
+      imageUrl: thumbnailUrl,
+      additionalImageLinks: additionalImages,
       material: attributes?.material,
       color: attributes?.color,
       brand: attributes?.brand,
@@ -115,7 +123,7 @@ export const generateGoogleXmlFeed = ({
     {
       rss: [
         {
-          // @ts-ignore - This is "just an object" that is transformed to XML. I dont see good way to type it, other than "any"
+          // @ts-ignore - This is "just an object" that is transformed to XML. I don't see good way to type it, other than "any"
           channel: channelData.concat(items),
         },
       ],
