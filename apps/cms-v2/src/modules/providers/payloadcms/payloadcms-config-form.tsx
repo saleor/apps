@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
 import { ButtonsBox } from "../../ui/buttons-box";
+import { TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<PayloadCmsProviderConfig.InputShape, "type">;
 
@@ -54,19 +55,36 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           name="payloadApiUrl"
           type="url"
           label="API url"
-          helperText="todo"
+          helperText="URL where Payload API is available. By default ends with /api"
         />
         <Input
           control={control}
           name="authToken"
           type="password"
           label="JWT Auth Token"
-          helperText="todo"
+          helperText={
+            <Text variant="caption" color="textNeutralSubdued">
+              Token assigned to Payload user authenticated to perform all CRUD operations. Optional
+              if operations are public (not recommended).{" "}
+              <TextLink
+                size="small"
+                newTab
+                href="https://payloadcms.com/docs/authentication/overview#token-based-auth"
+              >
+                Read more in Payload docs
+              </TextLink>
+            </Text>
+          }
         />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Configure fields mapping</Text>
-        <Input label="Collection Name" name="collectionName" control={control} helperText="todo" />
+        <Input
+          label="Collection Slug"
+          name="collectionName"
+          control={control}
+          helperText="Slug of your collection in Payload, e.g. 'saleorVariants'"
+        />
 
         <React.Fragment>
           <Text as="p" variant="heading" size="small">

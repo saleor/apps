@@ -51,5 +51,24 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
     this.logger.trace("onProductUpdated called");
+
+    const client = new PayloadCMSClient();
+
+    await Promise.all(
+      (product.variants ?? []).map((variant) => {
+        return client.upsertProductVariant({
+          configuration: this.providerConfig,
+          variant: {
+            id: variant.id,
+            name: variant.name,
+            product: {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+            },
+          },
+        });
+      }),
+    );
   }
 }
