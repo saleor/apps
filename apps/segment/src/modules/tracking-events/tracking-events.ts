@@ -37,7 +37,7 @@ export const trackingEventFactory = {
     const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "Checkout Started",
+      type: "Saleor Order Created",
       userId: getUserId(orderBase),
       payload: {
         ...order,
@@ -48,7 +48,7 @@ export const trackingEventFactory = {
     const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "Order Updated",
+      type: "Saleor Order Updated",
       userId: getUserId(orderBase),
       payload: {
         ...order,
@@ -59,7 +59,7 @@ export const trackingEventFactory = {
     const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "Order Cancelled",
+      type: "Saleor Order Cancelled",
       userId: getUserId(orderBase),
       payload: {
         ...order,
@@ -70,7 +70,7 @@ export const trackingEventFactory = {
     const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "Order Refunded",
+      type: "Saleor Order Refunded",
       userId: getUserId(orderBase),
       payload: {
         ...order,
@@ -81,7 +81,7 @@ export const trackingEventFactory = {
     const { user, userEmail, ...order } = orderBase;
 
     return {
-      type: "Order Completed",
+      type: "Saleor Order Completed",
       userId: getUserId(orderBase),
       payload: {
         ...order,
