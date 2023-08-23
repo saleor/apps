@@ -1,5 +1,14 @@
 # saleor-app-data-importer
 
+## 1.9.4
+
+### Patch Changes
+
+- 8b3d961: Updated Macaw UI to pre.118
+- Updated dependencies [8b3d961]
+- Updated dependencies [c50797e]
+  - @saleor/apps-shared@1.8.0
+
 ## 1.9.3
 
 ### Patch Changes

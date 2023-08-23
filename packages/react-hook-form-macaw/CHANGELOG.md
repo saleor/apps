@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.4
+
+### Patch Changes
+
+- 8b3d961: Updated Macaw UI to pre.118
+
 ## 0.2.3
 
 ### Patch Changes
