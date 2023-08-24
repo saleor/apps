@@ -2,8 +2,6 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
   OrderConfirmedSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
-  OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
