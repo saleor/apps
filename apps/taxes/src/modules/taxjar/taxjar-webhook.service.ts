@@ -2,14 +2,12 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import {
   OrderCancelledEventSubscriptionFragment,
   OrderConfirmedSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
 import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
-import { TaxJarOrderCreatedAdapter } from "./order-created/taxjar-order-created-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
 
@@ -18,7 +16,10 @@ export class TaxJarWebhookService implements ProviderWebhookService {
   private logger: Logger;
   private config: TaxJarConfig;
 
-  constructor(config: TaxJarConfig, private authData: AuthData) {
+  constructor(
+    config: TaxJarConfig,
+    private authData: AuthData,
+  ) {
     const taxJarClient = new TaxJarClient(config);
 
     this.client = taxJarClient;
@@ -42,24 +43,6 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     const response = await adapter.send({ order });
 
     return response;
-  }
-
-  /**
-   * @deprecated This method is deprecated and will be removed in the future.
-   */
-  async createOrder(payload: OrderCreatedSubscriptionFragment) {
-    const adapter = new TaxJarOrderCreatedAdapter(this.config, this.authData);
-
-    const response = await adapter.send({ order: payload });
-
-    return response;
-  }
-
-  /**
-   * @deprecated This method is deprecated and will be removed in the future.
-   */
-  async fulfillOrder() {
-    return { ok: true };
   }
 
   async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {

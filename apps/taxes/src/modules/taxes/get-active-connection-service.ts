@@ -2,8 +2,6 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import {
   MetadataItem,
   OrderConfirmedSubscriptionFragment,
-  OrderCreatedSubscriptionFragment,
-  OrderFulfilledSubscriptionFragment,
   TaxBaseFragment,
 } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
@@ -20,7 +18,10 @@ class ActiveTaxProviderService implements ProviderWebhookService {
   private logger: Logger;
   private client: TaxJarWebhookService | AvataxWebhookService;
 
-  constructor(providerConnection: ProviderConnection, private authData: AuthData) {
+  constructor(
+    providerConnection: ProviderConnection,
+    private authData: AuthData,
+  ) {
     this.logger = createLogger({
       name: "ActiveTaxProviderService",
     });
@@ -54,29 +55,15 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.confirmOrder(order);
   }
 
-  /**
-   * @deprecated This method is deprecated and will be removed in the future.
-   */
-  async fulfillOrder(payload: OrderFulfilledSubscriptionFragment) {
-    return this.client.fulfillOrder(payload);
-  }
-
   async cancelOrder(payload: OrderCancelledPayload) {
     this.client.cancelOrder(payload);
-  }
-
-  /**
-   * @deprecated This method is deprecated and will be removed in the future.
-   */
-  async createOrder(payload: OrderCreatedSubscriptionFragment) {
-    return this.client.createOrder(payload);
   }
 }
 
 export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
-  authData: AuthData
+  authData: AuthData,
 ): ActiveTaxProviderService {
   const logger = createLogger({
     name: "getActiveConnectionService",
@@ -105,13 +92,13 @@ export function getActiveConnectionService(
   }
 
   const providerConnection = providerConnections.find(
-    (connection) => connection.id === channelConfig.config.providerConnectionId
+    (connection) => connection.id === channelConfig.config.providerConnectionId,
   );
 
   if (!providerConnection) {
     logger.debug(
       { providerConnections, channelConfig },
-      "In the providers array, there is no item with an id that matches the channel config providerConnectionId."
+      "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
     );
     throw new Error(`Channel config providerConnectionId does not match any providers`);
   }
