@@ -1,5 +1,20 @@
 # saleor-app-taxes
 
+## 1.14.0
+
+### Minor Changes
+
+- be761b2: Changed the layout in the AvaTax configuration form to consist of three sections: "Credentials", "Settings" (new) and "Address". Now, the "Credentials" section contains only fields that affect authentication.
+
+### Patch Changes
+
+- 8b3d961: Updated Macaw UI to pre.118
+- Updated dependencies [8b3d961]
+- Updated dependencies [c50797e]
+  - @saleor/react-hook-form-macaw@0.2.4
+  - @saleor/apps-shared@1.8.0
+  - @saleor/apps-ui@1.1.7
+
 ## 1.13.1
 
 ### Patch Changes

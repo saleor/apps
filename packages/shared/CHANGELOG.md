@@ -1,5 +1,15 @@
 # @saleor/apps-shared
 
+## 1.8.0
+
+### Minor Changes
+
+- c50797e: Added Metadata Manager factory that abstract creation of EncryptedMetadataManager from SDK
+
+### Patch Changes
+
+- 8b3d961: Updated Macaw UI to pre.118
+
 ## 1.7.6
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # saleor-app-search
 
+## 1.13.1
+
+### Patch Changes
+
+- 8b3d961: Updated Macaw UI to pre.118
+- Updated dependencies [8b3d961]
+- Updated dependencies [c50797e]
+  - @saleor/react-hook-form-macaw@0.2.4
+  - @saleor/apps-shared@1.8.0
+  - @saleor/apps-ui@1.1.7
+
 ## 1.13.0
 
 ### Minor Changes
