@@ -3,7 +3,7 @@
 import * as dotenv from "dotenv";
 import { createAppWebhookMigrator } from "./app-webhook-migrator";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
-import { migrateTaxes } from "./taxes-migration";
+import { migrateTaxes } from "./1.13-taxes-migration";
 
 dotenv.config();
 
