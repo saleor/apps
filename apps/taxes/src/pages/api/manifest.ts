@@ -7,8 +7,6 @@ import { orderCalculateTaxesSyncWebhook } from "./webhooks/order-calculate-taxes
 import { orderConfirmedAsyncWebhook } from "./webhooks/order-confirmed";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { orderCancelledAsyncWebhook } from "./webhooks/order-cancelled";
-import { orderFulfilledAsyncWebhook } from "./webhooks/order-fulfilled";
-import { orderCreatedAsyncWebhook } from "./webhooks/order-created";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -39,8 +37,6 @@ export default createManifestHandler({
         checkoutCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
         orderConfirmedAsyncWebhook.getWebhookManifest(apiBaseURL),
         orderCancelledAsyncWebhook.getWebhookManifest(apiBaseURL),
-        orderFulfilledAsyncWebhook.getWebhookManifest(apiBaseURL),
-        orderCreatedAsyncWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 
