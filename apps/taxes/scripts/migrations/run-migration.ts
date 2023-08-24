@@ -29,7 +29,7 @@ const runMigration = async () => {
 
       await migrateTaxes(webhookMigrator);
     } catch (error) {
-      console.log("Error while migrating webhook. Continuing with the next app.");
+      console.log("⏩ Error while migrating webhook. Continuing with the next app.");
       continue;
     }
   }

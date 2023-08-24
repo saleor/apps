@@ -24,7 +24,7 @@ export class AppWebhookMigrator {
       appId: string;
       appWebhookRepository: AppWebhookRepository;
     },
-    { mode }: AppWebhookMigratorOptions
+    { mode }: AppWebhookMigratorOptions,
   ) {
     this.appWebhookRepository = appWebhookRepository;
 
@@ -56,22 +56,22 @@ export class AppWebhookMigrator {
   }
 
   private async deleteWebhookById(webhookId: string) {
-    console.log(`Webhook ${webhookId} will be deleted`);
+    console.log(`⏳ Webhook ${webhookId} will be deleted`);
 
     if (this.mode === "migrate") {
       await this.appWebhookRepository.delete(webhookId);
 
-      console.log(`Webhook ${webhookId} deleted`);
+      console.log(`✅ Webhook ${webhookId} deleted`);
     }
   }
 
   private async disableWebhookById(webhookId: string) {
-    console.log(`Webhook ${webhookId} will be disabled`);
+    console.log(`⏳ Webhook ${webhookId} will be disabled`);
 
     if (this.mode === "migrate") {
       await this.appWebhookRepository.disable(webhookId);
 
-      console.log(`Webhook ${webhookId} disabled`);
+      console.log(`✅ Webhook ${webhookId} disabled`);
     }
   }
 
@@ -82,7 +82,7 @@ export class AppWebhookMigrator {
   async getAppWebhooks() {
     const webhooks = await this.appWebhookRepository.getAll();
 
-    console.log(`Webhooks for app ${this.appId}: `, webhooks);
+    console.log(`📖 Webhooks for app ${this.appId}: `, webhooks);
 
     return webhooks;
   }
@@ -93,7 +93,7 @@ export class AppWebhookMigrator {
     const webhook = webhooks.find((webhook) => webhook.name === webhookName);
 
     if (!webhook) {
-      console.log(`Webhook ${webhookName} not found`);
+      console.log(`🚧 Webhook ${webhookName} not found`);
 
       return;
     }
@@ -111,7 +111,7 @@ export class AppWebhookMigrator {
     const webhook = webhooks.find((webhook) => webhook.name === webhookName);
 
     if (!webhook) {
-      console.log(`Webhook ${webhookName} not found`);
+      console.log(`🚧 Webhook ${webhookName} not found`);
 
       return;
     }
@@ -130,16 +130,16 @@ export class AppWebhookMigrator {
     const webhookExists = webhooks.some((webhook) => webhook.name === webhookHandler.name);
 
     if (webhookExists) {
-      console.log(`Webhook ${webhookHandler.name} already exists`);
+      console.log(`🚧 Webhook ${webhookHandler.name} already exists`);
 
       return;
     }
 
-    console.log(`Webhook ${webhookHandler.name} will be registered`);
+    console.log(`⏳ Webhook ${webhookHandler.name} will be registered`);
 
     if (this.mode === "migrate") {
       await this.registerWebhookFromHandler(webhookHandler);
-      console.log(`Webhook ${webhookHandler.name} registered`);
+      console.log(`✅ Webhook ${webhookHandler.name} registered`);
     }
   }
 
@@ -151,7 +151,7 @@ export class AppWebhookMigrator {
    */
   async rollbackWebhookMigrations(
     prevWebhookName: string,
-    nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook
+    nextWebhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook,
   ) {
     const webhooks = await this.appWebhookRepository.getAll();
 
@@ -181,6 +181,6 @@ export function createAppWebhookMigrator(env: AuthData, options: AppWebhookMigra
       appId: env.appId,
       appWebhookRepository,
     },
-    options
+    options,
   );
 }

@@ -1,4 +1,3 @@
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client, gql } from "urql";
 import {
   CreateAppWebhookDocument,
@@ -95,7 +94,7 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log("Was not able to fetch app webhooks", error.message);
+      console.log("❌ Was not able to fetch app webhooks", error.message);
 
       throw error;
     }
@@ -109,7 +108,10 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log(`Was not able to create webhook for the app ${variables.appId}`, error.message);
+      console.log(
+        `❌ Was not able to create webhook for the app ${variables.appId}`,
+        error.message,
+      );
 
       throw error;
     }
@@ -125,7 +127,7 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log(`Was not able to disable webhook ${id}`, error.message);
+      console.log(`❌ Was not able to disable webhook ${id}`, error.message);
 
       throw error;
     }
@@ -141,7 +143,7 @@ export class AppWebhookRepository {
       .toPromise();
 
     if (error) {
-      console.log(`Was not able to enable webhook ${id}`, error.message);
+      console.log(`❌ Was not able to enable webhook ${id}`, error.message);
 
       throw error;
     }
@@ -159,7 +161,7 @@ export class AppWebhookRepository {
     console.log(data, error);
 
     if (error) {
-      console.log(`Was not able to delete webhook ${id}`, error.message);
+      console.log(`❌ Was not able to delete webhook ${id}`, error.message);
 
       throw error;
     }
