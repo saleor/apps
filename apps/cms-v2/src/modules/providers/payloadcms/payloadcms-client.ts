@@ -12,15 +12,6 @@ type Context = {
   variant: WebhookProductVariantFragment;
 };
 
-const responseSchema = z.object({
-  docs: z.array(
-    z.object({
-      id: z.string(),
-    }),
-  ),
-});
-
-// todo: fix JWT, handle product updated
 export class PayloadCMSClient {
   private logger = createLogger({ name: "PayloadCMSClient" });
 
@@ -41,7 +32,9 @@ export class PayloadCMSClient {
     const queryString = qs.stringify(
       {
         where: {
-          [context.configuration.productVariantFieldsMapping.variantId]: context.variant.id,
+          [context.configuration.productVariantFieldsMapping.variantId]: {
+            equals: context.variant.id,
+          },
         },
       },
       {
@@ -58,7 +51,9 @@ export class PayloadCMSClient {
     const queryString = qs.stringify(
       {
         where: {
-          [context.configuration.productVariantFieldsMapping.variantId]: context.variant.id,
+          [context.configuration.productVariantFieldsMapping.variantId]: {
+            equals: context.variant.id,
+          },
         },
       },
       {
@@ -75,11 +70,13 @@ export class PayloadCMSClient {
         },
       );
 
-      const parsedResponse = await response.json();
-
-      console.log(parsedResponse);
+      if (response.status >= 400) {
+        throw new Error("Error while deleting product variant");
+      }
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
+
+      throw e;
     }
   }
 
@@ -88,8 +85,17 @@ export class PayloadCMSClient {
       "Content-Type": "application/json",
     });
 
-    if (context.configuration.authToken.length > 0) {
-      headers.append("Authorization", `JWT ${context.configuration.authToken}`);
+    /**
+     * https://payloadcms.com/docs/authentication/config#api-keys
+     */
+    if (
+      context.configuration.authToken.length > 0 &&
+      context.configuration.authenticatedUserSlug.length > 0
+    ) {
+      headers.append(
+        "Authorization",
+        `${context.configuration.authenticatedUserSlug} API-Key ${context.configuration.authToken}`,
+      );
     }
 
     return headers;
@@ -105,12 +111,11 @@ export class PayloadCMSClient {
     })
       .then((r) => {
         if (r.status >= 400) {
-          console.error(r);
           throw new Error(`Error while uploading product variant: ${r.statusText}`);
         }
       })
       .catch((e) => {
-        console.error(e);
+        this.logger.error(e);
 
         throw e;
       });
@@ -122,7 +127,9 @@ export class PayloadCMSClient {
     const queryString = qs.stringify(
       {
         where: {
-          [configuration.productVariantFieldsMapping.variantId]: variant.id,
+          [configuration.productVariantFieldsMapping.variantId]: {
+            equals: variant.id,
+          },
         },
       },
       {
@@ -137,11 +144,13 @@ export class PayloadCMSClient {
         headers: this.getHeaders({ configuration, variant }),
       });
 
-      const parsedResponse = await response.json();
-
-      console.log(parsedResponse);
+      if (response.status >= 400) {
+        throw new Error("Error while updating product variant");
+      }
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
+
+      throw e;
     }
   }
 

@@ -57,25 +57,43 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           label="API url"
           helperText="URL where Payload API is available. By default ends with /api"
         />
-        <Input
-          control={control}
-          name="authToken"
-          type="password"
-          label="JWT Auth Token"
-          helperText={
-            <Text variant="caption" color="textNeutralSubdued">
-              Token assigned to Payload user authenticated to perform all CRUD operations. Optional
-              if operations are public (not recommended).{" "}
-              <TextLink
-                size="small"
-                newTab
-                href="https://payloadcms.com/docs/authentication/overview#token-based-auth"
-              >
-                Read more in Payload docs
-              </TextLink>
-            </Text>
-          }
-        />
+
+        <Box
+          backgroundColor="surfaceNeutralHighlight"
+          borderColor="neutralHighlight"
+          borderWidth={1}
+          borderStyle={"solid"}
+          padding={4}
+          borderRadius={4}
+        >
+          <Text variant="heading" as="h1" marginBottom={4}>
+            Authorization
+          </Text>
+          <Text marginBottom={2} as="p">
+            Payload can be configured to have open operations (not recommended) or to require an API
+            key. Key can be generated per user. To authenticate, you need to provide both user slug
+            and the key itself.{" "}
+          </Text>
+          <TextLink
+            marginBottom={2}
+            display="block"
+            newTab
+            href="https://payloadcms.com/docs/authentication/config"
+          >
+            Read more in Payload docs
+          </TextLink>
+          <Text as="p" marginBottom={4}>
+            If your API is open (e.g. for development purposes) leave both fields empty.
+          </Text>
+
+          <Input
+            control={control}
+            name="authenticatedUserSlug"
+            label="Authenticated user slug"
+            placeholder="e.g. apps"
+          />
+          <Input control={control} name="authToken" type="password" label="User API Key" />
+        </Box>
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
         <Text variant="heading">Configure fields mapping</Text>
@@ -170,6 +188,7 @@ const AddFormVariant = () => {
         authToken: "",
         configName: "",
         collectionName: "",
+        authenticatedUserSlug: "",
         productVariantFieldsMapping: {
           channels: "",
           variantName: "",

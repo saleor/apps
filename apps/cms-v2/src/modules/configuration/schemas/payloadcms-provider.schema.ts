@@ -9,6 +9,7 @@ const InputSchema = z.object({
   collectionName: z.string().min(1),
   productVariantFieldsMapping: SaleorProviderFieldsMappingSchema,
   payloadApiUrl: z.string().url(),
+  authenticatedUserSlug: z.string(),
 });
 
 const FullSchema = InputSchema.extend({
