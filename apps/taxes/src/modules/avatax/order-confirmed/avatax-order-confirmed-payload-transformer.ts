@@ -25,7 +25,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
   async transform(
     order: OrderConfirmedSubscriptionFragment,
     avataxConfig: AvataxConfig,
-    matches: AvataxTaxCodeMatches
+    matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
     const avataxClient = new AvataxClient(avataxConfig);
 
@@ -46,9 +46,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         code,
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
-        customerCode:
-          order.user?.id ??
-          "" /* In Saleor AvaTax plugin, the customer code is 0. In Taxes App, we set it to the user id. */,
+        customerCode: taxProviderUtils.resolveStringOrThrow(order.user?.id),
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
@@ -62,7 +60,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         lines: linesTransformer.transform(order, avataxConfig, matches),
         date,
         discount: discountUtils.sumDiscounts(
-          order.discounts.map((discount) => discount.amount.amount)
+          order.discounts.map((discount) => discount.amount.amount),
         ),
       },
     };

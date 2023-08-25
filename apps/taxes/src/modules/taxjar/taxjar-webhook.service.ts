@@ -10,6 +10,7 @@ import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-
 import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
+import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
@@ -29,10 +30,10 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     });
   }
 
-  async calculateTaxes(taxBase: TaxBaseFragment) {
+  async calculateTaxes(payload: CalculateTaxesPayload) {
     const adapter = new TaxJarCalculateTaxesAdapter(this.config, this.authData);
 
-    const response = await adapter.send({ taxBase });
+    const response = await adapter.send(payload);
 
     return response;
   }

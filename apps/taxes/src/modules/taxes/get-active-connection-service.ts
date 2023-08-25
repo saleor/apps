@@ -12,6 +12,7 @@ import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
+import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -47,7 +48,7 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     }
   }
 
-  async calculateTaxes(payload: TaxBaseFragment) {
+  async calculateTaxes(payload: CalculateTaxesPayload) {
     return this.client.calculateTaxes(payload);
   }
 

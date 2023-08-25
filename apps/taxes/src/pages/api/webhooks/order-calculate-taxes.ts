@@ -52,11 +52,11 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
     const activeConnectionService = getActiveConnectionService(
       channelSlug,
       appMetadata,
-      ctx.authData
+      ctx.authData,
     );
 
     logger.info("Found active connection service. Calculating taxes...");
-    const calculatedTaxes = await activeConnectionService.calculateTaxes(payload.taxBase);
+    const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
 
     logger.info({ calculatedTaxes }, "Taxes calculated");
     return webhookResponse.success(ctx.buildResponse(calculatedTaxes));

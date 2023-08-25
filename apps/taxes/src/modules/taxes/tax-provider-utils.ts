@@ -16,7 +16,10 @@ function resolveOptionalOrThrow<T>(value: T | undefined | null, error?: Error): 
 }
 
 function resolveStringOrThrow(value: string | undefined | null): string {
-  return z.string().min(1, { message: "This field can not be empty." }).parse(value);
+  return z
+    .string({ required_error: "This field must be defined." })
+    .min(1, { message: "This field can not be empty." })
+    .parse(value);
 }
 
 export const taxProviderUtils = {
