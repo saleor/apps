@@ -13,6 +13,10 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     const matchesMock = mockGenerator.generateTaxCodeMatches();
     const payloadMock = {
       taxBase: taxBaseMock,
+      issuingPrincipal: {
+        __typename: "User",
+        id: "1",
+      },
     } as unknown as CalculateTaxesPayload;
 
     const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
@@ -28,6 +32,10 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     const matchesMock = mockGenerator.generateTaxCodeMatches();
     const payloadMock = {
       taxBase: taxBaseMock,
+      issuingPrincipal: {
+        __typename: "User",
+        id: "1",
+      },
     } as unknown as CalculateTaxesPayload;
 
     const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
@@ -39,13 +47,15 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     expect(payload.model.discount).toEqual(10);
   });
   it("when no discounts, the sum of discount is 0", async () => {
-    const mockGenerator = new AvataxCalculateTaxesMockGenerator();
-    const avataxConfigMock = mockGenerator.generateAvataxConfig();
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
     const payloadMock = {
       taxBase: taxBaseMock,
+      issuingPrincipal: {
+        __typename: "User",
+        id: "1",
+      },
     } as unknown as CalculateTaxesPayload;
 
     const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
@@ -55,5 +65,21 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     );
 
     expect(payload.model.discount).toEqual(0);
+  });
+  it("when no issuingPrincipal.id, throws an error", async () => {
+    const taxBaseMock = mockGenerator.generateTaxBase();
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+    const payloadMock = {
+      taxBase: taxBaseMock,
+    } as unknown as CalculateTaxesPayload;
+
+    await expect(
+      new AvataxCalculateTaxesPayloadTransformer().transform(
+        payloadMock,
+        avataxConfigMock,
+        matchesMock,
+      ),
+    ).rejects.toThrow("This field must be defined.");
   });
 });
