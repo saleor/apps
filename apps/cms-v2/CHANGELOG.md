@@ -1,5 +1,16 @@
 # saleor-app-cms-v2
 
+## 2.3.0
+
+### Minor Changes
+
+- 6f1c5c9: Added Payload CMS support.
+
+### Patch Changes
+
+- e9378e7: Fix PayloadCMS form where two inputs were stuck together without a margin. Now, they are placed in two columns
+- 6f1c5c9: Fix styling of modal in the dark mode
+
 ## 2.2.2
 
 ### Patch Changes
