@@ -21,6 +21,19 @@ export class AvataxCalculateTaxesPayloadTransformer {
     return DocumentType.SalesOrder;
   }
 
+  // During the checkout process, it appears the customer id is not always available. We can use the email address instead.
+  private resolveCustomerCode(payload: CalculateTaxesPayload): string {
+    if (payload.taxBase.sourceObject.__typename === "Checkout") {
+      return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.email);
+    }
+
+    if (payload.taxBase.sourceObject.__typename === "Order") {
+      return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.userEmail);
+    }
+
+    throw new Error("Cannot resolve customer code");
+  }
+
   async transform(
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
@@ -33,9 +46,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
-    const customerCode = taxProviderUtils.resolveStringOrThrow(
-      payload.issuingPrincipal?.__typename === "User" ? payload.issuingPrincipal.id : undefined,
-    );
+    const customerCode = this.resolveCustomerCode(payload);
 
     return {
       model: {
