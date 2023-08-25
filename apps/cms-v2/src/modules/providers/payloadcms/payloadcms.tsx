@@ -2,6 +2,7 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 
 import { CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./logo.png";
+import { TextLink } from "@saleor/apps-ui";
 
 export const PayloadCMS = {
   formSideInfo: (
@@ -13,7 +14,11 @@ export const PayloadCMS = {
         Fields are not validated - ensure you enter correct values.
       </Text>
       <Text as="p" marginBottom={2}>
-        Consult docs for more information how to set up Payload CMS. TODO
+        Consult{" "}
+        <TextLink newTab href="https://docs.saleor.io/docs/3.x/developer/app-store/apps/cms">
+          docs
+        </TextLink>{" "}
+        for more information how to set up Payload CMS.
       </Text>
     </Box>
   ),

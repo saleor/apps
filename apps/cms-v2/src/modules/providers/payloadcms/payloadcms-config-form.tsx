@@ -106,7 +106,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 
         <React.Fragment>
           <Text as="p" variant="heading" size="small">
-            Map fields from Saleor to your contentful schema.
+            Map fields from Saleor to your Payload schema.
           </Text>
           <Text as="p" marginTop={2} marginBottom={4}>
             All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
@@ -122,7 +122,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             padding={2}
           >
             <Text variant="caption">Saleor Field</Text>
-            <Text variant="caption">Contentful field</Text>
+            <Text variant="caption">Payload field</Text>
           </Box>
           {SaleorProviderFieldsMappingKeys.map((saleorField) => (
             // todo extract this table to component

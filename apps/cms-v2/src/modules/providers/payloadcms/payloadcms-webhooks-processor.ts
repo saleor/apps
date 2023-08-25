@@ -12,7 +12,8 @@ import { PayloadCMSClient } from "./payloadcms-client";
  * todo error handling
  */
 export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
-  // private client: DatoCMSClient;
+  private client = new PayloadCMSClient();
+
   private logger = createLogger({ name: "PayloadCmsWebhooksProcessor" });
 
   constructor(private providerConfig: PayloadCmsProviderConfig.FullShape) {}
@@ -20,9 +21,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.trace("onProductVariantUpdated called");
 
-    const client = new PayloadCMSClient();
-
-    await client.upsertProductVariant({
+    await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
@@ -31,9 +30,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.trace("onProductVariantCreated called");
 
-    const client = new PayloadCMSClient();
-
-    await client.uploadProductVariant({
+    await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
@@ -41,9 +38,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.trace("onProductVariantDeleted called");
 
-    const client = new PayloadCMSClient();
-
-    await client.deleteProductVariant({
+    await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });

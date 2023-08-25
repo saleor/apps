@@ -12,6 +12,10 @@ type Context = {
   variant: WebhookProductVariantFragment;
 };
 
+/**
+ * Client uses REST API with built-in query language
+ * https://payloadcms.com/docs/queries/overview#rest-queries
+ */
 export class PayloadCMSClient {
   private logger = createLogger({ name: "PayloadCMSClient" });
 
@@ -158,11 +162,9 @@ export class PayloadCMSClient {
     this.logger.debug("Trying to upsert product variant");
 
     try {
-      this.logger.debug("Trying to upload product variant");
-
       await this.uploadProductVariant(context);
     } catch (e) {
-      this.logger.debug("Trying to update product variant");
+      this.logger.debug("Failed to upload, will try to update");
 
       await this.updateProductVariant(context);
     }
