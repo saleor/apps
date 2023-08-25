@@ -28,7 +28,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     }
 
     if (payload.taxBase.sourceObject.__typename === "Order") {
-      return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.user?.email);
+      return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.userEmail);
     }
 
     throw new Error("Cannot resolve customer code");
