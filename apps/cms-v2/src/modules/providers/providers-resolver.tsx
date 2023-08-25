@@ -22,6 +22,10 @@ import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider
 import { BuilderIo } from "./builder.io/builder-io";
 import { BuilderIoWebhooksProcessor } from "./builder.io/builder-io-webhooks-processor";
 import { BuilderIoBulkSyncProcessor } from "./builder.io/builder-io-bulk-sync-processor";
+import { PayloadCmsBulkSyncProcessor } from "./payloadcms/payloadcms-bulk-sync-processor";
+import { PayloadCmsProviderConfig } from "../configuration/schemas/payloadcms-provider.schema";
+import { PayloadCMS } from "./payloadcms/payloadcms";
+import { PayloadCmsWebhooksProcessor } from "./payloadcms/payloadcms-webhooks-processor";
 
 /**
  * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.
@@ -39,9 +43,9 @@ export const ProvidersResolver = {
       case "builder.io": {
         return new BuilderIoBulkSyncProcessor(config);
       }
-
-      default:
-        throw new Error(`Unknown provider`);
+      case "payloadcms": {
+        return new PayloadCmsBulkSyncProcessor(config);
+      }
     }
   },
   getProviderInputSchema(type: CMSType) {
@@ -54,9 +58,8 @@ export const ProvidersResolver = {
         return StrapiProviderConfig.Schema.Input;
       case "builder.io":
         return BuilderIoProviderConfig.Schema.Input;
-      default: {
-        throw new Error("Failed to build input schema");
-      }
+      case "payloadcms":
+        return PayloadCmsProviderConfig.Schema.Input;
     }
   },
   getProviderSchema(type: CMSType) {
@@ -69,12 +72,11 @@ export const ProvidersResolver = {
         return StrapiProviderConfig.Schema.Full;
       case "builder.io":
         return BuilderIoProviderConfig.Schema.Full;
-      default: {
-        throw new Error("Failed to build provdier schema");
-      }
+      case "payloadcms":
+        return PayloadCmsProviderConfig.Schema.Full;
     }
   },
-  createProviderMeta(type: CMSType | string): CMS {
+  createProviderMeta(type: CMSType): CMS {
     switch (type) {
       case "contentful": {
         return Contentful;
@@ -88,8 +90,8 @@ export const ProvidersResolver = {
       case "builder.io": {
         return BuilderIo;
       }
-      default: {
-        throw new Error("Unknown provider");
+      case "payloadcms": {
+        return PayloadCMS;
       }
     }
   },
@@ -107,13 +109,13 @@ export const ProvidersResolver = {
       case "builder.io": {
         return new BuilderIoWebhooksProcessor(config);
       }
-      default: {
-        throw new Error("Failed to build webhook processor.");
+      case "payloadcms": {
+        return new PayloadCmsWebhooksProcessor(config);
       }
     }
   },
   getEditProviderFormComponent: (
-    type: CMSType
+    type: CMSType,
   ): ComponentType<{
     configId: string;
   }> => {
@@ -121,33 +123,37 @@ export const ProvidersResolver = {
       case "contentful": {
         return dynamic(() =>
           import("./contentful/contentful-config-form").then(
-            (module) => module.ContentfulConfigForm.EditVariant
-          )
+            (module) => module.ContentfulConfigForm.EditVariant,
+          ),
         );
       }
       case "datocms": {
         return dynamic(() =>
           import("./datocms/datocms-config-form").then(
-            (module) => module.DatoCMSConfigForm.EditVariant
-          )
+            (module) => module.DatoCMSConfigForm.EditVariant,
+          ),
         );
       }
       case "strapi": {
         return dynamic(() =>
           import("./strapi/strapi-config-form").then(
-            (module) => module.StrapiConfigForm.EditVariant
-          )
+            (module) => module.StrapiConfigForm.EditVariant,
+          ),
         );
       }
       case "builder.io": {
         return dynamic(() =>
           import("./builder.io/builder-io-config-form").then(
-            (module) => module.BuilderIoConfigForm.EditVariant
-          )
+            (module) => module.BuilderIoConfigForm.EditVariant,
+          ),
         );
       }
-      default: {
-        throw new Error("Provider form not registered");
+      case "payloadcms": {
+        return dynamic(() =>
+          import("./payloadcms/payloadcms-config-form").then(
+            (module) => module.PayloadCMSConfigForm.EditVariant,
+          ),
+        );
       }
     }
   },
@@ -156,31 +162,37 @@ export const ProvidersResolver = {
       case "contentful": {
         return dynamic(() =>
           import("./contentful/contentful-config-form").then(
-            (module) => module.ContentfulConfigForm.AddVariant
-          )
+            (module) => module.ContentfulConfigForm.AddVariant,
+          ),
         );
       }
       case "datocms": {
         return dynamic(() =>
           import("./datocms/datocms-config-form").then(
-            (module) => module.DatoCMSConfigForm.AddVariant
-          )
+            (module) => module.DatoCMSConfigForm.AddVariant,
+          ),
         );
       }
       case "strapi": {
         return dynamic(() =>
-          import("./strapi/strapi-config-form").then((module) => module.StrapiConfigForm.AddVariant)
+          import("./strapi/strapi-config-form").then(
+            (module) => module.StrapiConfigForm.AddVariant,
+          ),
         );
       }
       case "builder.io": {
         return dynamic(() =>
           import("./builder.io/builder-io-config-form").then(
-            (module) => module.BuilderIoConfigForm.AddVariant
-          )
+            (module) => module.BuilderIoConfigForm.AddVariant,
+          ),
         );
       }
-      default: {
-        throw new Error("Provider form not registered");
+      case "payloadcms": {
+        return dynamic(() =>
+          import("./payloadcms/payloadcms-config-form").then(
+            (module) => module.PayloadCMSConfigForm.AddVariant,
+          ),
+        );
       }
     }
   },

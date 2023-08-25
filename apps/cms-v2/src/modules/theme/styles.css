@@ -9,7 +9,7 @@ dialog {
 
 .dialog-overlay {
     z-index: 1;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(var(--mu-colors-background-plain), 0.8);
     backdrop-filter: blur(5px);
     content: "";
     position: fixed;

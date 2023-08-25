@@ -104,7 +104,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           padding={2}
         >
           <Text variant="caption">Saleor Field</Text>
-          <Text variant="caption">Contentful field</Text>
+          <Text variant="caption">Builder.io field</Text>
         </Box>
         {SaleorProviderFieldsMappingKeys.map((saleorField) => (
           // todo extract this table to component
@@ -190,7 +190,7 @@ const EditFormVariant = (props: { configId: string }) => {
     },
     {
       enabled: !!props.configId,
-    }
+    },
   );
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {

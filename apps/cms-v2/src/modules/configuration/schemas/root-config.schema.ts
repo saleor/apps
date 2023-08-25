@@ -4,6 +4,7 @@ import { ContentfulProviderConfig } from "./contentful-provider.schema";
 import { BuilderIoProviderConfig } from "./builder-provider.schema";
 import { StrapiProviderConfig } from "./strapi-provider.schema";
 import { DatocmsProviderConfig } from "./datocms-provider.schema";
+import { PayloadCmsProviderConfig } from "./payloadcms-provider.schema";
 
 export namespace ProvidersConfig {
   const AnyFull = z.union([
@@ -14,6 +15,7 @@ export namespace ProvidersConfig {
     DatocmsProviderConfig.Schema.Full,
     StrapiProviderConfig.Schema.Full,
     BuilderIoProviderConfig.Schema.Full,
+    PayloadCmsProviderConfig.Schema.Full,
   ]);
 
   export const Schema = {
@@ -23,6 +25,7 @@ export namespace ProvidersConfig {
       DatocmsProviderConfig.Schema.Input,
       StrapiProviderConfig.Schema.Input,
       BuilderIoProviderConfig.Schema.Input,
+      PayloadCmsProviderConfig.Schema.Input,
     ]),
     AnyFullList: z.array(AnyFull),
   };

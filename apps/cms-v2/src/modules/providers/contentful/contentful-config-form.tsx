@@ -53,7 +53,7 @@ const PureForm = ({
         });
         notifyError(
           "Error",
-          "Could not fetch content types from Contentful. Please check your credentials."
+          "Could not fetch content types from Contentful. Please check your credentials.",
         );
       },
     });
@@ -76,7 +76,7 @@ const PureForm = ({
         });
         notifyError(
           "Error",
-          "Could not fetch environments from Contentful. Please check your credentials."
+          "Could not fetch environments from Contentful. Please check your credentials.",
         );
       },
     });
@@ -197,7 +197,7 @@ const PureForm = ({
                     newTab
                     size="small"
                     href={`https://app.contentful.com/spaces/${getValues(
-                      "spaceId"
+                      "spaceId",
                     )}/settings/environments`}
                   >
                     here
@@ -247,7 +247,7 @@ const PureForm = ({
 
           <Box marginTop={4}>
             <Text as="p" variant="heading" size="small">
-              Map fields from Saleor to your contentful schema.
+              Map fields from Saleor to your Contentful schema.
             </Text>
             <Text as="p" marginTop={2} marginBottom={4}>
               All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should
@@ -357,7 +357,7 @@ const EditVariant = ({ configId }: { configId: string }) => {
     },
     {
       enabled: !!configId,
-    }
+    },
   );
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
