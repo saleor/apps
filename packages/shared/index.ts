@@ -6,3 +6,4 @@ export * from "./src/logger";
 export * from "./src/saleor-version-compatibility-validator";
 export * from "./src/create-graphql-client";
 export * from "./src/metadata-manager";
+export * from "./src/editor-js/editor-js-plaintext-renderer";
