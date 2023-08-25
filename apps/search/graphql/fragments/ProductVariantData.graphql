@@ -19,6 +19,7 @@ fragment ProductVariantData on ProductVariant {
     id
     channel {
       slug
+      currencyCode
     }
     price {
       currency

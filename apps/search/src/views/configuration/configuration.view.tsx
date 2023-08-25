@@ -6,13 +6,11 @@ import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { MainInstructions } from "../../components/MainInstructions";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 import { TextLink } from "@saleor/apps-ui";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { IndicesSettings } from "../../components/IndicesSettings";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
 export const ConfigurationView = () => {
-  const { appBridgeState } = useAppBridge();
-
   return (
     <Box display="flex" flexDirection="column" gap={10}>
       <Box>
@@ -54,6 +52,18 @@ export const ConfigurationView = () => {
         sideContent={
           <Box>
             <Text>Perform initial index of all products in your Saleor database</Text>
+          </Box>
+        }
+      />
+
+      <AppSection
+        includePadding
+        marginTop={14}
+        heading="Set indices settings"
+        mainContent={<IndicesSettings />}
+        sideContent={
+          <Box>
+            <Text>Sets up indices with recommended settings.</Text>
           </Box>
         }
       />

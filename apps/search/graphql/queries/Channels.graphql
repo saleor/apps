@@ -1,5 +1,6 @@
 query Channels {
   channels {
     slug
+    currencyCode
   }
 }
