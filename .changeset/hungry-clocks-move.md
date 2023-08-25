@@ -2,4 +2,4 @@
 "saleor-app-cms-v2": patch
 ---
 
-Fix PayloadCMS form where two inputs where stick together without a margin. Now they are placed in two columns
+Fix PayloadCMS form where two inputs were stuck together without a margin. Now, they are placed in two columns
