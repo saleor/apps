@@ -10,5 +10,11 @@ fragment CalculateTaxesEvent on Event {
         value
       }
     }
+    issuingPrincipal {
+      __typename
+      ... on User {
+        id
+      }
+    }
   }
 }

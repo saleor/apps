@@ -7,6 +7,8 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
+import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -20,32 +22,38 @@ export class AvataxCalculateTaxesPayloadTransformer {
   }
 
   async transform(
-    taxBase: TaxBaseFragment,
+    payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
-    matches: AvataxTaxCodeMatches
+    matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-    const entityUseCode = await entityTypeMatcher.match(taxBase.sourceObject.avataxEntityCode);
+    const entityUseCode = await entityTypeMatcher.match(
+      payload.taxBase.sourceObject.avataxEntityCode,
+    );
+
+    const customerCode = taxProviderUtils.resolveStringOrThrow(
+      payload.issuingPrincipal?.__typename === "User" ? payload.issuingPrincipal.id : undefined,
+    );
 
     return {
       model: {
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
-        customerCode: taxBase.sourceObject.user?.id ?? "",
+        customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {
           shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
-          shipTo: avataxAddressFactory.fromSaleorAddress(taxBase.address!),
+          shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
-        currencyCode: taxBase.currency,
-        lines: payloadLinesTransformer.transform(taxBase, avataxConfig, matches),
+        currencyCode: payload.taxBase.currency,
+        lines: payloadLinesTransformer.transform(payload.taxBase, avataxConfig, matches),
         date: new Date(),
         discount: discountUtils.sumDiscounts(
-          taxBase.discounts.map((discount) => discount.amount.amount)
+          payload.taxBase.discounts.map((discount) => discount.amount.amount),
         ),
       },
     };

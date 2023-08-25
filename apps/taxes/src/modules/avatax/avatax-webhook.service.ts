@@ -8,6 +8,7 @@ import { AvataxConfig, defaultAvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
+import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   config = defaultAvataxConfig;
@@ -27,10 +28,10 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.client = avataxClient;
   }
 
-  async calculateTaxes(taxBase: TaxBaseFragment) {
+  async calculateTaxes(payload: CalculateTaxesPayload) {
     const adapter = new AvataxCalculateTaxesAdapter(this.config, this.authData);
 
-    const response = await adapter.send({ taxBase });
+    const response = await adapter.send(payload);
 
     return response;
   }

@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { TaxBaseFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
+import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -10,26 +10,27 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
-export type AvataxCalculateTaxesPayload = {
-  taxBase: TaxBaseFragment;
-};
-
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
 export class AvataxCalculateTaxesAdapter
-  implements WebhookAdapter<AvataxCalculateTaxesPayload, AvataxCalculateTaxesResponse>
+  implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
   private logger: Logger;
-  constructor(private readonly config: AvataxConfig, private authData: AuthData) {
+  constructor(
+    private readonly config: AvataxConfig,
+    private authData: AuthData,
+  ) {
     this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
   }
 
-  // todo: refactor because its getting too big
-  async send(payload: AvataxCalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
-    this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
+  async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
+    this.logger.debug(
+      { payload },
+      "Transforming the Saleor payload for calculating taxes with AvaTax...",
+    );
     const payloadService = new AvataxCalculateTaxesPayloadService(this.authData);
-    const target = await payloadService.getPayload(payload.taxBase, this.config);
+    const target = await payloadService.getPayload(payload, this.config);
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 

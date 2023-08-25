@@ -96,9 +96,6 @@ const taxIncludedTaxBase: TaxBase = {
   ],
   sourceObject: {
     avataxEntityCode: null,
-    user: {
-      id: "VXNlcjoyMDg0NTEwNDEw",
-    },
   },
 };
 
@@ -194,9 +191,6 @@ const taxExcludedTaxBase: TaxBase = {
   ],
   sourceObject: {
     avataxEntityCode: null,
-    user: {
-      id: "VXNlcjoyMDg0NTEwNDEw",
-    },
   },
 };
 
