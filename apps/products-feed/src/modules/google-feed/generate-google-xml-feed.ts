@@ -2,12 +2,12 @@ import { XMLBuilder } from "fast-xml-parser";
 import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
-import { EditorJsPlaintextRenderer } from "../editor-js/editor-js-plaintext-renderer";
 import { RootConfig } from "../app-configuration/app-config";
 import { getMappedAttributes } from "./attribute-mapping";
 import { priceMapping } from "./price-mapping";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
+import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
