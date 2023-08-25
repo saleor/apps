@@ -2,9 +2,11 @@ subscription ProductVariantDeleted {
   event {
     __typename
     ... on ProductVariantDeleted {
-      __typename
       productVariant {
-        ...ProductVariantWebhookPayload
+        id
+        product{
+          id
+        }
       }
     }
     recipient {
