@@ -82,17 +82,19 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           >
             Read more in Payload docs
           </TextLink>
-          <Text as="p" marginBottom={4}>
+          <Text as="p" marginBottom={6}>
             If your API is open (e.g. for development purposes) leave both fields empty.
           </Text>
 
-          <Input
-            control={control}
-            name="authenticatedUserSlug"
-            label="Authenticated user slug"
-            placeholder="e.g. apps"
-          />
-          <Input control={control} name="authToken" type="password" label="User API Key" />
+          <Box display="grid" gap={4} gridTemplateColumns={2}>
+            <Input
+              control={control}
+              name="authenticatedUserSlug"
+              label="Authenticated user slug"
+              placeholder="e.g. apps"
+            />
+            <Input control={control} name="authToken" type="password" label="User API Key" />
+          </Box>
         </Box>
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
