@@ -107,6 +107,8 @@ const defaultTaxBase: TaxBase = {
   ],
   sourceObject: {
     avataxEntityCode: null,
+    __typename: "Checkout",
+    email: "test@saleor.io",
   },
 };
 

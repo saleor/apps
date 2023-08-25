@@ -14,6 +14,10 @@ import {
   EnableWebhookMutationVariables,
   FetchAppWebhooksDocument,
   FetchAppWebhooksQuery,
+  UpdateAppWebhookDocument,
+  UpdateAppWebhookMutation,
+  UpdateAppWebhookMutationVariables,
+  WebhookUpdateInput,
 } from "../../generated/graphql";
 
 gql`
@@ -48,6 +52,16 @@ gql`
         syncEvents: $syncEvents
       }
     ) {
+      webhook {
+        id
+      }
+    }
+  }
+`;
+
+gql`
+  mutation UpdateAppWebhook($id: ID!, $input: WebhookUpdateInput!) {
+    webhookUpdate(id: $id, input: $input) {
       webhook {
         id
       }
@@ -167,5 +181,22 @@ export class AppWebhookRepository {
     }
 
     return data?.webhookDelete?.webhook?.id;
+  }
+
+  async update(id: string, input: WebhookUpdateInput) {
+    const { error, data } = await this.client
+      .mutation<UpdateAppWebhookMutation>(UpdateAppWebhookDocument, {
+        id,
+        input,
+      } as UpdateAppWebhookMutationVariables)
+      .toPromise();
+
+    if (error) {
+      console.log(`❌ Was not able to update webhook ${id}`, error.message);
+
+      throw error;
+    }
+
+    return data?.webhookUpdate?.webhook?.id;
   }
 }

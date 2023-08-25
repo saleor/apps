@@ -66,8 +66,10 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
 
     expect(payload.model.discount).toEqual(0);
   });
-  it("when no issuingPrincipal.id, throws an error", async () => {
-    const taxBaseMock = mockGenerator.generateTaxBase();
+  it("when no email in sourceObject, throws an error", async () => {
+    const taxBaseMock = mockGenerator.generateTaxBase({
+      sourceObject: { email: undefined, __typename: "Checkout" },
+    });
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
     const payloadMock = {

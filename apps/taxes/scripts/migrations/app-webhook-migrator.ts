@@ -8,6 +8,8 @@ type AppWebhookMigratorOptions = {
   mode: "report" | "migrate";
 };
 
+type AppWebhookHandler = SaleorSyncWebhook | SaleorAsyncWebhook;
+
 export class AppWebhookMigrator {
   private appWebhookRepository: AppWebhookRepository;
   private appId: string;
@@ -33,7 +35,7 @@ export class AppWebhookMigrator {
     this.mode = mode;
   }
 
-  private registerWebhookFromHandler(webhookHandler: SaleorSyncWebhook | SaleorAsyncWebhook) {
+  private registerWebhookFromHandler(webhookHandler: AppWebhookHandler) {
     const manifest = webhookHandler.getWebhookManifest(this.apiUrl);
 
     if (!manifest.query) {
@@ -44,15 +46,19 @@ export class AppWebhookMigrator {
       throw new Error("Webhook name is required");
     }
 
-    return this.appWebhookRepository.create({
-      appId: this.appId,
-      name: manifest.name,
-      query: manifest.query,
-      targetUrl: manifest.targetUrl,
-      asyncEvents: (manifest.asyncEvents ?? []) as WebhookEventTypeAsyncEnum[],
-      syncEvents: (manifest.syncEvents ?? []) as WebhookEventTypeSyncEnum[],
-      isActive: manifest.isActive ?? true,
-    });
+    console.log(`⏳ Webhook ${manifest.name} will be registered`);
+
+    if (this.mode === "migrate") {
+      return this.appWebhookRepository.create({
+        appId: this.appId,
+        name: manifest.name,
+        query: manifest.query,
+        targetUrl: manifest.targetUrl,
+        asyncEvents: (manifest.asyncEvents ?? []) as WebhookEventTypeAsyncEnum[],
+        syncEvents: (manifest.syncEvents ?? []) as WebhookEventTypeSyncEnum[],
+        isActive: manifest.isActive ?? true,
+      });
+    }
   }
 
   private async deleteWebhookById(webhookId: string) {
@@ -117,6 +123,28 @@ export class AppWebhookMigrator {
     }
 
     await this.deleteWebhookById(webhook.id);
+  }
+
+  async updateWebhookQueryByHandler(webhookHandler: AppWebhookHandler) {
+    const webhooks = await this.getAppWebhooks();
+
+    const manifest = webhookHandler.getWebhookManifest(this.apiUrl);
+    const webhookName = manifest.name;
+
+    const webhook = webhooks.find((webhook) => webhook.name === webhookName);
+
+    if (!webhook) {
+      console.log(`🚧 Webhook ${webhookName} not found`);
+
+      return;
+    }
+
+    console.log(`⏳ Webhook ${webhookName} query will be updated`);
+
+    if (this.mode === "migrate") {
+      await this.appWebhookRepository.update(webhook.id, { query: manifest.query });
+      console.log(`✅ Webhook ${webhookName} query updated`);
+    }
   }
 
   /**
