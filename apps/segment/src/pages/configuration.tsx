@@ -21,7 +21,7 @@ const ConfigurationPage: NextPage = () => {
       <AppHeader />
       <AppSection
         marginBottom={14}
-        heading="Segment.io configration"
+        heading="Segment.io configuration"
         sideContent={<Text>Provide Segment credentials to allow sending events.</Text>}
         mainContent={<SegmentConfigForm />}
       />
