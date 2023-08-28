@@ -53,8 +53,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -201,8 +201,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.55.2
         version: 7.55.2(next@13.4.8)(react@18.2.0)
@@ -343,8 +343,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.55.2
         version: 7.55.2(next@13.4.8)(react@18.2.0)
@@ -473,8 +473,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -639,8 +639,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.55.2
         version: 7.55.2(next@13.4.8)(react@18.2.0)
@@ -787,8 +787,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.55.2
         version: 7.55.2(next@13.4.8)(react@18.2.0)
@@ -908,8 +908,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1053,8 +1053,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1180,8 +1180,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1325,8 +1325,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1452,8 +1452,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1637,8 +1637,8 @@ importers:
         specifier: ^7.21.8
         version: 7.22.5
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-actions':
         specifier: ^7.0.12
         version: 7.0.12(react-dom@18.2.0)(react@18.2.0)
@@ -1728,8 +1728,8 @@ importers:
         specifier: 0.41.1
         version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1780,8 +1780,8 @@ importers:
         specifier: 0.41.1
         version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/macaw-ui':
-        specifier: 0.8.0-pre.126
-        version: 0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -6816,8 +6816,8 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
 
-  /@floating-ui/react-dom@2.0.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-rZtAmSht4Lry6gdhAJDrCp/6rKN7++JnL1/Anbr/DdeyYXQPxvg/ivrbYvJulbRf4vL8b212suwMM2lxbv+RQA==}
+  /@floating-ui/react-dom@2.0.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-5qhlDvjaLmAst/rKb3VdlCinwTF4EYMiVxuuc/HVUjs46W0zgtbMmAZ1UTsDrRTxRmUEzl92mOtWbeeXL26lSQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -7064,7 +7064,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       '@whatwg-node/fetch': 0.9.9
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
     transitivePeerDependencies:
       - encoding
     dev: true
@@ -7078,7 +7078,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       dataloader: 2.2.2
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -7092,7 +7092,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -7111,7 +7111,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       dataloader: 2.2.2
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -7126,7 +7126,7 @@ packages:
       graphql: 16.7.1
       graphql-ws: 5.14.0(graphql@16.7.1)
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      tslib: 2.6.1
+      tslib: 2.6.0
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
@@ -7145,7 +7145,7 @@ packages:
       extract-files: 11.0.0
       graphql: 16.7.1
       meros: 1.3.0(@types/node@18.15.3)
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
@@ -7161,7 +7161,7 @@ packages:
       '@types/ws': 8.5.5
       graphql: 16.7.1
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      tslib: 2.6.1
+      tslib: 2.6.0
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
@@ -7178,7 +7178,7 @@ packages:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       '@repeaterjs/repeater': 3.0.4
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -7193,7 +7193,7 @@ packages:
       graphql: 16.7.1
       is-glob: 4.0.3
       micromatch: 4.0.5
-      tslib: 2.6.1
+      tslib: 2.6.0
       unixify: 1.0.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -7212,7 +7212,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       '@whatwg-node/fetch': 0.9.9
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@babel/core'
@@ -7231,7 +7231,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       unixify: 1.0.0
     dev: true
 
@@ -7247,7 +7247,7 @@ packages:
       '@babel/types': 7.22.5
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -7262,7 +7262,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
       resolve-from: 5.0.0
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@graphql-tools/json-file-loader@8.0.0(graphql@16.7.1):
@@ -7274,7 +7274,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       unixify: 1.0.0
     dev: true
 
@@ -7288,7 +7288,7 @@ packages:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
       p-limit: 3.1.0
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@graphql-tools/merge@9.0.0(graphql@16.7.1):
@@ -7299,7 +7299,7 @@ packages:
     dependencies:
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@graphql-tools/optimize@1.4.0(graphql@16.7.1):
@@ -7308,7 +7308,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.4.1
     dev: true
 
   /@graphql-tools/optimize@2.0.0(graphql@16.7.1):
@@ -7318,7 +7318,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /@graphql-tools/prisma-loader@8.0.1(@types/node@18.15.3)(graphql@16.7.1):
@@ -7344,7 +7344,7 @@ packages:
       json-stable-stringify: 1.0.2
       lodash: 4.17.21
       scuid: 1.1.0
-      tslib: 2.6.1
+      tslib: 2.6.0
       yaml-ast-parser: 0.0.43
     transitivePeerDependencies:
       - '@types/node'
@@ -7362,7 +7362,7 @@ packages:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7377,7 +7377,7 @@ packages:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.5.3
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7392,7 +7392,7 @@ packages:
       '@graphql-tools/merge': 9.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -7413,7 +7413,7 @@ packages:
       '@whatwg-node/fetch': 0.9.9
       graphql: 16.7.1
       isomorphic-ws: 5.0.0(ws@8.13.0)
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
       ws: 8.13.0
     transitivePeerDependencies:
@@ -7432,7 +7432,7 @@ packages:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       dset: 3.1.2
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@graphql-tools/utils@8.13.1(graphql@16.7.1):
@@ -7441,7 +7441,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.4.1
     dev: true
 
   /@graphql-tools/utils@9.2.1(graphql@16.7.1):
@@ -7451,7 +7451,7 @@ packages:
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.4.1
     dev: true
 
   /@graphql-tools/wrap@10.0.0(graphql@16.7.1):
@@ -7464,7 +7464,7 @@ packages:
       '@graphql-tools/schema': 10.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -8101,13 +8101,13 @@ packages:
     dependencies:
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.6.1
+      tslib: 2.6.0
 
   /@peculiar/json-schema@1.1.12:
     resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
     engines: {node: '>=8.0.0'}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.6.0
 
   /@peculiar/webcrypto@1.4.3:
     resolution: {integrity: sha512-VtaY4spKTdN5LjJ04im/d/joXuvLbQdgy5Z4DXF4MFZhQ+MTrejbNMkfZBp1Bs3O5+bFqnJgyGdPuZQflvIa5A==}
@@ -8116,7 +8116,7 @@ packages:
       '@peculiar/asn1-schema': 2.3.6
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.3.2
-      tslib: 2.6.1
+      tslib: 2.6.0
       webcrypto-core: 1.7.7
 
   /@pkgr/utils@2.4.1:
@@ -8537,7 +8537,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.22.11
-      '@floating-ui/react-dom': 2.0.1(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react-dom': 2.0.2(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-arrow': 1.0.3(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.5)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.5)(react@18.2.0)
@@ -8994,8 +8994,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@saleor/macaw-ui@0.8.0-pre.126(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-dSFgKVKdvAY+izOgylhKp37triIpfXbaqZhDnbGTU9Wfy2dJwkePDYXvXlQ98X/2s2OgFONid9mbyu4xnGZCuQ==}
+  /@saleor/macaw-ui@0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0E93KJDwP/Z2iyE+lt0bC9xPt+CZEGOhzi5jXYQDDeDLGJlwtFTKXw6PXuge6MJxGKI7olczdyomlOFjjDuBHw==}
     engines: {node: 16 || 18 || 20, pnpm: '>=8'}
     peerDependencies:
       '@types/react': ^16.9.0 || ^17.0.0 || ^18.0.0
@@ -11214,7 +11214,7 @@ packages:
       busboy: 1.6.0
       fast-querystring: 1.1.2
       fast-url-parser: 1.1.3
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@whatwg-node/node-fetch@0.4.11:
@@ -11225,7 +11225,7 @@ packages:
       busboy: 1.6.0
       fast-querystring: 1.1.2
       fast-url-parser: 1.1.3
-      tslib: 2.6.1
+      tslib: 2.6.0
     dev: true
 
   /@xobotyi/scrollbar-width@1.9.5:
@@ -11614,7 +11614,7 @@ packages:
     dependencies:
       pvtsutils: 1.3.2
       pvutils: 1.1.3
-      tslib: 2.6.1
+      tslib: 2.6.0
 
   /assert-plus@1.0.0:
     resolution: {integrity: sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw==}
@@ -12194,7 +12194,7 @@ packages:
     resolution: {integrity: sha512-gxGWBrTT1JuMx6R+o5PTXMmUnhnVzLQ9SNutD4YqKtI6ap897t3tKECYla6gCWEkplXnlNybEkZg9GEGxKFCgw==}
     dependencies:
       pascal-case: 3.1.2
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /camelcase-keys@6.2.2:
@@ -12224,15 +12224,15 @@ packages:
   /caniuse-lite@1.0.30001519:
     resolution: {integrity: sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg==}
 
-  /caniuse-lite@1.0.30001523:
-    resolution: {integrity: sha512-I5q5cisATTPZ1mc588Z//pj/Ox80ERYDfR71YnvY7raS/NOk8xXlZcB0sF7JdqaV//kOaa6aus7lRfpdnt1eBA==}
+  /caniuse-lite@1.0.30001524:
+    resolution: {integrity: sha512-Jj917pJtYg9HSJBF95HVX3Cdr89JUyLT4IZ8SvM5aDRni95swKgYi3TgYLH5hnGfPE/U1dg6IfZ50UsIlLkwSA==}
     dev: true
 
   /capital-case@1.0.4:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
       upper-case-first: 2.0.2
     dev: true
 
@@ -12337,7 +12337,7 @@ packages:
       path-case: 3.0.4
       sentence-case: 3.0.4
       snake-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /chardet@0.7.0:
@@ -12679,7 +12679,7 @@ packages:
     resolution: {integrity: sha512-I2hSBi7Vvs7BEuJDr5dDHfzb/Ruj3FyvFyh7KLilAjNQw3Be+xgqUBA2W6scVEcL0hL1dwPRtIqEPVUCKkSsyQ==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
       upper-case: 2.0.2
     dev: true
 
@@ -12969,7 +12969,7 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
     dev: false
 
   /dateformat@4.6.3:
@@ -13300,7 +13300,7 @@ packages:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /dot-object@2.1.4:
@@ -14377,7 +14377,7 @@ packages:
   /final-form@4.20.9:
     resolution: {integrity: sha512-shA1X/7v8RmukWMNRHx0l7+Bm41hOivY78IvOiBrPVHjyWFIyqqIEMCz7yTVRc9Ea+EU4WkZ5r4MH6whSo5taw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
     dev: false
 
   /finalhandler@1.2.0:
@@ -14901,7 +14901,7 @@ packages:
       jiti: 1.18.2
       minimatch: 4.2.3
       string-env-interpolation: 1.0.1
-      tslib: 2.6.1
+      tslib: 2.6.0
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -15052,7 +15052,7 @@ packages:
     resolution: {integrity: sha512-H/vuk5TEEVZwrR0lp2zed9OCo1uAILMlx0JEMgC26rzyJJ3N1v6XkwHHXJQdR2doSjcGPM6OKPYoJgf0plJ11Q==}
     dependencies:
       capital-case: 1.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /help-me@4.2.0:
@@ -15258,7 +15258,7 @@ packages:
   /i18next@21.10.0:
     resolution: {integrity: sha512-YeuIBmFsGjUfO3qBmMOc0rQaun4mIpGKET5WDwvu8lU7gvwpcariZLNtL0Fzj+zazcHUrlXHiptcFhBMFaxzfg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
     dev: false
 
   /iconv-lite@0.4.24:
@@ -15511,7 +15511,7 @@ packages:
   /is-lower-case@2.0.2:
     resolution: {integrity: sha512-bVcMJy4X5Og6VZfdOZstSexlEy20Sr0k/p/b2IlQJlfdKAQuMpiv5w2Ccxb8sKdRUNAG1PnHVHjFSdRDVS6NlQ==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /is-map@2.0.2:
@@ -15658,7 +15658,7 @@ packages:
   /is-upper-case@2.0.2:
     resolution: {integrity: sha512-44pxmxAvnnAOwBg4tHPnkfvgjPwbc5QIsSstNU+YcJ1ovxVzCWpSGosPJOZh/a1tdl81fbgnLc9LLv+x2ywbPQ==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /is-utf8@0.2.1:
@@ -16509,7 +16509,7 @@ packages:
   /lower-case-first@2.0.2:
     resolution: {integrity: sha512-EVm/rR94FJTZi3zefZ82fLWab+GX14LJN4HrWBcuo6Evmsl9hEfnqxgcHCKb9q+mNf6EVdsjx/qucYFIIB84pg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /lower-case@1.1.4:
@@ -16519,7 +16519,7 @@ packages:
   /lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /lru-cache@4.1.5:
@@ -16615,7 +16615,7 @@ packages:
   /match-sorter@6.3.1:
     resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       remove-accents: 0.4.2
     dev: false
 
@@ -16821,7 +16821,7 @@ packages:
   /mjml-accordion@4.13.0:
     resolution: {integrity: sha512-E3yihZW5Oq2p+sWOcr8kWeRTROmiTYOGxB4IOxW/jTycdY07N3FX3e6vuh7Fv3rryHEUaydUQYto3ICVyctI7w==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16831,7 +16831,7 @@ packages:
   /mjml-body@4.13.0:
     resolution: {integrity: sha512-S4HgwAuO9dEsyX9sr6WBf9/xr+H2ASVaLn22aurJm1S2Lvc1wifLPYBQgFmNdCjaesTCNtOMUDpG+Rbnavyaqg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16841,7 +16841,7 @@ packages:
   /mjml-button@4.13.0:
     resolution: {integrity: sha512-3y8IAHCCxh7ESHh1aOOqobZKUgyNxOKAGQ9TlJoyaLpsKUFzkN8nmrD0KXF0ADSuzvhMZ1CdRIJuZ5mjv2TwWQ==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16851,7 +16851,7 @@ packages:
   /mjml-carousel@4.13.0:
     resolution: {integrity: sha512-ORSY5bEYlMlrWSIKI/lN0Tz3uGltWAjG8DQl2Yr3pwjwOaIzGE+kozrDf+T9xItfiIIbvKajef1dg7B7XgP0zg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16862,7 +16862,7 @@ packages:
     resolution: {integrity: sha512-kAZxpH0QqlTF/CcLzELgKw1ljKRxrmWJ310CJQhbPAxHvwQ/nIb+q82U+zRJAelRPPKjnOb+hSrMRqTgk9rH3w==}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       chokidar: 3.5.3
       glob: 7.2.3
       html-minifier: 4.0.0
@@ -16880,7 +16880,7 @@ packages:
   /mjml-column@4.13.0:
     resolution: {integrity: sha512-O8FrWKK/bCy9XpKxrKRYWNdgWNaVd4TK4RqMeVI/I70IbnYnc1uf15jnsPMxCBSbT+NyXyk8k7fn099797uwpw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16890,7 +16890,7 @@ packages:
   /mjml-core@4.13.0:
     resolution: {integrity: sha512-kU5AoVTlZaXR/EDi3ix66xpzUe+kScYus71lBH/wo/B+LZW70GHE1AYWtsog5oJp1MuTHpMFTNuBD/wePeEgWg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       cheerio: 1.0.0-rc.10
       detect-node: 2.0.4
       html-minifier: 4.0.0
@@ -16907,7 +16907,7 @@ packages:
   /mjml-divider@4.13.0:
     resolution: {integrity: sha512-ooPCwfmxEC+wJduqObYezMp7W5UCHjL9Y1LPB5FGna2FrOejgfd6Ix3ij8Wrmycmlol7E2N4D7c5NDH5DbRCJg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16917,7 +16917,7 @@ packages:
   /mjml-group@4.13.0:
     resolution: {integrity: sha512-U7E8m8aaoAE/dMqjqXPjjrKcwO36B4cquAy9ASldECrIZJBcpFYO6eYf5yLXrNCUM2P0id8pgVjrUq23s00L7Q==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16927,7 +16927,7 @@ packages:
   /mjml-head-attributes@4.13.0:
     resolution: {integrity: sha512-haggCafno+0lQylxJStkINCVCPMwfTpwE6yjCHeGOpQl/TkoNmjNkDr7DEEbNTZbt4Ekg070lQFn7clDy38EoA==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16937,7 +16937,7 @@ packages:
   /mjml-head-breakpoint@4.13.0:
     resolution: {integrity: sha512-D2iPDeUKQK1+rYSNa2HGOvgfPxZhNyndTG0iBEb/FxdGge2hbeDCZEN0mwDYE3wWB+qSBqlCuMI+Vr4pEjZbKg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16947,7 +16947,7 @@ packages:
   /mjml-head-font@4.13.0:
     resolution: {integrity: sha512-mYn8aWnbrEap5vX2b4662hkUv6WifcYzYn++Yi6OHrJQi55LpzcU+myAGpfQEXXrpU8vGwExMTFKsJq5n2Kaow==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16957,7 +16957,7 @@ packages:
   /mjml-head-html-attributes@4.13.0:
     resolution: {integrity: sha512-m30Oro297+18Zou/1qYjagtmCOWtYXeoS38OABQ5zOSzMItE3TcZI9JNcOueIIWIyFCETe8StrTAKcQ2GHwsDw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16967,7 +16967,7 @@ packages:
   /mjml-head-preview@4.13.0:
     resolution: {integrity: sha512-v0K/NocjFCbaoF/0IMVNmiqov91HxqT07vNTEl0Bt9lKFrTKVC01m1S4K7AB78T/bEeJ/HwmNjr1+TMtVNGGow==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16977,7 +16977,7 @@ packages:
   /mjml-head-style@4.13.0:
     resolution: {integrity: sha512-tBa33GL9Atn5bAM2UwE+uxv4rI29WgX/e5lXX+5GWlsb4thmiN6rxpFTNqBqWbBNRbZk4UEZF78M7Da8xC1ZGQ==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16987,7 +16987,7 @@ packages:
   /mjml-head-title@4.13.0:
     resolution: {integrity: sha512-Mq0bjuZXJlwxfVcjuYihQcigZSDTKeQaG3nORR1D0jsOH2BXU4XgUK1UOcTXn2qCBIfRoIMq7rfzYs+L0CRhdw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -16997,7 +16997,7 @@ packages:
   /mjml-head@4.13.0:
     resolution: {integrity: sha512-sL2qQuoVALXBCiemu4DPo9geDr8DuUdXVJxm+4nd6k5jpLCfSDmFlNhgSsLPzsYn7VEac3/sxsjLtomQ+6/BHg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17007,7 +17007,7 @@ packages:
   /mjml-hero@4.13.0:
     resolution: {integrity: sha512-aWEOScdrhyjwdKBWG4XQaElRHP8LU5PtktkpMeBXa4yxrxNs25qRnDqMNkjSrnnmFKWZmQ166tfboY6RBNf0UA==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17017,7 +17017,7 @@ packages:
   /mjml-image@4.13.0:
     resolution: {integrity: sha512-agMmm2wRZTIrKwrUnYFlnAbtrKYSP0R2en+Vf92HPspAwmaw3/AeOW/QxmSiMhfGf+xsEJyzVvR/nd33jbT3sg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17028,7 +17028,7 @@ packages:
     resolution: {integrity: sha512-I1euHiAyNpaz+B5vH+Z4T+hg/YtI5p3PqQ3/zTLv8gi24V6BILjTaftWhH5+3R/gQkQhH0NUaWNnRmds+Mq5DQ==}
     hasBin: true
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       js-beautify: 1.14.8
       lodash: 4.17.21
       mjml-core: 4.13.0
@@ -17041,7 +17041,7 @@ packages:
   /mjml-navbar@4.13.0:
     resolution: {integrity: sha512-0Oqyyk+OdtXfsjswRb/7Ql1UOjN4MbqFPKoyltJqtj+11MRpF5+Wjd74Dj9H7l81GFwkIB9OaP+ZMiD+TPECgg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17051,7 +17051,7 @@ packages:
   /mjml-parser-xml@4.13.0:
     resolution: {integrity: sha512-phljtI8DaW++q0aybR/Ykv9zCyP/jCFypxVNo26r2IQo//VYXyc7JuLZZT8N/LAI8lZcwbTVxQPBzJTmZ5IfwQ==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       detect-node: 2.0.4
       htmlparser2: 4.1.0
       lodash: 4.17.21
@@ -17060,7 +17060,7 @@ packages:
   /mjml-preset-core@4.13.0:
     resolution: {integrity: sha512-gxzYaKkvUrHuzT1oqjEPSDtdmgEnN99Hf5f1r2CR5aMOB1x66EA3T8ATvF1o7qrBTVV4KMVlQem3IubMSYJZRw==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       mjml-accordion: 4.13.0
       mjml-body: 4.13.0
       mjml-button: 4.13.0
@@ -17093,7 +17093,7 @@ packages:
   /mjml-raw@4.13.0:
     resolution: {integrity: sha512-JbBYxwX1a/zbqnCrlDCRNqov2xqUrMCaEdTHfqE2athj479aQXvLKFM20LilTMaClp/dR0yfvFLfFVrC5ej4FQ==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17103,7 +17103,7 @@ packages:
   /mjml-section@4.13.0:
     resolution: {integrity: sha512-BLcqlhavtRakKtzDQPLv6Ae4Jt4imYWq/P0jo+Sjk7tP4QifgVA2KEQOirPK5ZUqw/lvK7Afhcths5rXZ2ItnQ==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17113,7 +17113,7 @@ packages:
   /mjml-social@4.13.0:
     resolution: {integrity: sha512-zL2a7Wwsk8OXF0Bqu+1B3La1UPwdTMcEXptO8zdh2V5LL6Xb7Gfyvx6w0CmmBtG5IjyCtqaKy5wtrcpG9Hvjfg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17123,7 +17123,7 @@ packages:
   /mjml-spacer@4.13.0:
     resolution: {integrity: sha512-Acw4QJ0MJ38W4IewXuMX7hLaW1BZaln+gEEuTfrv0xwPdTxX1ILqz4r+s9mYMxYkIDLWMCjBvXyQK6aWlid13A==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17133,7 +17133,7 @@ packages:
   /mjml-table@4.13.0:
     resolution: {integrity: sha512-UAWPVMaGReQhf776DFdiwdcJTIHTek3zzQ1pb+E7VlypEYgIpFvdUJ39UIiiflhqtdBATmHwKBOtePwU0MzFMg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17143,7 +17143,7 @@ packages:
   /mjml-text@4.13.0:
     resolution: {integrity: sha512-uDuraaQFdu+6xfuigCimbeznnOnJfwRdcCL1lTBTusTuEvW/5Va6m2D3mnMeEpl+bp4+cxesXIz9st6A9pcg5A==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
     transitivePeerDependencies:
@@ -17153,13 +17153,13 @@ packages:
   /mjml-validator@4.13.0:
     resolution: {integrity: sha512-uURYfyQYtHJ6Qz/1A7/+E9ezfcoISoLZhYK3olsxKRViwaA2Mm8gy/J3yggZXnsUXWUns7Qymycm5LglLEIiQg==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
     dev: false
 
   /mjml-wrapper@4.13.0:
     resolution: {integrity: sha512-p/44JvHg04rAFR7QDImg8nZucEokIjFH6KJMHxsO0frJtLZ+IuakctzlZAADHsqiR52BwocDsXSa+o9SE2l6Ng==}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.5
       lodash: 4.17.21
       mjml-core: 4.13.0
       mjml-section: 4.13.0
@@ -17312,7 +17312,7 @@ packages:
       '@next/env': 13.4.19
       '@swc/helpers': 0.5.1
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001523
+      caniuse-lite: 1.0.30001524
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -17386,7 +17386,7 @@ packages:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /node-addon-api@3.2.1:
@@ -17868,7 +17868,7 @@ packages:
     resolution: {integrity: sha512-RXlj7zCYokReqWpOPH9oYivUzLYZ5vAPIfEmCTNViosC78F8F0H9y7T7gG2M39ymgutxF5gcFEsyZQSph9Bp3A==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /parent-module@1.0.1:
@@ -17926,14 +17926,14 @@ packages:
     resolution: {integrity: sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /path-case@3.0.4:
     resolution: {integrity: sha512-qO4qCFjXqVTrcbPt/hQfhTQ+VhFsqNKOPtytgNKkKxSoEp3XPUQ8ObFuePylOIok5gjn69ry8XiULxCwot3Wfg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /path-exists@3.0.0:
@@ -18377,7 +18377,7 @@ packages:
   /pvtsutils@1.3.2:
     resolution: {integrity: sha512-+Ipe2iNUyrZz+8K/2IOo+kKikdtfhRKzNpQbruF2URmqPtoqAs8g3xS7TJvFF2GcPXjh7DkqMnpVveRFq4PgEQ==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.6.0
 
   /pvutils@1.1.3:
     resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
@@ -18562,7 +18562,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-final-form: ^6.2.1
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       final-form: 4.20.9
       final-form-arrays: 3.1.0(final-form@4.20.9)
       react: 18.2.0
@@ -18575,7 +18575,7 @@ packages:
       final-form: ^4.20.4
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       final-form: 4.20.9
       react: 18.2.0
     dev: false
@@ -18620,7 +18620,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       html-parse-stringify: 3.0.1
       i18next: 21.10.0
       react: 18.2.0
@@ -18871,7 +18871,7 @@ packages:
       react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       memoize-one: 5.2.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -19420,7 +19420,7 @@ packages:
     resolution: {integrity: sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
       upper-case-first: 2.0.2
     dev: true
 
@@ -19622,7 +19622,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /sonic-boom@3.3.0:
@@ -19698,7 +19698,7 @@ packages:
   /sponge-case@1.0.1:
     resolution: {integrity: sha512-dblb9Et4DAtiZ5YSUZHLl4XhH4uK80GhAZrVXdN4O2P4gQ40Wa5UIOPUHlA/nFd2PLblBZWUioLMMAVrgpoYcA==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /sprintf-js@1.0.3:
@@ -20022,7 +20022,7 @@ packages:
   /swap-case@2.0.2:
     resolution: {integrity: sha512-kc6S2YS/2yXbtkSMunBtKdah4VFETZ8Oh6ONSmSd9bRxhqTrtARUCBUiWXH3xVPpvR7tz2CSnkuXVE42EcGnMw==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /symbol-tree@3.2.4:
@@ -20247,7 +20247,7 @@ packages:
   /title-case@3.0.3:
     resolution: {integrity: sha512-e1zGYRvbffpcHIrnuqT0Dh+gEJtDaxDSoG4JAIpq4oDFyooziLBIiYQv0GBT4FUAnUop5uZ1hiIAj7oAF6sOCA==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /titleize@3.0.0:
@@ -20374,7 +20374,6 @@ packages:
 
   /tslib@2.6.0:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
-    dev: true
 
   /tslib@2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
@@ -20742,7 +20741,7 @@ packages:
   /upper-case-first@2.0.2:
     resolution: {integrity: sha512-514ppYHBaKwfJRK/pNC6c/OxfGa0obSnAl106u97Ed0I625Nin96KAjttZF6ZL3e1XLtphxnqrOi9iWgm+u+bg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /upper-case@1.1.3:
@@ -20752,7 +20751,7 @@ packages:
   /upper-case@2.0.2:
     resolution: {integrity: sha512-KgdgDGJt2TpuwBUIjgG6lzw2GWFRCW9Qkfkiv0DxqHHLYJHmtmdUIKcZd8rHgFSjopVTlw6ggzCm1b8MFQwikg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.5.3
     dev: true
 
   /uri-js@4.4.1:
@@ -21157,7 +21156,7 @@ packages:
       '@peculiar/json-schema': 1.1.12
       asn1js: 3.0.5
       pvtsutils: 1.3.2
-      tslib: 2.6.1
+      tslib: 2.6.0
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -21520,7 +21519,7 @@ packages:
     resolution: {integrity: sha512-Z2Fe1bn+eLstG8DRR6FTavGD+MeAwyfmouhHsIUgaADz8jvFKbO/fXc2trJKZg+5EBjh4gGm3iU/t3onKlXHIg==}
     engines: {node: '>=10'}
     dependencies:
-      '@babel/runtime': 7.22.10
+      '@babel/runtime': 7.22.11
       '@types/lodash': 4.14.195
       lodash: 4.17.21
       lodash-es: 4.17.21

@@ -15,4 +15,4 @@
 "saleor-app-crm": patch
 ---
 
-Updated Macaw to pre-126
+Updated Macaw to pre-127

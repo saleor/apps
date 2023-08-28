@@ -16,7 +16,7 @@
     "@material-ui/lab": "4.0.0-alpha.61",
     "@saleor/app-sdk": "0.41.1",
     "@saleor/apps-shared": "workspace:*",
-    "@saleor/macaw-ui": "0.8.0-pre.126",
+    "@saleor/macaw-ui": "0.8.0-pre.127",
     "@sentry/nextjs": "7.55.2",
     "@urql/exchange-auth": "^2.1.4",
     "clsx": "^1.2.1",

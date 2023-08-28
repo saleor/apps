@@ -5,7 +5,10 @@ import {
 } from "@saleor/macaw-ui/next";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
-export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<$ComboboxProps<T>, "name"> & {
+export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<
+  $ComboboxProps<T, T>,
+  "name"
+> & {
   name: FieldPath<T>;
   control: Control<T>;
   options: Option[];
@@ -30,7 +33,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
             {...field}
             options={options}
             onChange={(option) => {
-              onChange(option.value);
+              onChange(option.value); // todo
             }}
             value={options.find((o: Option) => o.value === value) || null}
             name={name}

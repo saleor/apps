@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "0.41.1",
-    "@saleor/macaw-ui": "0.8.0-pre.126",
+    "@saleor/macaw-ui": "0.8.0-pre.127",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "eslint-config-saleor": "workspace:*",
