@@ -1,5 +1,16 @@
 # saleor-app-taxes
 
+## 1.15.0
+
+### Minor Changes
+
+- 783bd5e: Removed all the code related to the deprecated OrderCreated & OrderFulfilled flow. The migration process began in version 1.13.0. All the cloud environments had been migrated automatically.
+
+### Patch Changes
+
+- 34efd39: Fixed the issue when user id was not available during tax calculation. Now, to identify the user during tax calculation, we use the user email.
+- 45ed9fb: Fixed the error when checkout couldn't calculate taxes when no customerCode was provided. In calculate taxes, the customerCode is now derived from issuingPrincipal's id.
+
 ## 1.14.0
 
 ### Minor Changes
