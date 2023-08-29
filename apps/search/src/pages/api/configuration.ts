@@ -41,6 +41,9 @@ const sendResponse = async (
   });
 };
 
+/**
+ * @deprecated
+ */
 export const handler = async (
   req: NextApiRequest,
   res: NextApiResponse,
