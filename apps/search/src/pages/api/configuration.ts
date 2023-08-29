@@ -10,6 +10,7 @@ import { AppConfigurationFields } from "../../domain/configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { ChannelsDocument } from "../../../generated/graphql";
 
 const logger = createLogger({
   handler: "api/configuration",
@@ -24,7 +25,7 @@ const sendResponse = async (
   res: NextApiResponse<SettingsApiResponse>,
   statusCode: number,
   settings: SettingsManager,
-  domain: string
+  domain: string,
 ) => {
   const data = {
     secretKey: (await settings.get("secretKey", domain)) || "",
@@ -43,7 +44,7 @@ const sendResponse = async (
 export const handler = async (
   req: NextApiRequest,
   res: NextApiResponse,
-  ctx: ProtectedHandlerContext
+  ctx: ProtectedHandlerContext,
 ) => {
   const {
     authData: { token, saleorApiUrl },
@@ -70,10 +71,14 @@ export const handler = async (
 
     const { appId, secretKey, indexNamePrefix } = JSON.parse(req.body) as AppConfigurationFields;
 
+    const { data: channelsData } = await client.query(ChannelsDocument, {}).toPromise();
+    const channels = channelsData?.channels || [];
+
     const algoliaClient = new AlgoliaSearchProvider({
       appId,
       apiKey: secretKey,
       indexNamePrefix: indexNamePrefix,
+      channels,
     });
 
     try {

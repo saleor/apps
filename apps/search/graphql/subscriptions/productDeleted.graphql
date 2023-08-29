@@ -4,7 +4,13 @@ subscription ProductDeleted {
     ... on ProductDeleted {
       __typename
       product {
-        ...ProductWebhookPayload
+        id
+        variants{
+          id
+          product{
+            id
+          }
+        }
       }
     }
     recipient {
