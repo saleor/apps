@@ -2,7 +2,7 @@ import { Select as $Select, type SelectProps as $SelectProps, Option } from "@sa
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type SelectProps<T extends FieldValues = FieldValues> = Omit<
-  $SelectProps<Option>,
+  $SelectProps<Option, Option>,
   "name"
 > & {
   name: FieldPath<T>;
