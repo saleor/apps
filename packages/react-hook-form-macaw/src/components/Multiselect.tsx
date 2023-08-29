@@ -6,7 +6,11 @@ import {
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
-  $MultiselectProps<T>,
+  /*
+   * todo we can go back to string-type value
+   * https://github.com/saleor/macaw-ui/blob/canary/src/components/Combobox/Static/Combobox.tsx#L171
+   */
+  $MultiselectProps<T, T>,
   "name"
 > & {
   name: FieldPath<T>;
