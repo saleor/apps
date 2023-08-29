@@ -1068,6 +1068,9 @@ importers:
       debug:
         specifier: ^4.3.4
         version: 4.3.4
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -10084,7 +10087,7 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@babel/code-frame': 7.22.5
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.10
       '@types/aria-query': 5.0.1
       aria-query: 5.2.1
       chalk: 4.1.2
@@ -18360,7 +18363,7 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.10
       react: 18.2.0
     dev: true
 
