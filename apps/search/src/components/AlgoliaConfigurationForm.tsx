@@ -1,15 +1,15 @@
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
-import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchConfiguration } from "../lib/configuration";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { AppConfigurationFields, AppConfigurationSchema } from "../domain/configuration";
+import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { trpcClient } from "../modules/trpc/trpc-client";
 
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -24,50 +24,32 @@ export const AlgoliaConfigurationForm = () => {
   });
 
   const reactQueryClient = useQueryClient();
-  /**
-   * TODO Extract to hook
-   */
-  const { isLoading: isQueryLoading } = useQuery({
-    queryKey: ["configuration"],
-    onSuccess(data) {
-      setValue("secretKey", data?.secretKey || "");
-      setValue("appId", data?.appId || "");
-      setValue("indexNamePrefix", data?.indexNamePrefix || "");
-    },
-    queryFn: async () => fetchConfiguration(fetch),
-  });
 
-  const { mutate, isLoading: isMutationLoading } = useMutation(
-    async (conf: AppConfigurationFields) => {
-      const resp = await fetch("/api/configuration", {
-        method: "POST",
-        body: JSON.stringify(conf),
-      });
+  const { isLoading: isQueryLoading, refetch: refetchConfig } =
+    trpcClient.configuration.getConfig.useQuery(undefined, {
+      onSuccess(data) {
+        setValue("secretKey", data?.secretKey || "");
+        setValue("appId", data?.appId || "");
+        setValue("indexNamePrefix", data?.indexNamePrefix || "");
+      },
+    });
 
-      if (resp.status >= 200 && resp.status < 300) {
-        const data = (await resp.json()) as { data?: AppConfigurationFields };
-
-        return data.data;
-      }
-      throw new Error(`Server responded with status code ${resp.status}`);
-    },
-    {
+  const { mutate: setConfig, isLoading: isMutationLoading } =
+    trpcClient.configuration.setConfig.useMutation({
       onSuccess: async () => {
         await Promise.all([
-          reactQueryClient.refetchQueries({
-            queryKey: ["configuration"],
-          }),
+          refetchConfig(),
+          // todo migrate to trpc
           reactQueryClient.refetchQueries({
             queryKey: ["webhooks-status"],
           }),
         ]);
         notifySuccess("Configuration saved!");
       },
-      onError: async (data: Error) => {
-        notifyError("Could not save the configuration", data.message);
+      onError: async (error) => {
+        notifyError("Could not save the configuration", error.message);
       },
-    }
-  );
+    });
 
   const onFormSubmit = handleSubmit(async (conf) => {
     const client = new AlgoliaSearchProvider({
@@ -80,7 +62,7 @@ export const AlgoliaConfigurationForm = () => {
       await client.ping();
       setCredentialsValidationError(false);
 
-      mutate(conf);
+      setConfig(conf);
     } catch (e) {
       trigger();
       setCredentialsValidationError(true);

@@ -28,6 +28,7 @@ const mockWebhookContext = {
 const appWebhooksResponseData: Pick<OperationResult<FetchOwnWebhooksQuery, any>, "data"> = {
   data: {
     app: {
+      id: "appID",
       webhooks: [
         {
           name: "W1",
@@ -39,6 +40,7 @@ const appWebhooksResponseData: Pick<OperationResult<FetchOwnWebhooksQuery, any>,
           eventDeliveries: {
             edges: [],
           },
+          targetUrl: "localhost:3000/api/webhooks/test",
         },
       ],
     },

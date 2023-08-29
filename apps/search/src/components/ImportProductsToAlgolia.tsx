@@ -1,8 +1,8 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
-import { useConfiguration } from "../lib/configuration";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
+import { trpcClient } from "../modules/trpc/trpc-client";
 
 const BATCH_SIZE = 100;
 
@@ -14,21 +14,21 @@ export const ImportProductsToAlgolia = () => {
 
   const products = useQueryAllProducts(!started);
 
-  const algoliaConfiguration = useConfiguration();
+  const { data: algoliaConfiguration } = trpcClient.configuration.getConfig.useQuery();
 
   const searchProvider = useMemo(() => {
-    if (!algoliaConfiguration.data?.appId || !algoliaConfiguration.data.secretKey) {
+    if (!algoliaConfiguration?.appId || !algoliaConfiguration.secretKey) {
       return null;
     }
     return new AlgoliaSearchProvider({
-      appId: algoliaConfiguration.data.appId,
-      apiKey: algoliaConfiguration.data.secretKey,
-      indexNamePrefix: algoliaConfiguration.data.indexNamePrefix,
+      appId: algoliaConfiguration.appId,
+      apiKey: algoliaConfiguration.secretKey,
+      indexNamePrefix: algoliaConfiguration.indexNamePrefix,
     });
   }, [
-    algoliaConfiguration?.data?.appId,
-    algoliaConfiguration?.data?.indexNamePrefix,
-    algoliaConfiguration?.data?.secretKey,
+    algoliaConfiguration?.appId,
+    algoliaConfiguration?.indexNamePrefix,
+    algoliaConfiguration?.secretKey,
   ]);
 
   const importProducts = useCallback(() => {
