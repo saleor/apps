@@ -1,5 +1,29 @@
 # saleor-app-search
 
+## 1.14.0
+
+### Minor Changes
+
+- 2a1385b: Added new field to products document: descriptionPlaintext. It contains the product description converted to plaintext format which can be used to full text search.
+- 2a1385b: Added Algolia index configuration helper, which sets up recommended settings: distinct results based on Product ID, faceting filters and searchable attributes.
+
+### Patch Changes
+
+- 2a1385b: Added script responsible for webhook migration.
+- a81f061: Updated Macaw to pre-127
+- 2a1385b: Fixed issue with stale product variants after product deletion or channel visibility settings change.
+- fcc37e7: Remove clsx package from the projects no longer using it.
+- 0f84985: Refactor: Introduced tRPC and re-implemented /api/configuration endpoint to the tRPC controller.
+
+  _This does not affect the end-user functionality_
+
+- Updated dependencies [2a1385b]
+- Updated dependencies [a81f061]
+- Updated dependencies [fcc37e7]
+  - @saleor/apps-shared@1.8.1
+  - @saleor/react-hook-form-macaw@0.2.5
+  - @saleor/apps-ui@1.1.8
+
 ## 1.13.1
 
 ### Patch Changes

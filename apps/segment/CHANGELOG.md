@@ -1,5 +1,19 @@
 # saleor-app-segment
 
+## 1.0.1
+
+### Patch Changes
+
+- a81f061: Updated Macaw to pre-127
+- fcc37e7: Remove clsx package from the projects no longer using it.
+- 254cd4c: Fix typo in the UI ("configration" -> "configuration").
+- Updated dependencies [2a1385b]
+- Updated dependencies [a81f061]
+- Updated dependencies [fcc37e7]
+  - @saleor/apps-shared@1.8.1
+  - @saleor/react-hook-form-macaw@0.2.5
+  - @saleor/apps-ui@1.1.8
+
 ## 1.0.0
 
 ### Major Changes
