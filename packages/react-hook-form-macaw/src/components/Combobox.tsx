@@ -33,7 +33,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
             {...field}
             options={options}
             onChange={(option) => {
-              onChange(option.value); // todo
+              onChange(option?.value ?? null);
             }}
             value={options.find((o: Option) => o.value === value) || null}
             name={name}
