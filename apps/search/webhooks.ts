@@ -1,11 +1,11 @@
-import { webhookProductCreated } from "./src/pages/api/webhooks/saleor/product_created";
-import { webhookProductDeleted } from "./src/pages/api/webhooks/saleor/product_deleted";
-import { webhookProductUpdated } from "./src/pages/api/webhooks/saleor/product_updated";
-import { webhookProductVariantCreated } from "./src/pages/api/webhooks/saleor/product_variant_created";
-import { webhookProductVariantDeleted } from "./src/pages/api/webhooks/saleor/product_variant_deleted";
-import { webhookProductVariantUpdated } from "./src/pages/api/webhooks/saleor/product_variant_updated";
-import { webhookProductVariantOutOfStock } from "./src/pages/api/webhooks/saleor/product_variant_out_of_stock";
-import { webhookProductVariantBackInStock } from "./src/pages/api/webhooks/saleor/product_variant_back_in_stock";
+import { webhookProductCreated } from "./src/webhooks/definitions/product-created";
+import { webhookProductDeleted } from "./src/webhooks/definitions/product-deleted";
+import { webhookProductUpdated } from "./src/webhooks/definitions/product-updated";
+import { webhookProductVariantBackInStock } from "./src/webhooks/definitions/product-variant-back-in-stock";
+import { webhookProductVariantCreated } from "./src/webhooks/definitions/product-variant-created";
+import { webhookProductVariantDeleted } from "./src/webhooks/definitions/product-variant-deleted";
+import { webhookProductVariantOutOfStock } from "./src/webhooks/definitions/product-variant-out-of-stock";
+import { webhookProductVariantUpdated } from "./src/webhooks/definitions/product-variant-updated";
 
 export const appWebhooks = [
   webhookProductCreated,

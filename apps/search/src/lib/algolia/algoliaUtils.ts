@@ -1,3 +1,4 @@
+import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 import {
   ProductAttributesDataFragment,
   ProductVariantWebhookPayloadFragment,
@@ -127,6 +128,7 @@ export function productAndVariantToAlgolia({
     attributes,
     media,
     description: safeParseJson(product.description),
+    descriptionPlaintext: EditorJsPlaintextRenderer({ stringData: product.description }),
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
     grossPrice: listing?.price?.amount,
