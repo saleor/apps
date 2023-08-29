@@ -1,19 +1,18 @@
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
-import { z } from "zod";
+import { createLogger } from "@saleor/apps-shared";
+import { TRPCError } from "@trpc/server";
+import { ChannelsDocument } from "../../../generated/graphql";
+import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
+import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { createSettingsManager } from "../../lib/metadata";
-import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
-import { ChannelsDocument } from "../../../generated/graphql";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
-import { TRPCError } from "@trpc/server";
 
 const logger = createLogger({ name: "configuration.router" });
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {
-    const settingsManager = createSettingsManager(ctx.apiClient); // todo use shared pkg
+    const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
     /**
      * Backwards compatbitility
@@ -47,7 +46,7 @@ export const configurationRouter = router({
         channels,
       });
 
-      const settingsManager = createSettingsManager(ctx.apiClient); // todo use shared pkg
+      const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
       /**
        * Backwards compatbitility

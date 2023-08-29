@@ -20,7 +20,7 @@ const logger = createLogger({
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (client: Client) => SettingsManager;
+  settingsManagerFactory: (client: Client, appId: string) => SettingsManager;
   webhookActivityTogglerFactory: (appId: string, client: Client) => IWebhookActivityTogglerService;
   graphqlClientFactory: (saleorApiUrl: string, token: string) => Client;
 };
@@ -40,7 +40,7 @@ export const recreateWebhooksHandlerFactory =
     logger.debug("Fetching settings");
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
-    const settingsManager = settingsManagerFactory(client);
+    const settingsManager = settingsManagerFactory(client, authData.appId);
 
     const domain = new URL(authData.saleorApiUrl).host;
 

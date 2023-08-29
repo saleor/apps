@@ -22,10 +22,16 @@ const logger = createLogger({
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (client: Client) => SettingsManager;
-  webhookActivityTogglerFactory: (appId: string, client: Client) => IWebhookActivityTogglerService;
+  settingsManagerFactory: (
+    client: Pick<Client, "query" | "mutation">,
+    appId: string,
+  ) => SettingsManager;
+  webhookActivityTogglerFactory: (
+    appId: string,
+    client: Pick<Client, "query" | "mutation">,
+  ) => IWebhookActivityTogglerService;
   algoliaSearchProviderFactory: (appId: string, apiKey: string) => Pick<SearchProvider, "ping">;
-  graphqlClientFactory: (saleorApiUrl: string, token: string) => Client;
+  graphqlClientFactory: (saleorApiUrl: string, token: string) => Pick<Client, "query" | "mutation">;
 };
 
 export type WebhooksStatusResponse = {
@@ -46,7 +52,7 @@ export const webhooksStatusHandlerFactory =
      */
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
-    const settingsManager = settingsManagerFactory(client);
+    const settingsManager = settingsManagerFactory(client, authData.appId);
 
     const domain = new URL(authData.saleorApiUrl).host;
 
