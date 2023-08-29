@@ -107,6 +107,7 @@ async function updatePrivateMetadata(
 export class EncryptedMetadataManagerFactory {
   constructor(private encryptionKey: string) {
     if (!encryptionKey) {
+      console.error("Encryption key is required, will throw");
       throw new Error("Encryption key is required");
     }
   }

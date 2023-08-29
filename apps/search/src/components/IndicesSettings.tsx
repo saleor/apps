@@ -1,14 +1,14 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React from "react";
-import { useConfiguration } from "../lib/configuration";
 import { TextLink } from "@saleor/apps-ui";
 import { useIndicesSetupMutation } from "../lib/useIndicesSetup";
+import { trpcClient } from "../modules/trpc/trpc-client";
 
 export const IndicesSettings = () => {
-  const algoliaConfiguration = useConfiguration();
+  const { data: algoliaConfiguration } = trpcClient.configuration.getConfig.useQuery();
   const updateWebhooksMutation = useIndicesSetupMutation();
 
-  const isConfigured = algoliaConfiguration.data?.appId && algoliaConfiguration.data?.secretKey;
+  const isConfigured = algoliaConfiguration?.appId && algoliaConfiguration?.secretKey;
 
   return (
     <Box>
