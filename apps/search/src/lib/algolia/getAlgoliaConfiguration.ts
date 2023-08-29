@@ -15,7 +15,7 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
     token: authData.token,
   });
 
-  const settings = createSettingsManager(client);
+  const settings = createSettingsManager(client, authData.appId);
 
   try {
     const secretKey = await settings.get("secretKey", authData.domain);

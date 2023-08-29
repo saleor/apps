@@ -16,7 +16,7 @@ const logger = createLogger({
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (client: Client) => SettingsManager;
+  settingsManagerFactory: (client: Client, appId: string) => SettingsManager;
   graphqlClientFactory: (saleorApiUrl: string, token: string) => Client;
 };
 
@@ -30,7 +30,7 @@ export const setupIndicesHandlerFactory =
 
     logger.debug("Fetching settings");
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
-    const settingsManager = settingsManagerFactory(client);
+    const settingsManager = settingsManagerFactory(client, authData.appId);
 
     const domain = new URL(authData.saleorApiUrl).host;
 
