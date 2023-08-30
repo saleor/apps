@@ -1,5 +1,13 @@
 # @saleor/apps-shared
 
+## 1.8.1
+
+### Patch Changes
+
+- 2a1385b: Plaintext EditorJS renderer has been moved to the shared package.
+- a81f061: Updated Macaw to pre-127
+- fcc37e7: Remove clsx package from the projects no longer using it.
+
 ## 1.8.0
 
 ### Minor Changes
