@@ -9,12 +9,12 @@ const logSchema = z.object({
   date: z.string(),
   event: z.string(),
   status: z.enum(["success", "error"]),
-  payload: z.unknown().optional(),
+  payload: z.string().optional(),
 });
 
-export const logInputSchema = logSchema.pick({ event: true, status: true }).merge(
+export const logInputSchema = logSchema.pick({ event: true, status: true, payload: true }).merge(
   z.object({
-    payload: z.unknown(),
+    payload: z.record(z.unknown()).optional(),
   }),
 );
 
@@ -48,7 +48,7 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
     const log: AvataxLog = {
       date: new Date().toDateString(),
       event,
-      payload,
+      payload: JSON.stringify(payload),
       status,
     };
 

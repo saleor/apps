@@ -54,7 +54,10 @@ export class AvataxOrderConfirmedAdapter
       this.clientLogger.push({
         event: "createTransaction",
         status: "success",
-        payload: JSON.stringify(target),
+        payload: {
+          input: target,
+          response,
+        },
       });
 
       this.logger.debug("AvaTax createTransaction successfully responded");
@@ -66,12 +69,13 @@ export class AvataxOrderConfirmedAdapter
 
       return transformedResponse;
     } catch (error) {
-      const payload = error instanceof Error ? error.message : error;
-
       this.clientLogger.push({
         event: "createTransaction",
         status: "error",
-        payload,
+        payload: {
+          input: target,
+          response: error,
+        },
       });
       throw error;
     }
