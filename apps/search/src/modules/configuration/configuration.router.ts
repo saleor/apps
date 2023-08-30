@@ -2,11 +2,13 @@ import { createLogger } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
-import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
+import { AppConfigurationFields, AppConfigurationSchema } from "./configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
+import { fetchLegacyConfiguration } from "./legacy-configuration";
+import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 
 const logger = createLogger({ name: "configuration.router" });
 
@@ -19,18 +21,23 @@ export const configurationRouter = router({
      */
     const domain = new URL(ctx.saleorApiUrl).host;
 
+    const config = await new AppConfigMetadataManager(settingsManager).get(ctx.saleorApiUrl);
+
     /**
-     * TODO - refactor to single config in one key
+     * Verify if config is filled with data - by default its null
      */
-    const data: AppConfigurationFields = {
-      secretKey: (await settingsManager.get("secretKey", domain)) || "",
-      appId: (await settingsManager.get("appId", domain)) || "",
-      indexNamePrefix: (await settingsManager.get("indexNamePrefix", domain)) || "",
-    };
+    if (config.getConfig()) {
+      return config.getConfig();
+    } else {
+      /**
+       * Otherwise fetch legacy config from old metadata keys
+       */
+      const data = await fetchLegacyConfiguration(settingsManager, domain);
 
-    logger.debug("Will return config");
+      config.setAlgoliaSettings(data);
 
-    return data;
+      return config.getConfig();
+    }
   }),
   setConfig: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
@@ -48,22 +55,19 @@ export const configurationRouter = router({
 
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
-      /**
-       * Backwards compatbitility
-       */
-      const domain = new URL(ctx.saleorApiUrl).host;
+      const configManager = new AppConfigMetadataManager(settingsManager);
+
+      const config = await configManager.get(ctx.saleorApiUrl);
 
       try {
-        logger.debug("Will ping Algolia");
+        logger.trace("Will ping Algolia");
         await algoliaClient.ping();
 
-        logger.debug("Algolia connection is ok. Will save settings");
+        logger.trace("Algolia connection is ok. Will save settings");
 
-        await settingsManager.set([
-          { key: "secretKey", value: input.secretKey || "", domain },
-          { key: "appId", value: input.appId || "", domain },
-          { key: "indexNamePrefix", value: input.indexNamePrefix || "", domain },
-        ]);
+        config.setAlgoliaSettings(input);
+
+        await configManager.set(config, ctx.saleorApiUrl);
 
         logger.debug("Settings set successfully");
 
