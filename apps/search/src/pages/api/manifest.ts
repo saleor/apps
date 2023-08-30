@@ -40,6 +40,7 @@ export default createManifestHandler({
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
+      author: "Saleor Commerce",
     };
 
     return manifest;
