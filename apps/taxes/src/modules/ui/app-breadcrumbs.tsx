@@ -76,19 +76,26 @@ const breadcrumbsForRoute: Record<string, Breadcrumb[]> = {
       href: "/providers/avatax",
     },
   ],
+  "/providers/avatax/[id]/logs": [
+    ...newProviderBreadcrumbs,
+    {
+      label: "Logs",
+    },
+  ],
 };
 
 const useBreadcrumbs = () => {
   const { pathname } = useRouter();
   const breadcrumbs = breadcrumbsForRoute[pathname];
 
-  if (pathname !== "/" && pathname !== "_error" && !breadcrumbs) {
+  if (!breadcrumbs) {
     throw new Error(`No breadcrumbs for route ${pathname}`);
   }
 
   return breadcrumbs;
 };
 
+// todo: move on the page level
 export const AppBreadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs();
 
