@@ -1,5 +1,16 @@
 # saleor-app-crm
 
+## 1.7.6
+
+### Patch Changes
+
+- a81f061: Updated Macaw to pre-127
+- fcc37e7: Remove clsx package from the projects no longer using it.
+- Updated dependencies [2a1385b]
+- Updated dependencies [a81f061]
+- Updated dependencies [fcc37e7]
+  - @saleor/apps-shared@1.8.1
+
 ## 1.7.5
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.5
+
+### Patch Changes
+
+- a81f061: Updated Macaw to pre-127
+- fcc37e7: Remove clsx package from the projects no longer using it.
+
 ## 0.2.4
 
 ### Patch Changes

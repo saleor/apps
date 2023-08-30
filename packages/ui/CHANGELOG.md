@@ -1,5 +1,12 @@
 # @saleor/apps-ui
 
+## 1.1.8
+
+### Patch Changes
+
+- a81f061: Updated Macaw to pre-127
+- fcc37e7: Remove clsx package from the projects no longer using it.
+
 ## 1.1.7
 
 ### Patch Changes
