@@ -7,7 +7,10 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AppConfigurationFields, AppConfigurationSchema } from "../domain/configuration";
+import {
+  AppConfigurationFields,
+  AppConfigurationSchema,
+} from "../modules/configuration/configuration";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { trpcClient } from "../modules/trpc/trpc-client";
 

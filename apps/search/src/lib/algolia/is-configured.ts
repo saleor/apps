@@ -1,4 +1,7 @@
-import { AppConfigurationFields, AppConfigurationSchema } from "../../domain/configuration";
+import {
+  AppConfigurationFields,
+  AppConfigurationSchema,
+} from "../../modules/configuration/configuration";
 
 interface isConfiguredArgs {
   configuration: Partial<AppConfigurationFields> | undefined;

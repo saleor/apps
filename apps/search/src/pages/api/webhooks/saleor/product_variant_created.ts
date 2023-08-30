@@ -42,8 +42,11 @@ export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req,
   if (errors?.length || !settings) {
     logger.warn("Aborting due to lack of settings");
     logger.debug(errors);
+
+    const errorMessage = (errors && errors.length && errors[0].message) ?? "Unknown error";
+
     return res.status(400).json({
-      message: errors[0].message,
+      message: errorMessage,
     });
   }
 
