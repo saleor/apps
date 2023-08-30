@@ -1,5 +1,4 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { ProductCreated } from "../../../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../../../lib/logger";
