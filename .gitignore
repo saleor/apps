@@ -43,3 +43,4 @@ apps/**/generated
 .sentryclirc
 
 .vscode/
+.cspellcache
