@@ -4,11 +4,9 @@ import { RootConfig } from "../schemas/root-config.schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TextLink } from "@saleor/apps-ui";
+import { ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui/next";
-import { ButtonsBox } from "@/modules/ui/buttons-box";
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { Skeleton } from "@/modules/ui/skeleton";
 import { useDashboardNotification } from "@saleor/apps-shared";
 
 const Schema = RootConfig.Schema.unwrap();
@@ -22,7 +20,15 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
   });
 
   return (
-    <Box as="form" onSubmit={handleSubmit(props.onSubmit)}>
+    <Layout.AppSectionCard
+      footer={
+        <ButtonsBox>
+          <Button type="submit">Save</Button>
+        </ButtonsBox>
+      }
+      as="form"
+      onSubmit={handleSubmit(props.onSubmit)}
+    >
       <Input
         control={control}
         name="segmentWriteKey"
@@ -41,10 +47,7 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
           </Text>
         }
       />
-      <ButtonsBox marginTop={6}>
-        <Button type="submit">Save</Button>
-      </ButtonsBox>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };
 
@@ -63,7 +66,7 @@ export const SegmentConfigForm = () => {
   });
 
   if (isLoading) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   return (

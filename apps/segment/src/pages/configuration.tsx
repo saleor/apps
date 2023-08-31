@@ -1,7 +1,7 @@
 import { SegmentConfigForm } from "@/modules/configuration/segment-config-form/segment-config-form";
 import { AppHeader } from "@/modules/ui/app-header";
-import { AppSection } from "@/modules/ui/app-section";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 
@@ -19,12 +19,13 @@ const ConfigurationPage: NextPage = () => {
   return (
     <Box>
       <AppHeader />
-      <AppSection
+      <Layout.AppSection
         marginBottom={14}
         heading="Segment.io configuration"
         sideContent={<Text>Provide Segment credentials to allow sending events.</Text>}
-        mainContent={<SegmentConfigForm />}
-      />
+      >
+        <SegmentConfigForm />
+      </Layout.AppSection>
     </Box>
   );
 };
