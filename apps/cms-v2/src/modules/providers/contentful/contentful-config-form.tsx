@@ -9,8 +9,7 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ButtonsBox } from "../../ui/buttons-box";
-import { TextLink } from "@saleor/apps-ui";
+import { ButtonsBox, TextLink } from "@saleor/apps-ui";
 import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
 
 type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;

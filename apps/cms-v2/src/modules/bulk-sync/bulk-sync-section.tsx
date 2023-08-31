@@ -6,26 +6,20 @@ import { Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ButtonsBox } from "../ui/buttons-box";
 import { ProvidersResolver } from "../providers/providers-resolver";
-import { Skeleton } from "../ui/skeleton";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 
 const FormSchema = z.object({
   connectionId: z.string().min(7),
 });
 
 const EmptyState = () => (
-  <Box
-    display="flex"
-    paddingY={4}
-    flexDirection={"column"}
-    gap={4}
-    alignItems={"center"}
-    justifyContent={"center"}
-  >
-    <Text variant="heading">No connections configured</Text>
-    <Text>Create a channel connection above to enable bulk synchronization.</Text>
-  </Box>
+  <Layout.AppSectionCard>
+    <Box display="flex" flexDirection={"column"} gap={4} justifyContent={"center"}>
+      <Text variant="heading">Bulk products synchronization</Text>
+      <Text>Create a channel connection above to enable bulk synchronization.</Text>
+    </Box>
+  </Layout.AppSectionCard>
 );
 
 export const BulkSyncSection = () => {
@@ -42,7 +36,7 @@ export const BulkSyncSection = () => {
   });
 
   if (!connections || !providers) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   if (connections.length === 0) {
@@ -50,7 +44,7 @@ export const BulkSyncSection = () => {
   }
 
   return (
-    <Box>
+    <Layout.AppSectionCard>
       <Text as="h2" marginBottom={6} variant="heading">
         Bulk products synchronization
       </Text>
@@ -88,6 +82,6 @@ export const BulkSyncSection = () => {
           <Button type="submit">Start sync</Button>
         </ButtonsBox>
       </Box>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };

@@ -9,8 +9,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { ButtonsBox } from "../../ui/buttons-box";
-import { TextLink } from "@saleor/apps-ui";
+import { ButtonsBox, TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<PayloadCmsProviderConfig.InputShape, "type">;
 

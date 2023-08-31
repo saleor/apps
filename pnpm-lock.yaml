@@ -1763,6 +1763,9 @@ importers:
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
+      zod:
+        specifier: 3.21.4
+        version: 3.21.4
 
   packages/trpc:
     dependencies:

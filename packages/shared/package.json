@@ -27,7 +27,8 @@
     "typescript": "5.1.6",
     "urql": "^4.0.4",
     "vite": "4.4.8",
-    "vitest": "0.34.1"
+    "vitest": "0.34.1",
+    "zod": "3.21.4"
   },
   "main": "index.ts",
   "peerDependencies": {
@@ -37,6 +38,7 @@
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "urql": "^4.0.4"
+    "urql": "^4.0.4",
+    "zod": "3.21.4"
   }
 }

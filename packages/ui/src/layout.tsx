@@ -60,6 +60,7 @@ const AppSection = ({
       display={"grid"}
       gap={10}
       __maxWidth={`${maxWidthPx}px`}
+      alignItems="start"
       {...props}
     >
       <Box>

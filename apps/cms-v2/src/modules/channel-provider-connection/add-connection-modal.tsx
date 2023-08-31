@@ -1,5 +1,4 @@
 import { Button, Text } from "@saleor/macaw-ui/next";
-import { ButtonsBox } from "../ui/buttons-box";
 import { Modal } from "../ui/modal";
 import {
   AddConnectionForm,
@@ -7,7 +6,7 @@ import {
   AddConnectionFormSchema,
 } from "./add-connection-form";
 import { trpcClient } from "../trpc/trpc-client";
-import { Skeleton } from "../ui/skeleton";
+import { ButtonsBox, SkeletonLayout } from "@saleor/apps-ui";
 
 const defaultValues: AddConnectionFormSchema = { channelSlug: "", providerId: "" };
 
@@ -15,7 +14,7 @@ export const AddConnectionModal = (props: { onSuccess(): void; onClose(): void }
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   if (!providers) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   const { mutateAsync: addProviderMutate, isLoading } =
