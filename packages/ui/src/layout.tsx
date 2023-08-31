@@ -1,10 +1,9 @@
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
-import { ComponentProps, ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 
 type AppSectionProps = PropsWithBox<{
   heading: ReactNode;
   sideContent?: ReactNode;
-  footerContent?: ReactNode;
   includePadding?: boolean;
   leftColumnWidthPx?: number;
   maxWidthPx?: number;
@@ -49,7 +48,6 @@ const AppSection = ({
   includePadding = true,
   leftColumnWidthPx = 400,
   maxWidthPx = 1200,
-  footerContent,
   children,
   ...props
 }: AppSectionProps) => {

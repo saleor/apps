@@ -7,9 +7,8 @@ import {
 } from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient, getAppBaseUrl } from "@saleor/apps-shared";
 import { Client } from "urql";
-import { getBaseUrl } from "../../lib/getBaseUrl";
 import { isConfigured } from "../../lib/algolia/is-configured";
 
 const logger = createLogger({
@@ -53,7 +52,7 @@ export const recreateWebhooksHandlerFactory =
 
     logger.debug(settings, "fetched settings");
 
-    const baseUrl = getBaseUrl(req.headers);
+    const baseUrl = getAppBaseUrl(req.headers);
     const enableWebhooks = isConfigured({
       configuration: {
         appId: appId,
