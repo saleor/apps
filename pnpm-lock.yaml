@@ -1799,9 +1799,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      urql:
-        specifier: ^4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
       '@saleor/app-sdk':
         specifier: 0.41.1
