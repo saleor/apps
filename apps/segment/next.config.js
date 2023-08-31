@@ -17,7 +17,8 @@ const nextConfig = () => {
 
   return {
     reactStrictMode: true,
-    transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
+    // TODO Infer names dynamically from disk
+    transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw", "@saleor/trpc"],
   };
 };
 

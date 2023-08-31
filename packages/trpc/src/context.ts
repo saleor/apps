@@ -2,6 +2,9 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { SALEOR_AUTHORIZATION_BEARER_HEADER, SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { inferAsyncReturnType } from "@trpc/server";
 
+/**
+ * TODO - extract to SDK
+ */
 const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": xForwardedProto = "http" } = headers;
 
