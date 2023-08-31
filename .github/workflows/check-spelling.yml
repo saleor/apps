@@ -8,3 +8,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: streetsidesoftware/cspell-action@v3
+        with:
+          verbose: true
