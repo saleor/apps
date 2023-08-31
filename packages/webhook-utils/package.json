@@ -1,0 +1,45 @@
+{
+  "name": "@saleor/webhook-utils",
+  "version": "0.0.0",
+  "scripts": {
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "generate": "graphql-codegen",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@saleor/app-sdk": "0.41.1",
+    "@urql/exchange-auth": "^2.1.4",
+    "eslint": "8.46.0",
+    "graphql": "16.7.1",
+    "graphql-tag": "^2.12.6",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
+    "semver": "^7.5.1",
+    "urql": "^4.0.4"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/schema-ast": "4.0.0",
+    "@graphql-codegen/typed-document-node": "5.0.1",
+    "@graphql-codegen/typescript": "4.0.1",
+    "@graphql-codegen/typescript-operations": "4.0.1",
+    "@graphql-typed-document-node/core": "3.2.0",
+    "@saleor/app-sdk": "0.41.1",
+    "@types/semver": "^7.5.0",
+    "eslint-config-saleor": "workspace:*",
+    "typescript": "5.1.6",
+    "urql": "^4.0.4",
+    "vite": "4.4.8",
+    "vitest": "0.34.1"
+  },
+  "main": "index.ts",
+  "peerDependencies": {
+    "next": "13.3.0",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0"
+  },
+  "saleor": {
+    "schemaVersion": "3.7"
+  }
+}

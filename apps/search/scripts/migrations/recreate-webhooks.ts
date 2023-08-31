@@ -1,11 +1,11 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
 import { createGraphQLClient } from "@saleor/apps-shared";
-import { WebhookActivityTogglerService } from "../../src/domain/WebhookActivityToggler.service";
-import { FetchOwnWebhooksDocument } from "../../generated/graphql";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { getAppDetailsAndWebhooksData, recreateWebhooks } from "@saleor/webhook-utils";
+import { appWebhooks } from "../../webhooks";
 
-export const recreateWebhooks = async ({
+export const recreateWebhooksScript = async ({
   authData,
   dryRun,
 }: {
@@ -18,12 +18,10 @@ export const recreateWebhooks = async ({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
-  const webhooks = await client
-    .query(FetchOwnWebhooksDocument, {
-      id: authData.appId,
-    })
-    .toPromise()
-    .then((r) => r.data?.app?.webhooks);
+
+  const appData = await getAppDetailsAndWebhooksData({ client });
+
+  const webhooks = appData?.webhooks;
 
   if (!webhooks?.length) {
     console.error("The environment does not have any webhooks, skipping");
@@ -31,7 +29,13 @@ export const recreateWebhooks = async ({
   }
 
   // Use currently existing webhook data to determine a proper baseUrl and enabled state
-  const targetUrl = webhooks[0].targetUrl;
+  const targetUrl = appData?.appUrl; // TODO: validate if thats always populated
+
+  if (!targetUrl?.length) {
+    console.error("App has no defined appUrl, skipping");
+    return;
+  }
+
   const enabled = webhooks[0].isActive;
 
   const baseUrl = new URL(targetUrl).origin;
@@ -41,10 +45,11 @@ export const recreateWebhooks = async ({
     return;
   }
 
-  const webhookService = new WebhookActivityTogglerService(authData.appId, client);
-
   try {
-    await webhookService.recreateOwnWebhooks({ baseUrl, enableWebhooks: enabled });
+    await recreateWebhooks({
+      client,
+      webhookManifests: appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled })),
+    });
     console.log("✅ Webhooks recreated successfully");
   } catch (e) {
     console.error("🛑 Failed to recreate webhooks: ", e);

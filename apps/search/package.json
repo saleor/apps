@@ -19,6 +19,7 @@
     "@saleor/macaw-ui": "0.8.0-pre.127",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@sentry/nextjs": "7.67.0",
+    "@saleor/webhook-utils": "workspace:*",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.38.1",
     "@trpc/next": "10.38.1",
