@@ -1,3 +1,4 @@
 {
-  "words": ["saleor", "AvaTax", "TaxJar"]
+  "words": ["saleor", "AvaTax", "TaxJar"],
+  "ignorePaths": ["node_modules", "package.json"]
 }
