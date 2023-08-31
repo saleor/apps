@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 import { trpcClient } from "../modules/trpc/trpc-client";
+import { Layout } from "@saleor/apps-ui";
 
 const BATCH_SIZE = 100;
 
@@ -63,7 +64,19 @@ export const ImportProductsToAlgolia = () => {
   }, [searchProvider, currentProductIndex, isAlgoliaImporting, products]);
 
   return (
-    <Box __cursor={started ? "wait" : "auto"}>
+    <Layout.AppSectionCard
+      footer={
+        searchProvider &&
+        algoliaConfigured && (
+          <Box display={"flex"} justifyContent={"flex-end"}>
+            <Button disabled={started || !searchProvider} onClick={importProducts}>
+              Start importing
+            </Button>
+          </Box>
+        )
+      }
+      __cursor={started ? "wait" : "auto"}
+    >
       {searchProvider && algoliaConfigured ? (
         <Box>
           <Text variant={"heading"} as={"p"} marginBottom={1.5}>
@@ -75,11 +88,6 @@ export const ImportProductsToAlgolia = () => {
           <Text marginBottom={5} variant={"bodyStrong"}>
             Do not close the app - its running client-side
           </Text>
-          <Box display={"flex"} justifyContent={"flex-end"}>
-            <Button disabled={started || !searchProvider} onClick={importProducts}>
-              Start importing
-            </Button>
-          </Box>
         </Box>
       ) : (
         <Box>
@@ -112,7 +120,7 @@ export const ImportProductsToAlgolia = () => {
           />
         </div>
       )}
-    </Box>
+    </Layout.AppSectionCard>
   );
 };
 

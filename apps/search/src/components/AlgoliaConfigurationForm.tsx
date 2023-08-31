@@ -13,6 +13,7 @@ import {
 } from "../modules/configuration/configuration";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { trpcClient } from "../modules/trpc/trpc-client";
+import { Layout } from "@saleor/apps-ui";
 
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -76,10 +77,18 @@ export const AlgoliaConfigurationForm = () => {
   const isFormDisabled = isMutationLoading || isQueryLoading;
 
   return (
-    <Box>
+    <Layout.AppSectionCard
+      footer={
+        <Box display={"flex"} justifyContent={"flex-end"}>
+          <Button disabled={isFormDisabled} type="submit" variant="primary">
+            {isFormDisabled ? "Loading..." : "Save"}
+          </Button>
+        </Box>
+      }
+    >
       <form onSubmit={onFormSubmit}>
-        <Box padding={5}>
-          <Box marginBottom={5}>
+        <Box>
+          <Box>
             <Input
               control={control}
               name="appId"
@@ -117,15 +126,7 @@ export const AlgoliaConfigurationForm = () => {
             </Box>
           )}
         </Box>
-
-        <Divider margin={0} marginTop={5} />
-
-        <Box paddingX={5} paddingY={3} display={"flex"} justifyContent={"flex-end"}>
-          <Button disabled={isFormDisabled} type="submit" variant="primary">
-            {isFormDisabled ? "Loading..." : "Save"}
-          </Button>
-        </Box>
       </form>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };

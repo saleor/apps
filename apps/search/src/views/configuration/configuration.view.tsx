@@ -1,5 +1,5 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { AppSection } from "../../components/AppSection";
+import { Layout } from "@saleor/apps-ui";
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
@@ -20,17 +20,20 @@ export const ConfigurationView = () => {
         </Text>
         <MainInstructions marginTop={1.5} />
       </Box>
-      <AppSection
+      <Layout.AppSection
         includePadding
         heading="Webhooks status"
         sideContent={<WebhooksStatusInstructions />}
-        mainContent={<WebhooksStatus />}
-      />
+      >
+        <Layout.AppSectionCard>
+          <WebhooksStatus />
+        </Layout.AppSectionCard>
+      </Layout.AppSection>
 
-      <AppSection
+      <Layout.AppSection
+        includePadding={false}
         marginTop={14}
         heading="Algolia settings"
-        mainContent={<AlgoliaConfigurationForm />}
         sideContent={
           <Box>
             <Text as="p" marginBottom={1.5}>
@@ -45,45 +48,31 @@ export const ConfigurationView = () => {
           </Box>
         }
       />
-      <AppSection
-        marginTop={14}
-        heading="Fields filtering"
-        mainContent={<AlgoliaFieldsSelectionForm />}
-        sideContent={
-          <Box>
-            <Text as="p" marginBottom={1.5}>
-              Decide which fields app should send with each product variant.
-            </Text>
-            <Text as="p" marginBottom={1.5}>
-              You should remove fields you do not need, to ensure Algolia limits will not be
-              exceeded.
-            </Text>
-          </Box>
-        }
-      />
-      <AppSection
+      <Layout.AppSection
         includePadding
         marginTop={14}
         heading="Index products"
-        mainContent={<ImportProductsToAlgolia />}
         sideContent={
           <Box>
             <Text>Perform initial index of all products in your Saleor database</Text>
           </Box>
         }
-      />
+      >
+        <ImportProductsToAlgolia />
+      </Layout.AppSection>
 
-      <AppSection
+      <Layout.AppSection
         includePadding
         marginTop={14}
         heading="Set indices settings"
-        mainContent={<IndicesSettings />}
         sideContent={
           <Box>
             <Text>Sets up indices with recommended settings.</Text>
           </Box>
         }
-      />
+      >
+        <IndicesSettings />
+      </Layout.AppSection>
     </Box>
   );
 };
