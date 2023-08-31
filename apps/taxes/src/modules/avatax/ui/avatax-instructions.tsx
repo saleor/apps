@@ -26,8 +26,8 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <Text as="p" marginBottom={8}>
-            You must verify the crddedentials by clicking the{" "}
-            <Text variant="bodyStrong">Verify</Text> button.
+            You must verify the credentials by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
           </Text>
           <Text as="p">
             <i>Address</i> will fail if:
