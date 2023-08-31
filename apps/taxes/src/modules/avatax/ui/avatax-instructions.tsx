@@ -16,18 +16,18 @@ export const AvataxInstructions = () => {
           </Text>
           <Box as="ol" marginBottom={1}>
             <li>
-              <Text>- The usrname or password are incorrect.</Text>
+              <Text>- The username or password are incorrect.</Text>
             </li>
             <li>
               <Text>
-                - The combination of username and pasword do not match &quot;sandbox mode&quot;
+                - The combination of username and password do not match &quot;sandbox mode&quot;
                 setting.
               </Text>
             </li>
           </Box>
           <Text as="p" marginBottom={8}>
-            You must verify the crecredentials by clicking the{" "}
-            <Text variant="bodyStrong">Verify</Text> button.
+            You must verify the credentials by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            button.
           </Text>
           <Text as="p">
             <i>Address</i> will fail if:
@@ -35,7 +35,7 @@ export const AvataxInstructions = () => {
           <Box as="ol" marginTop={1} marginBottom={2} marginX={1}>
             <li>
               <Text>
-                - The adress does not match{" "}
+                - The address does not match{" "}
                 <TextLink href="https://developer.avalara.com/avatax/address-validation/" newTab>
                   the desired format
                 </TextLink>
