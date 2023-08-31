@@ -6,6 +6,7 @@ import {
 import { isNotNil } from "../isNotNil";
 import { safeParseJson } from "../safe-parse-json";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
+import { AlgoliaRootFields } from "../algolia-fields";
 
 type PartialChannelListing = {
   channel: {
@@ -138,7 +139,7 @@ export function productAndVariantToAlgolia({
     metadata: metadataToAlgoliaAttribute(variant.product.metadata),
     variantMetadata: metadataToAlgoliaAttribute(variant.metadata),
     otherVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
-  };
+  } satisfies Record<AlgoliaRootFields | string, unknown>;
 
   return document;
 }
