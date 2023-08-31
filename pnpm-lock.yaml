@@ -1766,6 +1766,9 @@ importers:
 
   packages/trpc:
     dependencies:
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../shared
       '@tanstack/react-query':
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)

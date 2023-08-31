@@ -1,9 +1,8 @@
 import "@saleor/macaw-ui/next/style";
-import { GraphQLProvider } from "@/modules/graphql/GraphQLProvider";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
+import { GraphQLProvider, NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

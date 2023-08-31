@@ -3,11 +3,10 @@ import "@saleor/macaw-ui/next/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import React from "react";
 import { AppProps } from "next/app";
-import { GraphQLProvider } from "../providers/GraphQLProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
-import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
+import { GraphQLProvider, NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
 /**

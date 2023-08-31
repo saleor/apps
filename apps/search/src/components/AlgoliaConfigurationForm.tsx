@@ -78,6 +78,8 @@ export const AlgoliaConfigurationForm = () => {
 
   return (
     <Layout.AppSectionCard
+      as="form"
+      onSubmit={onFormSubmit}
       footer={
         <Box display={"flex"} justifyContent={"flex-end"}>
           <Button disabled={isFormDisabled} type="submit" variant="primary">
@@ -86,47 +88,42 @@ export const AlgoliaConfigurationForm = () => {
         </Box>
       }
     >
-      <form onSubmit={onFormSubmit}>
-        <Box>
-          <Box>
-            <Input
-              control={control}
-              name="appId"
-              disabled={isFormDisabled}
-              required
-              label="Application ID"
-              /* cspell:disable-next-line */
-              helperText="Usually 10 characters, e.g. XYZAAABB00"
-            />
-          </Box>
-          <Box marginBottom={5} key={"secret"} /* todo why is this "key" here? */>
-            <Input
-              control={control}
-              name="secretKey"
-              disabled={isFormDisabled}
-              required
-              label="Admin API Key"
-              helperText="In Algolia dashboard it's a masked field"
-            />
-          </Box>
-
+      <Box>
+        <Input
+          control={control}
+          name="appId"
+          disabled={isFormDisabled}
+          required
+          label="Application ID"
+          helperText="Usually 10 characters, e.g. XYZAAABB00"
+        />
+        <Box marginBottom={5} key={"secret"} /* todo why is this "key" here? */>
           <Input
             control={control}
-            name="indexNamePrefix"
+            name="secretKey"
             disabled={isFormDisabled}
-            label="Index name prefix"
-            helperText='Optional prefix, you can add "test" or "staging" to test the app'
+            required
+            label="Admin API Key"
+            helperText="In Algolia dashboard it's a masked field"
           />
-
-          {credentialsValidationError && (
-            <Box marginTop={5}>
-              <Text color={"textCriticalDefault"}>
-                Could not connect to Algolia. Please verify your credentials
-              </Text>
-            </Box>
-          )}
         </Box>
-      </form>
+
+        <Input
+          control={control}
+          name="indexNamePrefix"
+          disabled={isFormDisabled}
+          label="Index name prefix"
+          helperText='Optional prefix, you can add "test" or "staging" to test the app'
+        />
+
+        {credentialsValidationError && (
+          <Box marginTop={5}>
+            <Text color={"textCriticalDefault"}>
+              Could not connect to Algolia. Please verify your credentials
+            </Text>
+          </Box>
+        )}
+      </Box>
     </Layout.AppSectionCard>
   );
 };

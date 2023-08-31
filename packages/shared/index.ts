@@ -7,3 +7,5 @@ export * from "./src/create-graphql-client";
 export * from "./src/metadata-manager";
 export * from "./src/editor-js/editor-js-plaintext-renderer";
 export * from "./src/theme-synchronizer";
+export * from "./src/GraphQLProvider";
+export * from "./src/get-app-base-url";
