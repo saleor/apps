@@ -2,13 +2,13 @@ import { createLogger } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
-import { AppConfigurationFields, AppConfigurationSchema } from "./configuration";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { fetchLegacyConfiguration } from "./legacy-configuration";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
+import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
+import { fetchLegacyConfiguration } from "./legacy-configuration";
 
 const logger = createLogger({ name: "configuration.router" });
 
@@ -17,7 +17,7 @@ export const configurationRouter = router({
     const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
     /**
-     * Backwards compatbitility
+     * Backwards compatibility
      */
     const domain = new URL(ctx.saleorApiUrl).host;
 
@@ -39,7 +39,7 @@ export const configurationRouter = router({
       return config.getConfig();
     }
   }),
-  setConfig: protectedClientProcedure
+  setConnectionConfig: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
@@ -51,6 +51,7 @@ export const configurationRouter = router({
         apiKey: input.secretKey,
         indexNamePrefix: input.indexNamePrefix,
         channels,
+        enabledKeys: [], // not required to ping algolia, but should be refactored
       });
 
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
@@ -83,5 +84,18 @@ export const configurationRouter = router({
       }
 
       return null;
+    }),
+  setFieldsMappingConfig: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(FieldsConfigSchema)
+    .mutation(async ({ ctx, input }) => {
+      const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
+      const configManager = new AppConfigMetadataManager(settingsManager);
+
+      const config = await configManager.get(ctx.saleorApiUrl);
+
+      config.setFieldsMapping(input.enabledAlgoliaFields);
+
+      configManager.set(config, ctx.saleorApiUrl);
     }),
 });

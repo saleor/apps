@@ -8,7 +8,8 @@ export const IndicesSettings = () => {
   const { data: algoliaConfiguration } = trpcClient.configuration.getConfig.useQuery();
   const updateWebhooksMutation = useIndicesSetupMutation();
 
-  const isConfigured = algoliaConfiguration?.appId && algoliaConfiguration?.secretKey;
+  const isConfigured =
+    algoliaConfiguration?.appConfig?.appId && algoliaConfiguration?.appConfig?.secretKey;
 
   return (
     <Box>

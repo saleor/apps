@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AlgoliaRootFieldsKeys } from "../../lib/algolia-fields";
 
 export const AppConfigurationSchema = z.object({
   appId: z.string().min(3),
@@ -6,17 +7,29 @@ export const AppConfigurationSchema = z.object({
   secretKey: z.string().min(3),
 });
 
-export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
+export const FieldsConfigSchema = z.object({
+  enabledAlgoliaFields: z.array(z.string()),
+});
 
-export const AppConfigRootSchema = AppConfigurationSchema.nullable();
+const AppConfigRootSchema = z.object({
+  appConfig: AppConfigurationSchema.nullable(),
+  fieldsMapping: FieldsConfigSchema,
+});
+
+export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
 export type AppConfigRootSchemaFields = z.infer<typeof AppConfigRootSchema>;
 
 export class AppConfig {
-  private rootData: AppConfigRootSchemaFields = null;
+  private rootData: AppConfigRootSchemaFields = {
+    appConfig: null,
+    fieldsMapping: {
+      enabledAlgoliaFields: [...AlgoliaRootFieldsKeys],
+    },
+  };
 
   constructor(initialData?: AppConfigRootSchemaFields) {
     if (initialData) {
-      this.rootData = AppConfigurationSchema.parse(initialData);
+      this.rootData = AppConfigRootSchema.parse(initialData);
     }
   }
 
@@ -29,7 +42,15 @@ export class AppConfig {
   }
 
   setAlgoliaSettings(settings: AppConfigurationFields) {
-    this.rootData = AppConfigurationSchema.parse(settings);
+    this.rootData.appConfig = AppConfigurationSchema.parse(settings);
+
+    return this;
+  }
+
+  setFieldsMapping(fieldsMapping: string[]) {
+    this.rootData.fieldsMapping = {
+      enabledAlgoliaFields: z.array(z.string()).parse(fieldsMapping),
+    };
 
     return this;
   }

@@ -7,6 +7,7 @@ import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger({
   service: "setupIndicesHandler",
@@ -31,28 +32,28 @@ export const setupIndicesHandlerFactory =
     logger.debug("Fetching settings");
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const settingsManager = settingsManagerFactory(client, authData.appId);
+    const configManager = new AppConfigMetadataManager(settingsManager);
 
-    const domain = new URL(authData.saleorApiUrl).host;
-
-    const [secretKey, appId, indexNamePrefix, channelsRequest] = await Promise.all([
-      settingsManager.get("secretKey", domain),
-      settingsManager.get("appId", domain),
-      settingsManager.get("indexNamePrefix", domain),
+    const [config, channelsRequest] = await Promise.all([
+      configManager.get(authData.saleorApiUrl),
       client.query(ChannelsDocument, {}).toPromise(),
     ]);
 
-    if (!secretKey || !appId) {
-      logger.debug("Missing secretKey or appId, returning 400");
+    const configData = config.getConfig();
+
+    if (!configData.appConfig) {
+      logger.debug("Missing config, returning 400");
       return res.status(400).end();
     }
 
     const channels = channelsRequest.data?.channels || [];
 
     const algoliaClient = new AlgoliaSearchProvider({
-      appId,
-      apiKey: secretKey,
-      indexNamePrefix: indexNamePrefix,
+      appId: configData.appConfig.appId,
+      apiKey: configData.appConfig.secretKey,
+      indexNamePrefix: configData.appConfig.indexNamePrefix,
       channels,
+      enabledKeys: configData.fieldsMapping.enabledAlgoliaFields,
     });
 
     try {

@@ -6,6 +6,7 @@ import {
 import { isNotNil } from "../isNotNil";
 import { safeParseJson } from "../safe-parse-json";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
+import { AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
 
 type PartialChannelListing = {
   channel: {
@@ -82,9 +83,11 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
 export function productAndVariantToAlgolia({
   variant,
   channel,
+  enabledKeys,
 }: {
   variant: ProductVariantWebhookPayloadFragment;
   channel: string;
+  enabledKeys: string[];
 }) {
   const product = variant.product;
   const attributes = {
@@ -138,7 +141,16 @@ export function productAndVariantToAlgolia({
     metadata: metadataToAlgoliaAttribute(variant.product.metadata),
     variantMetadata: metadataToAlgoliaAttribute(variant.metadata),
     otherVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
-  };
+  } satisfies Record<AlgoliaRootFields | string, unknown>;
+
+  // todo refactor
+  AlgoliaRootFieldsKeys.forEach((field) => {
+    const enabled = enabledKeys.includes(field);
+
+    if (!enabled) {
+      delete document[field];
+    }
+  });
 
   return document;
 }
