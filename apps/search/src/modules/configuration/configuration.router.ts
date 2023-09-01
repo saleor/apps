@@ -51,6 +51,7 @@ export const configurationRouter = router({
         apiKey: input.secretKey,
         indexNamePrefix: input.indexNamePrefix,
         channels,
+        enabledKeys: [], // not required to ping algolia, but should be refactored
       });
 
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);

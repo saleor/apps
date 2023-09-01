@@ -126,7 +126,7 @@ export default createProtectedHandler(
       return new WebhookActivityTogglerService(appId, client);
     },
     algoliaSearchProviderFactory(appId, apiKey) {
-      return new AlgoliaSearchProvider({ appId, apiKey });
+      return new AlgoliaSearchProvider({ appId, apiKey, enabledKeys: [] });
     },
     graphqlClientFactory(saleorApiUrl: string, token: string) {
       return createGraphQLClient({ saleorApiUrl, token });

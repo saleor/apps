@@ -59,6 +59,7 @@ export const AlgoliaConfigurationForm = () => {
       appId: conf.appId ?? "",
       apiKey: conf.secretKey ?? "",
       indexNamePrefix: conf.indexNamePrefix,
+      enabledKeys: [], // not required for ping but should be refactored
     });
 
     try {

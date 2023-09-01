@@ -24,6 +24,7 @@ export const ImportProductsToAlgolia = () => {
       appId: algoliaConfiguration.appConfig.appId,
       apiKey: algoliaConfiguration.appConfig.secretKey,
       indexNamePrefix: algoliaConfiguration.appConfig.indexNamePrefix,
+      enabledKeys: algoliaConfiguration.fieldsMapping.enabledAlgoliaFields,
     });
   }, [
     algoliaConfiguration?.appConfig?.appId,

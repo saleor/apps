@@ -35,6 +35,7 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
     apiKey: settings.appConfig?.secretKey,
     indexNamePrefix: settings.appConfig?.indexNamePrefix,
     channels,
+    enabledKeys: settings.fieldsMapping.enabledAlgoliaFields,
   });
 
   return {
