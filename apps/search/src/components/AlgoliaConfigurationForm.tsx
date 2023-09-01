@@ -86,6 +86,7 @@ export const AlgoliaConfigurationForm = () => {
               disabled={isFormDisabled}
               required
               label="Application ID"
+              /* cspell:disable-next-line */
               helperText="Usually 10 characters, e.g. XYZAAABB00"
             />
           </Box>

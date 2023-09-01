@@ -44,7 +44,17 @@
     "Undiscounted",
     "Upstash",
     "urql",
-    "Vercel"
+    "Vercel",
+    "RudderStack",
+    "DataDog",
+    "Clearpay",
+    "Afterpay",
+    "Nuvo",
+    "Appstore",
+    "tRPC",
+    "Algoliasearch",
+    "tanstack",
+    "hookform"
   ],
   "ignorePaths": ["node_modules", "package.json", "pnpm-lock.yaml", ".gitignore"]
 }

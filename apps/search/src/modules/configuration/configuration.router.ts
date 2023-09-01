@@ -17,7 +17,7 @@ export const configurationRouter = router({
     const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
     /**
-     * Backwards compatbitility
+     * Backwards compatibility
      */
     const domain = new URL(ctx.saleorApiUrl).host;
 
