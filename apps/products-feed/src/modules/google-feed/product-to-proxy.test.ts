@@ -11,6 +11,7 @@ describe("productToProxy", () => {
       id: "product-id",
       title: "title",
       variantId: "variant-id",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -18,7 +19,7 @@ describe("productToProxy", () => {
         {
           "g:id": expect.arrayContaining([{ "#text": "variant-id" }]),
         },
-      ])
+      ]),
     );
   });
 
@@ -34,6 +35,7 @@ describe("productToProxy", () => {
       id: "product-id",
       title: "title",
       variantId: "variant-id",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -41,7 +43,7 @@ describe("productToProxy", () => {
         {
           "g:condition": expect.arrayContaining([{ "#text": "new" }]),
         },
-      ])
+      ]),
     );
   });
 
@@ -55,6 +57,7 @@ describe("productToProxy", () => {
       title: "title",
       variantId: "variant-id",
       description: "Product description",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -62,7 +65,7 @@ describe("productToProxy", () => {
         {
           "g:description": expect.arrayContaining([{ "#text": "Product description" }]),
         },
-      ])
+      ]),
     );
   });
 
@@ -76,6 +79,7 @@ describe("productToProxy", () => {
       id: "product-id",
       title: "title",
       variantId: "variant-id",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -83,7 +87,7 @@ describe("productToProxy", () => {
         {
           "g:google_product_category": expect.arrayContaining([{ "#text": "1" }]),
         },
-      ])
+      ]),
     );
   });
 
@@ -98,6 +102,7 @@ describe("productToProxy", () => {
       title: "title",
       variantId: "variant-id",
       link: "https://example.com/p/product-id",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -109,7 +114,7 @@ describe("productToProxy", () => {
             },
           ]),
         },
-      ])
+      ]),
     );
   });
 
@@ -124,6 +129,7 @@ describe("productToProxy", () => {
       title: "title",
       variantId: "variant-id",
       imageUrl: "https://image.example.com",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -131,7 +137,7 @@ describe("productToProxy", () => {
         {
           "g:image_link": expect.arrayContaining([{ "#text": "https://image.example.com" }]),
         },
-      ])
+      ]),
     );
   });
 
@@ -147,6 +153,7 @@ describe("productToProxy", () => {
       variantId: "variant-id",
       imageUrl: "https://image.example.com",
       price: "50.00 USD",
+      additionalImageLinks: [],
     });
 
     expect(result.item).toEqual(
@@ -154,7 +161,7 @@ describe("productToProxy", () => {
         {
           "g:price": expect.arrayContaining([{ "#text": "50.00 USD" }]),
         },
-      ])
+      ]),
     );
   });
 });

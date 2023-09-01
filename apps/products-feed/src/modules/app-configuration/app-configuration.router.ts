@@ -3,7 +3,7 @@ import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { createLogger } from "@saleor/apps-shared";
 
 import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
-import { AppConfigSchema, titleTemplateInputSchema } from "./app-config";
+import { AppConfigSchema, imageSizeInputSchema, titleTemplateInputSchema } from "./app-config";
 import { z } from "zod";
 import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
 import { checkBucketAccess } from "../file-storage/s3/check-bucket-access";
@@ -158,6 +158,21 @@ export const appConfigurationRouter = router({
 
       return result;
     }),
+  setImageSize: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
+    .input(imageSizeInputSchema)
+    .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
+      logger.debug("Setting image size");
+      const config = await getConfig();
+
+      config.setImageSize(input.imageSize);
+
+      await appConfigMetadataManager.set(config.serialize());
+
+      logger.debug("image size set");
+      return null;
+    }),
+
   setTitleTemplate: protectedClientProcedure
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(titleTemplateInputSchema)
