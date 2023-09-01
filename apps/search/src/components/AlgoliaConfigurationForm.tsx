@@ -38,7 +38,7 @@ export const AlgoliaConfigurationForm = () => {
     });
 
   const { mutate: setConfig, isLoading: isMutationLoading } =
-    trpcClient.configuration.setConfig.useMutation({
+    trpcClient.configuration.setConnectionConfig.useMutation({
       onSuccess: async () => {
         await Promise.all([
           refetchConfig(),

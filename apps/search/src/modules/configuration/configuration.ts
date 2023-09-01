@@ -5,20 +5,29 @@ export const AppConfigurationSchema = z.object({
   appId: z.string().min(3),
   indexNamePrefix: z.string().optional(),
   secretKey: z.string().min(3),
+});
+
+export const FieldsConfigSchema = z.object({
   enabledAlgoliaFields: z.array(z.string()).default(AlgoliaRootFieldsKeys),
 });
 
-export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
+const AppConfigRootSchema = z.object({
+  appConfig: AppConfigurationSchema.nullable(),
+  fieldsMapping: FieldsConfigSchema.nullable(),
+});
 
-export const AppConfigRootSchema = AppConfigurationSchema.nullable();
+export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
 export type AppConfigRootSchemaFields = z.infer<typeof AppConfigRootSchema>;
 
 export class AppConfig {
-  private rootData: AppConfigRootSchemaFields = null;
+  private rootData: AppConfigRootSchemaFields = {
+    appConfig: null,
+    fieldsMapping: null,
+  };
 
   constructor(initialData?: AppConfigRootSchemaFields) {
     if (initialData) {
-      this.rootData = AppConfigurationSchema.parse(initialData);
+      this.rootData = AppConfigRootSchema.parse(initialData);
     }
   }
 
@@ -31,7 +40,15 @@ export class AppConfig {
   }
 
   setAlgoliaSettings(settings: AppConfigurationFields) {
-    this.rootData = AppConfigurationSchema.parse(settings);
+    this.rootData.appConfig = AppConfigurationSchema.parse(settings);
+
+    return this;
+  }
+
+  setFieldsMapping(fieldsMapping: string[]) {
+    this.rootData.fieldsMapping = {
+      enabledAlgoliaFields: z.array(z.string()).parse(fieldsMapping),
+    };
 
     return this;
   }

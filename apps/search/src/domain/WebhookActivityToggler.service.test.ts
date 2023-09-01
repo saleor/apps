@@ -1,6 +1,9 @@
 import { Client } from "urql";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { IWebhooksActivityClient, WebhookActivityTogglerService } from "./WebhookActivityToggler.service";
+import {
+  IWebhooksActivityClient,
+  WebhookActivityTogglerService,
+} from "./WebhookActivityToggler.service";
 
 describe("WebhookActivityTogglerService", function () {
   let mockWebhooksClient: IWebhooksActivityClient;
@@ -11,6 +14,8 @@ describe("WebhookActivityTogglerService", function () {
       enableSingleWebhook: vi.fn(),
       disableSingleWebhook: vi.fn(),
       fetchAppWebhooksIDs: vi.fn(),
+      createWebhook: vi.fn(),
+      removeSingleWebhook: vi.fn(),
     };
 
     service = new WebhookActivityTogglerService("ID", {} as Client, {
