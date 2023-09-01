@@ -8,12 +8,12 @@ export const AppConfigurationSchema = z.object({
 });
 
 export const FieldsConfigSchema = z.object({
-  enabledAlgoliaFields: z.array(z.string()).default(AlgoliaRootFieldsKeys),
+  enabledAlgoliaFields: z.array(z.string()),
 });
 
 const AppConfigRootSchema = z.object({
   appConfig: AppConfigurationSchema.nullable(),
-  fieldsMapping: FieldsConfigSchema.nullable(),
+  fieldsMapping: FieldsConfigSchema,
 });
 
 export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
@@ -22,7 +22,9 @@ export type AppConfigRootSchemaFields = z.infer<typeof AppConfigRootSchema>;
 export class AppConfig {
   private rootData: AppConfigRootSchemaFields = {
     appConfig: null,
-    fieldsMapping: null,
+    fieldsMapping: {
+      enabledAlgoliaFields: [...AlgoliaRootFieldsKeys],
+    },
   };
 
   constructor(initialData?: AppConfigRootSchemaFields) {

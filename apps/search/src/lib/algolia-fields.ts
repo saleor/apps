@@ -21,4 +21,14 @@ export const AlgoliaRootFieldsLabelsMap = {
   variantMetadata: "Variant metadata",
 } satisfies Record<AlgoliaRootFields, string>;
 
-export const AlgoliaRootFieldsKeys = Object.keys(AlgoliaRootFieldsLabelsMap);
+export const AlgoliaRootFieldsKeys = [
+  "attributes",
+  "media",
+  "description",
+  "descriptionPlaintext",
+  "categories",
+  "collections",
+  "metadata",
+  "variantMetadata",
+  "otherVariants",
+] as const;

@@ -31,9 +31,9 @@ export const AlgoliaConfigurationForm = () => {
   const { isLoading: isQueryLoading, refetch: refetchConfig } =
     trpcClient.configuration.getConfig.useQuery(undefined, {
       onSuccess(data) {
-        setValue("secretKey", data?.secretKey || "");
-        setValue("appId", data?.appId || "");
-        setValue("indexNamePrefix", data?.indexNamePrefix || "");
+        setValue("secretKey", data?.appConfig?.secretKey || "");
+        setValue("appId", data?.appConfig?.appId || "");
+        setValue("indexNamePrefix", data?.appConfig?.indexNamePrefix || "");
       },
     });
 
