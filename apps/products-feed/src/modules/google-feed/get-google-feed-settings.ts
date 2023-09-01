@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
-import { GraphqlClientFactory } from "../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../lib/create-graphql-client";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
 
