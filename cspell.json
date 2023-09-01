@@ -54,7 +54,8 @@
     "tRPC",
     "Algoliasearch",
     "tanstack",
-    "hookform"
+    "hookform",
+    "urql"
   ],
   "ignorePaths": ["node_modules", "package.json", "pnpm-lock.yaml", ".gitignore"]
 }
