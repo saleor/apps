@@ -26,11 +26,16 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
     throw new Error(errorMessage);
   }
 
+  if (!settings.appConfig) {
+    throw new Error("App not configured");
+  }
+
   const algoliaClient = new AlgoliaSearchProvider({
-    appId: settings.appId,
-    apiKey: settings.secretKey,
-    indexNamePrefix: settings.indexNamePrefix,
+    appId: settings.appConfig?.appId,
+    apiKey: settings.appConfig?.secretKey,
+    indexNamePrefix: settings.appConfig?.indexNamePrefix,
     channels,
+    enabledKeys: settings.fieldsMapping.enabledAlgoliaFields,
   });
 
   return {

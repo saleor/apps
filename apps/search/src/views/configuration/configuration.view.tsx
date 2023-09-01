@@ -7,6 +7,7 @@ import { MainInstructions } from "../../components/MainInstructions";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 import { TextLink } from "@saleor/apps-ui";
 import { IndicesSettings } from "../../components/IndicesSettings";
+import { AlgoliaFieldsSelectionForm } from "../../components/AlgoliaFieldsSelectionForm";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
@@ -40,6 +41,22 @@ export const ConfigurationView = () => {
               <TextLink href={ALGOLIA_DASHBOARD_TOKENS_URL} newTab>
                 here
               </TextLink>
+            </Text>
+          </Box>
+        }
+      />
+      <AppSection
+        marginTop={14}
+        heading="Fields filtering"
+        mainContent={<AlgoliaFieldsSelectionForm />}
+        sideContent={
+          <Box>
+            <Text as="p" marginBottom={1.5}>
+              Decide which fields app should send with each product variant.
+            </Text>
+            <Text as="p" marginBottom={1.5}>
+              You should remove fields you do not need, to ensure Algolia limits will not be
+              exceeded.
             </Text>
           </Box>
         }

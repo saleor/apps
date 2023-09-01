@@ -31,14 +31,14 @@ export const AlgoliaConfigurationForm = () => {
   const { isLoading: isQueryLoading, refetch: refetchConfig } =
     trpcClient.configuration.getConfig.useQuery(undefined, {
       onSuccess(data) {
-        setValue("secretKey", data?.secretKey || "");
-        setValue("appId", data?.appId || "");
-        setValue("indexNamePrefix", data?.indexNamePrefix || "");
+        setValue("secretKey", data?.appConfig?.secretKey || "");
+        setValue("appId", data?.appConfig?.appId || "");
+        setValue("indexNamePrefix", data?.appConfig?.indexNamePrefix || "");
       },
     });
 
   const { mutate: setConfig, isLoading: isMutationLoading } =
-    trpcClient.configuration.setConfig.useMutation({
+    trpcClient.configuration.setConnectionConfig.useMutation({
       onSuccess: async () => {
         await Promise.all([
           refetchConfig(),
@@ -59,6 +59,7 @@ export const AlgoliaConfigurationForm = () => {
       appId: conf.appId ?? "",
       apiKey: conf.secretKey ?? "",
       indexNamePrefix: conf.indexNamePrefix,
+      enabledKeys: [], // not required for ping but should be refactored
     });
 
     try {
@@ -85,6 +86,7 @@ export const AlgoliaConfigurationForm = () => {
               disabled={isFormDisabled}
               required
               label="Application ID"
+              /* cspell:disable-next-line */
               helperText="Usually 10 characters, e.g. XYZAAABB00"
             />
           </Box>

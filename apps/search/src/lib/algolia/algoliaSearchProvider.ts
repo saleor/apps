@@ -18,6 +18,7 @@ export interface AlgoliaSearchProviderOptions {
   apiKey: string;
   indexNamePrefix?: string;
   channels?: Array<{ slug: string; currencyCode: string }>;
+  enabledKeys: string[];
 }
 
 const logger = createLogger({ name: "AlgoliaSearchProvider" });
@@ -26,13 +27,21 @@ export class AlgoliaSearchProvider implements SearchProvider {
   #algolia: SearchClient;
   #indexNamePrefix?: string | undefined;
   #indexNames: Array<string>;
+  #enabledKeys: string[];
 
-  constructor({ appId, apiKey, indexNamePrefix, channels }: AlgoliaSearchProviderOptions) {
+  constructor({
+    appId,
+    apiKey,
+    indexNamePrefix,
+    channels,
+    enabledKeys,
+  }: AlgoliaSearchProviderOptions) {
     this.#algolia = Algoliasearch(appId, apiKey);
     this.#indexNamePrefix = indexNamePrefix;
     this.#indexNames =
       channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.#indexNamePrefix)) ||
       [];
+    this.#enabledKeys = enabledKeys;
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
@@ -96,6 +105,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     const groupedByIndex = groupProductsByIndexName(productsBatch, {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
+      enabledKeys: this.#enabledKeys,
     });
 
     await this.saveGroupedByIndex(groupedByIndex);
@@ -139,6 +149,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     const groupedByIndexToSave = groupVariantByIndexName(productVariant, {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
+      enabledKeys: this.#enabledKeys,
     });
 
     if (groupedByIndexToSave && !!Object.keys(groupedByIndexToSave).length) {
@@ -193,7 +204,12 @@ const groupVariantByIndexName = (
   {
     visibleInListings,
     indexNamePrefix,
-  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined },
+    enabledKeys,
+  }: {
+    visibleInListings: true | false | null;
+    indexNamePrefix: string | undefined;
+    enabledKeys: string[];
+  },
 ) => {
   logger.debug("Grouping variants per index name");
   if (!productVariant.channelListings) {
@@ -225,6 +241,7 @@ const groupVariantByIndexName = (
       const object = productAndVariantToAlgolia({
         variant: productVariant,
         channel: channelListing.channel.slug,
+        enabledKeys,
       });
 
       return {
@@ -246,13 +263,18 @@ const groupProductsByIndexName = (
   {
     visibleInListings,
     indexNamePrefix,
-  }: { visibleInListings: true | false | null; indexNamePrefix: string | undefined },
+    enabledKeys,
+  }: {
+    visibleInListings: true | false | null;
+    indexNamePrefix: string | undefined;
+    enabledKeys: string[];
+  },
 ) => {
   logger.debug(`groupProductsByIndexName called`);
   const batchesAndIndices = productsBatch
     .flatMap((p) => p.variants)
     .filter(isNotNil)
-    .map((p) => groupVariantByIndexName(p, { visibleInListings, indexNamePrefix }))
+    .map((p) => groupVariantByIndexName(p, { visibleInListings, indexNamePrefix, enabledKeys }))
     .filter(isNotNil)
     .flatMap((x) => Object.entries(x));
 
