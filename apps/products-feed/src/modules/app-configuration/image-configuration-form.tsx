@@ -14,19 +14,19 @@ type Props = {
   onSubmit(data: ImageSizeInput): Promise<void>;
 };
 
+const imageSizeOptions = [
+  { value: "256", label: "256px" },
+  { value: "512", label: "512px" },
+  { value: "1024", label: "1024px" },
+  { value: "2048", label: "2048px" },
+  { value: "4096", label: "4096px" },
+];
+
 export const ImageConfigurationForm = (props: Props) => {
   const { handleSubmit, control, formState } = useForm<ImageSizeInput>({
     defaultValues: props.initialData,
     resolver: zodResolver(imageSizeInputSchema),
   });
-
-  const options = [
-    { value: "256", label: "256px" },
-    { value: "512", label: "512px" },
-    { value: "1024", label: "1024px" },
-    { value: "2048", label: "2048px" },
-    { value: "4096", label: "4096px" },
-  ];
 
   return (
     <Box
@@ -34,11 +34,9 @@ export const ImageConfigurationForm = (props: Props) => {
       display={"flex"}
       gap={5}
       flexDirection={"column"}
-      onSubmit={handleSubmit((data) => {
-        props.onSubmit(data);
-      })}
+      onSubmit={handleSubmit(props.onSubmit)}
     >
-      <Select control={control} name="imageSize" label="Image size" options={options} />
+      <Select control={control} name="imageSize" label="Image size" options={imageSizeOptions} />
       {!!formState.errors.imageSize?.message && (
         <Text variant="caption" color={"textCriticalSubdued"}>
           {formState.errors.imageSize?.message}
@@ -46,7 +44,7 @@ export const ImageConfigurationForm = (props: Props) => {
       )}
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button type="submit" variant="primary">
-          Save
+          Save {props.initialData.imageSize}
         </Button>
       </Box>
     </Box>
