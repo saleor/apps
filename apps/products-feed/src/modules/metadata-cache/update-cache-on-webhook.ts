@@ -1,4 +1,4 @@
-import { GraphqlClientFactory } from "../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../lib/create-graphql-client";
 import { updateCacheForConfigurations } from "./update-cache-for-configurations";
 import { AuthData } from "@saleor/app-sdk/APL";
 import {

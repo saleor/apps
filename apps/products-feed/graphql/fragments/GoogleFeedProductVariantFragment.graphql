@@ -32,6 +32,21 @@ fragment GoogleFeedProductVariant on ProductVariant {
     slug
     description
     seoDescription
+    media{
+      id
+      alt
+      url(size: $imageSize)
+      type
+    }
+    variants{
+      id
+      media{
+        id
+        alt
+        url(size: $imageSize)
+        type
+      }
+    }
     attributes{
       attribute{
         id
@@ -41,7 +56,7 @@ fragment GoogleFeedProductVariant on ProductVariant {
         name
       }
     }
-    thumbnail {
+    thumbnail(size: $imageSize) {
       url
     }
     category {

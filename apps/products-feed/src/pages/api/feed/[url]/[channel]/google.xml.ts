@@ -8,7 +8,7 @@ import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/genera
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
 import { createSettingsManager } from "../../../../../lib/metadata-manager";
-import { GraphqlClientFactory } from "../../../../../lib/create-graphq-client";
+import { GraphqlClientFactory } from "../../../../../lib/create-graphql-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
@@ -82,6 +82,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let bucketConfiguration: RootConfig["s3"] | undefined;
   let attributeMapping: RootConfig["attributeMapping"] | undefined;
   let titleTemplate: RootConfig["titleTemplate"] | undefined;
+  let imageSize: RootConfig["imageSize"] | undefined;
 
   try {
     const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
@@ -92,6 +93,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     bucketConfiguration = settings.s3BucketConfiguration;
     attributeMapping = settings.attributeMapping;
     titleTemplate = settings.titleTemplate;
+    imageSize = settings.imageSize;
   } catch (error) {
     logger.warn("The application has not been configured");
 
@@ -171,7 +173,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let productVariants: GoogleFeedProductVariantFragment[] = [];
 
   try {
-    productVariants = await fetchProductData({ client, channel, cursors });
+    productVariants = await fetchProductData({ client, channel, cursors, imageSize });
   } catch (error) {
     logger.error(error);
     return res.status(400).end();

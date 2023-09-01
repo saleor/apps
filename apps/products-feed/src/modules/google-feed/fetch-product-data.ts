@@ -40,10 +40,12 @@ const fetchVariants = async ({
   client,
   after,
   channel,
+  imageSize,
 }: {
   client: Client;
   after?: string;
   channel: string;
+  imageSize?: number;
 }): Promise<GoogleFeedProductVariantFragment[]> => {
   const logger = createLogger({ saleorApiUrl: url, channel, fn: "fetchVariants" });
 
@@ -54,6 +56,7 @@ const fetchVariants = async ({
       channel: channel,
       first: 100,
       after,
+      imageSize,
     })
     .toPromise();
 
@@ -69,9 +72,15 @@ interface FetchProductDataArgs {
   client: Client;
   channel: string;
   cursors?: Array<string>;
+  imageSize?: number;
 }
 
-export const fetchProductData = async ({ client, channel, cursors }: FetchProductDataArgs) => {
+export const fetchProductData = async ({
+  client,
+  channel,
+  cursors,
+  imageSize,
+}: FetchProductDataArgs) => {
   const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
 
   const cachedCursors = cursors || (await getCursors({ client, channel }));
@@ -80,7 +89,9 @@ export const fetchProductData = async ({ client, channel, cursors }: FetchProduc
 
   logger.debug(`Query generated ${pageCursors.length} cursors`);
 
-  const promises = pageCursors.map((cursor) => fetchVariants({ client, after: cursor, channel }));
+  const promises = pageCursors.map((cursor) =>
+    fetchVariants({ client, after: cursor, channel, imageSize }),
+  );
 
   const results = await Promise.all(promises);
 

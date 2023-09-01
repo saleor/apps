@@ -28,11 +28,14 @@ const exampleAttributeMappingConfig: RootConfig["attributeMapping"] = {
 const exampleTitleTemplate: RootConfig["titleTemplate"] =
   "Example {{ variant.product.name }} - {{ variant.name }}";
 
+const exampleImageSize: RootConfig["imageSize"] = 1024;
+
 const exampleConfiguration: RootConfig = {
   channelConfig: exampleChannelConfig,
   s3: exampleS3Config,
   attributeMapping: exampleAttributeMappingConfig,
   titleTemplate: exampleTitleTemplate,
+  imageSize: exampleImageSize,
 };
 
 describe("AppConfig", function () {
@@ -51,6 +54,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
+        imageSize: 1024,
       });
     });
 
@@ -60,13 +64,15 @@ describe("AppConfig", function () {
       expect(instance.getRootConfig()).toEqual(exampleConfiguration);
     });
 
-    it("Fill attribute mapping and title template with default values, when initial data are lacking those fields", () => {
+    it("Fill attribute mapping, image size and title template with default values, when initial data are lacking those fields", () => {
       const configurationWithoutMapping = structuredClone(exampleConfiguration);
 
       // @ts-expect-error: Simulating data before the migration
       delete configurationWithoutMapping.attributeMapping;
       // @ts-expect-error
       delete configurationWithoutMapping.titleTemplate;
+      // @ts-expect-error
+      delete configurationWithoutMapping.imageSize;
 
       const instance = new AppConfig(configurationWithoutMapping as any); // Casting used to prevent TS from reporting an error
 
@@ -80,6 +86,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
+        imageSize: 1024,
       });
     });
 
@@ -110,6 +117,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
+        imageSize: 1024,
       });
 
       const serialized = instance1.serialize();
@@ -132,6 +140,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
+        imageSize: 1024,
       });
     });
   });
@@ -160,6 +169,7 @@ describe("AppConfig", function () {
         sizeAttributeIds: ["size-id"],
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
+      imageSize: 1024,
     });
 
     it("getRootConfig returns root config data", () => {
@@ -186,6 +196,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: ["size-id"],
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
+        imageSize: 1024,
       });
     });
 

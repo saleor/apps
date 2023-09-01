@@ -30,6 +30,7 @@ describe("GoogleFeedSettingsFetcher", () => {
         },
         attributeMapping: null,
         titleTemplate: "{{ variant.name }}",
+        imageSize: 1024,
       });
 
       return appConfig.serialize();
@@ -43,7 +44,7 @@ describe("GoogleFeedSettingsFetcher", () => {
 
     const result = await instance.fetch("testChannel");
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       storefrontUrl: "https://example.com",
       productStorefrontUrl: "https://example.com/p/{{ variant.product.slug }}/v/{{ variant.slug }}",
       s3BucketConfiguration: {
@@ -54,6 +55,7 @@ describe("GoogleFeedSettingsFetcher", () => {
       },
       attributeMapping: null,
       titleTemplate: "{{ variant.name }}",
+      imageSize: 1024,
     });
   });
 });

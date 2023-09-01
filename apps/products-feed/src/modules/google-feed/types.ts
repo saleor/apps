@@ -7,6 +7,7 @@ export type ProductEntry = {
   description?: string;
   link?: string;
   imageUrl?: string;
+  additionalImageLinks: string[];
   condition?: "new" | "refurbished" | "used";
   price?: string;
   salePrice?: string;
