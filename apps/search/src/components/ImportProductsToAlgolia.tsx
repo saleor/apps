@@ -17,18 +17,18 @@ export const ImportProductsToAlgolia = () => {
   const { data: algoliaConfiguration } = trpcClient.configuration.getConfig.useQuery();
 
   const searchProvider = useMemo(() => {
-    if (!algoliaConfiguration?.appId || !algoliaConfiguration.secretKey) {
+    if (!algoliaConfiguration?.appConfig?.appId || !algoliaConfiguration.appConfig?.secretKey) {
       return null;
     }
     return new AlgoliaSearchProvider({
-      appId: algoliaConfiguration.appId,
-      apiKey: algoliaConfiguration.secretKey,
-      indexNamePrefix: algoliaConfiguration.indexNamePrefix,
+      appId: algoliaConfiguration.appConfig.appId,
+      apiKey: algoliaConfiguration.appConfig.secretKey,
+      indexNamePrefix: algoliaConfiguration.appConfig.indexNamePrefix,
     });
   }, [
-    algoliaConfiguration?.appId,
-    algoliaConfiguration?.indexNamePrefix,
-    algoliaConfiguration?.secretKey,
+    algoliaConfiguration?.appConfig?.appId,
+    algoliaConfiguration?.appConfig?.indexNamePrefix,
+    algoliaConfiguration?.appConfig?.secretKey,
   ]);
 
   const importProducts = useCallback(() => {
