@@ -44,7 +44,7 @@ export const ImageConfigurationForm = (props: Props) => {
       )}
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button type="submit" variant="primary">
-          Save {props.initialData.imageSize}
+          Save
         </Button>
       </Box>
     </Box>
