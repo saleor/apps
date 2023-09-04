@@ -2,6 +2,8 @@ import { SemanticChip } from "@saleor/apps-ui";
 import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui/next";
 import { AvataxLog } from "../avatax-client-logger";
 import { trpcClient } from "../../../trpc/trpc-client";
+import { useRouter } from "next/router";
+import { z } from "zod";
 
 function formatDateToLocaleString(date: string) {
   return new Date(date).toLocaleDateString();
@@ -68,7 +70,12 @@ const LogAccordion = ({ log }: { log: AvataxLog }) => {
 };
 
 export const AvataxLogsTable = () => {
-  const { data: logs = [], isFetched } = trpcClient.avataxClientLogs.getAll.useQuery();
+  const router = useRouter();
+  const { id } = router.query;
+  const configurationId = z.string().parse(id);
+  const { data: logs = [], isFetched } = trpcClient.avataxClientLogs.getAll.useQuery({
+    id: configurationId,
+  });
   const isEmpty = isFetched && logs.length === 0;
 
   return (
@@ -86,7 +93,7 @@ export const AvataxLogsTable = () => {
       {isEmpty && (
         <Box marginTop={4}>
           <Text color="textNeutralSubdued" variant="bodyEmp">
-            No logs found
+            No logs found for this configuration
           </Text>
         </Box>
       )}

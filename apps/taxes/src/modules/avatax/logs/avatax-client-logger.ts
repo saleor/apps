@@ -12,7 +12,7 @@ const logSchema = z.object({
   payload: z.string().optional(),
 });
 
-export const logInputSchema = logSchema.pick({ event: true, status: true, payload: true }).merge(
+export const logInputSchema = logSchema.pick({ event: true, status: true }).merge(
   z.object({
     payload: z
       .object({
@@ -34,12 +34,12 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
 
   constructor({
     settingsManager,
-    loggerKey,
+    configurationId,
   }: Pick<ClientLogsMetadataRepositoryParams<AvataxLog>, "settingsManager"> & {
-    loggerKey: string;
+    configurationId: string;
   }) {
     this.logRepository = new ClientLogsMetadataRepository({
-      metadataKey: loggerKey,
+      metadataKey: configurationId,
       schema: logSchema,
       settingsManager,
       options: {

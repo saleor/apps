@@ -1,18 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import {
-  MetadataItem,
-  OrderConfirmedSubscriptionFragment,
-  TaxBaseFragment,
-} from "../../../generated/graphql";
+import { MetadataItem, OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { Logger, createLogger } from "../../lib/logger";
 
+import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
-import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -38,7 +34,11 @@ class ActiveTaxProviderService implements ProviderWebhookService {
 
       case "avatax": {
         this.logger.debug("Selecting AvaTax as tax provider");
-        this.client = new AvataxWebhookService(providerConnection.config, this.authData);
+        this.client = new AvataxWebhookService({
+          config: providerConnection.config,
+          authData: this.authData,
+          configurationId: providerConnection.id,
+        });
         break;
       }
 

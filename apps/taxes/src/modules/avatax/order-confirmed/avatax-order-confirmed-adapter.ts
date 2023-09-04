@@ -24,10 +24,19 @@ export class AvataxOrderConfirmedAdapter
   private readonly authData: AuthData;
   private readonly clientLogger: AvataxClientLogger;
 
-  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
+  constructor({
+    config,
+    authData,
+    configurationId,
+  }: {
+    config: AvataxConfig;
+    authData: AuthData;
+    configurationId: string;
+  }) {
     this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
     this.config = config;
     this.authData = authData;
+
     const client = createGraphQLClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,
@@ -35,8 +44,10 @@ export class AvataxOrderConfirmedAdapter
     const { appId } = authData;
     const settingsManager = createSettingsManager(client, appId);
 
-    // todo: replace with configuration id
-    this.clientLogger = new AvataxClientLogger({ settingsManager, loggerKey: "avataxClientLogs" });
+    this.clientLogger = new AvataxClientLogger({
+      settingsManager,
+      configurationId,
+    });
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {

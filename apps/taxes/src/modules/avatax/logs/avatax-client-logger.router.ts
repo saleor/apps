@@ -4,6 +4,7 @@ import { createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { AvataxClientLogger, logInputSchema } from "./avatax-client-logger";
+import { z } from "zod";
 
 const logProcedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -15,8 +16,18 @@ const logProcedure = protectedClientProcedure.use(({ ctx, next }) => {
   });
 });
 
+const logIdSchema = z.object({
+  id: z.string(),
+});
+
+const pushLogInputSchema = z
+  .object({
+    log: logInputSchema,
+  })
+  .merge(logIdSchema);
+
 export const avataxClientLoggerRouter = router({
-  push: logProcedure.input(logInputSchema).query(async ({ ctx, input }) => {
+  push: logProcedure.input(pushLogInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       name: "avataxClientLoggerRouter.push",
     });
@@ -25,13 +36,12 @@ export const avataxClientLoggerRouter = router({
 
     const loggerRepository = new AvataxClientLogger({
       settingsManager: ctx.settingsManager,
-      // todo: replace with configuration id
-      loggerKey: "avataxClientLogs",
+      configurationId: input.id,
     });
 
-    return loggerRepository.push(input);
+    return loggerRepository.push(input.log);
   }),
-  getAll: logProcedure.query(async ({ ctx }) => {
+  getAll: logProcedure.input(logIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
       name: "avataxClientLoggerRouter.getAll",
     });
@@ -40,8 +50,7 @@ export const avataxClientLoggerRouter = router({
 
     const loggerRepository = new AvataxClientLogger({
       settingsManager: ctx.settingsManager,
-      // todo: replace with configuration id
-      loggerKey: "avataxClientLogs",
+      configurationId: input.id,
     });
 
     return loggerRepository.getAll();

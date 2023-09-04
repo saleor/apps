@@ -11,21 +11,27 @@ import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-conf
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 
 export class AvataxWebhookService implements ProviderWebhookService {
-  config = defaultAvataxConfig;
-  client: AvataxClient;
   private logger: Logger;
+  private config: AvataxConfig;
+  private authData: AuthData;
+  private configurationId: string;
 
-  constructor(
-    config: AvataxConfig,
-    private authData: AuthData,
-  ) {
+  constructor({
+    config,
+    authData,
+    configurationId,
+  }: {
+    config: AvataxConfig;
+    authData: AuthData;
+    configurationId: string;
+  }) {
     this.logger = createLogger({
       name: "AvataxWebhookService",
     });
-    const avataxClient = new AvataxClient(config);
 
     this.config = config;
-    this.client = avataxClient;
+    this.authData = authData;
+    this.configurationId = configurationId;
   }
 
   async calculateTaxes(payload: CalculateTaxesPayload) {
@@ -40,6 +46,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
     const adapter = new AvataxOrderConfirmedAdapter({
       config: this.config,
       authData: this.authData,
+      configurationId: this.configurationId,
     });
 
     const response = await adapter.send({ order });
