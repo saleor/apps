@@ -2,11 +2,15 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { WebhookAdapter, WebhookAdapterParams } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
+import {
+  AvataxClientLogger,
+  createAvataxClientLoggerFromAdapter,
+} from "../logs/avatax-client-logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -17,11 +21,22 @@ export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
   private logger: Logger;
-  constructor(
-    private readonly config: AvataxConfig,
-    private authData: AuthData,
-  ) {
+  private readonly config: AvataxConfig;
+  private readonly authData: AuthData;
+  private readonly clientLogger: AvataxClientLogger;
+
+  constructor({
+    config,
+    authData,
+    configurationId,
+  }: {
+    config: AvataxConfig;
+  } & WebhookAdapterParams) {
     this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
+    this.config = config;
+    this.authData = authData;
+
+    this.clientLogger = createAvataxClientLoggerFromAdapter({ authData, configurationId });
   }
 
   async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
@@ -32,15 +47,37 @@ export class AvataxCalculateTaxesAdapter
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
     const client = new AvataxClient(this.config);
-    const response = await client.createTransaction(target);
 
-    this.logger.debug("AvaTax createTransaction successfully responded");
+    try {
+      const response = await client.createTransaction(target);
 
-    const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
-    const transformedResponse = responseTransformer.transform(response);
+      this.clientLogger.push({
+        event: "[CalculateTaxes] createTransaction",
+        status: "success",
+        payload: {
+          input: target,
+          output: response,
+        },
+      });
 
-    this.logger.debug("Transformed AvaTax createTransaction response");
+      this.logger.debug("AvaTax createTransaction successfully responded");
 
-    return transformedResponse;
+      const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
+      const transformedResponse = responseTransformer.transform(response);
+
+      this.logger.debug("Transformed AvaTax createTransaction response");
+
+      return transformedResponse;
+    } catch (error) {
+      this.clientLogger.push({
+        event: "[CalculateTaxes] createTransaction",
+        status: "error",
+        payload: {
+          input: target,
+          output: error,
+        },
+      });
+      throw error;
+    }
   }
 }

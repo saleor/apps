@@ -5,6 +5,7 @@ import { Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { AvataxLogs } from "../../../../modules/avatax/logs/ui/avatax-logs";
 import { AppPageLayout } from "../../../../modules/ui/app-page-layout";
+import { AVATAX_LOG_LIMIT } from "../../../../modules/avatax/logs/avatax-client-logger";
 
 const LogsInstructions = () => {
   return (
@@ -13,7 +14,14 @@ const LogsInstructions = () => {
       description={
         <>
           <Text as="p" marginBottom={8}>
-            Here are logs
+            Taxes App records all AvaTax API calls and responses. You can use this information to
+            debug issues with AvaTax.
+          </Text>
+          <Text as="p" marginBottom={8}>
+            Only the last {AVATAX_LOG_LIMIT} logs are stored.
+          </Text>
+          <Text as="p" marginBottom={8}>
+            The naming convention for each event is: <b>[WebhookName] API method name</b>.
           </Text>
         </>
       }

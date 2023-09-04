@@ -35,7 +35,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async calculateTaxes(payload: CalculateTaxesPayload) {
-    const adapter = new AvataxCalculateTaxesAdapter(this.config, this.authData);
+    const adapter = new AvataxCalculateTaxesAdapter({
+      config: this.config,
+      authData: this.authData,
+      configurationId: this.configurationId,
+    });
 
     const response = await adapter.send(payload);
 
@@ -55,7 +59,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async cancelOrder(payload: OrderCancelledPayload) {
-    const adapter = new AvataxOrderCancelledAdapter(this.config);
+    const adapter = new AvataxOrderCancelledAdapter({
+      config: this.config,
+      authData: this.authData,
+      configurationId: this.configurationId,
+    });
 
     await adapter.send(payload);
   }

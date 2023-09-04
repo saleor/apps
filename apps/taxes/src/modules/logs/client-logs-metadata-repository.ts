@@ -62,6 +62,11 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
   }
 
   async getAll() {
+    if (this.logs.length) {
+      this.logger.debug(`Returning cached logs for key ${this.metadataKey}`);
+      return this.logs;
+    }
+
     const metadata = await this.settingsManager.get(this.metadataKey);
 
     if (!metadata) {
@@ -82,8 +87,6 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
 
     this.logger.debug(`Returning logs for key ${this.metadataKey}`);
 
-    this.logger.debug({ logs });
-
     return logs;
   }
 
@@ -99,8 +102,6 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
     const nextLogs = unshiftItemToLimitedArray(logs, log, this.options.limit);
 
     this.logs = nextLogs;
-
-    this.logger.debug({ nextLogs });
 
     this.logger.debug(`Pushing log to metadata for key ${this.metadataKey}`);
 

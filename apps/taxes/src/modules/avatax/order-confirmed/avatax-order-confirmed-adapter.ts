@@ -2,14 +2,15 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { WebhookAdapter, WebhookAdapterParams } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import {
+  AvataxClientLogger,
+  createAvataxClientLoggerFromAdapter,
+} from "../logs/avatax-client-logger";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
-import { AvataxClientLogger } from "../logs/avatax-client-logger";
-import { createGraphQLClient } from "@saleor/apps-shared";
-import { createSettingsManager } from "../../app/metadata-manager";
 
 type AvataxOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -30,24 +31,12 @@ export class AvataxOrderConfirmedAdapter
     configurationId,
   }: {
     config: AvataxConfig;
-    authData: AuthData;
-    configurationId: string;
-  }) {
+  } & WebhookAdapterParams) {
     this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
     this.config = config;
     this.authData = authData;
 
-    const client = createGraphQLClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    });
-    const { appId } = authData;
-    const settingsManager = createSettingsManager(client, appId);
-
-    this.clientLogger = new AvataxClientLogger({
-      settingsManager,
-      configurationId,
-    });
+    this.clientLogger = createAvataxClientLoggerFromAdapter({ authData, configurationId });
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {
@@ -64,7 +53,7 @@ export class AvataxOrderConfirmedAdapter
       const response = await client.createTransaction(target);
 
       this.clientLogger.push({
-        event: "createTransaction",
+        event: "[OrderConfirmed] createTransaction",
         status: "success",
         payload: {
           input: target,
@@ -82,7 +71,7 @@ export class AvataxOrderConfirmedAdapter
       return transformedResponse;
     } catch (error) {
       this.clientLogger.push({
-        event: "createTransaction",
+        event: "[OrderConfirmed] createTransaction",
         status: "error",
         payload: {
           input: target,

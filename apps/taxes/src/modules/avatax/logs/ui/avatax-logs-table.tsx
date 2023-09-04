@@ -1,13 +1,10 @@
 import { SemanticChip } from "@saleor/apps-ui";
-import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui/next";
-import { AvataxLog } from "../avatax-client-logger";
-import { trpcClient } from "../../../trpc/trpc-client";
+import { Accordion, Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
-
-function formatDateToLocaleString(date: string) {
-  return new Date(date).toLocaleDateString();
-}
+import { trpcClient } from "../../../trpc/trpc-client";
+import { Table } from "../../../ui/table";
+import { AvataxLog } from "../avatax-client-logger";
 
 type SemanticChipProps = Parameters<typeof SemanticChip>[0];
 
@@ -21,13 +18,13 @@ const StatusCell = ({ status }: { status: AvataxLog["status"] }) => {
 };
 
 const LogRow = ({ log }: { log: AvataxLog }) => {
-  const formattedDate = formatDateToLocaleString(log.date);
-
   return (
     <>
       <Text>{log.event}</Text>
-      <StatusCell status={log.status} />
-      <Text variant="caption">{formattedDate}</Text>
+      <Box display={"flex"}>
+        <StatusCell status={log.status} />
+      </Box>
+      <Text variant="caption">{log.date}</Text>
     </>
   );
 };
@@ -40,8 +37,18 @@ const LogAccordion = ({ log }: { log: AvataxLog }) => {
       <Accordion>
         <Accordion.Item value={log.date}>
           <Accordion.Trigger>
-            <LogRow log={log} />
-            <Accordion.TriggerButton />
+            <Box
+              alignItems={"center"}
+              display={"grid"}
+              __gridTemplateColumns={"2fr 1fr 1fr auto"}
+              gap={4}
+              width={"100%"}
+            >
+              <LogRow log={log} />
+              <Box marginX={4}>
+                <Accordion.TriggerButton />
+              </Box>
+            </Box>
           </Accordion.Trigger>
           <Accordion.Content>
             <Box display="grid">
@@ -69,17 +76,38 @@ const LogAccordion = ({ log }: { log: AvataxLog }) => {
   );
 };
 
+export const RefreshLogsButton = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const configurationId = z.string().parse(id ?? "");
+
+  const { refetch } = trpcClient.avataxClientLogs.getAll.useQuery({
+    id: configurationId,
+  });
+
+  return (
+    <Button variant="secondary" size="small" onClick={() => refetch()}>
+      Refresh
+    </Button>
+  );
+};
+
 export const AvataxLogsTable = () => {
   const router = useRouter();
   const { id } = router.query;
-  const configurationId = z.string().parse(id);
-  const { data: logs = [], isFetched } = trpcClient.avataxClientLogs.getAll.useQuery({
+  const configurationId = z.string().parse(id ?? "");
+
+  const {
+    data: logs = [],
+    isFetched,
+    isLoading,
+  } = trpcClient.avataxClientLogs.getAll.useQuery({
     id: configurationId,
   });
   const isEmpty = isFetched && logs.length === 0;
 
   return (
-    <>
+    <Box marginTop={10}>
       {logs.map((log, index, array) => {
         const isLast = index === array.length - 1;
 
@@ -91,12 +119,21 @@ export const AvataxLogsTable = () => {
         );
       })}
       {isEmpty && (
-        <Box marginTop={4}>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          gap={4}
+          __minHeight={"240px"}
+        >
           <Text color="textNeutralSubdued" variant="bodyEmp">
             No logs found for this configuration
           </Text>
+          <RefreshLogsButton />
         </Box>
       )}
-    </>
+      {isLoading && <Table.Skeleton />}
+    </Box>
   );
 };

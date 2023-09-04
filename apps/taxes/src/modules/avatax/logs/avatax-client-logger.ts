@@ -1,9 +1,12 @@
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { z } from "zod";
+import { createSettingsManager } from "../../app/metadata-manager";
 import {
-  MetadataLogs,
   ClientLogsMetadataRepository,
   ClientLogsMetadataRepositoryParams,
+  MetadataLogs,
 } from "../../logs/client-logs-metadata-repository";
+import { WebhookAdapterParams } from "../../taxes/tax-webhook-adapter";
 
 const logSchema = z.object({
   date: z.string(),
@@ -27,7 +30,7 @@ type AvataxLogInput = z.infer<typeof logInputSchema>;
 
 export type AvataxLog = z.infer<typeof logSchema>;
 
-const AVATAX_LOG_LIMIT = 100;
+export const AVATAX_LOG_LIMIT = 100;
 
 export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
   private logRepository: ClientLogsMetadataRepository<AvataxLog>;
@@ -54,7 +57,7 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
 
   push({ event, payload, status }: AvataxLogInput) {
     const log: AvataxLog = {
-      date: new Date().toDateString(),
+      date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
       event,
       payload: JSON.stringify(payload, null, 4),
       status,
@@ -62,4 +65,21 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
 
     return this.logRepository.push(log);
   }
+}
+
+export function createAvataxClientLoggerFromAdapter({
+  authData,
+  configurationId,
+}: WebhookAdapterParams) {
+  const { appId, saleorApiUrl, token } = authData;
+  const client = createGraphQLClient({
+    saleorApiUrl,
+    token,
+  });
+  const settingsManager = createSettingsManager(client, appId);
+
+  return new AvataxClientLogger({
+    settingsManager,
+    configurationId,
+  });
 }
