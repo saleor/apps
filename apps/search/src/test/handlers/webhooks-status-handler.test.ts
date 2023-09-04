@@ -1,16 +1,13 @@
-import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
-import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
 import { Client, OperationResult } from "urql";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { FetchOwnWebhooksQuery, WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { SearchProvider } from "../../lib/searchProvider";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import {
-  FetchOwnWebhooksQuery,
-  WebhookEventTypeAsyncEnum,
-  WebhookEventTypeEnum,
-} from "../../../generated/graphql";
+import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
+import { AppConfig } from "../../modules/configuration/configuration";
 
 /**
  * Context provided from ProtectedApiHandler to handler body
@@ -100,8 +97,16 @@ describe("webhooksStatusHandler", () => {
     expect(res._getStatusCode()).toBe(200);
   });
 
-  it("Disables webhooks if Algolia credentials are invalid", async function () {
-    (settingsManagerMock.get as Mock).mockReturnValue("metadata-value");
+  it("Disables webhooks if Algolia credentials are set, but invalid", async function () {
+    const invalidConfig = new AppConfig();
+
+    invalidConfig.setAlgoliaSettings({
+      appId: "asd",
+      secretKey: "wrong",
+      indexNamePrefix: "test",
+    });
+
+    (settingsManagerMock.get as Mock).mockReturnValueOnce(invalidConfig.serialize());
     (algoliaSearchProviderMock.ping as Mock).mockImplementationOnce(async () => {
       throw new Error();
     });
@@ -116,7 +121,15 @@ describe("webhooksStatusHandler", () => {
   });
 
   it("Returns webhooks if Algolia credentials are valid", async function () {
-    (settingsManagerMock.get as Mock).mockReturnValue("metadata-value");
+    const validConfig = new AppConfig();
+
+    validConfig.setAlgoliaSettings({
+      appId: "asd",
+      secretKey: "asddsada",
+      indexNamePrefix: "test",
+    });
+
+    (settingsManagerMock.get as Mock).mockReturnValueOnce(validConfig.serialize());
     (algoliaSearchProviderMock.ping as Mock).mockImplementationOnce(async () => Promise.resolve());
 
     const { req, res } = createMocks({});
