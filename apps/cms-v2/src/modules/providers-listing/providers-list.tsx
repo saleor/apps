@@ -5,8 +5,8 @@ import { ProvidersConfig } from "../configuration";
 
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
-import { ButtonsBox } from "../ui/buttons-box";
-import { Skeleton } from "../ui/skeleton";
+
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 
 const ProvidersTable = (props: { providers: ProvidersConfig.AnyFullShape[] }) => {
   const { push } = useRouter();
@@ -47,30 +47,45 @@ export const ProvidersList = () => {
   const { push } = useRouter();
 
   if (!data) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   if (data.length === 0) {
     return (
-      <Box>
+      <Layout.AppSectionCard
+        footer={
+          <ButtonsBox>
+            <Button
+              onClick={() => {
+                push("/add-provider");
+              }}
+            >
+              Add first CMS configuration
+            </Button>
+          </ButtonsBox>
+        }
+      >
         <Text as="p" marginBottom={4}>
           No configurations yet
         </Text>
+      </Layout.AppSectionCard>
+    );
+  }
+
+  return (
+    <Layout.AppSectionCard
+      footer={
         <ButtonsBox>
           <Button
             onClick={() => {
               push("/add-provider");
             }}
           >
-            Add first CMS configuration
+            Add CMS configuration
           </Button>
         </ButtonsBox>
-      </Box>
-    );
-  }
-
-  return (
-    <Box>
+      }
+    >
       {data.length && (
         <Box>
           <Text variant="heading" as="h2" marginBottom={4}>
@@ -79,15 +94,6 @@ export const ProvidersList = () => {
           <ProvidersTable providers={data} />
         </Box>
       )}
-      <ButtonsBox marginTop={8}>
-        <Button
-          onClick={() => {
-            push("/add-provider");
-          }}
-        >
-          Add CMS configuration
-        </Button>
-      </ButtonsBox>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };

@@ -7,9 +7,7 @@ import { useForm } from "react-hook-form";
 import { BuilderIoProviderConfig, SaleorProviderFieldsMappingKeys } from "../../configuration";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { ButtonsBox } from "../../ui/buttons-box";
-import { TextLink } from "@saleor/apps-ui";
-import { Skeleton } from "@/modules/ui/skeleton";
+import { ButtonsBox, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<BuilderIoProviderConfig.InputShape, "type">;
 const FormSchema = BuilderIoProviderConfig.Schema.Input.omit({ type: true });
@@ -207,7 +205,7 @@ const EditFormVariant = (props: { configId: string }) => {
   });
 
   if (!data) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   if (data.type !== "builder.io") {

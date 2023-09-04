@@ -8,6 +8,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, Layout } from "@saleor/apps-ui";
 
 export const AlgoliaFieldsSelectionForm = () => {
   const { notifySuccess } = useDashboardNotification();
@@ -35,46 +36,46 @@ export const AlgoliaFieldsSelectionForm = () => {
   }
 
   return (
-    <Box>
-      <form
-        onSubmit={handleSubmit((values) => {
-          const selectedValues = Object.entries(values)
-            .filter(([key, selected]) => selected)
-            .map(([key]) => key);
+    <Layout.AppSectionCard
+      as="form"
+      onSubmit={handleSubmit((values) => {
+        const selectedValues = Object.entries(values)
+          .filter(([key, selected]) => selected)
+          .map(([key]) => key);
 
-          mutate({
-            enabledAlgoliaFields: selectedValues,
-          });
-        })}
-      >
-        <Box padding={5}>
-          {AlgoliaRootFieldsKeys.map((field) => (
-            <Box key={field} marginBottom={5}>
-              <Controller
-                name={field}
-                control={control}
-                render={({ field: { value, onChange } }) => {
-                  return (
-                    <Checkbox
-                      onCheckedChange={(v) => {
-                        onChange(v);
-                      }}
-                      checked={value}
-                      name={field}
-                    >
-                      {AlgoliaRootFieldsLabelsMap[field]}
-                    </Checkbox>
-                  );
-                }}
-              />
-            </Box>
-          ))}
-        </Box>
-        <Divider margin={0} marginTop={5} />
-        <Box padding={5} display="flex" justifyContent="flex-end">
+        mutate({
+          enabledAlgoliaFields: selectedValues,
+        });
+      })}
+      footer={
+        <ButtonsBox>
           <Button type="submit">Save</Button>
-        </Box>
-      </form>
-    </Box>
+        </ButtonsBox>
+      }
+    >
+      <Box>
+        {AlgoliaRootFieldsKeys.map((field) => (
+          <Box key={field} marginBottom={5}>
+            <Controller
+              name={field}
+              control={control}
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <Checkbox
+                    onCheckedChange={(v) => {
+                      onChange(v);
+                    }}
+                    checked={value}
+                    name={field}
+                  >
+                    {AlgoliaRootFieldsLabelsMap[field]}
+                  </Checkbox>
+                );
+              }}
+            />
+          </Box>
+        ))}
+      </Box>
+    </Layout.AppSectionCard>
   );
 };

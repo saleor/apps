@@ -1,5 +1,5 @@
 import { initTRPC } from "@trpc/server";
-import { TrpcContext } from "./trpc-context";
+import { TrpcContext } from "@saleor/trpc";
 import { Permission } from "@saleor/app-sdk/types";
 import { ZodError } from "zod";
 

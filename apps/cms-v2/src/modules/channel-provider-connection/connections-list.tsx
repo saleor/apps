@@ -4,7 +4,7 @@ import React from "react";
 import { trpcClient } from "../trpc/trpc-client";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
 import { ProvidersResolver } from "../providers/providers-resolver";
-import { Skeleton } from "../ui/skeleton";
+import { SkeletonLayout } from "@saleor/apps-ui";
 
 export const ConnectionsList = (props: { onRemove(connectionId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
@@ -12,7 +12,7 @@ export const ConnectionsList = (props: { onRemove(connectionId: string): void })
   const { data: providers } = trpcClient.providersConfigs.getAll.useQuery();
 
   if (!data || !providers) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   return (

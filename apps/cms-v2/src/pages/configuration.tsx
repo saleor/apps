@@ -2,7 +2,7 @@ import { BulkSyncSection } from "@/modules/bulk-sync/bulk-sync-section";
 import { ChannelProviderConnectionList } from "@/modules/channel-provider-connection/channels-provider-connection-list";
 import { ProvidersList } from "@/modules/providers-listing/providers-list";
 import { AppHeader } from "@/modules/ui/app-header";
-import { AppSection } from "@/modules/ui/app-section";
+import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 
@@ -10,7 +10,7 @@ const ConfigurationPage: NextPage = () => {
   return (
     <Box>
       <AppHeader />
-      <AppSection
+      <Layout.AppSection
         marginBottom={14}
         heading="Providers configuration"
         sideContent={
@@ -18,9 +18,10 @@ const ConfigurationPage: NextPage = () => {
             <Text>Configure one or more CMS providers to synchronize Saleor products.</Text>
           </Box>
         }
-        mainContent={<ProvidersList />}
-      />
-      <AppSection
+      >
+        <ProvidersList />
+      </Layout.AppSection>
+      <Layout.AppSection
         marginBottom={14}
         heading="Automatic synchronization"
         sideContent={
@@ -31,9 +32,10 @@ const ConfigurationPage: NextPage = () => {
             </Text>
           </Box>
         }
-        mainContent={<ChannelProviderConnectionList />}
-      />
-      <AppSection
+      >
+        <ChannelProviderConnectionList />
+      </Layout.AppSection>
+      <Layout.AppSection
         heading="Initial sync"
         sideContent={
           <Box>
@@ -44,8 +46,9 @@ const ConfigurationPage: NextPage = () => {
             <Text as="p">Its recommended to run this flow initially, once app is configured.</Text>
           </Box>
         }
-        mainContent={<BulkSyncSection />}
-      />
+      >
+        <BulkSyncSection />
+      </Layout.AppSection>
     </Box>
   );
 };

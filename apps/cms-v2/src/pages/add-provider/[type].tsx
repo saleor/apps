@@ -2,8 +2,7 @@ import { CMSType } from "@/modules/providers/providers-registry";
 import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 
 import { AppHeader } from "@/modules/ui/app-header";
-import { AppSection } from "@/modules/ui/app-section";
-import { Breadcrumbs } from "@saleor/apps-ui";
+import { Breadcrumbs, Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -32,7 +31,7 @@ const AddProviderPage: NextPage = () => {
         ]}
       />
 
-      <AppSection
+      <Layout.AppSection
         heading={`Set up ${provider.displayName}`}
         sideContent={
           <Box>
@@ -40,8 +39,11 @@ const AddProviderPage: NextPage = () => {
             {provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}
           </Box>
         }
-        mainContent={<FormComponent />}
-      />
+      >
+        <Layout.AppSectionCard>
+          <FormComponent />
+        </Layout.AppSectionCard>
+      </Layout.AppSection>
     </Box>
   );
 };

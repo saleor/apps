@@ -7,12 +7,18 @@ import { AppConfigurationFields } from "./configuration";
 export const fetchLegacyConfiguration = async (
   settingsManager: SettingsManager,
   domain: string,
-) => {
-  const data: AppConfigurationFields = {
-    secretKey: (await settingsManager.get("secretKey", domain)) || "",
-    appId: (await settingsManager.get("appId", domain)) || "",
-    indexNamePrefix: (await settingsManager.get("indexNamePrefix", domain)) || "",
-  };
+): Promise<AppConfigurationFields | null> => {
+  const secretKey = await settingsManager.get("secretKey", domain);
+  const appId = await settingsManager.get("appId", domain);
+  const indexNamePrefix = await settingsManager.get("indexNamePrefix", domain);
 
-  return data;
+  if (secretKey && appId) {
+    return {
+      appId,
+      secretKey,
+      indexNamePrefix,
+    };
+  }
+
+  return null;
 };

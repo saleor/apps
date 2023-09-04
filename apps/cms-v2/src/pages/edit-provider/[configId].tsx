@@ -2,9 +2,7 @@ import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
-import { AppSection } from "@/modules/ui/app-section";
-import { Skeleton } from "@/modules/ui/skeleton";
-import { Breadcrumbs } from "@saleor/apps-ui";
+import { Breadcrumbs, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -20,7 +18,7 @@ const EditProviderPage: NextPage = () => {
     },
     {
       enabled: !!configId,
-    }
+    },
   );
 
   const provider = useMemo(() => {
@@ -28,7 +26,7 @@ const EditProviderPage: NextPage = () => {
   }, [data]);
 
   if (isLoading) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   if (isFetched && !data) {
@@ -38,7 +36,7 @@ const EditProviderPage: NextPage = () => {
   }
 
   if (!provider) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   const EditForm = ProvidersResolver.getEditProviderFormComponent(provider.type);
@@ -53,13 +51,16 @@ const EditProviderPage: NextPage = () => {
           <Breadcrumbs.Item key="configname">{data?.configName}</Breadcrumbs.Item>,
         ]}
       />
-      <AppSection
+      <Layout.AppSection
         heading="Edit CMS configuration"
-        mainContent={<EditForm configId={configId} />}
         sideContent={
           <Box>{provider.formSideInfo && <Box marginTop={6}>{provider.formSideInfo}</Box>}</Box>
         }
-      />
+      >
+        <Layout.AppSectionCard>
+          <EditForm configId={configId} />
+        </Layout.AppSectionCard>
+      </Layout.AppSection>
     </Box>
   );
 };

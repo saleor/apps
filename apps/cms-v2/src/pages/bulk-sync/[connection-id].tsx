@@ -1,10 +1,9 @@
 import { BulkSyncView } from "@/modules/bulk-sync/bulk-sync-view";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { SkeletonLayout } from "@saleor/apps-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { z } from "zod";
-import { Text } from "@saleor/macaw-ui/next";
-import { Skeleton } from "@/modules/ui/skeleton";
 
 const BulkSyncPage: NextPage = () => {
   const { query } = useRouter();
@@ -23,7 +22,7 @@ const BulkSyncPage: NextPage = () => {
     },
     {
       enabled: !!parsedID,
-    }
+    },
   );
 
   const {
@@ -36,7 +35,7 @@ const BulkSyncPage: NextPage = () => {
     },
     {
       enabled: !!connection,
-    }
+    },
   );
 
   if ((providerFetched && !provider) || (connectionFetched && !connection)) {
@@ -45,7 +44,7 @@ const BulkSyncPage: NextPage = () => {
   }
 
   if (connectionLoading || providerLoading) {
-    return <Skeleton.Section />;
+    return <SkeletonLayout.Section />;
   }
 
   if (!(provider && connection)) {

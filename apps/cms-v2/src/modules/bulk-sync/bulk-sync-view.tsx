@@ -1,10 +1,8 @@
-import { Breadcrumbs } from "@saleor/apps-ui";
+import { Breadcrumbs, ButtonsBox, Layout } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui/next";
 import { useEffect, useRef, useState } from "react";
 import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configuration";
 import { AppHeader } from "../ui/app-header";
-import { AppSection } from "../ui/app-section";
-import { ButtonsBox } from "../ui/buttons-box";
 
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
@@ -14,16 +12,19 @@ import { useDashboardNotification } from "@saleor/apps-shared";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
-    <Box>
+    <Layout.AppSectionCard
+      footer={
+        <ButtonsBox>
+          <Button onClick={props.onButtonClick}>Prefetch products</Button>
+        </ButtonsBox>
+      }
+    >
       <Text variant="heading" as="h2" marginBottom={4}>
         Saleor products fetch
       </Text>
       <Text as="p">Click the button to start fetching products from Saleor API</Text>
       <Text as="p">After products are fetched, you will be able to upload them to the CMS</Text>
-      <ButtonsBox>
-        <Button onClick={props.onButtonClick}>Prefetch products</Button>
-      </ButtonsBox>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };
 
@@ -66,7 +67,7 @@ export const BulkSyncView = ({
 
   const { products, finished: saleorProductsFetchFinished } = useFetchAllProducts(
     state === "fetching",
-    connection.channelSlug
+    connection.channelSlug,
   );
 
   const { productsStatusList, setInitialProducts, setItemStatus, finished } =
@@ -121,9 +122,14 @@ export const BulkSyncView = ({
         ]}
       />
 
-      <AppSection
+      <Layout.AppSection
         marginBottom={8}
-        mainContent={(() => {
+        heading="1. Fetch products"
+        sideContent={
+          <Text>First pre-fetch all Product Variants from Saleor. Do not close the app.</Text>
+        }
+      >
+        {(() => {
           switch (state) {
             case "initial": {
               return (
@@ -149,33 +155,29 @@ export const BulkSyncView = ({
             }
           }
         })()}
-        heading="1. Fetch products"
-        sideContent={
-          <Text>First pre-fetch all Product Variants from Saleor. Do not close the app.</Text>
-        }
-      />
+      </Layout.AppSection>
 
       {(state === "fetched" || state === "uploading") && productsStatusList && (
-        <AppSection
+        <Layout.AppSection
+          marginTop={14}
           heading="2. Upload to the CMS"
           sideContent={<Text>Send listed variants to the CMS</Text>}
-          mainContent={
-            <Box>
-              <Text as="h2" marginBottom={4} variant="heading">
-                Upload products
-              </Text>
-              {state === "fetched" && (
-                <Box marginBottom={4}>
-                  <Text as="p" marginBottom={2}>
-                    Verify products below and click the button to start uploading.
-                  </Text>
-                  <Button onClick={() => setState("uploading")}>Start uploading</Button>
-                </Box>
-              )}
-              <VariantsSyncStatusList marginTop={8} variants={productsStatusList} />
-            </Box>
-          }
-        />
+        >
+          <Layout.AppSectionCard>
+            <Text as="h2" marginBottom={4} variant="heading">
+              Upload products
+            </Text>
+            {state === "fetched" && (
+              <Box marginBottom={4}>
+                <Text as="p" marginBottom={2}>
+                  Verify products below and click the button to start uploading.
+                </Text>
+                <Button onClick={() => setState("uploading")}>Start uploading</Button>
+              </Box>
+            )}
+            <VariantsSyncStatusList marginTop={8} variants={productsStatusList} />
+          </Layout.AppSectionCard>
+        </Layout.AppSection>
       )}
     </Box>
   );

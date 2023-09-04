@@ -1,7 +1,6 @@
 import { CMSProviders } from "@/modules/providers/providers-registry";
 import { AppHeader } from "@/modules/ui/app-header";
-import { AppSection } from "@/modules/ui/app-section";
-import { Breadcrumbs } from "@saleor/apps-ui";
+import { Breadcrumbs, Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -16,14 +15,15 @@ const AddProviderPage: NextPage = () => {
         text="Connect CMS platforms to the App."
         breadcrumbs={[<Breadcrumbs.Item key="provider">Add Provider</Breadcrumbs.Item>]}
       />
-      <AppSection
+      <Layout.AppSection
         heading="Select CMS provider"
         sideContent={
           <Box>
             <Text>App allows to connect one or more CMS platforms. You can add more later.</Text>
           </Box>
         }
-        mainContent={
+      >
+        <Layout.AppSectionCard>
           <Box
             display="grid"
             __gridTemplateColumns="auto auto auto"
@@ -54,8 +54,8 @@ const AddProviderPage: NextPage = () => {
               </React.Fragment>
             ))}
           </Box>
-        }
-      />
+        </Layout.AppSectionCard>
+      </Layout.AppSection>
     </Box>
   );
 };
