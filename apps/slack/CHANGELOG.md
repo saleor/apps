@@ -1,5 +1,18 @@
 # saleor-app-slack
 
+## 1.8.6
+
+### Patch Changes
+
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 1.8.5
 
 ### Patch Changes

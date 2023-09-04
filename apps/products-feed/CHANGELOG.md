@@ -1,5 +1,25 @@
 # saleor-app-products-feed
 
+## 1.12.0
+
+### Minor Changes
+
+- 261e9d1: Added additional images attribute to the feed for media uploaded to the product.
+
+### Patch Changes
+
+- 23e71bc: Fix typo on button label
+- 261e9d1: Improved default resolution of the submitted images. Was: 500px, now it's 1024px.
+  Users can now configure the size in the app configuration.
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 1.11.4
 
 ### Patch Changes

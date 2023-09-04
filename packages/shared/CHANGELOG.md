@@ -1,5 +1,17 @@
 # @saleor/apps-shared
 
+## 1.9.0
+
+### Minor Changes
+
+- e8660e8: Added GraphQL Provider component that build client side graphql context
+- e8660e8: Added getAppBaseUrl function that infers apps own URL
+- e8660e8: Added ThemeSynchronizer component that automatically syncs AppBridge and Macaw theme
+
+### Patch Changes
+
+- e8660e8: Removed ThemeProvider that was legacy for the older Macaw/Material UI
+
 ## 1.8.1
 
 ### Patch Changes

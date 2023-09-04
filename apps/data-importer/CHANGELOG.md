@@ -1,5 +1,15 @@
 # saleor-app-data-importer
 
+## 1.9.6
+
+### Patch Changes
+
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+
 ## 1.9.5
 
 ### Patch Changes

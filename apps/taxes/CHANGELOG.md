@@ -1,5 +1,19 @@
 # saleor-app-taxes
 
+## 1.15.2
+
+### Patch Changes
+
+- 30140ee: Improved some text typos.
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 1.15.1
 
 ### Patch Changes
