@@ -13,6 +13,7 @@ import { SearchProvider } from "../../lib/searchProvider";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
+import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
@@ -54,23 +55,18 @@ export const webhooksStatusHandlerFactory =
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
     const settingsManager = settingsManagerFactory(client, authData.appId);
 
-    const domain = new URL(authData.saleorApiUrl).host;
+    const configManager = new AppConfigMetadataManager(settingsManager);
 
-    const [secretKey, appId] = await Promise.all([
-      settingsManager.get("secretKey", domain),
-      settingsManager.get("appId", domain),
-    ]);
+    const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
-    const settings = { secretKey, appId };
-
-    logger.debug(settings, "fetched settings");
+    logger.debug("fetched settings");
 
     /**
      * If settings are incomplete, disable webhooks
      *
      * TODO Extract config operations to domain/
      */
-    if (!settings.appId || !settings.secretKey) {
+    if (!config.appConfig) {
       logger.debug("Settings not set, will disable webhooks");
 
       await webhooksToggler.disableOwnWebhooks();
@@ -78,7 +74,10 @@ export const webhooksStatusHandlerFactory =
       /**
        * Otherwise, if settings are set, check in Algolia if tokens are valid
        */
-      const algoliaService = algoliaSearchProviderFactory(settings.appId, settings.secretKey);
+      const algoliaService = algoliaSearchProviderFactory(
+        config.appConfig.appId,
+        config.appConfig.secretKey,
+      );
 
       try {
         logger.debug("Settings set, will ping Algolia");

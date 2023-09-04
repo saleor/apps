@@ -10,6 +10,7 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createGraphQLClient, getAppBaseUrl } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isConfigured } from "../../lib/algolia/is-configured";
+import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger({
   service: "recreateWebhooksHandler",
@@ -41,22 +42,17 @@ export const recreateWebhooksHandlerFactory =
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
     const settingsManager = settingsManagerFactory(client, authData.appId);
 
-    const domain = new URL(authData.saleorApiUrl).host;
+    const configManager = new AppConfigMetadataManager(settingsManager);
 
-    const [secretKey, appId] = await Promise.all([
-      settingsManager.get("secretKey", domain),
-      settingsManager.get("appId", domain),
-    ]);
+    const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
-    const settings = { secretKey, appId };
-
-    logger.debug(settings, "fetched settings");
+    logger.debug("fetched settings");
 
     const baseUrl = getAppBaseUrl(req.headers);
     const enableWebhooks = isConfigured({
       configuration: {
-        appId: appId,
-        secretKey: secretKey,
+        appId: config.appConfig?.appId,
+        secretKey: config.appConfig?.secretKey,
       },
     });
 
