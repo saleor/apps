@@ -36,7 +36,7 @@ Klaviyo app is based on App Template - you can check it [here](https://github.co
 3. Install app dependencies with `pnpm i`
 4. Start dev server `pnpm dev`
 5. To install app in your Saleor Instance and expose dev server to it, run in the separate terminal `saleor app tunnel`
-6. Now you can access the app configuration at [your dashboard]/apps and click on [klavio]
+6. Now you can access the app configuration at [your dashboard]/apps and click on [klaviyo]
 7. Read how to connect the app with the Klaviyo [here](https://github.com/saleor/saleor-app-template)
 
 ### Local development without CLI
