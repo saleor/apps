@@ -2,7 +2,7 @@ import { Box, Text } from "@saleor/macaw-ui/next";
 import { Provider } from "jotai";
 import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
 import { CreateAvataxConfiguration } from "../../../modules/avatax/ui/create-avatax-configuration";
-import { AppColumns } from "../../../modules/ui/app-columns";
+import { AppPageLayout } from "../../../modules/ui/app-page-layout";
 
 const Header = () => {
   return (
@@ -16,14 +16,28 @@ const Header = () => {
 
 const NewAvataxPage = () => {
   return (
-    <main>
-      <AppColumns top={<Header />}>
-        <AvataxInstructions />
-        <Provider>
-          <CreateAvataxConfiguration />
-        </Provider>
-      </AppColumns>
-    </main>
+    <AppPageLayout
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+        {
+          href: "/providers",
+          label: "Providers",
+        },
+        {
+          href: "/providers/avatax",
+          label: "AvaTax",
+        },
+      ]}
+      top={<Header />}
+    >
+      <AvataxInstructions />
+      <Provider>
+        <CreateAvataxConfiguration />
+      </Provider>
+    </AppPageLayout>
   );
 };
 

@@ -1,10 +1,10 @@
 import { Provider } from "jotai";
-import { AppColumns } from "../../../../modules/ui/app-columns";
 import { Section } from "../../../../modules/ui/app-section";
 
 import { Text } from "@saleor/macaw-ui/next";
-import { LogsTable } from "../../../../modules/avatax/logs/ui/logs-table";
-import { trpcClient } from "../../../../modules/trpc/trpc-client";
+import { useRouter } from "next/router";
+import { AvataxLogs } from "../../../../modules/avatax/logs/ui/avatax-logs";
+import { AppPageLayout } from "../../../../modules/ui/app-page-layout";
 
 const LogsInstructions = () => {
   return (
@@ -26,20 +26,40 @@ const Header = () => {
 };
 
 const LogsAvataxPage = () => {
-  const { data = [], isLoading } = trpcClient.avataxClientLogs.getAll.useQuery();
+  const router = useRouter();
+  const { id } = router.query;
 
   return (
-    <main>
-      <AppColumns top={<Header />}>
-        <LogsInstructions />
-        <Provider>
-          <section>
-            <h1>Logs</h1>
-            <LogsTable logs={data} />
-          </section>
-        </Provider>
-      </AppColumns>
-    </main>
+    <AppPageLayout
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+        {
+          href: "/providers",
+          label: "Providers",
+        },
+        {
+          href: "/providers/avatax",
+          label: "TaxJar",
+        },
+        {
+          href: `/providers/avatax/${id}`,
+          label: String(id),
+        },
+        {
+          href: `/providers/avatax/${id}/logs`,
+          label: "Logs",
+        },
+      ]}
+      top={<Header />}
+    >
+      <LogsInstructions />
+      <Provider>
+        <AvataxLogs />
+      </Provider>
+    </AppPageLayout>
   );
 };
 

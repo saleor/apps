@@ -1,6 +1,7 @@
 import { SemanticChip } from "@saleor/apps-ui";
 import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui/next";
 import { AvataxLog } from "../avatax-client-logger";
+import { trpcClient } from "../../../trpc/trpc-client";
 
 function formatDateToLocaleString(date: string) {
   return new Date(date).toLocaleDateString();
@@ -66,7 +67,10 @@ const LogAccordion = ({ log }: { log: AvataxLog }) => {
   );
 };
 
-export const LogsTable = ({ logs }: { logs: AvataxLog[] }) => {
+export const AvataxLogsTable = () => {
+  const { data: logs = [], isFetched } = trpcClient.avataxClientLogs.getAll.useQuery();
+  const isEmpty = isFetched && logs.length === 0;
+
   return (
     <>
       {logs.map((log, index, array) => {
@@ -79,6 +83,13 @@ export const LogsTable = ({ logs }: { logs: AvataxLog[] }) => {
           </>
         );
       })}
+      {isEmpty && (
+        <Box marginTop={4}>
+          <Text color="textNeutralSubdued" variant="bodyEmp">
+            No logs found
+          </Text>
+        </Box>
+      )}
     </>
   );
 };
