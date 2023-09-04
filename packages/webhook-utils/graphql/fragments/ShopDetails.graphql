@@ -1,0 +1,6 @@
+fragment ShopDetailsFragment on Shop {
+    version
+    domain {
+        url
+    }
+}

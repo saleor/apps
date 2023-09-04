@@ -1873,6 +1873,9 @@ importers:
       '@saleor/app-sdk':
         specifier: 0.43.1
         version: 0.43.1(graphql@16.7.1)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../shared
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)

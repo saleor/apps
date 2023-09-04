@@ -9,13 +9,23 @@ interface ModifyAppWebhookArgs {
 
 export const modifyAppWebhook = async ({ client, webhookId, input }: ModifyAppWebhookArgs) => {
   return client
-    .query(ModifyAppWebhookDocument, {
+    .mutation(ModifyAppWebhookDocument, {
       id: webhookId,
       input,
     })
     .toPromise()
     .then((r) => {
-      // TODO: handle error
+      if (r.error) {
+        throw new Error(`Webhook creation failed. The API returned an error: ${r.error.message}`);
+      }
+
+      const webhook = r.data?.webhookUpdate?.webhook;
+
+      if (!webhook) {
+        throw new Error(
+          "Webhook creation response is empty. The API returned no additional error.",
+        );
+      }
       return r.data?.webhookUpdate?.webhook;
     });
 };

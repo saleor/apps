@@ -8,12 +8,15 @@ interface RemoveAppWebhookArgs {
 
 export const removeAppWebhook = async ({ client, webhookId }: RemoveAppWebhookArgs) => {
   return client
-    .query(RemoveAppWebhookDocument, {
+    .mutation(RemoveAppWebhookDocument, {
       id: webhookId,
     })
     .toPromise()
     .then((r) => {
-      // TODO: handle error
+      if (r.error) {
+        throw new Error(`Webhook creation failed. The API returned an error: ${r.error.message}`);
+      }
+
       return;
     });
 };

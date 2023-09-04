@@ -8,12 +8,21 @@ interface CreateAppWebhookArgs {
 
 export const createAppWebhook = async ({ client, input }: CreateAppWebhookArgs) => {
   return client
-    .query(CreateAppWebhookDocument, {
+    .mutation(CreateAppWebhookDocument, {
       input,
     })
     .toPromise()
     .then((r) => {
-      // TODO: handle error
-      return r.data?.webhookCreate;
+      if (r.error) {
+        throw new Error(`Webhook creation failed. The API returned an error: ${r.error.message}`);
+      }
+      const webhook = r.data?.webhookCreate?.webhook;
+
+      if (!webhook) {
+        throw new Error(
+          "Webhook creation response is empty. The API returned no additional error.",
+        );
+      }
+      return webhook;
     });
 };

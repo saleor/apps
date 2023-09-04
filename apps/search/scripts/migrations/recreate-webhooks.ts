@@ -2,7 +2,7 @@
 
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { getAppDetailsAndWebhooksData, recreateWebhooks } from "@saleor/webhook-utils";
+import { recreateWebhooks, updateScript } from "@saleor/webhook-utils";
 import { appWebhooks } from "../../webhooks";
 
 export const recreateWebhooksScript = async ({
@@ -19,39 +19,28 @@ export const recreateWebhooksScript = async ({
     token: authData.token,
   });
 
-  const appData = await getAppDetailsAndWebhooksData({ client });
+  await updateScript({
+    client,
+    getManifests: async ({ appDetails }) => {
+      const webhooks = appDetails.webhooks;
 
-  const webhooks = appData?.webhooks;
+      if (!webhooks?.length) {
+        console.info("The environment does not have any webhooks, skipping");
+        return [];
+      }
 
-  if (!webhooks?.length) {
-    console.error("The environment does not have any webhooks, skipping");
-    return;
-  }
+      // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
+      const enabled = webhooks.some((w) => w.isActive);
 
-  // Use currently existing webhook data to determine a proper baseUrl and enabled state
-  const targetUrl = appData?.appUrl; // TODO: validate if thats always populated
+      const targetUrl = appDetails.appUrl;
 
-  if (!targetUrl?.length) {
-    console.error("App has no defined appUrl, skipping");
-    return;
-  }
+      if (!targetUrl?.length) {
+        throw new Error("App has no defined appUrl, skipping");
+      }
 
-  const enabled = webhooks[0].isActive;
+      const baseUrl = new URL(targetUrl).origin;
 
-  const baseUrl = new URL(targetUrl).origin;
-
-  if (dryRun) {
-    console.log("Necessary data gathered, skipping recreation of webhooks due to dry run mode");
-    return;
-  }
-
-  try {
-    await recreateWebhooks({
-      client,
-      webhookManifests: appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled })),
-    });
-    console.log("✅ Webhooks recreated successfully");
-  } catch (e) {
-    console.error("🛑 Failed to recreate webhooks: ", e);
-  }
+      return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
+    },
+  });
 };

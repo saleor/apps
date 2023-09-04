@@ -10,7 +10,13 @@ export const getAppDetailsAndWebhooksData = async ({ client }: GetAppWebhooksArg
     .query(GetAppDetailsAndWebhooksDataDocument, {})
     .toPromise()
     .then((r) => {
-      // TODO: handle error
-      return r.data?.app;
+      const app = r.data?.app;
+
+      if (!app) {
+        throw new Error(
+          "Could not get the app details. Access token could be invalid or app is disabled.",
+        );
+      }
+      return app;
     });
 };

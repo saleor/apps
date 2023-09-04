@@ -1,9 +1,11 @@
 import { Client } from "urql";
-import { getAppDetailsAndWebhooksData } from "./operations/get-app-details-and-webhooks-data";
 import { removeAppWebhook } from "./operations/remove-app-webhook";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { createAppWebhook } from "./operations/create-app-webhook";
 import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../generated/graphql";
+import { createLogger } from "@saleor/apps-shared";
+
+const logger = createLogger({ name: "recreateWebhooks" });
 
 interface recreateWebhooksArgs {
   client: Client;
@@ -11,15 +13,13 @@ interface recreateWebhooksArgs {
   webhookManifests: Array<WebhookManifest>;
 }
 
-// Removes all existing webhooks and create new ones based on given manifests
+// Removes all existing webhooks and create new ones based on given manifests.
 export const recreateWebhooks = async ({
   client,
   existingWebhookIds,
   webhookManifests,
 }: recreateWebhooksArgs) => {
-  // Remove all existing webhooks
-  await Promise.all(existingWebhookIds.map((webhookId) => removeAppWebhook({ client, webhookId })));
-
+  logger.debug("Creating new webhooks");
   await Promise.all(
     webhookManifests.map((webhookManifest) =>
       createAppWebhook({
@@ -35,4 +35,7 @@ export const recreateWebhooks = async ({
       }),
     ),
   );
+
+  logger.debug("Removing existing webhooks");
+  await Promise.all(existingWebhookIds.map((webhookId) => removeAppWebhook({ client, webhookId })));
 };

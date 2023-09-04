@@ -1,10 +1,5 @@
 query GetAppDetailsAndWebhooksData {
     app{
-        id
-        appUrl
-        name
-        webhooks{
-            ...WebhookDetailsFragment
-        }
+        ...AppDetailsFragment
     }
 }
