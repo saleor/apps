@@ -9,6 +9,7 @@ import { taxJarTaxCodesRouter } from "../taxjar/tax-code/taxjar-tax-codes.router
 import { taxJarTaxCodeMatchesRouter } from "../taxjar/tax-code/taxjar-tax-code-matches.router";
 import { avataxTaxCodeMatchesRouter } from "../avatax/tax-code/avatax-tax-code-matches.router";
 import { avataxClientLoggerRouter } from "../avatax/logs/avatax-client-logger.router";
+import { taxjarClientLoggerRouter } from "../taxjar/logs/taxjar-client-logger.router";
 
 /*
  * // todo: split to namespaces, e.g.:
@@ -25,6 +26,7 @@ export const appRouter = router({
   taxJarMatches: taxJarTaxCodeMatchesRouter,
   avataxMatches: avataxTaxCodeMatchesRouter,
   avataxClientLogs: avataxClientLoggerRouter,
+  taxjarClientLogs: taxjarClientLoggerRouter,
 });
 
 export type AppRouter = typeof appRouter;

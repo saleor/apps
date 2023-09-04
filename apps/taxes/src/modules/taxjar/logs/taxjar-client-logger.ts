@@ -26,19 +26,19 @@ export const logInputSchema = logSchema.pick({ event: true, status: true }).merg
   }),
 );
 
-type AvataxLogInput = z.infer<typeof logInputSchema>;
+type TaxJarLogInput = z.infer<typeof logInputSchema>;
 
-export type AvataxLog = z.infer<typeof logSchema>;
+export type TaxJarLog = z.infer<typeof logSchema>;
 
-export const AVATAX_LOG_LIMIT = 100;
+export const TAXJAR_LOG_LIMIT = 100;
 
-export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
-  private logRepository: ClientLogsMetadataRepository<AvataxLog>;
+export class TaxJarClientLogger implements MetadataLogs<TaxJarLog> {
+  private logRepository: ClientLogsMetadataRepository<TaxJarLog>;
 
   constructor({
     settingsManager,
     configurationId,
-  }: Pick<ClientLogsMetadataRepositoryParams<AvataxLog>, "settingsManager"> & {
+  }: Pick<ClientLogsMetadataRepositoryParams<TaxJarLog>, "settingsManager"> & {
     configurationId: string;
   }) {
     this.logRepository = new ClientLogsMetadataRepository({
@@ -46,7 +46,7 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
       schema: logSchema,
       settingsManager,
       options: {
-        limit: AVATAX_LOG_LIMIT,
+        limit: TAXJAR_LOG_LIMIT,
       },
     });
   }
@@ -55,8 +55,8 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
     return this.logRepository.getAll();
   }
 
-  push({ event, payload, status }: AvataxLogInput) {
-    const log: AvataxLog = {
+  push({ event, payload, status }: TaxJarLogInput) {
+    const log: TaxJarLog = {
       date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
       event,
       payload: JSON.stringify(payload, null, 4),
@@ -67,7 +67,7 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
   }
 }
 
-export function createAvataxClientLogger({
+export function createTaxJarClientLogger({
   authData,
   configurationId,
 }: {
@@ -81,7 +81,7 @@ export function createAvataxClientLogger({
   });
   const settingsManager = createSettingsManager(client, appId);
 
-  return new AvataxClientLogger({
+  return new TaxJarClientLogger({
     settingsManager,
     configurationId,
   });

@@ -28,7 +28,11 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     switch (taxProviderName) {
       case "taxjar": {
         this.logger.debug("Selecting TaxJar as tax provider");
-        this.client = new TaxJarWebhookService(providerConnection.config, this.authData);
+        this.client = new TaxJarWebhookService({
+          config: providerConnection.config,
+          authData: this.authData,
+          configurationId: providerConnection.id,
+        });
         break;
       }
 
