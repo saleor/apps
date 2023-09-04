@@ -57,5 +57,15 @@
     "hookform",
     "urql"
   ],
-  "ignorePaths": ["node_modules", "package.json", "pnpm-lock.yaml", ".gitignore"]
+  "ignorePaths": [
+    "node_modules",
+    "package.json",
+    "pnpm-lock.yaml",
+    ".gitignore",
+    "apps/products-feed/src/modules/category-mapping/google-product-categories.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/graphql.ts",
+    "**/CHANGELOG.md"
+  ]
 }
