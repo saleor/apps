@@ -125,7 +125,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
               size="small"
               control={control}
               name={`productVariantFieldsMapping.${saleorField}`}
-              label="Builer.io Field"
+              label="Builder.io Field"
             />
           </Box>
         ))}
@@ -209,7 +209,7 @@ const EditFormVariant = (props: { configId: string }) => {
   }
 
   if (data.type !== "builder.io") {
-    throw new Error("Trying to fill builer.io form with non builder.io data");
+    throw new Error("Trying to fill builder.io form with non builder.io data");
   }
 
   return (
