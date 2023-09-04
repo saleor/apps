@@ -47,7 +47,29 @@ export const ConfigurationView = () => {
             </Text>
           </Box>
         }
-      />
+      >
+        <AlgoliaConfigurationForm />
+      </Layout.AppSection>
+
+      <Layout.AppSection
+        includePadding={false}
+        marginTop={14}
+        heading="Algolia fields filtering"
+        sideContent={
+          <Box>
+            <Text as="p" marginBottom={1.5}>
+              Decide which fields app should send with each product variant.
+            </Text>
+            <Text as="p" marginBottom={1.5}>
+              You should remove fields you do not need, to ensure Algolia limits will not be
+              exceeded.
+            </Text>
+          </Box>
+        }
+      >
+        <AlgoliaFieldsSelectionForm />
+      </Layout.AppSection>
+
       <Layout.AppSection
         includePadding
         marginTop={14}
