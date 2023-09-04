@@ -44,5 +44,10 @@
     "apps/*",
     "packages/*",
     "templates/*"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "@saleor/app-sdk": "0.43.1"
+    }
+  }
 }
