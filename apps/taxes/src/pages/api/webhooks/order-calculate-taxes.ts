@@ -45,7 +45,7 @@ export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx
 
   try {
     verifyCalculateTaxesPayload(payload);
-    logger.debug("Payload validated succesfully");
+    logger.debug("Payload validated successfully");
 
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;

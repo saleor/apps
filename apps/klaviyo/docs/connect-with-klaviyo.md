@@ -1,4 +1,4 @@
-# How to connect your App with Klavio
+# How to connect your App with Klaviyo
 
 ## Installation
 
@@ -24,7 +24,7 @@ First and foremost, you need to perform an initial API call to Klaviyo, which wi
 
 Let's navigate to "Customers" and create the first, dummy customer.
 
-Then, open Klavio [Metrics page](https://www.klaviyo.com/analytics/metrics).
+Then, open Klaviyo [Metrics page](https://www.klaviyo.com/analytics/metrics).
 
 Your Metric should be visible on the list:
 
