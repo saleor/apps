@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@saleor/macaw-ui/next";
 import React from "react";
-import { TextLink } from "@saleor/apps-ui";
+import { Layout, TextLink } from "@saleor/apps-ui";
 import { useIndicesSetupMutation } from "../lib/useIndicesSetup";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
@@ -12,7 +12,19 @@ export const IndicesSettings = () => {
     algoliaConfiguration?.appConfig?.appId && algoliaConfiguration?.appConfig?.secretKey;
 
   return (
-    <Box>
+    <Layout.AppSectionCard
+      footer={
+        <Box display={"flex"} justifyContent={"flex-end"}>
+          <Button
+            disabled={!isConfigured}
+            onClick={() => updateWebhooksMutation.mutate()}
+            variant="primary"
+          >
+            Update indices configuration
+          </Button>
+        </Box>
+      }
+    >
       <Box>
         <Text variant={"heading"} as={"p"} marginBottom={1.5}>
           Performing this operation will update indices to use recommended settings:
@@ -60,16 +72,7 @@ export const IndicesSettings = () => {
           Please note - if indices are already configured, this operation will overwrite settings
           mentioned above.
         </Text>
-        <Box display={"flex"} justifyContent={"flex-end"}>
-          <Button
-            disabled={!isConfigured}
-            onClick={() => updateWebhooksMutation.mutate()}
-            variant="primary"
-          >
-            Update indices configuration
-          </Button>
-        </Box>
       </Box>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };

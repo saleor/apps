@@ -13,6 +13,7 @@ import {
 } from "../modules/configuration/configuration";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { trpcClient } from "../modules/trpc/trpc-client";
+import { Layout } from "@saleor/apps-ui";
 
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -76,56 +77,53 @@ export const AlgoliaConfigurationForm = () => {
   const isFormDisabled = isMutationLoading || isQueryLoading;
 
   return (
-    <Box>
-      <form onSubmit={onFormSubmit}>
-        <Box padding={5}>
-          <Box marginBottom={5}>
-            <Input
-              control={control}
-              name="appId"
-              disabled={isFormDisabled}
-              required
-              label="Application ID"
-              /* cspell:disable-next-line */
-              helperText="Usually 10 characters, e.g. XYZAAABB00"
-            />
-          </Box>
-          <Box marginBottom={5} key={"secret"} /* todo why is this "key" here? */>
-            <Input
-              control={control}
-              name="secretKey"
-              disabled={isFormDisabled}
-              required
-              label="Admin API Key"
-              helperText="In Algolia dashboard it's a masked field"
-            />
-          </Box>
-
-          <Input
-            control={control}
-            name="indexNamePrefix"
-            disabled={isFormDisabled}
-            label="Index name prefix"
-            helperText='Optional prefix, you can add "test" or "staging" to test the app'
-          />
-
-          {credentialsValidationError && (
-            <Box marginTop={5}>
-              <Text color={"textCriticalDefault"}>
-                Could not connect to Algolia. Please verify your credentials
-              </Text>
-            </Box>
-          )}
-        </Box>
-
-        <Divider margin={0} marginTop={5} />
-
-        <Box paddingX={5} paddingY={3} display={"flex"} justifyContent={"flex-end"}>
+    <Layout.AppSectionCard
+      as="form"
+      onSubmit={onFormSubmit}
+      footer={
+        <Box display={"flex"} justifyContent={"flex-end"}>
           <Button disabled={isFormDisabled} type="submit" variant="primary">
             {isFormDisabled ? "Loading..." : "Save"}
           </Button>
         </Box>
-      </form>
-    </Box>
+      }
+    >
+      <Box>
+        <Input
+          control={control}
+          name="appId"
+          disabled={isFormDisabled}
+          required
+          label="Application ID"
+          helperText="Usually 10 characters, e.g. XYZAAABB00"
+        />
+        <Box marginBottom={5} key={"secret"} /* todo why is this "key" here? */>
+          <Input
+            control={control}
+            name="secretKey"
+            disabled={isFormDisabled}
+            required
+            label="Admin API Key"
+            helperText="In Algolia dashboard it's a masked field"
+          />
+        </Box>
+
+        <Input
+          control={control}
+          name="indexNamePrefix"
+          disabled={isFormDisabled}
+          label="Index name prefix"
+          helperText='Optional prefix, you can add "test" or "staging" to test the app'
+        />
+
+        {credentialsValidationError && (
+          <Box marginTop={5}>
+            <Text color={"textCriticalDefault"}>
+              Could not connect to Algolia. Please verify your credentials
+            </Text>
+          </Box>
+        )}
+      </Box>
+    </Layout.AppSectionCard>
   );
 };

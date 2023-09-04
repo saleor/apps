@@ -1188,6 +1188,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/trpc':
+        specifier: workspace:*
+        version: link:../../packages/trpc
       '@segment/analytics-node':
         specifier: ^1.1.0
         version: 1.1.0
@@ -1760,6 +1763,58 @@ importers:
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
+      zod:
+        specifier: 3.21.4
+        version: 3.21.4
+
+  packages/trpc:
+    dependencies:
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@tanstack/react-query':
+        specifier: ^4.29.19
+        version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/client':
+        specifier: 10.34.0
+        version: 10.34.0(@trpc/server@10.34.0)
+      '@trpc/next':
+        specifier: 10.34.0
+        version: 10.34.0(@tanstack/react-query@4.29.19)(@trpc/client@10.34.0)(@trpc/react-query@10.34.0)(@trpc/server@10.34.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 10.34.0
+        version: 10.34.0(@tanstack/react-query@4.29.19)(@trpc/client@10.34.0)(@trpc/server@10.34.0)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/server':
+        specifier: 10.34.0
+        version: 10.34.0
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@saleor/app-sdk':
+        specifier: 0.41.1
+        version: 0.41.1(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      eslint:
+        specifier: 8.46.0
+        version: 8.46.0
+      eslint-config-saleor:
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      next:
+        specifier: 13.4.8
+        version: 13.4.8(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0)
+      typescript:
+        specifier: 5.1.6
+        version: 5.1.6
 
   packages/ui:
     dependencies:
@@ -2939,7 +2994,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@ampproject/remapping': 2.2.1
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.22.10
       '@babel/generator': 7.22.9
       '@babel/helper-compilation-targets': 7.22.9(@babel/core@7.21.8)
       '@babel/helper-module-transforms': 7.22.9(@babel/core@7.21.8)
@@ -5704,7 +5759,7 @@ packages:
     resolution: {integrity: sha512-AhQoI3YjWi6u/y/ntv7k48mcrCXmus0t79J9qPNlk/lAsFlCiJ047RmbfMOawySTHtywXhbXgpx/8nXMYd+oFw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.22.10
       '@babel/generator': 7.22.9
       '@babel/helper-environment-visitor': 7.22.5
       '@babel/helper-function-name': 7.22.5
@@ -5757,7 +5812,7 @@ packages:
     resolution: {integrity: sha512-y6LPR+wpM2I3qJrsheCTwhIinzkETbplIgPBbwvqPKc+uljeA5gP+3nP8irdYt1mjQaDnlIcG+dw8OjAco4GXw==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.22.10
       '@babel/generator': 7.22.9
       '@babel/helper-environment-visitor': 7.22.5
       '@babel/helper-function-name': 7.22.5
@@ -10358,7 +10413,7 @@ packages:
   /@swc/helpers@0.5.1:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.6.2
 
   /@tanstack/query-core@4.29.19:
     resolution: {integrity: sha512-uPe1DukeIpIHpQi6UzIgBcXsjjsDaLnc7hF+zLBKnaUlh7jFE/A+P8t4cU4VzKPMFB/C970n/9SxtpO5hmIRgw==}
@@ -12260,7 +12315,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001503
+      caniuse-lite: 1.0.30001519
       electron-to-chromium: 1.4.482
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.9)

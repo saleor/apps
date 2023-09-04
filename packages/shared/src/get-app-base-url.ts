@@ -1,7 +1,9 @@
 /**
- * Extracts the app's url from headers from the response.
+ * TODO Consume this from App SDK
  */
-export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
+export const getAppBaseUrl = (headers: {
+  [name: string]: string | string[] | undefined;
+}): string => {
   const { host, "x-forwarded-proto": xForwardedProto = "http" } = headers;
 
   const xForwardedProtos = Array.isArray(xForwardedProto)

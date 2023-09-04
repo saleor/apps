@@ -34,7 +34,9 @@ export const configurationRouter = router({
        */
       const data = await fetchLegacyConfiguration(settingsManager, domain);
 
-      config.setAlgoliaSettings(data);
+      if (data) {
+        config.setAlgoliaSettings(data);
+      }
 
       return config.getConfig();
     }
