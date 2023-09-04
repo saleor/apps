@@ -8,7 +8,7 @@ import { avataxTaxCodesRouter } from "../avatax/tax-code/avatax-tax-codes.router
 import { taxJarTaxCodesRouter } from "../taxjar/tax-code/taxjar-tax-codes.router";
 import { taxJarTaxCodeMatchesRouter } from "../taxjar/tax-code/taxjar-tax-code-matches.router";
 import { avataxTaxCodeMatchesRouter } from "../avatax/tax-code/avatax-tax-code-matches.router";
-import { avataxClientLoggerRouter } from "../avatax/logger/avatax-client-logger.router";
+import { avataxClientLoggerRouter } from "../avatax/logs/avatax-client-logger.router";
 
 /*
  * // todo: split to namespaces, e.g.:

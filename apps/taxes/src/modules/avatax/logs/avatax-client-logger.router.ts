@@ -25,6 +25,8 @@ export const avataxClientLoggerRouter = router({
 
     const loggerRepository = new AvataxClientLogger({
       settingsManager: ctx.settingsManager,
+      // todo: replace with configuration id
+      loggerKey: "avataxClientLogs",
     });
 
     return loggerRepository.push(input);
@@ -38,6 +40,8 @@ export const avataxClientLoggerRouter = router({
 
     const loggerRepository = new AvataxClientLogger({
       settingsManager: ctx.settingsManager,
+      // todo: replace with configuration id
+      loggerKey: "avataxClientLogs",
     });
 
     return loggerRepository.getAll();

@@ -82,6 +82,8 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
 
     this.logger.debug(`Returning logs for key ${this.metadataKey}`);
 
+    this.logger.debug({ logs });
+
     return logs;
   }
 
@@ -93,15 +95,18 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
     }
 
     const log = validation.data;
-    const logs = unshiftItemToLimitedArray(this.logs, log, this.options.limit);
+    const logs = await this.getAll();
+    const nextLogs = unshiftItemToLimitedArray(logs, log, this.options.limit);
 
-    this.logs = logs;
+    this.logs = nextLogs;
+
+    this.logger.debug({ nextLogs });
 
     this.logger.debug(`Pushing log to metadata for key ${this.metadataKey}`);
 
     await this.settingsManager.set({
       key: this.metadataKey,
-      value: JSON.stringify(logs),
+      value: JSON.stringify(nextLogs),
     });
   }
 }

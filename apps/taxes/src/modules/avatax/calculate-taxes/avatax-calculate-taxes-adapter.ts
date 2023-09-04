@@ -25,10 +25,7 @@ export class AvataxCalculateTaxesAdapter
   }
 
   async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
-    this.logger.debug(
-      { payload },
-      "Transforming the Saleor payload for calculating taxes with AvaTax...",
-    );
+    this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
     const payloadService = new AvataxCalculateTaxesPayloadService(this.authData);
     const target = await payloadService.getPayload(payload, this.config);
 

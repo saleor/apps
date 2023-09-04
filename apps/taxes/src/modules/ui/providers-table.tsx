@@ -1,4 +1,4 @@
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button, EditIcon, ViewTableIcon } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";
@@ -9,8 +9,12 @@ export const ProvidersTable = () => {
   const router = useRouter();
   const { data } = trpcClient.providersConfiguration.getAll.useQuery();
 
-  const itemClickHandler = (item: ProviderConnection) => {
+  const editClickHandler = (item: ProviderConnection) => {
     router.push(`/providers/${item.provider}/${item.id}`);
+  };
+
+  const logsClickHandler = (item: ProviderConnection) => {
+    router.push(`/providers/${item.provider}/${item.id}/logs`);
   };
 
   return (
@@ -28,9 +32,22 @@ export const ProvidersTable = () => {
             <Table.TD>
               <ProviderLabel name={item.provider} />
             </Table.TD>
-            <Table.TD onClick={() => itemClickHandler(item)}>
-              <Box display={"flex"} justifyContent={"flex-end"}>
-                <Button data-testid="provider-edit-button" variant="tertiary">
+            <Table.TD>
+              <Box display={"flex"} justifyContent={"flex-end"} gap={2}>
+                <Button
+                  onClick={() => logsClickHandler(item)}
+                  icon={<ViewTableIcon />}
+                  variant="tertiary"
+                  data-testid="provider-logs-button"
+                >
+                  Logs
+                </Button>
+                <Button
+                  onClick={() => editClickHandler(item)}
+                  icon={<EditIcon />}
+                  data-testid="provider-edit-button"
+                  variant="secondary"
+                >
                   Edit
                 </Button>
               </Box>

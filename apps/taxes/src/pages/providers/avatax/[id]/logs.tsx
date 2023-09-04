@@ -3,6 +3,7 @@ import { AppColumns } from "../../../../modules/ui/app-columns";
 import { Section } from "../../../../modules/ui/app-section";
 
 import { Text } from "@saleor/macaw-ui/next";
+import { LogsTable } from "../../../../modules/avatax/logs/ui/logs-table";
 import { trpcClient } from "../../../../modules/trpc/trpc-client";
 
 const LogsInstructions = () => {
@@ -25,25 +26,17 @@ const Header = () => {
 };
 
 const LogsAvataxPage = () => {
-  const logs = trpcClient.avataxClientLogs.getAll.useQuery();
+  const { data = [], isLoading } = trpcClient.avataxClientLogs.getAll.useQuery();
 
   return (
     <main>
       <AppColumns top={<Header />}>
         <LogsInstructions />
         <Provider>
-          <div>
+          <section>
             <h1>Logs</h1>
-            <ul>
-              {logs.data?.map((log) => (
-                <li style={{ display: "flex", gap: 10 }} key={log.date}>
-                  <Text>{log.event}</Text>
-                  <Text>{log.date}</Text>
-                  <Text>{log.status}</Text>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <LogsTable logs={data} />
+          </section>
         </Provider>
       </AppColumns>
     </main>

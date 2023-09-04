@@ -7,7 +7,7 @@ import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
-import { AvataxClientLogger } from "../logger/avatax-client-logger";
+import { AvataxClientLogger } from "../logs/avatax-client-logger";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { createSettingsManager } from "../../app/metadata-manager";
 
@@ -35,7 +35,8 @@ export class AvataxOrderConfirmedAdapter
     const { appId } = authData;
     const settingsManager = createSettingsManager(client, appId);
 
-    this.clientLogger = new AvataxClientLogger({ settingsManager });
+    // todo: replace with configuration id
+    this.clientLogger = new AvataxClientLogger({ settingsManager, loggerKey: "avataxClientLogs" });
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {
@@ -56,7 +57,7 @@ export class AvataxOrderConfirmedAdapter
         status: "success",
         payload: {
           input: target,
-          response,
+          output: response,
         },
       });
 
@@ -74,7 +75,7 @@ export class AvataxOrderConfirmedAdapter
         status: "error",
         payload: {
           input: target,
-          response: error,
+          output: error,
         },
       });
       throw error;

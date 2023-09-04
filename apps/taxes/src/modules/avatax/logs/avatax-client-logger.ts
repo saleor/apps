@@ -14,13 +14,18 @@ const logSchema = z.object({
 
 export const logInputSchema = logSchema.pick({ event: true, status: true, payload: true }).merge(
   z.object({
-    payload: z.record(z.unknown()).optional(),
+    payload: z
+      .object({
+        input: z.unknown(),
+        output: z.unknown(),
+      })
+      .optional(),
   }),
 );
 
 type AvataxLogInput = z.infer<typeof logInputSchema>;
 
-type AvataxLog = z.infer<typeof logSchema>;
+export type AvataxLog = z.infer<typeof logSchema>;
 
 const AVATAX_LOG_LIMIT = 100;
 
@@ -29,9 +34,12 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
 
   constructor({
     settingsManager,
-  }: Pick<ClientLogsMetadataRepositoryParams<AvataxLog>, "settingsManager">) {
+    loggerKey,
+  }: Pick<ClientLogsMetadataRepositoryParams<AvataxLog>, "settingsManager"> & {
+    loggerKey: string;
+  }) {
     this.logRepository = new ClientLogsMetadataRepository({
-      metadataKey: "avatax-logs",
+      metadataKey: loggerKey,
       schema: logSchema,
       settingsManager,
       options: {
@@ -48,7 +56,7 @@ export class AvataxClientLogger implements MetadataLogs<AvataxLog> {
     const log: AvataxLog = {
       date: new Date().toDateString(),
       event,
-      payload: JSON.stringify(payload),
+      payload: JSON.stringify(payload, null, 4),
       status,
     };
 
