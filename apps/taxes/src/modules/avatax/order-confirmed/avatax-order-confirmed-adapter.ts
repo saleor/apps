@@ -2,13 +2,10 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter, WebhookAdapterParams } from "../../taxes/tax-webhook-adapter";
+import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import {
-  AvataxClientLogger,
-  createAvataxClientLoggerFromAdapter,
-} from "../logs/avatax-client-logger";
+import { AvataxClientLogger } from "../logs/avatax-client-logger";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
@@ -28,15 +25,16 @@ export class AvataxOrderConfirmedAdapter
   constructor({
     config,
     authData,
-    configurationId,
+    clientLogger,
   }: {
     config: AvataxConfig;
-  } & WebhookAdapterParams) {
+    clientLogger: AvataxClientLogger;
+    authData: AuthData;
+  }) {
     this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
     this.config = config;
     this.authData = authData;
-
-    this.clientLogger = createAvataxClientLoggerFromAdapter({ authData, configurationId });
+    this.clientLogger = clientLogger;
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {

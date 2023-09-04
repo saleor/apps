@@ -2,15 +2,12 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter, WebhookAdapterParams } from "../../taxes/tax-webhook-adapter";
+import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxClientLogger } from "../logs/avatax-client-logger";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
-import {
-  AvataxClientLogger,
-  createAvataxClientLoggerFromAdapter,
-} from "../logs/avatax-client-logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -28,15 +25,16 @@ export class AvataxCalculateTaxesAdapter
   constructor({
     config,
     authData,
-    configurationId,
+    clientLogger,
   }: {
     config: AvataxConfig;
-  } & WebhookAdapterParams) {
+    clientLogger: AvataxClientLogger;
+    authData: AuthData;
+  }) {
     this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
     this.config = config;
+    this.clientLogger = clientLogger;
     this.authData = authData;
-
-    this.clientLogger = createAvataxClientLoggerFromAdapter({ authData, configurationId });
   }
 
   async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
