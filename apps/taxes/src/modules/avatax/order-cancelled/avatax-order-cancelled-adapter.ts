@@ -47,7 +47,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
         },
       });
 
-      this.logger.debug(`Succesfully voided the transaction of id: ${target.transactionCode}`);
+      this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
     } catch (error) {
       this.clientLogger.push({
         event: "[OrderCancelled] voidTransaction",
