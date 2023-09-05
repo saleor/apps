@@ -5,22 +5,22 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "eslint": "8.46.0",
-    "typescript": "5.1.6"
+    "eslint": "8.48.0",
+    "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "0.41.1",
-    "@saleor/macaw-ui": "0.8.0-pre.127",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@saleor/app-sdk": "0.43.1",
+    "@saleor/macaw-ui": "0.8.0-pre.129",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
     "eslint-config-saleor": "workspace:*",
-    "next": "13.4.8",
+    "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "main": "index.ts",
   "peerDependencies": {
-    "@saleor/app-sdk": "0.41.1",
+    "@saleor/app-sdk": "0.43.1",
     "next": "13.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
