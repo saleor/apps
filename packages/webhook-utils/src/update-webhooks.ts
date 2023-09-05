@@ -1,19 +1,72 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
 import { webhooksToRemove } from "./filters/webhooks-to-remove";
-import { getWebhookIdsAndQueriesToUpdate } from "./filters/get-webhook-ids-and-queries-to-update";
+import { getWebhookIdsAndManifestsToUpdate } from "./filters/get-webhook-ids-and-manifests-to-update";
 import { webhooksToAdd } from "./filters/webhooks-to-add";
 import { createLogger } from "@saleor/apps-shared";
 import { removeAppWebhook } from "./operations/remove-app-webhook";
-import { createAppWebhook } from "./operations/create-app-webhook";
-import {
-  WebhookDetailsFragmentFragment,
-  WebhookEventTypeAsyncEnum,
-  WebhookEventTypeSyncEnum,
-} from "../generated/graphql";
-import { modifyAppWebhook } from "./operations/modify-app-webhook";
+import { WebhookDetailsFragmentFragment } from "../generated/graphql";
+import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
+import { modifyAppWebhookFromManifest } from "./modify-app-webhook-from-manifest";
+import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
+import { modifyAppWebhookFromWebhookDetails } from "./modify-app-webhook-from-webhook-details";
 
 const logger = createLogger({ name: "updateWebhooks" });
+
+interface RollbackArgs {
+  client: Client;
+  webhookManifests: Array<WebhookManifest>;
+  existingWebhooksData: Array<WebhookDetailsFragmentFragment>;
+  addedWebhooks: Array<WebhookDetailsFragmentFragment>;
+  modifiedWebhooks: Array<WebhookDetailsFragmentFragment>;
+  removedWebhooks: Array<WebhookDetailsFragmentFragment>;
+}
+
+const rollback = async ({
+  client,
+  addedWebhooks,
+  modifiedWebhooks,
+  existingWebhooksData,
+  removedWebhooks,
+}: RollbackArgs) => {
+  if (addedWebhooks.length) {
+    logger.info("Removing added webhooks");
+    await Promise.all(
+      addedWebhooks.map((webhook) => removeAppWebhook({ client, webhookId: webhook.id })),
+    );
+  }
+
+  if (modifiedWebhooks.length) {
+    logger.info("Rollback modified webhooks");
+    await Promise.all(
+      modifiedWebhooks.map((modifiedWebhook) => {
+        const webhookDetails = existingWebhooksData.find(
+          (existingWebhook) => existingWebhook.id === modifiedWebhook.id,
+        );
+
+        if (!webhookDetails) {
+          logger.error("This should not happen");
+          throw new Error("This should not happen");
+        }
+
+        return modifyAppWebhookFromWebhookDetails({ client, webhookDetails });
+      }),
+    );
+  }
+
+  if (removedWebhooks.length) {
+    logger.debug("Rollback removed webhooks");
+
+    await Promise.all(
+      modifiedWebhooks.map((webhookDetails) => {
+        return createAppWebhookFromWebhookDetailsFragment({
+          client,
+          webhookDetails,
+        });
+      }),
+    );
+  }
+};
 
 interface UpdateWebhooksArgs {
   client: Client;
@@ -26,6 +79,8 @@ interface UpdateWebhooksArgs {
  * - remove the ones which are not in the new list
  * - create the ones which are not in the existing list
  * - update queries the ones which are in both lists
+ *
+ * If any of the operations fails, rollback all changes to the initial state
  */
 export const updateWebhooks = async ({
   client,
@@ -46,140 +101,59 @@ export const updateWebhooks = async ({
     });
 
     // Based on names, find the ones which should be updated
-    const webhookIdsAndQueriesToBeUpdated = getWebhookIdsAndQueriesToUpdate({
+    const webhookIdsAndManifestsToBeUpdated = getWebhookIdsAndManifestsToUpdate({
       existingWebhooksPartial: existingWebhooksData,
       newWebhookManifests: webhookManifests,
     });
 
     // Based on names, find the ones which should be removed
-    const webhookIdsToBeRemoved = webhooksToRemove({
+    const webhookToBeRemoved = webhooksToRemove({
       existingWebhooksPartial: existingWebhooksData,
       newWebhookManifests: webhookManifests,
-    }).map((webhook) => webhook.id);
+    });
 
     logger.info(
-      `Scheduled changes: ${webhookIdsAndQueriesToBeUpdated} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookIdsToBeRemoved.length} to be removed`,
+      `Scheduled changes: ${webhookIdsAndManifestsToBeUpdated} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookToBeRemoved.length} to be removed`,
     );
 
     for (const webhookManifest of webhookManifestsToBeAdded) {
       logger.debug(`Adding webhook ${webhookManifest.name}`);
-      const response = await createAppWebhook({
-        client,
-        input: {
-          asyncEvents: webhookManifest.asyncEvents as WebhookEventTypeAsyncEnum[],
-          syncEvents: webhookManifest.syncEvents as WebhookEventTypeSyncEnum[],
-          isActive: webhookManifest.isActive,
-          name: webhookManifest.name,
-          targetUrl: webhookManifest.targetUrl,
-          query: webhookManifest.query,
-        },
-      });
+      const createdWebhook = await createAppWebhookFromManifest({ client, webhookManifest });
 
       logger.debug("Webhook added");
-      addedWebhooks.push(response);
+      addedWebhooks.push(createdWebhook);
     }
 
-    if (webhookIdsAndQueriesToBeUpdated.length) {
-      for (const updateData of webhookIdsAndQueriesToBeUpdated) {
-        const { webhookId, newQuery } = updateData;
+    for (const updateData of webhookIdsAndManifestsToBeUpdated) {
+      const { webhookId, webhookManifest } = updateData;
 
-        const webhook = webhookManifests.find((webhook) => webhook.id === webhookId);
+      logger.debug(`Updating webhook ${webhookManifest.name}`);
+      const response = await modifyAppWebhookFromManifest({ client, webhookId, webhookManifest });
 
-        logger.debug(`Adding webhook ${webhookManifest.name}`);
-        const response = await modifyAppWebhook({
-          client,
-          webhookId,
-          input: {
-            asyncEvents: webhookManifest.asyncEvents as WebhookEventTypeAsyncEnum[],
-            syncEvents: webhookManifest.syncEvents as WebhookEventTypeSyncEnum[],
-            isActive: webhookManifest.isActive,
-            name: webhookManifest.name,
-            targetUrl: webhookManifest.targetUrl,
-            query: webhookManifest.query,
-          },
-        });
-
-        logger.debug("Webhook updated");
-        modifiedWebhooks.push(webhookId);
-      }
-    } else {
-      logger.debug("Theres no webhooks to update");
+      logger.debug("Webhook updated");
+      modifiedWebhooks.push(response);
     }
 
-    if (webhookIdsToBeRemoved.length) {
-      logger.debug("Removing webhooks");
+    for (const webhookDetails of webhookToBeRemoved) {
+      logger.debug(`Removing webhook ${webhookDetails.name}`);
 
-      for (const webhookId of webhookIdsToBeRemoved) {
-        const response = await removeAppWebhook({ client, webhookId });
+      await removeAppWebhook({ client, webhookId: webhookDetails.id });
 
-        removedWebhooks.push(webhookId);
-      }
+      logger.debug("Webhook removed");
+      removedWebhooks.push(webhookDetails);
     }
+
+    logger.info("Migration finished successfully");
   } catch (e) {
     logger.error(e, "Error during update procedure, rolling back changes");
-
-    if (addedWebhooks.length) {
-      logger.info("Removing added webhooks");
-      await Promise.all(
-        addedWebhooks.map((webhook) => removeAppWebhook({ client, webhookId: webhook.id })),
-      );
-    }
-
-    if (modifiedWebhooks.length) {
-      logger.info("Rollback modified webhooks");
-      await Promise.all(
-        modifiedWebhooks.map((webhookId) => {
-          const webhook = existingWebhooksData.find((webhook) => webhook.id === webhookId);
-
-          if (!webhook) {
-            // TODO: better message
-            logger.error("This should not happen");
-            throw new Error("This should not happen");
-          }
-
-          return modifyAppWebhook({
-            client,
-            webhookId,
-            input: {
-              asyncEvents: webhook.asyncEvents.map((event) => event.eventType),
-              syncEvents: webhook.syncEvents.map((event) => event.eventType),
-              isActive: webhook.isActive,
-              name: webhook.name,
-              targetUrl: webhook.targetUrl,
-              query: webhook.subscriptionQuery,
-            },
-          });
-        }),
-      );
-    }
-
-    if (removedWebhooks.length) {
-      logger.debug("Rollback removed webhooks");
-
-      await Promise.all(
-        modifiedWebhooks.map((webhookId) => {
-          const webhook = existingWebhooksData.find((webhook) => webhook.id === webhookId);
-
-          if (!webhook) {
-            // TODO: better message
-            logger.error("This should not happen");
-            throw new Error("This should not happen");
-          }
-
-          return createAppWebhook({
-            client,
-            input: {
-              asyncEvents: webhook.asyncEvents.map((event) => event.eventType),
-              syncEvents: webhook.syncEvents.map((event) => event.eventType),
-              isActive: webhook.isActive,
-              name: webhook.name,
-              targetUrl: webhook.targetUrl,
-              query: webhook.subscriptionQuery,
-            },
-          });
-        }),
-      );
-    }
+    await rollback({
+      client,
+      addedWebhooks,
+      existingWebhooksData,
+      modifiedWebhooks,
+      webhookManifests,
+      removedWebhooks,
+    });
+    logger.info("Changes rolled back");
   }
-  logger.debug("Changes applied");
 };

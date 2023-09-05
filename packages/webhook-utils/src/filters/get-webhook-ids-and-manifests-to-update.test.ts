@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getWebhookIdsAndQueriesToUpdate } from "./get-webhook-ids-and-queries-to-update";
+import { getWebhookIdsAndManifestsToUpdate } from "./get-webhook-ids-and-manifests-to-update";
 
 describe("getWebhookIdsAndQueriesToUpdate", () => {
   it("Returns an empty list, when no data is passed", () => {
     expect(
-      getWebhookIdsAndQueriesToUpdate({
+      getWebhookIdsAndManifestsToUpdate({
         existingWebhooksPartial: [],
         newWebhookManifests: [],
       }),
@@ -12,7 +12,7 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
   });
   it("Returns all of the entries, when new webhook manifests contain the same webhooks as existing list", () => {
     expect(
-      getWebhookIdsAndQueriesToUpdate({
+      getWebhookIdsAndManifestsToUpdate({
         existingWebhooksPartial: [
           { id: "1", name: "webhook1" },
           { id: "2", name: "webhook2" },
@@ -43,7 +43,7 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
   });
   it("Returns subset of entries, when existing webhook list contain some of them", () => {
     expect(
-      getWebhookIdsAndQueriesToUpdate({
+      getWebhookIdsAndManifestsToUpdate({
         existingWebhooksPartial: [{ id: "1", name: "webhook1" }],
         newWebhookManifests: [
           {

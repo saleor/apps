@@ -7,7 +7,7 @@ import { updateWebhooks } from "./update-webhooks";
 
 const logger = createLogger({ name: "updateScript" });
 
-interface updateScriptArgs {
+interface WebhookMigrationRunnerArgs {
   client: Client;
   getManifests: ({
     appDetails,
@@ -16,7 +16,10 @@ interface updateScriptArgs {
   }) => Promise<Array<WebhookManifest>>;
 }
 
-export const updateScript = async ({ client, getManifests }: updateScriptArgs) => {
+export const webhookMigrationRunner = async ({
+  client,
+  getManifests,
+}: WebhookMigrationRunnerArgs) => {
   logger.info("Getting app details and webhooks data");
 
   let appDetails: AppDetailsFragmentFragment | undefined;
@@ -25,7 +28,6 @@ export const updateScript = async ({ client, getManifests }: updateScriptArgs) =
     appDetails = await getAppDetailsAndWebhooksData({ client });
   } catch (e) {
     logger.error(e, "Couldn't fetch the app details.");
-    logger.error("Exiting...");
     return;
   }
 
@@ -35,7 +37,14 @@ export const updateScript = async ({ client, getManifests }: updateScriptArgs) =
   }
 
   logger.debug("Got app details and webhooks data. Generate list of webhook manifests");
-  const newWebhookManifests = await getManifests({ appDetails });
+  let newWebhookManifests: Array<WebhookManifest> = [];
+
+  try {
+    newWebhookManifests = await getManifests({ appDetails });
+  } catch (e) {
+    logger.error(e, "Couldn't prepare list of manifests.");
+    return;
+  }
 
   logger.debug("Got list of webhook manifests. Updating webhooks");
   await updateWebhooks({
@@ -43,5 +52,5 @@ export const updateScript = async ({ client, getManifests }: updateScriptArgs) =
     webhookManifests: newWebhookManifests,
     existingWebhooksData: appDetails.webhooks || [],
   });
-  logger.info("Webhooks migrated successfully");
+  logger.info("Migration finished.");
 };

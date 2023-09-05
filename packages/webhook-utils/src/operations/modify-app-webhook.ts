@@ -26,6 +26,6 @@ export const modifyAppWebhook = async ({ client, webhookId, input }: ModifyAppWe
           "Webhook creation response is empty. The API returned no additional error.",
         );
       }
-      return r.data?.webhookUpdate?.webhook;
+      return webhook;
     });
 };
