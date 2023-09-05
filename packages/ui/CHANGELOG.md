@@ -1,5 +1,12 @@
 # @saleor/apps-ui
 
+## 1.2.0
+
+### Minor Changes
+
+- e8660e8: Added two new components: ButtonsBox, which is a simple grid wrapper for horizontal buttons and SkeletonSection which composes Macaw Skeletons and make them looking more like a layout
+- e8660e8: Added Layout.AppSection and Layout.AppSectionCard components to build standard app layouts
+
 ## 1.1.8
 
 ### Patch Changes

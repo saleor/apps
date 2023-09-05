@@ -1,5 +1,30 @@
 # saleor-app-search
 
+## 1.15.0
+
+### Minor Changes
+
+- 1e3c08c: Added fields filtering form. Unused fields can be unchecked to match Algolia limits. By default every field is selected
+- ed30a81: Added "Saleor Commerce" as an author in the Manifest
+
+### Patch Changes
+
+- e8660e8: Implemented shared getApBaseUrl
+- e8660e8: Replaced GraphQL provider with shared package
+- e8660e8: Replaced AppSections implementation with the shared package
+- ed30a81: Refactor: Migrated private metadata of the app (used for settings) - previously each setting was saved in a dedicated metadata key. Now entire config is kept as JSON in a single field. This is non-breaking change - app will fallback to old config if needed.
+- ed30a81: Refactor: Extracted shared webhook logic, like clients creation and settings fetching to a shared function that creates entire context. Webhook handlers LoC decreased by half
+- e8660e8: Implemented ThemeSynchronizer from shared package
+- e8660e8: Fixed broken configuration form when legacy metadata was fetched
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 1.14.0
 
 ### Minor Changes
