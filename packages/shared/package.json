@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",
-    "eslint": "8.46.0",
+    "eslint": "8.48.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "semver": "^7.5.1"
@@ -15,30 +15,30 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
-    "@saleor/app-sdk": "0.41.1",
-    "@saleor/macaw-ui": "0.8.0-pre.127",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@saleor/app-sdk": "0.43.1",
+    "@saleor/macaw-ui": "0.8.0-pre.129",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
     "@types/semver": "^7.5.0",
     "eslint-config-saleor": "workspace:*",
-    "next": "13.4.8",
+    "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "5.1.6",
+    "typescript": "5.2.2",
     "urql": "^4.0.4",
-    "vite": "4.4.8",
-    "vitest": "0.34.1",
-    "zod": "3.21.4"
+    "vite": "4.4.9",
+    "vitest": "0.34.3",
+    "zod": "3.22.2"
   },
   "main": "index.ts",
   "peerDependencies": {
-    "@saleor/app-sdk": "0.41.1",
+    "@saleor/app-sdk": "0.43.1",
     "next": "13.3.0",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "urql": "^4.0.4",
-    "zod": "3.21.4"
+    "zod": "3.22.2"
   }
 }
