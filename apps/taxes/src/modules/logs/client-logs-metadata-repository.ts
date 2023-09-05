@@ -1,23 +1,7 @@
 import { EncryptedMetadataManager, SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { ZodSchema, z } from "zod";
 import { Logger, createLogger } from "../../lib/logger";
-
-/**
- * Pushes item to first place in the array and limits array length to limit.
- * When array length is equal to limit, last item is removed.
- * @param array Array to push item to.
- * @param item Item to push to array.
- * @param limit Maximum length of array.
- */
-function unshiftItemToLimitedArray<T>(array: T[], item: T, limit: number) {
-  const newArray = [item, ...array];
-
-  if (newArray.length > limit) {
-    newArray.pop();
-  }
-
-  return newArray;
-}
+import { logUtils } from "./log-utils";
 
 export interface MetadataLogs<TLog extends unknown> {
   getAll(): Promise<TLog[]>;
@@ -100,7 +84,7 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
 
     const log = validation.data;
     const logs = await this.getAll();
-    const nextLogs = unshiftItemToLimitedArray(logs, log, this.options.limit);
+    const nextLogs = logUtils.unshiftItemToLimitedArray(logs, log, this.options.limit);
 
     this.logs = nextLogs;
 
