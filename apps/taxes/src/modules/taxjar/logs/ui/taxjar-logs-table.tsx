@@ -125,7 +125,7 @@ export const TaxJarLogsTable = () => {
           justifyContent={"center"}
           alignItems={"center"}
           gap={4}
-          __minHeight={"240px"}
+          __minHeight={"160px"}
         >
           <Text color="textNeutralSubdued" variant="bodyEmp">
             No logs found for this configuration
