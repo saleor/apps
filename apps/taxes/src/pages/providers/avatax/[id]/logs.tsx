@@ -50,7 +50,7 @@ const LogsAvataxPage = () => {
         },
         {
           href: "/providers/avatax",
-          label: "TaxJar",
+          label: "AvaTax",
         },
         {
           href: `/providers/avatax/${id}`,
