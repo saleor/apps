@@ -7,6 +7,10 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   # Packages
   - package-ecosystem: "npm"
@@ -16,6 +20,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/packages/shared"
     open-pull-requests-limit: 1
@@ -23,6 +31,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/packages/ui"
     open-pull-requests-limit: 1
@@ -30,6 +42,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/packages/react-hook-form-macaw"
     open-pull-requests-limit: 1
@@ -37,6 +53,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]" 
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: "/packages/trpc"
     open-pull-requests-limit: 1
@@ -44,6 +64,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   # Apps
   - package-ecosystem: "npm"
@@ -53,6 +77,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/crm
     open-pull-requests-limit: 1
@@ -60,6 +88,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/data-importer
     open-pull-requests-limit: 1
@@ -67,6 +99,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/emails-and-messages
     open-pull-requests-limit: 1
@@ -74,6 +110,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/invoices
     open-pull-requests-limit: 1
@@ -81,6 +121,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/klaviyo
     open-pull-requests-limit: 1
@@ -88,6 +132,10 @@ updates:
       interval: weekly
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/products-feed
     open-pull-requests-limit: 1
@@ -95,6 +143,10 @@ updates:
       prefix: "[skip ci]"
     schedule:
       interval: weekly
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/search
     open-pull-requests-limit: 1
@@ -102,6 +154,10 @@ updates:
       prefix: "[skip ci]"
     schedule:
       interval: weekly
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     directory: apps/slack
     open-pull-requests-limit: 1
@@ -109,6 +165,10 @@ updates:
       prefix: "[skip ci]"
     schedule:
       interval: weekly
+    groups:
+      deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm"
     open-pull-requests-limit: 1
     directory: apps/taxes
@@ -116,6 +176,10 @@ updates:
       prefix: "[skip ci]"
     schedule:
       interval: weekly
+    groups:
+      deps:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     open-pull-requests-limit: 1
@@ -124,3 +188,7 @@ updates:
       prefix: "[skip ci]"
     schedule:
       interval: weekly
+    groups:
+      deps:
+        patterns:
+          - "*"
