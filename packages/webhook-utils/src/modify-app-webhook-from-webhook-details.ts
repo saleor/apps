@@ -1,10 +1,10 @@
 import { Client } from "urql";
-import { WebhookDetailsFragmentFragment } from "../generated/graphql";
+import { WebhookDetailsFragment } from "../generated/graphql";
 import { modifyAppWebhook } from "./operations/modify-app-webhook";
 
 interface ModifyAppWebhookFromWebhookDetailsArgs {
   client: Client;
-  webhookDetails: WebhookDetailsFragmentFragment;
+  webhookDetails: WebhookDetailsFragment;
 }
 
 export const modifyAppWebhookFromWebhookDetails = async ({

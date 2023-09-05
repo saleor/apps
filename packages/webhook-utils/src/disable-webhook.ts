@@ -7,7 +7,7 @@ interface DisableWebhookArgs {
 }
 
 export const disableWebhook = async ({ client, webhookId }: DisableWebhookArgs) => {
-  const response = await modifyAppWebhook({
+  return modifyAppWebhook({
     client,
     webhookId,
     input: {

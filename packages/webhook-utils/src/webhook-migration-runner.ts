@@ -1,5 +1,5 @@
 import { Client } from "urql";
-import { AppDetailsFragmentFragment } from "../generated/graphql";
+import { AppDetailsFragment } from "../generated/graphql";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { getAppDetailsAndWebhooksData } from "./operations/get-app-details-and-webhooks-data";
 import { createLogger } from "@saleor/apps-shared";
@@ -12,17 +12,19 @@ interface WebhookMigrationRunnerArgs {
   getManifests: ({
     appDetails,
   }: {
-    appDetails: AppDetailsFragmentFragment;
+    appDetails: AppDetailsFragment;
   }) => Promise<Array<WebhookManifest>>;
+  dryRun?: boolean;
 }
 
 export const webhookMigrationRunner = async ({
   client,
   getManifests,
+  dryRun,
 }: WebhookMigrationRunnerArgs) => {
   logger.info("Getting app details and webhooks data");
 
-  let appDetails: AppDetailsFragmentFragment | undefined;
+  let appDetails: AppDetailsFragment | undefined;
 
   try {
     appDetails = await getAppDetailsAndWebhooksData({ client });
@@ -51,6 +53,7 @@ export const webhookMigrationRunner = async ({
     client,
     webhookManifests: newWebhookManifests,
     existingWebhooksData: appDetails.webhooks || [],
+    dryRun,
   });
   logger.info("Migration finished.");
 };

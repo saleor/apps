@@ -2,10 +2,10 @@
 
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { recreateWebhooks, webhookMigrationRunner } from "@saleor/webhook-utils";
+import { webhookMigrationRunner } from "@saleor/webhook-utils";
 import { appWebhooks } from "../../webhooks";
 
-export const recreateWebhooksScript = async ({
+export const updateWebhooksScript = async ({
   authData,
   dryRun,
 }: {
@@ -21,6 +21,7 @@ export const recreateWebhooksScript = async ({
 
   await webhookMigrationRunner({
     client,
+    dryRun,
     getManifests: async ({ appDetails }) => {
       const webhooks = appDetails.webhooks;
 

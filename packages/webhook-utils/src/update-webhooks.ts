@@ -5,7 +5,7 @@ import { getWebhookIdsAndManifestsToUpdate } from "./filters/get-webhook-ids-and
 import { webhooksToAdd } from "./filters/webhooks-to-add";
 import { createLogger } from "@saleor/apps-shared";
 import { removeAppWebhook } from "./operations/remove-app-webhook";
-import { WebhookDetailsFragmentFragment } from "../generated/graphql";
+import { WebhookDetailsFragment } from "../generated/graphql";
 import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
 import { modifyAppWebhookFromManifest } from "./modify-app-webhook-from-manifest";
 import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
@@ -16,10 +16,10 @@ const logger = createLogger({ name: "updateWebhooks" });
 interface RollbackArgs {
   client: Client;
   webhookManifests: Array<WebhookManifest>;
-  existingWebhooksData: Array<WebhookDetailsFragmentFragment>;
-  addedWebhooks: Array<WebhookDetailsFragmentFragment>;
-  modifiedWebhooks: Array<WebhookDetailsFragmentFragment>;
-  removedWebhooks: Array<WebhookDetailsFragmentFragment>;
+  existingWebhooksData: Array<WebhookDetailsFragment>;
+  addedWebhooks: Array<WebhookDetailsFragment>;
+  modifiedWebhooks: Array<WebhookDetailsFragment>;
+  removedWebhooks: Array<WebhookDetailsFragment>;
 }
 
 const rollback = async ({
@@ -71,7 +71,8 @@ const rollback = async ({
 interface UpdateWebhooksArgs {
   client: Client;
   webhookManifests: Array<WebhookManifest>;
-  existingWebhooksData: Array<WebhookDetailsFragmentFragment>;
+  existingWebhooksData: Array<WebhookDetailsFragment>;
+  dryRun?: boolean;
 }
 
 /*
@@ -86,6 +87,7 @@ export const updateWebhooks = async ({
   client,
   webhookManifests,
   existingWebhooksData,
+  dryRun,
 }: UpdateWebhooksArgs) => {
   const addedWebhooks = [];
   const modifiedWebhooks = [];
@@ -115,6 +117,11 @@ export const updateWebhooks = async ({
     logger.info(
       `Scheduled changes: ${webhookIdsAndManifestsToBeUpdated} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookToBeRemoved.length} to be removed`,
     );
+
+    if (dryRun) {
+      logger.info("Dry run mode, changes will not be executed. Exiting.");
+      return;
+    }
 
     for (const webhookManifest of webhookManifestsToBeAdded) {
       logger.debug(`Adding webhook ${webhookManifest.name}`);

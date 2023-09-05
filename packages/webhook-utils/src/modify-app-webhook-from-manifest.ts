@@ -3,7 +3,7 @@ import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../generate
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { modifyAppWebhook } from "./operations/modify-app-webhook";
 
-interface CreateAppWebhookArgs {
+interface ModifyAppWebhookFromManifestArgs {
   client: Client;
   webhookId: string;
   webhookManifest: WebhookManifest;
@@ -13,7 +13,7 @@ export const modifyAppWebhookFromManifest = async ({
   client,
   webhookId,
   webhookManifest,
-}: CreateAppWebhookArgs) => {
+}: ModifyAppWebhookFromManifestArgs) => {
   return modifyAppWebhook({
     client,
     webhookId,

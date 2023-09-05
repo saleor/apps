@@ -37,8 +37,28 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
         ],
       }),
     ).toStrictEqual([
-      { webhookId: "1", newQuery: "newQuery1" },
-      { webhookId: "2", newQuery: "newQuery2" },
+      {
+        webhookId: "1",
+        webhookManifest: {
+          asyncEvents: [],
+          isActive: true,
+          name: "webhook1",
+          query: "newQuery1",
+          syncEvents: [],
+          targetUrl: "",
+        },
+      },
+      {
+        webhookId: "2",
+        webhookManifest: {
+          asyncEvents: [],
+          isActive: true,
+          name: "webhook2",
+          query: "newQuery2",
+          syncEvents: [],
+          targetUrl: "",
+        },
+      },
     ]);
   });
   it("Returns subset of entries, when existing webhook list contain some of them", () => {
@@ -67,7 +87,14 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
     ).toStrictEqual([
       {
         webhookId: "1",
-        newQuery: "newQuery1",
+        webhookManifest: {
+          asyncEvents: [],
+          isActive: true,
+          name: "webhook1",
+          query: "newQuery1",
+          syncEvents: [],
+          targetUrl: "",
+        },
       },
     ]);
   });
