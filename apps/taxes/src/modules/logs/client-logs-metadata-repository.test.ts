@@ -92,4 +92,24 @@ describe("ClientLogsMetadataRepository", () => {
       value: JSON.stringify([lastLog, nextLog]),
     });
   });
+  it("should return all logs", async () => {
+    mockSettingsManager = {
+      set: vi.fn(),
+      get: vi.fn().mockReturnValueOnce(JSON.stringify([{ date: "2021-09-02" }])),
+      delete: vi.fn(),
+    } as unknown as EncryptedMetadataManager;
+
+    const logsRepository = new ClientLogsMetadataRepository({
+      metadataKey: `test-logs`,
+      schema: logSchema,
+      settingsManager: mockSettingsManager,
+      options: {
+        limit: 2,
+      },
+    });
+
+    const logs = await logsRepository.getAll();
+
+    expect(logs).toEqual([{ date: "2021-09-02" }]);
+  });
 });
