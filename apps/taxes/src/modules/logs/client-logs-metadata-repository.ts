@@ -37,6 +37,7 @@ export type ClientLogsMetadataRepositoryParams<TLog extends unknown> = {
 
 /**
  * ClientLogsMetadataRepository is a generic class that can be used to store logs in the app metadata.
+ * The name "clientLogs" is used to distinguish it from the server logs. Client logs can appear in the app UI.
  */
 export class ClientLogsMetadataRepository<TLog extends unknown> implements MetadataLogs<TLog> {
   private readonly settingsManager: EncryptedMetadataManager;

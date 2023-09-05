@@ -1,9 +1,8 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { EditTaxJarConfiguration } from "../../../modules/taxjar/ui/edit-taxjar-configuration";
-import { AppColumns } from "../../../modules/ui/app-columns";
-import { TaxJarInstructions } from "../../../modules/taxjar/ui/taxjar-instructions";
-import { AppPageLayout } from "../../../modules/ui/app-page-layout";
 import { useRouter } from "next/router";
+import { EditTaxJarConfiguration } from "../../../../modules/taxjar/ui/edit-taxjar-configuration";
+import { TaxJarInstructions } from "../../../../modules/taxjar/ui/taxjar-instructions";
+import { AppPageLayout } from "../../../../modules/ui/app-page-layout";
 
 const Header = () => {
   return (
