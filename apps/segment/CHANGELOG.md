@@ -1,5 +1,24 @@
 # saleor-app-segment
 
+## 1.0.2
+
+### Patch Changes
+
+- e8660e8: Implemented ButtonsBox and SkeletonLayout from shared package. This should not have visual effect other than better looking Skeleton animation
+- e8660e8: Replaced GraphQL provider with shared package
+- e8660e8: Implemented ThemeSynchronizer from shared package
+- e8660e8: Extracted some tRPC utilities to shared package
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+  - @saleor/trpc@1.0.0
+
 ## 1.0.1
 
 ### Patch Changes

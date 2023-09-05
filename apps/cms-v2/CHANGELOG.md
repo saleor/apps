@@ -1,5 +1,20 @@
 # saleor-app-cms-v2
 
+## 2.3.2
+
+### Patch Changes
+
+- e8660e8: Extracted UI components and use shared package
+- 30140ee: Improved some text typos.
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 2.3.1
 
 ### Patch Changes

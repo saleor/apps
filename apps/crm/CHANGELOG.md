@@ -1,5 +1,15 @@
 # saleor-app-crm
 
+## 1.7.7
+
+### Patch Changes
+
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+
 ## 1.7.6
 
 ### Patch Changes

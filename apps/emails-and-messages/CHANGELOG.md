@@ -1,5 +1,18 @@
 # saleor-app-emails-and-messages
 
+## 1.9.9
+
+### Patch Changes
+
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+  - @saleor/apps-ui@1.2.0
+
 ## 1.9.8
 
 ### Patch Changes

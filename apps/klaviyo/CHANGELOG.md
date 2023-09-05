@@ -1,5 +1,16 @@
 # saleor-app-klaviyo
 
+## 1.8.6
+
+### Patch Changes
+
+- 30140ee: Improved some text typos.
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+- Updated dependencies [e8660e8]
+  - @saleor/apps-shared@1.9.0
+
 ## 1.8.5
 
 ### Patch Changes
