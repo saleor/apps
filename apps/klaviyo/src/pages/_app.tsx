@@ -1,11 +1,8 @@
-import "@saleor/macaw-ui/next/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import React from "react";
-import { AppProps } from "next/app";
-import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
-import { NoSSRWrapper } from "@saleor/apps-shared";
-import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
+import "@saleor/macaw-ui/next/style";
+import { AppProps } from "next/app";
 
 /**
  * Ensure instance is a singleton.
@@ -18,7 +15,9 @@ function SaleorApp({ Component, pageProps }: AppProps) {
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <ThemeProvider>
           <ThemeSynchronizer />
-          <Component {...pageProps} />
+          <Box padding={10}>
+            <Component {...pageProps} />
+          </Box>
         </ThemeProvider>
       </AppBridgeProvider>
     </NoSSRWrapper>

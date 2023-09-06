@@ -793,6 +793,9 @@ importers:
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@saleor/apps-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.127
         version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)

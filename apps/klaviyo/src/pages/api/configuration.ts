@@ -61,12 +61,20 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
         data: await getAppSettings(settings),
       });
     case "POST": {
-      await settings.set((request.body as PostRequestBody).data);
+      try {
+        await settings.set((JSON.parse(request.body) as PostRequestBody).data);
 
-      return res.json({
-        success: true,
-        data: await getAppSettings(settings),
-      });
+        return res.json({
+          success: true,
+          data: await getAppSettings(settings),
+        });
+      } catch (e) {
+        console.error(e);
+
+        return res.json({
+          success: false,
+        });
+      }
     }
     default:
       return res.status(405).end();

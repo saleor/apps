@@ -18,7 +18,9 @@
         "SENTRY_PROJECT",
         "SENTRY_AUTH_TOKEN",
         "NEXT_PUBLIC_VERCEL_ENV",
-        "SENTRY_ENVIRONMENT"
+        "SENTRY_ENVIRONMENT",
+        "APP_API_BASE_URL",
+        "APP_IFRAME_BASE_URL"
       ]
     }
   }
