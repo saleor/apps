@@ -1,6 +1,7 @@
 import { initTRPC } from "@trpc/server";
-import { TrpcContext } from "./trpc-context";
+
 import { Permission } from "@saleor/app-sdk/types";
+import { TrpcContext } from "@saleor/trpc";
 
 interface Meta {
   requiredClientPermissions?: Permission[];

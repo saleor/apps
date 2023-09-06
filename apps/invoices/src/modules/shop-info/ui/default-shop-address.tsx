@@ -2,7 +2,7 @@ import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { PropsWithChildren } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { ButtonsBox, Layout } from "@saleor/apps-ui";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 
 const Wrapper = ({ children }: PropsWithChildren<{}>) => {
   const { appBridge } = useAppBridge();
@@ -47,7 +47,7 @@ export const DefaultShopAddress = () => {
   if (isLoading) {
     return (
       <Wrapper>
-        <Text color={"textNeutralSubdued"}>Loading...</Text>
+        <SkeletonLayout.Section />
       </Wrapper>
     );
   }

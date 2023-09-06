@@ -1,7 +1,7 @@
 import * as trpcNext from "@trpc/server/adapters/next";
-import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createLogger } from "@saleor/apps-shared";
+import { createTrpcContext } from "@saleor/trpc";
 
 const logger = createLogger({ name: "tRPC error" });
 

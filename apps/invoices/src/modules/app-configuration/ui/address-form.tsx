@@ -2,7 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { ButtonsBox, Layout } from "@saleor/apps-ui";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
@@ -183,7 +183,7 @@ export const ConnectedAddressForm = (props: Props) => {
   }, [push]);
 
   if (channelOverrideConfigQuery.isLoading) {
-    return <Text color={"textNeutralSubdued"}>Loading</Text>;
+    return <SkeletonLayout.Section />;
   }
 
   return (

@@ -53,6 +53,8 @@ describe("appConfigurationRouter", function () {
           token: "TOKEN",
           saleorApiUrl: "http://localhost:8000/graphql/",
           appId: "app",
+          ssr: true,
+          baseUrl: "localhost:3000",
         })
         .upsertChannelOverride({
           channelSlug: "test",
