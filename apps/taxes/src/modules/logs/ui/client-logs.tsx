@@ -9,13 +9,13 @@ const RefreshLogsButton = () => {
   const { id } = router.query;
   const configurationId = z.string().parse(id ?? "");
 
-  const { refetch, isFetching } = trpcClient.clientLogs.getAll.useQuery({
+  const { refetch, isRefetching } = trpcClient.clientLogs.getAll.useQuery({
     id: configurationId,
   });
 
   return (
     <Button minWidth={16} variant="secondary" size="small" onClick={() => refetch()}>
-      {isFetching ? <Spinner /> : "Refresh"}
+      {isRefetching ? <Spinner /> : "Refresh"}
     </Button>
   );
 };
