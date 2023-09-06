@@ -1,5 +1,24 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
-import { ClientLogsTable, RefreshLogsButton } from "./client-logs-table";
+import { Box, Button, Spinner, Text } from "@saleor/macaw-ui/next";
+import { ClientLogsTable } from "./client-logs-table";
+import { useRouter } from "next/router";
+import { z } from "zod";
+import { trpcClient } from "../../trpc/trpc-client";
+
+const RefreshLogsButton = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const configurationId = z.string().parse(id ?? "");
+
+  const { refetch, isFetching } = trpcClient.clientLogs.getAll.useQuery({
+    id: configurationId,
+  });
+
+  return (
+    <Button minWidth={16} variant="secondary" size="small" onClick={() => refetch()}>
+      {isFetching ? <Spinner /> : "Refresh"}
+    </Button>
+  );
+};
 
 export const ClientLogs = () => {
   return (

@@ -1,15 +1,12 @@
+import { Text } from "@saleor/macaw-ui/next";
 import { Provider } from "jotai";
 import { Section } from "../../ui/app-section";
-import { Text } from "@saleor/macaw-ui/next";
-import { useRouter } from "next/router";
-import { ClientLogs } from "./client-logs";
-import { AppPageLayout } from "../../ui/app-page-layout";
 import { LOG_LIMIT } from "../client-logger";
+import { ClientLogs } from "./client-logs";
 
 const LogsInstructions = () => {
   return (
     <Section.Description
-      title="Logs"
       description={
         <>
           <Text as="p" marginBottom={8}>
@@ -27,44 +24,14 @@ const LogsInstructions = () => {
     />
   );
 };
-const Header = () => {
-  return <Section.Header>Display logs for your configuration</Section.Header>;
-};
 
 export const ClientLogsPage = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
   return (
-    <AppPageLayout
-      breadcrumbs={[
-        {
-          href: "/configuration",
-          label: "Configuration",
-        },
-        {
-          href: "/providers",
-          label: "Providers",
-        },
-        {
-          href: "/providers/avatax",
-          label: "AvaTax",
-        },
-        {
-          href: `/providers/avatax/${id}`,
-          label: String(id),
-        },
-        {
-          href: `/providers/avatax/${id}/logs`,
-          label: "Logs",
-        },
-      ]}
-      top={<Header />}
-    >
+    <>
       <LogsInstructions />
       <Provider>
         <ClientLogs />
       </Provider>
-    </AppPageLayout>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 import { SemanticChip } from "@saleor/apps-ui";
-import { Accordion, Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -76,22 +76,6 @@ const LogAccordion = ({ log }: { log: ClientLog }) => {
   );
 };
 
-export const RefreshLogsButton = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const configurationId = z.string().parse(id ?? "");
-
-  const { refetch } = trpcClient.clientLogs.getAll.useQuery({
-    id: configurationId,
-  });
-
-  return (
-    <Button variant="secondary" size="small" onClick={() => refetch()}>
-      Refresh
-    </Button>
-  );
-};
-
 export const ClientLogsTable = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -130,7 +114,6 @@ export const ClientLogsTable = () => {
           <Text color="textNeutralSubdued" variant="bodyEmp">
             No logs found for this configuration
           </Text>
-          <RefreshLogsButton />
         </Box>
       )}
       {isLoading && <Table.Skeleton />}
