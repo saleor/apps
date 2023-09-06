@@ -14,7 +14,7 @@
   "dependencies": {
     "@datocms/cma-client-browser": "2.0.0",
     "@hookform/resolvers": "^3.1.0",
-    "@saleor/app-sdk": "0.41.1",
+    "@saleor/app-sdk": "0.43.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.127",
