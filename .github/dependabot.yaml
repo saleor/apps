@@ -7,4 +7,14 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "[skip ci]"
+    groups:
+      trpc:
+        patterns:
+          - "@trpc/*"
+      codegen:
+        patterns:
+          - "@graphql-codegen/*"
+      rtl:
+        patterns:
+          - "@testing-library/*"
 
