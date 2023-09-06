@@ -18,7 +18,7 @@
     "@saleor/macaw-ui": "0.8.0-pre.127",
     "@sentry/nextjs": "7.67.0",
     "@tanstack/react-query": "4.29.19",
-    "@trpc/client": "10.34.0",
+    "@trpc/client": "10.38.1",
     "@trpc/next": "10.34.0",
     "@trpc/react-query": "10.34.0",
     "@trpc/server": "10.34.0",
