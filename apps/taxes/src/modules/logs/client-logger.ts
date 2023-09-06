@@ -1,21 +1,21 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { z } from "zod";
-import { createSettingsManager } from "../../app/metadata-manager";
+import { createSettingsManager } from "../app/metadata-manager";
 import {
   ClientLogsMetadataRepository,
   ClientLogsMetadataRepositoryParams,
   MetadataLogs,
-} from "../../logs/client-logs-metadata-repository";
+} from "./client-logs-metadata-repository";
 
-const logSchema = z.object({
+const clientLogSchema = z.object({
   date: z.string(),
   event: z.string(),
   status: z.enum(["success", "error"]),
   payload: z.string().optional(),
 });
 
-export const logInputSchema = logSchema.pick({ event: true, status: true }).merge(
+export const clientLogInputSchema = clientLogSchema.pick({ event: true, status: true }).merge(
   z.object({
     payload: z
       .object({
@@ -26,27 +26,27 @@ export const logInputSchema = logSchema.pick({ event: true, status: true }).merg
   }),
 );
 
-type TaxJarLogInput = z.infer<typeof logInputSchema>;
+type LogInput = z.infer<typeof clientLogInputSchema>;
 
-export type TaxJarLog = z.infer<typeof logSchema>;
+export type ClientLog = z.infer<typeof clientLogSchema>;
 
-export const TAXJAR_LOG_LIMIT = 100;
+export const LOG_LIMIT = 100;
 
-export class TaxJarClientLogger implements MetadataLogs<TaxJarLog> {
-  private logRepository: ClientLogsMetadataRepository<TaxJarLog>;
+export class ClientLogger implements MetadataLogs<ClientLog> {
+  private logRepository: ClientLogsMetadataRepository<ClientLog>;
 
   constructor({
     settingsManager,
     configurationId,
-  }: Pick<ClientLogsMetadataRepositoryParams<TaxJarLog>, "settingsManager"> & {
+  }: Pick<ClientLogsMetadataRepositoryParams<ClientLog>, "settingsManager"> & {
     configurationId: string;
   }) {
     this.logRepository = new ClientLogsMetadataRepository({
       metadataKey: `logs-${configurationId}`,
-      schema: logSchema,
+      schema: clientLogSchema,
       settingsManager,
       options: {
-        limit: TAXJAR_LOG_LIMIT,
+        limit: LOG_LIMIT,
       },
     });
   }
@@ -55,8 +55,8 @@ export class TaxJarClientLogger implements MetadataLogs<TaxJarLog> {
     return this.logRepository.getAll();
   }
 
-  push({ event, payload, status }: TaxJarLogInput) {
-    const log: TaxJarLog = {
+  push({ event, payload, status }: LogInput) {
+    const log: ClientLog = {
       date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
       event,
       payload: JSON.stringify(payload, null, 4),
@@ -67,7 +67,7 @@ export class TaxJarClientLogger implements MetadataLogs<TaxJarLog> {
   }
 }
 
-export function createTaxJarClientLogger({
+export function createClientLogger({
   authData,
   configurationId,
 }: {
@@ -81,7 +81,7 @@ export function createTaxJarClientLogger({
   });
   const settingsManager = createSettingsManager(client, appId);
 
-  return new TaxJarClientLogger({
+  return new ClientLogger({
     settingsManager,
     configurationId,
   });

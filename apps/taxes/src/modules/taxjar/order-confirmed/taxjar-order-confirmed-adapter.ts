@@ -7,7 +7,7 @@ import { CreateOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderConfirmedPayloadService } from "./taxjar-order-confirmed-payload.service";
 import { TaxJarOrderConfirmedResponseTransformer } from "./taxjar-order-confirmed-response-transformer";
-import { TaxJarClientLogger } from "../logs/taxjar-client-logger";
+import { ClientLogger } from "../../logs/client-logger";
 
 export type TaxJarOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -21,7 +21,7 @@ export class TaxJarOrderConfirmedAdapter
   private logger: Logger;
   private readonly config: TaxJarConfig;
   private readonly authData: AuthData;
-  private clientLogger: TaxJarClientLogger;
+  private clientLogger: ClientLogger;
 
   constructor({
     config,
@@ -29,7 +29,7 @@ export class TaxJarOrderConfirmedAdapter
     clientLogger,
   }: {
     config: TaxJarConfig;
-    clientLogger: TaxJarClientLogger;
+    clientLogger: ClientLogger;
     authData: AuthData;
   }) {
     this.config = config;

@@ -6,35 +6,31 @@ import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled"
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxClientLogger, createAvataxClientLogger } from "./logs/avatax-client-logger";
+import { ClientLogger, createClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   private logger: Logger;
   private config: AvataxConfig;
-  private clientLogger: AvataxClientLogger;
+  private clientLogger: ClientLogger;
   private authData: AuthData;
 
   constructor({
     config,
     authData,
-    configurationId,
+    clientLogger,
   }: {
     config: AvataxConfig;
     authData: AuthData;
-    configurationId: string;
+    clientLogger: ClientLogger;
   }) {
     this.logger = createLogger({
       name: "AvataxWebhookService",
     });
     this.authData = authData;
     this.config = config;
-
-    this.clientLogger = createAvataxClientLogger({
-      authData,
-      configurationId,
-    });
+    this.clientLogger = clientLogger;
   }
 
   async calculateTaxes(payload: CalculateTaxesPayload) {

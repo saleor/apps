@@ -2,22 +2,22 @@ import { SemanticChip } from "@saleor/apps-ui";
 import { Accordion, Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
 import { z } from "zod";
-import { trpcClient } from "../../../trpc/trpc-client";
-import { Table } from "../../../ui/table";
-import { AvataxLog } from "../avatax-client-logger";
+import { trpcClient } from "../../trpc/trpc-client";
+import { Table } from "../../ui/table";
+import { ClientLog } from "../client-logger";
 
 type SemanticChipProps = Parameters<typeof SemanticChip>[0];
 
-const chipVariantMap: Record<AvataxLog["status"], SemanticChipProps["variant"]> = {
+const chipVariantMap: Record<ClientLog["status"], SemanticChipProps["variant"]> = {
   success: "success",
   error: "error",
 };
 
-const StatusCell = ({ status }: { status: AvataxLog["status"] }) => {
+const StatusCell = ({ status }: { status: ClientLog["status"] }) => {
   return <SemanticChip variant={chipVariantMap[status]}>{status}</SemanticChip>;
 };
 
-const LogRow = ({ log }: { log: AvataxLog }) => {
+const LogRow = ({ log }: { log: ClientLog }) => {
   return (
     <>
       <Text>{log.event}</Text>
@@ -29,7 +29,7 @@ const LogRow = ({ log }: { log: AvataxLog }) => {
   );
 };
 
-const LogAccordion = ({ log }: { log: AvataxLog }) => {
+const LogAccordion = ({ log }: { log: ClientLog }) => {
   if (log.payload) {
     const prettyPayload = JSON.stringify(JSON.parse(log.payload), null, 2);
 
@@ -81,7 +81,7 @@ export const RefreshLogsButton = () => {
   const { id } = router.query;
   const configurationId = z.string().parse(id ?? "");
 
-  const { refetch } = trpcClient.avataxClientLogs.getAll.useQuery({
+  const { refetch } = trpcClient.clientLogs.getAll.useQuery({
     id: configurationId,
   });
 
@@ -92,7 +92,7 @@ export const RefreshLogsButton = () => {
   );
 };
 
-export const AvataxLogsTable = () => {
+export const ClientLogsTable = () => {
   const router = useRouter();
   const { id } = router.query;
   const configurationId = z.string().parse(id ?? "");
@@ -101,7 +101,7 @@ export const AvataxLogsTable = () => {
     data: logs = [],
     isFetched,
     isLoading,
-  } = trpcClient.avataxClientLogs.getAll.useQuery({
+  } = trpcClient.clientLogs.getAll.useQuery({
     id: configurationId,
   });
   const isEmpty = isFetched && logs.length === 0;

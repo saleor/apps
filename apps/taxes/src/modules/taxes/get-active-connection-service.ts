@@ -9,6 +9,7 @@ import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
+import { createClientLogger } from "../logs/client-logger";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -24,6 +25,10 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     });
 
     const taxProviderName = providerConnection.provider;
+    const clientLogger = createClientLogger({
+      authData,
+      configurationId: providerConnection.id,
+    });
 
     switch (taxProviderName) {
       case "taxjar": {
@@ -31,7 +36,7 @@ class ActiveTaxProviderService implements ProviderWebhookService {
         this.client = new TaxJarWebhookService({
           config: providerConnection.config,
           authData: this.authData,
-          configurationId: providerConnection.id,
+          clientLogger,
         });
         break;
       }
@@ -41,7 +46,7 @@ class ActiveTaxProviderService implements ProviderWebhookService {
         this.client = new AvataxWebhookService({
           config: providerConnection.config,
           authData: this.authData,
-          configurationId: providerConnection.id,
+          clientLogger,
         });
         break;
       }

@@ -5,7 +5,7 @@ import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxClientLogger } from "../logs/avatax-client-logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
@@ -20,7 +20,7 @@ export class AvataxCalculateTaxesAdapter
   private logger: Logger;
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
-  private readonly clientLogger: AvataxClientLogger;
+  private readonly clientLogger: ClientLogger;
 
   constructor({
     config,
@@ -28,7 +28,7 @@ export class AvataxCalculateTaxesAdapter
     clientLogger,
   }: {
     config: AvataxConfig;
-    clientLogger: AvataxClientLogger;
+    clientLogger: ClientLogger;
     authData: AuthData;
   }) {
     this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });

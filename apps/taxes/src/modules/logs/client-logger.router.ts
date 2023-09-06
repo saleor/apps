@@ -1,10 +1,9 @@
-import { router } from "../../trpc/trpc-server";
-
-import { createLogger } from "../../../lib/logger";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
-import { AvataxClientLogger, logInputSchema } from "./avatax-client-logger";
+import { createSettingsManager } from "../app/metadata-manager";
+import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { ClientLogger, clientLogInputSchema } from "./client-logger";
 import { z } from "zod";
+import { router } from "../trpc/trpc-server";
+import { createLogger } from "../../lib/logger";
 
 const logProcedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -20,21 +19,21 @@ const logIdSchema = z.object({
   id: z.string(),
 });
 
-const pushLogInputSchema = z
+const pushClientLogInputSchema = z
   .object({
-    log: logInputSchema,
+    log: clientLogInputSchema,
   })
   .merge(logIdSchema);
 
-export const avataxClientLoggerRouter = router({
-  push: logProcedure.input(pushLogInputSchema).query(async ({ ctx, input }) => {
+export const clientLoggerRouter = router({
+  push: logProcedure.input(pushClientLogInputSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      name: "avataxClientLoggerRouter.push",
+      name: "ClientLoggerRouter.push",
     });
 
     logger.debug("Pushing log to metadata");
 
-    const loggerRepository = new AvataxClientLogger({
+    const loggerRepository = new ClientLogger({
       settingsManager: ctx.settingsManager,
       configurationId: input.id,
     });
@@ -43,12 +42,12 @@ export const avataxClientLoggerRouter = router({
   }),
   getAll: logProcedure.input(logIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger({
-      name: "avataxClientLoggerRouter.getAll",
+      name: "ClientLoggerRouter.getAll",
     });
 
     logger.debug("Getting logs from metadata");
 
-    const loggerRepository = new AvataxClientLogger({
+    const loggerRepository = new ClientLogger({
       settingsManager: ctx.settingsManager,
       configurationId: input.id,
     });

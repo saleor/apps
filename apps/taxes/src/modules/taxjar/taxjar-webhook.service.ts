@@ -7,24 +7,24 @@ import { Logger, createLogger } from "../../lib/logger";
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
-import { TaxJarClientLogger, createTaxJarClientLogger } from "./logs/taxjar-client-logger";
 import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
+import { ClientLogger, createClientLogger } from "../logs/client-logger";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
   private logger: Logger;
   private config: TaxJarConfig;
-  private clientLogger: TaxJarClientLogger;
+  private clientLogger: ClientLogger;
   private authData: AuthData;
 
   constructor({
-    configurationId,
+    clientLogger,
     config,
     authData,
   }: {
-    configurationId: string;
+    clientLogger: ClientLogger;
     config: TaxJarConfig;
     authData: AuthData;
   }) {
@@ -33,11 +33,8 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.client = taxJarClient;
     this.config = config;
     this.authData = authData;
+    this.clientLogger = clientLogger;
 
-    this.clientLogger = createTaxJarClientLogger({
-      authData,
-      configurationId,
-    });
     this.logger = createLogger({
       name: "TaxJarWebhookService",
     });

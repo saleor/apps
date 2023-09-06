@@ -7,7 +7,7 @@ import { FetchTaxForOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarCalculateTaxesPayloadService } from "./taxjar-calculate-taxes-payload-service";
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
-import { TaxJarClientLogger } from "../logs/taxjar-client-logger";
+import { ClientLogger } from "../../logs/client-logger";
 
 export type TaxJarCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
@@ -22,7 +22,7 @@ export class TaxJarCalculateTaxesAdapter
   private logger: Logger;
   private authData: AuthData;
   private readonly config: TaxJarConfig;
-  private readonly clientLogger: TaxJarClientLogger;
+  private readonly clientLogger: ClientLogger;
 
   constructor({
     config,
@@ -30,7 +30,7 @@ export class TaxJarCalculateTaxesAdapter
     authData,
   }: {
     config: TaxJarConfig;
-    clientLogger: TaxJarClientLogger;
+    clientLogger: ClientLogger;
     authData: AuthData;
   }) {
     this.logger = createLogger({ name: "TaxJarCalculateTaxesAdapter" });

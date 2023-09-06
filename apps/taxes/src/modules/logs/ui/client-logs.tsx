@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { AvataxLogsTable, RefreshLogsButton } from "./avatax-logs-table";
+import { ClientLogsTable, RefreshLogsButton } from "./client-logs-table";
 
-export const AvataxLogs = () => {
+export const ClientLogs = () => {
   return (
     <section>
       <Box alignItems={"center"} display={"flex"} justifyContent={"space-between"}>
@@ -10,7 +10,7 @@ export const AvataxLogs = () => {
         </Text>
         <RefreshLogsButton />
       </Box>
-      <AvataxLogsTable />
+      <ClientLogsTable />
     </section>
   );
 };

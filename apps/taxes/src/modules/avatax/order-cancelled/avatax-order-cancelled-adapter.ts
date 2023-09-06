@@ -3,23 +3,17 @@ import { OrderCancelledPayload } from "../../../pages/api/webhooks/order-cancell
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxClientLogger } from "../logs/avatax-client-logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
   private logger: Logger;
-  private readonly clientLogger: AvataxClientLogger;
+  private readonly clientLogger: ClientLogger;
   private readonly config: AvataxConfig;
 
-  constructor({
-    config,
-    clientLogger,
-  }: {
-    config: AvataxConfig;
-    clientLogger: AvataxClientLogger;
-  }) {
+  constructor({ config, clientLogger }: { config: AvataxConfig; clientLogger: ClientLogger }) {
     this.logger = createLogger({ name: "AvataxOrderCancelledAdapter" });
     this.config = config;
     this.clientLogger = clientLogger;

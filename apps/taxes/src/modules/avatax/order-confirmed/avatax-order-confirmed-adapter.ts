@@ -5,7 +5,7 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxClientLogger } from "../logs/avatax-client-logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
@@ -20,7 +20,7 @@ export class AvataxOrderConfirmedAdapter
   private logger: Logger;
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
-  private readonly clientLogger: AvataxClientLogger;
+  private readonly clientLogger: ClientLogger;
 
   constructor({
     config,
@@ -28,7 +28,7 @@ export class AvataxOrderConfirmedAdapter
     clientLogger,
   }: {
     config: AvataxConfig;
-    clientLogger: AvataxClientLogger;
+    clientLogger: ClientLogger;
     authData: AuthData;
   }) {
     this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
