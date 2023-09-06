@@ -1,9 +1,9 @@
 import { Box, ChevronRightIcon, Text, Button } from "@saleor/macaw-ui/next";
-import { AppSection } from "../../ui/AppSection";
 import { useRouter } from "next/router";
 import { ConnectedAddressForm } from "../ui/address-form";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Layout } from "@saleor/apps-ui";
 
 export const ChannelConfigView = () => {
   const {
@@ -15,7 +15,7 @@ export const ChannelConfigView = () => {
   const { notifySuccess } = useDashboardNotification();
 
   if (!channel) {
-    return null;
+    return null; // TODO: error
   }
 
   return (
@@ -29,10 +29,9 @@ export const ChannelConfigView = () => {
           <Text>{channel}</Text>
         </Box>
       </Box>
-      <AppSection
+      <Layout.AppSection
         includePadding={true}
         heading={"Shop address per channel"}
-        mainContent={<ConnectedAddressForm channelSlug={channel as string} />}
         sideContent={
           <Box>
             <Text marginBottom={5} as={"p"}>
@@ -51,7 +50,9 @@ export const ChannelConfigView = () => {
             </Button>
           </Box>
         }
-      />
+      >
+        <ConnectedAddressForm channelSlug={channel as string} />
+      </Layout.AppSection>
     </Box>
   );
 };

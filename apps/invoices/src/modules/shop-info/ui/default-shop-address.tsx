@@ -2,30 +2,31 @@ import { Box, Text, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { PropsWithChildren } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 
 const Wrapper = ({ children }: PropsWithChildren<{}>) => {
   const { appBridge } = useAppBridge();
 
   return (
-    <Box>
-      <Box display={"flex"} justifyContent={"space-between"} marginBottom={5}>
-        <Text variant={"heading"}>Default address of the shop</Text>
-        <Button
-          size={"small"}
-          variant={"tertiary"}
-          onClick={() => {
-            appBridge?.dispatch(
-              actions.Redirect({
-                to: "/site-settings",
-              })
-            );
-          }}
-        >
-          <Text color={"textNeutralSubdued"}>Edit</Text>
-        </Button>
-      </Box>
+    <Layout.AppSectionCard
+      footer={
+        <ButtonsBox>
+          <Button
+            onClick={() => {
+              appBridge?.dispatch(
+                actions.Redirect({
+                  to: "/site-settings",
+                }),
+              );
+            }}
+          >
+            Edit
+          </Button>
+        </ButtonsBox>
+      }
+    >
       <Box>{children}</Box>
-    </Box>
+    </Layout.AppSectionCard>
   );
 };
 
@@ -46,7 +47,7 @@ export const DefaultShopAddress = () => {
   if (isLoading) {
     return (
       <Wrapper>
-        <Text color={"textNeutralSubdued"}>Loading...</Text>
+        <SkeletonLayout.Section />
       </Wrapper>
     );
   }
@@ -70,6 +71,9 @@ export const DefaultShopAddress = () => {
   if (data && data.companyAddress) {
     return (
       <Wrapper>
+        <Text as="p" marginBottom={4} variant="caption">
+          This address will be used if custom address is not set for channel
+        </Text>
         <Text size={"small"} as={"p"}>
           {data.companyAddress.companyName}
         </Text>
