@@ -6,12 +6,11 @@ import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import React, { ReactElement } from "react";
 import { AppProps } from "next/app";
 
-import { NoSSRWrapper } from "@saleor/apps-shared";
+import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
 
 import { NextPage } from "next";
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 
 /**
  * Ensure instance is a singleton.
