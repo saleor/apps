@@ -91,7 +91,7 @@ export const ClientLogsTable = () => {
   const isEmpty = isFetched && logs.length === 0;
 
   return (
-    <Box __maxHeight={420} overflowY={"scroll"} marginTop={10}>
+    <Box __maxHeight={"80vh"} overflowY={"scroll"} marginTop={10}>
       {logs.map((log, index, array) => {
         const isLast = index === array.length - 1;
 
