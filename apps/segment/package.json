@@ -12,7 +12,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.1.0",
+    "@hookform/resolvers": "^3.3.1",
     "@saleor/app-sdk": "0.43.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
