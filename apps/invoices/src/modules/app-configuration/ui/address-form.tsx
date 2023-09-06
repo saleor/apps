@@ -1,13 +1,14 @@
 import { Controller, useForm } from "react-hook-form";
 
-import React, { useCallback, useEffect } from "react";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
-import { SellerAddress } from "../address";
-import { trpcClient } from "../../trpc/trpc-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
 import { useRouter } from "next/router";
+import { useCallback } from "react";
+import { z } from "zod";
+import { trpcClient } from "../../trpc/trpc-client";
+import { SellerAddress } from "../address";
 import { AddressV2Schema, AddressV2Shape } from "../schema-v2/app-config-schema.v2";
 
 type Props = {
@@ -57,12 +58,29 @@ export const AddressForm = (props: Props & InnerFormProps) => {
   });
 
   return (
-    <form
+    <Layout.AppSectionCard
+      as="form"
+      footer={
+        <ButtonsBox>
+          <Button
+            variant="tertiary"
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onCancel();
+            }}
+          >
+            <Text color={"textNeutralSubdued"}>Cancel</Text>
+          </Button>
+          <Button type="submit" variant="primary">
+            Save
+          </Button>
+        </ButtonsBox>
+      }
       onSubmit={handleSubmit((data, event) => {
         return props.onSubmit(data);
       })}
     >
-      <Box display={"grid"} gap={3} marginBottom={9}>
+      <Box display={"grid"} gap={3}>
         {fieldsBlock1.map((fieldName) => (
           <Controller
             key={fieldName}
@@ -128,21 +146,7 @@ export const AddressForm = (props: Props & InnerFormProps) => {
           />
         ))}
       </Box>
-      <Box display={"grid"} justifyContent={"flex-end"} gap={1.5} gridAutoFlow={"column"}>
-        <Button
-          variant="tertiary"
-          onClick={(e) => {
-            e.stopPropagation();
-            props.onCancel();
-          }}
-        >
-          <Text color={"textNeutralSubdued"}>Cancel</Text>
-        </Button>
-        <Button type="submit" variant="primary">
-          Save
-        </Button>
-      </Box>
-    </form>
+    </Layout.AppSectionCard>
   );
 };
 
@@ -164,9 +168,6 @@ export const ConnectedAddressForm = (props: Props) => {
 
   const { push } = useRouter();
 
-  const addressData =
-    channelOverrideConfigQuery.data && channelOverrideConfigQuery.data[props.channelSlug];
-
   const submitHandler = useCallback(
     async (data: AddressV2Shape) => {
       return upsertConfigMutation.mutate({
@@ -174,7 +175,7 @@ export const ConnectedAddressForm = (props: Props) => {
         channelSlug: props.channelSlug,
       });
     },
-    [props.channelSlug, upsertConfigMutation]
+    [props.channelSlug, upsertConfigMutation],
   );
 
   const onCancelHandler = useCallback(() => {
@@ -182,7 +183,7 @@ export const ConnectedAddressForm = (props: Props) => {
   }, [push]);
 
   if (channelOverrideConfigQuery.isLoading) {
-    return <Text color={"textNeutralSubdued"}>Loading</Text>;
+    return <SkeletonLayout.Section />;
   }
 
   return (

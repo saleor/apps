@@ -1,6 +1,7 @@
 import { Box, Text, Chip, Button } from "@saleor/macaw-ui/next";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useRouter } from "next/router";
+import { SkeletonLayout } from "@saleor/apps-ui";
 
 const defaultAddressChip = (
   <Chip __display={"inline-block"} size={"large"}>
@@ -17,7 +18,7 @@ export const PerChannelConfigList = () => {
   const { push } = useRouter();
 
   if (shopChannelsQuery.isLoading || channelsOverridesQuery.isLoading) {
-    return <Text color={"textNeutralSubdued"}>Loading...</Text>;
+    return <SkeletonLayout.Section />;
   }
 
   const renderChannelAddress = (slug: string) => {
