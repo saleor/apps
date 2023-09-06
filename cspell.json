@@ -67,7 +67,8 @@
     "vals",
     "urql",
     "Protos",
-    "pino"
+    "pino",
+    "IFRAME"
   ],
   "ignorePaths": [
     "node_modules",
