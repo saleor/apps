@@ -38,7 +38,7 @@
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
-  "packageManager": "pnpm@8.2.0",
+  "packageManager": "pnpm@8.7.4",
   "private": true,
   "workspaces": [
     "apps/*",
