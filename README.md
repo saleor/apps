@@ -59,6 +59,11 @@ In the `apps` folder, you will find the following applications:
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
 - [taxes](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes) - calculate order and checkout taxes using external services.
 
+## Another official apps
+
+Some of Saleor apps are available in separate repositories:
+- [Stripe](https://github.com/saleor/saleor-app-payment-stripe)
+
 ## Development
 
 You can find the documentation for saleor/apps on [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/app-store/development).
