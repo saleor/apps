@@ -20,7 +20,7 @@ export type CalculateTaxesPayload = Extract<
 >;
 
 function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
-  if (!payload.taxBase.lines) {
+  if (!payload.taxBase.lines.length) {
     throw new Error("No lines found in taxBase");
   }
 
@@ -48,7 +48,7 @@ export default checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, 
 
   try {
     verifyCalculateTaxesPayload(payload);
-    logger.debug("Payload validated succesfully");
+    logger.debug("Payload validated Successfully");
 
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;

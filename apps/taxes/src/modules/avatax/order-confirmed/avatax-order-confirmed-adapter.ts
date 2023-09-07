@@ -5,6 +5,7 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { ClientLogger } from "../../logs/client-logger";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
@@ -17,9 +18,23 @@ export class AvataxOrderConfirmedAdapter
   implements WebhookAdapter<AvataxOrderConfirmedPayload, AvataxOrderConfirmedResponse>
 {
   private logger: Logger;
+  private readonly config: AvataxConfig;
+  private readonly authData: AuthData;
+  private readonly clientLogger: ClientLogger;
 
-  constructor(private readonly config: AvataxConfig, private authData: AuthData) {
+  constructor({
+    config,
+    authData,
+    clientLogger,
+  }: {
+    config: AvataxConfig;
+    clientLogger: ClientLogger;
+    authData: AuthData;
+  }) {
     this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
+    this.config = config;
+    this.authData = authData;
+    this.clientLogger = clientLogger;
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {
@@ -31,15 +46,37 @@ export class AvataxOrderConfirmedAdapter
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
     const client = new AvataxClient(this.config);
-    const response = await client.createTransaction(target);
 
-    this.logger.debug("AvaTax createTransaction successfully responded");
+    try {
+      const response = await client.createTransaction(target);
 
-    const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
-    const transformedResponse = responseTransformer.transform(response);
+      this.clientLogger.push({
+        event: "[OrderConfirmed] createTransaction",
+        status: "success",
+        payload: {
+          input: target,
+          output: response,
+        },
+      });
 
-    this.logger.debug("Transformed AvaTax createTransaction response");
+      this.logger.debug("AvaTax createTransaction successfully responded");
 
-    return transformedResponse;
+      const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
+      const transformedResponse = responseTransformer.transform(response);
+
+      this.logger.debug("Transformed AvaTax createTransaction response");
+
+      return transformedResponse;
+    } catch (error) {
+      this.clientLogger.push({
+        event: "[OrderConfirmed] createTransaction",
+        status: "error",
+        payload: {
+          input: target,
+          output: error,
+        },
+      });
+      throw error;
+    }
   }
 }

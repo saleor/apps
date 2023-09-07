@@ -1,6 +1,7 @@
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppColumns } from "../modules/ui/app-columns";
+import { AppPageLayout } from "../modules/ui/app-page-layout";
 import { Section } from "../modules/ui/app-section";
 import { MatcherSection } from "../modules/ui/matcher-section";
 
@@ -14,11 +15,19 @@ const Header = () => {
 
 const ConfigurationPage = () => {
   return (
-    <AppColumns top={<Header />}>
+    <AppPageLayout
+      top={<Header />}
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+      ]}
+    >
       <ProvidersSection />
       <ChannelSection />
       <MatcherSection />
-    </AppColumns>
+    </AppPageLayout>
   );
 };
 

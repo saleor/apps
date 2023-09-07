@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui/next";
-import { AppColumns } from "../../../modules/ui/app-columns";
 import { CreateTaxJarConfiguration } from "../../../modules/taxjar/ui/create-taxjar-configuration";
 import { TaxJarInstructions } from "../../../modules/taxjar/ui/taxjar-instructions";
+import { AppPageLayout } from "../../../modules/ui/app-page-layout";
 
 const Header = () => {
   return (
@@ -15,12 +15,26 @@ const Header = () => {
 
 const NewTaxJarPage = () => {
   return (
-    <main>
-      <AppColumns top={<Header />}>
-        <TaxJarInstructions />
-        <CreateTaxJarConfiguration />
-      </AppColumns>
-    </main>
+    <AppPageLayout
+      top={<Header />}
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+        {
+          href: "/providers",
+          label: "Providers",
+        },
+        {
+          href: "/providers/taxjar",
+          label: "TaxJar",
+        },
+      ]}
+    >
+      <TaxJarInstructions />
+      <CreateTaxJarConfiguration />
+    </AppPageLayout>
   );
 };
 

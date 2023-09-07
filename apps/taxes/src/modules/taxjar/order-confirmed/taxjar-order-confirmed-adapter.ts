@@ -7,6 +7,7 @@ import { CreateOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderConfirmedPayloadService } from "./taxjar-order-confirmed-payload.service";
 import { TaxJarOrderConfirmedResponseTransformer } from "./taxjar-order-confirmed-response-transformer";
+import { ClientLogger } from "../../logs/client-logger";
 
 export type TaxJarOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -18,7 +19,22 @@ export class TaxJarOrderConfirmedAdapter
   implements WebhookAdapter<TaxJarOrderConfirmedPayload, TaxJarOrderConfirmedResponse>
 {
   private logger: Logger;
-  constructor(private readonly config: TaxJarConfig, private authData: AuthData) {
+  private readonly config: TaxJarConfig;
+  private readonly authData: AuthData;
+  private clientLogger: ClientLogger;
+
+  constructor({
+    config,
+    authData,
+    clientLogger,
+  }: {
+    config: TaxJarConfig;
+    clientLogger: ClientLogger;
+    authData: AuthData;
+  }) {
+    this.config = config;
+    this.authData = authData;
+    this.clientLogger = clientLogger;
     this.logger = createLogger({ name: "TaxJarOrderConfirmedAdapter" });
   }
 
@@ -30,14 +46,36 @@ export class TaxJarOrderConfirmedAdapter
     this.logger.debug("Calling TaxJar fetchTaxForOrder with transformed payload...");
 
     const client = new TaxJarClient(this.config);
-    const response = await client.createOrder(target);
 
-    this.logger.debug("TaxJar createOrder successfully responded");
-    const responseTransformer = new TaxJarOrderConfirmedResponseTransformer();
-    const transformedResponse = responseTransformer.transform(response);
+    try {
+      const response = await client.createOrder(target);
 
-    this.logger.debug("Transformed TaxJar createOrder response");
+      this.clientLogger.push({
+        event: "[OrderConfirmed] createOrder",
+        status: "success",
+        payload: {
+          input: target,
+          output: response,
+        },
+      });
 
-    return transformedResponse;
+      this.logger.debug("TaxJar createOrder successfully responded");
+      const responseTransformer = new TaxJarOrderConfirmedResponseTransformer();
+      const transformedResponse = responseTransformer.transform(response);
+
+      this.logger.debug("Transformed TaxJar createOrder response");
+
+      return transformedResponse;
+    } catch (error) {
+      this.clientLogger.push({
+        event: "[OrderConfirmed] createOrder",
+        status: "error",
+        payload: {
+          input: target,
+          output: error,
+        },
+      });
+      throw error;
+    }
   }
 }

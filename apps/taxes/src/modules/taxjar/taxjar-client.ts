@@ -47,7 +47,7 @@ export class TaxJarClient {
   }
 
   /**
-   * In the past, we've had some problems with TaxJar validateAddress. It looks like it works now, but we should keep an eye on it.
+   * In the past, we've had some problems with TaxJar validateAddress. It looks like only works on production (live token, not sandbox token).
    * @see https://github.com/taxjar/taxjar-node/issues/70
    */
   async validateAddress({ params }: ValidateAddressArgs) {
