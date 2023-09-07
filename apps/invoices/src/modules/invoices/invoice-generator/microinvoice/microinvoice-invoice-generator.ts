@@ -1,6 +1,7 @@
-import { OrderPayloadFragment } from "../../../../../generated/graphql";
-import { AddressV2Shape } from "../../../app-configuration/schema-v2/app-config-schema.v2";
 import { InvoiceGenerator } from "../invoice-generator";
+import { Order, OrderPayloadFragment } from "../../../../../generated/graphql";
+import { SellerShopConfig } from "../../../app-configuration/schema-v1/app-config-v1";
+import { AddressV2Shape } from "../../../app-configuration/schema-v2/app-config-schema.v2";
 const Microinvoice = require("microinvoice");
 
 export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
@@ -18,17 +19,7 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
     const { invoiceNumber, order, companyAddressData, filename } = input;
 
     const microinvoiceInstance = new Microinvoice({
-      style: {
-        /*
-         * header: {
-         *   image: {
-         *     path: "./examples/logo.png",
-         *     width: 50,
-         *     height: 19,
-         *   },
-         * },
-         */
-      },
+      style: {},
       data: {
         invoice: {
           name: `Invoice ${invoiceNumber}`,
@@ -62,12 +53,6 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
                 order.billingAddress?.country.country,
               ],
             },
-            /*
-             * {
-             *   label: "Tax Identifier",
-             *   value: "todo",
-             * },
-             */
           ],
 
           seller: [
@@ -83,28 +68,9 @@ export class MicroinvoiceInvoiceGenerator implements InvoiceGenerator {
                 companyAddressData.countryArea,
               ],
             },
-            /*
-             * {
-             *   label: "Tax Identifier",
-             *   value: "todo",
-             * },
-             */
           ],
 
-          legal: [
-            /*
-             * {
-             *   value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-             *   weight: "bold",
-             *   color: "primary",
-             * },
-             * {
-             *   value: "sed do eiusmod tempor incididunt ut labore et dolore magna.",
-             *   weight: "bold",
-             *   color: "secondary",
-             * },
-             */
-          ],
+          legal: [],
 
           details: {
             header: [

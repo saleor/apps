@@ -4,7 +4,7 @@ import { z } from "zod";
 export class AppConfigV2 {
   private rootData: AppConfigV2Shape = { channelsOverrides: {} };
 
-  constructor(initialData?: AppConfigV2Shape | unknown) {
+  constructor(initialData?: AppConfigV2Shape) {
     if (initialData) {
       this.rootData = AppConfigV2Schema.parse(initialData);
     }
