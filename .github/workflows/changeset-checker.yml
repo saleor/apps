@@ -1,0 +1,24 @@
+name: Changeset checker
+
+on:
+  pull_request:
+    branches-ignore:    
+      - 'changeset-release/**'
+jobs:
+  changeset_checker:
+    name: Changeset checker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # check out full history
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2.2.4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Changeset added
+        run: npx changeset status --since origin/main
