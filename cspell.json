@@ -80,6 +80,7 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/graphql.ts",
-    "**/CHANGELOG.md"
+    "**/CHANGELOG.md",
+    "**/schema.graphql"
   ]
 }
