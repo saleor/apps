@@ -68,7 +68,8 @@
     "urql",
     "Protos",
     "pino",
-    "IFRAME"
+    "IFRAME",
+    "dedupe"
   ],
   "ignorePaths": [
     "node_modules",
