@@ -68,7 +68,8 @@
     "urql",
     "Protos",
     "pino",
-    "IFRAME"
+    "IFRAME",
+    "dedupe"
   ],
   "ignorePaths": [
     "node_modules",
@@ -80,6 +81,7 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/graphql.ts",
-    "**/CHANGELOG.md"
+    "**/CHANGELOG.md",
+    "**/schema.graphql"
   ]
 }

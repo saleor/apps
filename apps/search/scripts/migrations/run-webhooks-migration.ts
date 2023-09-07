@@ -2,7 +2,7 @@
 
 import * as dotenv from "dotenv";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
-import { recreateWebhooks } from "./recreate-webhooks";
+import { updateWebhooksScript } from "./update-webhooks";
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ const runMigration = async () => {
   });
 
   for (const env of allEnvs) {
-    await recreateWebhooks({ authData: env, dryRun: false });
+    await updateWebhooksScript({ authData: env, dryRun: false });
   }
 
   console.log("Migration complete");

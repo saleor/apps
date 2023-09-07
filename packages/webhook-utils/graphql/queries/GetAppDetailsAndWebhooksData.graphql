@@ -1,0 +1,5 @@
+query GetAppDetailsAndWebhooksData {
+    app{
+        ...AppDetailsFragment
+    }
+}
