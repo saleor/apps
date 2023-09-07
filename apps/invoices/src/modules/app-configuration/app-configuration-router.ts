@@ -3,11 +3,10 @@ import { z } from "zod";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { createSettingsManager } from "./metadata-manager";
+import { AppConfigV2 } from "./schema-v2/app-config";
+import { AddressV2Schema } from "./schema-v2/app-config-schema.v2";
 import { AppConfigV2MetadataManager } from "./schema-v2/app-config-v2-metadata-manager";
 import { GetAppConfigurationV2Service } from "./schema-v2/get-app-configuration.v2.service";
-import { ConfigV1ToV2MigrationService } from "./schema-v2/config-v1-to-v2-migration.service";
-import { AddressV2Schema } from "./schema-v2/app-config-schema.v2";
-import { AppConfigV2 } from "./schema-v2/app-config";
 
 const UpsertAddressSchema = z.object({
   address: AddressV2Schema,
@@ -47,7 +46,7 @@ export const appConfigurationRouter = router({
     .input(
       z.object({
         channelSlug: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const appConfigV2 =
