@@ -139,11 +139,19 @@ export function productAndVariantToAlgolia({
      */
     grossPrice: listing?.price?.amount,
     pricing: {
-      grossAmount: variant.pricing?.price?.gross.amount,
+      price: {
+        net: variant.pricing?.price?.net.amount,
+        gross: variant.pricing?.price?.gross.amount,
+      },
       onSale: variant.pricing?.onSale,
-      discountGrossAmount: variant.pricing?.discount?.gross.amount,
-      undiscountedGrossAmount: variant.pricing?.priceUndiscounted?.gross.amount,
-      channelListingPriceAmount: listing?.price?.amount,
+      discount: {
+        net: variant.pricing?.discount?.net.amount,
+        gross: variant.pricing?.discount?.gross.amount,
+      },
+      priceUndiscounted: {
+        net: variant.pricing?.priceUndiscounted?.net.amount,
+        gross: variant.pricing?.priceUndiscounted?.gross.amount,
+      },
     },
     inStock,
     categories: categoryHierarchicalFacets(variant),

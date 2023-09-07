@@ -11,15 +11,24 @@ fragment ProductVariantData on ProductVariant {
       gross {
         amount
       }
+      net {
+        amount
+      }
     }
     discount {
       gross {
+        amount
+      }
+      net {
         amount
       }
     }
     onSale
     priceUndiscounted {
       gross {
+        amount
+      }
+      net {
         amount
       }
     }
@@ -29,7 +38,7 @@ fragment ProductVariantData on ProductVariant {
     id
     channel {
       slug
-      currencyCode 
+      currencyCode
     }
     price {
       currency
