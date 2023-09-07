@@ -31,14 +31,14 @@ const rollback = async ({
 }: RollbackArgs) => {
   if (addedWebhooks.length) {
     logger.info("Removing added webhooks");
-    await Promise.all(
+    await Promise.allSettled(
       addedWebhooks.map((webhook) => removeAppWebhook({ client, webhookId: webhook.id })),
     );
   }
 
   if (modifiedWebhooks.length) {
     logger.info("Rollback modified webhooks");
-    await Promise.all(
+    await Promise.allSettled(
       modifiedWebhooks.map((modifiedWebhook) => {
         const webhookDetails = existingWebhooksData.find(
           (existingWebhook) => existingWebhook.id === modifiedWebhook.id,
@@ -57,7 +57,7 @@ const rollback = async ({
   if (removedWebhooks.length) {
     logger.debug("Rollback removed webhooks");
 
-    await Promise.all(
+    await Promise.allSettled(
       modifiedWebhooks.map((webhookDetails) => {
         return createAppWebhookFromWebhookDetailsFragment({
           client,
