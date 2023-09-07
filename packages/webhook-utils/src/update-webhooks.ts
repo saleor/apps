@@ -115,7 +115,7 @@ export const updateWebhooks = async ({
     });
 
     logger.info(
-      `Scheduled changes: ${webhookIdsAndManifestsToBeUpdated} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookToBeRemoved.length} to be removed`,
+      `Scheduled changes: ${webhookIdsAndManifestsToBeUpdated.length} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookToBeRemoved.length} to be removed`,
     );
 
     if (dryRun) {
