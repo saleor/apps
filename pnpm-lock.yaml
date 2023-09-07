@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 overrides:
   '@saleor/app-sdk': 0.43.1
 
@@ -892,6 +896,145 @@ importers:
       pretty-quick:
         specifier: ^3.1.3
         version: 3.1.3(prettier@3.0.3)
+      typescript:
+        specifier: 5.1.6
+        version: 5.1.6
+
+  apps/orders-export:
+    dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.1.0
+        version: 3.1.0(react-hook-form@7.44.3)
+      '@saleor/app-sdk':
+        specifier: 0.43.1
+        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@saleor/apps-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@saleor/macaw-ui':
+        specifier: 0.8.0-pre.127
+        version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
+      '@saleor/trpc':
+        specifier: workspace:*
+        version: link:../../packages/trpc
+      '@sentry/nextjs':
+        specifier: 7.67.0
+        version: 7.67.0(next@13.4.8)(react@18.2.0)
+      '@tanstack/react-query':
+        specifier: ^4.29.19
+        version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/client':
+        specifier: 10.38.1
+        version: 10.38.1(@trpc/server@10.38.1)
+      '@trpc/next':
+        specifier: 10.38.1
+        version: 10.38.1(@tanstack/react-query@4.29.19)(@trpc/client@10.38.1)(@trpc/react-query@10.38.1)(@trpc/server@10.38.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 10.38.1
+        version: 10.38.1(@tanstack/react-query@4.29.19)(@trpc/client@10.38.1)(@trpc/server@10.38.1)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/server':
+        specifier: 10.38.1
+        version: 10.38.1
+      '@urql/exchange-auth':
+        specifier: ^2.1.4
+        version: 2.1.4(graphql@16.7.1)
+      '@vitejs/plugin-react':
+        specifier: 4.0.4
+        version: 4.0.4(vite@4.4.8)
+      graphql:
+        specifier: 16.7.1
+        version: 16.7.1
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.7.1)
+      jsdom:
+        specifier: ^20.0.3
+        version: 20.0.3
+      next:
+        specifier: 13.4.8
+        version: 13.4.8(@babel/core@7.22.11)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-error-boundary:
+        specifier: 4.0.10
+        version: 4.0.10(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.43.9
+        version: 7.44.3(react@18.2.0)
+      urql:
+        specifier: ^4.0.4
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+      usehooks-ts:
+        specifier: ^2.9.1
+        version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
+      vite:
+        specifier: 4.4.8
+        version: 4.4.8(@types/node@18.15.3)
+      vitest:
+        specifier: 0.34.1
+        version: 0.34.1(jsdom@20.0.3)
+      zod:
+        specifier: 3.21.4
+        version: 3.21.4
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: 4.0.1
+        version: 4.0.1(@babel/core@7.22.11)(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-codegen/introspection':
+        specifier: 4.0.0
+        version: 4.0.0(graphql@16.7.1)
+      '@graphql-codegen/typed-document-node':
+        specifier: 5.0.1
+        version: 5.0.1(graphql@16.7.1)
+      '@graphql-codegen/typescript':
+        specifier: 4.0.1
+        version: 4.0.1(graphql@16.7.1)
+      '@graphql-codegen/typescript-operations':
+        specifier: 4.0.1
+        version: 4.0.1(graphql@16.7.1)
+      '@graphql-codegen/typescript-urql':
+        specifier: 3.7.3
+        version: 3.7.3(graphql-tag@2.12.6)(graphql@16.7.1)
+      '@graphql-typed-document-node/core':
+        specifier: 3.2.0
+        version: 3.2.0(graphql@16.7.1)
+      '@testing-library/react':
+        specifier: ^14.0.0
+        version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
+      '@testing-library/react-hooks':
+        specifier: ^8.0.1
+        version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react':
+        specifier: 18.2.5
+        version: 18.2.5
+      '@types/react-dom':
+        specifier: 18.2.5
+        version: 18.2.5
+      eslint:
+        specifier: 8.46.0
+        version: 8.46.0
+      eslint-config-saleor:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      node-mocks-http:
+        specifier: ^1.12.2
+        version: 1.12.2
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -5782,6 +5925,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
+    dev: true
 
   /@babel/template@7.22.5:
     resolution: {integrity: sha512-X7yV7eiwAxdj9k94NEylvbVHLiVG1nvzCV2EAowhxLTwODV1jl9UzZ48leOC0sH7OnuHrIkllaBgneUykIcZaw==}
@@ -12876,6 +13020,7 @@ packages:
 
   /chevrotain@6.5.0:
     resolution: {integrity: sha512-BwqQ/AgmKJ8jcMEjaSnfMybnKMgGTrtDKowfTP3pX4jwVy0kNjRsT/AP6h+wC3+3NC+X8X15VWBnTCQlX+wQFg==}
+    requiresBuild: true
     dependencies:
       regexp-to-ast: 0.4.0
     dev: false
@@ -15738,7 +15883,7 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.1
+      tslib: 2.6.2
 
   /graphql-ws@5.14.0(graphql@16.7.1):
     resolution: {integrity: sha512-itrUTQZP/TgswR4GSSYuwWUzrE/w5GhbwM2GX3ic2U7aw33jgEsayfIlvaj7/GcIvZgNMzsPTrE5hqPuFUiE5g==}
@@ -19455,7 +19600,7 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.22.11
       react: 18.2.0
     dev: false
 
@@ -19948,6 +20093,7 @@ packages:
 
   /regexp-to-ast@0.4.0:
     resolution: {integrity: sha512-4qf/7IsIKfSNHQXSwial1IFmfM1Cc/whNBQqRwe0V2stPe7KmN1U0tWQiIx6JiirgSrisjE0eECdNf7Tav1Ntw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -21181,6 +21327,7 @@ packages:
 
   /tiny-emitter@2.1.0:
     resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -21342,6 +21489,7 @@ packages:
 
   /tslib@2.6.1:
     resolution: {integrity: sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==}
+    dev: false
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
@@ -21697,6 +21845,7 @@ packages:
   /unorm@1.6.0:
     resolution: {integrity: sha512-b2/KCUlYZUeA7JFUuRJZPUtr4gZvBh7tavtv4fvk4+KV9pfGiR6CQAQAWl49ZpR3ts2dk4FYkP7EIgDJoiOLDA==}
     engines: {node: '>= 0.4.0'}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -22615,7 +22764,3 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
