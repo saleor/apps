@@ -1,0 +1,10 @@
+mutation ModifyAppWebhook($id: ID!, $input: WebhookUpdateInput!) {
+  webhookUpdate(id: $id, input: $input) {
+    errors {
+      message
+    }
+    webhook {
+      ...WebhookDetailsFragment
+    }
+  }
+}

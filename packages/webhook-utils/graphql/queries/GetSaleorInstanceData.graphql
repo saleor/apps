@@ -1,0 +1,8 @@
+query GetSaleorInstanceData {
+    shop{
+        ...ShopDetailsFragment
+    }
+    channels{
+        ...ChannelDetailsFragment
+    }
+}

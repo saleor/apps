@@ -1,0 +1,15 @@
+fragment WebhookDetailsFragment on Webhook {
+  id
+  isActive
+  name
+  targetUrl
+  subscriptionQuery
+  syncEvents{
+    name
+    eventType
+  }
+  asyncEvents {
+    name
+    eventType
+  }  
+}
