@@ -18,17 +18,21 @@ const Description = ({
   description,
   ...props
 }: PropsWithBox<{
-  title: React.ReactNode;
-  description: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
 }>) => {
   return (
     <Box display="flex" flexDirection={"column"} gap={10} __maxWidth={MAX_WIDTH} {...props}>
-      <Text as="h3" variant="heading">
-        {title}
-      </Text>
-      <Box fontWeight={"bodyMedium"} fontSize={"bodyMedium"}>
-        {description}
-      </Box>
+      {title && (
+        <Text as="h3" variant="heading">
+          {title}
+        </Text>
+      )}
+      {description && (
+        <Box fontWeight={"bodyMedium"} fontSize={"bodyMedium"}>
+          {description}
+        </Box>
+      )}
     </Box>
   );
 };

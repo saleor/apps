@@ -17,7 +17,7 @@ export const config = {
 type CalculateTaxesPayload = Extract<CalculateTaxesEventFragment, { __typename: "CalculateTaxes" }>;
 
 function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
-  if (!payload.taxBase.lines) {
+  if (!payload.taxBase.lines.length) {
     throw new Error("No lines found in taxBase");
   }
 

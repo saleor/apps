@@ -5,6 +5,7 @@ import { AppCard } from "../../modules/ui/app-card";
 import { AppColumns } from "../../modules/ui/app-columns";
 import { ProviderLabel } from "../../modules/ui/provider-label";
 import { Section } from "../../modules/ui/app-section";
+import { AppPageLayout } from "../../modules/ui/app-page-layout";
 
 const Header = () => {
   return (
@@ -107,12 +108,22 @@ const ChooseProvider = () => {
 
 const NewProviderPage = () => {
   return (
-    <main>
-      <AppColumns top={<Header />}>
-        <Intro />
-        <ChooseProvider />
-      </AppColumns>
-    </main>
+    <AppPageLayout
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+        {
+          href: "/providers",
+          label: "Providers",
+        },
+      ]}
+      top={<Header />}
+    >
+      <Intro />
+      <ChooseProvider />
+    </AppPageLayout>
   );
 };
 
