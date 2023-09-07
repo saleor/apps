@@ -72,7 +72,7 @@ export class AppConfig {
     imageSize: imageSizeFieldSchema.parse(undefined),
   };
 
-  constructor(initialData?: RootConfig) {
+  constructor(initialData?: RootConfig | unknown) {
     if (initialData) {
       try {
         this.rootData = rootAppConfigSchema.parse(initialData);

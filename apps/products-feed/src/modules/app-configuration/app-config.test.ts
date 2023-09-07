@@ -94,7 +94,6 @@ describe("AppConfig", function () {
       expect(
         () =>
           new AppConfig({
-            // @ts-expect-error
             foo: "bar",
           }),
       ).toThrow();

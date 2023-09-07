@@ -176,6 +176,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/qs':
         specifier: ^6.9.7
         version: 6.9.7
@@ -312,6 +315,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/mailchimp__mailchimp_marketing':
         specifier: ^3.0.7
         version: 3.0.7
@@ -442,6 +448,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/dot-object':
         specifier: ^2.1.2
         version: 2.1.2
@@ -605,6 +614,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/html-to-text':
         specifier: ^9.0.0
         version: 9.0.0
@@ -741,6 +753,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -868,6 +883,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1025,6 +1043,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1158,6 +1179,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1309,6 +1333,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1427,6 +1454,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1584,6 +1614,9 @@ importers:
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1611,6 +1644,9 @@ importers:
       '@saleor/app-sdk':
         specifier: 0.43.1
         version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -1623,6 +1659,9 @@ importers:
 
   packages/eslint-config-saleor:
     devDependencies:
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1681,6 +1720,9 @@ importers:
       '@storybook/testing-library':
         specifier: ^0.0.14-next.2
         version: 0.0.14-next.2
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1748,6 +1790,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.127
         version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1821,6 +1866,9 @@ importers:
       '@saleor/app-sdk':
         specifier: 0.43.1
         version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1849,6 +1897,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 0.8.0-pre.127
         version: 0.8.0-pre.127(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
+      '@total-typescript/ts-reset':
+        specifier: ^0.5.1
+        version: 0.5.1
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -10674,6 +10725,10 @@ packages:
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
+
+  /@total-typescript/ts-reset@0.5.1:
+    resolution: {integrity: sha512-AqlrT8YA1o7Ff5wPfMOL0pvL+1X+sw60NN6CcOCqs658emD6RfiXhF7Gu9QcfKBH7ELY2nInLhKSCWVoNL70MQ==}
+    dev: true
 
   /@trpc/client@10.34.0(@trpc/server@10.34.0):
     resolution: {integrity: sha512-nqtDTIqSY/9syo2EjSy4WWWXPU9GsamEh9Tsg698gLAh1nhgFc5+/YYeb+Ne1pbvWGZ5/3t9Dcz3h4wMyyJ9gQ==}

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { MailchimpConfigSettingsManagerV1 } from "./mailchimp-config-settings-manager";
+import { MailchimpConfigSettingsManagerV1, MailchimpConfigType } from "./mailchimp-config-settings-manager";
 import { Client } from "urql";
 import { SettingsManager, SettingsValue } from "@saleor/app-sdk/settings-manager";
 
@@ -70,9 +70,11 @@ describe("MailchimpConfigSettingsManagerV1", () => {
       dc: "us41",
     });
 
-    const parsedSetValue = JSON.parse(valueHasBeenSet!);
+    const parsedSetValue = JSON.parse(valueHasBeenSet!) as {
+      config: MailchimpConfigType
+    };
 
-    expect(parsedSetValue.config.customerCreateEvent.enabled).toBe(false);
+    expect(parsedSetValue.config.customerCreateEvent?.enabled).toBe(false);
   });
 
   it("Calls settings manager with default customerCreateEvent setting to be disabled", async () => {
@@ -90,9 +92,11 @@ describe("MailchimpConfigSettingsManagerV1", () => {
       dc: "us41",
     });
 
-    const parsedSetValue = JSON.parse(valueHasBeenSet!);
+    const parsedSetValue = JSON.parse(valueHasBeenSet!) as {
+      config: MailchimpConfigType
+    };
 
-    expect(parsedSetValue.config.customerCreateEvent.enabled).toBe(false);
+    expect(parsedSetValue.config.customerCreateEvent?.enabled).toBe(false);
   });
 
   it(".get returns null if data doesnt match schema", async () => {

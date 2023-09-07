@@ -1,9 +1,13 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { z } from "zod";
 
 export class CacheConfigurator {
   private metadataKeyPrefix = "cursor-cache-";
 
-  constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
+  constructor(
+    private metadataManager: SettingsManager,
+    private saleorApiUrl: string,
+  ) {}
 
   private constructKey(channel: string) {
     return this.metadataKeyPrefix + channel;
@@ -16,7 +20,7 @@ export class CacheConfigurator {
       }
 
       try {
-        return JSON.parse(data);
+        return z.array(z.string()).parse(JSON.parse(data));
       } catch (e) {
         throw new Error("Invalid metadata value, can't be parsed");
       }

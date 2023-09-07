@@ -23,7 +23,7 @@ export const AppBridgePersistence = {
     }
 
     try {
-      return JSON.parse(storageItem as string);
+      return JSON.parse(storageItem as string) as AppBridgeStorageState;
     } catch (e) {
       return null;
     }

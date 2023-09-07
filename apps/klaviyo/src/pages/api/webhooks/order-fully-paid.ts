@@ -38,7 +38,7 @@ export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhoo
 const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   console.debug("orderFullyPaidWebhook handler called");
 
@@ -70,7 +70,8 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   const klaviyoResponse = await klaviyoClient.send(klaviyoMetric, userEmail, payload);
 
   if (klaviyoResponse.status !== 200) {
-    const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+    const klaviyoMessage =
+      ` Message: ${((await klaviyoResponse.json()) as { message: string })?.message}.` || "";
 
     console.debug("Klaviyo returned error: ", klaviyoMessage);
 

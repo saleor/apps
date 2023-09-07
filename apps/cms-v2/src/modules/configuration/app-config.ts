@@ -19,7 +19,7 @@ export class AppConfig {
     connections: [],
   };
 
-  constructor(initialData?: RootConfig.Shape) {
+  constructor(initialData?: RootConfig.Shape | unknown) {
     if (initialData) {
       this.rootData = RootConfig.Schema.parse(initialData);
     }
