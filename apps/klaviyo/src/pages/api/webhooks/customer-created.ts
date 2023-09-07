@@ -56,13 +56,13 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
     event: "CUSTOMER_CREATED",
     apl: saleorApp.apl,
     query: UntypedCustomerCreatedDocument,
-  }
+  },
 );
 
 const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   console.debug("customerCreatedWebhook handler called");
 
@@ -94,7 +94,8 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   const klaviyoResponse = await klaviyoClient.send(klaviyoMetric, userEmail, payload);
 
   if (klaviyoResponse.status !== 200) {
-    const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
+    const klaviyoMessage =
+      ` Message: ${((await klaviyoResponse.json()) as { message: string })?.message}.` || "";
 
     console.debug("Klaviyo returned error: ", klaviyoMessage);
 

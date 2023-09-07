@@ -1,30 +1,25 @@
+import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 import { gql } from "urql";
-import { saleorApp } from "../../../saleor-app";
 import {
   InvoiceRequestedPayloadFragment,
   OrderPayloadFragment,
 } from "../../../../generated/graphql";
-import { SaleorInvoiceUploader } from "../../../modules/invoices/invoice-uploader/saleor-invoice-uploader";
+import { AddressV2Shape } from "../../../modules/app-configuration/schema-v2/app-config-schema.v2";
+import { GetAppConfigurationV2Service } from "../../../modules/app-configuration/schema-v2/get-app-configuration.v2.service";
 import { InvoiceCreateNotifier } from "../../../modules/invoices/invoice-create-notifier/invoice-create-notifier";
+import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
+import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
+import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-generator/microinvoice/microinvoice-invoice-generator";
 import {
   InvoiceNumberGenerationStrategy,
   InvoiceNumberGenerator,
 } from "../../../modules/invoices/invoice-number-generator/invoice-number-generator";
-import { MicroinvoiceInvoiceGenerator } from "../../../modules/invoices/invoice-generator/microinvoice/microinvoice-invoice-generator";
-import { hashInvoiceFilename } from "../../../modules/invoices/invoice-file-name/hash-invoice-filename";
-import { resolveTempPdfFileLocation } from "../../../modules/invoices/invoice-file-name/resolve-temp-pdf-file-location";
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
-import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
-import { GetAppConfigurationV2Service } from "../../../modules/app-configuration/schema-v2/get-app-configuration.v2.service";
+import { SaleorInvoiceUploader } from "../../../modules/invoices/invoice-uploader/saleor-invoice-uploader";
 import { ShopInfoFetcher } from "../../../modules/shop-info/shop-info-fetcher";
-import { z } from "zod";
-import {
-  AddressV2Schema,
-  AddressV2Shape,
-} from "../../../modules/app-configuration/schema-v2/app-config-schema.v2";
-import { ConfigV1ToV2MigrationService } from "../../../modules/app-configuration/schema-v2/config-v1-to-v2-migration.service";
 import { shopInfoQueryToAddressShape } from "../../../modules/shop-info/shop-info-query-to-address-shape";
+import { saleorApp } from "../../../saleor-app";
 
 import * as Sentry from "@sentry/nextjs";
 import { AppConfigV2 } from "../../../modules/app-configuration/schema-v2/app-config";
@@ -156,7 +151,7 @@ const invoiceNumberGenerator = new InvoiceNumberGenerator();
 export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const { authData, payload, baseUrl } = context;
   const logger = createLogger({ domain: authData.saleorApiUrl, url: baseUrl });
@@ -176,7 +171,7 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
    */
   const invoiceName = invoiceNumberGenerator.generateFromOrder(
     order as OrderPayloadFragment,
-    InvoiceNumberGenerationStrategy.localizedDate("en-US") // todo connect locale -> where from?
+    InvoiceNumberGenerationStrategy.localizedDate("en-US"), // todo connect locale -> where from?
   );
 
   Sentry.addBreadcrumb({
@@ -270,7 +265,7 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
     await new InvoiceCreateNotifier(client).notifyInvoiceCreated(
       orderId,
       invoiceName,
-      uploadedFileUrl
+      uploadedFileUrl,
     );
 
     Sentry.addBreadcrumb({

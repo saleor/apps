@@ -7,7 +7,9 @@ export const useWebhooksStatus = () => {
   const fetch: typeof window.fetch = useAuthenticatedFetch();
 
   const fetchFn = useCallback(() => {
-    return fetch("/api/webhooks-status").then((resp) => resp.json());
+    return fetch("/api/webhooks-status").then(
+      (resp) => resp.json() as unknown as WebhooksStatusResponse,
+    );
     /**
      * fetch from SDK is not wrapped with memo todo
      */

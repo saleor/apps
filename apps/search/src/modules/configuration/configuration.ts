@@ -27,7 +27,7 @@ export class AppConfig {
     },
   };
 
-  constructor(initialData?: AppConfigRootSchemaFields) {
+  constructor(initialData?: AppConfigRootSchemaFields | unknown) {
     if (initialData) {
       this.rootData = AppConfigRootSchema.parse(initialData);
     }

@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "0.41.1",
+    "@total-typescript/ts-reset": "^0.5.1",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "next": "13.4.8",

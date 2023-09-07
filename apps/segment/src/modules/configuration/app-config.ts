@@ -4,7 +4,7 @@ import { RootConfig } from "./schemas/root-config.schema";
 export class AppConfig {
   private rootData: RootConfig.Shape = null;
 
-  constructor(initialData?: RootConfig.Shape) {
+  constructor(initialData?: RootConfig.Shape | unknown) {
     if (initialData) {
       this.rootData = RootConfig.Schema.parse(initialData);
     }

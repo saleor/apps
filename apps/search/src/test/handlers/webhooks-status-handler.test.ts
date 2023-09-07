@@ -1,4 +1,4 @@
-import { NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextProtectedApiHandler, ProtectedHandlerContext } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
 import { Client, OperationResult } from "urql";
@@ -8,11 +8,12 @@ import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityTogg
 import { SearchProvider } from "../../lib/searchProvider";
 import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
 import { AppConfig } from "../../modules/configuration/configuration";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Context provided from ProtectedApiHandler to handler body
  */
-const mockWebhookContext = {
+const mockWebhookContext: ProtectedHandlerContext = {
   authData: {
     appId: "app-id",
     domain: "domain.saleor.io",
@@ -20,6 +21,10 @@ const mockWebhookContext = {
     saleorApiUrl: "https://domain.saleor.io/graphql",
   },
   baseUrl: "localhost:3000",
+  user: {
+    email: "",
+    userPermissions: [],
+  },
 };
 
 const appWebhooksResponseData: Pick<OperationResult<FetchOwnWebhooksQuery, any>, "data"> = {
@@ -90,6 +95,7 @@ describe("webhooksStatusHandler", () => {
   it("Disables webhooks if Algolia settings are not saved in Saleor Metadata", async function () {
     const { req, res } = createMocks({});
 
+    // @ts-expect-error - mock doesnt contain next-specific fields
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
@@ -113,6 +119,7 @@ describe("webhooksStatusHandler", () => {
 
     const { req, res } = createMocks({});
 
+    // @ts-expect-error - mock doesnt contain next-specific fields
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();

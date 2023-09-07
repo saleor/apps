@@ -2,6 +2,7 @@ import { BuilderIoProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { createLogger } from "@saleor/apps-shared";
 import { FieldsMapper } from "../fields-mapper";
+import { z } from "zod";
 
 // https://www.builder.io/c/docs/write-api
 export class BuilderIoClient {
@@ -43,7 +44,7 @@ export class BuilderIoClient {
 
   private async updateProductVariantCall(
     builderIoEntryId: string,
-    variant: WebhookProductVariantFragment
+    variant: WebhookProductVariantFragment,
   ) {
     try {
       const response = await fetch(this.endpoint + `/${builderIoEntryId}`, {
@@ -71,13 +72,13 @@ export class BuilderIoClient {
       {
         entriesToUpdate,
       },
-      "Trying to update variants in builder.io with following IDs"
+      "Trying to update variants in builder.io with following IDs",
     );
 
     return Promise.all(
       entriesToUpdate.map((id) => {
         return this.updateProductVariantCall(id, variant);
-      })
+      }),
     );
   }
 
@@ -94,7 +95,7 @@ export class BuilderIoClient {
       return Promise.all(
         entriesToUpdate.map((id) => {
           return this.updateProductVariantCall(id, variant);
-        })
+        }),
       );
     }
   }
@@ -112,8 +113,8 @@ export class BuilderIoClient {
             "Content-Type": "application/json",
             Authorization: `Bearer ${this.config.privateApiKey}`,
           },
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -127,15 +128,23 @@ export class BuilderIoClient {
         variantID: variantId,
         variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
       },
-      "Trying to fetch variant from Builder.io"
+      "Trying to fetch variant from Builder.io",
     );
 
+    const expectedSchema = z.object({
+      results: z.array(
+        z.object({
+          id: z.string(),
+        }),
+      ),
+    });
+
     return fetch(
-      `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=false&cacheSeconds=0`
+      `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=false&cacheSeconds=0`,
     )
-      .then((res) => res.json())
+      .then((res) => expectedSchema.parse(res.json()))
       .then((data) => {
-        return data.results.map((result: any) => result.id) as string[];
+        return data.results.map((result) => result.id) as string[];
       })
       .catch((err) => {
         this.logger.error(err, "Failed to fetch builder.io entry id");
