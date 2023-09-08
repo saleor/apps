@@ -134,7 +134,25 @@ export function productAndVariantToAlgolia({
     descriptionPlaintext: EditorJsPlaintextRenderer({ stringData: product.description }),
     slug: product.slug,
     thumbnail: product.thumbnail?.url,
+    /**
+     * Deprecated
+     */
     grossPrice: listing?.price?.amount,
+    pricing: {
+      price: {
+        net: variant.pricing?.price?.net.amount,
+        gross: variant.pricing?.price?.gross.amount,
+      },
+      onSale: variant.pricing?.onSale,
+      discount: {
+        net: variant.pricing?.discount?.net.amount,
+        gross: variant.pricing?.discount?.gross.amount,
+      },
+      priceUndiscounted: {
+        net: variant.pricing?.priceUndiscounted?.net.amount,
+        gross: variant.pricing?.priceUndiscounted?.gross.amount,
+      },
+    },
     inStock,
     categories: categoryHierarchicalFacets(variant),
     collections: product.collections?.map((collection) => collection.name) || [],

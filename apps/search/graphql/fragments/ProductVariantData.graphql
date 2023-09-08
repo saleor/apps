@@ -10,7 +10,26 @@ fragment ProductVariantData on ProductVariant {
     price {
       gross {
         amount
-        currency
+      }
+      net {
+        amount
+      }
+    }
+    discount {
+      gross {
+        amount
+      }
+      net {
+        amount
+      }
+    }
+    onSale
+    priceUndiscounted {
+      gross {
+        amount
+      }
+      net {
+        amount
       }
     }
   }
