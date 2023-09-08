@@ -1,12 +1,18 @@
-name: Changeset checker
+name: Changesets
 
 on:
   pull_request:
+    types:
+      - opened
+      - labeled
+      - edited
     branches-ignore:    
       - 'changeset-release/**'
 jobs:
-  changeset_checker:
-    name: Changeset checker
+  changeset_check:
+    name: Changeset added to the PR
+    # Adding 'skip changesets' label to the PR will skip this job
+    if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changesets') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
