@@ -8,7 +8,7 @@ const ConfigurationPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
 
   if (!appBridgeState) {
-    return null;
+    throw new Error("AppBridge is not available.");
   }
 
   if (appBridgeState.user?.permissions.includes("MANAGE_APPS") === false) {
@@ -19,7 +19,7 @@ const ConfigurationPage: NextPage = () => {
     <Box>
       <AppHeader />
       <Layout.AppSection marginBottom={14} heading="todo">
-        todo
+        TODO
       </Layout.AppSection>
     </Box>
   );

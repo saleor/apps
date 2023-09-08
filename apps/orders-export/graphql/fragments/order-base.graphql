@@ -22,10 +22,18 @@ fragment OrderBase on Order {
     }
   }
   lines {
-    id
     productVariantId
     productSku
     variantName
+    unitPrice {
+      gross {
+        amount
+      }
+      net {
+        amount
+      }
+    }
+    quantity
   }
   number
 }
