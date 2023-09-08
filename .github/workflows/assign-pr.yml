@@ -6,9 +6,12 @@ on:
 
 jobs:
   assign_creator:
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
     - name: Assign PR to creator
-      uses: thomaseizinger/assign-pr-creator-action@v1.0.0
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        CREATOR: ${{ github.event.pull_request.user.login }}
+      run: gh pr edit "$PR_URL" --add-assignee "$CREATOR"
