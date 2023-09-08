@@ -1,0 +1,11 @@
+query PaginatedOrders($after: String, $channel: String!) {
+  orders(first: 100, after: $after, channel: $channel) {
+    edges {
+      node {
+        ... on Order {
+          ...OrderBase
+        }
+      }
+    }
+  }
+}
