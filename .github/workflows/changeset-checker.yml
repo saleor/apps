@@ -6,13 +6,14 @@ on:
       - opened
       - labeled
       - edited
+      - synchronize
     branches-ignore:    
       - 'changeset-release/**'
 jobs:
   changeset_check:
     name: Changeset added to the PR
     # Adding 'skip changesets' label to the PR will skip this job
-    if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changesets') }}
+    if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changeset') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
