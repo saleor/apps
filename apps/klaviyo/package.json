@@ -35,7 +35,7 @@
     "vitest": "0.34.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "4.0.1",
+    "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/introspection": "4.0.0",
     "@graphql-codegen/schema-ast": "4.0.0",
     "@graphql-codegen/typed-document-node": "5.0.1",
