@@ -96,8 +96,8 @@ importers:
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
       contentful-management:
-        specifier: 10.38.3
-        version: 10.38.3
+        specifier: 10.45.1
+        version: 10.45.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -12328,11 +12328,12 @@ packages:
       - debug
     dev: false
 
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  /axios@1.5.0:
+    resolution: {integrity: sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -13319,30 +13320,29 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /contentful-management@10.38.3:
-    resolution: {integrity: sha512-hAuUSEfPYMQ6aplaENkZM5Zvhg9q+yiCsbm++pyHadUr5x+XKC9D85fASXuA4vI0hB/K66YHaqBiJ7CwAHT9bQ==}
+  /contentful-management@10.45.1:
+    resolution: {integrity: sha512-jErN1sgxQRwbJ2l/B9CWvwPjp7T1JZuhyD1YPB+WUxp8mcF8iYXtot0Gf24kDb2Qcct55NkAP9TQgbHjMBvlTw==}
     engines: {node: '>=14'}
     dependencies:
       '@contentful/rich-text-types': 16.2.0
       '@types/json-patch': 0.0.30
-      axios: 0.27.2
-      contentful-sdk-core: 7.1.0
+      axios: 1.5.0
+      contentful-sdk-core: 8.1.0
       fast-copy: 3.0.1
       lodash.isplainobject: 4.0.6
-      type-fest: 3.13.0
+      type-fest: 4.3.1
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /contentful-sdk-core@7.1.0:
-    resolution: {integrity: sha512-RzTPnRsbCdVAhyka3wa9sDsAu9YsxoerNgaMqd63Ljb7qpG2zkdHcP7NTfyIbuHDJNJdAQdifyafxfEEwP+q/w==}
+  /contentful-sdk-core@8.1.0:
+    resolution: {integrity: sha512-ZXTtrkrx4OlRcVY0WLihrskF+BSuHe7QZuWA8DNEeTlHmkPXAVch9Og5TJDoyGeqNrArR3Ovd7yfaG+1QYo+ag==}
     engines: {node: '>=12'}
     dependencies:
       fast-copy: 2.1.7
       lodash.isplainobject: 4.0.6
       lodash.isstring: 4.0.1
       p-throttle: 4.1.1
-      qs: 6.11.2
     dev: false
 
   /convert-source-map@1.9.0:
@@ -21558,9 +21558,9 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /type-fest@3.13.0:
-    resolution: {integrity: sha512-Gur3yQGM9qiLNs0KPP7LPgeRbio2QTt4xXouobMCarR0/wyW3F+F/+OWwshg3NG0Adon7uQfSZBpB46NfhoF1A==}
-    engines: {node: '>=14.16'}
+  /type-fest@4.3.1:
+    resolution: {integrity: sha512-pphNW/msgOUSkJbH58x8sqpq8uQj6b0ZKGxEsLKMUnGorRcDjrUaLS+39+/ub41JNTwrrMyJcUB8+YZs3mbwqw==}
+    engines: {node: '>=16'}
     dev: false
 
   /type-is@1.6.18:
