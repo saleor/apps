@@ -1,5 +1,13 @@
 # saleor-app-crm
 
+## 1.7.8
+
+### Patch Changes
+
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+
 ## 1.7.7
 
 ### Patch Changes
