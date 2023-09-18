@@ -1,5 +1,19 @@
 # saleor-app-invoices
 
+## 1.16.0
+
+### Minor Changes
+
+- 4aee4e1: Replace text "loading" messages with skeletons
+- 4aee4e1: Redesigned app layout. Now app uses shared sections as other apps.
+
+### Patch Changes
+
+- 5d3d81d: Bumped @hookform/resolvers from 2.9.11 to 3.3.1
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+
 ## 1.15.7
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # saleor-app-klaviyo
 
+## 1.9.0
+
+### Minor Changes
+
+- 4aee4e1: Improved app layout to match modern style.
+
+### Patch Changes
+
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+- 4aee4e1: Fixed error where config couldn't be saved
+
 ## 1.8.6
 
 ### Patch Changes

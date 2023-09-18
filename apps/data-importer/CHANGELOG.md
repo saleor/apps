@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.9.7
+
+### Patch Changes
+
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+
 ## 1.9.6
 
 ### Patch Changes
