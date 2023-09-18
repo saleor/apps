@@ -1,5 +1,14 @@
 # saleor-app-emails-and-messages
 
+## 1.9.10
+
+### Patch Changes
+
+- 5d3d81d: Bumped @hookform/resolvers from 2.9.11 to 3.3.1
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+
 ## 1.9.9
 
 ### Patch Changes

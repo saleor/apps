@@ -1,5 +1,13 @@
 # saleor-app-slack
 
+## 1.8.7
+
+### Patch Changes
+
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+
 ## 1.8.6
 
 ### Patch Changes

@@ -1,5 +1,50 @@
 # saleor-app-search
 
+## 1.16.0
+
+### Minor Changes
+
+- 1982d81: Added a new `pricing` field to the Algolia object representation. It now passes variant pricing representation from GraphQL:
+
+  ```graphQL
+      price {
+        gross {
+          amount
+        }
+        net {
+          amount
+        }
+      }
+      discount {
+        gross {
+          amount
+        }
+        net {
+          amount
+        }
+      }
+      onSale
+      priceUndiscounted {
+        gross {
+          amount
+        }
+        net {
+          amount
+        }
+      }
+  ```
+
+### Patch Changes
+
+- 5d3d81d: Bumped @hookform/resolvers from 2.9.11 to 3.3.1
+- 5dee65a: Updated dependencies:
+  - @graphql-codegen/cli@5.0.0
+- 2e29699: Updated Sentry package
+- 7e0755e: Webhook migration scripts has been moved to the shared package.
+- Updated dependencies [5dee65a]
+- Updated dependencies [7e0755e]
+  - @saleor/webhook-utils@0.0.1
+
 ## 1.15.0
 
 ### Minor Changes
