@@ -16,6 +16,10 @@ import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
 
+export const config = {
+  maxDuration: 5,
+};
+
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
   ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
