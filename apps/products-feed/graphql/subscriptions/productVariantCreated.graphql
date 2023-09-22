@@ -1,9 +1,0 @@
-subscription ProductVariantCreated {
-  event {
-    ... on ProductVariantCreated {
-      productVariant {
-        ...ProductVariantWebhookPayload
-      }
-    }
-  }
-}
