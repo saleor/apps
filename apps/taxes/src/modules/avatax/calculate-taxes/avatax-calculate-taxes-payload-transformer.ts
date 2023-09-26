@@ -1,14 +1,14 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
+import { TaxUnexpectedError } from "../../taxes/tax-error";
+import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
-import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -31,7 +31,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
       return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.userEmail);
     }
 
-    throw new Error("Cannot resolve customer code");
+    throw new TaxUnexpectedError("Cannot resolve customer code");
   }
 
   async transform(

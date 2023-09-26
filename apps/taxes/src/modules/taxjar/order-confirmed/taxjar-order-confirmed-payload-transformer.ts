@@ -15,14 +15,14 @@ export function sumPayloadLines(lines: LineItem[]): number {
         prev +
         taxProviderUtils.resolveOptionalOrThrow(
           line.unit_price,
-          new Error("Line unit_price is required to calculate order taxes")
+          "Line unit_price is required to calculate order taxes",
         ) *
           taxProviderUtils.resolveOptionalOrThrow(
             line.quantity,
-            new Error("Line quantity is required to calculate order taxes")
+            "Line quantity is required to calculate order taxes",
           ),
-      0
-    )
+      0,
+    ),
   );
 }
 
@@ -30,7 +30,7 @@ export class TaxJarOrderConfirmedPayloadTransformer {
   transform(
     order: OrderConfirmedSubscriptionFragment,
     taxJarConfig: TaxJarConfig,
-    matches: TaxJarTaxCodeMatches
+    matches: TaxJarTaxCodeMatches,
   ): TaxJarOrderConfirmedTarget {
     const linesTransformer = new TaxJarOrderConfirmedPayloadLinesTransformer();
     const lineItems = linesTransformer.transform(order.lines, matches);

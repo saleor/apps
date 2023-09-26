@@ -6,7 +6,7 @@ import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
 
 export class AvataxCalculateTaxesResponseShippingTransformer {
   transform(
-    transaction: TransactionModel
+    transaction: TransactionModel,
   ): Pick<
     CalculateTaxesResponse,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
@@ -25,14 +25,14 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
       return {
         shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
           shippingLine.lineAmount,
-          new Error("shippingLine.lineAmount is undefined")
+          "shippingLine.lineAmount is undefined",
         ),
         shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(
           shippingLine.lineAmount,
-          new Error("shippingLine.lineAmount is undefined")
+          "shippingLine.lineAmount is undefined",
         ),
         /*
-         * avatax doesnt return combined tax rate
+         * avatax doesn't return combined tax rate
          * // todo: calculate percentage tax rate
          */
         shipping_tax_rate: 0,
@@ -41,14 +41,14 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
 
     const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
       shippingLine.taxCalculated,
-      new Error("shippingLine.taxCalculated is undefined")
+      "shippingLine.taxCalculated is undefined",
     );
     const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
       shippingLine.taxableAmount,
-      new Error("shippingLine.taxableAmount is undefined")
+      "shippingLine.taxableAmount is undefined",
     );
     const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
-      shippingTaxableAmount + shippingTaxCalculated
+      shippingTaxableAmount + shippingTaxCalculated,
     );
 
     return {

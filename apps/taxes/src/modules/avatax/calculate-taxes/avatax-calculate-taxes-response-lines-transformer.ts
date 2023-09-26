@@ -14,11 +14,11 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           return {
             total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
               line.lineAmount,
-              new Error("line.lineAmount is undefined")
+              "line.lineAmount is undefined",
             ),
             total_net_amount: taxProviderUtils.resolveOptionalOrThrow(
               line.lineAmount,
-              new Error("line.lineAmount is undefined")
+              "line.lineAmount is undefined",
             ),
             tax_rate: 0,
           };
@@ -26,21 +26,21 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
 
         const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
           line.taxCalculated,
-          new Error("line.taxCalculated is undefined")
+          "line.taxCalculated is undefined",
         );
         const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrow(
           line.taxableAmount,
-          new Error("line.taxableAmount is undefined")
+          "line.taxableAmount is undefined",
         );
         const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
-          lineTotalNetAmount + lineTaxCalculated
+          lineTotalNetAmount + lineTaxCalculated,
         );
 
         return {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,
           /*
-           * avatax doesnt return combined tax rate
+           * avatax doesn't return combined tax rate
            * // todo: calculate percentage tax rate
            */ tax_rate: 0,
         };

@@ -9,9 +9,7 @@ describe("taxProviderUtils", () => {
       expect(() => taxProviderUtils.resolveOptionalOrThrow(undefined)).toThrowError();
     });
     it("throws a custom error if value is undefined", () => {
-      expect(() =>
-        taxProviderUtils.resolveOptionalOrThrow(undefined, new Error("test"))
-      ).toThrowError("test");
+      expect(() => taxProviderUtils.resolveOptionalOrThrow(undefined, "test")).toThrowError("test");
     }),
       it("returns value if value is not undefined", () => {
         expect(taxProviderUtils.resolveOptionalOrThrow("test")).toBe("test");
