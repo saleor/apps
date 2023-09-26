@@ -8,6 +8,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { ClientLogger } from "../../logs/client-logger";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
+import { AvataxErrorNormalizer } from "../avatax-error-normalizer";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -57,14 +58,16 @@ export class AvataxCalculateTaxesAdapter
       this.logger.debug("Transformed AvaTax createTransaction response");
 
       return transformedResponse;
-    } catch (error) {
-      // todo: once better error handling is merged, use normalized error in clientLogger payload output
+    } catch (e) {
+      const errorNormalizer = new AvataxErrorNormalizer();
+      const error = errorNormalizer.normalize(e);
+
       this.clientLogger.push({
         event: "[CalculateTaxes] createTransaction",
         status: "error",
         payload: {
           input: target,
-          output: error,
+          output: error.message,
         },
       });
       throw error;
