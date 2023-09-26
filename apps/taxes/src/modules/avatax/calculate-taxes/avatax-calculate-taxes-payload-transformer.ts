@@ -1,7 +1,7 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
-import { TaxUnknownError } from "../../taxes/tax-error";
+import { TaxUnexpectedError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -31,7 +31,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
       return taxProviderUtils.resolveStringOrThrow(payload.taxBase.sourceObject.userEmail);
     }
 
-    throw new TaxUnknownError("Cannot resolve customer code");
+    throw new TaxUnexpectedError("Cannot resolve customer code");
   }
 
   async transform(

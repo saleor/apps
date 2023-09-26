@@ -2,11 +2,17 @@ import { BaseError } from "../../error";
 
 const TaxError = BaseError.subclass("TaxError");
 
-// An error that we didn't catch
-export const TaxUnknownError = TaxError.subclass("TaxUnknownError");
+/*
+ * Errors that happen if there is not enough data in webhook payload to proceed with the process. Is not reported.
+ * Better name: BadRequestError?
+ */
+export const TaxBadWebhookPayloadError = TaxError.subclass("TaxBadWebhookPayloadError");
 
-// An error that we throw because we know it will happen
-export const TaxKnownError = TaxError.subclass("TaxKnownError");
+// Breaks the process. Is reported.
+export const TaxCriticalError = TaxError.subclass("TaxCriticalError");
 
-// An error that we throw but it shouldn't happen
-export const TaxUnexpectedError = TaxError.subclass("TaxUnexpectedError");
+// Error that shouldn't happen. Should provide extra insights for debugging.
+export const TaxUnexpectedError = TaxCriticalError.subclass("TaxUnexpectedError");
+
+// Error that happens when external service returns an error
+export const TaxExternalError = TaxCriticalError.subclass("TaxExternalError");

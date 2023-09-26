@@ -7,6 +7,7 @@ import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { TaxBadWebhookPayloadError } from "../../../modules/taxes/tax-error";
 
 export const config = {
   api: {
@@ -18,11 +19,11 @@ type CalculateTaxesPayload = Extract<CalculateTaxesEventFragment, { __typename: 
 
 function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   if (!payload.taxBase.lines.length) {
-    throw new Error("No lines found in taxBase");
+    throw new TaxBadWebhookPayloadError("No lines found in taxBase");
   }
 
   if (!payload.taxBase.address) {
-    throw new Error("No address found in taxBase");
+    throw new TaxBadWebhookPayloadError("No address found in taxBase");
   }
 
   return payload;

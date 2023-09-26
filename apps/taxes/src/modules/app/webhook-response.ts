@@ -1,41 +1,7 @@
 import { NextApiResponse } from "next";
 
-import { AvalaraError } from "avatax/lib/AvaTaxClient";
-import { ZodError } from "zod";
 import { createLogger, Logger } from "../../lib/logger";
-
-class WebhookErrorResolver {
-  private logger: Logger;
-  constructor() {
-    this.logger = createLogger({ event: "WebhookErrorResolver" });
-  }
-
-  private resolveErrorMessage(error: unknown) {
-    if (error instanceof ZodError) {
-      this.logger.error(error.message, "Unexpected Zod error caught:");
-      this.logger.debug(error.stack, "Error details:");
-      return error.message;
-    }
-
-    if (error instanceof AvalaraError) {
-      this.logger.error(error.message, "Unexpected Avalara error caught:");
-      this.logger.debug(error.stack, "Error stack:");
-      this.logger.debug(error.target, "Error target:");
-      return error.message;
-    }
-
-    if (error instanceof Error) {
-      this.logger.error(error.stack, "Unexpected error caught:");
-      return error.message;
-    }
-
-    return "Internal server error";
-  }
-
-  resolve(error: unknown) {
-    return this.resolveErrorMessage(error);
-  }
-}
+import { TaxBadWebhookPayloadError, TaxCriticalError } from "../taxes/tax-error";
 
 export class WebhookResponse {
   private logger: Logger;
@@ -43,13 +9,28 @@ export class WebhookResponse {
     this.logger = createLogger({ event: "WebhookResponse" });
   }
 
-  error(error: unknown) {
-    const errorResolver = new WebhookErrorResolver();
-    const errorMessage = errorResolver.resolve(error);
+  private respondWithBadRequest(errorMessage: string) {
+    // Are we sure its 400?
+    return this.res.status(400).json({ error: errorMessage });
+  }
 
-    this.logger.debug({ errorMessage }, "Responding to Saleor with error:");
-
+  private respondWithInternalServerError(errorMessage: string) {
     return this.res.status(500).json({ error: errorMessage });
+  }
+
+  error(error: unknown) {
+    if (error instanceof TaxBadWebhookPayloadError) {
+      this.logger.warn({ error }, "TaxBadWebhookPayloadError occurred");
+      return this.respondWithBadRequest(error.message);
+    }
+
+    if (error instanceof TaxCriticalError) {
+      this.logger.error({ error }, "TaxCriticalError occurred");
+      return this.respondWithInternalServerError(error.message);
+    }
+
+    this.logger.error({ error }, "Unexpected error occurred");
+    return this.respondWithInternalServerError("Unexpected error occurred");
   }
 
   success(data?: unknown) {
