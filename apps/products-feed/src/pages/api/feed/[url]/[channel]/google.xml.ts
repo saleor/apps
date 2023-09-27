@@ -6,15 +6,16 @@ import { fetchProductData } from "../../../../../modules/google-feed/fetch-produ
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
-import { CacheConfigurator } from "../../../../../modules/metadata-cache/cache-configurator";
-import { createSettingsManager } from "../../../../../lib/metadata-manager";
-import { GraphqlClientFactory } from "../../../../../lib/create-graphql-client";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
+
+export const config = {
+  maxDuration: 5 * 60, // 5 minutes
+};
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -157,23 +158,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Generating a new feed");
 
-  const cacheClient = GraphqlClientFactory.fromAuthData(authData);
-
-  if (!cacheClient) {
-    logger.error("Can't create the gql client");
-    return res.status(500).end();
-  }
-
-  // get cached cursors
-  const cache = new CacheConfigurator(createSettingsManager(cacheClient), authData.saleorApiUrl);
-
-  const cursors = await cache.get({ channel });
-
-  // TODO: instead of separate variants, use group id https://support.google.com/merchants/answer/6324507?hl=en
   let productVariants: GoogleFeedProductVariantFragment[] = [];
 
   try {
-    productVariants = await fetchProductData({ client, channel, cursors, imageSize });
+    productVariants = await fetchProductData({ client, channel, imageSize });
   } catch (error) {
     logger.error(error);
     return res.status(400).end();

@@ -1,8 +1,0 @@
-fragment ProductVariantWebhookPayload on ProductVariant {
-  channel
-  channelListings {
-    channel {
-      slug
-    }
-  }
-}

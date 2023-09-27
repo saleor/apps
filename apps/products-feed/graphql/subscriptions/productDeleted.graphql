@@ -1,9 +1,0 @@
-subscription ProductDeleted {
-  event {
-    ... on ProductDeleted {
-      product {
-        ...ProductWebhookPayload
-      }
-    }
-  }
-}

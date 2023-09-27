@@ -2,11 +2,6 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
-import { webhookProductCreated } from "./webhooks/product_created";
-import { webhookProductDeleted } from "./webhooks/product_deleted";
-import { webhookProductVariantCreated } from "./webhooks/product_variant_created";
-import { webhookProductVariantDeleted } from "./webhooks/product_variant_deleted";
-import { webhookProductVariantUpdated } from "./webhooks/product_variant_updated";
 
 export default createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -31,13 +26,7 @@ export default createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
-      webhooks: [
-        webhookProductCreated.getWebhookManifest(apiBaseURL),
-        webhookProductDeleted.getWebhookManifest(apiBaseURL),
-        webhookProductVariantCreated.getWebhookManifest(apiBaseURL),
-        webhookProductVariantDeleted.getWebhookManifest(apiBaseURL),
-        webhookProductVariantUpdated.getWebhookManifest(apiBaseURL),
-      ],
+      webhooks: [],
     };
 
     return manifest;

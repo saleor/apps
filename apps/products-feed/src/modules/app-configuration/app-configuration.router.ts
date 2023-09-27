@@ -2,7 +2,6 @@ import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { createLogger } from "@saleor/apps-shared";
 
-import { updateCacheForConfigurations } from "../metadata-cache/update-cache-for-configurations";
 import { AppConfigSchema, imageSizeInputSchema, titleTemplateInputSchema } from "./app-config";
 import { z } from "zod";
 import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
@@ -105,17 +104,6 @@ export const appConfigurationRouter = router({
         input,
       }) => {
         const config = await getConfig();
-
-        /**
-         * TODO Check if this has to run, once its cached, it should be invalidated by webhooks only.
-         *
-         * But this operation isn't expensive and users will not continuously save this form
-         */
-        await updateCacheForConfigurations({
-          client: apiClient,
-          channelsSlugs: [input.channelSlug],
-          saleorApiUrl: saleorApiUrl,
-        });
 
         logger.debug({ channel: input.channelSlug }, "Updated cache for channel");
 
