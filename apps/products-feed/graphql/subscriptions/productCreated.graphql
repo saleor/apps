@@ -1,9 +1,0 @@
-subscription ProductCreated {
-  event {
-    ... on ProductCreated {
-      product {
-        ...ProductWebhookPayload
-      }
-    }
-  }
-}
