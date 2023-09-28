@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.12.2
+
+### Patch Changes
+
+- ae6dbb1: Removed webhooks on product changes used for feed cache due to changed max execution time.
+- ae6dbb1: Changed Vercel's maximum execution time to be 5 minutes for feed generation. This should help with the previous limits of 60s, that was not enough for feed to be generated.
+
 ## 1.12.1
 
 ### Patch Changes
