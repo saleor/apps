@@ -1,5 +1,7 @@
 {
-  "extends": ["//"],
+  "extends": [
+    "//"
+  ],
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
@@ -21,7 +23,8 @@
         "NEXT_PUBLIC_SENTRY_DSN",
         "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
-        "APP_API_BASE_URL"
+        "APP_API_BASE_URL",
+        "REDIS_URL"
       ]
     }
   }
