@@ -50,15 +50,6 @@ export class TaxJarOrderConfirmedAdapter
     try {
       const response = await client.createOrder(target);
 
-      this.clientLogger.push({
-        event: "[OrderConfirmed] createOrder",
-        status: "success",
-        payload: {
-          input: target,
-          output: response,
-        },
-      });
-
       this.logger.debug("TaxJar createOrder successfully responded");
       const responseTransformer = new TaxJarOrderConfirmedResponseTransformer();
       const transformedResponse = responseTransformer.transform(response);

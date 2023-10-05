@@ -49,15 +49,6 @@ export class AvataxCalculateTaxesAdapter
     try {
       const response = await client.createTransaction(target);
 
-      this.clientLogger.push({
-        event: "[CalculateTaxes] createTransaction",
-        status: "success",
-        payload: {
-          input: target,
-          output: response,
-        },
-      });
-
       this.logger.debug("AvaTax createTransaction successfully responded");
 
       const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
