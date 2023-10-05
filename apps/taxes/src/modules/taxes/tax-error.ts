@@ -2,17 +2,14 @@ import { BaseError } from "../../error";
 
 const TaxError = BaseError.subclass("TaxError");
 
-/*
- * Errors that happen if there is not enough data in webhook payload to proceed with the process. Is not reported.
- * Better name: BadRequestError?
- */
+// Error thrown when there is not enough data in webhook payload to proceed with the process. Is expected behavior. Not reported.
 export const TaxBadWebhookPayloadError = TaxError.subclass("TaxBadWebhookPayloadError");
 
 // Breaks the process. Is reported.
 export const TaxCriticalError = TaxError.subclass("TaxCriticalError");
 
-// Error that shouldn't happen. Should provide extra insights for debugging.
+/*
+ * Error that shouldn't happen. Should provide extra insights for debugging.
+ * Example use case: the API types say that the field "xyz" is string or undefined. We know that it's always string. For peace of mind, we check if it's undefined and throw this error if it is.
+ */
 export const TaxUnexpectedError = TaxCriticalError.subclass("TaxUnexpectedError");
-
-// Error that happens when external service returns an error
-export const TaxExternalError = TaxCriticalError.subclass("TaxExternalError");
