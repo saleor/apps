@@ -58,6 +58,7 @@ export class TaxJarOrderConfirmedAdapter
 
       return transformedResponse;
     } catch (error) {
+      // todo: once better error handling is merged, use normalized error in clientLogger payload output
       this.clientLogger.push({
         event: "[OrderConfirmed] createOrder",
         status: "error",
