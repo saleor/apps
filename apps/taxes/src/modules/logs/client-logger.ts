@@ -30,7 +30,7 @@ type LogInput = z.infer<typeof clientLogInputSchema>;
 
 export type ClientLog = z.infer<typeof clientLogSchema>;
 
-export const LOG_LIMIT = 100;
+export const LOG_LIMIT = 10;
 
 export class ClientLogger implements MetadataLogs<ClientLog> {
   private logRepository: ClientLogsMetadataRepository<ClientLog>;
