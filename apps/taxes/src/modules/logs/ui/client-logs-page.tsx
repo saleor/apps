@@ -10,8 +10,8 @@ const LogsInstructions = () => {
       description={
         <>
           <Text as="p" marginBottom={8}>
-            Taxes App records all API calls and responses. You can use this information to debug
-            issues with your provider.
+            Taxes App records all failed API calls and responses. You can use this information to
+            debug issues with your provider.
           </Text>
           <Text as="p" marginBottom={8}>
             Only the last {LOG_LIMIT} logs are stored.
