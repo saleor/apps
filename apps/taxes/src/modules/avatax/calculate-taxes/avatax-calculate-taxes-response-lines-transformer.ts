@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { numbers } from "../../taxes/numbers";
-import { TaxIncompletePayloadError } from "../../taxes/tax-error";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
@@ -15,11 +15,11 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           return {
             total_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
               line.lineAmount,
-              new TaxIncompletePayloadError("line.lineAmount is undefined"),
+              new TaxBadPayloadError("line.lineAmount is undefined"),
             ),
             total_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
               line.lineAmount,
-              new TaxIncompletePayloadError("line.lineAmount is undefined"),
+              new TaxBadPayloadError("line.lineAmount is undefined"),
             ),
             tax_rate: 0,
           };
@@ -27,11 +27,11 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
 
         const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxCalculated,
-          new TaxIncompletePayloadError("line.taxCalculated is undefined"),
+          new TaxBadPayloadError("line.taxCalculated is undefined"),
         );
         const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxableAmount,
-          new TaxIncompletePayloadError("line.taxableAmount is undefined"),
+          new TaxBadPayloadError("line.taxableAmount is undefined"),
         );
         const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
           lineTotalNetAmount + lineTaxCalculated,

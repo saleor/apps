@@ -1,6 +1,6 @@
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
 import type { TaxCode } from "../../taxes/tax-code";
-import { TaxIncompleteResponseError } from "../../taxes/tax-error";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
@@ -16,7 +16,7 @@ export class AvataxTaxCodesService {
     return taxCodes.map((item) => ({
       description: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         item.description,
-        new TaxIncompleteResponseError("Cannot resolve tax code description"),
+        new TaxBadProviderResponseError("Cannot resolve tax code description"),
       ),
       code: item.taxCode,
     }));

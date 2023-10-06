@@ -1,7 +1,7 @@
 import { LineItem } from "taxjar/dist/util/types";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
-import { TaxIncompletePayloadError } from "../../taxes/tax-error";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 import { TaxJarConfig } from "../taxjar-connection-schema";
@@ -16,11 +16,11 @@ export function sumPayloadLines(lines: LineItem[]): number {
         prev +
         taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.unit_price,
-          new TaxIncompletePayloadError("Line unit_price is required to calculate order taxes"),
+          new TaxBadPayloadError("Line unit_price is required to calculate order taxes"),
         ) *
           taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
             line.quantity,
-            new TaxIncompletePayloadError("Line quantity is required to calculate order taxes"),
+            new TaxBadPayloadError("Line quantity is required to calculate order taxes"),
           ),
       0,
     ),

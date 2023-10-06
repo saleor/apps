@@ -1,7 +1,7 @@
 import Breakdown from "taxjar/dist/types/breakdown";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { TaxIncompleteResponseError } from "../../taxes/tax-error";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import {
   TaxJarCalculateTaxesPayload,
@@ -41,15 +41,15 @@ export class TaxJarCalculateTaxesResponseLinesTransformer {
     return lines.map((line) => {
       const taxableAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.taxable_amount,
-        new TaxIncompleteResponseError("Line taxable amount is required to calculate net amount"),
+        new TaxBadProviderResponseError("Line taxable amount is required to calculate net amount"),
       );
       const taxCollectable = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.tax_collectable,
-        new TaxIncompleteResponseError("Line tax collectable is required to calculate net amount"),
+        new TaxBadProviderResponseError("Line tax collectable is required to calculate net amount"),
       );
       const taxRate = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.combined_tax_rate,
-        new TaxIncompleteResponseError(
+        new TaxBadProviderResponseError(
           "Line combined tax rate is required to calculate net amount",
         ),
       );

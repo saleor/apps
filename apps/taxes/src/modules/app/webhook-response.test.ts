@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { WebhookResponse } from "./webhook-response";
-import { TaxBadWebhookPayloadError } from "../taxes/tax-error";
+import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
 
 let jsonMock = vi.fn();
 let statusMock = vi.fn().mockReturnValueOnce({ json: jsonMock });
@@ -30,7 +30,7 @@ describe("WebhookResponse", () => {
   });
   it("returns 400 when thrown bad webhook payload error", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
-    const badWebhookPayloadError = new TaxBadWebhookPayloadError("Bad webhook payload");
+    const badWebhookPayloadError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
 
     webhookResponse.error(badWebhookPayloadError);
 

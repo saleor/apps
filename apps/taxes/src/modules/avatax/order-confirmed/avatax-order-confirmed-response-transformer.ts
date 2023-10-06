@@ -1,5 +1,5 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { TaxIncompleteResponseError } from "../../taxes/tax-error";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 
@@ -8,7 +8,7 @@ export class AvataxOrderConfirmedResponseTransformer {
     return {
       id: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         response.code,
-        new TaxIncompleteResponseError(
+        new TaxBadProviderResponseError(
           "Could not update the order metadata with AvaTax transaction code because it was not returned from the createTransaction mutation.",
         ),
       ),

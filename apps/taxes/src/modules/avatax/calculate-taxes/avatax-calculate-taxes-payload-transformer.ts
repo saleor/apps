@@ -1,7 +1,7 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
-import { TaxIncompletePayloadError } from "../../taxes/tax-error";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -26,18 +26,18 @@ export class AvataxCalculateTaxesPayloadTransformer {
     if (payload.taxBase.sourceObject.__typename === "Checkout") {
       return taxProviderUtils.resolveStringOrThrow(
         payload.taxBase.sourceObject.email,
-        new TaxIncompletePayloadError("Cannot resolve email from sourceObject"),
+        new TaxBadPayloadError("Cannot resolve email from sourceObject"),
       );
     }
 
     if (payload.taxBase.sourceObject.__typename === "Order") {
       return taxProviderUtils.resolveStringOrThrow(
         payload.taxBase.sourceObject.userEmail,
-        new TaxIncompletePayloadError("Cannot resolve userEmail from sourceObject"),
+        new TaxBadPayloadError("Cannot resolve userEmail from sourceObject"),
       );
     }
 
-    throw new TaxIncompletePayloadError("Cannot resolve customer code");
+    throw new TaxBadPayloadError("Cannot resolve customer code");
   }
 
   async transform(
