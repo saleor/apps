@@ -57,7 +57,7 @@ In the `apps` folder, you will find the following applications:
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
-- [taxes](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes) - calculate order and checkout taxes using external services.
+- [taxes](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) - calculate order and checkout taxes using external services.
 
 ## Another official apps
 
