@@ -30,19 +30,11 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
     const client = new AvataxClient(this.config);
 
     try {
-      const response = await client.voidTransaction(target);
-
-      this.clientLogger.push({
-        event: "[OrderCancelled] voidTransaction",
-        status: "success",
-        payload: {
-          input: target,
-          output: response,
-        },
-      });
+      await client.voidTransaction(target);
 
       this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
     } catch (error) {
+      // todo: once better error handling is merged, use normalized error in clientLogger payload output
       this.clientLogger.push({
         event: "[OrderCancelled] voidTransaction",
         status: "error",

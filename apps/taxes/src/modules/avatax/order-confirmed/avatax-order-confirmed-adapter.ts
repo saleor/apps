@@ -50,15 +50,6 @@ export class AvataxOrderConfirmedAdapter
     try {
       const response = await client.createTransaction(target);
 
-      this.clientLogger.push({
-        event: "[OrderConfirmed] createTransaction",
-        status: "success",
-        payload: {
-          input: target,
-          output: response,
-        },
-      });
-
       this.logger.debug("AvaTax createTransaction successfully responded");
 
       const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
@@ -68,6 +59,7 @@ export class AvataxOrderConfirmedAdapter
 
       return transformedResponse;
     } catch (error) {
+      // todo: once better error handling is merged, use normalized error in clientLogger payload output
       this.clientLogger.push({
         event: "[OrderConfirmed] createTransaction",
         status: "error",
