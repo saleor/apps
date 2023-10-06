@@ -52,15 +52,6 @@ export class TaxJarCalculateTaxesAdapter
     try {
       const response = await client.fetchTaxForOrder(target);
 
-      this.clientLogger.push({
-        event: "[CalculateTaxes] fetchTaxForOrder",
-        status: "success",
-        payload: {
-          input: target,
-          output: response,
-        },
-      });
-
       this.logger.debug("TaxJar fetchTaxForOrder responded with:");
 
       const responseTransformer = new TaxJarCalculateTaxesResponseTransformer();
@@ -70,6 +61,7 @@ export class TaxJarCalculateTaxesAdapter
 
       return transformedResponse;
     } catch (error) {
+      // todo: once better error handling is merged, use normalized error in clientLogger payload output
       this.clientLogger.push({
         event: "[CalculateTaxes] fetchTaxForOrder",
         status: "error",
