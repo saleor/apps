@@ -28,15 +28,38 @@ describe("WebhookResponse", () => {
 
     expect(statusMock).toHaveBeenCalledWith(500);
   });
-  it("returns 400 when thrown bad webhook payload error", () => {
+  it("returns 500 when thrown TaxIncompleteWebhookPayloadError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
     const badWebhookPayloadError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
 
     webhookResponse.error(badWebhookPayloadError);
 
-    expect(statusMock).toHaveBeenCalledWith(400);
+    expect(statusMock).toHaveBeenCalledWith(500);
   });
+  it("returns 500 when thrown TaxCriticalError", () => {
+    const webhookResponse = new WebhookResponse(mockResponse);
+    const criticalError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
 
+    webhookResponse.error(criticalError);
+
+    expect(statusMock).toHaveBeenCalledWith(500);
+  });
+  it("returns 500 when thrown TaxBadPayloadError", () => {
+    const webhookResponse = new WebhookResponse(mockResponse);
+    const badPayloadError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+
+    webhookResponse.error(badPayloadError);
+
+    expect(statusMock).toHaveBeenCalledWith(500);
+  });
+  it("returns 500 when thrown TaxBadProviderResponseError", () => {
+    const webhookResponse = new WebhookResponse(mockResponse);
+    const badProviderResponseError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+
+    webhookResponse.error(badProviderResponseError);
+
+    expect(statusMock).toHaveBeenCalledWith(500);
+  });
   it("returns 200 and data when success is called", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
 
