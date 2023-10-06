@@ -6,13 +6,12 @@ import { TaxUnexpectedError } from "./tax-error";
  * If it ever happens, we have nothing to fall back to, so we throw an error.
  * Should only be used for values that are required for further calculation.
  */
-function resolveOptionalOrThrow<T>(value: T | undefined | null, errorMessage?: string): T {
+function resolveOptionalOrThrowUnexpectedError<T>(
+  value: T | undefined | null,
+  error?: InstanceType<typeof TaxUnexpectedError>,
+): T {
   if (value === undefined || value === null) {
-    throw new TaxUnexpectedError(
-      errorMessage
-        ? errorMessage
-        : "Could not resolve data. Value needed for further calculation is undefined.",
-    );
+    throw error;
   }
 
   return value;
@@ -32,6 +31,6 @@ function resolveStringOrThrow(value: string | undefined | null): string {
 }
 
 export const taxProviderUtils = {
-  resolveOptionalOrThrow,
+  resolveOptionalOrThrowUnexpectedError,
   resolveStringOrThrow,
 };

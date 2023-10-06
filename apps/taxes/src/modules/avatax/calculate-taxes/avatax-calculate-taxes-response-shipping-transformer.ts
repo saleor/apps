@@ -3,6 +3,7 @@ import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { TaxUnexpectedError } from "../../taxes/tax-error";
 
 export class AvataxCalculateTaxesResponseShippingTransformer {
   transform(
@@ -23,13 +24,13 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
 
     if (!shippingLine.isItemTaxable) {
       return {
-        shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           shippingLine.lineAmount,
-          "shippingLine.lineAmount is undefined",
+          new TaxUnexpectedError("shippingLine.lineAmount is undefined"),
         ),
-        shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           shippingLine.lineAmount,
-          "shippingLine.lineAmount is undefined",
+          new TaxUnexpectedError("shippingLine.lineAmount is undefined"),
         ),
         /*
          * avatax doesn't return combined tax rate
@@ -39,13 +40,13 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
       };
     }
 
-    const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+    const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
       shippingLine.taxCalculated,
-      "shippingLine.taxCalculated is undefined",
+      new TaxUnexpectedError("shippingLine.taxCalculated is undefined"),
     );
-    const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+    const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
       shippingLine.taxableAmount,
-      "shippingLine.taxableAmount is undefined",
+      new TaxUnexpectedError("shippingLine.taxableAmount is undefined"),
     );
     const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
       shippingTaxableAmount + shippingTaxCalculated,

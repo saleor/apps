@@ -14,7 +14,7 @@ export class AvataxTaxCodesService {
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
     return taxCodes.map((item) => ({
-      description: taxProviderUtils.resolveOptionalOrThrow(item.description),
+      description: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(item.description),
       code: item.taxCode,
     }));
   }

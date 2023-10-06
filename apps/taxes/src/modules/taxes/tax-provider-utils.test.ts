@@ -1,18 +1,26 @@
-// write vitest tests for checking if taxProviderUtils.resolveOptionalOrThrow throws an error for undefined value
+// write vitest tests for checking if taxProviderUtils.resolveOptionalOrThrowUnexpectedError throws an error for undefined value
 
 import { describe, expect, it } from "vitest";
 import { taxProviderUtils } from "./tax-provider-utils";
+import { TaxUnexpectedError } from "./tax-error";
 
 describe("taxProviderUtils", () => {
-  describe("resolveOptionalOrThrow", () => {
+  describe("resolveOptionalOrThrowUnexpectedError", () => {
     it("throws a default error if value is undefined", () => {
-      expect(() => taxProviderUtils.resolveOptionalOrThrow(undefined)).toThrowError();
+      expect(() =>
+        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(undefined),
+      ).toThrowError();
     });
     it("throws a custom error if value is undefined", () => {
-      expect(() => taxProviderUtils.resolveOptionalOrThrow(undefined, "test")).toThrowError("test");
+      expect(() =>
+        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+          undefined,
+          new TaxUnexpectedError("test"),
+        ),
+      ).toThrowError("test");
     }),
       it("returns value if value is not undefined", () => {
-        expect(taxProviderUtils.resolveOptionalOrThrow("test")).toBe("test");
+        expect(taxProviderUtils.resolveOptionalOrThrowUnexpectedError("test")).toBe("test");
       });
   });
 });

@@ -3,6 +3,7 @@ import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { TaxUnexpectedError } from "../../taxes/tax-error";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
   transform(transaction: TransactionModel): CalculateTaxesResponse["lines"] {
@@ -12,25 +13,25 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
       productLines?.map((line) => {
         if (!line.isItemTaxable) {
           return {
-            total_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+            total_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
               line.lineAmount,
-              "line.lineAmount is undefined",
+              new TaxUnexpectedError("line.lineAmount is undefined"),
             ),
-            total_net_amount: taxProviderUtils.resolveOptionalOrThrow(
+            total_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
               line.lineAmount,
-              "line.lineAmount is undefined",
+              new TaxUnexpectedError("line.lineAmount is undefined"),
             ),
             tax_rate: 0,
           };
         }
 
-        const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+        const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxCalculated,
-          "line.taxCalculated is undefined",
+          new TaxUnexpectedError("line.taxCalculated is undefined"),
         );
-        const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrow(
+        const lineTotalNetAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxableAmount,
-          "line.taxableAmount is undefined",
+          new TaxUnexpectedError("line.taxableAmount is undefined"),
         );
         const lineTotalGrossAmount = numbers.roundFloatToTwoDecimals(
           lineTotalNetAmount + lineTaxCalculated,

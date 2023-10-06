@@ -6,6 +6,7 @@ import {
   TaxJarCalculateTaxesPayload,
   TaxJarCalculateTaxesResponse,
 } from "./taxjar-calculate-taxes-adapter";
+import { TaxUnexpectedError } from "../../taxes/tax-error";
 
 /*
  * TaxJar doesn't guarantee the order of the response items to match the payload items order.
@@ -38,17 +39,17 @@ export class TaxJarCalculateTaxesResponseLinesTransformer {
     const lines = matchPayloadLinesToResponseLines(payload.taxBase.lines, responseLines);
 
     return lines.map((line) => {
-      const taxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+      const taxableAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.taxable_amount,
-        "Line taxable amount is required to calculate net amount",
+        new TaxUnexpectedError("Line taxable amount is required to calculate net amount"),
       );
-      const taxCollectable = taxProviderUtils.resolveOptionalOrThrow(
+      const taxCollectable = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.tax_collectable,
-        "Line tax collectable is required to calculate net amount",
+        new TaxUnexpectedError("Line tax collectable is required to calculate net amount"),
       );
-      const taxRate = taxProviderUtils.resolveOptionalOrThrow(
+      const taxRate = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.combined_tax_rate,
-        "Line combined tax rate is required to calculate net amount",
+        new TaxUnexpectedError("Line combined tax rate is required to calculate net amount"),
       );
 
       return {
