@@ -1,6 +1,6 @@
 import { TaxjarError } from "taxjar/dist/util/types";
 import { createLogger } from "../../lib/logger";
-import { TaxCriticalError, TaxUnexpectedError } from "../taxes/tax-error";
+import { TaxCriticalError } from "../taxes/tax-error";
 
 export class TaxJarErrorNormalizer {
   private logger = createLogger({ name: "TaxJarErrorNormalizer" });
@@ -12,6 +12,6 @@ export class TaxJarErrorNormalizer {
       return new TaxCriticalError(error.message);
     }
 
-    return TaxUnexpectedError.normalize(error);
+    return TaxCriticalError.normalize(error);
   }
 }

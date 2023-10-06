@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { taxProviderUtils } from "./tax-provider-utils";
-import { TaxUnexpectedError } from "./tax-error";
+import { TaxCriticalError } from "./tax-error";
 
 describe("taxProviderUtils", () => {
   describe("resolveOptionalOrThrowUnexpectedError", () => {
@@ -10,7 +10,7 @@ describe("taxProviderUtils", () => {
       expect(() =>
         taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           undefined,
-          new TaxUnexpectedError("test"),
+          new TaxCriticalError("test"),
         ),
       ).toThrowError();
     });
@@ -19,7 +19,7 @@ describe("taxProviderUtils", () => {
       expect(
         taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           "test",
-          new TaxUnexpectedError("error"),
+          new TaxCriticalError("error"),
         ),
       ).toBe("test");
     });

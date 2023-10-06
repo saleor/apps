@@ -2,14 +2,17 @@ import { BaseError } from "../../error";
 
 const TaxError = BaseError.subclass("TaxError");
 
-// Error thrown when there is not enough data in webhook payload to proceed with the process. Is expected behavior. Not reported.
-export const TaxBadWebhookPayloadError = TaxError.subclass("TaxBadWebhookPayloadError");
+// Expected error that is not reported.
+const TaxExpectedError = TaxError.subclass("TaxExpectedError");
+
+// Error thrown when there is not enough data in webhook payload to proceed with the process.
+export const TaxBadWebhookPayloadError = TaxExpectedError.subclass("TaxBadWebhookPayloadError");
 
 // Breaks the process. Is reported.
 export const TaxCriticalError = TaxError.subclass("TaxCriticalError");
 
-/*
- * Error that shouldn't happen. Should provide extra insights for debugging.
- * Example use case: the API types say that the field "xyz" is string or undefined. We know that it's always string. For peace of mind, we check if it's undefined and throw this error if it is.
- */
-export const TaxUnexpectedError = TaxCriticalError.subclass("TaxUnexpectedError");
+// Error thrown when expected data is not present in the payload.
+export const TaxIncompletePayloadError = TaxCriticalError.subclass("TaxIncompletePayloadError");
+
+// Error thrown when expected data is not present in the response.
+export const TaxIncompleteResponseError = TaxCriticalError.subclass("TaxIncompleteResponseError");

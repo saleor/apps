@@ -1,6 +1,6 @@
-import { createLogger } from "../../lib/logger";
 import { AvalaraError } from "avatax/lib/AvaTaxClient";
-import { TaxCriticalError, TaxUnexpectedError } from "../taxes/tax-error";
+import { createLogger } from "../../lib/logger";
+import { TaxCriticalError } from "../taxes/tax-error";
 
 export class AvataxErrorNormalizer {
   private logger = createLogger({ name: "AvataxErrorNormalizer" });
@@ -12,6 +12,6 @@ export class AvataxErrorNormalizer {
       return new TaxCriticalError(error.message);
     }
 
-    return TaxUnexpectedError.normalize(error);
+    return TaxCriticalError.normalize(error);
   }
 }
