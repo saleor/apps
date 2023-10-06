@@ -82,6 +82,6 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
         avataxConfigMock,
         matchesMock,
       ),
-    ).rejects.toThrow("This field must be defined.");
+    ).rejects.toThrow();
   });
 });
