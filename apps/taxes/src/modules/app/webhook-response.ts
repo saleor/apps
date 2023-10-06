@@ -9,28 +9,23 @@ export class WebhookResponse {
     this.logger = createLogger({ event: "WebhookResponse" });
   }
 
-  private respondWithBadRequest(errorMessage: string) {
-    // Are we sure its 400?
-    return this.res.status(400).json({ error: errorMessage });
-  }
-
-  private respondWithInternalServerError(errorMessage: string) {
+  private respondWithError(errorMessage: string) {
     return this.res.status(500).json({ error: errorMessage });
   }
 
   error(error: unknown) {
     if (error instanceof TaxBadWebhookPayloadError) {
-      this.logger.warn({ error }, "TaxBadWebhookPayloadError occurred");
-      return this.respondWithBadRequest(error.message);
+      this.logger.error({ error }, "TaxBadWebhookPayloadError occurred");
+      return this.respondWithError(error.message);
     }
 
     if (error instanceof TaxCriticalError) {
       this.logger.error({ error }, "TaxCriticalError occurred");
-      return this.respondWithInternalServerError(error.message);
+      return this.respondWithError(error.message);
     }
 
     this.logger.error({ error }, "Unexpected error occurred");
-    return this.respondWithInternalServerError("Unexpected error occurred");
+    return this.respondWithError("Unexpected error occurred");
   }
 
   success(data?: unknown) {
