@@ -1,8 +1,8 @@
 import { BaseError, BaseErrorProps } from "../../error";
 
-const TaxError = BaseError.subclass("TaxError", { props: {} as BaseErrorProps });
+export const TaxError = BaseError.subclass("TaxError", { props: {} as BaseErrorProps });
 
-// Error thrown when there is not enough data in webhook payload to proceed with the process.
+// Error thrown when there is not enough data in webhook payload to proceed with the process. Not reported.
 export const TaxIncompleteWebhookPayloadError = TaxError.subclass(
   "TaxIncompleteWebhookPayloadError",
   {

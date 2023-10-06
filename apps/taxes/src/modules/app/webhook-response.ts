@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
 
 import { createLogger, Logger } from "../../lib/logger";
-import { TaxIncompleteWebhookPayloadError, TaxCriticalError } from "../taxes/tax-error";
+import { TaxError } from "../taxes/tax-error";
 
 export class WebhookResponse {
   private logger: Logger;
@@ -14,13 +14,8 @@ export class WebhookResponse {
   }
 
   error(error: unknown) {
-    if (error instanceof TaxIncompleteWebhookPayloadError) {
-      this.logger.error({ error }, "TaxIncompleteWebhookPayloadError occurred");
-      return this.respondWithError(error.message);
-    }
-
-    if (error instanceof TaxCriticalError) {
-      this.logger.error({ error }, "TaxCriticalError occurred");
+    if (error instanceof TaxError) {
+      this.logger.error({ error }, "TaxError occurred");
       return this.respondWithError(error.message);
     }
 
