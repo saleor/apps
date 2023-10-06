@@ -6,21 +6,22 @@ import { TaxUnexpectedError } from "./tax-error";
 
 describe("taxProviderUtils", () => {
   describe("resolveOptionalOrThrowUnexpectedError", () => {
-    it("throws a default error if value is undefined", () => {
-      expect(() =>
-        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(undefined),
-      ).toThrowError();
-    });
-    it("throws a custom error if value is undefined", () => {
+    it("throws an error if value is undefined", () => {
       expect(() =>
         taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           undefined,
           new TaxUnexpectedError("test"),
         ),
-      ).toThrowError("test");
-    }),
-      it("returns value if value is not undefined", () => {
-        expect(taxProviderUtils.resolveOptionalOrThrowUnexpectedError("test")).toBe("test");
-      });
+      ).toThrowError();
+    });
+
+    it("returns value if value is not undefined", () => {
+      expect(
+        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+          "test",
+          new TaxUnexpectedError("error"),
+        ),
+      ).toBe("test");
+    });
   });
 });

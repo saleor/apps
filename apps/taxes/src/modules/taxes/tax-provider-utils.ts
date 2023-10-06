@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TaxUnexpectedError } from "./tax-error";
+import { TaxCriticalError } from "./tax-error";
 
 /*
  * The providers sdk types claim to sometimes return undefined.
@@ -8,7 +8,7 @@ import { TaxUnexpectedError } from "./tax-error";
  */
 function resolveOptionalOrThrowUnexpectedError<T>(
   value: T | undefined | null,
-  error?: InstanceType<typeof TaxUnexpectedError>,
+  error: InstanceType<typeof TaxCriticalError>,
 ): T {
   if (value === undefined || value === null) {
     throw error;
@@ -17,14 +17,17 @@ function resolveOptionalOrThrowUnexpectedError<T>(
   return value;
 }
 
-function resolveStringOrThrow(value: string | undefined | null): string {
+function resolveStringOrThrow(
+  value: string | undefined | null,
+  error: InstanceType<typeof TaxCriticalError>,
+): string {
   const parseResult = z
     .string({ required_error: "This field must be defined." })
     .min(1, { message: "This field can not be empty." })
     .safeParse(value);
 
   if (!parseResult.success) {
-    throw new TaxUnexpectedError(parseResult.error.message);
+    throw error;
   }
 
   return parseResult.data;
