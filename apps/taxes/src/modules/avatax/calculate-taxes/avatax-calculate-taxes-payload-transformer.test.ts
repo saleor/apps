@@ -82,6 +82,24 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
         avataxConfigMock,
         matchesMock,
       ),
-    ).rejects.toThrow();
+    ).rejects.toThrow("Cannot resolve email from sourceObject");
+  });
+  it("when no userEmail in sourceObject, throws an error", async () => {
+    const taxBaseMock = mockGenerator.generateTaxBase({
+      sourceObject: { userEmail: undefined, __typename: "Order" },
+    });
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+    const payloadMock = {
+      taxBase: taxBaseMock,
+    } as unknown as CalculateTaxesPayload;
+
+    await expect(
+      new AvataxCalculateTaxesPayloadTransformer().transform(
+        payloadMock,
+        avataxConfigMock,
+        matchesMock,
+      ),
+    ).rejects.toThrow("Cannot resolve userEmail from sourceObject");
   });
 });

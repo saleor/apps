@@ -1,5 +1,3 @@
-// write vitest tests for checking if taxProviderUtils.resolveOptionalOrThrowUnexpectedError throws an error for undefined value
-
 import { describe, expect, it } from "vitest";
 import { taxProviderUtils } from "./tax-provider-utils";
 import { TaxCriticalError } from "./tax-error";
