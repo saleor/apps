@@ -9,7 +9,9 @@
         "APP_API_BASE_URL",
         "APP_DEBUG",
         "APP_IFRAME_BASE_URL",
+        "GITHUB_SHA",
         "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_ENVIRONMENT",
         "NEXT_PUBLIC_SENTRY_REPORT_LEVEL",
         "NODE_ENV",
         "PORT",
@@ -21,7 +23,9 @@
         "SENTRY_ENVIRONMENT",
         "SENTRY_ORG",
         "SENTRY_PROJECT",
-        "VERCEL_URL"
+        "VERCEL_GIT_COMMIT_SHA",
+        "VERCEL_URL",
+        "VERCEL"
       ]
     }
   }
