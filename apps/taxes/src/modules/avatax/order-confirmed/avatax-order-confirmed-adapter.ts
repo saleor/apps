@@ -1,11 +1,12 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { ClientLogger } from "../../logs/client-logger";
+import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
@@ -58,16 +59,18 @@ export class AvataxOrderConfirmedAdapter
       this.logger.debug("Transformed AvaTax createTransaction response");
 
       return transformedResponse;
-    } catch (error) {
-      // todo: once better error handling is merged, use normalized error in clientLogger payload output
+    } catch (e) {
+      const error = normalizeAvaTaxError(e);
+
       this.clientLogger.push({
         event: "[OrderConfirmed] createTransaction",
         status: "error",
         payload: {
           input: target,
-          output: error,
+          output: error.message,
         },
       });
+
       throw error;
     }
   }

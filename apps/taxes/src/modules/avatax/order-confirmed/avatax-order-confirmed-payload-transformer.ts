@@ -10,6 +10,7 @@ import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -46,7 +47,10 @@ export class AvataxOrderConfirmedPayloadTransformer {
         code,
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
-        customerCode: taxProviderUtils.resolveStringOrThrow(order.user?.id),
+        customerCode: taxProviderUtils.resolveStringOrThrow(
+          order.user?.id,
+          new TaxBadPayloadError("Cannot resolve user id"),
+        ),
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
@@ -56,7 +60,10 @@ export class AvataxOrderConfirmedPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
         },
         currencyCode: order.total.currency,
-        email: taxProviderUtils.resolveStringOrThrow(order.user?.email),
+        email: taxProviderUtils.resolveStringOrThrow(
+          order.user?.email,
+          new TaxBadPayloadError("Cannot resolve user email"),
+        ),
         lines: linesTransformer.transform(order, avataxConfig, matches),
         date,
         discount: discountUtils.sumDiscounts(

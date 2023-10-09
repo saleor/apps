@@ -1,6 +1,7 @@
 import Breakdown from "taxjar/dist/types/breakdown";
 import { TaxForOrderRes } from "taxjar/dist/types/returnTypes";
 import { TaxBaseFragment } from "../../../../generated/graphql";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import {
   TaxJarCalculateTaxesPayload,
@@ -13,14 +14,14 @@ import {
  */
 export function matchPayloadLinesToResponseLines(
   payloadLines: TaxBaseFragment["lines"],
-  responseLines: NonNullable<Breakdown["line_items"]>
+  responseLines: NonNullable<Breakdown["line_items"]>,
 ) {
   return payloadLines.map((payloadLine) => {
     const responseLine = responseLines.find((line) => line.id === payloadLine.sourceLine.id);
 
     if (!responseLine) {
       throw new Error(
-        `Saleor product line with id ${payloadLine.sourceLine.id} not found in TaxJar response.`
+        `Saleor product line with id ${payloadLine.sourceLine.id} not found in TaxJar response.`,
       );
     }
 
@@ -31,24 +32,26 @@ export function matchPayloadLinesToResponseLines(
 export class TaxJarCalculateTaxesResponseLinesTransformer {
   transform(
     payload: TaxJarCalculateTaxesPayload,
-    response: TaxForOrderRes
+    response: TaxForOrderRes,
   ): TaxJarCalculateTaxesResponse["lines"] {
     const responseLines = response.tax.breakdown?.line_items ?? [];
 
     const lines = matchPayloadLinesToResponseLines(payload.taxBase.lines, responseLines);
 
     return lines.map((line) => {
-      const taxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+      const taxableAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.taxable_amount,
-        new Error("Line taxable amount is required to calculate net amount")
+        new TaxBadProviderResponseError("Line taxable amount is required to calculate net amount"),
       );
-      const taxCollectable = taxProviderUtils.resolveOptionalOrThrow(
+      const taxCollectable = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.tax_collectable,
-        new Error("Line tax collectable is required to calculate net amount")
+        new TaxBadProviderResponseError("Line tax collectable is required to calculate net amount"),
       );
-      const taxRate = taxProviderUtils.resolveOptionalOrThrow(
+      const taxRate = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         line?.combined_tax_rate,
-        new Error("Line combined tax rate is required to calculate net amount")
+        new TaxBadProviderResponseError(
+          "Line combined tax rate is required to calculate net amount",
+        ),
       );
 
       return {
