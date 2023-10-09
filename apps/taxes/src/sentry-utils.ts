@@ -1,0 +1,15 @@
+import { SeverityLevel } from "@sentry/nextjs";
+import { z } from "zod";
+
+// todo: add typed env using @t3-oss/env-nextjs
+const sentryReportLevel = z.string().parse(process.env.NEXT_PUBLIC_SENTRY_REPORT_LEVEL);
+
+const sortedSeverities = ["fatal", "error", "warning", "log", "info", "debug"];
+const reportThresholdLevelIndex = sortedSeverities.indexOf(sentryReportLevel);
+
+/** Checks wether the provided sentrySeverity should be logged to Sentry at all */
+export const shouldExceptionLevelBeReported = (level: SeverityLevel) => {
+  const levelIndex = sortedSeverities.indexOf(level);
+
+  return levelIndex <= reportThresholdLevelIndex;
+};
