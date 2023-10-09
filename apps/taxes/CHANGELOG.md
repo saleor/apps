@@ -1,5 +1,17 @@
 # saleor-app-taxes
 
+## 1.16.1
+
+### Patch Changes
+
+- a561cb8: Fixed the issue with client logger freezing while parsing logs. Now, the logs are limited to 10 failed events.
+- 949a4f5: Refactored error handling. The app now distinguishes between different types of errors:
+
+  - `TaxIncompleteWebhookPayloadError` - thrown when data in the webhook payload is not complete enough to continue with the process.
+  - `TaxBadPayloadError` - thrown when the webhook payload is not what the app expects.
+  - `TaxBadProviderResponseError` - thrown when the response from the tax provider is not what the app expects.
+  - `TaxExternalError` - thrown when the tax provider returns an error.
+
 ## 1.16.0
 
 ### Minor Changes
