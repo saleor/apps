@@ -1,6 +1,6 @@
 import { AvalaraError } from "avatax/lib/AvaTaxClient";
 import { createLogger } from "../../lib/logger";
-import { TaxCriticalError } from "../taxes/tax-error";
+import { TaxExternalError } from "../taxes/tax-error";
 
 export class AvataxErrorNormalizer {
   private logger = createLogger({ name: "AvataxErrorNormalizer" });
@@ -9,9 +9,9 @@ export class AvataxErrorNormalizer {
     if (error instanceof AvalaraError) {
       this.logger.debug(error.stack, "AvalaraError occurred");
 
-      return new TaxCriticalError(error.message);
+      return new TaxExternalError(error.message);
     }
 
-    return TaxCriticalError.normalize(error);
+    return TaxExternalError.normalize(error);
   }
 }

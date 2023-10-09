@@ -35,3 +35,10 @@ export const TaxBadProviderResponseError = TaxCriticalError.subclass(
     } as BaseErrorProps,
   },
 );
+
+// Error thrown by external service.
+export const TaxExternalError = TaxCriticalError.subclass("TaxExternalError", {
+  props: {
+    expected: false,
+  } as BaseErrorProps,
+});
