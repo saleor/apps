@@ -1,4 +1,5 @@
 import { NextApiResponse } from "next";
+import * as Sentry from "@sentry/nextjs";
 
 import { createLogger, Logger } from "../../lib/logger";
 import { TaxError } from "../taxes/tax-error";
@@ -14,6 +15,8 @@ export class WebhookResponse {
   }
 
   error(error: unknown) {
+    Sentry.captureException(error);
+
     if (error instanceof TaxError) {
       this.logger.error({ error }, "TaxError occurred");
       return this.respondWithError(error.message);
