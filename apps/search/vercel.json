@@ -1,12 +1,6 @@
 {
   "functions": {
-    "pages/api/webhooks/product_updated.ts": {
-      "memory": 256
-    },
     "src/pages/api/webhooks/product_updated.ts": {
-      "memory": 256
-    },
-    "pages/api/webhooks/product_variant_updated.ts": {
       "memory": 256
     },
     "src/pages/api/webhooks/product_variant_updated.ts": {
