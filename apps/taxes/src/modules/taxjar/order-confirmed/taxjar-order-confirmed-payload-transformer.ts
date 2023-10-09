@@ -1,6 +1,7 @@
 import { LineItem } from "taxjar/dist/util/types";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { TaxJarTaxCodeMatches } from "../tax-code/taxjar-tax-code-match-repository";
 import { TaxJarConfig } from "../taxjar-connection-schema";
@@ -13,16 +14,16 @@ export function sumPayloadLines(lines: LineItem[]): number {
     lines.reduce(
       (prev, line) =>
         prev +
-        taxProviderUtils.resolveOptionalOrThrow(
+        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.unit_price,
-          new Error("Line unit_price is required to calculate order taxes")
+          new TaxBadPayloadError("Line unit_price is required to calculate order taxes"),
         ) *
-          taxProviderUtils.resolveOptionalOrThrow(
+          taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
             line.quantity,
-            new Error("Line quantity is required to calculate order taxes")
+            new TaxBadPayloadError("Line quantity is required to calculate order taxes"),
           ),
-      0
-    )
+      0,
+    ),
   );
 }
 
@@ -30,7 +31,7 @@ export class TaxJarOrderConfirmedPayloadTransformer {
   transform(
     order: OrderConfirmedSubscriptionFragment,
     taxJarConfig: TaxJarConfig,
-    matches: TaxJarTaxCodeMatches
+    matches: TaxJarTaxCodeMatches,
   ): TaxJarOrderConfirmedTarget {
     const linesTransformer = new TaxJarOrderConfirmedPayloadLinesTransformer();
     const lineItems = linesTransformer.transform(order.lines, matches);

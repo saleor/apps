@@ -3,10 +3,11 @@ import { numbers } from "../../taxes/numbers";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 
 export class AvataxCalculateTaxesResponseShippingTransformer {
   transform(
-    transaction: TransactionModel
+    transaction: TransactionModel,
   ): Pick<
     CalculateTaxesResponse,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
@@ -23,32 +24,32 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
 
     if (!shippingLine.isItemTaxable) {
       return {
-        shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           shippingLine.lineAmount,
-          new Error("shippingLine.lineAmount is undefined")
+          new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
         ),
-        shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrow(
+        shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           shippingLine.lineAmount,
-          new Error("shippingLine.lineAmount is undefined")
+          new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
         ),
         /*
-         * avatax doesnt return combined tax rate
+         * avatax doesn't return combined tax rate
          * // todo: calculate percentage tax rate
          */
         shipping_tax_rate: 0,
       };
     }
 
-    const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrow(
+    const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
       shippingLine.taxCalculated,
-      new Error("shippingLine.taxCalculated is undefined")
+      new TaxBadProviderResponseError("shippingLine.taxCalculated is undefined"),
     );
-    const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrow(
+    const shippingTaxableAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
       shippingLine.taxableAmount,
-      new Error("shippingLine.taxableAmount is undefined")
+      new TaxBadProviderResponseError("shippingLine.taxableAmount is undefined"),
     );
     const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
-      shippingTaxableAmount + shippingTaxCalculated
+      shippingTaxableAmount + shippingTaxCalculated,
     );
 
     return {

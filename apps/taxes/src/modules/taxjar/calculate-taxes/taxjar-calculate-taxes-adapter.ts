@@ -1,13 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { FetchTaxForOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
+import { normalizeTaxJarError } from "../taxjar-error-normalizer";
 import { TaxJarCalculateTaxesPayloadService } from "./taxjar-calculate-taxes-payload-service";
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
-import { ClientLogger } from "../../logs/client-logger";
 
 export type TaxJarCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
@@ -60,16 +61,18 @@ export class TaxJarCalculateTaxesAdapter
       this.logger.debug("Transformed TaxJar fetchTaxForOrder response to");
 
       return transformedResponse;
-    } catch (error) {
-      // todo: once better error handling is merged, use normalized error in clientLogger payload output
+    } catch (e) {
+      const error = normalizeTaxJarError(e);
+
       this.clientLogger.push({
         event: "[CalculateTaxes] fetchTaxForOrder",
         status: "error",
         payload: {
           input: target,
-          output: error,
+          output: error.message,
         },
       });
+
       throw error;
     }
   }
