@@ -6,9 +6,9 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
-import { AvataxErrorNormalizer } from "../avatax-error-normalizer";
 
 type AvataxOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -60,8 +60,7 @@ export class AvataxOrderConfirmedAdapter
 
       return transformedResponse;
     } catch (e) {
-      const errorNormalizer = new AvataxErrorNormalizer();
-      const error = errorNormalizer.normalize(e);
+      const error = normalizeAvaTaxError(e);
 
       this.clientLogger.push({
         event: "[OrderConfirmed] createTransaction",

@@ -1,14 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
+import { ClientLogger } from "../../logs/client-logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { ClientLogger } from "../../logs/client-logger";
+import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
-import { AvataxErrorNormalizer } from "../avatax-error-normalizer";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -59,8 +59,7 @@ export class AvataxCalculateTaxesAdapter
 
       return transformedResponse;
     } catch (e) {
-      const errorNormalizer = new AvataxErrorNormalizer();
-      const error = errorNormalizer.normalize(e);
+      const error = normalizeAvaTaxError(e);
 
       this.clientLogger.push({
         event: "[CalculateTaxes] createTransaction",

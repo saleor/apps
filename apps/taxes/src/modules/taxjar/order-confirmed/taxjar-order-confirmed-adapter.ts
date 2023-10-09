@@ -1,14 +1,14 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { Logger, createLogger } from "../../../lib/logger";
+import { ClientLogger } from "../../logs/client-logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { CreateOrderArgs, TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderConfirmedPayloadService } from "./taxjar-order-confirmed-payload.service";
 import { TaxJarOrderConfirmedResponseTransformer } from "./taxjar-order-confirmed-response-transformer";
-import { ClientLogger } from "../../logs/client-logger";
-import { TaxJarErrorNormalizer } from "../taxjar-error-normalizer";
+import { normalizeTaxJarError } from "../taxjar-error-normalizer";
 
 export type TaxJarOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -59,8 +59,7 @@ export class TaxJarOrderConfirmedAdapter
 
       return transformedResponse;
     } catch (e) {
-      const errorNormalizer = new TaxJarErrorNormalizer();
-      const error = errorNormalizer.normalize(e);
+      const error = normalizeTaxJarError(e);
 
       this.clientLogger.push({
         event: "[OrderConfirmed] createOrder",
