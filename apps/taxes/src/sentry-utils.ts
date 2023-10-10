@@ -5,7 +5,10 @@ import { z } from "zod";
  * // todo: move to shared
  * // todo: add typed env using @t3-oss/env-nextjs
  */
-const sentryReportLevel = z.string().parse(process.env.NEXT_PUBLIC_SENTRY_REPORT_LEVEL);
+const sentryReportLevel = z
+  .string()
+  .min(1, "NEXT_PUBLIC_SENTRY_REPORT_LEVEL must be at least 1 character long")
+  .parse(process.env.NEXT_PUBLIC_SENTRY_REPORT_LEVEL);
 
 const sortedSeverities = ["fatal", "error", "warning", "log", "info", "debug"];
 const reportThresholdLevelIndex = sortedSeverities.indexOf(sentryReportLevel);

@@ -17,12 +17,12 @@ const configWithSentry = withSentryConfig(
     project: process.env.SENTRY_PROJECT,
   },
   {
+    hideSourceMaps: true,
     widenClientFileUpload: true,
+    disableLogger: true,
     transpileClientSDK: true,
     tunnelRoute: "/monitoring",
-    hideSourceMaps: true,
-    disableLogger: true,
-  }
+  },
 );
 
 module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
