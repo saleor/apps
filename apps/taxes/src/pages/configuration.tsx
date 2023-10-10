@@ -27,6 +27,14 @@ const ConfigurationPage = () => {
       <ProvidersSection />
       <ChannelSection />
       <MatcherSection />
+      {/* // todo: remove */}
+      <button
+        onClick={() => {
+          throw new Error("Test Sentry");
+        }}
+      >
+        Throw error!
+      </button>
     </AppPageLayout>
   );
 };
