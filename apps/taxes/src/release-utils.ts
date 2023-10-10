@@ -1,6 +1,8 @@
 import { execSync } from "child_process";
 import packageJson from "../../../package.json";
 
+// todo: move to shared
+
 const getCommitHash = () => {
   if (process.env.VERCEL) {
     return process.env.VERCEL_GIT_COMMIT_SHA;
