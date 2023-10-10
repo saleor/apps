@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.12.3
+
+### Patch Changes
+
+- c66e70c: Fixed lambda execution time on Vercel deployments with `vercel.json` file.
+
 ## 1.12.2
 
 ### Patch Changes

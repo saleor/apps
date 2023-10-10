@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.17.0
+
+### Minor Changes
+
+- 556906a: Reduced memory limit for UPDATED\* webhooks to 256mb
+
 ## 1.16.0
 
 ### Minor Changes
