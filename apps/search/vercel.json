@@ -1,10 +1,7 @@
 {
   "functions": {
-    "src/pages/api/webhooks/product_updated.ts": {
+    "src/pages/api/webhooks/saleor/**/*": {
       "memory": 256
     },
-    "src/pages/api/webhooks/product_variant_updated.ts": {
-      "memory": 256
-    }
   }
 }
