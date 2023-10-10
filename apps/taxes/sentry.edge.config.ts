@@ -9,7 +9,7 @@ import { BaseError } from "./src/error";
 import { TaxError } from "./src/modules/taxes/tax-error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
-const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
 Sentry.init({
