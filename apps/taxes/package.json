@@ -19,6 +19,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.127",
     "@saleor/react-hook-form-macaw": "workspace:*",
+    "@sentry/cli": "2.20.6",
     "@sentry/nextjs": "7.67.0",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.38.1",
