@@ -1,9 +1,10 @@
+import { SeverityLevel } from "@sentry/nextjs";
 import ModernError from "modern-errors";
 import modernErrorsSerialize from "modern-errors-serialize";
 
 export type BaseErrorProps = {
   expected?: boolean;
-  // severity: "critical" | "warning"; <- will be added with proper Sentry setup
+  sentrySeverity: SeverityLevel;
 };
 
 export const BaseError = ModernError.subclass("BaseError", {

@@ -1,4 +1,12 @@
 {
   "root": true,
-  "extends": ["saleor"]
+  "extends": ["saleor"],
+  "rules": {
+    "turbo/no-undeclared-env-vars": [
+      "error",
+      {
+        "allowList": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"]
+      }
+    ]
+  }
 }
