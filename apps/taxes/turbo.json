@@ -1,26 +1,27 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
+  "globalPassThroughEnv": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"],
   "pipeline": {
     "build": {
       "env": [
+        "ALLOWED_DOMAIN_PATTERN",
         "APL",
+        "APP_API_BASE_URL",
         "APP_DEBUG",
+        "APP_IFRAME_BASE_URL",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_REPORT_LEVEL",
         "NODE_ENV",
-        "SECRET_KEY",
         "PORT",
-        "VERCEL_URL",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "ALLOWED_DOMAIN_PATTERN",
-        "SENTRY_ORG",
-        "SENTRY_PROJECT",
-        "SENTRY_DSN",
+        "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
+        "SENTRY_DSN",
         "SENTRY_ENVIRONMENT",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "APP_IFRAME_BASE_URL",
-        "APP_API_BASE_URL"
+        "SENTRY_ORG",
+        "SENTRY_PROJECT"
       ]
     }
   }

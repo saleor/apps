@@ -8,6 +8,7 @@ export const TaxIncompleteWebhookPayloadError = TaxError.subclass(
   {
     props: {
       expected: true,
+      sentrySeverity: "warning",
     } as BaseErrorProps,
   },
 );
@@ -16,6 +17,7 @@ export const TaxIncompleteWebhookPayloadError = TaxError.subclass(
 export const TaxCriticalError = TaxError.subclass("TaxCriticalError", {
   props: {
     expected: false,
+    sentrySeverity: "error",
   } as BaseErrorProps,
 });
 
@@ -23,6 +25,7 @@ export const TaxCriticalError = TaxError.subclass("TaxCriticalError", {
 export const TaxBadPayloadError = TaxCriticalError.subclass("TaxBadPayloadError", {
   props: {
     expected: false,
+    sentrySeverity: "error",
   } as BaseErrorProps,
 });
 
@@ -32,6 +35,7 @@ export const TaxBadProviderResponseError = TaxCriticalError.subclass(
   {
     props: {
       expected: false,
+      sentrySeverity: "error",
     } as BaseErrorProps,
   },
 );
@@ -40,5 +44,6 @@ export const TaxBadProviderResponseError = TaxCriticalError.subclass(
 export const TaxExternalError = TaxCriticalError.subclass("TaxExternalError", {
   props: {
     expected: false,
+    sentrySeverity: "error",
   } as BaseErrorProps,
 });
