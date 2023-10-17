@@ -48,7 +48,7 @@ export class ContentfulClient {
    */
   private mapVariantToConfiguredFields = (
     variant: WebhookProductVariantFragment,
-    productVariantFieldsMapping: ContentfulProviderConfig.FullShape["productVariantFieldsMapping"]
+    productVariantFieldsMapping: ContentfulProviderConfig.FullShape["productVariantFieldsMapping"],
   ) => {
     const {
       channels,
@@ -119,7 +119,7 @@ export class ContentfulClient {
 
     entry.fields = this.mapVariantToConfiguredFields(
       variant,
-      configuration.productVariantFieldsMapping
+      configuration.productVariantFieldsMapping,
     );
 
     return entry.update();
@@ -188,6 +188,7 @@ export class ContentfulClient {
         return this.updateProductVariant(opts);
       } else {
         Sentry.captureMessage("Contentful error failed and is not handled");
+        Sentry.captureException(e);
         throw e;
       }
     }
