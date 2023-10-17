@@ -97,7 +97,9 @@ const taxIncludedTaxBase: TaxBase = {
   sourceObject: {
     avataxEntityCode: null,
     __typename: "Checkout",
-    email: "test@saleor.io",
+    user: {
+      id: "123",
+    },
   },
 };
 
@@ -194,7 +196,9 @@ const taxExcludedTaxBase: TaxBase = {
   sourceObject: {
     avataxEntityCode: null,
     __typename: "Checkout",
-    email: "test@saleor.io",
+    user: {
+      id: "123",
+    },
   },
 };
 
