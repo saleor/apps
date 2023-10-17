@@ -11,6 +11,7 @@ import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
+import { AvataxCustomerCodeResolver } from "../avatax-customer-code-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -34,6 +35,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
+    const customerCodeResolver = new AvataxCustomerCodeResolver();
 
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
     const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
@@ -41,16 +43,14 @@ export class AvataxOrderConfirmedPayloadTransformer {
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
+    const customerCode = customerCodeResolver.resolveOrderCustomerCode(order);
 
     return {
       model: {
         code,
         type: this.matchDocumentType(avataxConfig),
         entityUseCode,
-        customerCode: taxProviderUtils.resolveStringOrThrow(
-          order.user?.id,
-          new TaxBadPayloadError("Cannot resolve user id"),
-        ),
+        customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,

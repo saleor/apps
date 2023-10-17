@@ -83,6 +83,7 @@
     "**/*.spec.ts",
     "**/graphql.ts",
     "**/CHANGELOG.md",
-    "**/schema.graphql"
+    "**/schema.graphql",
+    "**/*-generator.ts"
   ]
 }

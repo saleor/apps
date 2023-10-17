@@ -1,11 +1,10 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
-import { TaxBadPayloadError } from "../../taxes/tax-error";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { AvataxCustomerCodeResolver } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
@@ -21,25 +20,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
     return DocumentType.SalesOrder;
   }
 
-  // During the checkout process, it appears the customer id is not always available. We can use the email address instead.
-  private resolveCustomerCode(payload: CalculateTaxesPayload): string {
-    if (payload.taxBase.sourceObject.__typename === "Checkout") {
-      return taxProviderUtils.resolveStringOrThrow(
-        payload.taxBase.sourceObject.email,
-        new TaxBadPayloadError("Cannot resolve email from sourceObject"),
-      );
-    }
-
-    if (payload.taxBase.sourceObject.__typename === "Order") {
-      return taxProviderUtils.resolveStringOrThrow(
-        payload.taxBase.sourceObject.userEmail,
-        new TaxBadPayloadError("Cannot resolve userEmail from sourceObject"),
-      );
-    }
-
-    throw new TaxBadPayloadError("Cannot resolve customer code");
-  }
-
   async transform(
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
@@ -48,11 +28,13 @@ export class AvataxCalculateTaxesPayloadTransformer {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const customerCodeResolver = new AvataxCustomerCodeResolver();
+
     const entityUseCode = await entityTypeMatcher.match(
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
-    const customerCode = this.resolveCustomerCode(payload);
+    const customerCode = customerCodeResolver.resolveCalculateTaxesCustomerCode(payload);
 
     return {
       model: {
