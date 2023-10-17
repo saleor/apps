@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 72b4fba: Fixed the issue with the app throwing errors when no customer code was resolved. Now, it falls back to "0" which is the recommended dummy value for when it's impossible to identify a customer (e.g. in an anonymous checkout).
+- 72b4fba: Fixed the issue with the app throwing errors when no customer code was resolved in AvaTax integration. Now, it falls back to "0" which is the recommended dummy value for when it's impossible to identify a customer (e.g. in an anonymous checkout).
 
 ## 1.17.0
 
