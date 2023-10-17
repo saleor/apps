@@ -23,6 +23,7 @@ fragment OrderLine on OrderLine {
 fragment OrderConfirmedSubscription on Order {
   id
   number
+  userEmail
   user {
     id
     email
