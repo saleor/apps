@@ -2,16 +2,14 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
+import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { AvataxCustomerCodeResolver } from "../avatax-customer-code-resolver";
+import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
+import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
-import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
-import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
-import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { TaxBadPayloadError } from "../../taxes/tax-error";
-import { AvataxCustomerCodeResolver } from "../avatax-customer-code-resolver";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -60,10 +58,8 @@ export class AvataxOrderConfirmedPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
         },
         currencyCode: order.total.currency,
-        email: taxProviderUtils.resolveStringOrThrow(
-          order.user?.email,
-          new TaxBadPayloadError("Cannot resolve user email"),
-        ),
+        // we can fall back to empty string because email is not a required field
+        email: order.user?.email ?? order.userEmail ?? "",
         lines: linesTransformer.transform(order, avataxConfig, matches),
         date,
         discount: discountUtils.sumDiscounts(

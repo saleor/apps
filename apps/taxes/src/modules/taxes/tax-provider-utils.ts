@@ -17,23 +17,6 @@ function resolveOptionalOrThrowUnexpectedError<T>(
   return value;
 }
 
-function resolveStringOrThrow(
-  value: string | undefined | null,
-  error: InstanceType<typeof TaxCriticalError>,
-): string {
-  const parseResult = z
-    .string({ required_error: "This field must be defined." })
-    .min(1, { message: "This field can not be empty." })
-    .safeParse(value);
-
-  if (!parseResult.success) {
-    throw error;
-  }
-
-  return parseResult.data;
-}
-
 export const taxProviderUtils = {
   resolveOptionalOrThrowUnexpectedError,
-  resolveStringOrThrow,
 };
