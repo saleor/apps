@@ -6,7 +6,6 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { CriticalError } from "./src/error";
-import { TaxError } from "./src/modules/taxes/tax-error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
@@ -34,8 +33,8 @@ Sentry.init({
       }
     }
 
-    // Improve grouping of TaxError into separate issues in Sentry
-    if (error instanceof TaxError) {
+    // Improve grouping of CriticalError into separate issues in Sentry
+    if (error instanceof CriticalError) {
       errorEvent.fingerprint = ["{{ default }}", error.message];
     }
 

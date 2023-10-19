@@ -36,7 +36,7 @@ describe("WebhookResponse", () => {
 
     expect(statusMock).toHaveBeenCalledWith(500);
   });
-  it("returns 500 when thrown TaxCriticalError", () => {
+  it("returns 500 when thrown CriticalError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
     const criticalError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
 

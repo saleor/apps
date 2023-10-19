@@ -1,5 +1,4 @@
-import { z } from "zod";
-import { TaxCriticalError } from "./tax-error";
+import { CriticalError } from "../../error";
 
 /*
  * The providers sdk types claim to sometimes return undefined.
@@ -8,7 +7,7 @@ import { TaxCriticalError } from "./tax-error";
  */
 function resolveOptionalOrThrowUnexpectedError<T>(
   value: T | undefined | null,
-  error: InstanceType<typeof TaxCriticalError>,
+  error: InstanceType<typeof CriticalError>,
 ): T {
   if (value === undefined || value === null) {
     throw error;
