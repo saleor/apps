@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.18.2
+
+### Patch Changes
+
+- d4fa3a4: Removed the hardcoded error message for when `order-cancelled` webhook handler fails. Split up errors to be expected/critical. Expected are not reported to Sentry.
+
 ## 1.18.1
 
 ### Patch Changes
