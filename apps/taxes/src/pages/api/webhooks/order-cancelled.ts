@@ -50,6 +50,6 @@ export default orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =>
 
     return webhookResponse.success();
   } catch (error) {
-    return webhookResponse.error(new Error("Error while cancelling tax provider order"));
+    return webhookResponse.error(error);
   }
 });
