@@ -1,8 +1,8 @@
-import { NextApiResponse } from "next";
 import * as Sentry from "@sentry/nextjs";
+import { NextApiResponse } from "next";
 
+import { CriticalError, ExpectedError } from "../../error";
 import { createLogger, Logger } from "../../lib/logger";
-import { TaxError } from "../taxes/tax-error";
 
 export class WebhookResponse {
   private logger: Logger;
@@ -15,15 +15,21 @@ export class WebhookResponse {
   }
 
   error(error: unknown) {
-    Sentry.captureException(error);
-
-    if (error instanceof TaxError) {
-      this.logger.error({ error }, "TaxError occurred");
+    if (error instanceof CriticalError) {
+      Sentry.captureException(error);
+      this.logger.error({ error }, "CriticalError occurred");
       return this.respondWithError(error.message);
     }
 
-    this.logger.error({ error }, "Unexpected error occurred");
-    return this.respondWithError("Unexpected error occurred");
+    if (error instanceof ExpectedError) {
+      this.logger.warn({ error }, "ExpectedError occurred");
+      return this.respondWithError(error.message);
+    }
+
+    Sentry.captureMessage("Unhandled error occurred");
+    Sentry.captureException(error);
+    this.logger.error({ error }, "Unhandled error occurred");
+    return this.respondWithError("Unhandled error occurred");
   }
 
   success(data?: unknown) {
