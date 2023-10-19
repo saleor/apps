@@ -10,6 +10,7 @@ import { ProviderConnection } from "../provider-connections/provider-connections
 import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { createClientLogger } from "../logs/client-logger";
+import { ExpectedError } from "../../error";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
@@ -98,7 +99,7 @@ export function getActiveConnectionService(
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
     logger.debug({ channelSlug }, "Channel config was not found for channel slug");
-    throw new Error(`Channel config was not found for channel ${channelSlug}`);
+    throw new ExpectedError(`Channel config was not found for channel ${channelSlug}`);
   }
 
   const providerConnection = providerConnections.find(
@@ -110,7 +111,7 @@ export function getActiveConnectionService(
       { providerConnections, channelConfig },
       "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
     );
-    throw new Error(`Channel config providerConnectionId does not match any providers`);
+    throw new ExpectedError(`Channel config providerConnectionId does not match any providers`);
   }
 
   const taxProvider = new ActiveTaxProviderService(providerConnection, authData);

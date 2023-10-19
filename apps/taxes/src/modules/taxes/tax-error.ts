@@ -1,15 +1,14 @@
-import { BaseError, BaseErrorProps } from "../../error";
+import { CriticalError, CommonErrorProps, ExpectedError } from "../../error";
 
-export const TaxError = BaseError.subclass("TaxError", { props: {} as BaseErrorProps });
+export const TaxError = CriticalError.subclass("TaxError", { props: {} as CommonErrorProps });
 
 // Error thrown when there is not enough data in webhook payload to proceed with the process. Not reported.
-export const TaxIncompleteWebhookPayloadError = TaxError.subclass(
+export const TaxIncompleteWebhookPayloadError = ExpectedError.subclass(
   "TaxIncompleteWebhookPayloadError",
   {
     props: {
-      expected: true,
       sentrySeverity: "warning",
-    } as BaseErrorProps,
+    } as CommonErrorProps,
   },
 );
 
@@ -18,7 +17,7 @@ export const TaxCriticalError = TaxError.subclass("TaxCriticalError", {
   props: {
     expected: false,
     sentrySeverity: "error",
-  } as BaseErrorProps,
+  } as CommonErrorProps,
 });
 
 // Error thrown when expected data is not present in the payload.
@@ -26,7 +25,7 @@ export const TaxBadPayloadError = TaxCriticalError.subclass("TaxBadPayloadError"
   props: {
     expected: false,
     sentrySeverity: "error",
-  } as BaseErrorProps,
+  } as CommonErrorProps,
 });
 
 // Error thrown when expected data is not present in the response.
@@ -36,7 +35,7 @@ export const TaxBadProviderResponseError = TaxCriticalError.subclass(
     props: {
       expected: false,
       sentrySeverity: "error",
-    } as BaseErrorProps,
+    } as CommonErrorProps,
   },
 );
 
@@ -45,5 +44,5 @@ export const TaxExternalError = TaxCriticalError.subclass("TaxExternalError", {
   props: {
     expected: false,
     sentrySeverity: "error",
-  } as BaseErrorProps,
+  } as CommonErrorProps,
 });
