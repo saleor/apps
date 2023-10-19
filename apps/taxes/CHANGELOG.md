@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.18.1
+
+### Patch Changes
+
+- 6720d01: Fixed the issue when the app threw errors when unable to resolve user email. Now, if the email is not available in `order.user.email` and `order.userEmail`, the app will fall back to empty string.
+
 ## 1.18.0
 
 ### Minor Changes
