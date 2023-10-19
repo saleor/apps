@@ -5,7 +5,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import { BaseError } from "./src/error";
+import { CriticalError } from "./src/error";
 import { TaxError } from "./src/modules/taxes/tax-error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
@@ -25,7 +25,7 @@ Sentry.init({
   beforeSend(errorEvent, hint) {
     const error = hint.originalException;
 
-    if (error instanceof BaseError) {
+    if (error instanceof CriticalError) {
       errorEvent.level = error.sentrySeverity;
 
       // Ignore exceptions below specified severity (warning default)
