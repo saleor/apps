@@ -45,6 +45,7 @@ export class ContentfulClient {
 
   /**
    * Support only en-US locale now
+   * todo: throw specific error if locale is not en-US
    */
   private mapVariantToConfiguredFields = (
     variant: WebhookProductVariantFragment,
