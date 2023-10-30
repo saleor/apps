@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.3.4
+
+### Patch Changes
+
+- 1f7f472: Fixed the issue with `uploadProductVariant` error not being captured in Sentry.
+
 ## 2.3.3
 
 ### Patch Changes

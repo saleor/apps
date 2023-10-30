@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.16.1
+
+### Patch Changes
+
+- bfcab00: Updated `crypto-js` package used as a nested dependency of `microinvoice`. This update resolves `CVE-2023-46233` vulnerability.
+
 ## 1.16.0
 
 ### Minor Changes
