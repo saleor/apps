@@ -135,21 +135,23 @@ export class ContentfulClient {
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
 
-    const entry = contentEntries.items[0];
+    return Promise.all(
+      contentEntries.items.map((item) => {
+        item.fields = this.mapVariantToConfiguredFields(
+          variant,
+          configuration.productVariantFieldsMapping,
+        );
 
-    entry.fields = this.mapVariantToConfiguredFields(
-      variant,
-      configuration.productVariantFieldsMapping,
+        return item.update();
+      }),
     );
-
-    return entry.update();
   }
 
   async deleteProductVariant(opts: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    this.logger.debug("Attempting to delete product variant");
+    this.logger.debug({ variantId: opts.variant.id }, "Attempting to delete product variant");
 
     const space = await this.client.getSpace(this.space);
     const env = await space.getEnvironment(opts.configuration.environment);
@@ -158,6 +160,8 @@ export class ContentfulClient {
       env,
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
+
+    this.logger.trace(contentEntries, "Found entries to delete");
 
     /**
      * In general it should be only one item, but in case of duplication run through everything
@@ -209,8 +213,10 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
+      this.logger.trace(entries, "Found entries");
+
       if (entries.items.length > 0) {
-        this.logger.trace("Found existing entry, will update");
+        this.logger.debug("Found existing entry, will update");
         Sentry.addBreadcrumb({
           message: "Found entry for variant",
           level: "debug",
@@ -218,7 +224,7 @@ export class ContentfulClient {
 
         return this.updateProductVariant({ configuration, variant });
       } else {
-        this.logger.trace("No existing entry found, will create");
+        this.logger.debug("No existing entry found, will create");
         Sentry.addBreadcrumb({
           message: "Did not found entry for variant",
           level: "debug",
