@@ -1,14 +1,10 @@
-import { createClient, ClientAPI } from "contentful-management";
+import { createClient, ClientAPI, Environment } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { ContentfulProviderConfig } from "@/modules/configuration";
 import { z } from "zod";
 
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@saleor/apps-shared";
-
-const ContentfulErrorMessageSchema = z.object({
-  status: z.number(),
-});
 
 type ConstructorOptions = {
   space: string;
@@ -82,6 +78,23 @@ export class ContentfulClient {
     };
   };
 
+  private getEntriesBySaleorId =
+    ({
+      contentId,
+      env,
+      variantIdFieldName,
+    }: {
+      env: Environment;
+      contentId: string;
+      variantIdFieldName: string;
+    }) =>
+    (saleorId: string) => {
+      return env.getEntries({
+        content_type: contentId,
+        [`fields.${variantIdFieldName}`]: saleorId,
+      });
+    };
+
   async getContentTypes(env: string) {
     this.logger.trace("Attempting to get content types");
 
@@ -116,28 +129,48 @@ export class ContentfulClient {
     const space = await this.client.getSpace(this.space);
     const env = await space.getEnvironment(configuration.environment);
 
-    const entry = await env.getEntry(variant.id);
+    const contentEntries = await this.getEntriesBySaleorId({
+      contentId: configuration.contentId,
+      env,
+      variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
+    })(variant.id);
 
-    entry.fields = this.mapVariantToConfiguredFields(
-      variant,
-      configuration.productVariantFieldsMapping,
+    return Promise.all(
+      contentEntries.items.map((item) => {
+        item.fields = this.mapVariantToConfiguredFields(
+          variant,
+          configuration.productVariantFieldsMapping,
+        );
+
+        return item.update();
+      }),
     );
-
-    return entry.update();
   }
 
   async deleteProductVariant(opts: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    this.logger.debug("Attempting to delete product variant");
+    this.logger.debug({ variantId: opts.variant.id }, "Attempting to delete product variant");
 
     const space = await this.client.getSpace(this.space);
     const env = await space.getEnvironment(opts.configuration.environment);
+    const contentEntries = await this.getEntriesBySaleorId({
+      contentId: opts.configuration.contentId,
+      env,
+      variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
+    })(opts.variant.id);
 
-    const entry = await env.getEntry(opts.variant.id);
+    this.logger.trace(contentEntries, "Found entries to delete");
 
-    return await entry.delete();
+    /**
+     * In general it should be only one item, but in case of duplication run through everything
+     */
+    return Promise.all(
+      contentEntries.items.map(async (item) => {
+        return item.delete();
+      }),
+    );
   }
 
   async uploadProductVariant({
@@ -156,42 +189,53 @@ export class ContentfulClient {
      * TODO: add translations
      * TODO: - should it create published? is draft
      */
-    return env.createEntryWithId(configuration.contentId, variant.id, {
+    return env.createEntry(configuration.contentId, {
       fields: this.mapVariantToConfiguredFields(variant, configuration.productVariantFieldsMapping),
     });
   }
 
-  async upsertProductVariant(opts: {
+  async upsertProductVariant({
+    configuration,
+    variant,
+  }: {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
     this.logger.debug("Attempting to upsert product variant");
 
     try {
-      this.logger.trace("Attempting to upload product variant first");
+      const space = await this.client.getSpace(this.space);
+      const env = await space.getEnvironment(configuration.environment);
 
-      return await this.uploadProductVariant(opts);
-    } catch (e: unknown) {
-      this.logger.trace("Upload failed");
+      const entries = await this.getEntriesBySaleorId({
+        contentId: configuration.contentId,
+        env,
+        variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
+      })(variant.id);
 
-      if (typeof e !== "object" || e === null) {
-        Sentry.captureMessage("Contentful error is not expected shape");
-        Sentry.captureException(e);
+      this.logger.trace(entries, "Found entries");
 
-        throw e;
-      }
+      if (entries.items.length > 0) {
+        this.logger.debug("Found existing entry, will update");
+        Sentry.addBreadcrumb({
+          message: "Found entry for variant",
+          level: "debug",
+        });
 
-      const parsedError = ContentfulErrorMessageSchema.parse(JSON.parse((e as Error).message));
-
-      if (parsedError.status === 409) {
-        this.logger.trace("Contentful returned 409 status, will try to update instead");
-
-        return this.updateProductVariant(opts);
+        return this.updateProductVariant({ configuration, variant });
       } else {
-        Sentry.captureMessage("Contentful error failed and is not handled");
-        Sentry.captureException(e);
-        throw e;
+        this.logger.debug("No existing entry found, will create");
+        Sentry.addBreadcrumb({
+          message: "Did not found entry for variant",
+          level: "debug",
+        });
+
+        return this.uploadProductVariant({ configuration, variant });
       }
+    } catch (err) {
+      Sentry.captureException(err);
+
+      throw err;
     }
   }
 }

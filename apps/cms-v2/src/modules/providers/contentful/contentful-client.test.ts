@@ -50,7 +50,8 @@ const mockGetEnvironment = vi.fn();
 const mockGetEnvironments = vi.fn();
 const mockGetEnvEntry = vi.fn();
 const mockGetContentTypes = vi.fn();
-const mockCreateEntryWithId = vi.fn();
+const mockCreateEntry = vi.fn();
+const mockGetEntries = vi.fn();
 
 const mockContentfulSdk: ContentfulApiClientChunk = {
   getSpace: mockGetSpace.mockReturnValue(
@@ -60,10 +61,13 @@ const mockContentfulSdk: ContentfulApiClientChunk = {
           items: [{}],
         }),
         getEntry: mockGetEnvEntry.mockReturnValue({}),
-        createEntryWithId: mockCreateEntryWithId.mockReturnValue({}),
+        getEntries: mockGetEntries.mockReturnValue({
+          items: [],
+        }),
+        createEntry: mockCreateEntry.mockReturnValue({}),
       }),
       getEnvironments: mockGetEnvironments.mockReturnValue({}),
-    })
+    }),
   ),
 };
 
@@ -78,7 +82,7 @@ describe("ContentfulClient", () => {
         accessToken: "test-token",
         space: "test-space",
       },
-      () => mockContentfulSdk
+      () => mockContentfulSdk,
     );
   });
 
@@ -106,6 +110,7 @@ describe("ContentfulClient", () => {
       };
 
       mockGetEnvEntry.mockReturnValue(mockEntry);
+      mockGetEntries.mockReturnValue({ items: [mockEntry] });
 
       const mockConfig = getMockContenfulConfiguration();
       const mockMapping = mockConfig.productVariantFieldsMapping;
@@ -117,7 +122,14 @@ describe("ContentfulClient", () => {
         variant: mockVariant,
       });
 
-      expect(mockGetEnvEntry).toHaveBeenCalledWith(mockVariant.id);
+      /**
+       * Query Contentful first, to get the entry. content_type is configured by user.
+       * Then field path, matching variant id, also provided by user.
+       */
+      expect(mockGetEntries).toHaveBeenCalledWith({
+        content_type: mockConfig.contentId,
+        [`fields.${mockConfig.productVariantFieldsMapping.variantId}`]: mockVariant.id,
+      });
 
       /**
        * Fields must reflect mapping config to variant real data
@@ -156,6 +168,7 @@ describe("ContentfulClient", () => {
       };
 
       mockGetEnvEntry.mockReturnValue(mockEntry);
+      mockGetEntries.mockReturnValue({ items: [mockEntry] });
 
       const mockConfig = getMockContenfulConfiguration();
       const mockVariant = getMockWebhookProductVariant();
@@ -165,13 +178,20 @@ describe("ContentfulClient", () => {
         variant: { id: mockVariant.id },
       });
 
-      expect(mockGetEnvEntry).toHaveBeenCalledWith(mockVariant.id);
+      /**
+       * Query Contentful first, to get the entry. content_type is configured by user.
+       * Then field path, matching variant id, also provided by user.
+       */
+      expect(mockGetEntries).toHaveBeenCalledWith({
+        content_type: mockConfig.contentId,
+        [`fields.${mockConfig.productVariantFieldsMapping.variantId}`]: mockVariant.id,
+      });
       expect(mockEntry.delete).toHaveBeenCalled();
     });
   });
 
   describe("uploadProductVariant", () => {
-    it("Calls contentful createEntryWithId method with correct mapped fields", async () => {
+    it("Calls contentful createEntry method with correct mapped fields", async () => {
       const mockConfig = getMockContenfulConfiguration();
       const mockMapping = mockConfig.productVariantFieldsMapping;
 
@@ -182,7 +202,7 @@ describe("ContentfulClient", () => {
         variant: mockVariant,
       });
 
-      expect(mockCreateEntryWithId).toHaveBeenCalledWith(mockConfig.contentId, mockVariant.id, {
+      expect(mockCreateEntry).toHaveBeenCalledWith(mockConfig.contentId, {
         fields: {
           [mockMapping.productId]: {
             "en-US": mockVariant.product.id,
@@ -212,6 +232,9 @@ describe("ContentfulClient", () => {
       const mockConfig = getMockContenfulConfiguration();
       const mockMapping = mockConfig.productVariantFieldsMapping;
 
+      mockGetEnvEntry.mockReturnValue(undefined);
+      mockGetEntries.mockReturnValue({ items: [] });
+
       const mockVariant = getMockWebhookProductVariant();
 
       await contentfulClient.upsertProductVariant({
@@ -220,7 +243,7 @@ describe("ContentfulClient", () => {
       });
 
       expect(mockGetEnvEntry).not.toHaveBeenCalled();
-      expect(mockCreateEntryWithId).toHaveBeenCalledWith(mockConfig.contentId, mockVariant.id, {
+      expect(mockCreateEntry).toHaveBeenCalledWith(mockConfig.contentId, {
         fields: {
           [mockMapping.productId]: {
             "en-US": mockVariant.product.id,
@@ -244,17 +267,11 @@ describe("ContentfulClient", () => {
       });
     });
 
-    it("Calls update method if SDK returned 409 error", async () => {
+    it("Calls update method if entries exist", async () => {
       const mockConfig = getMockContenfulConfiguration();
       const mockMapping = mockConfig.productVariantFieldsMapping;
 
       const mockVariant = getMockWebhookProductVariant();
-
-      mockCreateEntryWithId.mockRejectedValue({
-        message: JSON.stringify({
-          status: 409,
-        }),
-      });
 
       const mockEntry = {
         fields: {},
@@ -262,12 +279,14 @@ describe("ContentfulClient", () => {
       };
 
       mockGetEnvEntry.mockReturnValue(mockEntry);
+      mockGetEntries.mockReturnValue({ items: [mockEntry] });
 
       await contentfulClient.upsertProductVariant({
         configuration: mockConfig,
         variant: mockVariant,
       });
 
+      // todo fix
       expect(mockEntry.fields).toEqual({
         [mockMapping.productId]: {
           "en-US": mockVariant.product.id,
