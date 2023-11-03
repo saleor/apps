@@ -12,7 +12,7 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
 
   async uploadProducts(
     products: BulkImportProductFragment[],
-    hooks: BulkSyncProcessorHooks
+    hooks: BulkSyncProcessorHooks,
   ): Promise<void> {
     const contentful = new ContentfulClient({
       accessToken: this.config.authToken,
@@ -41,7 +41,9 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
               },
             })
             .then((r) => {
-              if (r?.metadata) {
+              const resp = Array.isArray(r) ? r[0] : r;
+
+              if (resp?.metadata) {
                 if (hooks.onUploadSuccess) {
                   hooks.onUploadSuccess({ variantId: variant.id });
                 }

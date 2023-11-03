@@ -13,7 +13,7 @@ export type ContentfulClientStrip = Pick<
 >;
 
 export type ContentfulClientFactory = (
-  config: ContentfulProviderConfig.FullShape
+  config: ContentfulProviderConfig.FullShape,
 ) => ContentfulClientStrip;
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
@@ -26,7 +26,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       new ContentfulClient({
         accessToken: providerConfig.authToken,
         space: providerConfig.spaceId,
-      })
+      }),
   ) {
     this.client = clientFactory(providerConfig);
   }
@@ -56,6 +56,11 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
     });
   }
 
+  /**
+   * TODO Must check channels, otherwise variants that are not available, will be sent to CMS anyway.
+   * Probably happens in every provider type.
+   * Context of process must include channel-config mapping.
+   */
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
     this.logger.trace("onProductUpdated called");
 
@@ -73,7 +78,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
             },
           },
         });
-      })
+      }),
     );
   }
 }
