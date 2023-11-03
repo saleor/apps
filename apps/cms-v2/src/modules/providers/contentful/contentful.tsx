@@ -1,10 +1,18 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui/next";
 
 import logo from "./contentful-logo.svg";
 import { CMSProviderMeta } from "../cms-provider-meta";
 
 export const Contentful = {
-  formSideInfo: <Text>App will save each variant with the same ID as variant ID.</Text>,
+  formSideInfo: (
+    <Box>
+      <Text as="p" marginBottom={2}>
+        App will use Saleor Product Variant as a unique identifier. It will be saved as one of the
+        fields. Please ensure you map Variant ID to field that is UNIQUE in Contentful.
+      </Text>
+      <Text>Otherwise, products may be duplicated</Text>
+    </Box>
+  ),
   type: "contentful" as const,
   logoUrl: logo.src as string,
   displayName: "Contentful",
