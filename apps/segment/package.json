@@ -20,7 +20,7 @@
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/trpc": "workspace:*",
     "@segment/analytics-node": "^1.1.0",
-    "@sentry/nextjs": "7.67.0",
+    "@sentry/nextjs": "7.77.0",
     "@tanstack/react-query": "^4.29.19",
     "@trpc/client": "10.38.1",
     "@trpc/next": "10.38.1",

@@ -18,7 +18,7 @@
     "@saleor/app-sdk": "0.43.1",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.127",
-    "@sentry/nextjs": "7.67.0",
+    "@sentry/nextjs": "7.77.0",
     "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.4",
     "dot-object": "^2.1.4",
