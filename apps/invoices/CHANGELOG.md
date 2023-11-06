@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.16.2
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.16.1
 
 ### Patch Changes
