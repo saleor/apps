@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.9.1
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.9.0
 
 ### Minor Changes
