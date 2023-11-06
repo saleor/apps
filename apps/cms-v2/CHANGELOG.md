@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.4.1
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 2.4.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.18.3
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.18.2
 
 ### Patch Changes

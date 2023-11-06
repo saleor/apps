@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.9.11
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.9.10
 
 ### Patch Changes

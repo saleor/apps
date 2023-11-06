@@ -1,5 +1,11 @@
 # saleor-app-data-importer
 
+## 1.9.8
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.9.7
 
 ### Patch Changes

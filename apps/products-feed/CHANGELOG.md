@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.12.4
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.12.3
 
 ### Patch Changes

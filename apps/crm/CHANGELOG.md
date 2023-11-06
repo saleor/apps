@@ -1,5 +1,11 @@
 # saleor-app-crm
 
+## 1.7.9
+
+### Patch Changes
+
+- 148a6d7: Updated Sentry to 7.77.0
+
 ## 1.7.8
 
 ### Patch Changes
