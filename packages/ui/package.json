@@ -9,18 +9,17 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "0.43.1",
     "@saleor/macaw-ui": "0.8.0-pre.127",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "eslint-config-saleor": "workspace:*",
     "next": "13.4.8",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "@saleor/app-sdk": "../../node_modules/@saleor/app-sdk"
   },
   "main": "index.ts",
   "peerDependencies": {
-    "@saleor/app-sdk": "0.43.1",
     "next": "13.4.8",
     "react": "18.2.0",
     "react-dom": "18.2.0"
