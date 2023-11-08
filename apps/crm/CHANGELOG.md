@@ -1,5 +1,13 @@
 # saleor-app-crm
 
+## 1.7.10
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+- Updated dependencies [fdabc51]
+  - @saleor/apps-shared@1.9.1
+
 ## 1.7.9
 
 ### Patch Changes
