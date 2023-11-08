@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-slack",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",

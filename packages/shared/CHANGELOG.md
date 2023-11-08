@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.9.1
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+
 ## 1.9.0
 
 ### Minor Changes

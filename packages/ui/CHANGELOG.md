@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.2.1
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+
 ## 1.2.0
 
 ### Minor Changes

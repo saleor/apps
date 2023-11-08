@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.2
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+
 ## 1.0.1
 
 ### Patch Changes

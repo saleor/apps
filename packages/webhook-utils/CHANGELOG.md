@@ -1,5 +1,13 @@
 # @saleor/webhook-utils
 
+## 0.0.2
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+- Updated dependencies [fdabc51]
+  - @saleor/apps-shared@1.9.1
+
 ## 0.0.1
 
 ### Patch Changes
