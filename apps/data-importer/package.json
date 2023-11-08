@@ -15,7 +15,7 @@
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/lab": "4.0.0-alpha.61",
-    "@saleor/app-sdk": "0.43.1",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "0.8.0-pre.127",
     "@sentry/nextjs": "7.77.0",

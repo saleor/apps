@@ -5,7 +5,7 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@saleor/app-sdk": "0.41.1",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "next": "13.4.8",
