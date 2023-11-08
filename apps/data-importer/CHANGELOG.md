@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.9.9
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+- Updated dependencies [fdabc51]
+  - @saleor/apps-shared@1.9.1
+
 ## 1.9.8
 
 ### Patch Changes

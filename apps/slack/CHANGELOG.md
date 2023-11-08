@@ -1,5 +1,14 @@
 # saleor-app-slack
 
+## 1.8.9
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+- Updated dependencies [fdabc51]
+  - @saleor/apps-shared@1.9.1
+  - @saleor/apps-ui@1.2.1
+
 ## 1.8.8
 
 ### Patch Changes

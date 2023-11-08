@@ -1,5 +1,15 @@
 # saleor-app-products-feed
 
+## 1.12.5
+
+### Patch Changes
+
+- fdabc51: Mapped app-sdk package to root library
+- Updated dependencies [fdabc51]
+  - @saleor/webhook-utils@0.0.2
+  - @saleor/apps-shared@1.9.1
+  - @saleor/apps-ui@1.2.1
+
 ## 1.12.4
 
 ### Patch Changes
