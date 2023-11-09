@@ -101,8 +101,8 @@ importers:
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
       contentful-management:
-        specifier: 10.38.3
-        version: 10.38.3
+        specifier: 10.46.4
+        version: 10.46.4
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -6255,8 +6255,8 @@ packages:
     dev: true
     optional: true
 
-  /@contentful/rich-text-types@16.2.0:
-    resolution: {integrity: sha512-4BHC+mfa50JB70epzpnas4EkiuB3mGdBZ5Rp8w7R5wXvswEf8TLg5yGau2FxmZeEjrAkDrt4vzBLVQ8v3Y//Jw==}
+  /@contentful/rich-text-types@16.3.0:
+    resolution: {integrity: sha512-OfQmAu5bxE0CgQA3WlUleVej+ifFG/iXmB2DmUl4EyWyFue1aiIvfjxQhcDRSH4n1jUNMJ6L1wInZL8uV5m3TQ==}
     engines: {node: '>=6.0.0'}
     dev: false
 
@@ -12429,11 +12429,12 @@ packages:
       - debug
     dev: false
 
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  /axios@1.5.1:
+    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -13435,30 +13436,29 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /contentful-management@10.38.3:
-    resolution: {integrity: sha512-hAuUSEfPYMQ6aplaENkZM5Zvhg9q+yiCsbm++pyHadUr5x+XKC9D85fASXuA4vI0hB/K66YHaqBiJ7CwAHT9bQ==}
+  /contentful-management@10.46.4:
+    resolution: {integrity: sha512-swOTlKO6AeCRnD5w237ey6wKDXty8shFVm0AisKO2w5seQINlFytgCkZd89E0lxjg4zgjb9maa7AScUtyQUd5w==}
     engines: {node: '>=14'}
     dependencies:
-      '@contentful/rich-text-types': 16.2.0
+      '@contentful/rich-text-types': 16.3.0
       '@types/json-patch': 0.0.30
-      axios: 0.27.2
-      contentful-sdk-core: 7.1.0
+      axios: 1.5.1
+      contentful-sdk-core: 8.1.0
       fast-copy: 3.0.1
       lodash.isplainobject: 4.0.6
-      type-fest: 3.13.0
+      type-fest: 4.3.2
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /contentful-sdk-core@7.1.0:
-    resolution: {integrity: sha512-RzTPnRsbCdVAhyka3wa9sDsAu9YsxoerNgaMqd63Ljb7qpG2zkdHcP7NTfyIbuHDJNJdAQdifyafxfEEwP+q/w==}
+  /contentful-sdk-core@8.1.0:
+    resolution: {integrity: sha512-ZXTtrkrx4OlRcVY0WLihrskF+BSuHe7QZuWA8DNEeTlHmkPXAVch9Og5TJDoyGeqNrArR3Ovd7yfaG+1QYo+ag==}
     engines: {node: '>=12'}
     dependencies:
       fast-copy: 2.1.7
       lodash.isplainobject: 4.0.6
       lodash.isstring: 4.0.1
       p-throttle: 4.1.1
-      qs: 6.11.2
     dev: false
 
   /convert-source-map@1.9.0:
@@ -21827,9 +21827,9 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /type-fest@3.13.0:
-    resolution: {integrity: sha512-Gur3yQGM9qiLNs0KPP7LPgeRbio2QTt4xXouobMCarR0/wyW3F+F/+OWwshg3NG0Adon7uQfSZBpB46NfhoF1A==}
-    engines: {node: '>=14.16'}
+  /type-fest@4.3.2:
+    resolution: {integrity: sha512-VpwuOgnTsQUUWi0id8Hl4/xiQ+OoaeJGe8dnFjzubJYe/lOc2/d1Qx/d3FqWR0FlpOG/cvukAXfB12A49Y4iiA==}
+    engines: {node: '>=16'}
     dev: false
 
   /type-is@1.6.18:
