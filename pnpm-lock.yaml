@@ -83,17 +83,17 @@ importers:
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -228,17 +228,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -506,17 +506,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -666,17 +666,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -938,17 +938,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -1086,17 +1086,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@types/debug':
         specifier: ^4.1.7
         version: 4.1.8
@@ -1234,17 +1234,17 @@ importers:
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -1506,17 +1506,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
-        version: 10.43.1(@trpc/server@10.43.1)
+        specifier: 10.43.2
+        version: 10.43.2(@trpc/server@10.43.2)
       '@trpc/next':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 10.43.2
+        version: 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
-        version: 10.43.1
+        specifier: 10.43.2
+        version: 10.43.2
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -10862,12 +10862,12 @@ packages:
       '@trpc/server': 10.34.0
     dev: false
 
-  /@trpc/client@10.43.1(@trpc/server@10.43.1):
-    resolution: {integrity: sha512-pkPtbDS0ck/2WZo2cWaPV11NFMII2I/nzse1Ggs5Cr0YczsZk3Z0DM77Sfb9FTSjmccYfkEtumHqxfTj6fRbbg==}
+  /@trpc/client@10.43.2(@trpc/server@10.43.2):
+    resolution: {integrity: sha512-3wbuvu38lZi37iG+36IsTE/SoqNyrwnGH6Q9TndaOdF/7vkQoofTsVWTaNuBsStkpj6xbvFUHZbCBd7kpIVL1A==}
     peerDependencies:
-      '@trpc/server': 10.43.1
+      '@trpc/server': 10.43.2
     dependencies:
-      '@trpc/server': 10.43.1
+      '@trpc/server': 10.43.2
     dev: false
 
   /@trpc/next@10.34.0(@tanstack/react-query@4.29.19)(@trpc/client@10.34.0)(@trpc/react-query@10.34.0)(@trpc/server@10.34.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
@@ -10891,21 +10891,21 @@ packages:
       react-ssr-prepass: 1.5.0(react@18.2.0)
     dev: false
 
-  /@trpc/next@10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/react-query@10.43.1)(@trpc/server@10.43.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-8Gmt5FaYR6Cb2KLPBUC3sc9xm2YOjJwJG+qUGZsmqnD0AstKr4D3K8dcrP+b7zjiyTIha2Lb3hGaXqyl1Z9X6g==}
+  /@trpc/next@10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/react-query@10.43.2)(@trpc/server@10.43.2)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-fWdRGTwPjRh/AjrqsOarCTf7v11BNQM3ReR+jVa0TFvvp5I0UDuvdGMExA0OFpTB1KbnRc58A4S3IITUCf01Tg==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.43.1
-      '@trpc/react-query': 10.43.1
-      '@trpc/server': 10.43.1
+      '@trpc/client': 10.43.2
+      '@trpc/react-query': 10.43.2
+      '@trpc/server': 10.43.2
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.43.1(@trpc/server@10.43.1)
-      '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/server': 10.43.1
+      '@trpc/client': 10.43.2(@trpc/server@10.43.2)
+      '@trpc/react-query': 10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0)
+      '@trpc/server': 10.43.2
       next: 13.4.8(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -10928,18 +10928,18 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-H7icpfXRYdD8K7EFDozKxtTEkMyQNu4+KLHNiCHq5yan4le3dyhtDYJa+1ZR/0sZWV95siVa+CqcUQHs1Nwu+g==}
+  /@trpc/react-query@10.43.2(@tanstack/react-query@4.29.19)(@trpc/client@10.43.2)(@trpc/server@10.43.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-2YPqIFwXdquxDqPGsRuEgv5Ky5UVgdyopzzc1l5xLXpwaaeJ0usfr5zNbeCmHa1IWYY1BiHU2TEVJlREEamngg==}
     peerDependencies:
       '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.43.1
-      '@trpc/server': 10.43.1
+      '@trpc/client': 10.43.2
+      '@trpc/server': 10.43.2
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0)(react@18.2.0)
-      '@trpc/client': 10.43.1(@trpc/server@10.43.1)
-      '@trpc/server': 10.43.1
+      '@trpc/client': 10.43.2(@trpc/server@10.43.2)
+      '@trpc/server': 10.43.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -10948,8 +10948,8 @@ packages:
     resolution: {integrity: sha512-2VMW44Fpaoyqb50dBtzdSWMhqt8lmoJiocEyBBeDb03R0W+XrzbVD5kU/wqKPlcp1DWeNCkOEIMtetMZCfo1hA==}
     dev: false
 
-  /@trpc/server@10.43.1:
-    resolution: {integrity: sha512-rKOSCpJOb1MdTyJFqdf3QNNESDfPkbP+yBOZBM2x6iIOS4VlCfJqxsaSrb3uLPR6s8Ni7DhTu+cu/q1r0xOGcw==}
+  /@trpc/server@10.43.2:
+    resolution: {integrity: sha512-88C9sFCdmk1IFL4ub7gqRPM0lFVmyZPjxpOcYy4GZw5yJif/FLyFuzSJiwsy9NygHOjqpfCxsDrLYsFr4eANPA==}
     engines: {node: '>=18.0.0'}
     dev: false
 
@@ -12772,7 +12772,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001561
-      electron-to-chromium: 1.4.579
+      electron-to-chromium: 1.4.580
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
 
@@ -14273,8 +14273,8 @@ packages:
   /electron-to-chromium@1.4.482:
     resolution: {integrity: sha512-h+UqpfmEr1Qkk0zp7ej/jid7CXoq4m4QzW6wNTb0ELJ/BZCpA4wgUylBIMGCe621tnr4l5VmoHjdoSx2lbnNJA==}
 
-  /electron-to-chromium@1.4.579:
-    resolution: {integrity: sha512-bJKvA+awBIzYR0xRced7PrQuRIwGQPpo6ZLP62GAShahU9fWpsNN2IP6BSP1BLDDSbxvBVRGAMWlvVVq3npmLA==}
+  /electron-to-chromium@1.4.580:
+    resolution: {integrity: sha512-T5q3pjQon853xxxHUq3ZP68ZpvJHuSMY2+BZaW3QzjS4HvNuvsMmZ/+lU+nCrftre1jFZ+OSlExynXWBihnXzw==}
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
