@@ -50,7 +50,7 @@
     "@graphql-codegen/typed-document-node": "5.0.1",
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-operations": "4.0.1",
-    "@graphql-codegen/typescript-urql": "3.7.3",
+    "@graphql-codegen/typescript-urql": "4.0.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
