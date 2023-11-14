@@ -33,7 +33,7 @@ fragment ProductVariantData on ProductVariant {
       }
     }
   }
-  quantityAvailable
+  quantityAvailable 
   channelListings {
     id
     channel {

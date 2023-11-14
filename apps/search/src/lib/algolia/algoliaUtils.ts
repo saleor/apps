@@ -121,6 +121,10 @@ export function productAndVariantToAlgolia({
 
   const media = variant.product.media?.map((m) => ({ url: m.url, type: m.type })) || [];
 
+  const parentProductPricing = variant.product.channelListings?.find(
+    (listing) => listing.channel.slug === channel,
+  )?.pricing;
+
   const document = {
     objectID: productAndVariantToObjectID(variant),
     productId: product.id,
@@ -138,6 +142,13 @@ export function productAndVariantToAlgolia({
      * Deprecated
      */
     grossPrice: listing?.price?.amount,
+    /**
+     * BUG: This will work in bulk-sync, because channel is set in the query.
+     * In webhook (like product_variant_updated) pricing is null, so these fields will be purged in Algolia.
+     *
+     * Need to either add fields to Core (https://github.com/saleor/saleor/issues/14748)
+     * or dynamically fetch missing data
+     */
     pricing: {
       price: {
         net: variant.pricing?.price?.net.amount,
@@ -151,6 +162,28 @@ export function productAndVariantToAlgolia({
       priceUndiscounted: {
         net: variant.pricing?.priceUndiscounted?.net.amount,
         gross: variant.pricing?.priceUndiscounted?.gross.amount,
+      },
+    },
+    productPricing: {
+      priceRange: {
+        start: {
+          gross: parentProductPricing?.priceRange?.start?.gross.amount,
+          net: parentProductPricing?.priceRange?.start?.net.amount,
+        },
+        stop: {
+          gross: parentProductPricing?.priceRange?.stop?.gross.amount,
+          net: parentProductPricing?.priceRange?.stop?.net.amount,
+        },
+      },
+      priceRangeUndiscounted: {
+        start: {
+          gross: parentProductPricing?.priceRangeUndiscounted?.start?.gross.amount,
+          net: parentProductPricing?.priceRangeUndiscounted?.start?.net.amount,
+        },
+        stop: {
+          gross: parentProductPricing?.priceRangeUndiscounted?.stop?.gross.amount,
+          net: parentProductPricing?.priceRangeUndiscounted?.stop?.net.amount,
+        },
       },
     },
     inStock,
