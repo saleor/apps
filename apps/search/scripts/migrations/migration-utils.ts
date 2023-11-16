@@ -3,7 +3,7 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 
 export const verifyRequiredEnvs = () => {
-  const requiredEnvs = ["SALEOR_CLOUD_TOKEN", "SALEOR_CLOUD_RESOURCE_URL"];
+  const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 
   if (!requiredEnvs.every((env) => process.env[env])) {
     throw new Error(`Missing envs: ${requiredEnvs.join(" | ")}`);
@@ -12,8 +12,8 @@ export const verifyRequiredEnvs = () => {
 
 export const fetchCloudAplEnvs = () => {
   const saleorAPL = new SaleorCloudAPL({
-    token: process.env.SALEOR_CLOUD_TOKEN!,
-    resourceUrl: process.env.SALEOR_CLOUD_RESOURCE_URL!,
+    token: process.env.REST_APL_TOKEN!,
+    resourceUrl: process.env.REST_APL_ENDPOINT!,
   });
 
   return saleorAPL.getAll();
