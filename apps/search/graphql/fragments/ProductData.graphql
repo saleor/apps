@@ -24,7 +24,7 @@ fragment ProductData on Product {
   thumbnail {
     url
   }
-  media{
+  media {
     url
     type
   }
@@ -32,6 +32,44 @@ fragment ProductData on Product {
     ...ProductAttributesData
   }
   channelListings {
+    pricing {
+      priceRangeUndiscounted {
+        start {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+      }
+      priceRange {
+        start {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+      }
+    }
     id
     visibleInListings
     channel {
