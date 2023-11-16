@@ -63,7 +63,7 @@ export const UniversalChannelsSection = ({
         <BoxWithBorder>
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={defaultPadding}>
             <Box display="flex" flexDirection="column" gap={defaultPadding}>
-              <Text variant="heading">Current behaviour</Text>
+              <Text variant="heading">Current behavior</Text>
               <AssignedChannelsMessage
                 availableChannels={channels?.map((channel) => channel.slug) || []}
                 channelConfiguration={channelConfiguration}
