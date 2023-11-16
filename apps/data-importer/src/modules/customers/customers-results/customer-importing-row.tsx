@@ -14,7 +14,6 @@ const ImportedStatus = ({ id }: { id: string }) => {
 
   return (
     <Box style={{ gap: 20, display: "flex", alignItems: "center" }}>
-      <CheckboxIcon />
       <span
         style={{ cursor: "pointer" }}
         onClick={() => {
