@@ -14,7 +14,8 @@
     "lint-staged": "lint-staged",
     "prepare": "husky install",
     "start": "turbo run start",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "deploy": "turbo run deploy"
   },
   "dependencies": {
     "@saleor/app-sdk": "0.43.1"
