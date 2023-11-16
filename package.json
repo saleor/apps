@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "check-deps": "syncpack list-mismatches",
     "check-spelling": "cspell **/*.{jsx,tsx,js,ts,md,mdx}",
+    "deploy": "turbo run deploy",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format-package-json": "syncpack format",
@@ -14,8 +15,7 @@
     "lint-staged": "lint-staged",
     "prepare": "husky install",
     "start": "turbo run start",
-    "test": "turbo run test",
-    "deploy": "turbo run deploy"
+    "test": "turbo run test"
   },
   "dependencies": {
     "@saleor/app-sdk": "0.43.1"

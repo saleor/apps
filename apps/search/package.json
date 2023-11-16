@@ -3,7 +3,7 @@
   "version": "1.17.2",
   "scripts": {
     "build": "pnpm generate && next build",
-    "deploy": "tsx scripts/migrations/run-webhooks-migration.ts && pnpm run build",
+    "deploy": "pnpm run build && tsx scripts/migrations/run-webhooks-migration.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
@@ -59,10 +59,10 @@
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
+    "tsx": "4.1.2",
     "typescript": "5.1.6",
     "vite": "4.4.8",
-    "vitest": "0.34.1",
-    "tsx":"4.1.2"
+    "vitest": "0.34.1"
   },
   "private": true,
   "saleor": {
