@@ -7,8 +7,8 @@ import { AppProps } from "next/app";
 import { useEffect } from "react";
 
 import { ThemeProvider } from "@saleor/macaw-ui";
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../no-ssr-wrapper";
+import { ThemeSynchronizer } from "@saleor/apps-shared";
 
 /**
  * Ensure instance is a singleton.

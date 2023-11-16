@@ -1,4 +1,4 @@
-import "@saleor/macaw-ui/next/style";
+import "@saleor/macaw-ui/style";
 import "./styles.css";
 
 import React from "react";

@@ -1,4 +1,4 @@
-import "@saleor/macaw-ui/next/style";
+import "@saleor/macaw-ui/style";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";

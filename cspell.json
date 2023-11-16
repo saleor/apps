@@ -70,6 +70,8 @@
     "Protos",
     "pino",
     "IFRAME",
+    "darkmode",
+    "Graphiql",
     "dedupe"
   ],
   "ignorePaths": [

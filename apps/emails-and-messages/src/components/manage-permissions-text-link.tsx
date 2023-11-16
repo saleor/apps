@@ -39,13 +39,13 @@ export const ManagePermissionsTextLink = ({
       To use this feature, the {missingPermission} permission is required. Please go to{" "}
       {/* TODO: Update the shared package to handle dashboard links */}
       <TextLink
-        onClick={(e: Event) => {
+        onClick={(e) => {
           e.preventDefault();
 
           appBridge?.dispatch(
             actions.Redirect({
               to: `/apps/${appId}`,
-            })
+            }),
           );
         }}
         href="#"
