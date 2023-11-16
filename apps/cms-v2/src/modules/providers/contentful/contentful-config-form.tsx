@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useForm } from "react-hook-form";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 

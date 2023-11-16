@@ -1,4 +1,4 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 import React, { PropsWithChildren } from "react";
 
 export const AppColumns = ({ top, children }: PropsWithChildren<{ top: React.ReactNode }>) => {

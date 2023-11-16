@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { ComponentProps } from "react";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { DangerSection } from "../../../ui/danger-section/danger-section";

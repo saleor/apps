@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { AvataxTaxCodeMatcherTable } from "../../../modules/avatax/ui/avatax-tax-code-matcher-table";
 import { AppColumns } from "../../../modules/ui/app-columns";
 import { AppDashboardLink } from "../../../modules/ui/app-dashboard-link";

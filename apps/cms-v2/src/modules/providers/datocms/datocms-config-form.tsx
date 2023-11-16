@@ -1,7 +1,7 @@
 import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";

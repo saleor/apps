@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { defaultPadding } from "../../../components/ui-defaults";

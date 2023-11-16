@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Button } from "@saleor/macaw-ui/next";
+import { Button } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { trpcClient } from "../../trpc/trpc-client";
 import { TaxJarConfig, defaultTaxJarConfig } from "../taxjar-connection-schema";

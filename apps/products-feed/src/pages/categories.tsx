@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import dynamic from "next/dynamic";
 
 const DynamicCategoryMapping = dynamic(

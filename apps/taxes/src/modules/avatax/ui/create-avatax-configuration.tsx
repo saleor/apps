@@ -4,7 +4,7 @@ import { AvataxConfig, BaseAvataxConfig, defaultAvataxConfig } from "../avatax-c
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useRouter } from "next/router";
-import { Button } from "@saleor/macaw-ui/next";
+import { Button } from "@saleor/macaw-ui";
 
 export const CreateAvataxConfiguration = () => {
   const router = useRouter();

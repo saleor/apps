@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import React from "react";
 
 import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 import { TextLink } from "@saleor/apps-ui";

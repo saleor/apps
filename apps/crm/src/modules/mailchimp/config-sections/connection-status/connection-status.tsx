@@ -1,4 +1,4 @@
-import { PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { PropsWithBox, Text } from "@saleor/macaw-ui";
 import { Section } from "../../../ui/section/section";
 
 export const ConnectionStatus = (props: PropsWithBox<{ status: "error" | "ok" }>) => (

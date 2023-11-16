@@ -1,4 +1,4 @@
-import { Box, PropsWithBox } from "@saleor/macaw-ui/next";
+import { Box, PropsWithBox } from "@saleor/macaw-ui";
 
 type Props = PropsWithBox<{}>;
 

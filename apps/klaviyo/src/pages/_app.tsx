@@ -1,6 +1,6 @@
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
-import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import "@saleor/macaw-ui/next/style";
 import { AppProps } from "next/app";
 

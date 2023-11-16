@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 import { ProvidersConfig } from "../configuration";

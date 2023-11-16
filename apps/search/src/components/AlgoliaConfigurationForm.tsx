@@ -2,7 +2,7 @@ import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";

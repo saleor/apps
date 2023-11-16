@@ -1,4 +1,4 @@
-import { BoxProps, Chip, ChipProps, Text, TextProps } from "@saleor/macaw-ui/next";
+import { BoxProps, Chip, ChipProps, Text, TextProps } from "@saleor/macaw-ui";
 
 const colorPropsBorderMapping: Record<ChipProps["variant"], BoxProps["borderColor"]> = {
   default: "neutralSubdued",

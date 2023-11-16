@@ -6,7 +6,7 @@ import RudderstackLogo from "../../../assets/rudderstack.png";
 import { HTMLAttributes } from "react";
 import clsx from "clsx";
 import styles from "./providers-list.module.css";
-import { Box, MarketplaceIcon, Text, useTheme } from "@saleor/macaw-ui/next";
+import { Box, MarketplaceIcon, Text, useTheme } from "@saleor/macaw-ui";
 import { TextLink } from "../../ui/text-link/text-link";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { trpcClient } from "../../../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";

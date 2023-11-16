@@ -5,7 +5,7 @@ import React from "react";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { GraphQLProvider, NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 

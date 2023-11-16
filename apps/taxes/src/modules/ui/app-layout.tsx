@@ -1,4 +1,4 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 import React from "react";
 
 export const AppLayout = ({ children }: { children: React.ReactNode }) => {

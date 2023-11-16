@@ -3,7 +3,7 @@ import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import React from "react";
 import { AppProps } from "next/app";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 import { ThemeSynchronizer } from "../hooks/theme-synchronizer";
 

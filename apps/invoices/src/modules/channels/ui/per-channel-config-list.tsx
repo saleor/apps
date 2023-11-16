@@ -1,4 +1,4 @@
-import { Box, Text, Chip, Button } from "@saleor/macaw-ui/next";
+import { Box, Text, Chip, Button } from "@saleor/macaw-ui";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useRouter } from "next/router";
 import { SkeletonLayout } from "@saleor/apps-ui";

@@ -3,7 +3,7 @@ import "./styles.css";
 
 import React from "react";
 import { Preview } from "@storybook/react";
-import { Box, DefaultTheme, ThemeProvider, useTheme } from "@saleor/macaw-ui/next";
+import { Box, DefaultTheme, ThemeProvider, useTheme } from "@saleor/macaw-ui";
 
 const ThemeSwitcher = ({ children, theme }) => {
   const { setTheme } = useTheme();

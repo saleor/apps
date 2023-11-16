@@ -1,4 +1,4 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
 
 type Props = PropsWithChildren<{}>;

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { useRouter } from "next/router";
 import { isInIframe } from "@saleor/apps-shared";
-import { LinearProgress } from "@material-ui/core";
+import { Text } from "@saleor/macaw-ui";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -18,7 +18,7 @@ const IndexPage: NextPage = () => {
   }, [isMounted, appBridgeState?.ready, replace]);
 
   if (isInIframe()) {
-    return <LinearProgress />;
+    return <Text>Loading</Text>
   }
 
   return (

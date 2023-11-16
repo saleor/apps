@@ -1,6 +1,6 @@
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { trpcClient } from "../../trpc/trpc-client";

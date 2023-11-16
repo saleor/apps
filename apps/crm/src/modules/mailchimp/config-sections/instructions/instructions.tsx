@@ -1,6 +1,6 @@
 import { Section } from "../../../ui/section/section";
 import React from "react";
-import { Box, Button, Chip, PropsWithBox, Text, TextProps } from "@saleor/macaw-ui/next";
+import { Box, Button, Chip, PropsWithBox, Text, TextProps } from "@saleor/macaw-ui";
 import { useLocalStorage } from "usehooks-ts";
 import { TextLink } from "../../../ui/text-link/text-link";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";

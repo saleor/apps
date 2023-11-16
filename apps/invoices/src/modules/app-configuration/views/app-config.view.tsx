@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { DefaultShopAddress } from "../../shop-info/ui/default-shop-address";
 import { PerChannelConfigList } from "../../channels/ui/per-channel-config-list";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";

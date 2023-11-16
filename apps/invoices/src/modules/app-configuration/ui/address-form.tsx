@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { z } from "zod";

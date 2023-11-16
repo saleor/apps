@@ -1,4 +1,4 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 import React, { ComponentProps } from "react";
 import styles from "./mailchimp-auth-frame.module.css";
 

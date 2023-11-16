@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { SemanticChip } from "@saleor/apps-ui";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { BoxFooter } from "../../../components/box-footer";

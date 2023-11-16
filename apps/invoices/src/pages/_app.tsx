@@ -8,7 +8,7 @@ import { AppProps } from "next/app";
 
 import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 
 import { NextPage } from "next";
 

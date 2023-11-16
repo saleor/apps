@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { Control, FieldPath, FieldValues } from "react-hook-form";

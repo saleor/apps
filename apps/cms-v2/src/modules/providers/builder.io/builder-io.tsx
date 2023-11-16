@@ -1,4 +1,4 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 
 import logo from "./builder-logo.svg";
 import { CMSProviderMeta } from "../cms-provider-meta";

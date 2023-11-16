@@ -1,4 +1,4 @@
-import { Text, TextProps } from "@saleor/macaw-ui/next";
+import { Text, TextProps } from "@saleor/macaw-ui";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 export const TextLink = ({ href, ...props }: TextProps & { href: string }) => {

@@ -2,7 +2,7 @@ import {
   Combobox as $Combobox,
   type ComboboxProps as $ComboboxProps,
   Option,
-} from "@saleor/macaw-ui/next";
+} from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<

@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui";
 import { useGetFeedApiUrl } from "../feed-url/use-get-feed-api-url";
 
 interface FeedPreviewCardProps {

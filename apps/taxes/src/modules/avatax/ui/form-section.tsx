@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import React, { PropsWithChildren } from "react";
 import styles from "./form-section.module.css";
 

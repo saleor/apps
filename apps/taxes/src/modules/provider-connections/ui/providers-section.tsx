@@ -1,7 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Section } from "../../ui/app-section";
 import { ProvidersList } from "./providers-list";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 
 const Intro = () => {
   return (

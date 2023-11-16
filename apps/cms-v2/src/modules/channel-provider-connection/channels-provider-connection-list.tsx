@@ -1,6 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useState } from "react";
 import { trpcClient } from "../trpc/trpc-client";
 import { AddConnectionModal } from "./add-connection-modal";

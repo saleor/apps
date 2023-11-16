@@ -1,5 +1,5 @@
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui";
 import { Multiselect } from "@saleor/react-hook-form-macaw";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";

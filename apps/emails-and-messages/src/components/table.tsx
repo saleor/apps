@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@saleor/macaw-ui/next";
+import { Box, BoxProps } from "@saleor/macaw-ui";
 
 export const Table = {
   Container: (props: BoxProps) => <Box __textAlign={"left"} width="100%" {...props} as="table" />,

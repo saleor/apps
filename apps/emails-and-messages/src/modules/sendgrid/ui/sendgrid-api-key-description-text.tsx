@@ -1,5 +1,5 @@
 import { TextLink } from "@saleor/apps-ui";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 
 export const SendgridApiKeyDescriptionText = () => (
   <Text as="p">

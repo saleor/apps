@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { PropsWithChildren } from "react";
 
 /*

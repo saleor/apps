@@ -1,6 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { useFormContext } from "react-hook-form";

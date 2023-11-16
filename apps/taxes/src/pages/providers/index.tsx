@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { ProviderName } from "../../modules/provider-connections/provider-connections";
 import { AppCard } from "../../modules/ui/app-card";

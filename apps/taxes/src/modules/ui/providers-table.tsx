@@ -1,4 +1,4 @@
-import { Box, Button, EditIcon, ViewTableIcon } from "@saleor/macaw-ui/next";
+import { Box, Button, EditIcon, ViewTableIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";

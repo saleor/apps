@@ -3,7 +3,7 @@ import { ChannelProviderConnectionList } from "@/modules/channel-provider-connec
 import { ProvidersList } from "@/modules/providers-listing/providers-list";
 import { AppHeader } from "@/modules/ui/app-header";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 const ConfigurationPage: NextPage = () => {

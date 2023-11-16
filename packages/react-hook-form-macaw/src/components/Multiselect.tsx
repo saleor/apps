@@ -2,7 +2,7 @@ import {
   Multiselect as $Multiselect,
   Option,
   type MultiselectProps as $MultiselectProps,
-} from "@saleor/macaw-ui/next";
+} from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
