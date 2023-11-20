@@ -1,5 +1,15 @@
 # saleor-app-crm
 
+## 1.8.0
+
+### Minor Changes
+
+- a50df02: Reduced Sentry traces sample rate to 0.1
+
+### Patch Changes
+
+- f4c67e8: Updated TRPC version
+
 ## 1.7.10
 
 ### Patch Changes

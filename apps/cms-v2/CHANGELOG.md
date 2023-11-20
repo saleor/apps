@@ -1,5 +1,16 @@
 # saleor-app-cms-v2
 
+## 2.5.0
+
+### Minor Changes
+
+- a50df02: Reduced Sentry traces sample rate to 0.1
+
+### Patch Changes
+
+- 1454572: Updated package contentful-management from 10.38.3 to 10.46.4
+- f4c67e8: Updated TRPC version
+
 ## 2.4.2
 
 ### Patch Changes
