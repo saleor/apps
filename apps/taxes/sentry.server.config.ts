@@ -14,7 +14,7 @@ const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 Sentry.init({
   dsn: SENTRY_DSN,
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.1,
   profilesSampleRate: 1.0,
   environment: SENTRY_ENVIRONMENT,
   includeLocalVariables: true,
