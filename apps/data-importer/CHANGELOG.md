@@ -1,5 +1,11 @@
 # saleor-app-data-importer
 
+## 1.10.0
+
+### Minor Changes
+
+- a50df02: Reduced Sentry traces sample rate to 0.1
+
 ## 1.9.9
 
 ### Patch Changes

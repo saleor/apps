@@ -1,5 +1,16 @@
 # saleor-app-search
 
+## 1.18.0
+
+### Minor Changes
+
+- a50df02: Reduced Sentry traces sample rate to 0.1
+- 9fc5b1a: Added new field to the index: productPricing that contains price range (start-stop). Now each variant can be displayed with pricing of cheapest and most expensive ones.
+
+### Patch Changes
+
+- f4c67e8: Updated TRPC version
+
 ## 1.17.2
 
 ### Patch Changes
