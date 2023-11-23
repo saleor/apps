@@ -132,6 +132,7 @@ export function productAndVariantToAlgolia({
     name: `${product.name} - ${variant.name}`,
     productName: product.name,
     variantName: variant.name,
+    sku: variant.sku,
     attributes,
     media,
     description: safeParseJson(product.description),
