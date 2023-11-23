@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.19.0
+
+### Minor Changes
+
+- 563fca9: Added "sku" field to the object mapped to Algolia. If sku is defined in the product variant, it will be passed to the synchronized index.
+
 ## 1.18.0
 
 ### Minor Changes
