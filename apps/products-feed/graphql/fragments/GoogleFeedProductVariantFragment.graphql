@@ -2,6 +2,10 @@ fragment GoogleFeedProductVariant on ProductVariant {
   id
   name
   sku
+  weight {
+    unit
+    value
+  }
   pricing {
     priceUndiscounted{
       gross {
@@ -32,6 +36,9 @@ fragment GoogleFeedProductVariant on ProductVariant {
     slug
     description
     seoDescription
+    productType {
+      isShippingRequired
+    }
     media{
       id
       alt

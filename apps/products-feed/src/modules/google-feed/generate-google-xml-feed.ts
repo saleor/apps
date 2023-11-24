@@ -9,6 +9,7 @@ import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handleba
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
+import { getWeightAttributeValue } from "./get-weight-attribute-value";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
@@ -67,6 +68,11 @@ export const generateGoogleXmlFeed = ({
       });
     } catch {}
 
+    let weight = getWeightAttributeValue({
+      isShippingRequired: variant.product.productType.isShippingRequired,
+      weight: variant.weight || undefined,
+    });
+
     return productToProxy({
       link,
       title: title || "",
@@ -86,6 +92,7 @@ export const generateGoogleXmlFeed = ({
       brand: attributes?.brand,
       pattern: attributes?.pattern,
       size: attributes?.size,
+      weight,
       ...pricing,
     });
   });

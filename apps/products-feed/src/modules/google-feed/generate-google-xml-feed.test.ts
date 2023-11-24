@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
+import { GoogleFeedProductVariantFragment, WeightUnitsEnum } from "../../../generated/graphql";
 import { generateGoogleXmlFeed } from "./generate-google-xml-feed";
 
 const productBase: GoogleFeedProductVariantFragment["product"] = {
@@ -17,6 +17,9 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
   slug: "product-slug",
   thumbnail: { __typename: "Image", url: "" },
   attributes: [],
+  productType: {
+    isShippingRequired: true,
+  },
 };
 
 const priceBase: GoogleFeedProductVariantFragment["pricing"] = {
@@ -57,6 +60,10 @@ describe("generateGoogleXmlFeed", () => {
           name: "Product variant",
           product: productBase,
           attributes: [],
+          weight: {
+            unit: WeightUnitsEnum.Kg,
+            value: 1,
+          },
         },
         {
           id: "id2",
@@ -85,6 +92,7 @@ describe("generateGoogleXmlFeed", () => {
             <g:condition>new</g:condition>
             <g:availability>in_stock</g:availability>
             <g:product_type>Category Name</g:product_type>
+            <g:shipping_weight>1 kg</g:shipping_weight>
             <g:google_product_category>1</g:google_product_category>
             <link>https://example.com/p/product-slug</link>
             <g:price>2.00 USD</g:price>
