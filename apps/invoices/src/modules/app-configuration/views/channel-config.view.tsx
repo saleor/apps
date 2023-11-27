@@ -1,4 +1,4 @@
-import { Box, ChevronRightIcon, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, ChevronRightIcon, Text, Button } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { ConnectedAddressForm } from "../ui/address-form";
 import { trpcClient } from "../../trpc/trpc-client";

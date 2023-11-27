@@ -3,7 +3,7 @@ import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { AppHeader } from "@/modules/ui/app-header";
 import { Breadcrumbs, Layout, SkeletonLayout } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -46,9 +46,9 @@ const EditProviderPage: NextPage = () => {
       <AppHeader
         text={`Edit connected provider`}
         breadcrumbs={[
-          <Breadcrumbs.Item key="editprovider">Edit Provider</Breadcrumbs.Item>,
-          <Breadcrumbs.Item key="displayname">{provider?.displayName}</Breadcrumbs.Item>,
-          <Breadcrumbs.Item key="configname">{data?.configName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="editProvider">Edit Provider</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="displayName">{provider?.displayName}</Breadcrumbs.Item>,
+          <Breadcrumbs.Item key="configName">{data?.configName}</Breadcrumbs.Item>,
         ]}
       />
       <Layout.AppSection

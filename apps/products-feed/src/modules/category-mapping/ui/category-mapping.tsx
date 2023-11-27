@@ -2,7 +2,7 @@ import { trpcClient } from "../../trpc/trpc-client";
 
 import React from "react";
 import { CategoryMappingForm } from "./category-mapping-form";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 
 export const CategoryMapping = () => {
   const { data: categories, isLoading } = trpcClient.categoryMapping.getCategoryMappings.useQuery();

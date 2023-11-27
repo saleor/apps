@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Text, TextProps } from "@saleor/macaw-ui/next";
+import { Text, TextProps } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 export interface TextLinkProps extends TextProps {

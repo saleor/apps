@@ -1,4 +1,4 @@
-import { Button, Text } from "@saleor/macaw-ui/next";
+import { Button, Text } from "@saleor/macaw-ui";
 import { Modal } from "../ui/modal";
 import {
   AddConnectionForm,

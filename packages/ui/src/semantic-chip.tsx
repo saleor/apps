@@ -1,20 +1,22 @@
-import { BoxProps, Chip, ChipProps, Text, TextProps } from "@saleor/macaw-ui/next";
+import { BoxProps, Chip, ChipProps, Text, TextProps } from "@saleor/macaw-ui";
 
-const colorPropsBorderMapping: Record<ChipProps["variant"], BoxProps["borderColor"]> = {
+type ChipVariant = "default" | "warning" | "error" | "success";
+
+const colorPropsBorderMapping: Record<ChipVariant, BoxProps["borderColor"]> = {
   default: "neutralSubdued",
   warning: "criticalDefault",
   error: "criticalDefault",
   success: "neutralDefault",
 };
 
-const colorPropsTextMapping: Record<ChipProps["variant"], BoxProps["color"]> = {
+const colorPropsTextMapping: Record<ChipVariant, BoxProps["color"]> = {
   default: "textNeutralPlain",
   warning: "textCriticalDefault",
   error: "textCriticalDefault",
   success: "text2Decorative",
 };
 
-const colorPropsBgMapping: Record<ChipProps["variant"], BoxProps["backgroundColor"]> = {
+const colorPropsBgMapping: Record<ChipVariant, BoxProps["backgroundColor"]> = {
   default: "surfaceNeutralHighlight",
   warning: "surfaceNeutralHighlight",
   error: "surfaceCriticalSubdued",

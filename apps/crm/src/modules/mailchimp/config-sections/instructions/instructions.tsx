@@ -1,9 +1,9 @@
 import { Section } from "../../../ui/section/section";
 import React from "react";
-import { Box, Button, Chip, PropsWithBox, Text, TextProps } from "@saleor/macaw-ui/next";
+import { Box, Button, Chip, PropsWithBox, Text, TextProps } from "@saleor/macaw-ui";
 import { useLocalStorage } from "usehooks-ts";
-import { TextLink } from "../../../ui/text-link/text-link";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { TextLink } from "@saleor/apps-ui";
 
 const Paragraph = (props: TextProps) => <Text marginBottom={2} as="p" {...props} />;
 
@@ -17,7 +17,7 @@ const getGraphiqlExampleQueryPlaygroundUrl = (apiUrl = "https://demo.saleor.io/g
 export const Instructions = (props: PropsWithBox<{}>) => {
   const [instructionsVisible, setInstructionsVisible] = useLocalStorage(
     "instructions-visible",
-    true
+    true,
   );
 
   const { appBridgeState } = useAppBridge();

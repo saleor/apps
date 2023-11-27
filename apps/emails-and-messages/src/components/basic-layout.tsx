@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 
 interface BasicLayoutProps {
   children: React.ReactNode;

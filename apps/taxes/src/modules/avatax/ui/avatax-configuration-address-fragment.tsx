@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";

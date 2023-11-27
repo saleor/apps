@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { EditTaxJarConfiguration } from "../../../../modules/taxjar/ui/edit-taxjar-configuration";
 import { TaxJarInstructions } from "../../../../modules/taxjar/ui/taxjar-instructions";

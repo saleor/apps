@@ -5,7 +5,7 @@ import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Breadcrumbs, ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { useAppApi } from "../hooks/useAppApi";
 
 interface ConfigurationField {

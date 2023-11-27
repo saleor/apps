@@ -1,4 +1,4 @@
-import { Toggle as $Toggle } from "@saleor/macaw-ui/next";
+import { Toggle as $Toggle } from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 // ! ToggleProps is not exported from macaw-ui

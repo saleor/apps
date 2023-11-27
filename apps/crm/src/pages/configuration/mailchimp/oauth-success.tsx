@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { Box, Text, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, Text, ThemeProvider } from "@saleor/macaw-ui";
 import { NextPageWithLayoutOverwrite } from "../../_app";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 

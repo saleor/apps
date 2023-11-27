@@ -1,5 +1,5 @@
 import { SemanticChip } from "@saleor/apps-ui";
-import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Divider, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Checkbox, Text } from "@saleor/macaw-ui";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { ChangeEvent, ComponentProps, useEffect, useState } from "react";
 import { Section } from "../../../ui/section/section";

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { BoxWithBorder } from "../../../components/box-with-border";

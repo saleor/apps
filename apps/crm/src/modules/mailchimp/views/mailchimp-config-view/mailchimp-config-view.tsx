@@ -1,5 +1,5 @@
 import { trpcClient } from "../../../trpc/trpc-client";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { RemoveMailchimpConfig } from "../../config-sections/remove-mailchimp-config/remove-mailchimp-config";
 import { MailchimpAuthorizeView } from "../mailchimp-authorize-view/mailchimp-authorize-view";
 import { MailchimpLists } from "../../config-sections/mailchimp-lists/mailchimp-lists";

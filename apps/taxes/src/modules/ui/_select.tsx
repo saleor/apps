@@ -1,4 +1,4 @@
-import { Select as _Select } from "@saleor/macaw-ui/next";
+import { Select as _Select } from "@saleor/macaw-ui";
 
 type SelectProps = Omit<React.ComponentProps<typeof _Select>, "value" | "onChange"> & {
   value: string | null;

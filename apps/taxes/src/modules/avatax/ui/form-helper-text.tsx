@@ -1,4 +1,4 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import React from "react";
 
 export const HelperText = ({

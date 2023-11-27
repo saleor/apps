@@ -2,12 +2,12 @@ import {
   Combobox as $Combobox,
   type ComboboxProps as $ComboboxProps,
   Option,
-} from "@saleor/macaw-ui/next";
+} from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type ComboboxProps<T extends FieldValues = FieldValues> = Omit<
-  $ComboboxProps<T, T>,
-  "name"
+  $ComboboxProps<Option, T>,
+  "name" | "value"
 > & {
   name: FieldPath<T>;
   control: Control<T>;
@@ -28,6 +28,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
       control={control}
       render={({ field: { value, onChange, ...field }, fieldState: { error } }) => {
         return (
+          // @ts-ignore todo: fix
           <$Combobox
             {...rest}
             {...field}
@@ -35,7 +36,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
             onChange={(option) => {
               onChange(option?.value ?? null);
             }}
-            value={options.find((o: Option) => o.value === value) || null}
+            value={options.find((o) => o.value === value) || null}
             name={name}
             required={required}
             type={type}

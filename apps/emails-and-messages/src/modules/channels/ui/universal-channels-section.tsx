@@ -1,5 +1,5 @@
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui";
 import { Multiselect } from "@saleor/react-hook-form-macaw";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";
@@ -63,7 +63,7 @@ export const UniversalChannelsSection = ({
         <BoxWithBorder>
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={defaultPadding}>
             <Box display="flex" flexDirection="column" gap={defaultPadding}>
-              <Text variant="heading">Current behaviour</Text>
+              <Text variant="heading">Current behavior</Text>
               <AssignedChannelsMessage
                 availableChannels={channels?.map((channel) => channel.slug) || []}
                 channelConfiguration={channelConfiguration}

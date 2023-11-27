@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { trpcClient } from "../../trpc/trpc-client";
 import { CategoryBreadcrumbs } from "../construct-category-breadcrumbs";
 import { GoogleProductCategories } from "../google-product-categories";

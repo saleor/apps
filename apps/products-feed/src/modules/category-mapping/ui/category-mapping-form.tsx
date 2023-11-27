@@ -9,7 +9,7 @@ import {
 import { CategoryWithMappingFragmentFragment } from "../../../../generated/graphql";
 import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { Box, Button, PropsWithBox } from "@saleor/macaw-ui/next";
+import { Box, Button, PropsWithBox } from "@saleor/macaw-ui";
 import { GoogleProductCategories } from "../google-product-categories";
 import { CategoryBreadcrumbs } from "../construct-category-breadcrumbs";
 

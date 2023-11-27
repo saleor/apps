@@ -1,4 +1,4 @@
-import { PropsWithBox, Box } from "@saleor/macaw-ui/next";
+import { PropsWithBox, Box } from "@saleor/macaw-ui";
 
 export const AppCard = ({ children, ...p }: PropsWithBox<{}>) => {
   return (

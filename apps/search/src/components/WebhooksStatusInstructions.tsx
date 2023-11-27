@@ -1,4 +1,4 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 
 export const WebhooksStatusInstructions = () => {

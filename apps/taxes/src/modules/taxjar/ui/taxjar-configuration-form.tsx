@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Button, Divider, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { useForm } from "react-hook-form";

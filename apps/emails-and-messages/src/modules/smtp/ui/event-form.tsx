@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { useDashboardNotification } from "@saleor/apps-shared";

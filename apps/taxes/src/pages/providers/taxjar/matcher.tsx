@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { AppColumns } from "../../../modules/ui/app-columns";
 import { AppDashboardLink } from "../../../modules/ui/app-dashboard-link";
 import { Section } from "../../../modules/ui/app-section";

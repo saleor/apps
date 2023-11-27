@@ -1,11 +1,11 @@
-import { Box, Button } from "@saleor/macaw-ui/next";
+import { Box, Button } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { RootConfig } from "../schemas/root-config.schema";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 

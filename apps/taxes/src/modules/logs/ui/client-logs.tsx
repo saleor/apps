@@ -1,4 +1,4 @@
-import { Box, Button, Spinner, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Spinner, Text } from "@saleor/macaw-ui";
 import { ClientLogsTable } from "./client-logs-table";
 import { useRouter } from "next/router";
 import { z } from "zod";

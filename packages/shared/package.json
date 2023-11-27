@@ -12,11 +12,8 @@
     "semver": "^7.5.1"
   },
   "devDependencies": {
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "@material-ui/lab": "4.0.0-alpha.61",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/macaw-ui": "0.8.0-pre.127",
+    "@saleor/macaw-ui": "1.0.0-pre.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@types/semver": "^7.5.0",

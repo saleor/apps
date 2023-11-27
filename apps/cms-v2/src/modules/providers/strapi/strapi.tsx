@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 
 import logo from "./strapi-logo.svg";
 import { CMSProviderMeta } from "../cms-provider-meta";

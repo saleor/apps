@@ -1,5 +1,5 @@
 import { ChannelConfiguration } from "../channel-configuration-schema";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 
 interface OverrideMessageArgs {
   availableChannels: string[];

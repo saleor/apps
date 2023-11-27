@@ -1,4 +1,4 @@
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
 import { ReactNode } from "react";
 
 // todo move to shared

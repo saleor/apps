@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { Layout } from "@saleor/apps-ui";
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";

@@ -1,5 +1,5 @@
 import MailchimpLogo from "../../../assets/mailchimp.svg";
-import { Button, ButtonProps } from "@saleor/macaw-ui/next";
+import { Button, ButtonProps } from "@saleor/macaw-ui";
 
 export const LoginWithMailchimpButton = ({ children, ...props }: ButtonProps) => {
   return (

@@ -1,7 +1,7 @@
 import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { PermissionEnum } from "../../generated/graphql";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { TextLink } from "@saleor/apps-ui";
 
 interface ManagePermissionsTextLinkProps {
@@ -39,13 +39,13 @@ export const ManagePermissionsTextLink = ({
       To use this feature, the {missingPermission} permission is required. Please go to{" "}
       {/* TODO: Update the shared package to handle dashboard links */}
       <TextLink
-        onClick={(e: Event) => {
+        onClick={(e) => {
           e.preventDefault();
 
           appBridge?.dispatch(
             actions.Redirect({
               to: `/apps/${appId}`,
-            })
+            }),
           );
         }}
         href="#"
