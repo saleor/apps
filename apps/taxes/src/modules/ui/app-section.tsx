@@ -1,4 +1,4 @@
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
 import React from "react";
 
 const MAX_WIDTH = "480px";

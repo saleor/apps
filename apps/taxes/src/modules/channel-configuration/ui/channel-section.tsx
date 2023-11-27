@@ -1,4 +1,4 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { Section } from "../../ui/app-section";
 import { ChannelList } from "./channel-list";
 import { AppDashboardLink } from "../../ui/app-dashboard-link";

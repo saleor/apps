@@ -1,11 +1,11 @@
-import "@saleor/macaw-ui/next/style";
+import "@saleor/macaw-ui/style";
 import "@/modules/theme/styles.css";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import React, { useEffect } from "react";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { Box, ThemeProvider } from "@saleor/macaw-ui/next";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { NoSSRWrapper } from "@saleor/apps-shared";
 import { GraphQLProvider } from "@/modules/graphql/GraphQLProvider";
 import { ThemeSynchronizer } from "@/modules/theme/theme-synchronizer";

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, Divider } from "@saleor/macaw-ui/next";
+import { Box, Button, Divider } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";

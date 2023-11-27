@@ -7,7 +7,7 @@ import { useAppApi } from "../hooks/useAppApi";
 import { AppColumnsLayout } from "../components/AppColumnsLayout/AppColumnsLayout";
 import { useDashboardNotification } from "@saleor/apps-shared";
 
-import { Input, Text, Box, Button } from "@saleor/macaw-ui/next";
+import { Input, Text, Box, Button } from "@saleor/macaw-ui";
 
 import { TextLink } from "@saleor/apps-ui";
 import { AccessWarning } from "../components/AccessWarning/AccessWarning";

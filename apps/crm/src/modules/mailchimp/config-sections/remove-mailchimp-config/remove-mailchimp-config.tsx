@@ -1,8 +1,8 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { ComponentProps } from "react";
 import { trpcClient } from "../../../trpc/trpc-client";
 import { DangerSection } from "../../../ui/danger-section/danger-section";
-import { TextLink } from "../../../ui/text-link/text-link";
+import { TextLink } from "@saleor/apps-ui";
 
 export const RemoveMailchimpConfig = (props: ComponentProps<typeof Box>) => {
   const { mutateAsync, isLoading, isSuccess } =

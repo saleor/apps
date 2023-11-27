@@ -71,7 +71,5 @@ export const WithHelpText: Story = {
 
 export const NoValue: Story = {
   ...ComboboxTemplate,
-  args: {
-    value: null,
-  },
+  args: {},
 };

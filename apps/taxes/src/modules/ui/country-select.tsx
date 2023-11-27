@@ -12,7 +12,6 @@ type CountrySelectProps<TFieldValues extends FieldValues = FieldValues> = Omit<
 
 export const CountrySelect = <TFieldValues extends FieldValues = FieldValues>({
   helperText,
-  value,
   ...p
 }: CountrySelectProps<TFieldValues>) => {
   return <Select {...p} options={countries} />;

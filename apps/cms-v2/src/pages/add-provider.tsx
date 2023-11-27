@@ -1,7 +1,7 @@
 import { CMSProviders } from "@/modules/providers/providers-registry";
 import { AppHeader } from "@/modules/ui/app-header";
 import { Breadcrumbs, Layout } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";

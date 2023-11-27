@@ -1,4 +1,4 @@
-import { Box } from "@saleor/macaw-ui/next";
+import { Box } from "@saleor/macaw-ui";
 import { ComponentProps } from "react";
 import styles from "./app-columns-layout.module.css";
 import clsx from "clsx";

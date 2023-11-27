@@ -1,7 +1,7 @@
 import { ImageSizeInput, imageSizeInputSchema } from "./app-config";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 
 import React, { useCallback, useMemo } from "react";
 import { Select } from "@saleor/react-hook-form-macaw";

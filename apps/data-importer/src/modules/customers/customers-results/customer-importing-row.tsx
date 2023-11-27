@@ -1,10 +1,8 @@
-import { Box, TableCell, TableRow, Typography } from "@material-ui/core";
-import { Done, Error, HourglassEmpty } from "@material-ui/icons";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Box, Button, CheckboxIcon } from "@saleor/macaw-ui";
+import { useCallback, useEffect } from "react";
 import { useCustomerCreateMutation } from "../../../../generated/graphql";
 import { CustomerColumnSchema } from "../customers-importer-nuvo/customers-columns-model";
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Button } from "@saleor/macaw-ui";
 
 type Props = {
   importedModel: CustomerColumnSchema;
@@ -16,7 +14,6 @@ const ImportedStatus = ({ id }: { id: string }) => {
 
   return (
     <Box style={{ gap: 20, display: "flex", alignItems: "center" }}>
-      <Done color="primary" width={30} />
       <span
         style={{ cursor: "pointer" }}
         onClick={() => {
@@ -24,7 +21,7 @@ const ImportedStatus = ({ id }: { id: string }) => {
             actions.Redirect({
               // newContext: true, // open in new context but dashboard has a bug here
               to: `/customers/${id}`,
-            })
+            }),
           );
         }}
       >
@@ -37,7 +34,6 @@ const ImportedStatus = ({ id }: { id: string }) => {
 const ErrorStatus = ({ message, onRetry }: { message: string; onRetry(): void }) => {
   return (
     <Box style={{ gap: 20, display: "flex", alignItems: "center" }}>
-      <Error width={30} color="error" />
       <span color="error">Error importing: {message}</span>
       <Button onClick={onRetry}>Retry</Button>
     </Box>
@@ -45,7 +41,6 @@ const ErrorStatus = ({ message, onRetry }: { message: string; onRetry(): void })
 };
 const PendingStatus = () => (
   <Box style={{ gap: 20, display: "flex", alignItems: "center" }}>
-    <HourglassEmpty width={30} />
     <span>Importing...</span>
   </Box>
 );
@@ -95,9 +90,9 @@ export const CustomerImportingRow = (props: Props) => {
   };
 
   return (
-    <TableRow>
-      <TableCell>{props.importedModel.customerCreate.email}</TableCell>
-      <TableCell>{renderStatus()}</TableCell>
-    </TableRow>
+    <Box display="grid" gridTemplateColumns={2}>
+      <Box>{props.importedModel.customerCreate.email}</Box>
+      <Box>{renderStatus()}</Box>
+    </Box>
   );
 };

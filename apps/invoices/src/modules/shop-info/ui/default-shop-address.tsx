@@ -1,4 +1,4 @@
-import { Box, Text, Button } from "@saleor/macaw-ui/next";
+import { Box, Text, Button } from "@saleor/macaw-ui";
 import { trpcClient } from "../../trpc/trpc-client";
 import { PropsWithChildren } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";

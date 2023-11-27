@@ -1,5 +1,4 @@
-import { Button } from "@saleor/macaw-ui";
-import { Table, TableBody, Typography } from "@material-ui/core";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { CustomerImportingRow } from "./customer-importing-row";
 import React, { useState } from "react";
 import { CustomerColumnSchema } from "../customers-importer-nuvo/customers-columns-model";
@@ -13,17 +12,17 @@ export const CustomersImportingResults = ({
 
   return (
     <div style={{ marginTop: 20 }}>
-      <Typography paragraph variant="h3">
+      <Text display="block" variant="heading">
         Customers rows from the imported file
-      </Typography>
+      </Text>
 
-      <Typography paragraph>
+      <Text display="block">
         Lines will be imported one by one. Failed imports can be retried, but performed operations
         must be reverted manually. Users will be set to inactive.
-      </Typography>
-      <Typography paragraph>
+      </Text>
+      <Text display="block">
         Customers will <strong>not</strong> be informed or notified by this operation.
-      </Typography>
+      </Text>
 
       {!importingStarted && (
         <Button
@@ -35,17 +34,15 @@ export const CustomersImportingResults = ({
         </Button>
       )}
 
-      <Table style={{ marginTop: 50 }}>
-        <TableBody>
-          {importedLines.map((row) => (
-            <CustomerImportingRow
-              doImport={importingStarted}
-              key={row.customerCreate.email}
-              importedModel={row}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      <Box style={{ marginTop: 50 }}>
+        {importedLines.map((row) => (
+          <CustomerImportingRow
+            doImport={importingStarted}
+            key={row.customerCreate.email}
+            importedModel={row}
+          />
+        ))}
+      </Box>
     </div>
   );
 };

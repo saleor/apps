@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 
 interface SectionWithDescriptionProps {
   title: string;

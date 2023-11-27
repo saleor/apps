@@ -1,4 +1,4 @@
-import { Accordion, Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Button, Text } from "@saleor/macaw-ui";
 import { EventDeliveryStatusEnum } from "../../generated/graphql";
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 import { SemanticChip } from "@saleor/apps-ui";

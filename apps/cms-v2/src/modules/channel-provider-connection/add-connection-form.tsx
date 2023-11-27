@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRightIcon, Box, Text } from "@saleor/macaw-ui/next";
+import { ArrowRightIcon, Box, Text } from "@saleor/macaw-ui";
 import { Select } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
 import { ChannelProviderConnectionConfig } from "../configuration";

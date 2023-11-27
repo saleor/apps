@@ -1,11 +1,11 @@
-import "@saleor/macaw-ui/next/style";
+import "@saleor/macaw-ui/style";
 import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import React from "react";
 import { AppProps } from "next/app";
-import { ThemeProvider } from "@saleor/macaw-ui/next";
+import { ThemeProvider } from "@saleor/macaw-ui";
 
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";

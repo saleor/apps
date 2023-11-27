@@ -1,6 +1,6 @@
 import { CategoryWithMappingFragmentFragment } from "../../../generated/graphql";
 import React from "react";
-import { Box, ChevronRightIcon, Text } from "@saleor/macaw-ui/next";
+import { Box, ChevronRightIcon, Text } from "@saleor/macaw-ui";
 
 export const constructCategoryBreadcrumbs = (category: CategoryWithMappingFragmentFragment) =>
   [category.parent?.parent?.name, category.parent?.name, category.name].filter((segment) =>

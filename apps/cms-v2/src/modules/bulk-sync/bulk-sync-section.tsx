@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { trpcClient } from "../trpc/trpc-client";
 
 import { useForm } from "react-hook-form";

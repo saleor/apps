@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";

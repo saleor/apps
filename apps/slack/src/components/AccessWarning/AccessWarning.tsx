@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 
 type WarningCause =
   | "not_in_iframe"

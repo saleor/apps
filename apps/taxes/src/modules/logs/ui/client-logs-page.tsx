@@ -1,4 +1,4 @@
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { Provider } from "jotai";
 import { Section } from "../../ui/app-section";
 import { LOG_LIMIT } from "../client-logger";

@@ -1,6 +1,6 @@
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui/next";
+import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { useRouter } from "next/router";

@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import React from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 

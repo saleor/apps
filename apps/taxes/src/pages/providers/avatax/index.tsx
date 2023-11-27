@@ -1,4 +1,4 @@
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { Provider } from "jotai";
 import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
 import { CreateAvataxConfiguration } from "../../../modules/avatax/ui/create-avatax-configuration";

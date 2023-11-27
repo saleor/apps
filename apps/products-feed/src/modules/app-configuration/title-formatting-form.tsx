@@ -1,7 +1,7 @@
 import { TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 
 import React, { useCallback, useMemo, useState } from "react";
 import { Input } from "@saleor/react-hook-form-macaw";

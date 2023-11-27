@@ -2,7 +2,7 @@ import { SegmentConfigForm } from "@/modules/configuration/segment-config-form/s
 import { AppHeader } from "@/modules/ui/app-header";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 const ConfigurationPage: NextPage = () => {

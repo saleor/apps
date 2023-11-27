@@ -1,5 +1,5 @@
 import { ComponentProps, useEffect, useState } from "react";
-import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui/next";
+import { Box, Button, Text, useTheme, WarningIcon } from "@saleor/macaw-ui";
 import { trpcClient } from "../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { useFetchAllCustomers } from "./use-fetch-all-customers";

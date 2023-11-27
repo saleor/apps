@@ -3,7 +3,7 @@ import { ProvidersResolver } from "@/modules/providers/providers-resolver";
 
 import { AppHeader } from "@/modules/ui/app-header";
 import { Breadcrumbs, Layout } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui/next";
+import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";

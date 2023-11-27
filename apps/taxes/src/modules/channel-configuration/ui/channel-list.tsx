@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Box, Button, Text } from "@saleor/macaw-ui/next";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { ChannelTable } from "./channel-table";

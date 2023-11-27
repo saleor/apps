@@ -1,8 +1,8 @@
 import "../styles/globals.css";
-import "@saleor/macaw-ui/next/style";
+import "@saleor/macaw-ui/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { ThemeProvider } from "@saleor/macaw-ui/next";
+import { ThemeProvider } from "@saleor/macaw-ui";
 
 import { AppProps } from "next/app";
 import { useEffect } from "react";

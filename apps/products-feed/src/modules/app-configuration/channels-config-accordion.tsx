@@ -1,4 +1,4 @@
-import { Accordion, Box, Button, Divider, PropsWithBox, Text } from "@saleor/macaw-ui/next";
+import { Accordion, Box, Button, Divider, PropsWithBox, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";

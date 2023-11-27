@@ -1,6 +1,6 @@
 import { LoginWithMailchimpButton } from "../../../ui/login-with-mailchimp-button/login-with-mailchimp-button";
 import React from "react";
-import { Text } from "@saleor/macaw-ui/next";
+import { Text } from "@saleor/macaw-ui";
 import { Section } from "../../../ui/section/section";
 import { useAppBridgePersistence } from "../../../../lib/app-bridge-persistence";
 

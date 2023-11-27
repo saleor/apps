@@ -1,4 +1,4 @@
-import { Input as $Input, type InputProps as $InputProps } from "@saleor/macaw-ui/next";
+import { Input as $Input, type InputProps as $InputProps } from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type TextFieldElementProps<T extends FieldValues = FieldValues> = Omit<

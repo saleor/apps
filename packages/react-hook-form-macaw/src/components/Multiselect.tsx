@@ -2,7 +2,7 @@ import {
   Multiselect as $Multiselect,
   Option,
   type MultiselectProps as $MultiselectProps,
-} from "@saleor/macaw-ui/next";
+} from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
@@ -10,8 +10,8 @@ export type MultiselectProps<T extends FieldValues = FieldValues> = Omit<
    * todo we can go back to string-type value
    * https://github.com/saleor/macaw-ui/blob/canary/src/components/Combobox/Static/Combobox.tsx#L171
    */
-  $MultiselectProps<T, T>,
-  "name"
+  $MultiselectProps<Option, T>,
+  "name" | "value"
 > & {
   name: FieldPath<T>;
   control: Control<T>;
@@ -44,7 +44,11 @@ export function Multiselect<TFieldValues extends FieldValues = FieldValues>({
             }) || []
           }
           onChange={(values) => {
-            onChange(values.map((v) => v.value));
+            onChange(
+              values.map((v) => {
+                return typeof v === "string" ? v : v.value;
+              }),
+            );
           }}
           name={name}
           required={required}
