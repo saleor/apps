@@ -68,7 +68,7 @@ export const generateGoogleXmlFeed = ({
       });
     } catch {}
 
-    let weight = getWeightAttributeValue({
+    const weight = getWeightAttributeValue({
       isShippingRequired: variant.product.productType.isShippingRequired,
       weight: variant.weight || undefined,
     });
