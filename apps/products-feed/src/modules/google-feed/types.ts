@@ -19,6 +19,7 @@ export type ProductEntry = {
   size?: string;
   brand?: string;
   pattern?: string;
+  weight?: string;
 };
 
 export type ShopDetailsEntry = {

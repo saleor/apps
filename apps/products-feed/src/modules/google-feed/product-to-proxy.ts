@@ -57,6 +57,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  if (p.weight) {
+    item.push({
+      "g:shipping_weight": [
+        {
+          "#text": p.weight,
+        },
+      ],
+    });
+  }
+
   /**
    * This field is optional and Google automatically match category if not has been provided
    *
