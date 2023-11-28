@@ -1,5 +1,22 @@
 # saleor-app-products-feed
 
+## 1.14.0
+
+### Minor Changes
+
+- 5eb17b2: Added "weight" attribute to the Google product feed.
+
+  The attribute is added to the item entry when weight is defined and product is marked as requiring a shipping.
+
+### Patch Changes
+
+- 99f7066: Updated Macaw UI to 1.0.0-pre.7. Removed legacy Material UI dependency from older Macaw. Code was updated to work properly with some API changes
+- Updated dependencies [99f7066]
+  - @saleor/react-hook-form-macaw@0.2.6
+  - @saleor/apps-shared@1.9.2
+  - @saleor/apps-ui@1.2.2
+  - @saleor/webhook-utils@0.0.3
+
 ## 1.13.0
 
 ### Minor Changes
