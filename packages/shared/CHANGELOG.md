@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.9.2
+
+### Patch Changes
+
+- 99f7066: Updated Macaw UI to 1.0.0-pre.7. Removed legacy Material UI dependency from older Macaw. Code was updated to work properly with some API changes
+
 ## 1.9.1
 
 ### Patch Changes

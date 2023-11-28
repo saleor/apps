@@ -1,5 +1,15 @@
 # saleor-app-invoices
 
+## 1.17.1
+
+### Patch Changes
+
+- 99f7066: Updated Macaw UI to 1.0.0-pre.7. Removed legacy Material UI dependency from older Macaw. Code was updated to work properly with some API changes
+- Updated dependencies [99f7066]
+  - @saleor/apps-shared@1.9.2
+  - @saleor/apps-ui@1.2.2
+  - @saleor/trpc@1.0.2
+
 ## 1.17.0
 
 ### Minor Changes
