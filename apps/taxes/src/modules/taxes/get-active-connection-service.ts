@@ -3,7 +3,7 @@ import { MetadataItem, OrderConfirmedSubscriptionFragment } from "../../../gener
 
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
-import { OrderRefundedPayload } from "../../pages/api/webhooks/order-refunded";
+import { TransactionRefundRequestedPayload } from "../../pages/api/webhooks/transaction-refund-requested";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
@@ -67,8 +67,8 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     return this.client.cancelOrder(payload);
   }
 
-  async refundOrder(payload: OrderRefundedPayload) {
-    return this.client.refundOrder(payload);
+  async refundTransaction(payload: TransactionRefundRequestedPayload) {
+    return this.client.refundTransaction(payload);
   }
 }
 

@@ -1,18 +1,20 @@
 import { Logger, createLogger } from "../../../lib/logger";
-import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
+import { TransactionRefundRequestedPayload } from "../../../pages/api/webhooks/transaction-refund-requested";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxOrderRefundedPayloadTransformer } from "./avatax-order-refunded-payload-transformer";
+import { AvataxTransactionRefundRequestedPayloadTransformer } from "./avatax-transaction-refund-requested-payload-transformer";
 
-export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedPayload, void> {
+export class AvataxTransactionRefundRequestedAdapter
+  implements WebhookAdapter<TransactionRefundRequestedPayload, void>
+{
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ name: "AvataxOrderRefundedAdapter" });
+    this.logger = createLogger({ name: "AvataxTransactionRefundRequestedAdapter" });
   }
 
-  async send(payload: OrderRefundedPayload) {
+  async send(payload: TransactionRefundRequestedPayload) {
     this.logger.debug(
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",
@@ -20,12 +22,12 @@ export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedP
 
     if (!this.config.isAutocommit) {
       throw new Error(
-        "Unable to refund transaction. AvaTax can only refund commited transactions.",
+        "Unable to refund transaction. AvaTax can only refund committed transactions.",
       );
     }
 
     const client = new AvataxClient(this.config);
-    const payloadTransformer = new AvataxOrderRefundedPayloadTransformer();
+    const payloadTransformer = new AvataxTransactionRefundRequestedPayloadTransformer();
     const target = payloadTransformer.transform(payload, this.config);
 
     this.logger.debug(
@@ -37,6 +39,6 @@ export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedP
 
     const response = await client.refundTransaction(target);
 
-    this.logger.debug({ response }, `Succesfully refunded the transaction`);
+    this.logger.debug({ response }, `Successfully refunded the transaction`);
   }
 }

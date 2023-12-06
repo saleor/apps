@@ -4,7 +4,7 @@ import {
   OrderConfirmedSubscriptionFragment,
 } from "../../../generated/graphql";
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
-import { OrderRefundedPayload } from "../../pages/api/webhooks/order-refunded";
+import { TransactionRefundRequestedPayload } from "../../pages/api/webhooks/transaction-refund-requested";
 import { ClientLogger } from "../logs/client-logger";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
@@ -61,11 +61,11 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
     // todo: implement
-    this.logger.debug("cancelOrder not implement for TaxJar");
+    this.logger.debug("cancelOrder not implemented for TaxJar");
   }
 
-  async refundOrder(payload: OrderRefundedPayload) {
+  async refundTransaction(payload: TransactionRefundRequestedPayload) {
     // todo: implement
-    this.logger.debug("refundOrder not implement for TaxJar");
+    this.logger.debug("refundOrder not implemented for TaxJar");
   }
 }

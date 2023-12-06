@@ -13,6 +13,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   channel: {
     id: "Q2hhbm5lbDox",
     slug: "default-channel",
+    name: "Default Channel",
   },
   shippingAddress: {
     streetAddress1: "600 Montgomery St",
