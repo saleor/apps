@@ -3,6 +3,7 @@ import { AddressFragment } from "../../../../generated/graphql";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { CriticalError } from "../../../error";
 
 export class AvataxAddressResolver {
   resolve({
@@ -14,7 +15,12 @@ export class AvataxAddressResolver {
   }): AddressesModel {
     return {
       shipFrom: avataxAddressFactory.fromChannelAddress(from),
-      shipTo: avataxAddressFactory.fromSaleorAddress(taxProviderUtils.resolveOptionalOrThrow(to)),
+      shipTo: avataxAddressFactory.fromSaleorAddress(
+        taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+          to,
+          new CriticalError("Missing address"),
+        ),
+      ),
     };
   }
 }

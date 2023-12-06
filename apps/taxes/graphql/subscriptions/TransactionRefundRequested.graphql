@@ -1,0 +1,42 @@
+fragment TransactionRefundRequestedEventSubscription on TransactionRefundRequested {
+  __typename
+  action {
+    amount
+    actionType
+  }
+  recipient {
+    ...WebhookApp
+  }
+  transaction {
+    id
+    chargedAmount {
+      ...Money
+    }
+    sourceObject: order {
+      ... on Order {
+        id
+        channel {
+          ...Channel
+        }
+        total {
+          gross {
+            ...Money
+          }
+        }
+        ...AvataxOrderMetadata
+        shippingAddress {
+          ...Address
+        }
+        user {
+          ...User
+        }
+      }
+    }
+  }
+}
+
+subscription TransactionRefundRequestedSubscription {
+  event {
+    ...TransactionRefundRequestedEventSubscription
+  }
+}
