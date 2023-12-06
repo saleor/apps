@@ -2,8 +2,7 @@ fragment OrderCancelledSubscription on Order {
   id
   avataxId: metafield(key: "avataxId")
   channel {
-    id
-    slug
+    ...Channel
   }
 }
 
@@ -14,10 +13,7 @@ fragment OrderCancelledEventSubscription on Event {
       ...OrderCancelledSubscription
     }
     recipient {
-      privateMetadata {
-        key
-        value
-      }
+      ...WebhookApp
     }
   }
 }

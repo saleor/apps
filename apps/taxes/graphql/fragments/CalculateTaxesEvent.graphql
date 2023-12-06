@@ -5,10 +5,7 @@ fragment CalculateTaxesEvent on Event {
       ...TaxBase
     }
     recipient {
-      privateMetadata {
-        key
-        value
-      }
+      ...WebhookApp
     }
   }
 }
