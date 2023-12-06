@@ -8,8 +8,7 @@ fragment OrderConfirmedSubscription on Order {
   created
   status
   channel {
-    id
-    slug
+    ...Channel
   }
   shippingAddress {
     ...Address
@@ -43,9 +42,7 @@ fragment OrderConfirmedSubscription on Order {
       amount
     }
   }
-  avataxEntityCode: metafield(key: "avataxEntityCode")
-  avataxTaxCalculationDate: metafield(key: "avataxTaxCalculationDate")
-  avataxDocumentCode: metafield(key: "avataxDocumentCode")
+  ...AvataxOrderMetadata
 }
 fragment OrderConfirmedEventSubscription on Event {
   __typename
@@ -55,10 +52,7 @@ fragment OrderConfirmedEventSubscription on Event {
     }
   }
   recipient {
-    privateMetadata {
-      key
-      value
-    }
+    ...WebhookApp
   }
 }
 subscription OrderConfirmedSubscription {
