@@ -31,7 +31,7 @@ function mapChannelAddressToTaxJarAddress(
   };
 }
 
-function mapChannelAddresstoParams(address: TaxJarConfig["address"]): AddressParams {
+function mapChannelAddressToParams(address: TaxJarConfig["address"]): AddressParams {
   return {
     city: address.city,
     country: address.country,
@@ -44,5 +44,5 @@ function mapChannelAddresstoParams(address: TaxJarConfig["address"]): AddressPar
 export const taxJarAddressFactory = {
   fromSaleorToTax: mapSaleorAddressToTaxJarAddress,
   fromChannelToTax: mapChannelAddressToTaxJarAddress,
-  fromChannelToParams: mapChannelAddresstoParams,
+  fromChannelToParams: mapChannelAddressToParams,
 };
