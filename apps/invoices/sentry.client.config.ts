@@ -9,17 +9,10 @@ import pkg from "./package.json";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-  tracesSampleRate: 0.1,
+  enableTracing: false,
   debug: false,
-  replaysOnErrorSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  integrations: [
-    new Sentry.Replay({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
+
+  integrations: [],
   environment: process.env.SENTRY_ENVIRONMENT,
   release: `${pkg.name}@${pkg.version}`,
 });
