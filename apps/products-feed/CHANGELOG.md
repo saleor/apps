@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.14.1
+
+### Patch Changes
+
+- 531e7c1: Disabled Sentry tracing and Replays by default
+
 ## 1.14.0
 
 ### Minor Changes

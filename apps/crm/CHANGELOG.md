@@ -1,5 +1,11 @@
 # saleor-app-crm
 
+## 1.8.2
+
+### Patch Changes
+
+- 531e7c1: Disabled Sentry tracing and Replays by default
+
 ## 1.8.1
 
 ### Patch Changes

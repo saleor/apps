@@ -1,5 +1,11 @@
 # saleor-app-slack
 
+## 1.9.2
+
+### Patch Changes
+
+- 531e7c1: Disabled Sentry tracing and Replays by default
+
 ## 1.9.1
 
 ### Patch Changes
