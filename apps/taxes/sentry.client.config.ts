@@ -13,8 +13,7 @@ const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 0.1,
+  enableTracing: false,
   environment: SENTRY_ENVIRONMENT,
   includeLocalVariables: true,
   ignoreErrors: ["TRPCClientError"],
@@ -32,11 +31,5 @@ Sentry.init({
 
     return errorEvent;
   },
-  integrations: [
-    new Sentry.Replay({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
+  integrations: [],
 });
