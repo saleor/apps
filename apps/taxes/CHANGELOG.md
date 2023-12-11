@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.19.2
+
+### Patch Changes
+
+- 531e7c1: Disabled Sentry tracing and Replays by default
+
 ## 1.19.1
 
 ### Patch Changes
