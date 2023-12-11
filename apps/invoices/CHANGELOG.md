@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.17.2
+
+### Patch Changes
+
+- 531e7c1: Disabled Sentry tracing and Replays by default
+
 ## 1.17.1
 
 ### Patch Changes
