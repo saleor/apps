@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@saleor/app-sdk': 0.43.1
   crypto-js@<4.2.0: '>=4.2.0'
 
 importers:
@@ -13,8 +12,8 @@ importers:
   .:
     dependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.47.2
+        version: 0.47.2(graphql@16.8.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -62,8 +61,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -213,8 +212,8 @@ importers:
         specifier: ^3.0.80
         version: 3.0.80
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -349,8 +348,8 @@ importers:
   apps/data-importer:
     dependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -473,8 +472,8 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.44.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -639,8 +638,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -781,8 +780,8 @@ importers:
   apps/klaviyo:
     dependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -899,8 +898,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1047,8 +1046,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1195,8 +1194,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1334,8 +1333,8 @@ importers:
   apps/slack:
     dependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1461,8 +1460,8 @@ importers:
         specifier: ^13.5.4
         version: 13.5.4
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1615,8 +1614,8 @@ importers:
         specifier: ^1.35.1
         version: 1.35.1
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -1725,7 +1724,7 @@ importers:
     dependencies:
       '@urql/exchange-auth':
         specifier: ^2.1.4
-        version: 2.1.4(graphql@16.7.1)
+        version: 2.1.4(graphql@16.8.0)
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1740,8 +1739,8 @@ importers:
         version: 7.5.2
     devDependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1771,7 +1770,7 @@ importers:
         version: 5.1.6
       urql:
         specifier: ^4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+        version: 4.0.4(graphql@16.8.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
         version: 4.4.8(@types/node@18.15.3)
@@ -1816,8 +1815,8 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1841,8 +1840,8 @@ importers:
         version: 5.1.6
     devDependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1868,8 +1867,8 @@ importers:
   packages/webhook-utils:
     dependencies:
       '@saleor/app-sdk':
-        specifier: 0.43.1
-        version: 0.43.1(graphql@16.7.1)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../shared
@@ -1961,6 +1960,17 @@ packages:
         optional: true
     dependencies:
       graphql: 16.7.1
+    dev: false
+
+  /@0no-co/graphql.web@1.0.4(graphql@16.8.0):
+    resolution: {integrity: sha512-W3ezhHGfO0MS1PtGloaTpg0PbaT8aZSmmaerL7idtU5F7oCI+uu25k+MsMS31BVFlp4aMkHSrNRxiD72IlK8TA==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      graphql:
+        optional: true
+    dependencies:
+      graphql: 16.8.0
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -8636,6 +8646,16 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@opentelemetry/api@1.7.0:
+    resolution: {integrity: sha512-AdY5wvN0P2vXBi3b29hxZgSFvdhdxPB9+f0B6s//P9Q8nibRWeA3cHm8UmLpio9ABigkVHJ5NMPk+Mz8VCCyrw==}
+    engines: {node: '>=8.0.0'}
+    dev: false
+
+  /@opentelemetry/semantic-conventions@1.18.1:
+    resolution: {integrity: sha512-+NLGHr6VZwcgE/2lw8zDIufOCGnzsA5CbQIMleXZTrgkBd0TanCX+MiDYJ1TOS4KL/Tqk0nFRxawnaYr6pkZkA==}
+    engines: {node: '>=14'}
+    dev: false
+
   /@peculiar/asn1-schema@2.3.6:
     resolution: {integrity: sha512-izNRxPoaeJeg/AyH8hER6s+H7p4itk+03QCa4sbxI3lNdseQYCuxzgsuNK8bTXChtLTjpJz6NmXKA73qLa3rCA==}
     dependencies:
@@ -9446,37 +9466,22 @@ packages:
     resolution: {integrity: sha512-V+MvGwaHH03hYhY+k6Ef/xKd6RYlc4q8WBx+2ANmipHJcKuktNcI/NgEsJgdSUF6Lw32njT6OnrRsKYCdgHjYw==}
     dev: true
 
-  /@saleor/app-sdk@0.43.1(graphql@16.7.1)(next@13.3.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-uq9RD35jMb4oApUqMA+utxot5EjBFgLQ9SH1pBvGvWVrULfB5DmQiazoS82r0vjZbyuCVRi6A2AkVb2+iJCpJA==}
+  /@saleor/app-sdk@0.47.2(graphql@16.8.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ctGbL9R5dmAYEMQHr+ir2OcvPCEmM3SDZX6isKBYLiO6CqKB7P8SNPjxlPBSiafC17ZcoKjim0oMhfqqcz3Srg==}
     peerDependencies:
-      graphql: '>=16.6.0'
+      '@vercel/kv': ^1.0.0
+      graphql: 16.8.0
       next: '>=12'
       react: '>=17'
       react-dom: '>=17'
+    peerDependenciesMeta:
+      '@vercel/kv':
+        optional: true
     dependencies:
+      '@opentelemetry/api': 1.7.0
+      '@opentelemetry/semantic-conventions': 1.18.1
       debug: 4.3.4
-      graphql: 16.7.1
-      jose: 4.14.4
-      next: 13.3.0(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
-      raw-body: 2.5.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      retes: 0.33.0
-      uuid: 9.0.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /@saleor/app-sdk@0.43.1(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-uq9RD35jMb4oApUqMA+utxot5EjBFgLQ9SH1pBvGvWVrULfB5DmQiazoS82r0vjZbyuCVRi6A2AkVb2+iJCpJA==}
-    peerDependencies:
-      graphql: '>=16.6.0'
-      next: '>=12'
-      react: '>=17'
-      react-dom: '>=17'
-    dependencies:
-      debug: 4.3.4
-      graphql: 16.7.1
+      graphql: 16.8.0
       jose: 4.14.4
       next: 13.4.8(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       raw-body: 2.5.2
@@ -9486,6 +9491,7 @@ packages:
       uuid: 9.0.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@saleor/macaw-ui@1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-xJKaZ5IChbFXOPjB+DUifmkCza36fVHkW21WHrFGzpTHlUP+NmYX8OOuf64HbXbumy1sThmuhP4m/SsM9VnWng==}
@@ -11467,11 +11473,29 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
+    dev: false
+
+  /@urql/core@4.0.10(graphql@16.8.0):
+    resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
+    dependencies:
+      '@0no-co/graphql.web': 1.0.4(graphql@16.8.0)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
 
   /@urql/exchange-auth@2.1.4(graphql@16.7.1):
     resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
     dependencies:
       '@urql/core': 4.0.10(graphql@16.7.1)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
+    dev: false
+
+  /@urql/exchange-auth@2.1.4(graphql@16.8.0):
+    resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
+    dependencies:
+      '@urql/core': 4.0.10(graphql@16.8.0)
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
@@ -15946,6 +15970,10 @@ packages:
     resolution: {integrity: sha512-DRYR9tf+UGU0KOsMcKAlXeFfX89UiiIZ0dRU3mR0yJfu6OjZqUcp68NnFLnqQU5RexygFoDy1EW+ccOYcPfmHg==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
+  /graphql@16.8.0:
+    resolution: {integrity: sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
   /gtin@1.0.2:
     resolution: {integrity: sha512-jEsHMz16c3yz0rlM4TvUUU0022FTniIAcBfCDoch+38RJC32yGkdKFC9ixpBqPskYpCRrb614AjF8O0QQP0gPg==}
     engines: {node: '>=10'}
@@ -19559,6 +19587,7 @@ packages:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+    dev: false
 
   /react-colorful@5.6.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==}
@@ -20343,6 +20372,7 @@ packages:
     dependencies:
       busboy: 1.6.0
       zod: 3.21.4
+    dev: false
 
   /reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
@@ -22049,6 +22079,19 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
+    dev: false
+
+  /urql@4.0.4(graphql@16.8.0)(react@18.2.0):
+    resolution: {integrity: sha512-C5P4BMnAsk+rbytCWglit5ijXbIKXsa9wofSGPbuMyJKsDdL+9GfipS362Nff/Caag+eYOK5W+sox8fwEILT6Q==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      '@urql/core': 4.0.10(graphql@16.8.0)
+      react: 18.2.0
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
+    dev: true
 
   /use-callback-ref@1.3.0(@types/react@18.2.5)(react@18.2.0):
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
