@@ -107,6 +107,7 @@ const useTaxCodeAutocomplete = ({ taxClassId }: { taxClassId: string }) => {
   };
 };
 
+// todo: replace with macaw-ui Autocomplete component when it's ready
 export const TaxCodeSelect = ({ taxClassId }: { taxClassId: string }) => {
   const { isInputLoading, isInputDisabled, inputText, onInputTextChange, options } =
     useTaxCodeAutocomplete({
