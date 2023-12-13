@@ -1,8 +1,8 @@
-import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { SaleorAsyncWebhook, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 
 import {
-  TransactionRefundRequestedEventSubscriptionFragment,
-  UntypedTransactionRefundRequestedSubscriptionDocument,
+  OrderRefundedEventSubscriptionFragment,
+  UntypedOrderRefundedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
@@ -15,21 +15,20 @@ export const config = {
   },
 };
 
-export type TransactionRefundRequestedPayload = Extract<
-  TransactionRefundRequestedEventSubscriptionFragment,
-  { __typename: "TransactionRefundRequested" }
+export type OrderRefundedPayload = Extract<
+  OrderRefundedEventSubscriptionFragment,
+  { __typename: "OrderRefunded" }
 >;
 
-export const transactionRefundRequestedSyncWebhook =
-  new SaleorSyncWebhook<TransactionRefundRequestedPayload>({
-    name: "TransactionRefundRequested",
-    apl: saleorApp.apl,
-    event: "TRANSACTION_REFUND_REQUESTED",
-    query: UntypedTransactionRefundRequestedSubscriptionDocument,
-    webhookPath: "/api/webhooks/transaction-refund-requested",
-  });
+export const orderRefundedAsyncWebhook = new SaleorAsyncWebhook<OrderRefundedPayload>({
+  name: "OrderRefunded",
+  apl: saleorApp.apl,
+  event: "ORDER_REFUNDED",
+  query: UntypedOrderRefundedSubscriptionDocument,
+  webhookPath: "/api/webhooks/order-refunded",
+});
 
-export default transactionRefundRequestedSyncWebhook.createHandler(async (req, res, ctx) => {
+export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload, authData } = ctx;
   const webhookResponse = new WebhookResponse(res);

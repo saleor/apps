@@ -1,9 +1,5 @@
 fragment OrderCancelledSubscription on Order {
-  id
-  avataxId: metafield(key: "avataxId")
-  channel {
-    ...Channel
-  }
+  ...OrderBase
 }
 
 fragment OrderCancelledEventSubscription on Event {

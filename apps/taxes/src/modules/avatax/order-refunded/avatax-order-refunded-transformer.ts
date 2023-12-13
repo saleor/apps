@@ -1,8 +1,8 @@
-import { TransactionRefundRequestedPayload } from "../../../pages/api/webhooks/transaction-refund-requested";
+import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
 import { RefundTransactionParams } from "../avatax-client";
 
 export class AvataxOrderRefundedLinesTransformer {
-  transform(payload: TransactionRefundRequestedPayload): RefundTransactionParams["lines"] {
+  transform(payload: OrderRefundedPayload): RefundTransactionParams["lines"] {
     const transaction = payload.transaction;
 
     if (!transaction) {

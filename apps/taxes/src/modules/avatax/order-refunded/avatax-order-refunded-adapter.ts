@@ -1,20 +1,18 @@
 import { Logger, createLogger } from "../../../lib/logger";
-import { TransactionRefundRequestedPayload } from "../../../pages/api/webhooks/transaction-refund-requested";
+import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxTransactionRefundRequestedPayloadTransformer } from "./avatax-transaction-refund-requested-payload-transformer";
+import { AvataxOrderRefundedPayloadTransformer } from "./avatax-order-refunded-payload-transformer";
 
-export class AvataxTransactionRefundRequestedAdapter
-  implements WebhookAdapter<TransactionRefundRequestedPayload, void>
-{
+export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedPayload, void> {
   private logger: Logger;
 
   constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ name: "AvataxTransactionRefundRequestedAdapter" });
+    this.logger = createLogger({ name: "AvataxOrderRefundedAdapter" });
   }
 
-  async send(payload: TransactionRefundRequestedPayload) {
+  async send(payload: OrderRefundedPayload) {
     this.logger.debug(
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",
@@ -27,7 +25,7 @@ export class AvataxTransactionRefundRequestedAdapter
     }
 
     const client = new AvataxClient(this.config);
-    const payloadTransformer = new AvataxTransactionRefundRequestedPayloadTransformer();
+    const payloadTransformer = new AvataxOrderRefundedPayloadTransformer();
     const target = payloadTransformer.transform(payload, this.config);
 
     this.logger.debug(
