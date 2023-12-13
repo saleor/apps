@@ -22,8 +22,8 @@ export class AvataxTaxCodesService {
     }));
   }
 
-  async getAll() {
-    const response = await this.client.getTaxCodes();
+  async getAllFiltered({ filter }: { filter: string | null }): Promise<TaxCode[]> {
+    const response = await this.client.getFilteredTaxCodes({ filter });
 
     return this.adapt(response);
   }
