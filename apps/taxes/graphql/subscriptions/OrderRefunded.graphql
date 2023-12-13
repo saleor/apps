@@ -1,0 +1,17 @@
+fragment OrderRefundedEventSubscription on Event {
+  __typename
+  ... on OrderRefunded {
+    order {
+      ...OrderBase
+    }
+  }
+  recipient {
+    ...WebhookApp
+  }
+}
+
+subscription OrderRefundedSubscription {
+  event {
+    ...OrderRefundedEventSubscription
+  }
+}

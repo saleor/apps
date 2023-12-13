@@ -1,24 +1,21 @@
 import { CriticalError } from "../../../error";
 import { Logger, createLogger } from "../../../lib/logger";
-import { TransactionRefundRequestedPayload } from "../../../pages/api/webhooks/transaction-refund-requested";
+import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { RefundTransactionParams } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxAddressResolver } from "../order-confirmed/avatax-address-resolver";
-import { AvataxOrderRefundedLinesTransformer } from "./avatax-transaction-refund-requested-transformer";
+import { AvataxOrderRefundedLinesTransformer } from "./avatax-order-refunded-transformer";
 
-export class AvataxTransactionRefundRequestedPayloadTransformer {
+export class AvataxOrderRefundedPayloadTransformer {
   private logger: Logger;
 
   constructor() {
-    this.logger = createLogger({ name: "AvataxTransactionRefundRequestedPayloadTransformer" });
+    this.logger = createLogger({ name: "AvataxOrderRefundedPayloadTransformer" });
   }
 
-  transform(
-    payload: TransactionRefundRequestedPayload,
-    avataxConfig: AvataxConfig,
-  ): RefundTransactionParams {
+  transform(payload: OrderRefundedPayload, avataxConfig: AvataxConfig): RefundTransactionParams {
     this.logger.debug(
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",

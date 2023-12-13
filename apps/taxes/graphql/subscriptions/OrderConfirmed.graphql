@@ -1,49 +1,7 @@
 fragment OrderConfirmedSubscription on Order {
-  id
-  number
-  userEmail
-  user {
-    ...User
-  }
-  created
-  status
-  channel {
-    ...Channel
-  }
-  shippingAddress {
-    ...Address
-  }
-  billingAddress {
-    ...Address
-  }
-  total {
-    currency
-    net {
-      amount
-    }
-    tax {
-      amount
-    }
-  }
-  shippingPrice {
-    gross {
-      amount
-    }
-    net {
-      amount
-    }
-  }
-  lines {
-    ...OrderLine
-  }
-  discounts {
-    id
-    amount {
-      amount
-    }
-  }
-  ...AvataxOrderMetadata
+  ...OrderBase
 }
+
 fragment OrderConfirmedEventSubscription on Event {
   __typename
   ... on OrderConfirmed {
