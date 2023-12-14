@@ -6,7 +6,11 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { AvataxConnectionService } from "../configuration/avatax-connection.service";
 import { AvataxTaxCodesService } from "./avatax-tax-codes.service";
 
-const getAllForIdSchema = z.object({ connectionId: z.string() });
+const getAllForIdSchema = z.object({
+  connectionId: z.string(),
+  filter: z.string().nullable(),
+  uniqueKey: z.string(),
+});
 
 export const avataxTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
@@ -25,6 +29,6 @@ export const avataxTaxCodesRouter = router({
 
     logger.debug("Returning tax codes");
 
-    return taxCodesService.getAll();
+    return taxCodesService.getAllFiltered({ filter: input.filter });
   }),
 });

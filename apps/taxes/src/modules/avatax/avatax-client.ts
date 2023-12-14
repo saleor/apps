@@ -96,10 +96,10 @@ export class AvataxClient {
     return this.client.resolveAddress(address);
   }
 
-  async getTaxCodes() {
+  async getFilteredTaxCodes({ filter }: { filter: string | null }) {
     const taxCodeService = new AvataxClientTaxCodeService(this.client);
 
-    return taxCodeService.getTaxCodes();
+    return taxCodeService.getFilteredTaxCodes({ filter });
   }
 
   async ping() {
