@@ -5,8 +5,7 @@ import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { RefundTransactionParams } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
-import { AvataxAddressResolver } from "../order-confirmed/avatax-address-resolver";
-import { AvataxOrderRefundedLinesTransformer } from "./avatax-order-refunded-transformer";
+import { resolveAvataxTransactionLineNumber } from "../avatax-line-number-resolver";
 
 export class AvataxOrderRefundedPayloadTransformer {
   private logger: Logger;
@@ -15,41 +14,41 @@ export class AvataxOrderRefundedPayloadTransformer {
     this.logger = createLogger({ name: "AvataxOrderRefundedPayloadTransformer" });
   }
 
+  private resolveAvataxOrderRefundedLines(
+    payload: OrderRefundedPayload,
+  ): RefundTransactionParams["lines"] {
+    const grantedRefunds = payload.order?.grantedRefunds ?? [];
+
+    const grantedRefundsLines = grantedRefunds.flatMap((refund) => refund.lines ?? []);
+
+    return grantedRefundsLines.map((grantedRefundLine) =>
+      resolveAvataxTransactionLineNumber(grantedRefundLine.orderLine),
+    );
+  }
+
   transform(payload: OrderRefundedPayload, avataxConfig: AvataxConfig): RefundTransactionParams {
     this.logger.debug(
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",
     );
 
-    const addressResolver = new AvataxAddressResolver();
-    const linesTransformer = new AvataxOrderRefundedLinesTransformer();
+    const order = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+      payload.order,
+      new CriticalError("Order not found in payload"),
+    );
+
     const documentCodeResolver = new AvataxDocumentCodeResolver();
 
-    const order = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-      payload.transaction?.sourceObject,
-      new CriticalError("Order not found in transaction"),
-    );
+    const lines = this.resolveAvataxOrderRefundedLines(payload);
 
-    const addresses = addressResolver.resolve({
-      from: avataxConfig.address,
-      to: order.shippingAddress,
-    });
-    const lines = linesTransformer.transform(payload);
-    const customerCode = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-      order.user?.id,
-      new CriticalError("Missing user id in order"),
-    );
     const code = documentCodeResolver.resolve({
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
 
     return {
-      code,
+      transactionCode: code,
       lines,
-      customerCode,
-      addresses,
-      date: new Date(),
       companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
     };
   }

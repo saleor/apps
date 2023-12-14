@@ -3,6 +3,18 @@ fragment OrderRefundedEventSubscription on Event {
   ... on OrderRefunded {
     order {
       ...OrderBase
+      grantedRefunds {
+        id
+        amount {
+          ...Money
+        }
+        lines {
+          id
+          orderLine {
+            ...OrderLine
+          }
+        }
+      }
     }
   }
   recipient {

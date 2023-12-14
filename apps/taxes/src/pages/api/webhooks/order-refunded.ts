@@ -36,7 +36,7 @@ export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => 
   logger.info("Handler called with payload");
 
   try {
-    const order = payload.transaction?.sourceObject;
+    const order = payload.order;
 
     if (!order) {
       throw new Error("Insufficient order data");
