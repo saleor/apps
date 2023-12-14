@@ -21,9 +21,11 @@ export class AvataxClientTaxCodeService {
     });
   }
 
-  async getTaxCodes() {
-    // * If we want to do filtering on the front-end, we can use the `filter` parameter.
-    const result = await this.client.listTaxCodes({});
+  async getFilteredTaxCodes({ filter }: { filter: string | null }) {
+    const result = await this.client.listTaxCodes({
+      ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
+      top: 50,
+    });
 
     return this.filterOutInvalid(result);
   }
