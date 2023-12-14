@@ -1,5 +1,11 @@
 # saleor-app-invoices
 
+## 1.17.3
+
+### Patch Changes
+
+- 5f564a0: Updated @saleor/app-sdk to 0.47.2
+
 ## 1.17.2
 
 ### Patch Changes

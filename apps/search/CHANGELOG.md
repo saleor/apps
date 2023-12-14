@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.19.3
+
+### Patch Changes
+
+- 5f564a0: Updated @saleor/app-sdk to 0.47.2
+
 ## 1.19.2
 
 ### Patch Changes

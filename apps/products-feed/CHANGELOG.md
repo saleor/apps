@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.14.2
+
+### Patch Changes
+
+- 5f564a0: Updated @saleor/app-sdk to 0.47.2
+
 ## 1.14.1
 
 ### Patch Changes
