@@ -8,6 +8,7 @@ import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
+import { RefundType } from "avatax/lib/enums/RefundType";
 
 type AvataxSettings = {
   appName: string;
@@ -55,10 +56,11 @@ export type VoidTransactionArgs = {
   companyCode: string;
 };
 
-export type RefundTransactionParams = Pick<
-  CreateTransactionModel,
-  "customerCode" | "lines" | "date" | "addresses" | "code" | "companyCode"
->;
+export type RefundTransactionParams = {
+  transactionCode: string;
+  companyCode: string;
+  lines: string[];
+};
 
 export class AvataxClient {
   private client: Avatax;
@@ -119,14 +121,14 @@ export class AvataxClient {
   }
 
   async refundTransaction(params: RefundTransactionParams) {
-    // https://developer.avalara.com/erp-integration-guide/refunds-badge/refunds-with-create-transactions/
-    return this.client.createOrAdjustTransaction({
+    return this.client.refundTransaction({
+      transactionCode: params.transactionCode,
+      companyCode: params.companyCode,
       model: {
-        createTransactionModel: {
-          type: DocumentType.ReturnInvoice,
-          commit: true,
-          ...params,
-        },
+        refundTransactionCode: params.transactionCode,
+        refundDate: new Date(),
+        refundType: RefundType.Partial,
+        refundLines: params.lines,
       },
     });
   }
