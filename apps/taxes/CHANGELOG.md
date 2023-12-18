@@ -1,5 +1,15 @@
 # saleor-app-taxes
 
+## 1.20.0
+
+### Minor Changes
+
+- 3e1185f: Added autocomplete component to the tax code matcher. It now allows for filtering the tax codes. This fixes the issue with some tax codes never appearing in the options list. This component will be later replaced with macaw-ui Autocomplete.
+
+### Patch Changes
+
+- 5f564a0: Updated @saleor/app-sdk to 0.47.2
+
 ## 1.19.2
 
 ### Patch Changes
