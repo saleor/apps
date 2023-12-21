@@ -1,5 +1,11 @@
 # saleor-app-slack
 
+## 1.9.4
+
+### Patch Changes
+
+- de4b214: Reduced amount of ORDER_CREATED webhook's max memory usage from 1GB to 256MB.
+
 ## 1.9.3
 
 ### Patch Changes
