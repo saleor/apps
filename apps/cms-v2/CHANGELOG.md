@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.5.4
+
+### Patch Changes
+
+- 3f21682: Reduced available Vercel RAM from 1GB to 512MB
+
 ## 2.5.3
 
 ### Patch Changes
