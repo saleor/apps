@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 overrides:
   crypto-js@<4.2.0: '>=4.2.0'
 
@@ -9,7 +13,7 @@ importers:
     dependencies:
       '@saleor/app-sdk':
         specifier: 0.47.2
-        version: 0.47.2(graphql@16.8.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
+        version: 0.47.2(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -66,8 +70,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -217,8 +221,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.77.0
         version: 7.77.0(next@13.4.8)(react@18.2.0)
@@ -350,8 +354,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.77.0
         version: 7.77.0(next@13.4.8)(react@18.2.0)
@@ -477,8 +481,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -643,8 +647,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/trpc':
         specifier: workspace:*
         version: link:../../packages/trpc
@@ -785,8 +789,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 7.77.0
         version: 7.77.0(next@13.4.8)(react@18.2.0)
@@ -903,8 +907,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1051,8 +1055,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1199,8 +1203,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1338,8 +1342,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1465,8 +1469,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1656,8 +1660,8 @@ importers:
         specifier: ^7.21.8
         version: 7.22.5
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-actions':
         specifier: ^7.0.12
         version: 7.0.12(react-dom@18.2.0)(react@18.2.0)
@@ -1720,7 +1724,7 @@ importers:
     dependencies:
       '@urql/exchange-auth':
         specifier: ^2.1.4
-        version: 2.1.4(graphql@16.8.0)
+        version: 2.1.4(graphql@16.7.1)
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1738,8 +1742,8 @@ importers:
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1766,7 +1770,7 @@ importers:
         version: 5.1.6
       urql:
         specifier: ^4.0.4
-        version: 4.0.4(graphql@16.8.0)(react@18.2.0)
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 4.4.8
         version: 4.4.8(@types/node@18.15.3)
@@ -1839,8 +1843,8 @@ importers:
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
       '@saleor/macaw-ui':
-        specifier: 1.0.0-pre.7
-        version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 1.0.0-pre.16
+        version: 1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1956,17 +1960,6 @@ packages:
         optional: true
     dependencies:
       graphql: 16.7.1
-    dev: false
-
-  /@0no-co/graphql.web@1.0.4(graphql@16.8.0):
-    resolution: {integrity: sha512-W3ezhHGfO0MS1PtGloaTpg0PbaT8aZSmmaerL7idtU5F7oCI+uu25k+MsMS31BVFlp4aMkHSrNRxiD72IlK8TA==}
-    peerDependencies:
-      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-    peerDependenciesMeta:
-      graphql:
-        optional: true
-    dependencies:
-      graphql: 16.8.0
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -5875,6 +5868,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
+    dev: true
 
   /@babel/runtime@7.22.5:
     resolution: {integrity: sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==}
@@ -9462,11 +9456,11 @@ packages:
     resolution: {integrity: sha512-V+MvGwaHH03hYhY+k6Ef/xKd6RYlc4q8WBx+2ANmipHJcKuktNcI/NgEsJgdSUF6Lw32njT6OnrRsKYCdgHjYw==}
     dev: true
 
-  /@saleor/app-sdk@0.47.2(graphql@16.8.0)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
+  /@saleor/app-sdk@0.47.2(graphql@16.7.1)(next@13.4.8)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ctGbL9R5dmAYEMQHr+ir2OcvPCEmM3SDZX6isKBYLiO6CqKB7P8SNPjxlPBSiafC17ZcoKjim0oMhfqqcz3Srg==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
-      graphql: 16.8.0
+      graphql: '>=16.6.0'
       next: '>=12'
       react: '>=17'
       react-dom: '>=17'
@@ -9477,7 +9471,7 @@ packages:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.18.1
       debug: 4.3.4
-      graphql: 16.8.0
+      graphql: 16.7.1
       jose: 4.14.4
       next: 13.4.8(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       raw-body: 2.5.2
@@ -9489,8 +9483,8 @@ packages:
       - supports-color
     dev: false
 
-  /@saleor/macaw-ui@1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-xJKaZ5IChbFXOPjB+DUifmkCza36fVHkW21WHrFGzpTHlUP+NmYX8OOuf64HbXbumy1sThmuhP4m/SsM9VnWng==}
+  /@saleor/macaw-ui@1.0.0-pre.16(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-W6JaPkQpZ2iGjOIkIVXMWcLEmZ6kCBGzQCnDTkZHOYG8AP3chR9rKrjSYgcDLvabmr3Z7O3F2kMWl6eDjH+B0A==}
     engines: {node: 16 || 18 || 20, pnpm: '>=8'}
     peerDependencies:
       '@types/react': ^16.9.0 || ^17.0.0 || ^18.0.0
@@ -10738,7 +10732,7 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.22.10
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.23.2
       '@types/aria-query': 5.0.1
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -11469,29 +11463,11 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
-    dev: false
-
-  /@urql/core@4.0.10(graphql@16.8.0):
-    resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
-    dependencies:
-      '@0no-co/graphql.web': 1.0.4(graphql@16.8.0)
-      wonka: 6.3.2
-    transitivePeerDependencies:
-      - graphql
 
   /@urql/exchange-auth@2.1.4(graphql@16.7.1):
     resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
     dependencies:
       '@urql/core': 4.0.10(graphql@16.7.1)
-      wonka: 6.3.2
-    transitivePeerDependencies:
-      - graphql
-    dev: false
-
-  /@urql/exchange-auth@2.1.4(graphql@16.8.0):
-    resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
-    dependencies:
-      '@urql/core': 4.0.10(graphql@16.8.0)
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
@@ -14165,7 +14141,7 @@ packages:
     peerDependencies:
       react: '>=16.12.0'
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.23.2
       compute-scroll-into-view: 1.0.20
       prop-types: 15.8.1
       react: 18.2.0
@@ -15964,10 +15940,6 @@ packages:
 
   /graphql@16.7.1:
     resolution: {integrity: sha512-DRYR9tf+UGU0KOsMcKAlXeFfX89UiiIZ0dRU3mR0yJfu6OjZqUcp68NnFLnqQU5RexygFoDy1EW+ccOYcPfmHg==}
-    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
-
-  /graphql@16.8.0:
-    resolution: {integrity: sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   /gtin@1.0.2:
@@ -19673,7 +19645,7 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.23.2
       react: 18.2.0
     dev: true
 
@@ -22075,19 +22047,6 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
-    dev: false
-
-  /urql@4.0.4(graphql@16.8.0)(react@18.2.0):
-    resolution: {integrity: sha512-C5P4BMnAsk+rbytCWglit5ijXbIKXsa9wofSGPbuMyJKsDdL+9GfipS362Nff/Caag+eYOK5W+sox8fwEILT6Q==}
-    peerDependencies:
-      react: '>= 16.8.0'
-    dependencies:
-      '@urql/core': 4.0.10(graphql@16.8.0)
-      react: 18.2.0
-      wonka: 6.3.2
-    transitivePeerDependencies:
-      - graphql
-    dev: true
 
   /use-callback-ref@1.3.0(@types/react@18.2.5)(react@18.2.0):
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
@@ -22895,7 +22854,3 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
