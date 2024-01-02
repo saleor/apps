@@ -6,6 +6,7 @@ import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../lib/saleor-app";
 import { sendSlackMessage } from "../../../lib/slack";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { WebhookActivityTogglerService } from "../../../lib/WebhookActivityToggler.service";
 
 const OrderCreatedWebhookPayload = gql`
   fragment OrderCreatedWebhookPayload on OrderCreated {
@@ -76,7 +77,7 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const { payload, authData } = context;
 
@@ -92,6 +93,14 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   const webhookUrl = await settings.get("WEBHOOK_URL");
 
   if (!webhookUrl) {
+    const webhooksToggler = new WebhookActivityTogglerService(appId, client);
+
+    /**
+     * If webhookUrl doesn't exist, it means app is not configured. Webhooks are disabled to prevent unnecessary
+     * traffic.
+     */
+    await webhooksToggler.disableOwnWebhooks();
+
     return res.status(400).send({
       success: false,
       message:
