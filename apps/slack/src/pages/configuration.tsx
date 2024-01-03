@@ -45,7 +45,13 @@ function Configuration() {
       body: JSON.stringify({ data: configuration }),
     })
       .then(async (response) => {
-        notifySuccess("Success", "Configuration updated successfully");
+        if (response.ok) {
+          notifySuccess("Success", "Configuration updated successfully");
+
+          return;
+        }
+
+        throw response;
       })
       .catch(async () => {
         await notifyError("Configuration update failed");
@@ -56,7 +62,7 @@ function Configuration() {
     const { name, value } = event.target as HTMLInputElement;
 
     setConfiguration((prev) =>
-      prev!.map((prevField) => (prevField.key === name ? { ...prevField, value } : prevField))
+      prev!.map((prevField) => (prevField.key === name ? { ...prevField, value } : prevField)),
     );
   };
 
@@ -77,6 +83,7 @@ function Configuration() {
             label={key}
             name={key}
             onChange={onChange}
+            type="url"
             value={value}
             helperText={
               "This webhook will be called when new order is created and `order_created` event is triggered."

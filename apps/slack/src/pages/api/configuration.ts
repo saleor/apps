@@ -42,11 +42,11 @@ export const handler = async (
 
       if (!newWebhookUrl) {
         console.error("New value for the webhook URL has not been found");
-        res.status(400).json({
+
+        return res.status(400).json({
           success: false,
           message: "Wrong request body",
         });
-        return;
       }
 
       if (!isValidUrl(newWebhookUrl)) {
