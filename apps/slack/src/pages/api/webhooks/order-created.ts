@@ -7,6 +7,7 @@ import { saleorApp } from "../../../lib/saleor-app";
 import { sendSlackMessage } from "../../../lib/slack";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { WebhookActivityTogglerService } from "../../../lib/WebhookActivityToggler.service";
+import { isValidUrl } from "../../../lib/is-valid-url";
 
 const OrderCreatedWebhookPayload = gql`
   fragment OrderCreatedWebhookPayload on OrderCreated {
@@ -74,14 +75,6 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   query: OrderCreatedGraphqlSubscription,
   isActive: false,
 });
-
-const isValidUrl = (url: string) => {
-  try {
-    new URL(url);
-  } catch (e) {
-    return false;
-  }
-};
 
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,

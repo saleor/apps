@@ -5,6 +5,7 @@ import { createSettingsManager } from "../../lib/metadata";
 import { saleorApp } from "../../lib/saleor-app";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { WebhookActivityTogglerService } from "../../lib/WebhookActivityToggler.service";
+import { isValidUrl } from "../../lib/is-valid-url";
 
 const WEBHOOK_URL = "WEBHOOK_URL";
 
@@ -48,9 +49,7 @@ export const handler = async (
         return;
       }
 
-      try {
-        new URL(newWebhookUrl);
-      } catch (e) {
+      if (!isValidUrl(newWebhookUrl)) {
         return res.status(400).json({
           success: false,
           message: "Invalid webhook URL format",
