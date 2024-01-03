@@ -75,6 +75,14 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   isActive: false,
 });
 
+const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+  } catch (e) {
+    return false;
+  }
+};
+
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
@@ -93,7 +101,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   const webhookUrl = await settings.get("WEBHOOK_URL");
 
-  if (!webhookUrl) {
+  if (!webhookUrl || !isValidUrl(webhookUrl)) {
     const webhooksToggler = new WebhookActivityTogglerService(appId, client);
 
     /**
@@ -104,8 +112,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
     return res.status(400).send({
       success: false,
-      message:
-        "The application has not been configured yet - Missing webhook URL configuration value",
+      message: "The application has not been configured yet - Webhook URL is invalid or missing.",
     });
   }
 

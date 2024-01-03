@@ -48,6 +48,15 @@ export const handler = async (
         return;
       }
 
+      try {
+        new URL(newWebhookUrl);
+      } catch (e) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid webhook URL format",
+        });
+      }
+
       await settings.set({ key: WEBHOOK_URL, value: newWebhookUrl });
 
       /**
