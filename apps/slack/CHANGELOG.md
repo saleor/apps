@@ -1,5 +1,15 @@
 # saleor-app-slack
 
+## 1.10.0
+
+### Minor Changes
+
+- 53167f2: Added enabling & disabling webhooks feature. Now, when webhook handler detects missing or broken (check URL format) configuration, it will call Saleor to disable webhooks. This will save some traffic. On the other hand, when configuration is set again, webhooks will be enabled. Only existence of string value is checked for now.
+
+  For new installations, app will register disabled webhook, until configured.
+
+- f54f252: Added built-in html validation for configuration input - to validate against URL format.
+
 ## 1.9.4
 
 ### Patch Changes
