@@ -72,6 +72,7 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   event: "ORDER_CREATED",
   apl: saleorApp.apl,
   query: OrderCreatedGraphqlSubscription,
+  isActive: false,
 });
 
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
