@@ -6,6 +6,8 @@ import { createSettingsManager } from "../../../lib/metadata";
 import { saleorApp } from "../../../lib/saleor-app";
 import { sendSlackMessage } from "../../../lib/slack";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { WebhookActivityTogglerService } from "../../../lib/WebhookActivityToggler.service";
+import { isValidUrl } from "../../../lib/is-valid-url";
 
 const OrderCreatedWebhookPayload = gql`
   fragment OrderCreatedWebhookPayload on OrderCreated {
@@ -71,12 +73,13 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   event: "ORDER_CREATED",
   apl: saleorApp.apl,
   query: OrderCreatedGraphqlSubscription,
+  isActive: false,
 });
 
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const { payload, authData } = context;
 
@@ -91,11 +94,18 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   const webhookUrl = await settings.get("WEBHOOK_URL");
 
-  if (!webhookUrl) {
+  if (!webhookUrl || !isValidUrl(webhookUrl)) {
+    const webhooksToggler = new WebhookActivityTogglerService(appId, client);
+
+    /**
+     * If webhookUrl doesn't exist, it means app is not configured. Webhooks are disabled to prevent unnecessary
+     * traffic.
+     */
+    await webhooksToggler.disableOwnWebhooks();
+
     return res.status(400).send({
       success: false,
-      message:
-        "The application has not been configured yet - Missing webhook URL configuration value",
+      message: "The application has not been configured yet - Webhook URL is invalid or missing.",
     });
   }
 

@@ -1,0 +1,11 @@
+mutation EnableWebhook($id: ID!) {
+  webhookUpdate(id: $id, input: { isActive: true }) {
+    errors {
+      message
+    }
+    webhook {
+      id
+      isActive
+    }
+  }
+}
