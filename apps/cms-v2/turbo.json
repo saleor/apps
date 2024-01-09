@@ -21,6 +21,9 @@
         "NEXT_PUBLIC_SENTRY_DSN",
         "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
+        "OTEL_ENABLED",
+        "OTEL_SERVICE_NAME",
+        "VERCEL_GIT_COMMIT_SHA",
         "APP_API_BASE_URL"
       ]
     }

@@ -6,17 +6,14 @@ import {
   SemanticAttributes,
   SemanticResourceAttributes,
 } from "@opentelemetry/semantic-conventions";
-import {diag, DiagConsoleLogger, DiagLogLevel, trace} from "@opentelemetry/api";
+import { diag, DiagConsoleLogger, DiagLogLevel, trace } from "@opentelemetry/api";
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { SpanStatusCode } from "@opentelemetry/api";
-// import pkg from "../package.json";
 import { batchSpanProcessor } from "./otel-traces-setup";
 import { otelLogsProcessor } from "./otel-logs-setup";
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
-
-
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({
@@ -25,8 +22,8 @@ export const otelSdk = new NodeSDK({
     "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV, // todo
   }),
-  spanProcessor: undefined,
-  logRecordProcessor: undefined,
+  spanProcessor: batchSpanProcessor,
+  logRecordProcessor: otelLogsProcessor,
   textMapPropagator: new W3CTraceContextPropagator(),
   instrumentations: [
     new HttpInstrumentation({

@@ -1,3 +1,4 @@
+import { otelSdk } from "./instrumentation";
 import { SpanKind, SpanStatusCode, type Span } from "@opentelemetry/api";
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
@@ -5,7 +6,7 @@ import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 
 import { race } from "./lib/race";
 import { getOtelTracer } from "./otel-tracer";
-import { otelSdk } from "./instrumentation";
+
 import { loggerProvider, otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 import { sharedOtelConfig } from "./shared-config";
@@ -13,7 +14,7 @@ import { getAttributesFromRequest } from "./get-attributes-from-request";
 
 const tracer = getOtelTracer();
 
-if (process.env.OTEL_ENABLED && process.env.OTEL_SERVICE_NAME) {
+if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
   otelSdk.start();
 }
 
@@ -22,19 +23,19 @@ const OTEL_FLUSH_TIMEOUT = sharedOtelConfig.flushTimeout;
 const flushOtel = async () => {
   await race({
     promise: loggerProvider.forceFlush(),
-    error: new Error("Timeout flushing OTEL logs"),
+    error: new Error("Timeout flushing OTEL logs from provider"),
     timeout: OTEL_FLUSH_TIMEOUT,
   });
 
   await race({
     promise: Promise.all([batchSpanProcessor.forceFlush(), otelLogsProcessor.forceFlush()]),
-    error: new Error("Timeout flushing OTEL spans"),
+    error: new Error("Timeout flushing OTEL items from processors"),
     timeout: OTEL_FLUSH_TIMEOUT,
   });
 };
 
 export const withOtel = (handler: NextApiHandler, staticRouteName: string): NextApiHandler => {
-  if (!process.env.OTEL_ENABLED) {
+  if (process.env.OTEL_ENABLED !== "true") {
     return handler;
   }
 

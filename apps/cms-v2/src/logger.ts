@@ -1,15 +1,14 @@
 import { createLogger, format, transports } from "winston";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import pkg from "../package.json";
-import {trace} from "@opentelemetry/api";
-import {WinstonOtelTransport} from "@saleor/apps-otel";
-import {SentryBreadcrumbTransport} from "@/logger-sentry-transport";
+import { trace } from "@opentelemetry/api";
+import { WinstonOtelTransport } from "@saleor/apps-otel";
+import { SentryBreadcrumbTransport } from "@/logger-sentry-transport";
 
 /**
  * Use raw process env, because logger is the root dependency. If there is an error on this layer, logger will fail and logs
  * will be lost.
  */
-/* eslint-disable node/no-process-env */
 const useDevFormatting = process.env.CI || process.env.NODE_ENV !== "production";
 const otelEnabled = process.env.OTEL_ENABLED === "true";
 
@@ -72,9 +71,9 @@ export const winstonLogger = createLogger({
 });
 
 winstonLogger.add(
-    new transports.Console({
-        format: useDevFormatting ? devFormat : defaultFormat,
-    }),
+  new transports.Console({
+    format: useDevFormatting ? devFormat : defaultFormat,
+  }),
 );
 
 if (otelEnabled) {
@@ -85,5 +84,3 @@ if (otelEnabled) {
 if (process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN) {
   winstonLogger.add(new SentryBreadcrumbTransport());
 }
-
-/* eslint-enable node/no-process-env*/
