@@ -1,3 +1,4 @@
+import { withOtel } from "@saleor/apps-otel";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
@@ -6,7 +7,7 @@ import { productVariantCreatedWebhook } from "./webhooks/product-variant-created
 import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted";
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
 import { productUpdatedWebhook } from "./webhooks/product-updated";
-import { withOtel } from "@saleor/apps-otel";
+
 
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {

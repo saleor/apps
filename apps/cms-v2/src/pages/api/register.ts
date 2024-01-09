@@ -1,6 +1,6 @@
+import { withOtel } from "@saleor/apps-otel";
 import { saleorApp } from "@/saleor-app";
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { withOtel } from "@saleor/apps-otel";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 

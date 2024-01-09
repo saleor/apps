@@ -1,3 +1,4 @@
+import { withOtel } from "@saleor/apps-otel";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import {
@@ -14,7 +15,7 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@saleor/apps-shared";
-import { withOtel } from "@saleor/apps-otel";
+
 
 export const config = {
   api: {
