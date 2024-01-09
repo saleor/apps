@@ -13,10 +13,6 @@ import { getAttributesFromRequest } from "./get-attributes-from-request";
 
 const tracer = getOtelTracer();
 
-function getVercelRequestId(req: NextApiRequest) {
-  return (req.headers["x-vercel-proxy-signature-ts"] as string) ?? "";
-}
-
 if (process.env.OTEL_ENABLED && process.env.OTEL_SERVICE_NAME) {
   otelSdk.start();
 }
