@@ -12,6 +12,7 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@saleor/apps-shared";
+import { withOtel } from "@saleor/apps-otel";
 
 export const config = {
   api: {
@@ -48,7 +49,7 @@ export const productUpdatedWebhook = new SaleorAsyncWebhook<ProductUpdatedWebhoo
 const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const logger = createLogger({
     name: "ProductUpdatedWebhook",
@@ -74,4 +75,7 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   return res.status(200).end();
 };
 
-export default productUpdatedWebhook.createHandler(handler);
+export default withOtel(
+  productUpdatedWebhook.createHandler(handler),
+  "/api/webhooks/product-updated",
+);

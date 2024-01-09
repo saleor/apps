@@ -14,6 +14,7 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@saleor/apps-shared";
+import { withOtel } from "@saleor/apps-otel";
 
 export const config = {
   api: {
@@ -56,7 +57,7 @@ export const productVariantCreatedWebhook =
 const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   const logger = createLogger({
     name: "ProductVariantCreatedWebhook",
@@ -82,4 +83,7 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default productVariantCreatedWebhook.createHandler(handler);
+export default withOtel(
+  productVariantCreatedWebhook.createHandler(handler),
+  "/api/webhooks/product-variant-created",
+);
