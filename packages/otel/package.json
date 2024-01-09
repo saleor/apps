@@ -19,7 +19,7 @@
     "@opentelemetry/sdk-trace-node": "1.18.1",
     "@opentelemetry/semantic-conventions": "1.18.1",
     "eslint": "8.46.0",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6","winston-transport": "4.6.0"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
