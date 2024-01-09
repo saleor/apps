@@ -66,6 +66,8 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
           attributes: attributesFromRequest,
         },
         async (span) => {
+          span.setAttribute(SemanticAttributes.HTTP_ROUTE, staticRouteName);
+
           const originalResEnd = res.end;
 
           /**
