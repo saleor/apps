@@ -75,7 +75,13 @@
     "Graphiql",
     "XYZAAABB00",
     "XYZAAABB",
-    "dedupe"
+    "dedupe",
+    "otel",
+    "opentelemetry",
+    "OTLP",
+    "FAAS",
+    "millis",
+    "Parentfor"
   ],
   "ignorePaths": [
     "node_modules",
