@@ -22,8 +22,11 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "eslint-config-saleor": "workspace:*"
   },
   "main": "index.ts",
-  "peerDependencies": {}
+  "peerDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk"
+  }
 }
