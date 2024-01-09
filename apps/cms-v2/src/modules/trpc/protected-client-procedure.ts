@@ -42,7 +42,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
     {
       permissions: meta?.requiredClientPermissions,
     },
-    "Calling validateClientToken middleware with permissions required"
+    "Calling validateClientToken middleware with permissions required",
   );
 
   if (!ctx.token) {
