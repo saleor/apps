@@ -51,7 +51,7 @@ export const productVariantCreatedWebhook =
 
 /*
  * todo extract services, delegate to providers
- * todo document that fields in contetnful should be unique
+ * todo document that fields in Contentful should be unique
  * todo fetch metadata end decode it with payload
  */
 const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment> = async (

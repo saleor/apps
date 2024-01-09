@@ -48,7 +48,7 @@ export const productVariantDeletedWebhook =
   });
 
 /*
- * TODO: document that fields in contetnful should be unique
+ * TODO: document that fields in Contentful should be unique
  * TODO: fetch metadata end decode it with payload, so we spare one call
  */
 const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
