@@ -21,7 +21,12 @@
         "SENTRY_DSN",
         "SENTRY_ENVIRONMENT",
         "SENTRY_ORG",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "OTEL_ENABLED",
+        "OTEL_SERVICE_NAME",
+        "VERCEL_GIT_COMMIT_SHA",
+        "NEW_APP_LOG_LEVEL",
+        "ENV"
       ]
     }
   }
