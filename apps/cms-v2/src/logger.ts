@@ -2,11 +2,31 @@ import { Logger } from "tslog";
 import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
 import { context } from "@opentelemetry/api";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import * as Sentry from "@sentry/nextjs";
+import {SeverityLevel} from "@sentry/nextjs";
 
 // TODO: ADD loggerContext
 export const logger = new Logger({
   argumentsArrayName: "payload",
 });
+
+const loggerLevelToSentryLevel = (level: string): SeverityLevel => {
+  switch (level) {
+    case "fatal":
+    case "error":
+      return "error";
+    case "warn":
+      return "warning";
+    case "silly":
+    case "debug":
+    case "trace":
+      return "debug";
+    case "info":
+      return "info";
+  }
+
+  return "debug";
+};
 
 if (typeof window === "undefined") {
   logger.attachTransport((log) => {
@@ -49,6 +69,17 @@ if (typeof window === "undefined") {
         ["commit-sha"]: process.env.VERCEL_GIT_COMMIT_SHA,
         [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
       },
+    });
+  });
+
+  logger.attachTransport((log) => {
+    Sentry?.addBreadcrumb?.({
+      message: log.payload[0] as string,
+      type: "debug", //todo,
+      level: loggerLevelToSentryLevel(log._meta.logLevelName),
+      // @ts-expect-error Invalid type in Sentry SDK
+      timestamp: new Date().toDateString(),
+      data: log.payload[1] as Record<string, unknown>,
     });
   });
 }
