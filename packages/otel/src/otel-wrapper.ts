@@ -14,6 +14,7 @@ import { getAttributesFromRequest } from "./get-attributes-from-request";
 
 const tracer = getOtelTracer();
 
+// eslint-disable-next-line turbo/no-undeclared-env-vars
 if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
   otelSdk.start();
 }
@@ -35,6 +36,7 @@ const flushOtel = async () => {
 };
 
 export const withOtel = (handler: NextApiHandler, staticRouteName: string): NextApiHandler => {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.OTEL_ENABLED !== "true") {
     return handler;
   }
@@ -48,7 +50,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
       const [req, res] = args;
 
       if (!req || !res) {
-        // winstonLogger.warn("No request and/or response objects found, OTEL is not set-up");
+        console.warn("No request and/or response objects found, OTEL is not set-up");
 
         // @ts-expect-error runtime check
         return wrappingTarget.apply(thisArg, args);
@@ -78,7 +80,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
             try {
               await flushOtel();
             } catch (e) {
-              // winstonLogger.error("Failed to flush OTEL", { error: e });
+              console.error("Failed to flush OTEL", { error: e });
               // noop - don't block return even if we loose traces
             }
 
@@ -100,7 +102,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
             try {
               await flushOtel();
             } catch (e) {
-              // winstonLogger.error("Failed to flush OTEL", { error: e });
+              console.error("Failed to flush OTEL", { error: e });
             }
 
             /**

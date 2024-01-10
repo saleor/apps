@@ -11,7 +11,7 @@ export const attachLoggerOtelTransport = (logger: Logger<ILogObj>) => {
       return;
     }
 
-    // @ts-ignore
+    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
     const message = log.payload[0];
 
     if (!message) {
@@ -20,7 +20,7 @@ export const attachLoggerOtelTransport = (logger: Logger<ILogObj>) => {
       return;
     }
 
-    // @ts-ignore
+    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
     const attributes = (log.payload[1] as Record<string, LogAttributeValue>) ?? {};
 
     /**
