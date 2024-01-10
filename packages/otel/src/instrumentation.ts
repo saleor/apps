@@ -12,15 +12,20 @@ import { SpanStatusCode } from "@opentelemetry/api";
 import { batchSpanProcessor } from "./otel-traces-setup";
 import { otelLogsProcessor } from "./otel-logs-setup";
 
-// For troubleshooting, set the log level to DiagLogLevel.DEBUG
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+/*
+ * For troubleshooting, set the log level to DiagLogLevel.DEBUG
+ * diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+ */
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
     // [SemanticResourceAttributes.SERVICE_VERSION]: pkg.version, TODO
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
-    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV, // todo
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
   }),
   spanProcessor: batchSpanProcessor,
   logRecordProcessor: otelLogsProcessor,

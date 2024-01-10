@@ -26,6 +26,7 @@
         "VERCEL_GIT_COMMIT_SHA",
         "NEW_APP_LOG_LEVEL",
         "ENV",
+        "OTEL_SERVICE_NAME",
         "APP_API_BASE_URL"
       ]
     }
