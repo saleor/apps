@@ -1,10 +1,9 @@
-import { createClient, ClientAPI, Environment } from "contentful-management";
+import { ClientAPI, createClient, Environment } from "contentful-management";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { ContentfulProviderConfig } from "@/modules/configuration";
-import { z } from "zod";
 
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 
 type ConstructorOptions = {
   space: string;
@@ -31,7 +30,7 @@ export class ContentfulClient {
   private client: ContentfulApiClientChunk;
   private space: string;
 
-  private logger = createLogger({ name: "ContentfulClient" });
+  private logger = createLogger("ContentfulClient");
 
   constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
@@ -105,7 +104,7 @@ export class ContentfulClient {
 
       return contentTypes;
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error("Failed to fetch content types", { error: err });
 
       throw err;
     }
@@ -151,7 +150,7 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    this.logger.debug({ variantId: opts.variant.id }, "Attempting to delete product variant");
+    this.logger.debug("Attempting to delete product variant", { variantId: opts.variant.id });
 
     const space = await this.client.getSpace(this.space);
     const env = await space.getEnvironment(opts.configuration.environment);
@@ -161,7 +160,7 @@ export class ContentfulClient {
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
 
-    this.logger.trace(contentEntries, "Found entries to delete");
+    this.logger.trace("Found entries to delete", { contentEntries });
 
     /**
      * In general it should be only one item, but in case of duplication run through everything

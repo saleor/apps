@@ -47,6 +47,7 @@
     "urql",
     "Vercel",
     "RudderStack",
+    "tslog",
     "DataDog",
     "Clearpay",
     "Afterpay",
@@ -75,7 +76,14 @@
     "Graphiql",
     "XYZAAABB00",
     "XYZAAABB",
-    "dedupe"
+    "dedupe",
+    "otel",
+    "opentelemetry",
+    "DOESNT",
+    "OTLP",
+    "FAAS",
+    "millis",
+    "Parentfor"
   ],
   "ignorePaths": [
     "node_modules",
@@ -89,6 +97,7 @@
     "**/graphql.ts",
     "**/CHANGELOG.md",
     "**/schema.graphql",
-    "**/*-generator.ts"
+    "**/*-generator.ts",
+    "apps/*/src/**"
   ]
 }

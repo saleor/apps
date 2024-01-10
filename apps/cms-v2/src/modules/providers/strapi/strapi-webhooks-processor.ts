@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
@@ -9,7 +9,7 @@ import { StrapiClient } from "./strapi-client";
 
 export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   private client: StrapiClient;
-  private logger = createLogger({ name: "StrapiWebhooksProcessor" });
+  private logger = createLogger("StrapiWebhooksProcessor");
 
   constructor(private config: StrapiProviderConfig.FullShape) {
     this.client = new StrapiClient({ url: config.url, token: config.authToken });
@@ -48,7 +48,7 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
             },
           },
         });
-      })
+      }),
     );
   }
 }

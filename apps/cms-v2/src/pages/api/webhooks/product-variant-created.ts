@@ -1,3 +1,4 @@
+import { withOtel } from "@saleor/apps-otel";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import {
@@ -13,7 +14,7 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 
 export const config = {
   api: {
@@ -50,16 +51,15 @@ export const productVariantCreatedWebhook =
 
 /*
  * todo extract services, delegate to providers
- * todo document that fields in contetnful should be unique
+ * todo document that fields in Contentful should be unique
  * todo fetch metadata end decode it with payload
  */
 const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
-  const logger = createLogger({
-    name: "ProductVariantCreatedWebhook",
+  const logger = createLogger("ProductVariantCreatedWebhook", {
     apiUrl: context.authData.saleorApiUrl,
   });
 
@@ -82,4 +82,7 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default productVariantCreatedWebhook.createHandler(handler);
+export default withOtel(
+  productVariantCreatedWebhook.createHandler(handler),
+  "/api/webhooks/product-variant-created",
+);
