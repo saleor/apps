@@ -4,7 +4,7 @@ import {
 } from "../../../../generated/graphql";
 
 import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { PayloadCMSClient } from "./payloadcms-client";
 
@@ -14,7 +14,7 @@ import { PayloadCMSClient } from "./payloadcms-client";
 export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client = new PayloadCMSClient();
 
-  private logger = createLogger({ name: "PayloadCmsWebhooksProcessor" });
+  private logger = createLogger("PayloadCmsWebhooksProcessor");
 
   constructor(private providerConfig: PayloadCmsProviderConfig.FullShape) {}
 

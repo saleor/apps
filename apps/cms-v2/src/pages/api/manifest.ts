@@ -1,3 +1,4 @@
+import { withOtel } from "@saleor/apps-otel";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
@@ -7,7 +8,8 @@ import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
 import { productUpdatedWebhook } from "./webhooks/product-updated";
 
-export default createManifestHandler({
+
+const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
     const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
@@ -63,3 +65,5 @@ export default createManifestHandler({
     return manifest;
   },
 });
+
+export default withOtel(handler, "/api/manifest");

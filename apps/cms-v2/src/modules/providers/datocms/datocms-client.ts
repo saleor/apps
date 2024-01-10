@@ -1,6 +1,6 @@
 import { buildClient, Client, SimpleSchemaTypes, ApiError } from "@datocms/cma-client-browser";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { z } from "zod";
 
 import * as Sentry from "@sentry/nextjs";
@@ -17,7 +17,7 @@ type Context = {
  */
 export class DatoCMSClient {
   private client: Client;
-  private logger = createLogger({ name: "DatoCMSClient" });
+  private logger = createLogger("DatoCMSClient");
 
   constructor(opts: { apiToken: string }) {
     this.client = buildClient({ apiToken: opts.apiToken });
@@ -71,7 +71,7 @@ export class DatoCMSClient {
      * Dato requires JSON to be stringified first so overwrite this single fields
      */
     fields[configuration.productVariantFieldsMapping.channels] = JSON.stringify(
-      variant.channelListings
+      variant.channelListings,
     );
 
     return {
@@ -91,7 +91,7 @@ export class DatoCMSClient {
 
     if (remoteProducts.length > 1) {
       this.logger.warn(
-        "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set"
+        "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
       );
     }
 
@@ -104,7 +104,7 @@ export class DatoCMSClient {
     return Promise.all(
       remoteProducts.map((p) => {
         return this.client.items.rawDestroy(p.id);
-      })
+      }),
     );
   }
 
@@ -126,7 +126,7 @@ export class DatoCMSClient {
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
           variantID: variant.id,
-        }
+        },
       );
     }
 
@@ -139,9 +139,9 @@ export class DatoCMSClient {
           this.mapVariantToDatoCMSFields({
             configuration,
             variant,
-          })
+          }),
         );
-      })
+      }),
     );
   }
 
@@ -158,7 +158,7 @@ export class DatoCMSClient {
               }),
             }),
           }),
-        })
+        }),
       ),
     });
 
@@ -167,7 +167,7 @@ export class DatoCMSClient {
         const errorBody = DatoErrorBody.parse(err.response.body);
 
         const isUniqueIdError = errorBody.data.find(
-          (d) => d.validation.attributes.details.code === "VALIDATION_UNIQUE"
+          (d) => d.validation.attributes.details.code === "VALIDATION_UNIQUE",
         );
 
         if (isUniqueIdError) {

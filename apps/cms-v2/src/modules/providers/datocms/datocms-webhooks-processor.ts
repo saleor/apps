@@ -6,14 +6,14 @@ import {
 
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 
 /*
  * todo error handling
  */
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client: DatoCMSClient;
-  private logger = createLogger({ name: "DatocmsWebhooksProcessor" });
+  private logger = createLogger("DatocmsWebhooksProcessor");
 
   constructor(private providerConfig: DatocmsProviderConfig.FullShape) {
     this.client = new DatoCMSClient({
@@ -64,7 +64,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
             },
           },
         });
-      })
+      }),
     );
   }
 }

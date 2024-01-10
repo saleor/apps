@@ -91,7 +91,7 @@ describe("App Config", () => {
   });
 
   describe("Connections", () => {
-    it("Throws if trying to add connection with provider that doesnt exist", () => {
+    it("Throws if trying to add connection with provider that doesn't exist", () => {
       expect(() => {
         appConfig.connections.addConnection({
           channelSlug: "test",

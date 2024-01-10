@@ -1,12 +1,12 @@
-import { createLogger } from "@saleor/apps-shared";
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 import { ContentfulProviderConfig } from "../../configuration";
 import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
+import { createLogger } from "@/logger";
 
 export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
-  private logger = createLogger({ name: "ContentfulBulkSyncProcessor" });
+  private logger = createLogger("ContentfulBulkSyncProcessor");
 
   constructor(private config: ContentfulProviderConfig.FullShape) {}
 
@@ -50,7 +50,7 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
               }
             })
             .catch((e) => {
-              this.logger.trace(e, "Error while uploading product to Contentful");
+              this.logger.trace("Error while uploading product to Contentful", { error: e });
 
               if (hooks.onUploadError) {
                 hooks.onUploadError({ variantId: variant.id, error: e });

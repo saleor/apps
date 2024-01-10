@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 
 import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
@@ -17,7 +17,7 @@ type Context = {
  * https://payloadcms.com/docs/queries/overview#rest-queries
  */
 export class PayloadCMSClient {
-  private logger = createLogger({ name: "PayloadCMSClient" });
+  private logger = createLogger("PayloadCMSClient");
 
   private mapVariantToPayloadFields({ configuration, variant }: Context) {
     const fields = FieldsMapper.mapProductVariantToConfigurationFields({
@@ -78,7 +78,7 @@ export class PayloadCMSClient {
         throw new Error("Error while deleting product variant");
       }
     } catch (e) {
-      this.logger.error(e);
+      this.logger.error("Failed to delete variant", { error: e });
 
       throw e;
     }
@@ -119,7 +119,7 @@ export class PayloadCMSClient {
         }
       })
       .catch((e) => {
-        this.logger.error(e);
+        this.logger.error("Failed to upload product variant", { error: e });
 
         throw e;
       });
@@ -152,7 +152,7 @@ export class PayloadCMSClient {
         throw new Error("Error while updating product variant");
       }
     } catch (e) {
-      this.logger.error(e);
+      this.logger.error("Failed to update product variant", { error: e });
 
       throw e;
     }

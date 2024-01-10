@@ -1,3 +1,4 @@
+import { withOtel } from "@saleor/apps-otel";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import {
@@ -11,7 +12,7 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 import { saleorApp } from "@/saleor-app";
 
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 
 export const config = {
   api: {
@@ -47,16 +48,15 @@ export const productVariantDeletedWebhook =
   });
 
 /*
- * TODO: document that fields in contetnful should be unique
+ * TODO: document that fields in Contentful should be unique
  * TODO: fetch metadata end decode it with payload, so we spare one call
  */
 const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
-  const logger = createLogger({
-    name: "ProductVariantCreatedWebhook",
+  const logger = createLogger("ProductVariantCreatedWebhook", {
     apiUrl: context.authData.saleorApiUrl,
   });
 
@@ -79,4 +79,7 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default productVariantDeletedWebhook.createHandler(handler);
+export default withOtel(
+  productVariantDeletedWebhook.createHandler(handler),
+  "api/webhooks/product-variant-deleted",
+);
