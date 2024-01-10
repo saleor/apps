@@ -1,15 +1,15 @@
 import { Client } from "urql";
-import { Logger, createLogger } from "../../../lib/logger";
 import { Obfuscator } from "../../../lib/obfuscator";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConnectionService } from "./avatax-connection.service";
+import { createLogger } from "../../../logger";
 
 /*
  * This class is used to merge the given input with the existing configuration.
  * The input from the edit UI is obfuscated, so we need to filter out those fields, and merge it with the existing configuration.
  */
 export class AvataxPatchInputTransformer {
-  private logger: Logger;
+  private logger = createLogger("AvataxPatchInputTransformer");
   private connection: AvataxConnectionService;
   private obfuscator: Obfuscator;
 
@@ -22,9 +22,6 @@ export class AvataxPatchInputTransformer {
     appId: string;
     saleorApiUrl: string;
   }) {
-    this.logger = createLogger({
-      name: "AvataxPatchInputTransformer",
-    });
     this.connection = new AvataxConnectionService({ client, appId, saleorApiUrl });
     this.obfuscator = new Obfuscator();
   }

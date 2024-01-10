@@ -4,10 +4,10 @@ import {
   UntypedOrderCancelledSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 export const config = {
   api: {
     bodyParser: false,
@@ -29,7 +29,9 @@ export const orderCancelledAsyncWebhook = new SaleorAsyncWebhook<OrderCancelledP
 
 export default withOtel(
   orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger({ event: ctx.event });
+    const logger = createLogger("orderCancelledAsyncWebhook", {
+      saleorApiUrl: ctx.authData.saleorApiUrl,
+    });
     const { payload } = ctx;
     const webhookResponse = new WebhookResponse(res);
 

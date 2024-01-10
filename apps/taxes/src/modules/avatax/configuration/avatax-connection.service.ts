@@ -1,14 +1,14 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxConnectionRepository } from "./avatax-connection-repository";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxClient } from "../avatax-client";
+import { createLogger } from "../../../logger";
 
 export class AvataxConnectionService {
-  private logger: Logger;
+  private logger = createLogger("AvataxConnectionService");
   private avataxConnectionRepository: AvataxConnectionRepository;
 
   constructor({
@@ -20,10 +20,6 @@ export class AvataxConnectionService {
     appId: string;
     saleorApiUrl: string;
   }) {
-    this.logger = createLogger({
-      name: "AvataxConnectionService",
-    });
-
     const settingsManager = createSettingsManager(client, appId);
 
     this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);

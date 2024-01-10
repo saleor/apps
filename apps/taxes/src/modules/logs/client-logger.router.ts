@@ -3,7 +3,7 @@ import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { ClientLogger, clientLogInputSchema } from "./client-logger";
 import { z } from "zod";
 import { router } from "../trpc/trpc-server";
-import { createLogger } from "../../lib/logger";
+import { createLogger } from "../../logger";
 
 const logProcedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -27,9 +27,7 @@ const pushClientLogInputSchema = z
 
 export const clientLoggerRouter = router({
   push: logProcedure.input(pushClientLogInputSchema).query(async ({ ctx, input }) => {
-    const logger = createLogger({
-      name: "ClientLoggerRouter.push",
-    });
+    const logger = createLogger("ClientLoggerRouter.push");
 
     logger.debug("Pushing log to metadata");
 
@@ -41,9 +39,7 @@ export const clientLoggerRouter = router({
     return loggerRepository.push(input.log);
   }),
   getAll: logProcedure.input(logIdSchema).query(async ({ ctx, input }) => {
-    const logger = createLogger({
-      name: "ClientLoggerRouter.getAll",
-    });
+    const logger = createLogger("ClientLoggerRouter.getAll");
 
     logger.debug("Getting logs from metadata");
 

@@ -1,17 +1,11 @@
-import { Logger, createLogger } from "../../../lib/logger";
 import { taxJarAddressFactory } from "../address-factory";
 import { TaxJarClient } from "../taxjar-client";
 import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarValidationErrorResolver } from "./tax-jar-validation-error-resolver";
+import { createLogger } from "../../../logger";
 
 export class TaxJarValidationService {
-  private logger: Logger;
-
-  constructor() {
-    this.logger = createLogger({
-      name: "TaxJarValidationService",
-    });
-  }
+  private logger = createLogger("TaxJarValidationService");
 
   async validate(config: TaxJarConfig): Promise<void> {
     const taxJarClient = new TaxJarClient(config);

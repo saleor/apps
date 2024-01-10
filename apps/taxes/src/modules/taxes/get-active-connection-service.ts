@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { MetadataItem, OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-import { Logger, createLogger } from "../../lib/logger";
 
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
@@ -11,20 +10,17 @@ import { TaxJarWebhookService } from "../taxjar/taxjar-webhook.service";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { createClientLogger } from "../logs/client-logger";
 import { ExpectedError } from "../../error";
+import { createLogger } from "../../logger";
 
 // todo: refactor to a factory
 class ActiveTaxProviderService implements ProviderWebhookService {
-  private logger: Logger;
+  private logger = createLogger("ActiveTaxProviderService");
   private client: TaxJarWebhookService | AvataxWebhookService;
 
   constructor(
     providerConnection: ProviderConnection,
     private authData: AuthData,
   ) {
-    this.logger = createLogger({
-      name: "ActiveTaxProviderService",
-    });
-
     const taxProviderName = providerConnection.provider;
     const clientLogger = createClientLogger({
       authData,
@@ -76,9 +72,7 @@ export function getActiveConnectionService(
   encryptedMetadata: MetadataItem[],
   authData: AuthData,
 ): ActiveTaxProviderService {
-  const logger = createLogger({
-    name: "getActiveConnectionService",
-  });
+  const logger = createLogger("getActiveConnectionService");
 
   if (!channelSlug) {
     throw new Error("Channel slug was not found in the webhook payload");

@@ -2,13 +2,11 @@ import * as Sentry from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 
 import { CriticalError, ExpectedError } from "../../error";
-import { createLogger, Logger } from "../../lib/logger";
+import { createLogger } from "../../logger";
 
 export class WebhookResponse {
-  private logger: Logger;
-  constructor(private res: NextApiResponse) {
-    this.logger = createLogger({ event: "WebhookResponse" });
-  }
+  private logger = createLogger("WebhookResponse");
+  constructor(private res: NextApiResponse) {}
 
   private respondWithError(errorMessage: string) {
     return this.res.status(500).json({ error: errorMessage });

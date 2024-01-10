@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createLogger, Logger } from "../../../lib/logger";
+import { createLogger } from "../../../logger";
 
 const avataxErrorSchema = z.object({
   code: z.string(),
@@ -10,17 +10,12 @@ const avataxErrorSchema = z.object({
       code: z.string(),
       message: z.string(),
       faultCode: z.string(),
-    })
+    }),
   ),
 });
 
 export class AvataxValidationErrorResolver {
-  private logger: Logger;
-  constructor() {
-    this.logger = createLogger({
-      locataion: "AvataxValidationErrorResolver",
-    });
-  }
+  private logger = createLogger("AvataxValidationErrorResolver");
 
   resolve(error: unknown): Error {
     const parseResult = avataxErrorSchema.safeParse(error);

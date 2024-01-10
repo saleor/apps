@@ -5,12 +5,12 @@ import {
   UntypedOrderConfirmedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 export const config = {
   api: {
@@ -33,7 +33,9 @@ export const orderConfirmedAsyncWebhook = new SaleorAsyncWebhook<OrderConfirmedP
 
 export default withOtel(
   orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger({ event: ctx.event });
+    const logger = createLogger("orderConfirmedAsyncWebhook", {
+      saleorApiUrl: ctx.authData.saleorApiUrl,
+    });
     const { payload, authData } = ctx;
     const { saleorApiUrl, token } = authData;
     const webhookResponse = new WebhookResponse(res);
@@ -58,7 +60,7 @@ export default withOtel(
 
       const confirmedOrder = await taxProvider.confirmOrder(payload.order);
 
-      logger.info({ confirmedOrder }, "Order confirmed");
+      logger.info("Order confirmed", { confirmedOrder });
       const client = createGraphQLClient({
         saleorApiUrl,
         token,

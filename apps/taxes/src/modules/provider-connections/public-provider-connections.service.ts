@@ -1,14 +1,16 @@
 import { Client } from "urql";
-import { createLogger, Logger } from "../../lib/logger";
 import { PublicAvataxConnectionService } from "../avatax/configuration/public-avatax-connection.service";
 import { PublicTaxJarConnectionService } from "../taxjar/configuration/public-taxjar-connection.service";
+import { createLogger } from "../../logger";
 
 export const TAX_PROVIDER_KEY = "tax-providers-v2";
 
 export class PublicProviderConnectionsService {
   private avataxConnectionService: PublicAvataxConnectionService;
   private taxJarConnectionService: PublicTaxJarConnectionService;
-  private logger: Logger;
+  private logger = createLogger("PublicProviderConnectionsService", {
+    metadataKey: TAX_PROVIDER_KEY,
+  });
   constructor({
     client,
     appId,
@@ -27,10 +29,6 @@ export class PublicProviderConnectionsService {
       client,
       appId,
       saleorApiUrl,
-    });
-    this.logger = createLogger({
-      name: "PublicProviderConnectionsService",
-      metadataKey: TAX_PROVIDER_KEY,
     });
   }
 

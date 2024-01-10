@@ -1,19 +1,18 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createGraphQLClient } from "@saleor/apps-shared";
-import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
   TaxJarTaxCodeMatch,
   TaxJarTaxCodeMatchRepository,
   TaxJarTaxCodeMatches,
 } from "./taxjar-tax-code-match-repository";
+import { createLogger } from "../../../logger";
 
 export class TaxJarTaxCodeMatchesService {
-  private logger: Logger;
+  private logger = createLogger("TaxJarTaxCodeService");
   private taxCodeMatchRepository: TaxJarTaxCodeMatchRepository;
 
   constructor(authData: AuthData) {
-    this.logger = createLogger({ name: "TaxJarTaxCodeService" });
     const client = createGraphQLClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,
@@ -22,7 +21,7 @@ export class TaxJarTaxCodeMatchesService {
 
     this.taxCodeMatchRepository = new TaxJarTaxCodeMatchRepository(
       settingsManager,
-      authData.saleorApiUrl
+      authData.saleorApiUrl,
     );
   }
 
@@ -33,7 +32,7 @@ export class TaxJarTaxCodeMatchesService {
   async upsert(input: TaxJarTaxCodeMatch): Promise<void | { data: { id: string } }> {
     const taxCodeMatches = await this.getAll();
     const taxCodeMatch = taxCodeMatches.find(
-      (match) => match.data.saleorTaxClassId === input.saleorTaxClassId
+      (match) => match.data.saleorTaxClassId === input.saleorTaxClassId,
     );
 
     if (taxCodeMatch) {

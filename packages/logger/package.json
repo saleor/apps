@@ -5,14 +5,14 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "tslog": "4.9.2",
     "eslint": "8.46.0",
+    "tslog": "4.9.2",
     "typescript": "5.1.6"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "eslint-config-saleor": "workspace:*",
-    "@sentry/nextjs": "7.93.0"
+    "@sentry/nextjs": "7.93.0",
+    "eslint-config-saleor": "workspace:*"
   },
   "main": "index.ts",
   "peerDependencies": {

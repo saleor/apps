@@ -1,12 +1,12 @@
 import { Client } from "urql";
-import { createLogger, Logger } from "../../../lib/logger";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
 import { AvataxClient } from "../avatax-client";
+import { createLogger } from "../../../logger";
 
 export class AvataxEditAuthValidationService {
-  private logger: Logger;
+  private logger = createLogger("AvataxAuthValidationService");
   private client: Client;
   private appId: string;
   private saleorApiUrl: string;
@@ -23,9 +23,6 @@ export class AvataxEditAuthValidationService {
     this.client = client;
     this.appId = appId;
     this.saleorApiUrl = saleorApiUrl;
-    this.logger = createLogger({
-      name: "AvataxAuthValidationService",
-    });
   }
 
   async validate(id: string, input: Pick<AvataxConfig, "credentials" | "isSandbox">) {

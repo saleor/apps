@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { Logger, createLogger } from "../../../lib/logger";
 import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { ClientLogger } from "../../logs/client-logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
@@ -9,6 +8,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
+import { createLogger } from "../../../logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -18,7 +18,7 @@ export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
-  private logger: Logger;
+  private logger = createLogger("AvataxCalculateTaxesAdapter");
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
   private readonly clientLogger: ClientLogger;
@@ -32,7 +32,6 @@ export class AvataxCalculateTaxesAdapter
     clientLogger: ClientLogger;
     authData: AuthData;
   }) {
-    this.logger = createLogger({ name: "AvataxCalculateTaxesAdapter" });
     this.config = config;
     this.clientLogger = clientLogger;
     this.authData = authData;

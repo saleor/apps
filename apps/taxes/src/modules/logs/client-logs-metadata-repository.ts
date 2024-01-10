@@ -1,7 +1,7 @@
 import { EncryptedMetadataManager, SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { ZodSchema, z } from "zod";
-import { Logger, createLogger } from "../../lib/logger";
 import { logUtils } from "./log-utils";
+import { createLogger } from "../../logger";
 
 export interface MetadataLogs<TLog extends unknown> {
   getAll(): Promise<TLog[]>;
@@ -28,7 +28,7 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
   private readonly schema: ZodSchema<TLog>;
   private readonly metadataKey: string;
   private readonly options: ClientLogsMetadataRepositoryOptions;
-  private readonly logger: Logger;
+  private readonly logger = createLogger("ClientLogsMetadataRepository");
   private logs: TLog[] = [];
 
   constructor({
@@ -41,9 +41,6 @@ export class ClientLogsMetadataRepository<TLog extends unknown> implements Metad
     this.schema = schema;
     this.metadataKey = metadataKey;
     this.options = options;
-    this.logger = createLogger({
-      name: "ClientLogsMetadataRepository",
-    });
   }
 
   async getAll() {

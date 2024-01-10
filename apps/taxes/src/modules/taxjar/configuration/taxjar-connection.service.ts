@@ -1,13 +1,13 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
-import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import { TaxJarConfig, TaxJarConnection } from "../taxjar-connection-schema";
 import { TaxJarConnectionRepository } from "./taxjar-connection-repository";
 import { TaxJarValidationService } from "./taxjar-validation.service";
+import { createLogger } from "../../../logger";
 
 export class TaxJarConnectionService {
-  private logger: Logger;
+  private logger = createLogger("TaxJarConnectionService");
   private taxJarConnectionRepository: TaxJarConnectionRepository;
   constructor({
     client,
@@ -18,10 +18,6 @@ export class TaxJarConnectionService {
     appId: string;
     saleorApiUrl: string;
   }) {
-    this.logger = createLogger({
-      name: "TaxJarConnectionService",
-    });
-
     const settingsManager = createSettingsManager(client, appId);
 
     this.taxJarConnectionRepository = new TaxJarConnectionRepository(settingsManager, saleorApiUrl);

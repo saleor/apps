@@ -4,11 +4,11 @@ import {
   UntypedCalculateTaxesDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 export const config = {
   api: {
@@ -40,7 +40,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 
 export default withOtel(
   orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger({ name: "orderCalculateTaxesSyncWebhook" });
+    const logger = createLogger("orderCalculateTaxesSyncWebhook");
     const { payload } = ctx;
     const webhookResponse = new WebhookResponse(res);
 
