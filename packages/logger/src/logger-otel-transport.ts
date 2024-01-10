@@ -47,7 +47,7 @@ export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: s
     );
 
     logs.getLogger("app-logger-otel").emit({
-      body: message,
+      body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
       context: context.active(),
       severityText: log._meta.logLevelName,
       attributes: {

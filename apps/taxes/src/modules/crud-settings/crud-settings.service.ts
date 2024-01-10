@@ -39,7 +39,7 @@ export class CrudSettingsManager {
     const validation = settingsSchema.safeParse(data);
 
     if (!validation.success) {
-      this.logger.error({ error: validation.error }, "Error while validating metadata");
+      this.logger.error("Error while validating metadata", { error: validation.error });
       throw new Error("Error while validating metadata");
     }
 
@@ -55,7 +55,7 @@ export class CrudSettingsManager {
     const item = settings.find((item) => item.id === id);
 
     if (!item) {
-      this.logger.error({ id }, "Item not found");
+      this.logger.error("Item not found", { id });
       throw new Error("Item not found");
     }
 

@@ -15,18 +15,18 @@ export class WebhookResponse {
   error(error: unknown) {
     if (error instanceof CriticalError) {
       Sentry.captureException(error);
-      this.logger.error({ error }, "CriticalError occurred");
+      this.logger.error("CriticalError occurred", { error });
       return this.respondWithError(error.message);
     }
 
     if (error instanceof ExpectedError) {
-      this.logger.warn({ error }, "ExpectedError occurred");
+      this.logger.warn("ExpectedError occurred", { error });
       return this.respondWithError(error.message);
     }
 
     Sentry.captureMessage("Unhandled error occurred");
     Sentry.captureException(error);
-    this.logger.error({ error }, "Unhandled error occurred");
+    this.logger.error("Unhandled error occurred", { error });
     return this.respondWithError("Unhandled error occurred");
   }
 

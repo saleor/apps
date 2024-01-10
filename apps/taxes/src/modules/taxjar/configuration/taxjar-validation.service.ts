@@ -16,7 +16,7 @@ export class TaxJarValidationService {
       // if the address is invalid, TaxJar will throw an error (rather than 200 and error messages)
       await taxJarClient.validateAddress({ params: address });
     } catch (error) {
-      this.logger.debug({ error });
+      this.logger.debug("Taxjar address validation failed", { error });
       const errorResolver = new TaxJarValidationErrorResolver();
 
       throw errorResolver.resolve(error);

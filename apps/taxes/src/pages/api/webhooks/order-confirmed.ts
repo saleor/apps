@@ -76,7 +76,7 @@ export default withOtel(
 
       return webhookResponse.success();
     } catch (error) {
-      logger.error({ error });
+      logger.error("Error executing webhook", { error });
       return webhookResponse.error(error);
     }
   }),

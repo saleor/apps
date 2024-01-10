@@ -64,7 +64,7 @@ export default withOtel(
       logger.info("Found active connection service. Calculating taxes...");
       const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
 
-      logger.info({ calculatedTaxes }, "Taxes calculated");
+      logger.info("Taxes calculated", { calculatedTaxes });
       return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
     } catch (error) {
       return webhookResponse.error(error);

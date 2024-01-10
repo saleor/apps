@@ -71,8 +71,9 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   }
 
   try {
-    logger.debug("trying to verify JWT token from frontend");
-    logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
+    logger.debug("trying to verify JWT token from frontend", {
+      token: ctx.token ? `${ctx.token[0]}...` : undefined,
+    });
 
     await verifyJWT({
       appId: ctx.appId,
@@ -107,7 +108,7 @@ const logErrors = middleware(async ({ next }) => {
   const result = await next();
 
   if (!result.ok) {
-    logger.error(result.error);
+    logger.error(result.error.message, { error: result.error });
   }
 
   return result;

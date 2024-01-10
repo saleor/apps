@@ -92,7 +92,7 @@ export function getActiveConnectionService(
 
   if (!channelConfig) {
     // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    logger.debug({ channelSlug }, "Channel config was not found for channel slug");
+    logger.debug("Channel config was not found for channel slug", { channelSlug });
     throw new ExpectedError(`Channel config was not found for channel ${channelSlug}`);
   }
 
@@ -102,8 +102,8 @@ export function getActiveConnectionService(
 
   if (!providerConnection) {
     logger.debug(
-      { providerConnections, channelConfig },
       "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
+      { providerConnections, channelConfig },
     );
     throw new ExpectedError(`Channel config providerConnectionId does not match any providers`);
   }
