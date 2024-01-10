@@ -4,11 +4,17 @@ import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-
 import { ContentfulProviderConfig } from "../../configuration";
 import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
+import { Logger } from "tslog";
+import { logger } from "@/logger";
 
 export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
-  private logger = createLogger({ name: "ContentfulBulkSyncProcessor" });
+  private logger = logger.getSubLogger({
+    name: "ContentfulBulkSyncProcessor",
+  });
 
-  constructor(private config: ContentfulProviderConfig.FullShape) {}
+  constructor(private config: ContentfulProviderConfig.FullShape) {
+    this.logger.info("ContentfulBulkSyncProcessor created", { foo: 1 });
+  }
 
   async uploadProducts(
     products: BulkImportProductFragment[],

@@ -3,10 +3,14 @@ import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-
 
 import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 import { PayloadCMSClient } from "./payloadcms-client";
+import { logger } from "@/logger";
 
 // todo CORS or proxy
 export class PayloadCmsBulkSyncProcessor implements BulkSyncProcessor {
-  constructor(private config: PayloadCmsProviderConfig.FullShape) {}
+  private logger = logger.getSubLogger({ name: "PayloadCmsBulkSyncProcessor" });
+  constructor(private config: PayloadCmsProviderConfig.FullShape) {
+    this.logger.info("ContentfulBulkSyncProcessor created", { foo: 1 });
+  }
 
   async uploadProducts(
     products: BulkImportProductFragment[],
