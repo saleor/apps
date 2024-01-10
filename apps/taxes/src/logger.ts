@@ -1,12 +1,6 @@
 import { logger, createLogger } from "@saleor/apps-logger";
 
-logger.settings.maskValuesOfKeys = [
-  "metadata",
-  "username",
-  "providerInstance.config.username",
-  "password",
-  "apiKey",
-];
+logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
 if (typeof window === "undefined") {
   import("@saleor/apps-logger").then(
