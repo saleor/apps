@@ -30,7 +30,7 @@ export const orderRefundedAsyncWebhook = new SaleorAsyncWebhook<OrderRefundedPay
 
 export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
-  const { payload, authData } = ctx;
+  const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
   logger.info("Handler called with payload");
@@ -48,9 +48,9 @@ export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => 
 
     logger.info("Refunding transaction...");
 
-    const confirmedOrder = await taxProvider.refundTransaction(payload);
+    const refundedOrder = await taxProvider.refundTransaction(payload);
 
-    logger.info({ confirmedOrder }, "Transaction refunded");
+    logger.info({ refundedOrder }, "Transaction refunded");
 
     return webhookResponse.success();
   } catch (error) {
