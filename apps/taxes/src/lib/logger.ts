@@ -1,5 +1,8 @@
 import { Logger, logger as _logger } from "@saleor/apps-shared";
 
+/**
+ * @deprecated
+ */
 export const logger = _logger.child(
   {},
   {
@@ -9,7 +12,7 @@ export const logger = _logger.child(
       "providerInstance.config.password",
       "providerInstance.config.apiKey",
     ],
-  }
+  },
 );
 
 export const createLogger = logger.child.bind(logger);
