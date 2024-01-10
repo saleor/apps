@@ -1,3 +1,4 @@
+import { ExpectedError } from "../../../error";
 import { Logger, createLogger } from "../../../lib/logger";
 import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -19,7 +20,7 @@ export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedP
     );
 
     if (!this.config.isAutocommit) {
-      throw new Error(
+      throw new ExpectedError(
         "Unable to refund transaction. AvaTax can only refund committed transactions.",
       );
     }
