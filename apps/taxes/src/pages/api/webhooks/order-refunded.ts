@@ -54,7 +54,6 @@ export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => 
 
     return webhookResponse.success();
   } catch (error) {
-    logger.error({ error });
     return webhookResponse.error(error);
   }
 });
