@@ -7,8 +7,7 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { router } from "../../trpc/trpc-server";
 
 import { ContentfulClient } from "./contentful-client";
-import { createFlatProxy } from "@trpc/server/shared";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
   const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId!);
@@ -17,7 +16,7 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
     ctx: {
       settingsManager,
       appConfigService: new AppConfigMetadataManager(settingsManager),
-      logger: createLogger({ name: "contentfulRouter" }),
+      logger: createLogger("contentfulRouter"),
     },
   });
 });
@@ -33,7 +32,7 @@ export const contentfulRouter = router({
       z.object({
         contentfulToken: z.string(),
         contentfulSpace: z.string(),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const client = new ContentfulClient({
@@ -53,7 +52,7 @@ export const contentfulRouter = router({
         contentfulToken: z.string(),
         contentfulSpace: z.string(),
         contentfulEnv: z.string(),
-      })
+      }),
     )
     .mutation(({ ctx, input }) => {
       const client = new ContentfulClient({

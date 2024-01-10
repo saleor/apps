@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
@@ -9,7 +9,7 @@ type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhook
 
 export class WebhooksProcessorsDelegator {
   private processorFactory: ProcessorFactory = ProvidersResolver.createWebhooksProcessor;
-  private logger = createLogger({ name: "WebhooksProcessorsDelegator" });
+  private logger = createLogger("WebhooksProcessorsDelegator");
 
   constructor(
     private opts: {

@@ -94,7 +94,7 @@ export class AppConfig {
 
     addConnection: (input: ChannelProviderConnectionConfig.InputShape) => {
       if (!this.providers.checkProviderExists(input.providerId)) {
-        const err = new Error("Provider doesnt exist");
+        const err = new Error("Provider doesn't exist");
 
         err.cause = Errors.PROVIDER_DOESNT_EXIST;
 

@@ -1,9 +1,9 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { BuilderIoProviderConfig, ContentfulProviderConfig } from "../../configuration";
+import { BuilderIoProviderConfig } from "../../configuration";
 import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { BuilderIoClient } from "./builder-io.client";
 
@@ -13,16 +13,16 @@ export type BuilderioClientStrip = Pick<
 >;
 
 export type BuilderIoClientFactory = (
-  config: BuilderIoProviderConfig.FullShape
+  config: BuilderIoProviderConfig.FullShape,
 ) => BuilderioClientStrip;
 
 export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   private client: BuilderioClientStrip;
-  private logger = createLogger({ name: "BuilderIoWebhooksProcessor" });
+  private logger = createLogger("BuilderIoWebhooksProcessor");
 
   constructor(
     providerConfig: BuilderIoProviderConfig.FullShape,
-    clientFactory: BuilderIoClientFactory = () => new BuilderIoClient(providerConfig)
+    clientFactory: BuilderIoClientFactory = () => new BuilderIoClient(providerConfig),
   ) {
     this.client = clientFactory(providerConfig);
 
@@ -30,25 +30,25 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug({ variantId: productVariant.id }, "Called onProductVariantUpdated");
+    this.logger.debug("Called onProductVariantUpdated", { variantId: productVariant.id });
 
     await this.client.upsertProductVariant(productVariant);
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug({ variantId: productVariant.id }, "Called onProductVariantCreated");
+    this.logger.debug("Called onProductVariantCreated", { variantId: productVariant.id });
 
     await this.client.upsertProductVariant(productVariant);
   }
 
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug({ variantId: productVariant.id }, "Called onProductVariantDeleted");
+    this.logger.debug("Called onProductVariantDeleted", { variantId: productVariant.id });
 
     await this.client.deleteProductVariant(productVariant.id);
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug({ procutId: product.id }, "Called onProductUpdated");
+    this.logger.debug("Called onProductUpdated", { productId: product.id });
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -61,7 +61,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
             slug: product.slug,
           },
         });
-      })
+      }),
     );
   }
 }

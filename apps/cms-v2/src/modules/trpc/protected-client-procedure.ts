@@ -4,9 +4,9 @@ import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
 import { createGraphQLClient } from "@saleor/apps-shared";
-import { logger as appLogger } from "@/logger";
+import { createLogger, logger as appLogger } from "@/logger";
 
-const logger = appLogger.getSubLogger({ name: "protected-client-procedure" });
+const logger = createLogger("protectedClientProcedure");
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");

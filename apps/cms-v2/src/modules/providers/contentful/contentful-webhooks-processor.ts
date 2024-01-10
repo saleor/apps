@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import {
   WebhookProductFragment,
   WebhookProductVariantFragment,
@@ -18,7 +18,7 @@ export type ContentfulClientFactory = (
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   private client: ContentfulClientStrip;
-  private logger = createLogger({ name: "ContentfulWebhooksProcessor" });
+  private logger = createLogger("ContentfulWebhooksProcessor");
 
   constructor(
     private providerConfig: ContentfulProviderConfig.FullShape,

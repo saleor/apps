@@ -47,6 +47,7 @@
     "urql",
     "Vercel",
     "RudderStack",
+    "tslog",
     "DataDog",
     "Clearpay",
     "Afterpay",
@@ -78,6 +79,7 @@
     "dedupe",
     "otel",
     "opentelemetry",
+    "DOESNT",
     "OTLP",
     "FAAS",
     "millis",
@@ -95,6 +97,7 @@
     "**/graphql.ts",
     "**/CHANGELOG.md",
     "**/schema.graphql",
-    "**/*-generator.ts"
+    "**/*-generator.ts",
+    "apps/*/src/**"
   ]
 }

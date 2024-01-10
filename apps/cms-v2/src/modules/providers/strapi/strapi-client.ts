@@ -2,7 +2,7 @@ import Strapi from "strapi-sdk-js";
 import { StrapiProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { z } from "zod";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { FieldsMapper } from "../fields-mapper";
 
 // partial response
@@ -10,14 +10,14 @@ const strapiFindOperationResult = z.object({
   data: z.array(
     z.object({
       id: z.number(),
-    })
+    }),
   ),
 });
 
 // todo error handling, tests
 export class StrapiClient {
   private client: Strapi;
-  private logger = createLogger({ name: "StrapiClient" });
+  private logger = createLogger("StrapiClient");
 
   constructor(options: { url: string; token: string }) {
     this.client = new Strapi({
@@ -67,8 +67,8 @@ export class StrapiClient {
 
     return Promise.all(
       strapiProducts.map((strapiProduct) =>
-        this.client.delete(configuration.itemType, strapiProduct.id)
-      )
+        this.client.delete(configuration.itemType, strapiProduct.id),
+      ),
     );
   }
 
@@ -120,7 +120,7 @@ export class StrapiClient {
     return Promise.all(
       strapiProductIdsToUpdate.map((strapiProductId) => {
         return this.client.update(configuration.itemType, strapiProductId, mappedFields);
-      })
+      }),
     );
   }
 
@@ -139,7 +139,7 @@ export class StrapiClient {
       return Promise.all(
         strapiProducts.map((strapiProduct) => {
           return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
-        })
+        }),
       );
     } else {
       return this.uploadProduct({ configuration, variant });
