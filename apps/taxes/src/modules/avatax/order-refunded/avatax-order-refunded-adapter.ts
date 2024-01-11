@@ -19,6 +19,7 @@ export class AvataxOrderRefundedAdapter implements WebhookAdapter<OrderRefundedP
       "Transforming the Saleor payload for refunding order with AvaTax...",
     );
 
+    // todo: document
     if (!this.config.isAutocommit) {
       throw new ExpectedError(
         "Unable to refund transaction. AvaTax can only refund committed transactions.",
