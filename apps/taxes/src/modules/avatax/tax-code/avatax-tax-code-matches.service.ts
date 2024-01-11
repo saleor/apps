@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { Logger, createLogger } from "../../../lib/logger";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
   AvataxTaxCodeMatch,
@@ -7,13 +6,13 @@ import {
   AvataxTaxCodeMatches,
 } from "./avatax-tax-code-match-repository";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
 export class AvataxTaxCodeMatchesService {
-  private logger: Logger;
+  private logger = createLogger("AvataxTaxCodeMatchesService");
   private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
 
   constructor(authData: AuthData) {
-    this.logger = createLogger({ name: "AvataxTaxCodeMatchesService" });
     const client = createGraphQLClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,
@@ -31,7 +30,7 @@ export class AvataxTaxCodeMatchesService {
   async upsert(input: AvataxTaxCodeMatch): Promise<void | { data: { id: string } }> {
     const taxCodeMatches = await this.getAll();
     const taxCodeMatch = taxCodeMatches.find(
-      (match) => match.data.saleorTaxClassId === input.saleorTaxClassId
+      (match) => match.data.saleorTaxClassId === input.saleorTaxClassId,
     );
 
     if (taxCodeMatch) {

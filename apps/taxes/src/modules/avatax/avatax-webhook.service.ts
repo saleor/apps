@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-import { Logger, createLogger } from "../../lib/logger";
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
@@ -9,9 +8,10 @@ import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-
 import { ClientLogger, createClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
+import { createLogger } from "../../logger";
 
 export class AvataxWebhookService implements ProviderWebhookService {
-  private logger: Logger;
+  private logger = createLogger("AvataxWebhookService");
   private config: AvataxConfig;
   private clientLogger: ClientLogger;
   private authData: AuthData;
@@ -25,9 +25,6 @@ export class AvataxWebhookService implements ProviderWebhookService {
     authData: AuthData;
     clientLogger: ClientLogger;
   }) {
-    this.logger = createLogger({
-      name: "AvataxWebhookService",
-    });
     this.authData = authData;
     this.config = config;
     this.clientLogger = clientLogger;

@@ -1,10 +1,8 @@
 import { z } from "zod";
-import { createLogger } from "../../lib/logger";
+import { createLogger } from "../../logger";
 
 export class AvataxCalculationDateResolver {
-  private logger = createLogger({
-    name: "AvataxCalculationDateResolver",
-  });
+  private logger = createLogger("AvataxCalculationDateResolver");
 
   resolve(avataxTaxCalculationDate: string | null | undefined, orderCreatedDate: string): Date {
     if (!avataxTaxCalculationDate) {
@@ -18,12 +16,12 @@ export class AvataxCalculationDateResolver {
     if (taxCalculationParse.success) {
       // The user is able to pass other tax calculation date than the order creation date.
       this.logger.info(
-        "Valid UTC tax calculation date found in metadata. Using it for tax calculation."
+        "Valid UTC tax calculation date found in metadata. Using it for tax calculation.",
       );
       return new Date(taxCalculationParse.data);
     } else {
       this.logger.warn(
-        `The tax calculation date ${avataxTaxCalculationDate} is not a valid UTC datetime. Falling back to order created date.`
+        `The tax calculation date ${avataxTaxCalculationDate} is not a valid UTC datetime. Falling back to order created date.`,
       );
 
       return new Date(orderCreatedDate);

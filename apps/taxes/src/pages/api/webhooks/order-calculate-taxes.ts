@@ -4,10 +4,11 @@ import {
   UntypedCalculateTaxesDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../lib/logger";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
+import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 export const config = {
   api: {
@@ -37,31 +38,34 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
   webhookPath: "/api/webhooks/order-calculate-taxes",
 });
 
-export default orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ name: "orderCalculateTaxesSyncWebhook" });
-  const { payload } = ctx;
-  const webhookResponse = new WebhookResponse(res);
+export default withOtel(
+  orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+    const logger = createLogger("orderCalculateTaxesSyncWebhook");
+    const { payload } = ctx;
+    const webhookResponse = new WebhookResponse(res);
 
-  logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+    logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
-  try {
-    verifyCalculateTaxesPayload(payload);
-    logger.debug("Payload validated successfully");
+    try {
+      verifyCalculateTaxesPayload(payload);
+      logger.debug("Payload validated successfully");
 
-    const appMetadata = payload.recipient?.privateMetadata ?? [];
-    const channelSlug = payload.taxBase.channel.slug;
-    const activeConnectionService = getActiveConnectionService(
-      channelSlug,
-      appMetadata,
-      ctx.authData,
-    );
+      const appMetadata = payload.recipient?.privateMetadata ?? [];
+      const channelSlug = payload.taxBase.channel.slug;
+      const activeConnectionService = getActiveConnectionService(
+        channelSlug,
+        appMetadata,
+        ctx.authData,
+      );
 
-    logger.info("Found active connection service. Calculating taxes...");
-    const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
+      logger.info("Found active connection service. Calculating taxes...");
+      const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
 
-    logger.info({ calculatedTaxes }, "Taxes calculated");
-    return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
-  } catch (error) {
-    return webhookResponse.error(error);
-  }
-});
+      logger.info("Taxes calculated", { calculatedTaxes });
+      return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+    } catch (error) {
+      return webhookResponse.error(error);
+    }
+  }),
+  "/api/order-calculate-taxes",
+);

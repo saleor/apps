@@ -1,17 +1,13 @@
-import { createLogger, Logger } from "../../../lib/logger";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
+import { createLogger } from "../../../logger";
 
 export class AvataxAddressValidationService {
-  private logger: Logger;
+  private logger = createLogger("AvataxAddressValidationService");
 
-  constructor(private avataxClient: AvataxClient) {
-    this.logger = createLogger({
-      name: "AvataxAddressValidationService",
-    });
-  }
+  constructor(private avataxClient: AvataxClient) {}
 
   async validate(address: AvataxConfig["address"]) {
     const formattedAddress = avataxAddressFactory.fromChannelAddress(address);

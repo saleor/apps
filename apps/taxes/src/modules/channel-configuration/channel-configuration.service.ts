@@ -4,25 +4,25 @@ import { ChannelConfigurationRepository } from "./channel-configuration-reposito
 import { ChannelsFetcher } from "./channel-fetcher";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { Logger, createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../app/metadata-manager";
+import { createLogger } from "../../logger";
 
 export class ChannelConfigurationService {
   private configurationRepository: ChannelConfigurationRepository;
-  private logger: Logger;
+  private logger = createLogger("ChannelConfigurationService");
   private settingsManager: EncryptedMetadataManager;
-  constructor(private client: Client, private appId: string, private saleorApiUrl: string) {
+  constructor(
+    private client: Client,
+    private appId: string,
+    private saleorApiUrl: string,
+  ) {
     const settingsManager = createSettingsManager(client, appId);
 
     this.settingsManager = settingsManager;
 
-    this.logger = createLogger({
-      name: "ChannelConfigurationService",
-    });
-
     this.configurationRepository = new ChannelConfigurationRepository(
       settingsManager,
-      saleorApiUrl
+      saleorApiUrl,
     );
   }
 

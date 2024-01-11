@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
-import { Logger, createLogger } from "../../../lib/logger";
 import { ClientLogger } from "../../logs/client-logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -9,6 +8,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
+import { createLogger } from "../../../logger";
 
 type AvataxOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -18,7 +18,7 @@ type AvataxOrderConfirmedResponse = CreateOrderResponse;
 export class AvataxOrderConfirmedAdapter
   implements WebhookAdapter<AvataxOrderConfirmedPayload, AvataxOrderConfirmedResponse>
 {
-  private logger: Logger;
+  private logger = createLogger("AvataxOrderConfirmedAdapter");
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
   private readonly clientLogger: ClientLogger;
@@ -32,7 +32,6 @@ export class AvataxOrderConfirmedAdapter
     clientLogger: ClientLogger;
     authData: AuthData;
   }) {
-    this.logger = createLogger({ name: "AvataxOrderConfirmedAdapter" });
     this.config = config;
     this.authData = authData;
     this.clientLogger = clientLogger;

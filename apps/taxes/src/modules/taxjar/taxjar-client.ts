@@ -1,7 +1,7 @@
 import TaxJar from "taxjar";
 import { AddressParams, Config, CreateOrderParams, TaxParams } from "taxjar/dist/util/types";
-import { createLogger, Logger } from "../../lib/logger";
 import { TaxJarConfig } from "./taxjar-connection-schema";
+import { createLogger } from "../../logger";
 
 const createTaxJarSettings = (config: TaxJarConfig): Config => {
   const settings: Config = {
@@ -26,10 +26,9 @@ export type ValidateAddressArgs = {
 
 export class TaxJarClient {
   private client: TaxJar;
-  private logger: Logger;
+  private logger = createLogger("TaxJarClient");
 
   constructor(providerConfig: TaxJarConfig) {
-    this.logger = createLogger({ name: "TaxJarClient" });
     const settings = createTaxJarSettings(providerConfig);
     const taxJarClient = new TaxJar(settings);
 

@@ -1,0 +1,22 @@
+{
+  "name": "@saleor/apps-logger",
+  "version": "0.0.0",
+  "scripts": {
+    "lint:fix": "eslint --fix ."
+  },
+  "dependencies": {
+    "eslint": "8.46.0",
+    "tslog": "4.9.2",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@sentry/nextjs": "7.93.0",
+    "eslint-config-saleor": "workspace:*"
+  },
+  "main": "index.ts",
+  "peerDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@sentry/nextjs": ">=7"
+  }
+}

@@ -1,20 +1,17 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { Logger, createLogger } from "../../lib/logger";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { ChannelConfig, channelsSchema } from "./channel-config";
+import { createLogger } from "../../logger";
 
 export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;
-  private logger: Logger;
+  private logger = createLogger("ChannelConfigurationRepository");
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,
-      "channel-configuration"
+      "channel-configuration",
     );
-    this.logger = createLogger({
-      name: "ChannelConfigurationRepository",
-    });
   }
 
   async getAll() {

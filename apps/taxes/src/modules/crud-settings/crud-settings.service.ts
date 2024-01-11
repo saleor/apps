@@ -1,14 +1,15 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 
 import { z } from "zod";
-import { createLogger, Logger } from "../../lib/logger";
+
 import { createId } from "../../lib/utils";
+import { createLogger } from "../../logger";
 
 const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
 export class CrudSettingsManager {
-  private logger: Logger;
+  private logger = createLogger("CrudSettingsManager", { metadataKey: this.metadataKey });
 
   constructor(
     /*
@@ -22,10 +23,9 @@ export class CrudSettingsManager {
      */
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
-    private metadataKey: string
+    private metadataKey: string,
   ) {
     this.metadataKey = metadataKey;
-    this.logger = createLogger({ name: "CrudSettingsManager", metadataKey });
   }
 
   async readAll() {
@@ -39,7 +39,7 @@ export class CrudSettingsManager {
     const validation = settingsSchema.safeParse(data);
 
     if (!validation.success) {
-      this.logger.error({ error: validation.error }, "Error while validating metadata");
+      this.logger.error("Error while validating metadata", { error: validation.error });
       throw new Error("Error while validating metadata");
     }
 
@@ -55,7 +55,7 @@ export class CrudSettingsManager {
     const item = settings.find((item) => item.id === id);
 
     if (!item) {
-      this.logger.error({ id }, "Item not found");
+      this.logger.error("Item not found", { id });
       throw new Error("Item not found");
     }
 

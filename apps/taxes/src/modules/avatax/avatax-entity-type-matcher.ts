@@ -1,5 +1,5 @@
-import { Logger, createLogger } from "../../lib/logger";
 import { AvataxClient } from "./avatax-client";
+import { createLogger } from "../../logger";
 
 /*
  * Arbitrary key-value pair that is used to store the entity code in the metadata.
@@ -9,13 +9,10 @@ const AVATAX_ENTITY_CODE = "avataxEntityCode";
 
 export class AvataxEntityTypeMatcher {
   private client: AvataxClient;
-  private logger: Logger;
+  private logger = createLogger("AvataxEntityTypeMatcher");
 
   constructor({ client }: { client: AvataxClient }) {
     this.client = client;
-    this.logger = createLogger({
-      name: "AvataxEntityTypeMatcher",
-    });
   }
 
   private returnFallback() {
@@ -38,7 +35,7 @@ export class AvataxEntityTypeMatcher {
     try {
       return this.validateEntityCode(entityCode);
     } catch (error) {
-      this.logger.debug({ error }, "Failed to verify entity code");
+      this.logger.debug("Failed to verify entity code", { error });
       return this.returnFallback();
     }
   }

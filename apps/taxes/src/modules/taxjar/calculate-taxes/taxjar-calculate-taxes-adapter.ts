@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { Logger, createLogger } from "../../../lib/logger";
 import { ClientLogger } from "../../logs/client-logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -9,6 +8,7 @@ import { TaxJarConfig } from "../taxjar-connection-schema";
 import { normalizeTaxJarError } from "../taxjar-error-normalizer";
 import { TaxJarCalculateTaxesPayloadService } from "./taxjar-calculate-taxes-payload-service";
 import { TaxJarCalculateTaxesResponseTransformer } from "./taxjar-calculate-taxes-response-transformer";
+import { createLogger } from "../../../logger";
 
 export type TaxJarCalculateTaxesPayload = {
   taxBase: TaxBaseFragment;
@@ -20,7 +20,7 @@ export type TaxJarCalculateTaxesResponse = CalculateTaxesResponse;
 export class TaxJarCalculateTaxesAdapter
   implements WebhookAdapter<TaxJarCalculateTaxesPayload, TaxJarCalculateTaxesResponse>
 {
-  private logger: Logger;
+  private logger = createLogger("TaxJarCalculateTaxesAdapter");
   private authData: AuthData;
   private readonly config: TaxJarConfig;
   private readonly clientLogger: ClientLogger;
@@ -34,7 +34,6 @@ export class TaxJarCalculateTaxesAdapter
     clientLogger: ClientLogger;
     authData: AuthData;
   }) {
-    this.logger = createLogger({ name: "TaxJarCalculateTaxesAdapter" });
     this.clientLogger = clientLogger;
     this.authData = authData;
     this.config = config;

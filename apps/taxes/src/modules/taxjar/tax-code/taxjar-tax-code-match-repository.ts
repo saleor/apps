@@ -1,7 +1,7 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
-import { Logger, createLogger } from "../../../lib/logger";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { createLogger } from "../../../logger";
 
 export const taxJarTaxCodeMatchSchema = z.object({
   saleorTaxClassId: z.string(),
@@ -14,7 +14,7 @@ const taxJarTaxCodeMatchesSchema = z.array(
   z.object({
     id: z.string(),
     data: taxJarTaxCodeMatchSchema,
-  })
+  }),
 );
 
 export type TaxJarTaxCodeMatches = z.infer<typeof taxJarTaxCodeMatchesSchema>;
@@ -23,13 +23,11 @@ const metadataKey = "taxjar-tax-code-map";
 
 export class TaxJarTaxCodeMatchRepository {
   private crudSettingsManager: CrudSettingsManager;
-  private logger: Logger;
+  private logger = createLogger("TaxJarTaxCodeMatchRepository", {
+    metadataKey,
+  });
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
-    this.logger = createLogger({
-      name: "TaxJarTaxCodeMatchRepository",
-      metadataKey,
-    });
   }
 
   async getAll(): Promise<TaxJarTaxCodeMatches> {
