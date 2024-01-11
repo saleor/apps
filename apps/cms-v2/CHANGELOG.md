@@ -1,5 +1,19 @@
 # saleor-app-cms-v2
 
+## 2.6.0
+
+### Minor Changes
+
+- d9e4cb3: Implemented Open Telemetry traces, replaced logger with one compatible with OTEL
+
+### Patch Changes
+
+- 0849d8e: Applied logger from shared @saleor/apps-logger package
+- Updated dependencies [d9e4cb3]
+- Updated dependencies [0849d8e]
+  - @saleor/apps-otel@1.0.0
+  - @saleor/apps-logger@1.0.0
+
 ## 2.5.4
 
 ### Patch Changes

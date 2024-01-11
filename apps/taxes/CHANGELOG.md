@@ -1,5 +1,18 @@
 # saleor-app-taxes
 
+## 1.21.0
+
+### Minor Changes
+
+- 0849d8e: Implemented Open Telemetry and Logger from shared packages.
+
+### Patch Changes
+
+- Updated dependencies [d9e4cb3]
+- Updated dependencies [0849d8e]
+  - @saleor/apps-otel@1.0.0
+  - @saleor/apps-logger@1.0.0
+
 ## 1.20.0
 
 ### Minor Changes
