@@ -15,6 +15,7 @@ export class AvataxOrderRefundedPayloadTransformer {
   ): RefundTransactionParams["lines"] {
     const grantedRefunds = payload.order?.grantedRefunds ?? [];
 
+    // ! Unfortunately this logic is wrong. We currently can't tell the refund amount from the grantedRefund lines. There is one amount for all the lines.
     const grantedRefundsLines = grantedRefunds.flatMap((refund) => refund.lines ?? []);
 
     return grantedRefundsLines.map((grantedRefundLine) =>
