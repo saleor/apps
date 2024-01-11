@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
-import { Logger, createLogger } from "../../../lib/logger";
+
 import { ClientLogger } from "../../logs/client-logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -9,6 +9,7 @@ import { TaxJarConfig } from "../taxjar-connection-schema";
 import { TaxJarOrderConfirmedPayloadService } from "./taxjar-order-confirmed-payload.service";
 import { TaxJarOrderConfirmedResponseTransformer } from "./taxjar-order-confirmed-response-transformer";
 import { normalizeTaxJarError } from "../taxjar-error-normalizer";
+import { createLogger } from "../../../logger";
 
 export type TaxJarOrderConfirmedPayload = {
   order: OrderConfirmedSubscriptionFragment;
@@ -19,7 +20,7 @@ export type TaxJarOrderConfirmedResponse = CreateOrderResponse;
 export class TaxJarOrderConfirmedAdapter
   implements WebhookAdapter<TaxJarOrderConfirmedPayload, TaxJarOrderConfirmedResponse>
 {
-  private logger: Logger;
+  private readonly logger = createLogger("TaxJarOrderConfirmedAdapter");
   private readonly config: TaxJarConfig;
   private readonly authData: AuthData;
   private clientLogger: ClientLogger;
@@ -36,7 +37,6 @@ export class TaxJarOrderConfirmedAdapter
     this.config = config;
     this.authData = authData;
     this.clientLogger = clientLogger;
-    this.logger = createLogger({ name: "TaxJarOrderConfirmedAdapter" });
   }
 
   async send(payload: TaxJarOrderConfirmedPayload): Promise<TaxJarOrderConfirmedResponse> {

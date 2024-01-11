@@ -6,13 +6,13 @@ const logLevel = process.env.APP_LOG_LEVEL ?? "silent";
 
 if (process.env.NODE_ENV === "production" && forbiddenProductionLevels.includes(logLevel)) {
   throw new Error(
-    `Production app can only log INFO or higher log level. "${logLevel}" is development only.`
+    `Production app can only log INFO or higher log level. "${logLevel}" is development only.`,
   );
   process.exit(1);
 }
 
 /**
- * TODO Set up log drain etc
+ * @deprecated
  */
 export const logger = pino({
   level: logLevel,
@@ -28,6 +28,12 @@ export const logger = pino({
       : undefined,
 });
 
+/**
+ * @deprecated
+ */
 export const createLogger = logger.child.bind(logger);
 
+/**
+ * @deprecated
+ */
 export type Logger = typeof logger;

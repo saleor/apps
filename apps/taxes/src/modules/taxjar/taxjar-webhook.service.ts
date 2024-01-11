@@ -3,7 +3,6 @@ import {
   OrderCancelledEventSubscriptionFragment,
   OrderConfirmedSubscriptionFragment,
 } from "../../../generated/graphql";
-import { Logger, createLogger } from "../../lib/logger";
 import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-taxes-adapter";
@@ -11,10 +10,11 @@ import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-conf
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
 import { ClientLogger, createClientLogger } from "../logs/client-logger";
+import { createLogger } from "../../logger";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
-  private logger: Logger;
+  private logger = createLogger("TaxJarWebhookService");
   private config: TaxJarConfig;
   private clientLogger: ClientLogger;
   private authData: AuthData;
@@ -34,10 +34,6 @@ export class TaxJarWebhookService implements ProviderWebhookService {
     this.config = config;
     this.authData = authData;
     this.clientLogger = clientLogger;
-
-    this.logger = createLogger({
-      name: "TaxJarWebhookService",
-    });
   }
 
   async calculateTaxes(payload: CalculateTaxesPayload) {

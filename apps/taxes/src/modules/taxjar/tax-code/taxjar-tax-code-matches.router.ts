@@ -1,8 +1,8 @@
-import { createLogger } from "../../../lib/logger";
 import { TaxJarTaxCodeMatchesService } from "./taxjar-tax-code-matches.service";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { router } from "../../trpc/trpc-server";
 import { taxJarTaxCodeMatchSchema } from "./taxjar-tax-code-match-repository";
+import { createLogger } from "../../../logger";
 
 const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
@@ -13,14 +13,12 @@ const protectedWithTaxJarTaxCodeMatchesService = protectedClientProcedure.use(({
         appId: ctx.appId!,
       }),
     },
-  })
+  }),
 );
 
 export const taxJarTaxCodeMatchesRouter = router({
   getAll: protectedWithTaxJarTaxCodeMatchesService.query(async ({ ctx }) => {
-    const logger = createLogger({
-      name: "taxjarTaxCodeMatchesRouter.fetch",
-    });
+    const logger = createLogger("taxjarTaxCodeMatchesRouter.fetch");
 
     logger.info("Returning tax code matches");
 
@@ -29,9 +27,7 @@ export const taxJarTaxCodeMatchesRouter = router({
   upsert: protectedWithTaxJarTaxCodeMatchesService
     .input(taxJarTaxCodeMatchSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
-        name: "taxjarTaxCodeMatchesRouter.upsert",
-      });
+      const logger = createLogger("taxjarTaxCodeMatchesRouter.upsert");
 
       logger.info("Upserting tax code match");
 

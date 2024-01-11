@@ -1,5 +1,4 @@
 import { ILogObj, Logger } from "tslog";
-import { LogAttributeValue } from "@opentelemetry/api-logs";
 import * as Sentry from "@sentry/nextjs";
 import { SeverityLevel } from "@sentry/nextjs";
 
@@ -54,7 +53,7 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
     }
 
     // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const attributes = (log.payload[1] as Record<string, LogAttributeValue>) ?? {};
+    const attributes = (log.payload[1] as Record<string, unknown>) ?? {};
 
     logger.attachTransport((log) => {
       Sentry?.addBreadcrumb?.({

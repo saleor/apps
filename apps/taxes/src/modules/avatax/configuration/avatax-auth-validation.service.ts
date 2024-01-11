@@ -1,15 +1,11 @@
-import { createLogger, Logger } from "../../../lib/logger";
 import { AvataxClient } from "../avatax-client";
 import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
+import { createLogger } from "../../../logger";
 
 export class AvataxAuthValidationService {
-  private logger: Logger;
+  private logger = createLogger("AvataxAuthValidationService");
 
-  constructor(private avataxClient: AvataxClient) {
-    this.logger = createLogger({
-      name: "AvataxAuthValidationService",
-    });
-  }
+  constructor(private avataxClient: AvataxClient) {}
 
   async validate() {
     try {

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { createLogger } from "../../lib/logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AvataxClient } from "./avatax-client";
@@ -9,6 +8,7 @@ import { AvataxAuthValidationService } from "./configuration/avatax-auth-validat
 import { AvataxEditAddressValidationService } from "./configuration/avatax-edit-address-validation.service";
 import { AvataxEditAuthValidationService } from "./configuration/avatax-edit-auth-validation.service";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
+import { createLogger } from "../../logger";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -36,14 +36,12 @@ const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx
         saleorApiUrl: ctx.saleorApiUrl,
       }),
     },
-  })
+  }),
 );
 
 export const avataxConnectionRouter = router({
   verifyConnections: protectedWithConnectionService.query(async ({ ctx }) => {
-    const logger = createLogger({
-      name: "avataxConnectionRouter.verifyConnections",
-    });
+    const logger = createLogger("avataxConnectionRouter.verifyConnections");
 
     logger.debug("Route verifyConnections called");
 
@@ -54,9 +52,7 @@ export const avataxConnectionRouter = router({
     return { ok: true };
   }),
   getById: protectedWithConnectionService.input(getInputSchema).query(async ({ ctx, input }) => {
-    const logger = createLogger({
-      name: "avataxConnectionRouter.get",
-    });
+    const logger = createLogger("avataxConnectionRouter.get");
 
     logger.debug("Route get called");
 
@@ -67,9 +63,8 @@ export const avataxConnectionRouter = router({
     return result;
   }),
   create: protectedWithConnectionService.input(postInputSchema).mutation(async ({ ctx, input }) => {
-    const logger = createLogger({
+    const logger = createLogger("avataxConnectionRouter.post", {
       saleorApiUrl: ctx.saleorApiUrl,
-      procedure: "avataxConnectionRouter.post",
     });
 
     logger.debug("Attempting to create configuration");
@@ -83,9 +78,8 @@ export const avataxConnectionRouter = router({
   delete: protectedWithConnectionService
     .input(deleteInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.delete", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.delete",
       });
 
       logger.debug("Route delete called");
@@ -99,9 +93,8 @@ export const avataxConnectionRouter = router({
   update: protectedWithConnectionService
     .input(patchInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.patch", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.patch",
       });
 
       logger.debug("Route patch called");
@@ -122,9 +115,8 @@ export const avataxConnectionRouter = router({
   editValidateAddress: protectedClientProcedure
     .input(z.object({ value: avataxConfigSchema, id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.editValidateAddress", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.editValidateAddress",
       });
 
       logger.debug("Route called");
@@ -144,9 +136,8 @@ export const avataxConnectionRouter = router({
   createValidateAddress: protectedWithConnectionService
     .input(postInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.createValidateAddress", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.createValidateAddress",
       });
 
       logger.debug("Route called");
@@ -171,9 +162,8 @@ export const avataxConnectionRouter = router({
   editValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema, id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.validateAuth", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.validateAuth",
       });
 
       const authValidation = new AvataxEditAuthValidationService({
@@ -189,9 +179,8 @@ export const avataxConnectionRouter = router({
   createValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema }))
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
+      const logger = createLogger("avataxConnectionRouter.createValidateAuth", {
         saleorApiUrl: ctx.saleorApiUrl,
-        procedure: "avataxConnectionRouter.createValidateAuth",
       });
 
       const avataxClient = new AvataxClient(input.value);

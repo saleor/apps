@@ -1,7 +1,7 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
-import { Logger, createLogger } from "../../../lib/logger";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { createLogger } from "../../../logger";
 
 export const avataxTaxCodeMatchSchema = z.object({
   saleorTaxClassId: z.string(),
@@ -14,7 +14,7 @@ const avataxTaxCodeMatchesSchema = z.array(
   z.object({
     id: z.string(),
     data: avataxTaxCodeMatchSchema,
-  })
+  }),
 );
 
 export type AvataxTaxCodeMatches = z.infer<typeof avataxTaxCodeMatchesSchema>;
@@ -23,13 +23,11 @@ const metadataKey = "avatax-tax-code-map";
 
 export class AvataxTaxCodeMatchRepository {
   private crudSettingsManager: CrudSettingsManager;
-  private logger: Logger;
+  private logger = createLogger("AvataxTaxCodeMatchRepository", {
+    metadataKey,
+  });
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(settingsManager, saleorApiUrl, metadataKey);
-    this.logger = createLogger({
-      name: "AvataxTaxCodeMatchRepository",
-      metadataKey,
-    });
   }
 
   async getAll(): Promise<AvataxTaxCodeMatches> {

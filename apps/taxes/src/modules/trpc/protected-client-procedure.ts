@@ -3,11 +3,13 @@ import { middleware, procedure } from "./trpc-server";
 import { saleorApp } from "../../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { createLogger, logger } from "../../lib/logger";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
+
+const logger = createLogger("protectedClientProcedure");
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
-  logger.debug("attachAppToken middleware");
+  logger.trace("attachAppToken middleware");
 
   if (!ctx.saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
@@ -43,7 +45,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
     {
       permissions: meta?.requiredClientPermissions,
     },
-    "Calling validateClientToken middleware with permissions required"
+    "Calling validateClientToken middleware with permissions required",
   );
 
   if (!ctx.token) {
@@ -69,8 +71,9 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   }
 
   try {
-    logger.debug("trying to verify JWT token from frontend");
-    logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
+    logger.debug("trying to verify JWT token from frontend", {
+      token: ctx.token ? `${ctx.token[0]}...` : undefined,
+    });
 
     await verifyJWT({
       appId: ctx.appId,
@@ -100,12 +103,12 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
  */
 
 const logErrors = middleware(async ({ next }) => {
-  const logger = createLogger({ name: "trpcServer" });
+  const logger = createLogger("trpcServer");
 
   const result = await next();
 
   if (!result.ok) {
-    logger.error(result.error);
+    logger.error(result.error.message, { error: result.error });
   }
 
   return result;
