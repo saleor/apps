@@ -4,17 +4,12 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../lib/logger";
 
 export default withOtel(
   createManifestHandler({
     async manifestFactory({ appBaseUrl }) {
       const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
       const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
-
-      createLogger("manifest", { baz: 2 })
-        .getSubLogger({ name: "dupa" }, { a: 1 })
-        .info("foo", { bar: 1 });
 
       const manifest: AppManifest = {
         about:

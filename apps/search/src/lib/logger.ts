@@ -1,7 +1,11 @@
 import { logger, createLogger } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport } from "@saleor/apps-logger/src/logger-console-transport";
 
 logger.settings.maskValuesOfKeys = ["token", "secretKey"];
-logger.settings.type = process.env.NODE_ENV === "production" ? "hidden" : "pretty";
+
+if (process.env.NODE_ENV !== "production") {
+  attachLoggerConsoleTransport(logger);
+}
 
 if (typeof window === "undefined") {
   import("@saleor/apps-logger").then(
