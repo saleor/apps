@@ -12,9 +12,7 @@ export const config = {
   },
 };
 
-const logger = createLogger({
-  service: "webhookProductVariantBackInStockWebhookHandler",
-});
+const logger = createLogger("webhookProductVariantBackInStockWebhookHandler");
 
 export const handler: NextWebhookApiHandler<ProductVariantBackInStock> = async (
   req,

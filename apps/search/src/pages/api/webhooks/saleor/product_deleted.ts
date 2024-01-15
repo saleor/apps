@@ -12,9 +12,7 @@ export const config = {
   },
 };
 
-const logger = createLogger({
-  service: "webhookProductDeletedWebhookHandler",
-});
+const logger = createLogger("webhookProductDeletedWebhookHandler");
 
 export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, context) => {
   const { event, authData } = context;

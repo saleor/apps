@@ -37,23 +37,16 @@ const levelToBreadcrumbType = (level: string) => {
 
 export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
   logger.attachTransport((log) => {
-    if (!log.payload) {
-      console.error("Logger is not configured properly. OTEL transport will not be attached.");
+    const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
+      message: string;
+      attributes: Record<string, unknown>;
+    };
+
+    if (!message || !attributes) {
+      console.error("Logger is not configured properly. Sentry transport will not be attached.");
 
       return;
     }
-
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const message = log.payload[0];
-
-    if (!message) {
-      console.warn("First argument in logger should be string message. OTEL will skip");
-
-      return;
-    }
-
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const attributes = (log.payload[1] as Record<string, unknown>) ?? {};
 
     logger.attachTransport((log) => {
       Sentry?.addBreadcrumb?.({

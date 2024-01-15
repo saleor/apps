@@ -13,9 +13,7 @@ import { isConfigured } from "../../lib/algolia/is-configured";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({
-  service: "recreateWebhooksHandler",
-});
+const logger = createLogger("recreateWebhooksHandler");
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks

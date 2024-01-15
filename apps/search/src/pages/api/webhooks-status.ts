@@ -16,9 +16,7 @@ import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-neede
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({
-  service: "webhooksStatusHandler",
-});
+const logger = createLogger("webhooksStatusHandler");
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks

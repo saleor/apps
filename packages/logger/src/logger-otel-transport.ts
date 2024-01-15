@@ -5,35 +5,21 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 
 export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: string) => {
   logger.attachTransport((log) => {
-    const { payload, _meta, ...inheritedAttributes } = log;
+    const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
+      message: string;
+      attributes: Record<string, unknown>;
+    };
 
-    if (!payload) {
+    if (!message || !attributes) {
       console.error("Logger is not configured properly. OTEL transport will not be attached.");
 
       return;
     }
 
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const message = payload[0];
-
-    if (!message) {
-      console.warn("First argument in logger should be string message. OTEL will skip");
-
-      return;
-    }
-
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const logAttributesParam = (log.payload[1] as Record<string, LogAttributeValue>) ?? {};
-
-    const allAttributes = {
-      ...inheritedAttributes,
-      ...logAttributesParam,
-    };
-
     /**
      * Prune empty keys and serialize top-level arrays, because OTEL can't consume them
      */
-    const serializedAttributes = Object.entries(allAttributes).reduce(
+    const serializedAttributes = Object.entries(attributes).reduce(
       (acc, [key, value]) => {
         /**
          * Prune empty keys, to save bandwidth

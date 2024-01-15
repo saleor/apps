@@ -12,9 +12,7 @@ export const config = {
   },
 };
 
-const logger = createLogger({
-  service: "webhookProductUpdatedWebhookHandler",
-});
+const logger = createLogger("webhookProductUpdatedWebhookHandler");
 
 export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, context) => {
   const { event, authData } = context;

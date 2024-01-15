@@ -10,9 +10,7 @@ import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({
-  service: "setupIndicesHandler",
-});
+const logger = createLogger("setupIndicesHandler");
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
