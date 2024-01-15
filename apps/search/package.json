@@ -17,6 +17,8 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/apps-otel": "workspace:*",
+    "@saleor/apps-logger": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",

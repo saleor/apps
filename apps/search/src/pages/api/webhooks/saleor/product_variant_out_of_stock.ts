@@ -4,6 +4,7 @@ import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivit
 import { createLogger } from "../../../../lib/logger";
 import { webhookProductVariantOutOfStock } from "../../../../webhooks/definitions/product-variant-out-of-stock";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
+import { withOtel } from "@saleor/apps-otel";
 
 export const config = {
   api: {
@@ -63,4 +64,7 @@ export const handler: NextWebhookApiHandler<ProductVariantOutOfStock> = async (
   }
 };
 
-export default webhookProductVariantOutOfStock.createHandler(handler);
+export default withOtel(
+  webhookProductVariantOutOfStock.createHandler(handler),
+  "api/webhooks/saleor/product_variant_out_of_stock",
+);

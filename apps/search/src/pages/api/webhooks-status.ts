@@ -14,6 +14,7 @@ import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
+import { withOtel } from "@saleor/apps-otel";
 
 const logger = createLogger({
   service: "webhooksStatusHandler",
@@ -118,19 +119,22 @@ export const webhooksStatusHandlerFactory =
     }
   };
 
-export default createProtectedHandler(
-  webhooksStatusHandlerFactory({
-    settingsManagerFactory: createSettingsManager,
-    webhookActivityTogglerFactory: function (appId, client) {
-      return new WebhookActivityTogglerService(appId, client);
-    },
-    algoliaSearchProviderFactory(appId, apiKey) {
-      return new AlgoliaSearchProvider({ appId, apiKey, enabledKeys: [] });
-    },
-    graphqlClientFactory(saleorApiUrl: string, token: string) {
-      return createGraphQLClient({ saleorApiUrl, token });
-    },
-  }),
-  saleorApp.apl,
-  [],
+export default withOtel(
+  createProtectedHandler(
+    webhooksStatusHandlerFactory({
+      settingsManagerFactory: createSettingsManager,
+      webhookActivityTogglerFactory: function (appId, client) {
+        return new WebhookActivityTogglerService(appId, client);
+      },
+      algoliaSearchProviderFactory(appId, apiKey) {
+        return new AlgoliaSearchProvider({ appId, apiKey, enabledKeys: [] });
+      },
+      graphqlClientFactory(saleorApiUrl: string, token: string) {
+        return createGraphQLClient({ saleorApiUrl, token });
+      },
+    }),
+    saleorApp.apl,
+    [],
+  ),
+  "api/webhooks-status",
 );
