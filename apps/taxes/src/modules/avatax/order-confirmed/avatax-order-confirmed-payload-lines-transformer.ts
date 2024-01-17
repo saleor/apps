@@ -5,10 +5,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 import { resolveAvataxTransactionLineNumber } from "../avatax-line-number-resolver";
-import {
-  SHIPPING_ITEM_CODE,
-  SHIPPING_ITEM_NUMBER,
-} from "../calculate-taxes/avatax-calculate-taxes-adapter";
+import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
@@ -46,7 +43,6 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
          */
         taxCode: config.shippingTaxCode,
         quantity: 1,
-        number: SHIPPING_ITEM_NUMBER,
       };
 
       return [...productLines, shippingLine];

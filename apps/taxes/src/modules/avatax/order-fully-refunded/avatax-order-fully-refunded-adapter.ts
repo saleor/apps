@@ -39,7 +39,7 @@ export class AvataxOrderFullyRefundedAdapter
       `Refunding the transaction...`,
     );
 
-    const response = await client.refundTransaction(target);
+    const response = await client.fullyRefundTransaction(target);
 
     this.logger.debug({ response }, `Successfully refunded the transaction`);
   }

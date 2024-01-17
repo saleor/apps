@@ -11,7 +11,6 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 import { createLogger } from "../../../logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
-export const SHIPPING_ITEM_NUMBER = "1";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
