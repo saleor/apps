@@ -59,7 +59,6 @@ export type VoidTransactionArgs = {
 export type RefundTransactionParams = {
   transactionCode: string;
   companyCode: string;
-  lines: string[];
 };
 
 export class AvataxClient {
@@ -120,15 +119,14 @@ export class AvataxClient {
     });
   }
 
-  async refundTransaction(params: RefundTransactionParams) {
+  async fullyRefundTransaction(params: RefundTransactionParams) {
     return this.client.refundTransaction({
       transactionCode: params.transactionCode,
       companyCode: params.companyCode,
       model: {
         refundTransactionCode: params.transactionCode,
         refundDate: new Date(),
-        refundType: RefundType.Partial,
-        refundLines: params.lines,
+        refundType: RefundType.Full,
       },
     });
   }
