@@ -33,7 +33,7 @@ export const orderConfirmedAsyncWebhook = new SaleorAsyncWebhook<OrderConfirmedP
 
 export default withOtel(
   orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger("orderConfirmedAsyncWebhook", {
+    const logger = createLogger(ctx.event, {
       saleorApiUrl: ctx.authData.saleorApiUrl,
     });
     const { payload, authData } = ctx;

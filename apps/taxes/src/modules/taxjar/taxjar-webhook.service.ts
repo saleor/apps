@@ -11,12 +11,15 @@ import { TaxJarCalculateTaxesAdapter } from "./calculate-taxes/taxjar-calculate-
 import { TaxJarOrderConfirmedAdapter } from "./order-confirmed/taxjar-order-confirmed-adapter";
 import { TaxJarClient } from "./taxjar-client";
 import { TaxJarConfig } from "./taxjar-connection-schema";
+import { createLogger } from "../../logger";
 
 export class TaxJarWebhookService implements ProviderWebhookService {
   client: TaxJarClient;
+
   private config: TaxJarConfig;
   private clientLogger: ClientLogger;
   private authData: AuthData;
+  private logger = createLogger("TaxJarWebhookService");
 
   constructor({
     clientLogger,

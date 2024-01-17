@@ -1,5 +1,5 @@
 import { ExpectedError } from "../../../error";
-import { Logger, createLogger } from "../../../lib/logger";
+import { createLogger } from "../../../logger";
 import { OrderFullyRefundedPayload } from "../../../pages/api/webhooks/order-fully-refunded";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
@@ -9,11 +9,9 @@ import { AvataxOrderRefundedPayloadTransformer } from "./avatax-order-fully-refu
 export class AvataxOrderFullyRefundedAdapter
   implements WebhookAdapter<OrderFullyRefundedPayload, void>
 {
-  private logger: Logger;
+  private logger = createLogger("AvataxOrderFullyRefundedAdapter");
 
-  constructor(private readonly config: AvataxConfig) {
-    this.logger = createLogger({ name: "AvataxOrderFullyRefundedAdapter" });
-  }
+  constructor(private readonly config: AvataxConfig) {}
 
   async send(payload: OrderFullyRefundedPayload) {
     this.logger.debug(

@@ -40,7 +40,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 
 export default withOtel(
   orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger("orderCalculateTaxesSyncWebhook");
+    const logger = createLogger(ctx.event);
     const { payload } = ctx;
     const webhookResponse = new WebhookResponse(res);
 

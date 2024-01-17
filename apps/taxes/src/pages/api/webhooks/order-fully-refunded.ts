@@ -5,9 +5,10 @@ import {
   UntypedOrderFullyRefundedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../lib/logger";
+
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+import { createLogger } from "../../../logger";
 
 export const config = {
   api: {
@@ -29,7 +30,7 @@ export const orderFullyRefundedAsyncWebhook = new SaleorAsyncWebhook<OrderFullyR
 });
 
 export default orderFullyRefundedAsyncWebhook.createHandler(async (req, res, ctx) => {
-  const logger = createLogger({ event: ctx.event });
+  const logger = createLogger(ctx.event);
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
