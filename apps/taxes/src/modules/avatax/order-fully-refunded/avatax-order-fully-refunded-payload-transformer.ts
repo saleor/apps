@@ -1,29 +1,34 @@
 import { CriticalError } from "../../../error";
 import { createLogger } from "../../../lib/logger";
-import { OrderRefundedPayload } from "../../../pages/api/webhooks/order-refunded";
+import { OrderFullyRefundedPayload } from "../../../pages/api/webhooks/order-fully-refunded";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { RefundTransactionParams } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { resolveAvataxTransactionLineNumber } from "../avatax-line-number-resolver";
+import { SHIPPING_ITEM_NUMBER } from "../calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class AvataxOrderRefundedPayloadTransformer {
   private logger = createLogger({ name: "AvataxOrderRefundedPayloadTransformer" });
 
   private resolveAvataxOrderRefundedLines(
-    payload: OrderRefundedPayload,
+    payload: OrderFullyRefundedPayload,
   ): RefundTransactionParams["lines"] {
     const grantedRefunds = payload.order?.grantedRefunds ?? [];
 
-    // ! Unfortunately this logic is wrong. We currently can't tell the refund amount from the grantedRefund lines. There is one amount for all the lines.
     const grantedRefundsLines = grantedRefunds.flatMap((refund) => refund.lines ?? []);
 
-    return grantedRefundsLines.map((grantedRefundLine) =>
+    const refundLines = grantedRefundsLines.map((grantedRefundLine) =>
       resolveAvataxTransactionLineNumber(grantedRefundLine.orderLine),
     );
+
+    return [...refundLines, SHIPPING_ITEM_NUMBER];
   }
 
-  transform(payload: OrderRefundedPayload, avataxConfig: AvataxConfig): RefundTransactionParams {
+  transform(
+    payload: OrderFullyRefundedPayload,
+    avataxConfig: AvataxConfig,
+  ): RefundTransactionParams {
     this.logger.debug(
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",

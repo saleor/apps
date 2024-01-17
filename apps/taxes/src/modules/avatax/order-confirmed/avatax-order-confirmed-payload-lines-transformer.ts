@@ -3,9 +3,12 @@ import { OrderConfirmedSubscriptionFragment, OrderLine } from "../../../../gener
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { SHIPPING_ITEM_CODE } from "./avatax-order-confirmed-payload-transformer";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 import { resolveAvataxTransactionLineNumber } from "../avatax-line-number-resolver";
+import {
+  SHIPPING_ITEM_CODE,
+  SHIPPING_ITEM_NUMBER,
+} from "../calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
@@ -18,7 +21,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
       const taxCode = matcher.match(line, matches);
 
       return {
-        number: resolveAvataxTransactionLineNumber(line), // * using line.id as number so that we can refund the line in AvataxOrderRefundedPayloadLinesTransformer
+        number: resolveAvataxTransactionLineNumber(line), // * using line.id as number so that we can refund the line in AvataxOrderFullyRefundedPayloadLinesTransformer
         taxIncluded: true, // taxes are included because we treat what is passed in payload as the source of truth
         amount: numbers.roundFloatToTwoDecimals(
           line.totalPrice.net.amount + line.totalPrice.tax.amount,
@@ -43,6 +46,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
          */
         taxCode: config.shippingTaxCode,
         quantity: 1,
+        number: SHIPPING_ITEM_NUMBER,
       };
 
       return [...productLines, shippingLine];

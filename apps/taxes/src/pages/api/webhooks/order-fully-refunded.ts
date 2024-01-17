@@ -1,8 +1,8 @@
-import { SaleorAsyncWebhook, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 
 import {
-  OrderRefundedEventSubscriptionFragment,
-  UntypedOrderRefundedSubscriptionDocument,
+  OrderFullyRefundedEventSubscriptionFragment,
+  UntypedOrderFullyRefundedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../lib/logger";
@@ -15,25 +15,25 @@ export const config = {
   },
 };
 
-export type OrderRefundedPayload = Extract<
-  OrderRefundedEventSubscriptionFragment,
-  { __typename: "OrderRefunded" }
+export type OrderFullyRefundedPayload = Extract<
+  OrderFullyRefundedEventSubscriptionFragment,
+  { __typename: "OrderFullyRefunded" }
 >;
 
-export const orderRefundedAsyncWebhook = new SaleorAsyncWebhook<OrderRefundedPayload>({
+export const orderFullyRefundedAsyncWebhook = new SaleorAsyncWebhook<OrderFullyRefundedPayload>({
   name: "OrderRefunded",
   apl: saleorApp.apl,
-  event: "ORDER_REFUNDED",
-  query: UntypedOrderRefundedSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-refunded",
+  event: "ORDER_FULLY_REFUNDED",
+  query: UntypedOrderFullyRefundedSubscriptionDocument,
+  webhookPath: "/api/webhooks/order-fully-refunded",
 });
 
-export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => {
+export default orderFullyRefundedAsyncWebhook.createHandler(async (req, res, ctx) => {
   const logger = createLogger({ event: ctx.event });
   const { payload } = ctx;
   const webhookResponse = new WebhookResponse(res);
 
-  logger.info("Handler called with payload");
+  logger.debug("Handler called with payload");
 
   try {
     const order = payload.order;
@@ -46,11 +46,11 @@ export default orderRefundedAsyncWebhook.createHandler(async (req, res, ctx) => 
     const channelSlug = order.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Refunding transaction...");
+    logger.info("Refunding order...");
 
     const refundedOrder = await taxProvider.refundTransaction(payload);
 
-    logger.info({ refundedOrder }, "Transaction refunded");
+    logger.info({ refundedOrder }, "Order refunded");
 
     return webhookResponse.success();
   } catch (error) {
