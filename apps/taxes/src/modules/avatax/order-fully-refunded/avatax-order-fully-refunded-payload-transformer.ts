@@ -1,5 +1,6 @@
 import { CriticalError } from "../../../error";
-import { createLogger } from "../../../lib/logger";
+import { createLogger } from "../../../logger";
+
 import { OrderFullyRefundedPayload } from "../../../pages/api/webhooks/order-fully-refunded";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { RefundTransactionParams } from "../avatax-client";
@@ -7,7 +8,7 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 
 export class AvataxOrderRefundedPayloadTransformer {
-  private logger = createLogger({ name: "AvataxOrderRefundedPayloadTransformer" });
+  private logger = createLogger("AvataxOrderRefundedPayloadTransformer");
 
   transform(
     payload: OrderFullyRefundedPayload,

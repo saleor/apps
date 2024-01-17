@@ -29,7 +29,7 @@ export const orderCancelledAsyncWebhook = new SaleorAsyncWebhook<OrderCancelledP
 
 export default withOtel(
   orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger("orderCancelledAsyncWebhook", {
+    const logger = createLogger(ctx.event, {
       saleorApiUrl: ctx.authData.saleorApiUrl,
     });
     const { payload } = ctx;
