@@ -1,6 +1,6 @@
-fragment OrderRefundedEventSubscription on Event {
+fragment OrderFullyRefundedEventSubscription on Event {
   __typename
-  ... on OrderRefunded {
+  ... on OrderFullyRefunded {
     order {
       ...OrderBase
       grantedRefunds {
@@ -22,8 +22,8 @@ fragment OrderRefundedEventSubscription on Event {
   }
 }
 
-subscription OrderRefundedSubscription {
+subscription OrderFullyRefundedSubscription {
   event {
-    ...OrderRefundedEventSubscription
+    ...OrderFullyRefundedEventSubscription
   }
 }

@@ -3,13 +3,13 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
-import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { SHIPPING_ITEM_CODE, SHIPPING_ITEM_NUMBER } from "./avatax-calculate-taxes-adapter";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
   transform(
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
-    matches: AvataxTaxCodeMatches
+    matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
     const isDiscounted = taxBase.discounts.length > 0;
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
@@ -34,6 +34,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         quantity: 1,
         taxIncluded: taxBase.pricesEnteredWithTax,
         discounted: isDiscounted,
+        number: SHIPPING_ITEM_NUMBER,
       };
 
       return [...productLines, shippingLine];
