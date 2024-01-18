@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
-import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { transformAvataxCalculateTaxesPayloadLines } from "./avatax-calculate-taxes-payload-lines-transformer";
 
-const transformer = new AvataxCalculateTaxesPayloadLinesTransformer();
-
-describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
+describe("transformAvataxCalculateTaxesPayloadLines", () => {
   describe("transform", () => {
     it("maps lines, adds shipping as line and maps the tax code of one product", () => {
       const mockGenerator = new AvataxCalculateTaxesMockGenerator();
@@ -12,7 +10,11 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const taxBaseMock = mockGenerator.generateTaxBase();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-      const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
+      const lines = transformAvataxCalculateTaxesPayloadLines(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+      );
 
       expect(lines).toEqual([
         {
@@ -52,7 +54,11 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const matchesMock = mockGenerator.generateTaxCodeMatches();
       const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 
-      const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
+      const lines = transformAvataxCalculateTaxesPayloadLines(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+      );
 
       expect(lines).toEqual([
         {
@@ -86,7 +92,11 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
         discounts: [{ amount: { amount: 10 } }],
       });
 
-      const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
+      const lines = transformAvataxCalculateTaxesPayloadLines(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+      );
 
       expect(lines).toEqual([
         {

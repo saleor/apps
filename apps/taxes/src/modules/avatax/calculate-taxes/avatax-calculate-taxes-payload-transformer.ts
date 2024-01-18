@@ -3,11 +3,11 @@ import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calc
 import { discountUtils } from "../../taxes/discount-utils";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { AvataxAddressResolver } from "../order-confirmed/avatax-address-resolver";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { transformAvataxCalculateTaxesPayloadLines } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { resolveAvataxAddress } from "../order-confirmed/avatax-address-resolver";
+import { avataxData } from "../avatax-data-resolver";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -25,7 +25,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
-    const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(avataxConfig);
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
 
@@ -33,9 +32,8 @@ export class AvataxCalculateTaxesPayloadTransformer {
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
-    const customerCode = avataxCustomerCode.resolve(payload.taxBase.sourceObject.user);
-    const addressResolver = new AvataxAddressResolver();
-    const addresses = addressResolver.resolve({
+    const customerCode = avataxData.customerCode.resolveFromCalculateTaxes(payload);
+    const addresses = resolveAvataxAddress({
       from: avataxConfig.address,
       to: payload.taxBase.address!,
     });
@@ -50,7 +48,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
         commit: avataxConfig.isAutocommit,
         addresses,
         currencyCode: payload.taxBase.currency,
-        lines: payloadLinesTransformer.transform(payload.taxBase, avataxConfig, matches),
+        lines: transformAvataxCalculateTaxesPayloadLines(payload.taxBase, avataxConfig, matches),
         date: new Date(),
         discount: discountUtils.sumDiscounts(
           payload.taxBase.discounts.map((discount) => discount.amount.amount),
