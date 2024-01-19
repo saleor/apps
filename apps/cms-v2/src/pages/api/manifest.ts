@@ -8,7 +8,6 @@ import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
 import { productUpdatedWebhook } from "./webhooks/product-updated";
 
-
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
     const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;

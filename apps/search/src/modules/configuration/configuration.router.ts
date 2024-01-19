@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
@@ -9,8 +8,9 @@ import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
+import { createLogger } from "../../lib/logger";
 
-const logger = createLogger({ name: "configuration.router" });
+const logger = createLogger("configuration.router");
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {

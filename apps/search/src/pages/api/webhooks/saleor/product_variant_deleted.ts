@@ -4,6 +4,7 @@ import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivit
 import { createLogger } from "../../../../lib/logger";
 import { webhookProductVariantDeleted } from "../../../../webhooks/definitions/product-variant-deleted";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
+import { withOtel } from "@saleor/apps-otel";
 
 export const config = {
   api: {
@@ -11,9 +12,7 @@ export const config = {
   },
 };
 
-const logger = createLogger({
-  service: "webhookProductVariantDeletedWebhookHandler",
-});
+const logger = createLogger("webhookProductVariantDeletedWebhookHandler");
 
 export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req, res, context) => {
   const { event, authData } = context;
@@ -59,4 +58,7 @@ export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req,
   }
 };
 
-export default webhookProductVariantDeleted.createHandler(handler);
+export default withOtel(
+  webhookProductVariantDeleted.createHandler(handler),
+  "api/webhooks/saleor/product_variant_deleted",
+);

@@ -11,7 +11,7 @@ import {
   productAndVariantToAlgolia,
   productAndVariantToObjectID,
 } from "./algoliaUtils";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../logger";
 
 export interface AlgoliaSearchProviderOptions {
   appId: string;
@@ -21,7 +21,7 @@ export interface AlgoliaSearchProviderOptions {
   enabledKeys: string[];
 }
 
-const logger = createLogger({ name: "AlgoliaSearchProvider" });
+const logger = createLogger("AlgoliaSearchProvider");
 
 export class AlgoliaSearchProvider implements SearchProvider {
   #algolia: SearchClient;

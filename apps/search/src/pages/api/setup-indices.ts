@@ -8,10 +8,9 @@ import { Client } from "urql";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
+import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({
-  service: "setupIndicesHandler",
-});
+const logger = createLogger("setupIndicesHandler");
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -67,13 +66,16 @@ export const setupIndicesHandlerFactory =
     }
   };
 
-export default createProtectedHandler(
-  setupIndicesHandlerFactory({
-    settingsManagerFactory: createSettingsManager,
-    graphqlClientFactory(saleorApiUrl: string, token: string) {
-      return createGraphQLClient({ saleorApiUrl, token });
-    },
-  }),
-  saleorApp.apl,
-  [],
+export default withOtel(
+  createProtectedHandler(
+    setupIndicesHandlerFactory({
+      settingsManagerFactory: createSettingsManager,
+      graphqlClientFactory(saleorApiUrl: string, token: string) {
+        return createGraphQLClient({ saleorApiUrl, token });
+      },
+    }),
+    saleorApp.apl,
+    [],
+  ),
+  "api/setup-indices",
 );

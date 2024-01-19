@@ -1,13 +1,19 @@
-import { createLogger as _createLogger } from "@saleor/apps-shared";
+import { logger, createLogger } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport } from "@saleor/apps-logger/src/logger-console-transport";
 
-/**
- * Extend factory to add more settings specific for the app
- */
-export const logger = _createLogger(
-  {},
-  {
-    redact: ["token", "secretKey"],
-  }
-);
+logger.settings.maskValuesOfKeys = ["token", "secretKey"];
 
-export const createLogger = logger.child.bind(logger);
+if (process.env.NODE_ENV !== "production") {
+  attachLoggerConsoleTransport(logger);
+}
+
+if (typeof window === "undefined") {
+  import("@saleor/apps-logger").then(
+    ({ attachLoggerOtelTransport, attachLoggerSentryTransport }) => {
+      attachLoggerSentryTransport(logger);
+      attachLoggerOtelTransport(logger, require("../../package.json").version);
+    },
+  );
+}
+
+export { logger, createLogger };

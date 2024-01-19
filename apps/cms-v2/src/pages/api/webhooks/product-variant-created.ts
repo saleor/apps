@@ -60,7 +60,7 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   context,
 ) => {
   const logger = createLogger("ProductVariantCreatedWebhook", {
-    apiUrl: context.authData.saleorApiUrl,
+    saleorApiUrl: context.authData.saleorApiUrl,
   });
 
   const { authData, payload } = context;
