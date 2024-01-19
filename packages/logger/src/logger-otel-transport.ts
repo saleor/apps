@@ -5,23 +5,16 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 
 export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: string) => {
   logger.attachTransport((log) => {
-    if (!log.payload) {
+    const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
+      message: string;
+      attributes: Record<string, unknown>;
+    };
+
+    if (!message || !attributes) {
       console.error("Logger is not configured properly. OTEL transport will not be attached.");
 
       return;
     }
-
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const message = log.payload[0];
-
-    if (!message) {
-      console.warn("First argument in logger should be string message. OTEL will skip");
-
-      return;
-    }
-
-    // @ts-expect-error - lib is not typed for payload existence, runtime check exists
-    const attributes = (log.payload[1] as Record<string, LogAttributeValue>) ?? {};
 
     /**
      * Prune empty keys and serialize top-level arrays, because OTEL can't consume them
@@ -38,6 +31,7 @@ export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: s
         if (Array.isArray(value)) {
           acc[key] = JSON.stringify(value);
         } else {
+          // @ts-expect-error - Logger maps attribute as IMeta, but in the runtime Meta is only in log._meta field which is filtered out first
           acc[key] = value;
         }
 

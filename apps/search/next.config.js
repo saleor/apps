@@ -8,6 +8,8 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: [
     "@saleor/apps-shared",
+    "@saleor/apps-otel",
+    "@saleor/apps-logger",
     "@saleor/apps-ui",
     "@saleor/webhook-utils",
     "@saleor/react-hook-form-macaw",

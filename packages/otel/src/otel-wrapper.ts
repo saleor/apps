@@ -35,6 +35,9 @@ const flushOtel = async () => {
   });
 };
 
+/**
+ * TODO: Consider injecting into Next.js config, to automatically wrap routes and infer static route name from file name
+ */
 export const withOtel = (handler: NextApiHandler, staticRouteName: string): NextApiHandler => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.OTEL_ENABLED !== "true") {

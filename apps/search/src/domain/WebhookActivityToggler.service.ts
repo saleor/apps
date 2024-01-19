@@ -11,9 +11,7 @@ import {
 import { createLogger } from "../lib/logger";
 import { appWebhooks } from "../../webhooks";
 
-const logger = createLogger({
-  service: "WebhookActivityTogglerService",
-});
+const logger = createLogger("WebhookActivityTogglerService");
 
 export interface IWebhooksActivityClient {
   fetchAppWebhooksIDs(id: string): Promise<string[]>;

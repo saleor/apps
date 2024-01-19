@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createDebug } from "../debug";
 import { createSettingsManager } from "../metadata";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
@@ -9,7 +8,7 @@ interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
 }
 
-const logger = createLogger({ name: "getAlgoliaConfiguration" });
+const logger = createLogger("getAlgoliaConfiguration");
 
 export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurationArgs) => {
   const client = createGraphQLClient({

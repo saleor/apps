@@ -4,6 +4,7 @@ import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivit
 import { createLogger } from "../../../../lib/logger";
 import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
+import { withOtel } from "@saleor/apps-otel";
 
 export const config = {
   api: {
@@ -11,9 +12,7 @@ export const config = {
   },
 };
 
-const logger = createLogger({
-  service: "webhookProductVariantCreatedWebhookHandler",
-});
+const logger = createLogger("webhookProductVariantCreatedWebhookHandler");
 
 export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req, res, context) => {
   const { event, authData } = context;
@@ -59,4 +58,7 @@ export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req,
   }
 };
 
-export default webhookProductVariantCreated.createHandler(handler);
+export default withOtel(
+  webhookProductVariantCreated.createHandler(handler),
+  "api/webhooks/saleor/product_variant_created",
+);

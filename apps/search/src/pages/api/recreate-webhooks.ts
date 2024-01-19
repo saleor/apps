@@ -11,10 +11,9 @@ import { createGraphQLClient, getAppBaseUrl } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isConfigured } from "../../lib/algolia/is-configured";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
+import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({
-  service: "recreateWebhooksHandler",
-});
+const logger = createLogger("recreateWebhooksHandler");
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -67,16 +66,19 @@ export const recreateWebhooksHandlerFactory =
     }
   };
 
-export default createProtectedHandler(
-  recreateWebhooksHandlerFactory({
-    settingsManagerFactory: createSettingsManager,
-    webhookActivityTogglerFactory: function (appId, client) {
-      return new WebhookActivityTogglerService(appId, client);
-    },
-    graphqlClientFactory(saleorApiUrl: string, token: string) {
-      return createGraphQLClient({ saleorApiUrl, token });
-    },
-  }),
-  saleorApp.apl,
-  [],
+export default withOtel(
+  createProtectedHandler(
+    recreateWebhooksHandlerFactory({
+      settingsManagerFactory: createSettingsManager,
+      webhookActivityTogglerFactory: function (appId, client) {
+        return new WebhookActivityTogglerService(appId, client);
+      },
+      graphqlClientFactory(saleorApiUrl: string, token: string) {
+        return createGraphQLClient({ saleorApiUrl, token });
+      },
+    }),
+    saleorApp.apl,
+    [],
+  ),
+  "/api/recreate-webhooks",
 );
