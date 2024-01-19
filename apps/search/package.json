@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.19.3",
+  "version": "1.20.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "deploy": "pnpm run build && tsx scripts/migrations/run-webhooks-migration.ts",

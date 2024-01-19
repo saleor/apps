@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.20.0
+
+### Minor Changes
+
+- 93848f2: Added Open Telemetry setup, including tracing for api handlers and logger, connected to Sentry and Otel.
+
+### Patch Changes
+
+- Updated dependencies [93848f2]
+- Updated dependencies [93848f2]
+  - @saleor/apps-logger@1.1.0
+
 ## 1.19.3
 
 ### Patch Changes

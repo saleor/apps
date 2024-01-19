@@ -1,5 +1,13 @@
 # saleor-app-taxes
 
+## 1.21.1
+
+### Patch Changes
+
+- Updated dependencies [93848f2]
+- Updated dependencies [93848f2]
+  - @saleor/apps-logger@1.1.0
+
 ## 1.21.0
 
 ### Minor Changes
