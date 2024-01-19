@@ -14,7 +14,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
-    "@saleor/macaw-ui": "1.0.0-pre.7",
+    "@saleor/macaw-ui": "1.0.0-pre.19",
     "@sentry/nextjs": "7.77.0",
     "@urql/exchange-auth": "^2.1.4",
     "graphql": "16.7.1",
