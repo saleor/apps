@@ -2,7 +2,8 @@
   "name": "@saleor/apps-logger",
   "version": "1.0.0",
   "scripts": {
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "test": "vitest"
   },
   "dependencies": {
     "eslint": "8.46.0",
@@ -12,7 +13,9 @@
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@sentry/nextjs": "7.93.0",
-    "eslint-config-saleor": "workspace:*"
+    "eslint-config-saleor": "workspace:*",
+    "vite": "4.4.8",
+    "vitest": "0.34.1"
   },
   "main": "index.ts",
   "peerDependencies": {
