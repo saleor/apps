@@ -9,13 +9,6 @@ vi.spyOn(console, "log");
 vi.setSystemTime(new Date(2024, 1, 1, 5, 15));
 
 describe("Logger", () => {
-  /**
-   * Fix time zone, so local machines match CICD
-   * TODO: Set this globally for every package
-   */
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  process.env.TZ = "UTC";
-
   describe("Console Transport", () => {
     it("Prints message and nested object to the console, including attributes passed from the parent scope", () => {
       const logger = createLogger("Test Logger", {
@@ -35,7 +28,7 @@ describe("Logger", () => {
       });
 
       expect(console.log).toBeCalledWith(
-        "\x1B[2m 2024-02-01T04:15:00.000Z :Test Logger\x1B[0m \tTest Message",
+        "\x1B[2m 2024-02-01T05:15:00.000Z :Test Logger\x1B[0m \tTest Message",
         {
           rootScopePrimitiveArg: 1,
           rootScopeObjectArg: { objectKey: "objectValue" },
