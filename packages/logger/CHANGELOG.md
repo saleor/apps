@@ -1,5 +1,15 @@
 # @saleor/apps-logger
 
+## 1.1.0
+
+### Minor Changes
+
+- 93848f2: Improved logger implementation internals. Now it will inherit parent-logger attributes (only 1 level, which is internal tslog limitation). It uses custom console printer if attached, by default doesn't print anything, because built-in pretty print is limited and has to be disabled.
+
+### Patch Changes
+
+- 93848f2: Fixed mapping inherited attributes in logger to be sent via otel. Now, child logger attributes will be merged with each single log arguments
+
 ## 1.0.0
 
 ### Major Changes
