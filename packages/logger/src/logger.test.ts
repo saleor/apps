@@ -30,12 +30,15 @@ describe("Logger", () => {
       /**
        * TODO this assertion fails, but strings are the same. Why?
        */
-      expect(console.log).toBeCalledWith(" 2024-02-01T04:15:00.000Z :Test Logger \tTest Message", {
-        rootScopePrimitiveArg: 1,
-        rootScopeObjectArg: { objectKey: "objectValue" },
-        childScopePrimitiveArg: 2,
-        childScopeObjectArg: { objectKey: "objectValue" },
-      });
+      expect(console.log).toBeCalledWith(
+        "\x1B[2m 2024-02-01T04:15:00.000Z :Test Logger\x1B[0m \tTest Message",
+        {
+          rootScopePrimitiveArg: 1,
+          rootScopeObjectArg: { objectKey: "objectValue" },
+          childScopePrimitiveArg: 2,
+          childScopeObjectArg: { objectKey: "objectValue" },
+        },
+      );
     });
   });
 
