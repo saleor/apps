@@ -40,7 +40,7 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
     (data: TaxJarConfig) => {
       props.onSubmit(data);
     },
-    [props]
+    [props],
   );
 
   return (
@@ -73,7 +73,10 @@ export const TaxJarConfigurationForm = (props: TaxJarConfigurationFormProps) => 
             />
             <HelperText>
               You can obtain it by following the instructions from{" "}
-              <TextLink href="https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token">
+              <TextLink
+                href="https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token"
+                newTab
+              >
                 here
               </TextLink>
               .
