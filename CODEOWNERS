@@ -2,7 +2,7 @@
 /.github/ @saleor/SRE
 
 
-/apps/emails-and-messages @saleor/ @saleor/shopex-js
-/apps/taxes @saleor/ @saleor/shopex-js
-/apps/search @saleor/ @saleor/shopex-js
-/apps/klaviyo @saleor/ @saleor/shopex-js
+/apps/emails-and-messages @saleor/shopex-js
+/apps/taxes  @saleor/shopex-js
+/apps/search @saleor/shopex-js
+/apps/klaviyo @saleor/shopex-js
