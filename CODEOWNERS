@@ -1,2 +1,8 @@
-* @saleor/apps
+* @saleor/apps-guild
 /.github/ @saleor/SRE
+
+
+/apps/emails-and-messages @saleor/shopex-js
+/apps/taxes  @saleor/shopex-js
+/apps/search @saleor/shopex-js
+/apps/klaviyo @saleor/shopex-js
