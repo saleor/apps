@@ -1,5 +1,13 @@
 # saleor-app-taxes
 
+## 1.21.2
+
+### Patch Changes
+
+- 50c31c2: Fixed Taxjar link to their docs - now it should open in the new tab.
+- Updated dependencies [2683431]
+  - @saleor/apps-logger@1.1.1
+
 ## 1.21.1
 
 ### Patch Changes

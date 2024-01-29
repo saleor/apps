@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.10.4
+
+### Patch Changes
+
+- c642a0b: Adding countryArea in the address fields to be populated in email templates
+
 ## 1.10.3
 
 ### Patch Changes

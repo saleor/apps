@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.1.1
+
+### Patch Changes
+
+- 2683431: Added tests for Logger (console transport and otel transport).
+
 ## 1.1.0
 
 ### Minor Changes
