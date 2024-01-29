@@ -59,6 +59,7 @@ const exampleOrderPayload: OrderDetailsFragment = {
     cityArea: "",
     city: "METROPOLIS",
     postalCode: "71653",
+    countryArea: "PL",
     country: {
       country: "United States of America",
     },
@@ -72,6 +73,7 @@ const exampleOrderPayload: OrderDetailsFragment = {
     cityArea: "",
     city: "METROPOLIS",
     postalCode: "71653",
+    countryArea: "PL",
     country: {
       country: "United States of America",
     },
