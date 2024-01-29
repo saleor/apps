@@ -51,7 +51,6 @@ In the `apps` folder, you will find the following applications:
 - [emails-and-messages](https://docs.saleor.io/docs/3.x/developer/app-store/apps/emails-and-messages/overview) - notifications and email communication with customers.
 - [invoices](https://docs.saleor.io/docs/3.x/developer/app-store/apps/invoices) - generate invoice PDF for each order.
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
-- [monitoring](./apps/monitoring) - send Saleor logs to 3rd party Monitoring services
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
