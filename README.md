@@ -23,8 +23,6 @@
 <div align="center">
   <a href="https://docs.saleor.io/docs/3.x/developer/extending/apps/quickstart/getting-started">🆕 Apps Quickstart</a>
   <span> • </span>
-  <a href="https://github.com/orgs/saleor/projects/22/views/1">🗓️ Roadmap</a>
-  <span> • </span>
   <a href="https://github.com/saleor/apps/discussions/categories/integrations-features">✍️ Propose an app</a>
 </div>
 
@@ -62,6 +60,7 @@ In the `apps` folder, you will find the following applications:
 #### Other official apps
 
 Some of the Saleor apps are available in separate repositories:
+
 - [Stripe](https://github.com/saleor/saleor-app-payment-stripe)
 
 ## Development
