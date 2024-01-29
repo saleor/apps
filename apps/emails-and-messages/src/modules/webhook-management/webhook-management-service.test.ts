@@ -77,7 +77,7 @@ describe("WebhookManagementService", function () {
     const statuses = await webhookManagementService.getWebhooksStatus();
 
     expect(statuses).toStrictEqual(
-      webhookStatusesFactory({ enabledWebhooks: ["invoiceSentWebhook"] })
+      webhookStatusesFactory({ enabledWebhooks: ["invoiceSentWebhook"] }),
     );
     expect(fetchAppWebhooksMock).toBeCalledTimes(1);
   });
@@ -114,7 +114,7 @@ describe("WebhookManagementService", function () {
         name: invoiceSentWebhook.name,
         targetUrl: "https://example.com/api/webhooks/invoice-sent",
         query:
-          "subscription InvoiceSent { event { ...InvoiceSentWebhookPayload }}fragment InvoiceSentWebhookPayload on InvoiceSent { invoice { id metadata { key value } privateMetadata { key value } message externalUrl url order { id } } order { ...OrderDetails }}fragment OrderDetails on Order { id number status languageCodeEnum userEmail created redirectUrl channel { slug } metadata { key value } privateMetadata { key value } user { email firstName lastName languageCode } billingAddress { firstName lastName companyName streetAddress1 streetAddress2 city cityArea postalCode country { country } phone } shippingAddress { firstName lastName companyName streetAddress1 streetAddress2 city cityArea postalCode country { country } phone } lines { id digitalContentUrl { id url } isShippingRequired metadata { key value } privateMetadata { key value } productName translatedProductName variantName translatedVariantName productSku variant { preorder { endDate } weight { unit value } attributes { attribute { id name slug } values { id name slug file { url contentType } } } product { attributes { attribute { id name slug } values { id name slug file { url contentType } } } } } quantity quantityFulfilled taxRate thumbnail { url alt } unitPrice { gross { currency amount } net { currency amount } tax { currency amount } } totalPrice { gross { currency amount } net { currency amount } tax { currency amount } } unitDiscount { currency amount } unitDiscountReason unitDiscountType unitDiscountValue undiscountedUnitPrice { gross { currency amount } net { currency amount } tax { currency amount } } } subtotal { gross { amount currency } net { currency amount } tax { currency amount } } shippingPrice { gross { amount currency } net { currency amount } tax { currency amount } } total { gross { amount currency } net { currency amount } tax { currency amount } } undiscountedTotal { gross { amount currency } net { currency amount } tax { currency amount } } displayGrossPrices isShippingRequired shippingMethodName}",
+          "subscription InvoiceSent { event { ...InvoiceSentWebhookPayload }}fragment InvoiceSentWebhookPayload on InvoiceSent { invoice { id metadata { key value } privateMetadata { key value } message externalUrl url order { id } } order { ...OrderDetails }}fragment OrderDetails on Order { id number status languageCodeEnum userEmail created redirectUrl channel { slug } metadata { key value } privateMetadata { key value } user { email firstName lastName languageCode } billingAddress { firstName lastName companyName streetAddress1 streetAddress2 city cityArea postalCode countryArea country { country } phone } shippingAddress { firstName lastName companyName streetAddress1 streetAddress2 city cityArea postalCode countryArea country { country } phone } lines { id digitalContentUrl { id url } isShippingRequired metadata { key value } privateMetadata { key value } productName translatedProductName variantName translatedVariantName productSku variant { preorder { endDate } weight { unit value } attributes { attribute { id name slug } values { id name slug file { url contentType } } } product { attributes { attribute { id name slug } values { id name slug file { url contentType } } } } } quantity quantityFulfilled taxRate thumbnail { url alt } unitPrice { gross { currency amount } net { currency amount } tax { currency amount } } totalPrice { gross { currency amount } net { currency amount } tax { currency amount } } unitDiscount { currency amount } unitDiscountReason unitDiscountType unitDiscountValue undiscountedUnitPrice { gross { currency amount } net { currency amount } tax { currency amount } } } subtotal { gross { amount currency } net { currency amount } tax { currency amount } } shippingPrice { gross { amount currency } net { currency amount } tax { currency amount } } total { gross { amount currency } net { currency amount } tax { currency amount } } undiscountedTotal { gross { amount currency } net { currency amount } tax { currency amount } } displayGrossPrices isShippingRequired shippingMethodName}",
       },
     });
   });
@@ -133,7 +133,7 @@ describe("WebhookManagementService", function () {
       async () =>
         await webhookManagementService.createWebhook({
           webhook: "giftCardSentWebhook",
-        })
+        }),
     ).rejects.toThrow("Gift card event is not supported in this environment");
   });
 
