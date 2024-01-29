@@ -1,5 +1,12 @@
 # saleor-app-cms-v2
 
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [2683431]
+  - @saleor/apps-logger@1.1.1
+
 ## 2.6.1
 
 ### Patch Changes
