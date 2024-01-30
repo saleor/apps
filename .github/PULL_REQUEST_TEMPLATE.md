@@ -8,5 +8,6 @@
 
 ## Checklist
 
-<!-- If the PR is not related to any app's or package changes, changesets should be skipped. Use "skip changeset" label for that ->
+<!-- If the PR is not related to any app's or package changes, changesets should be skipped. Use "skip changeset" label for that -->
+
 - [ ] I added changesets and [read good practices](/.changeset/README.md). 
