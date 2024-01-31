@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-search",
+  "name": "search",
   "version": "1.20.1",
   "scripts": {
     "build": "pnpm generate && next build",

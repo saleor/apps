@@ -16,5 +16,5 @@ Sentry.init({
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [],
   environment: process.env.SENTRY_ENVIRONMENT,
-  release: `${pkg.name}@${pkg.version}`,
+  release: `saleor-app-${pkg.name}@${pkg.version}`,
 });

@@ -13,5 +13,5 @@ Sentry.init({
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
   environment: process.env.SENTRY_ENVIRONMENT,
-  release: `${pkg.name}@${pkg.version}`,
+  release: `saleor-app-${pkg.name}@${pkg.version}`,
 });
