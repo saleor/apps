@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-slack",
+  "name": "slack",
   "version": "1.10.0",
   "scripts": {
     "build": "pnpm generate && next build",

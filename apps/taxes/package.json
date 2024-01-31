@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-taxes",
+  "name": "taxes",
   "version": "1.21.2",
   "scripts": {
     "build": "pnpm generate && next build",

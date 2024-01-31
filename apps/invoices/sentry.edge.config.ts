@@ -12,5 +12,5 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   debug: false,
   environment: process.env.SENTRY_ENVIRONMENT,
-  release: `${pkg.name}@${pkg.version}`,
+  release: `saleor-app-${pkg.name}@${pkg.version}`,
 });

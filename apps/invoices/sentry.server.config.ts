@@ -12,5 +12,5 @@ Sentry.init({
   enableTracing: false,
   debug: false,
   environment: process.env.SENTRY_ENVIRONMENT,
-  release: `${pkg.name}@${pkg.version}`,
+  release: `saleor-app-${pkg.name}@${pkg.version}`,
 });

@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-klaviyo",
+  "name": "klaviyo",
   "version": "1.10.3",
   "scripts": {
     "build": "pnpm generate && next build",
