@@ -14,6 +14,7 @@ const nextConfig = {
     "@saleor/webhook-utils",
     "@saleor/react-hook-form-macaw",
   ],
+  distDir: "build",
 };
 
 const configWithSentry = withSentryConfig(
