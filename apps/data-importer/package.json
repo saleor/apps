@@ -1,5 +1,5 @@
 {
-  "name": "saleor-app-data-importer",
+  "name": "data-importer",
   "version": "1.10.3",
   "scripts": {
     "build": "pnpm generate && next build",
