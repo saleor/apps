@@ -99,6 +99,7 @@ const taxIncludedTaxBase: TaxBase = {
     __typename: "Checkout",
     user: {
       id: "123",
+      email: "demo@saleor.io",
     },
   },
 };
@@ -198,6 +199,7 @@ const taxExcludedTaxBase: TaxBase = {
     __typename: "Checkout",
     user: {
       id: "123",
+      email: "demo@saleor.io",
     },
   },
 };
