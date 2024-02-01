@@ -4,7 +4,11 @@ import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { avataxShippingLine } from "./avatax-shipping-line";
+import { createLogger } from "@saleor/apps-logger";
 
+const logger = createLogger("transformAvataxTransactionModelIntoShipping");
+
+// why is tax rate 0?
 export function transformAvataxTransactionModelIntoShipping(
   transaction: TransactionModel,
 ): Pick<
@@ -14,6 +18,10 @@ export function transformAvataxTransactionModelIntoShipping(
   const shippingLine = avataxShippingLine.getFromTransactionModel(transaction);
 
   if (!shippingLine) {
+    logger.warn(
+      "Shipping line was not found in the response from AvaTax. The app will return 0s for shipping fields.",
+    );
+
     return {
       shipping_price_gross_amount: 0,
       shipping_price_net_amount: 0,
