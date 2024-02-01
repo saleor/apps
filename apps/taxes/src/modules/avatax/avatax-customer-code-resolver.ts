@@ -15,7 +15,7 @@ export const avataxCustomerCode = {
     const avataxCustomerCode = user?.avataxCustomerCode;
 
     if (avataxCustomerCode) {
-      logger.trace(`Returning customer code found in the user metadata.`);
+      logger.trace({ avataxCustomerCode }, `Returning customer code found in the user metadata.`);
       return avataxCustomerCode;
     }
 
