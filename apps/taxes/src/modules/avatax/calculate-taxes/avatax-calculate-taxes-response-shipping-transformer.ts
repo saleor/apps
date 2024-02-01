@@ -1,9 +1,9 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { numbers } from "../../taxes/numbers";
+import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
-import { TaxBadProviderResponseError } from "../../taxes/tax-error";
+import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesResponseShippingTransformer {
   transform(
@@ -12,7 +12,7 @@ export class AvataxCalculateTaxesResponseShippingTransformer {
     CalculateTaxesResponse,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
   > {
-    const shippingLine = transaction.lines?.find((line) => line.itemCode === SHIPPING_ITEM_CODE);
+    const shippingLine = avataxShippingLine.getFromTransactionModel(transaction);
 
     if (!shippingLine) {
       return {
