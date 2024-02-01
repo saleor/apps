@@ -7,7 +7,7 @@ interface GetMappedAttributesArgs {
 }
 
 export const attributeArrayToValueString = (
-  attributes?: GoogleFeedProductVariantFragment["attributes"]
+  attributes?: GoogleFeedProductVariantFragment["attributes"],
 ) => {
   if (!attributes?.length) {
     return;
@@ -35,29 +35,34 @@ export const getMappedAttributes = ({
   const attributes = variant.attributes.concat(variant.product.attributes);
 
   const materialAttributes = attributes.filter((a) =>
-    mapping.materialAttributeIds.includes(a.attribute.id)
+    mapping.materialAttributeIds.includes(a.attribute.id),
   );
   const materialValue = attributeArrayToValueString(materialAttributes);
 
   const brandAttributes = attributes.filter((a) =>
-    mapping.brandAttributeIds.includes(a.attribute.id)
+    mapping.brandAttributeIds.includes(a.attribute.id),
   );
   const brandValue = attributeArrayToValueString(brandAttributes);
 
   const colorAttributes = attributes.filter((a) =>
-    mapping.colorAttributeIds.includes(a.attribute.id)
+    mapping.colorAttributeIds.includes(a.attribute.id),
   );
   const colorValue = attributeArrayToValueString(colorAttributes);
 
   const patternAttributes = attributes.filter((a) =>
-    mapping.patternAttributeIds.includes(a.attribute.id)
+    mapping.patternAttributeIds.includes(a.attribute.id),
   );
   const patternValue = attributeArrayToValueString(patternAttributes);
 
   const sizeAttributes = attributes.filter((a) =>
-    mapping.sizeAttributeIds.includes(a.attribute.id)
+    mapping.sizeAttributeIds.includes(a.attribute.id),
   );
   const sizeValue = attributeArrayToValueString(sizeAttributes);
+
+  const gtinAttributes = attributes.filter((a) =>
+    mapping.gtinAttributeIds.includes(a.attribute.id),
+  );
+  const gtinValue = attributeArrayToValueString(gtinAttributes);
 
   return {
     material: materialValue,
@@ -65,5 +70,6 @@ export const getMappedAttributes = ({
     color: colorValue,
     size: sizeValue,
     pattern: patternValue,
+    gtin: gtinValue,
   };
 };

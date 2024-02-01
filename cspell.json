@@ -83,7 +83,8 @@
     "OTLP",
     "FAAS",
     "millis",
-    "Parentfor"
+    "Parentfor",
+    "GTIN"
   ],
   "ignorePaths": [
     "node_modules",
