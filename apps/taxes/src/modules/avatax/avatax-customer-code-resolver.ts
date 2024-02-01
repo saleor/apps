@@ -22,7 +22,7 @@ export const avataxCustomerCode = {
     const userId = user?.id;
 
     if (userId) {
-      logger.trace(`Returning user id as a customer code.`);
+      logger.trace({ userId }, `Returning user id as a customer code.`);
       return userId;
     }
 
