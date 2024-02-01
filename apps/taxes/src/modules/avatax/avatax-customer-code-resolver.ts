@@ -11,6 +11,7 @@ const FALLBACK_CUSTOMER_CODE = "0";
 
 export const avataxCustomerCode = {
   resolve(user: UserFragment | null | undefined): string {
+    // see: docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax/overview#customer-code
     const avataxCustomerCode = user?.avataxCustomerCode;
 
     if (avataxCustomerCode) {
