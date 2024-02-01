@@ -2,9 +2,9 @@ import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
-import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
@@ -31,18 +31,11 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      // * In AvaTax, shipping is a regular line
-      const shippingLine: LineItemModel = {
+      const shippingLine = avataxShippingLine.create({
         amount: order.shippingPrice.gross.amount,
-        taxIncluded: true,
-        itemCode: SHIPPING_ITEM_CODE,
-        /**
-         * * Different shipping methods can have different tax codes.
-         * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/\
-         */
         taxCode: config.shippingTaxCode,
-        quantity: 1,
-      };
+        taxIncluded: true,
+      });
 
       return [...productLines, shippingLine];
     }
