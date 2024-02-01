@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.15.0
+
+### Minor Changes
+
+- 4ef6539: You can now map GTIN attribute from Saleor to your Google Feed.
+
 ## 1.14.2
 
 ### Patch Changes
