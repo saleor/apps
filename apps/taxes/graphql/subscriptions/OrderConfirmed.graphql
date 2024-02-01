@@ -25,8 +25,7 @@ fragment OrderConfirmedSubscription on Order {
   number
   userEmail
   user {
-    id
-    email
+    ...User
   }
   created
   status

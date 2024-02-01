@@ -110,6 +110,7 @@ const defaultTaxBase: TaxBase = {
     __typename: "Checkout",
     user: {
       id: "123",
+      email: "demo@saleor.io",
     },
   },
 };

@@ -34,6 +34,7 @@ fragment TaxBaseLine on TaxableObjectLine {
     amount
   }
 }
+
 fragment TaxDiscount on TaxableObjectDiscount {
   name
   amount {
@@ -64,13 +65,13 @@ fragment TaxBase on TaxableObject {
     ... on Checkout {
       avataxEntityCode: metafield(key: "avataxEntityCode")
       user {
-        id
+        ...User
       }
     }
     ... on Order {
       avataxEntityCode: metafield(key: "avataxEntityCode")
       user {
-        id
+        ...User
       }
     }
   }

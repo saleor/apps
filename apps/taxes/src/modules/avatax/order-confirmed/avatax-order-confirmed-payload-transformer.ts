@@ -5,7 +5,7 @@ import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { AvataxCustomerCodeResolver } from "../avatax-customer-code-resolver";
+import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
@@ -33,7 +33,6 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
-    const customerCodeResolver = new AvataxCustomerCodeResolver();
 
     const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
     const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
@@ -41,7 +40,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
-    const customerCode = customerCodeResolver.resolveOrderCustomerCode(order);
+    const customerCode = avataxCustomerCode.resolve(order.user);
 
     return {
       model: {
