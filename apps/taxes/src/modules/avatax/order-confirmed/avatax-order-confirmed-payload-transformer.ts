@@ -42,6 +42,11 @@ export class AvataxOrderConfirmedPayloadTransformer {
       orderId: order.id,
     });
     const customerCode = customerCodeResolver.resolveOrderCustomerCode(order);
+    const billingAddress = order.billingAddress;
+
+    if (!billingAddress) {
+      throw new Error("Billing address not found in OrderConfirmed subscription.");
+    }
 
     return {
       model: {
@@ -55,7 +60,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         addresses: {
           shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
           // billing or shipping address?
-          shipTo: avataxAddressFactory.fromSaleorAddress(order.billingAddress!),
+          shipTo: avataxAddressFactory.fromSaleorAddress(billingAddress),
         },
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
