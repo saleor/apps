@@ -6,9 +6,13 @@
     "build": {
       "env": ["NEXT_PUBLIC_VERCEL_ENV"],
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
-    "deploy": {},
+    "deploy": {
+      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
     "lint": {
       "inputs": ["src"],
       "outputs": []
