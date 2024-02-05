@@ -1,10 +1,18 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
+import { CriticalError } from "../../../error";
+import { createLogger } from "../../../logger";
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
+
+const AvataxOrderConfirmedMissingShippingError = CriticalError.subclass(
+  "AvataxOrderConfirmedMissingShippingError",
+);
+
+const logger = createLogger("AvataxOrderConfirmedPayloadLinesTransformer");
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
@@ -30,16 +38,19 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
       };
     });
 
-    if (order.shippingPrice.net.amount !== 0) {
-      const shippingLine = avataxShippingLine.create({
-        amount: order.shippingPrice.gross.amount,
-        taxCode: config.shippingTaxCode,
-        taxIncluded: true,
-      });
-
-      return [...productLines, shippingLine];
+    if (order.shippingPrice.gross.amount !== 0) {
+      logger.debug({ order });
+      throw new AvataxOrderConfirmedMissingShippingError(
+        "Confirmed order cannot be processed without shipping line",
+      );
     }
 
-    return productLines;
+    const shippingLine = avataxShippingLine.create({
+      amount: order.shippingPrice.gross.amount,
+      taxCode: config.shippingTaxCode,
+      taxIncluded: true,
+    });
+
+    return [...productLines, shippingLine];
   }
 }
