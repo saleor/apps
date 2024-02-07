@@ -555,9 +555,54 @@ importers:
       '@monaco-editor/react':
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.44.0)(react-dom@18.2.0)(react@18.2.0)
+      '@opentelemetry/api':
+        specifier: ../../node_modules/@opentelemetry/api
+        version: link:../../node_modules/@opentelemetry/api
+      '@opentelemetry/api-logs':
+        specifier: ../../node_modules/@opentelemetry/api-logs
+        version: link:../../node_modules/@opentelemetry/api-logs
+      '@opentelemetry/core':
+        specifier: ../../node_modules/@opentelemetry/core
+        version: link:../../node_modules/@opentelemetry/core
+      '@opentelemetry/exporter-logs-otlp-http':
+        specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
+        version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
+      '@opentelemetry/exporter-trace-otlp-http':
+        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+      '@opentelemetry/instrumentation-http':
+        specifier: ../../node_modules/@opentelemetry/instrumentation-http
+        version: link:../../node_modules/@opentelemetry/instrumentation-http
+      '@opentelemetry/instrumentation-winston':
+        specifier: ../../node_modules/@opentelemetry/instrumentation-winston
+        version: link:../../node_modules/@opentelemetry/instrumentation-winston
+      '@opentelemetry/resources':
+        specifier: ../../node_modules/@opentelemetry/resources
+        version: link:../../node_modules/@opentelemetry/resources
+      '@opentelemetry/sdk-logs':
+        specifier: ../../node_modules/@opentelemetry/sdk-logs
+        version: link:../../node_modules/@opentelemetry/sdk-logs
+      '@opentelemetry/sdk-node':
+        specifier: ../../node_modules/@opentelemetry/sdk-node
+        version: link:../../node_modules/@opentelemetry/sdk-node
+      '@opentelemetry/sdk-trace-base':
+        specifier: ../../node_modules/@opentelemetry/sdk-trace-base
+        version: link:../../node_modules/@opentelemetry/sdk-trace-base
+      '@opentelemetry/sdk-trace-node':
+        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
+        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+      '@opentelemetry/semantic-conventions':
+        specifier: ../../node_modules/@opentelemetry/semantic-conventions
+        version: link:../../node_modules/@opentelemetry/semantic-conventions
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@saleor/apps-otel':
+        specifier: workspace:*
+        version: link:../../packages/otel
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -623,7 +668,7 @@ importers:
         version: 4.13.0
       next:
         specifier: 13.4.8
-        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1

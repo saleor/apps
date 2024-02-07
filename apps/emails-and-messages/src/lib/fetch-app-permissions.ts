@@ -4,7 +4,7 @@ import {
   FetchAppPermissionsQuery,
   PermissionEnum,
 } from "../../generated/graphql";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../logger";
 
 gql`
   query FetchAppPermissions {
@@ -16,9 +16,7 @@ gql`
   }
 `;
 
-const logger = createLogger({
-  name: "fetchAppPermissions",
-});
+const logger = createLogger("fetchAppPermissions");
 
 export async function fetchAppPermissions(client: Client): Promise<PermissionEnum[]> {
   const { error, data } = await client

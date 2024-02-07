@@ -1,12 +1,14 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   OrderConfirmedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 const OrderConfirmedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -35,14 +37,12 @@ export const orderConfirmedWebhook = new SaleorAsyncWebhook<OrderConfirmedWebhoo
   subscriptionQueryAst: OrderConfirmedGraphqlSubscription,
 });
 
-const logger = createLogger({
-  name: orderConfirmedWebhook.webhookPath,
-});
+const logger = createLogger(orderConfirmedWebhook.webhookPath);
 
 const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   logger.debug("Webhook received");
 
@@ -81,7 +81,10 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default orderConfirmedWebhook.createHandler(handler);
+export default withOtel(
+  orderConfirmedWebhook.createHandler(handler),
+  "api/webhooks/order-confirmed",
+);
 
 export const config = {
   api: {

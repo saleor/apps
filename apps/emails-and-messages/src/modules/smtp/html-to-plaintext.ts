@@ -1,9 +1,7 @@
 import { convert } from "html-to-text";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({
-  name: "htmlToPlaintext",
-});
+const logger = createLogger("htmlToPlaintext");
 
 export const htmlToPlaintext = (html: string) => {
   logger.debug("Converting HTML template to plaintext");

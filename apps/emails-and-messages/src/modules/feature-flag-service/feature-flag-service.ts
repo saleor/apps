@@ -1,11 +1,9 @@
 import { Client } from "urql";
 import { FeatureFlagsState, getFeatureFlags } from "./get-feature-flags";
 import { fetchSaleorVersion } from "./fetch-saleor-version";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({
-  name: "FeatureFlagService",
-});
+const logger = createLogger("FeatureFlagService");
 
 /*
  * Manages state of feature flags, based on Saleor version.
