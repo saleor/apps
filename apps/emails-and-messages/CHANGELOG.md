@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.11.0
+
+### Minor Changes
+
+- 882943c: Added Open Telemetry setup, including spans/traces and new logger, that will send logs to OTEL collector if configured.
+
 ## 1.10.4
 
 ### Patch Changes
