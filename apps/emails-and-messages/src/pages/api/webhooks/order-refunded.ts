@@ -5,6 +5,7 @@ import { saleorApp } from "../../../saleor-app";
 import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { OrderRefundedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { withOtel } from "@saleor/apps-otel";
 
 const OrderRefundedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -39,7 +40,7 @@ const logger = createLogger({
 const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   logger.debug("Webhook received");
 
@@ -78,7 +79,7 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default orderRefundedWebhook.createHandler(handler);
+export default withOtel(orderRefundedWebhook.createHandler(handler), "api/webhooks/order-refunded");
 
 export const config = {
   api: {

@@ -3,6 +3,7 @@ import { saleorApp } from "../../../saleor-app";
 import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
+import { withOtel } from "@saleor/apps-otel";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -60,7 +61,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default notifyWebhook.createHandler(handler);
+export default withOtel(notifyWebhook.createHandler(handler), "api/webhooks/notify");
 
 export const config = {
   api: {

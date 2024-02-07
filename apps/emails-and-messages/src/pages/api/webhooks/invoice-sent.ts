@@ -7,6 +7,7 @@ import {
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { withOtel } from "@saleor/apps-otel";
 
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -58,7 +59,7 @@ const logger = createLogger({
 const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   logger.debug("Webhook received");
 
@@ -97,7 +98,7 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default invoiceSentWebhook.createHandler(handler);
+export default withOtel(invoiceSentWebhook.createHandler(handler), "api/webhooks/invoice-sent");
 
 export const config = {
   api: {

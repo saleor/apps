@@ -4,6 +4,7 @@ import { saleorApp } from "../../../saleor-app";
 import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
 import { GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { withOtel } from "@saleor/apps-otel";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
@@ -72,7 +73,7 @@ const logger = createLogger({
 const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
   logger.debug("Webhook received");
 
@@ -117,7 +118,7 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default giftCardSentWebhook.createHandler(handler);
+export default withOtel(giftCardSentWebhook.createHandler(handler), "/api/webhooks/gift-card-sent");
 
 export const config = {
   api: {
