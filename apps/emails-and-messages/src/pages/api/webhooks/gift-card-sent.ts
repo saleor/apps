@@ -1,10 +1,11 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
@@ -66,9 +67,7 @@ export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPay
   subscriptionQueryAst: GiftCardSentGraphqlSubscription,
 });
 
-const logger = createLogger({
-  name: giftCardSentWebhook.webhookPath,
-});
+const logger = createLogger(giftCardSentWebhook.webhookPath);
 
 const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async (
   req,

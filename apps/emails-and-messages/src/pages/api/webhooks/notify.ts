@@ -1,9 +1,10 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -18,9 +19,7 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   query: "{}", // We are using the default payload instead of subscription
 });
 
-const logger = createLogger({
-  name: notifyWebhook.webhookPath,
-});
+const logger = createLogger(notifyWebhook.webhookPath);
 
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.debug("Webhook received");

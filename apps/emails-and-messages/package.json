@@ -12,6 +12,8 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.1",
+    "@monaco-editor/react": "^4.4.6",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
     "@opentelemetry/api-logs": "../../node_modules/@opentelemetry/api-logs",
     "@opentelemetry/core": "../../node_modules/@opentelemetry/core",
@@ -25,12 +27,10 @@
     "@opentelemetry/sdk-trace-base": "../../node_modules/@opentelemetry/sdk-trace-base",
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
-    "@hookform/resolvers": "^3.3.1",
-    "@monaco-editor/react": "^4.4.6",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/apps-shared": "workspace:*",
-    "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-logger": "workspace:*",
+    "@saleor/apps-otel": "workspace:*",
+    "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",

@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
 import {
   SendgridConfig,
@@ -10,10 +9,9 @@ import { generateRandomId } from "../../../lib/generate-random-id";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { SendgridPrivateMetadataManager } from "./sendgrid-metadata-manager";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { createLogger } from "../../../logger";
 
-const logger = createLogger({
-  name: "SendgridConfigurationService",
-});
+const logger = createLogger("SendgridConfigurationService");
 
 export type SendgridConfigurationServiceErrorType =
   | "OTHER"
@@ -110,7 +108,7 @@ export class SendgridConfigurationService {
   private containActiveGiftCardEvent(config: SendgridConfig) {
     for (const configuration of config.configurations) {
       const giftCardSentEvent = configuration.events.find(
-        (event) => event.eventType === "GIFT_CARD_SENT"
+        (event) => event.eventType === "GIFT_CARD_SENT",
       );
 
       if (giftCardSentEvent?.active) {
@@ -127,11 +125,11 @@ export class SendgridConfigurationService {
 
     if (!availableFeatures.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
       logger.error(
-        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
+        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update.",
       );
       throw new SendgridConfigurationServiceError(
         "Gift card sent event is not supported for this Saleor version",
-        "WRONG_SALEOR_VERSION"
+        "WRONG_SALEOR_VERSION",
       );
     }
 
@@ -152,7 +150,7 @@ export class SendgridConfigurationService {
     if (!configuration) {
       throw new SendgridConfigurationServiceError(
         "Configuration not found",
-        "CONFIGURATION_NOT_FOUND"
+        "CONFIGURATION_NOT_FOUND",
       );
     }
 
@@ -203,7 +201,7 @@ export class SendgridConfigurationService {
     const configurationRoot = await this.getConfigurationRoot();
 
     const configurationIndex = configurationRoot.configurations.findIndex(
-      (conf) => conf.id === configuration.id
+      (conf) => conf.id === configuration.id,
     );
 
     const updatedConfigRoot = structuredClone(configurationRoot);
@@ -227,7 +225,7 @@ export class SendgridConfigurationService {
     const updatedConfigRoot = structuredClone(this.configurationData!);
 
     updatedConfigRoot.configurations = updatedConfigRoot.configurations.filter(
-      (configuration) => configuration.id !== id
+      (configuration) => configuration.id !== id,
     );
 
     await this.setConfigurationRoot(updatedConfigRoot);
@@ -253,7 +251,7 @@ export class SendgridConfigurationService {
     if (!event) {
       throw new SendgridConfigurationServiceError(
         "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND"
+        "EVENT_CONFIGURATION_NOT_FOUND",
       );
     }
 
@@ -283,7 +281,7 @@ export class SendgridConfigurationService {
       logger.warn("Event configuration not found, throwing an error");
       throw new SendgridConfigurationServiceError(
         "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND"
+        "EVENT_CONFIGURATION_NOT_FOUND",
       );
     }
 

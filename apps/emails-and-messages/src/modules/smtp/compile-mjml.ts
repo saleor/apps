@@ -1,9 +1,7 @@
 import mjml2html from "mjml";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({
-  name: "compileMjml",
-});
+const logger = createLogger("compileMjml");
 
 export const compileMjml = (mjml: string) => {
   logger.debug("Converting MJML template to HTML");

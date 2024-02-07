@@ -2,23 +2,24 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpConfig } from "./smtp-config-schema";
 import { SmtpPrivateMetadataManagerV2 } from "./smtp-metadata-manager-v2";
 import { smtpConfigMigrationV1ToV2 } from "./migrations/smtp-config-migration-v1-to-v2";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
-const logger = createLogger({
-  name: "SmtpPrivateMetadataManager",
-});
+const logger = createLogger("SmtpPrivateMetadataManager");
 
 export class SmtpPrivateMetadataManager {
   private metadataKey = "smtp-config-v2";
 
-  constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
+  constructor(
+    private metadataManager: SettingsManager,
+    private saleorApiUrl: string,
+  ) {}
 
   async getConfig() {
     logger.debug("Fetching config in the current version");
 
     const currentVersionManager = new SmtpPrivateMetadataManagerV2(
       this.metadataManager,
-      this.saleorApiUrl
+      this.saleorApiUrl,
     );
 
     const currentVersionConfig = await currentVersionManager.getConfig();

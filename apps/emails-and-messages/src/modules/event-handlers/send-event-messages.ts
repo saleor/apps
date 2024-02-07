@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
-import { createLogger } from "@saleor/apps-shared";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { sendSmtp } from "../smtp/send-smtp";
 import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
@@ -10,6 +9,7 @@ import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
+import { createLogger } from "../../logger";
 
 interface SendEventMessagesArgs {
   recipientEmail: string;
@@ -28,9 +28,7 @@ export const sendEventMessages = async ({
   payload,
   client,
 }: SendEventMessagesArgs) => {
-  const logger = createLogger({
-    name: "sendEventMessages",
-  });
+  const logger = createLogger("sendEventMessages");
 
   logger.debug("Function called");
 
@@ -41,7 +39,7 @@ export const sendEventMessages = async ({
   const smtpConfigurationService = new SmtpConfigurationService({
     metadataManager: new SmtpPrivateMetadataManager(
       createSettingsManager(client, authData.appId),
-      authData.saleorApiUrl
+      authData.saleorApiUrl,
     ),
     featureFlagService,
   });
@@ -49,7 +47,7 @@ export const sendEventMessages = async ({
   const sendgridConfigurationService = new SendgridConfigurationService({
     metadataManager: new SendgridPrivateMetadataManager(
       createSettingsManager(client, authData.appId),
-      authData.saleorApiUrl
+      authData.saleorApiUrl,
     ),
     featureFlagService,
   });

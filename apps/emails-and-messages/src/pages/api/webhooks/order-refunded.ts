@@ -2,10 +2,11 @@ import { OrderDetailsFragmentDoc } from "../../../../generated/graphql";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { createLogger, createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { OrderRefundedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../../logger";
 
 const OrderRefundedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -33,9 +34,7 @@ export const orderRefundedWebhook = new SaleorAsyncWebhook<OrderRefundedWebhookP
   subscriptionQueryAst: OrderRefundedGraphqlSubscription,
 });
 
-const logger = createLogger({
-  name: orderRefundedWebhook.webhookPath,
-});
+const logger = createLogger(orderRefundedWebhook.webhookPath);
 
 const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = async (
   req,

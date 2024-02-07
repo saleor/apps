@@ -2,11 +2,9 @@ import { AppConfigPrivateMetadataManager } from "../../../app-configuration/app-
 import { SendgridPrivateMetadataManagerV1 } from "../sendgrid-metadata-manager-v1";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { sendgridTransformV1toV2 } from "./sendgrid-transform-v1-to-v2";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../../../logger";
 
-const logger = createLogger({
-  name: "sendgridConfigMigrationV1ToV2",
-});
+const logger = createLogger("sendgridConfigMigrationV1ToV2");
 
 interface SendgridConfigMigrationV1ToV1Args {
   settingsManager: SettingsManager;
