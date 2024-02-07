@@ -2,23 +2,24 @@ import { SendgridConfig } from "./sendgrid-config-schema";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SendgridPrivateMetadataManagerV2 } from "./sendgrid-metadata-manager-v2";
 import { sendgridConfigMigrationV1ToV2 } from "./migrations/sendgrid-config-migration-v1-to-v2";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
-const logger = createLogger({
-  name: "SendgridPrivateMetadataManager",
-});
+const logger = createLogger("SendgridPrivateMetadataManager");
 
 export class SendgridPrivateMetadataManager {
   private metadataKey = "sendgrid-config-v2";
 
-  constructor(private metadataManager: SettingsManager, private saleorApiUrl: string) {}
+  constructor(
+    private metadataManager: SettingsManager,
+    private saleorApiUrl: string,
+  ) {}
 
   async getConfig() {
     logger.debug("Fetching config in the current version");
 
     const currentVersionManager = new SendgridPrivateMetadataManagerV2(
       this.metadataManager,
-      this.saleorApiUrl
+      this.saleorApiUrl,
     );
 
     const currentVersionConfig = await currentVersionManager.getConfig();

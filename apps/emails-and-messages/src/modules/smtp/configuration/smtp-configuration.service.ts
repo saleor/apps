@@ -1,15 +1,13 @@
 import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
-import { createLogger } from "@saleor/apps-shared";
 import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { createLogger } from "../../../logger";
 
-const logger = createLogger({
-  name: "SmtpConfigurationService",
-});
+const logger = createLogger("SmtpConfigurationService");
 
 export type SmtpConfigurationServiceErrorType =
   | "OTHER"
@@ -106,7 +104,7 @@ export class SmtpConfigurationService {
   private containActiveGiftCardEvent(config: SmtpConfig) {
     for (const configuration of config.configurations) {
       const giftCardSentEvent = configuration.events.find(
-        (event) => event.eventType === "GIFT_CARD_SENT"
+        (event) => event.eventType === "GIFT_CARD_SENT",
       );
 
       if (giftCardSentEvent?.active) {
@@ -123,11 +121,11 @@ export class SmtpConfigurationService {
 
     if (!availableFeatures.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
       logger.error(
-        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update."
+        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update.",
       );
       throw new SmtpConfigurationServiceError(
         "Gift card sent event is not supported for this Saleor version",
-        "WRONG_SALEOR_VERSION"
+        "WRONG_SALEOR_VERSION",
       );
     }
 
@@ -196,7 +194,7 @@ export class SmtpConfigurationService {
     const configurationRoot = await this.getConfigurationRoot();
 
     const configurationIndex = configurationRoot.configurations.findIndex(
-      (conf) => conf.id === configuration.id
+      (conf) => conf.id === configuration.id,
     );
 
     const updatedConfigRoot = structuredClone(configurationRoot);
@@ -220,7 +218,7 @@ export class SmtpConfigurationService {
     const updatedConfigRoot = structuredClone(this.configurationData!);
 
     updatedConfigRoot.configurations = updatedConfigRoot.configurations.filter(
-      (configuration) => configuration.id !== id
+      (configuration) => configuration.id !== id,
     );
 
     await this.setConfigurationRoot(updatedConfigRoot);
@@ -246,7 +244,7 @@ export class SmtpConfigurationService {
     if (!event) {
       throw new SmtpConfigurationServiceError(
         "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND"
+        "EVENT_CONFIGURATION_NOT_FOUND",
       );
     }
 
@@ -276,7 +274,7 @@ export class SmtpConfigurationService {
       logger.warn("Event configuration not found, throwing an error");
       throw new SmtpConfigurationServiceError(
         "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND"
+        "EVENT_CONFIGURATION_NOT_FOUND",
       );
     }
 
