@@ -20,4 +20,4 @@
 
 ## Documentation
 
-Visit [Taxes App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes) to learn how to configure and develop the app locally.
+Visit [Taxes App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) to learn how to configure and develop the app locally.
