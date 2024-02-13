@@ -8,7 +8,7 @@ describe("AvataxEntityTypeMatcher", () => {
   it("returns empty string when no entity code", async () => {
     const mockAvataxClient = {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
+        Promise.resolve({ value: [{ code: "entityCode" }] })
       ),
     } as any as AvataxClient;
 
@@ -31,7 +31,7 @@ describe("AvataxEntityTypeMatcher", () => {
   it("returns entity code when entity code is present in metadata and in avatax", async () => {
     const mockAvataxClient = {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
+        Promise.resolve({ value: [{ code: "entityCode" }] })
       ),
     } as any as AvataxClient;
 

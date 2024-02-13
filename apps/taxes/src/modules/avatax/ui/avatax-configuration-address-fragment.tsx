@@ -31,7 +31,7 @@ type AvataxConfigurationAddressFragmentProps = {
 };
 
 export const AvataxConfigurationAddressFragment = (
-  props: AvataxConfigurationAddressFragmentProps,
+  props: AvataxConfigurationAddressFragmentProps
 ) => {
   const { control, formState, getValues, setValue, watch } = useFormContext<AvataxConfig>();
   const { status, setStatus } = useAvataxConfigurationStatus();

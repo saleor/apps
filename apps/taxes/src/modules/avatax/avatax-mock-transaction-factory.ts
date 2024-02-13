@@ -2288,7 +2288,7 @@ type MockTransactionVariant = keyof typeof mockTransactionVariants;
 
 const createMockTransaction = (
   variant: MockTransactionVariant,
-  overrides?: Partial<TransactionModel>,
+  overrides?: Partial<TransactionModel>
 ): TransactionModel => ({
   ...defaultTransaction,
   ...mockTransactionVariants[variant],

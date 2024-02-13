@@ -31,7 +31,7 @@ export const CreateAvataxConfiguration = () => {
     async (config: AvataxConfig) => {
       return validateAddressMutation.mutateAsync({ value: config });
     },
-    [validateAddressMutation],
+    [validateAddressMutation]
   );
 
   const validateCredentialsMutation =
@@ -41,14 +41,14 @@ export const CreateAvataxConfiguration = () => {
     async (config: BaseAvataxConfig) => {
       return validateCredentialsMutation.mutateAsync({ value: config });
     },
-    [validateCredentialsMutation],
+    [validateCredentialsMutation]
   );
 
   const submitHandler = React.useCallback(
     (data: AvataxConfig) => {
       createMutation({ value: data });
     },
-    [createMutation],
+    [createMutation]
   );
 
   const submit = React.useMemo(() => {

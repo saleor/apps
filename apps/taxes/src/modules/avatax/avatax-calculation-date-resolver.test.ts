@@ -12,7 +12,7 @@ describe("AvataxCalculationDateResolver", () => {
     } as any as OrderConfirmedSubscriptionFragment;
 
     expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
-      new Date("2021-01-01T00:00:00.000Z"),
+      new Date("2021-01-01T00:00:00.000Z")
     );
   });
   it("should fallback to order created when metadata tax calculation date is not a string datetime", () => {
@@ -22,7 +22,7 @@ describe("AvataxCalculationDateResolver", () => {
     } as any as OrderConfirmedSubscriptionFragment;
 
     expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
-      new Date("2021-01-02T00:00:00.000Z"),
+      new Date("2021-01-02T00:00:00.000Z")
     );
   });
   it("should return the order creation date if the metadata tax calculation date is not set", () => {
@@ -31,7 +31,7 @@ describe("AvataxCalculationDateResolver", () => {
     } as any as OrderConfirmedSubscriptionFragment;
 
     expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
-      new Date("2021-01-02T00:00:00.000Z"),
+      new Date("2021-01-02T00:00:00.000Z")
     );
   });
 });

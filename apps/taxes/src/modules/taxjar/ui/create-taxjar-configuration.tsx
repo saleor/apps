@@ -29,7 +29,7 @@ export const CreateTaxJarConfiguration = () => {
     (data: TaxJarConfig) => {
       createMutation({ value: data });
     },
-    [createMutation],
+    [createMutation]
   );
 
   return (

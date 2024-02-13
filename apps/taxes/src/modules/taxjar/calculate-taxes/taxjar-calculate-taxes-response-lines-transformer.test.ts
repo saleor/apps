@@ -26,7 +26,7 @@ describe("matchPayloadLinesToResponseLines", () => {
     const responseLines = (responseMock.tax.breakdown?.line_items ?? []).slice(0, 2);
 
     expect(() => matchPayloadLinesToResponseLines(payloadLines, responseLines)).toThrowError(
-      `Saleor product line with id ${payloadLines[2].sourceLine.id} not found in TaxJar response.`,
+      `Saleor product line with id ${payloadLines[2].sourceLine.id} not found in TaxJar response.`
     );
   });
 });

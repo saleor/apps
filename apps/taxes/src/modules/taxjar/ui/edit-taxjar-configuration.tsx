@@ -39,7 +39,7 @@ export const EditTaxJarConfiguration = () => {
     { id: configurationId },
     {
       enabled: !!configurationId,
-    },
+    }
   );
 
   const submitHandler = React.useCallback(
@@ -49,7 +49,7 @@ export const EditTaxJarConfiguration = () => {
         id: configurationId,
       });
     },
-    [configurationId, patchMutation],
+    [configurationId, patchMutation]
   );
 
   const { mutate: deleteMutation, isLoading: isDeleteLoading } =

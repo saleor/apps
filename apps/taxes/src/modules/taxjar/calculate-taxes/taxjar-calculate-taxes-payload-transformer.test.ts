@@ -98,7 +98,7 @@ describe("TaxJarCalculateTaxesPayloadTransformer", () => {
     const matchesMock = mockGenerator.generateTaxCodeMatches();
 
     expect(() => transformer.transform(taxBase, matchesMock)).toThrow(
-      "Customer address is required to calculate taxes in TaxJar.",
+      "Customer address is required to calculate taxes in TaxJar."
     );
   });
 });

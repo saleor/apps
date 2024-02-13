@@ -26,7 +26,7 @@ const useGetTaxCodes = () => {
       enabled: firstConnectionId !== undefined,
       // Retry once, because it's possible we may get a timeout for such a big request.
       retry: 1,
-    },
+    }
   );
 
   React.useEffect(() => {

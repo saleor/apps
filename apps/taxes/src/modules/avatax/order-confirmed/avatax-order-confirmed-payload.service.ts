@@ -16,7 +16,7 @@ export class AvataxOrderConfirmedPayloadService {
 
   async getPayload(
     order: OrderConfirmedSubscriptionFragment,
-    avataxConfig: AvataxConfig,
+    avataxConfig: AvataxConfig
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
     const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer();

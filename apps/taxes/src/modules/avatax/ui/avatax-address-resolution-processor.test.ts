@@ -116,7 +116,7 @@ describe("AvataxAddressResolutionProcessor", () => {
   describe("extractSuggestionsFromResponse", () => {
     it("throws an error when no address", () => {
       expect(() => processor.extractSuggestionsFromResponse({} as any)).toThrowError(
-        "No address found",
+        "No address found"
       );
     });
     it("returns suggestions when address", () => {

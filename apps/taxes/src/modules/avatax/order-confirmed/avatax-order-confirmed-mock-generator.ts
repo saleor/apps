@@ -29,7 +29,7 @@ type TestingScenario = keyof typeof testingScenariosMap;
 export class AvataxOrderConfirmedMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
   generateOrder = (
-    overrides: Partial<OrderConfirmedSubscriptionFragment> = {},
+    overrides: Partial<OrderConfirmedSubscriptionFragment> = {}
   ): OrderConfirmedSubscriptionFragment =>
     structuredClone({
       ...testingScenariosMap[this.scenario].order,

@@ -19,7 +19,7 @@ describe("AppWebhookMigrator", () => {
             apiUrl: "apiUrl",
             appId: "appId",
           },
-          { mode: "report" },
+          { mode: "report" }
         );
 
         await appWebhookMigrator.registerWebhookIfItDoesntExist({} as SaleorAsyncWebhook);
@@ -41,7 +41,7 @@ describe("AppWebhookMigrator", () => {
             apiUrl: "apiUrl",
             appId: "appId",
           },
-          { mode: "migrate" },
+          { mode: "migrate" }
         );
 
         const webhookHandler = {
@@ -76,12 +76,12 @@ describe("AppWebhookMigrator", () => {
             apiUrl: "apiUrl",
             appId: "appId",
           },
-          { mode: "report" },
+          { mode: "report" }
         );
 
         await appWebhookMigrator.rollbackWebhookMigrations(
           "OrderCreated",
-          {} as unknown as SaleorSyncWebhook,
+          {} as unknown as SaleorSyncWebhook
         );
 
         expect(deleteMock).not.toHaveBeenCalled();
@@ -116,7 +116,7 @@ describe("AppWebhookMigrator", () => {
           apiUrl: "apiUrl",
           appId: "appId",
         },
-        { mode: "migrate" },
+        { mode: "migrate" }
       );
 
       await appWebhookMigrator.rollbackWebhookMigrations("OrderCreated", {
@@ -150,7 +150,7 @@ describe("AppWebhookMigrator", () => {
             apiUrl: "apiUrl",
             appId: "appId",
           },
-          { mode: "report" },
+          { mode: "report" }
         );
 
         await appWebhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");
@@ -177,7 +177,7 @@ describe("AppWebhookMigrator", () => {
             apiUrl: "apiUrl",
             appId: "appId",
           },
-          { mode: "migrate" },
+          { mode: "migrate" }
         );
 
         await appWebhookMigrator.DANGEROUS_DELETE_APP_WEBHOOK_BY_NAME("OrderCreated");

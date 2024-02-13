@@ -12,7 +12,7 @@ describe("AvataxDocumentCodeResolver", () => {
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),
+      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id })
     ).toBe("123");
   });
   it("returns order id when document code is not provided in metadata", () => {
@@ -21,17 +21,17 @@ describe("AvataxDocumentCodeResolver", () => {
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),
+      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id })
     ).toBe("id");
   });
   it("returns sliced document code when avataxDocumentCode too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: "123456789012345678901234567890", orderId: "id" }),
+      resolver.resolve({ avataxDocumentCode: "123456789012345678901234567890", orderId: "id" })
     ).toBe("12345678901234567890");
   });
   it("returns sliced document code when orderId too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: null, orderId: "123456789012345678901234567890" }),
+      resolver.resolve({ avataxDocumentCode: null, orderId: "123456789012345678901234567890" })
     ).toBe("12345678901234567890");
   });
 });

@@ -52,7 +52,7 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
     (data: AvataxConfig) => {
       props.submit.handleFn(data);
     },
-    [props],
+    [props]
   );
 
   return (

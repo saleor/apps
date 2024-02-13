@@ -16,7 +16,7 @@ export class TaxJarOrderConfirmedPayloadService {
 
   async getPayload(
     order: OrderConfirmedSubscriptionFragment,
-    taxJarConfig: TaxJarConfig,
+    taxJarConfig: TaxJarConfig
   ): Promise<CreateOrderArgs> {
     const matches = await this.getMatches();
     const payloadTransformer = new TaxJarOrderConfirmedPayloadTransformer();

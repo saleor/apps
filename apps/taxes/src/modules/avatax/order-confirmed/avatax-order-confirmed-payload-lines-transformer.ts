@@ -10,7 +10,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
     order: OrderConfirmedSubscriptionFragment,
     config: AvataxConfig,
-    matches: AvataxTaxCodeMatches,
+    matches: AvataxTaxCodeMatches
   ): LineItemModel[] {
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
@@ -20,7 +20,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
         // taxes are included because we treat what is passed in payload as the source of truth
         taxIncluded: true,
         amount: numbers.roundFloatToTwoDecimals(
-          line.totalPrice.net.amount + line.totalPrice.tax.amount,
+          line.totalPrice.net.amount + line.totalPrice.tax.amount
         ),
         taxCode,
         quantity: line.quantity,

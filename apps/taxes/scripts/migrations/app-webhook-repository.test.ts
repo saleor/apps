@@ -53,7 +53,7 @@ describe("AppWebhookRepository", () => {
       const appWebhookRepository = new AppWebhookRepository(client);
 
       await expect(
-        appWebhookRepository.create({} as unknown as CreateAppWebhookMutationVariables),
+        appWebhookRepository.create({} as unknown as CreateAppWebhookMutationVariables)
       ).rejects.toThrow();
     });
   });

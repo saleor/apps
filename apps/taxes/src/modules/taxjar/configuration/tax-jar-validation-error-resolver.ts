@@ -8,13 +8,13 @@ export class TaxJarValidationErrorResolver {
 
     if (error.status === 401) {
       return new Error(
-        "The provided API token is invalid. Please visit https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token for more information.",
+        "The provided API token is invalid. Please visit https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token for more information."
       );
     }
 
     if (error.status === 404) {
       return new Error(
-        "The provided address is invalid. Please visit https://support.taxjar.com/article/659-address-validation to learn about address formatting.",
+        "The provided address is invalid. Please visit https://support.taxjar.com/article/659-address-validation to learn about address formatting."
       );
     }
 

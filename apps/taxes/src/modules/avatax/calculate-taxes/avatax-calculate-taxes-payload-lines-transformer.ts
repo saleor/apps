@@ -9,7 +9,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
   transform(
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
-    matches: AvataxTaxCodeMatches,
+    matches: AvataxTaxCodeMatches
   ): LineItemModel[] {
     const isDiscounted = taxBase.discounts.length > 0;
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {

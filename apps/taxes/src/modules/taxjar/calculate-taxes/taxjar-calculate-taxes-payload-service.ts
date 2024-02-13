@@ -8,10 +8,7 @@ import {
 import { TaxJarCalculateTaxesPayloadTransformer } from "./taxjar-calculate-taxes-payload-transformer";
 
 export class TaxJarCalculateTaxesPayloadService {
-  constructor(
-    private readonly config: TaxJarConfig,
-    private authData: AuthData,
-  ) {}
+  constructor(private readonly config: TaxJarConfig, private authData: AuthData) {}
 
   private getMatches() {
     const taxCodeMatchesService = new TaxJarTaxCodeMatchesService(this.authData);

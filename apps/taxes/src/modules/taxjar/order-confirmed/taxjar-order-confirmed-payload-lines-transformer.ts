@@ -6,7 +6,7 @@ import { TaxJarOrderConfirmedTaxCodeMatcher } from "./taxjar-order-confirmed-tax
 export class TaxJarOrderConfirmedPayloadLinesTransformer {
   transform(
     lines: OrderConfirmedSubscriptionFragment["lines"],
-    matches: TaxJarTaxCodeMatches,
+    matches: TaxJarTaxCodeMatches
   ): LineItem[] {
     return lines.map((line) => {
       const matcher = new TaxJarOrderConfirmedTaxCodeMatcher();

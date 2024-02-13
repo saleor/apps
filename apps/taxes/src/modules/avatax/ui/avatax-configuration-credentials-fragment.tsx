@@ -17,7 +17,7 @@ type AvataxConfigurationCredentialsFragmentProps = {
 };
 
 export const AvataxConfigurationCredentialsFragment = (
-  props: AvataxConfigurationCredentialsFragmentProps,
+  props: AvataxConfigurationCredentialsFragmentProps
 ) => {
   const { control, formState, getValues, watch } = useFormContext<AvataxConfig>();
   const { setStatus } = useAvataxConfigurationStatus();

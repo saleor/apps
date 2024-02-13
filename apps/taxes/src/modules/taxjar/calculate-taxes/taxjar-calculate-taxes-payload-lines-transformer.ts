@@ -9,12 +9,12 @@ import { TaxJarCalculateTaxesTaxCodeMatcher } from "./taxjar-calculate-taxes-tax
 export class TaxJarCalculateTaxesPayloadLinesTransformer {
   transform(
     taxBase: TaxJarCalculateTaxesPayload["taxBase"],
-    matches: TaxJarTaxCodeMatches,
+    matches: TaxJarTaxCodeMatches
   ): TaxJarCalculateTaxesTarget["params"]["line_items"] {
     const { lines, discounts } = taxBase;
     const discountSum = discounts?.reduce(
       (total, current) => total + Number(current.amount.amount),
-      0,
+      0
     );
     const linePrices = lines.map((line) => Number(line.totalPrice.amount));
     const distributedDiscounts = discountUtils.distributeDiscount(discountSum, linePrices);
@@ -32,7 +32,7 @@ export class TaxJarCalculateTaxesPayloadLinesTransformer {
           unit_price: Number(line.unitPrice.amount),
           discount: discountAmount,
         };
-      },
+      }
     );
 
     return mappedLines;

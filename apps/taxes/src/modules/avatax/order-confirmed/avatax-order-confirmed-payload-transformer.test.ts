@@ -34,7 +34,7 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
           ...avataxConfigMock,
           isDocumentRecordingEnabled: false,
         },
-        [],
+        []
       );
 
       expect(payload.model.type).toBe(DocumentType.SalesOrder);

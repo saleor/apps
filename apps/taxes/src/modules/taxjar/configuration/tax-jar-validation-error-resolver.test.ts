@@ -18,7 +18,7 @@ describe("TaxJarValidationErrorResolver", () => {
 
     expect(result).toBeInstanceOf(Error);
     expect(result.message).toBe(
-      "The provided API token is invalid. Please visit https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token for more information.",
+      "The provided API token is invalid. Please visit https://support.taxjar.com/article/160-how-do-i-get-a-sales-tax-api-token for more information."
     );
   });
   it("when TaxJarError && status 404, should return error with specific message", () => {
@@ -28,7 +28,7 @@ describe("TaxJarValidationErrorResolver", () => {
 
     expect(result).toBeInstanceOf(Error);
     expect(result.message).toBe(
-      "The provided address is invalid. Please visit https://support.taxjar.com/article/659-address-validation to learn about address formatting.",
+      "The provided address is invalid. Please visit https://support.taxjar.com/article/659-address-validation to learn about address formatting."
     );
   });
   it("when TaxJarError && other status, should return error with error detail message", () => {

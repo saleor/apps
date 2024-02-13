@@ -61,7 +61,7 @@ export const EditAvataxConfiguration = () => {
     },
     {
       enabled: !!configurationId,
-    },
+    }
   );
 
   const submitHandler = React.useCallback(
@@ -72,7 +72,7 @@ export const EditAvataxConfiguration = () => {
         id: configurationId,
       });
     },
-    [configurationId, patchMutation],
+    [configurationId, patchMutation]
   );
 
   const deleteHandler = () => {
@@ -90,7 +90,7 @@ export const EditAvataxConfiguration = () => {
     async (config: AvataxConfig) => {
       return validateAddressMutation.mutateAsync({ id: configurationId, value: config });
     },
-    [configurationId, validateAddressMutation],
+    [configurationId, validateAddressMutation]
   );
 
   const validateCredentialsMutation =
@@ -100,7 +100,7 @@ export const EditAvataxConfiguration = () => {
     async (config: BaseAvataxConfig) => {
       return validateCredentialsMutation.mutateAsync({ id: configurationId, value: config });
     },
-    [configurationId, validateCredentialsMutation],
+    [configurationId, validateCredentialsMutation]
   );
 
   const submit = React.useMemo(() => {
