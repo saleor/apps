@@ -7,7 +7,7 @@ import { MatcherSection } from "../modules/ui/matcher-section";
 const Header = () => {
   return (
     <Section.Header>
-      Configure the app by connecting one of the supported tax providers
+      Configure the app by connecting to Avatax. you can connect to multiple accounts.
     </Section.Header>
   );
 };

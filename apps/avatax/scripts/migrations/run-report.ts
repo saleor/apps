@@ -3,7 +3,6 @@
 import * as dotenv from "dotenv";
 import { createAppWebhookMigrator } from "./app-webhook-migrator";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
-import { migrateTaxes } from "./1.15-taxes-migration";
 
 dotenv.config();
 
@@ -27,7 +26,7 @@ const runReport = async () => {
 
       const webhookMigrator = createAppWebhookMigrator(env, { mode: "report" });
 
-      await migrateTaxes(webhookMigrator);
+      // TODO Run migration here
     } catch (error) {
       console.log("⏩ Error while migrating webhook. Continuing with the next app.");
       continue;

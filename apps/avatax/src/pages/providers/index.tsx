@@ -2,7 +2,6 @@ import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { ProviderName } from "../../modules/provider-connections/provider-connections";
 import { AppCard } from "../../modules/ui/app-card";
-import { AppColumns } from "../../modules/ui/app-columns";
 import { ProviderLabel } from "../../modules/ui/provider-label";
 import { Section } from "../../modules/ui/app-section";
 import { AppPageLayout } from "../../modules/ui/app-page-layout";
@@ -24,18 +23,7 @@ type ProviderProps = {
   isComingSoon?: boolean;
 };
 
-// TODO: remove ProviderNameWithStripeTax when stripeTax is ready
-type ProviderNameWithStripeTax = ProviderName | "stripeTax";
-
 const providerConfig = {
-  taxjar: {
-    description: (
-      <p>
-        TaxJar is a cloud-based tax automation platform designed to simplify and streamline sales
-        tax management for online sellers.
-      </p>
-    ),
-  },
   avatax: {
     description: (
       <p>
@@ -44,22 +32,13 @@ const providerConfig = {
       </p>
     ),
   },
-  stripeTax: {
-    isComingSoon: true,
-    description: (
-      <p>
-        Stripe Tax lets you calculate, collect, and report tax on global payments with a single
-        integration.
-      </p>
-    ),
-  },
-} satisfies Record<ProviderNameWithStripeTax, ProviderProps>;
+} satisfies Record<ProviderName, ProviderProps>;
 
 const ProviderCard = ({
   description,
   provider,
   isComingSoon,
-}: ProviderProps & { provider: ProviderNameWithStripeTax }) => {
+}: ProviderProps & { provider: ProviderName }) => {
   const router = useRouter();
 
   return (

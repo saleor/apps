@@ -30,24 +30,6 @@ const mockedProviders: ProviderConnections = [
       },
     },
   },
-  {
-    provider: "taxjar",
-    id: "2",
-    config: {
-      name: "taxjar-1",
-      isSandbox: true,
-      credentials: {
-        apiKey: "taxjar-api-key",
-      },
-      address: {
-        city: "New York",
-        country: "US",
-        state: "NY",
-        street: "123 Main St",
-        zip: "10001",
-      },
-    },
-  },
 ];
 const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), mockedSecretKey);
 

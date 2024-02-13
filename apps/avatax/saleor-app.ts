@@ -35,4 +35,4 @@ export const saleorApp = new SaleorApp({
   apl,
 });
 
-export const REQUIRED_SALEOR_VERSION = ">=3.9 <4";
+export const REQUIRED_SALEOR_VERSION = ">=3.18 <4";
