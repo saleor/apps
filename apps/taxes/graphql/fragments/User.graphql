@@ -1,0 +1,5 @@
+fragment User on User {
+  id
+  email
+  avataxCustomerCode: metafield(key: "avataxCustomerCode")
+}
