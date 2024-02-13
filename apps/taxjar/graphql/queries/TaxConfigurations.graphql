@@ -1,0 +1,51 @@
+query TaxConfigurationsList(
+  $before: String
+  $after: String
+  $first: Int
+  $last: Int
+  $filter: TaxConfigurationFilterInput
+) {
+  taxConfigurations(before: $before, after: $after, first: $first, last: $last, filter: $filter) {
+    edges {
+      node {
+        ...TaxConfiguration
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}
+
+fragment TaxConfiguration on TaxConfiguration {
+  id
+  channel {
+    ...Channel
+  }
+  displayGrossPrices
+  pricesEnteredWithTax
+  chargeTaxes
+  taxCalculationStrategy
+  countries {
+    ...TaxConfigurationPerCountry
+    __typename
+  }
+  __typename
+}
+
+fragment TaxConfigurationPerCountry on TaxConfigurationPerCountry {
+  country {
+    ...CountryWithCode
+    __typename
+  }
+  chargeTaxes
+  taxCalculationStrategy
+  displayGrossPrices
+  __typename
+}
+
+fragment CountryWithCode on CountryDisplay {
+  country
+  code
+  __typename
+}

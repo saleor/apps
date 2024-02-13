@@ -1,0 +1,10 @@
+mutation UpdatePublicMetadata($id: ID!, $input: [MetadataInput!]!) {
+  updateMetadata(id: $id, input: $input) {
+    item {
+      metadata {
+        key
+        value
+      }
+    }
+  }
+}

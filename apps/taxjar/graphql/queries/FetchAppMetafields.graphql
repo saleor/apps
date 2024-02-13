@@ -1,0 +1,6 @@
+query FetchAppMetafields($keys: [String!]) {
+  app {
+    id
+    privateMetafields(keys: $keys)
+  }
+}
