@@ -52,7 +52,7 @@ const mockedValidChannels: ChannelsConfig = [
   {
     id: "1",
     config: {
-      providerConnectionId: "1",
+      providerConnectionId: "2",
       slug: "default-channel",
     },
   },
