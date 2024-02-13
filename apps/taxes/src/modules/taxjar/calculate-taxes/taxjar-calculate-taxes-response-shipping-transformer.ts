@@ -8,7 +8,7 @@ import {
 export class TaxJarCalculateTaxesResponseShippingTransformer {
   transform(
     taxBase: TaxJarCalculateTaxesPayload["taxBase"],
-    res: TaxForOrderRes
+    res: TaxForOrderRes,
   ): Pick<
     TaxJarCalculateTaxesResponse,
     "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
@@ -23,7 +23,7 @@ export class TaxJarCalculateTaxesResponseShippingTransformer {
       return {
         shipping_price_gross_amount: tax.shipping,
         shipping_price_net_amount: tax.shipping,
-        shipping_tax_rate: 0,
+        shipping_tax_rate: 0, // shipping_tax_rate is sum of all detail.rate in plugin
       };
     }
 

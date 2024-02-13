@@ -25,7 +25,7 @@ export function transformAvataxTransactionModelIntoShipping(
     return {
       shipping_price_gross_amount: 0,
       shipping_price_net_amount: 0,
-      shipping_tax_rate: 0,
+      shipping_tax_rate: 0, // shipping_tax_rate is sum of all detail.rate in plugin
     };
   }
 
@@ -43,7 +43,7 @@ export function transformAvataxTransactionModelIntoShipping(
        * avatax doesn't return combined tax rate
        * // todo: calculate percentage tax rate
        */
-      shipping_tax_rate: 0,
+      shipping_tax_rate: 0, // shipping_tax_rate is sum of all detail.rate in plugin
     };
   }
 
@@ -62,6 +62,6 @@ export function transformAvataxTransactionModelIntoShipping(
   return {
     shipping_price_gross_amount: shippingGrossAmount,
     shipping_price_net_amount: shippingTaxableAmount,
-    shipping_tax_rate: 0,
+    shipping_tax_rate: 0, // shipping_tax_rate is sum of all detail.rate in plugin
   };
 }
