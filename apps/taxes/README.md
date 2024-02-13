@@ -21,3 +21,5 @@
 ## Documentation
 
 Visit [Taxes App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) to learn how to configure and develop the app locally.
+
+TODO Migrate to "avatax" app name
