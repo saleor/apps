@@ -16,7 +16,7 @@ export default withOtel(
       const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
       const manifest: AppManifest = {
-        about: "Taxes App allows dynamic taxes calculations for orders",
+        about: "Connects to Taxjar for dynamic taxes calculation",
         appUrl: iframeBaseUrl,
         author: "Saleor Commerce",
         brand: {
@@ -27,8 +27,8 @@ export default withOtel(
         dataPrivacyUrl: "https://saleor.io/legal/privacy/",
         extensions: [],
         homepageUrl: "https://github.com/saleor/apps",
-        id: "saleor.app.taxes",
-        name: "Taxes",
+        id: "saleor.app.taxjar",
+        name: "Taxjar",
         permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
         requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
         supportUrl: "https://github.com/saleor/apps/discussions",

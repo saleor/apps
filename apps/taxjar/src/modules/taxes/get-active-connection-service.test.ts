@@ -18,29 +18,6 @@ const mockedInvalidMetadata: MetadataItem[] = [
 const mockedSecretKey = "test_secret_key";
 const mockedProviders: ProviderConnections = [
   {
-    provider: "avatax",
-    id: "1",
-    config: {
-      isDocumentRecordingEnabled: true,
-      companyCode: "DEFAULT",
-      isAutocommit: false,
-      isSandbox: true,
-      name: "avatax-1",
-      shippingTaxCode: "FR000000",
-      credentials: {
-        password: "avatax-password",
-        username: "avatax-username",
-      },
-      address: {
-        city: "New York",
-        country: "US",
-        state: "NY",
-        street: "123 Main St",
-        zip: "10001",
-      },
-    },
-  },
-  {
     provider: "taxjar",
     id: "2",
     config: {

@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { avataxConnectionSchema } from "../avatax/avatax-connection-schema";
 import { taxJarConnection } from "../taxjar/taxjar-connection-schema";
 
-export const providerConnectionSchema = taxJarConnection.or(avataxConnectionSchema);
+export const providerConnectionSchema = taxJarConnection;
 
 export const providerConnectionsSchema = z.array(providerConnectionSchema);
 

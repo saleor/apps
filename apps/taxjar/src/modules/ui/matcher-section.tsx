@@ -9,9 +9,8 @@ import { useRouter } from "next/router";
 const MatcherTable = () => {
   const { data: connections = [], isLoading } = trpcClient.providersConfiguration.getAll.useQuery();
 
-  const isAvatax = connections.some(({ provider }) => provider === "avatax");
   const isTaxJar = connections.some(({ provider }) => provider === "taxjar");
-  const isConfigured = isAvatax || isTaxJar;
+  const isConfigured = isTaxJar;
 
   const router = useRouter();
 
@@ -31,24 +30,6 @@ const MatcherTable = () => {
                 </Table.TR>
               </Table.THead>
               <Table.TBody>
-                {isAvatax && (
-                  <Table.TR>
-                    <Table.TD>
-                      <ProviderLabel name="avatax" />
-                    </Table.TD>
-                    <Table.TD>
-                      <Box display="flex" justifyContent={"flex-end"}>
-                        <Button
-                          data-testid="avatax-matcher-configure-button"
-                          onClick={() => router.push("/providers/avatax/matcher")}
-                          variant="tertiary"
-                        >
-                          Configure
-                        </Button>{" "}
-                      </Box>{" "}
-                    </Table.TD>
-                  </Table.TR>
-                )}
                 {isTaxJar && (
                   <Table.TR>
                     <Table.TD>

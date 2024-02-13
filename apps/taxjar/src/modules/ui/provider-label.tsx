@@ -1,32 +1,22 @@
 import { Box, Text } from "@saleor/macaw-ui";
 import Image from "next/image";
 import { ProviderName } from "../provider-connections/provider-connections";
-import { TaxJarIcon, AvataxIcon, StripeTaxIcon } from "../../assets";
-
-type ProviderNameWithStripeTax = ProviderName | "stripeTax";
+import { TaxJarIcon } from "../../assets";
 
 const providerConfig = {
   taxjar: {
     label: "TaxJar",
     icon: TaxJarIcon,
   },
-  avatax: {
-    label: "AvaTax",
-    icon: AvataxIcon,
-  },
-  stripeTax: {
-    label: "Stripe Tax",
-    icon: StripeTaxIcon,
-  },
 } satisfies Record<
-  ProviderNameWithStripeTax,
+  ProviderName,
   {
     label: string;
     icon: string;
   }
 >;
 
-export const ProviderLabel = ({ name }: { name: ProviderNameWithStripeTax }) => {
+export const ProviderLabel = ({ name }: { name: ProviderName }) => {
   const { label, icon } = providerConfig[name];
 
   return (

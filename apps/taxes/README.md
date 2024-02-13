@@ -1,3 +1,8 @@
+# DEPRECATION NOTE
+
+Use Avatax or Taxjar apps, which are forks of the multi-provider app.
+This app will be removed
+
 ![Saleor Taxes App](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
 
 <div align="center">

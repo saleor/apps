@@ -7,5 +7,3 @@
 This app was extracted from Avatax app. It contains Taxjar integration example, but is not actively maintained by Saleor.
 
 Feel free to fork and contribute. For officially supported taxes integration we recommend using Avatax App.
-
-TODO: Remove Avatax code

@@ -8,7 +8,6 @@ import { saleorApp } from "../../../../saleor-app";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { createGraphQLClient } from "@saleor/apps-shared";
-import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 
@@ -66,12 +65,6 @@ export default withOtel(
         token,
       });
 
-      const orderMetadataManager = new OrderMetadataManager(client);
-
-      await orderMetadataManager.updateOrderMetadataWithExternalId(
-        payload.order.id,
-        confirmedOrder.id,
-      );
       logger.info("Updated order metadata with externalId");
 
       return webhookResponse.success();

@@ -95,7 +95,6 @@ const taxIncludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
-    avataxEntityCode: null,
     __typename: "Checkout",
     user: {
       id: "123",
@@ -195,7 +194,6 @@ const taxExcludedTaxBase: TaxBase = {
     },
   ],
   sourceObject: {
-    avataxEntityCode: null,
     __typename: "Checkout",
     user: {
       id: "123",
