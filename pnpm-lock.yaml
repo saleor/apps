@@ -2764,6 +2764,7 @@ packages:
 
   /@ardatan/relay-compiler@12.0.0(graphql@16.7.1):
     resolution: {integrity: sha512-9anThAaj1dQr6IGmzBMcfzOQKTa5artjuPmw8NYK/fiGEMjADbSguBY2FMDykt+QhilR3wc9VA/3yVju7JHg7Q==}
+    hasBin: true
     peerDependencies:
       graphql: '*'
     dependencies:
@@ -7986,6 +7987,7 @@ packages:
 
   /@graphql-codegen/cli@5.0.0(@babel/core@7.23.3)(@types/node@18.15.3)(graphql@16.7.1):
     resolution: {integrity: sha512-A7J7+be/a6e+/ul2KI5sfJlpoqeqwX8EzktaKCeduyVKgOLA6W5t+NUGf6QumBDXU8PEOqXk3o3F+RAwCWOiqA==}
+    hasBin: true
     peerDependencies:
       '@parcel/watcher': ^2.1.0
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -13432,6 +13434,7 @@ packages:
   /autoprefixer@10.4.7(postcss@8.4.14):
     resolution: {integrity: sha512-ypHju4Y2Oav95SipEcCcI5J7CGPuvz8oat7sUtYj3ClK44bldfvtvcxK6IEK++7rqB7YchDGzweZIBG+SD0ZAA==}
     engines: {node: ^10 || ^12 || >=14}
+    hasBin: true
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
@@ -15706,6 +15709,7 @@ packages:
 
   /eslint-config-prettier@8.8.0(eslint@8.46.0):
     resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
+    hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
@@ -18027,6 +18031,7 @@ packages:
 
   /jscodeshift@0.14.0(@babel/preset-env@7.21.5):
     resolution: {integrity: sha512-7eCC1knD7bLUPuSCwXsMZUH51O8jIcoVyKtI6P0XM0IVzlGjckPy3FIwQlorzbN0Sg79oK+RlohN32Mqf/lrYA==}
+    hasBin: true
     peerDependencies:
       '@babel/preset-env': ^7.1.6
     dependencies:
@@ -18056,6 +18061,7 @@ packages:
 
   /jscodeshift@0.14.0(@babel/preset-env@7.22.5):
     resolution: {integrity: sha512-7eCC1knD7bLUPuSCwXsMZUH51O8jIcoVyKtI6P0XM0IVzlGjckPy3FIwQlorzbN0Sg79oK+RlohN32Mqf/lrYA==}
+    hasBin: true
     peerDependencies:
       '@babel/preset-env': ^7.1.6
     dependencies:
@@ -19406,6 +19412,7 @@ packages:
   /next@13.3.0(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-OVTw8MpIPa12+DCUkPqRGPS3thlJPcwae2ZL4xti3iBff27goH024xy4q2lhlsdoYiKOi8Kz6uJoLW/GXwgfOA==}
     engines: {node: '>=14.6.0'}
+    hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
       fibers: '>= 3.1.0'
@@ -19450,6 +19457,7 @@ packages:
   /next@13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-lxUjndYKjZHGK3CWeN2RI+/6ni6EUvjiqGWXAYPxUfGIdFGQ5XoisrqAJ/dF74aP27buAfs8MKIbIMMdxjqSBg==}
     engines: {node: '>=16.8.0'}
+    hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
       fibers: '>= 3.1.0'
@@ -19492,6 +19500,7 @@ packages:
   /next@13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-lxUjndYKjZHGK3CWeN2RI+/6ni6EUvjiqGWXAYPxUfGIdFGQ5XoisrqAJ/dF74aP27buAfs8MKIbIMMdxjqSBg==}
     engines: {node: '>=16.8.0'}
+    hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
       fibers: '>= 3.1.0'
@@ -19535,6 +19544,7 @@ packages:
   /next@13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-lxUjndYKjZHGK3CWeN2RI+/6ni6EUvjiqGWXAYPxUfGIdFGQ5XoisrqAJ/dF74aP27buAfs8MKIbIMMdxjqSBg==}
     engines: {node: '>=16.8.0'}
+    hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
       fibers: '>= 3.1.0'
@@ -20465,6 +20475,7 @@ packages:
   /pretty-quick@3.1.3(prettier@3.0.3):
     resolution: {integrity: sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA==}
     engines: {node: '>=10.13'}
+    hasBin: true
     peerDependencies:
       prettier: '>=2.0.0'
     dependencies:
@@ -23087,6 +23098,7 @@ packages:
 
   /update-browserslist-db@1.0.11(browserslist@4.21.10):
     resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
+    hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
@@ -23097,6 +23109,7 @@ packages:
 
   /update-browserslist-db@1.0.11(browserslist@4.21.9):
     resolution: {integrity: sha512-dCwEFf0/oT85M1fHBg4F0jtLwJrutGoHSQXCh7u4o2t1drG+c0a9Flnqww6XUKSfQMPpJBRjU8d4RXB09qtvaA==}
+    hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
@@ -23107,6 +23120,7 @@ packages:
 
   /update-browserslist-db@1.0.13(browserslist@4.22.1):
     resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
+    hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
     dependencies:
@@ -23345,6 +23359,7 @@ packages:
   /vite@4.4.8(@types/node@18.15.3):
     resolution: {integrity: sha512-LONawOUUjxQridNWGQlNizfKH89qPigK36XhMI7COMGztz8KNY0JHim7/xDd71CZwGT4HtSRgI7Hy+RlhG0Gvg==}
     engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
     peerDependencies:
       '@types/node': '>= 14'
       less: '*'
@@ -23379,6 +23394,7 @@ packages:
   /vitest@0.34.1(jsdom@20.0.3):
     resolution: {integrity: sha512-G1PzuBEq9A75XSU88yO5G4vPT20UovbC/2osB2KEuV/FisSIIsw7m5y2xMdB7RsAGHAfg2lPmp2qKr3KWliVlQ==}
     engines: {node: '>=v14.18.0'}
+    hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@vitest/browser': '*'
@@ -23542,6 +23558,7 @@ packages:
   /webpack@5.82.1(esbuild@0.17.19):
     resolution: {integrity: sha512-C6uiGQJ+Gt4RyHXXYt+v9f+SN1v83x68URwgxNQ98cvH8kxiuywWGP4XeNZ1paOzZ63aY3cTciCEQJNFUljlLw==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
     peerDependencies:
       webpack-cli: '*'
     peerDependenciesMeta:
