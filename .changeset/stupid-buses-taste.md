@@ -1,5 +1,5 @@
 ---
-"avatax": patch
+"app-avatax": patch
 ---
 
 Empty changeset
