@@ -1,6 +1,6 @@
 {
   "name": "taxjar",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
@@ -55,7 +55,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
-    "taxjar": "^4.0.1",
+    "taxjar": "^1.0.0",
     "urql": "^4.0.4",
     "usehooks-ts": "^2.9.1",
     "vite": "4.4.8",

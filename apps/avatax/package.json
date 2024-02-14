@@ -1,6 +1,6 @@
 {
   "name": "avatax",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
@@ -42,7 +42,7 @@
     "@trpc/react-query": "10.43.1",
     "@trpc/server": "10.43.1",
     "@urql/exchange-auth": "^2.1.4",
-    "avatax": "^23.7.0",
+    "avatax": "^1.0.0",
     "dotenv": "^16.3.1",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
