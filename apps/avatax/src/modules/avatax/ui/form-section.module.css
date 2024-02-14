@@ -1,0 +1,5 @@
+/* when formSection is disabled, change the color of the a element: */
+.formSection[disabled] a,
+.formSection[disabled] a span {
+  color: inherit;
+}

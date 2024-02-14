@@ -1,0 +1,9 @@
+
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js
+
+# Sentry Auth Token
+.sentryclirc
