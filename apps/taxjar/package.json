@@ -1,5 +1,5 @@
 {
-  "name": "taxjar",
+  "name": "app-taxjar",
   "version": "0.0.0",
   "scripts": {
     "build": "pnpm generate && next build",

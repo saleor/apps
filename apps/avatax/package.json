@@ -1,5 +1,5 @@
 {
-  "name": "avatax",
+  "name": "app-avatax",
   "version": "0.0.0",
   "scripts": {
     "build": "pnpm generate && next build",
