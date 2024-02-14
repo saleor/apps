@@ -6,3 +6,11 @@
 /apps/taxes  @saleor/shopex-js
 /apps/search @saleor/shopex-js
 /apps/klaviyo @saleor/shopex-js
+
+/apps/cms-v2 @saleor/Merchant-JS
+/apps/crm @saleor/Merchant-JS
+/apps/data-importer @saleor/Merchant-JS
+/apps/invoices @saleor/Merchant-JS
+/apps/products-feed @saleor/Merchant-JS
+/apps/slack @saleor/Merchant-JS
+/apps/segment @saleor/Merchant-JS
