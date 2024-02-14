@@ -57,6 +57,7 @@ export type VoidTransactionArgs = {
 };
 
 export type RefundTransactionParams = {
+  refundDate: Date;
   transactionCode: string;
   companyCode: string;
 };
@@ -125,7 +126,7 @@ export class AvataxClient {
       companyCode: params.companyCode,
       model: {
         refundTransactionCode: params.transactionCode,
-        refundDate: new Date(),
+        refundDate: params.refundDate,
         refundType: RefundType.Full,
       },
     });

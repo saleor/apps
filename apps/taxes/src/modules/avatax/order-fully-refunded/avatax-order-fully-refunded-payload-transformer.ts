@@ -31,9 +31,12 @@ export class AvataxOrderRefundedPayloadTransformer {
       orderId: order.id,
     });
 
+    const refundDate = payload.issuedAt ? new Date(payload.issuedAt) : new Date();
+
     return {
       transactionCode: code,
       companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
+      refundDate,
     };
   }
 }
