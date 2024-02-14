@@ -7,10 +7,10 @@
 /apps/search @saleor/shopex-js
 /apps/klaviyo @saleor/shopex-js
 
-/apps/cms-v2 @saleor/Merchant-JS
-/apps/crm @saleor/Merchant-JS
-/apps/data-importer @saleor/Merchant-JS
-/apps/invoices @saleor/Merchant-JS
-/apps/products-feed @saleor/Merchant-JS
-/apps/slack @saleor/Merchant-JS
-/apps/segment @saleor/Merchant-JS
+/apps/cms-v2 @saleor/merchant-js
+/apps/crm @saleor/merchant-js
+/apps/data-importer @saleor/merchant-js
+/apps/invoices @saleor/merchant-js
+/apps/products-feed @saleor/merchant-js
+/apps/slack @saleor/merchant-js
+/apps/segment @saleor/merchant-js
