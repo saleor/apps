@@ -14,7 +14,7 @@ const Intro = () => {
             Saleor offers two ways of calculating taxes: flat or dynamic rates.
           </Text>
           <Text as="p" marginBottom={4}>
-            Taxes App leverages the dynamic rates by delegating the tax calculation to third-party
+            Taxjar App leverages the dynamic rates by delegating the tax calculation to third-party
             services.
           </Text>
           <Text as="p">

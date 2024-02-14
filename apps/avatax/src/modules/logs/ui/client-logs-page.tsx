@@ -10,7 +10,7 @@ const LogsInstructions = () => {
       description={
         <>
           <Text as="p" marginBottom={8}>
-            Taxes App records all failed API calls and responses. You can use this information to
+            Avatax App records all failed API calls and responses. You can use this information to
             debug issues with your provider.
           </Text>
           <Text as="p" marginBottom={8}>

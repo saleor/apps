@@ -26,7 +26,7 @@ const runReport = async () => {
 
       const webhookMigrator = createAppWebhookMigrator(env, { mode: "report" });
 
-      // TODO Run migration here
+      throw new Error("No migrations registered");
     } catch (error) {
       console.log("⏩ Error while migrating webhook. Continuing with the next app.");
       continue;

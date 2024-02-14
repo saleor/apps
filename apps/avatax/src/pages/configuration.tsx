@@ -7,7 +7,7 @@ import { MatcherSection } from "../modules/ui/matcher-section";
 const Header = () => {
   return (
     <Section.Header>
-      Configure the app by connecting to Avatax. you can connect to multiple accounts.
+      Configure the app by connecting to Avatax. You can connect to multiple accounts.
     </Section.Header>
   );
 };
