@@ -1,11 +1,23 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderConfirmedSubscriptionFragment, OrderLine } from "../../../../generated/graphql";
+import {
+  OrderConfirmedSubscriptionFragment,
+  OrderLine,
+  OrderLineFragment,
+} from "../../../../generated/graphql";
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
-import { resolveAvataxTransactionLineNumber } from "../avatax-line-number-resolver";
+
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-calculate-taxes-adapter";
+
+/**
+ * @description Makes sure we use the same line number for creating & refunding transaction. AvaTax requires that the line number is <= 50 characters.
+ */
+export function resolveAvataxTransactionLineNumber(line: OrderLineFragment) {
+  // get last 50 characters of line.id
+  return line.id.slice(-50);
+}
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
