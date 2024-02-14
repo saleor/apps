@@ -1,14 +1,35 @@
 import { describe, expect, it } from "vitest";
-import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
+import {
+  AvataxOrderConfirmedPayloadLinesTransformer,
+  resolveAvataxTransactionLineNumber,
+} from "./avatax-order-confirmed-payload-lines-transformer";
 import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
+import { OrderLineFragment } from "../../../../generated/graphql";
 
 const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
 const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const orderMock = mockGenerator.generateOrder();
 
 const matches: AvataxTaxCodeMatches = [];
+
+describe("resolveAvataxTransactionLineNumber", () => {
+  it("takes last 50 characters of id", () => {
+    expect(
+      resolveAvataxTransactionLineNumber({
+        id: "c9a81439-2dd3-4d0f-a782-d51f41d8e959-4041b7a0-2aab-4777-b310-08b6995d6220",
+      } as unknown as OrderLineFragment),
+    ).toBe("-d51f41d8e959-4041b7a0-2aab-4777-b310-08b6995d6220");
+  });
+  it("returns full id if less than 50 characters", () => {
+    expect(
+      resolveAvataxTransactionLineNumber({
+        id: "abc123",
+      } as unknown as OrderLineFragment),
+    ).toBe("abc123");
+  });
+});
 
 describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
   const lines = linesTransformer.transform(orderMock, avataxConfigMock, matches);
