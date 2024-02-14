@@ -1,5 +1,11 @@
 # saleor-app-taxes
 
+## 1.22.1
+
+### Patch Changes
+
+- 221c924: App was deprecated in favor of Avatax and Taxjar individual apps
+
 ## 1.22.0
 
 ### Minor Changes
