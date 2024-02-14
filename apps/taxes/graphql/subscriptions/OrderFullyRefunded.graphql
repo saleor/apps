@@ -1,6 +1,7 @@
 fragment OrderFullyRefundedEventSubscription on Event {
   __typename
   ... on OrderFullyRefunded {
+    issuedAt
     order {
       ...OrderBase
       grantedRefunds {
