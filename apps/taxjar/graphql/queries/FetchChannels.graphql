@@ -1,0 +1,11 @@
+query Channel($id: ID!) {
+  channel(id: $id) {
+    ...Channel
+  }
+}
+
+query FetchChannels {
+  channels {
+    ...Channel
+  }
+}
