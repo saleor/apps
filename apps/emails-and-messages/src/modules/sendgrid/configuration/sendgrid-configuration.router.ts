@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import {
   sendgridConfigurationIdInputSchema,
   sendgridCreateConfigurationInputSchema,
@@ -17,9 +16,10 @@ import { fetchSenders } from "../sendgrid-api";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { sendgridDefaultEmptyConfigurations } from "./sendgrid-default-empty-configurations";
 import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
+import { createLogger } from "../../../logger";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
-  error: SendgridConfigurationServiceError | unknown
+  error: SendgridConfigurationServiceError | unknown,
 ) => {
   if (error instanceof SendgridConfigurationServiceError) {
     switch (error.errorType) {
@@ -53,7 +53,7 @@ export const throwTrpcErrorFromConfigurationServiceError = (
 
 export const sendgridConfigurationRouter = router({
   fetch: protectedWithConfigurationServices.query(async ({ ctx }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+    const logger = createLogger("sendgridConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("sendgridConfigurationRouter.fetch called");
     return ctx.sendgridConfigurationService.getConfigurationRoot();
@@ -62,7 +62,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.get called");
       try {
@@ -75,7 +77,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.getConfigurations called");
       try {
@@ -88,7 +92,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.create called");
       const newConfiguration = {
@@ -102,7 +108,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.delete called");
 
@@ -116,7 +124,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.getEventConfiguration called");
 
@@ -133,7 +143,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
 
@@ -147,7 +159,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateApiConnectionSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateApiConnection called");
 
@@ -162,7 +176,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateBasicInformation called");
 
@@ -199,7 +215,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateChannels called");
 
@@ -221,7 +239,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateEvent called");
 
@@ -242,7 +262,9 @@ export const sendgridConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
     .input(sendgridUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
+      const logger = createLogger("sendgridConfigurationRouter", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       logger.debug(input, "sendgridConfigurationRouter.updateEventArray called");
 

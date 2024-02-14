@@ -1,4 +1,3 @@
-import { createLogger } from "@saleor/apps-shared";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
 import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
@@ -8,8 +7,9 @@ import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
 import { protectedClientProcedure } from "./protected-client-procedure";
 import { WebhookManagementService } from "../webhook-management/webhook-management-service";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({ name: "protectedWithConfigurationServices middleware" });
+const logger = createLogger("protectedWithConfigurationServices middleware");
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -32,7 +32,7 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
     const smtpConfigurationService = new SmtpConfigurationService({
       metadataManager: new SmtpPrivateMetadataManager(
         createSettingsManager(ctx.apiClient, ctx.appId!),
-        ctx.saleorApiUrl
+        ctx.saleorApiUrl,
       ),
       featureFlagService,
     });
@@ -40,7 +40,7 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
     const sendgridConfigurationService = new SendgridConfigurationService({
       metadataManager: new SendgridPrivateMetadataManager(
         createSettingsManager(ctx.apiClient, ctx.appId!),
-        ctx.saleorApiUrl
+        ctx.saleorApiUrl,
       ),
       featureFlagService,
     });
@@ -70,5 +70,5 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
     }
 
     return result;
-  }
+  },
 );

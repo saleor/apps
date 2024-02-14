@@ -1,7 +1,7 @@
-import { createLogger } from "@saleor/apps-shared";
 import { SendgridConfiguration } from "./configuration/sendgrid-config-schema";
 import { MailService } from "@sendgrid/mail";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
+import { createLogger } from "../../logger";
 
 interface SendSendgridArgs {
   recipientEmail: string;
@@ -23,7 +23,7 @@ export const sendSendgrid = async ({
   event,
   sendgridConfiguration,
 }: SendSendgridArgs) => {
-  const logger = createLogger({
+  const logger = createLogger("sendSendgrid", {
     name: "sendSendgrid",
     event,
   });

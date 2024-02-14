@@ -1,10 +1,10 @@
-import { createLogger } from "@saleor/apps-shared";
 import { compileMjml } from "./compile-mjml";
 import { compileHandlebarsTemplate } from "./compile-handlebars-template";
 import { sendEmailWithSmtp, SendMailArgs } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
 import { SmtpConfiguration } from "./configuration/smtp-config-schema";
+import { createLogger } from "../../logger";
 
 interface SendSmtpArgs {
   smtpConfiguration: SmtpConfiguration;
@@ -26,7 +26,7 @@ export const sendSmtp = async ({
   event,
   smtpConfiguration,
 }: SendSmtpArgs) => {
-  const logger = createLogger({
+  const logger = createLogger("sendSmtp", {
     name: "sendSmtp",
     event,
   });
@@ -49,7 +49,7 @@ export const sendSmtp = async ({
 
   const { template: emailSubject, errors: handlebarsSubjectErrors } = compileHandlebarsTemplate(
     subject,
-    payload
+    payload,
   );
 
   if (handlebarsSubjectErrors?.length) {
@@ -70,7 +70,7 @@ export const sendSmtp = async ({
 
   const { template: mjmlTemplate, errors: handlebarsErrors } = compileHandlebarsTemplate(
     rawTemplate,
-    payload
+    payload,
   );
 
   if (handlebarsErrors?.length) {

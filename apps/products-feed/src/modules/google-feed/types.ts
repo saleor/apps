@@ -20,6 +20,7 @@ export type ProductEntry = {
   brand?: string;
   pattern?: string;
   weight?: string;
+  gtin?: string;
 };
 
 export type ShopDetailsEntry = {

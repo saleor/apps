@@ -23,6 +23,7 @@ const exampleAttributeMappingConfig: RootConfig["attributeMapping"] = {
   patternAttributeIds: [],
   materialAttributeIds: [],
   sizeAttributeIds: [],
+  gtinAttributeIds: [],
 };
 
 const exampleTitleTemplate: RootConfig["titleTemplate"] =
@@ -52,6 +53,7 @@ describe("AppConfig", function () {
           patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
+          gtinAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -84,6 +86,7 @@ describe("AppConfig", function () {
           patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
+          gtinAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -115,6 +118,7 @@ describe("AppConfig", function () {
           patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
+          gtinAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -138,6 +142,7 @@ describe("AppConfig", function () {
           patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: [],
+          gtinAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -167,6 +172,7 @@ describe("AppConfig", function () {
         patternAttributeIds: [],
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
+        gtinAttributeIds: [],
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       imageSize: 1024,
@@ -194,6 +200,7 @@ describe("AppConfig", function () {
           patternAttributeIds: [],
           materialAttributeIds: [],
           sizeAttributeIds: ["size-id"],
+          gtinAttributeIds: [],
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
@@ -225,6 +232,7 @@ describe("AppConfig", function () {
         patternAttributeIds: [],
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
+        gtinAttributeIds: [],
       });
     });
   });

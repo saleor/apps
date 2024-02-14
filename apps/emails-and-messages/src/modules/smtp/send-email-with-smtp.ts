@@ -1,10 +1,8 @@
 import nodemailer from "nodemailer";
-import { createLogger } from "@saleor/apps-shared";
 import { SmtpEncryptionType } from "./configuration/migrations/mjml-config-schema-v1";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({
-  name: "sendEmailWithSmtp",
-});
+const logger = createLogger("sendEmailWithSmtp");
 
 export interface SendMailArgs {
   smtpSettings: {

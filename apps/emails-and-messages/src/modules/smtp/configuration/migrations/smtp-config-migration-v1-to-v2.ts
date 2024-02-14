@@ -2,11 +2,9 @@ import { AppConfigPrivateMetadataManager } from "../../../app-configuration/app-
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { MjmlPrivateMetadataManager } from "../mjml-metadata-manager";
 import { smtpTransformV1toV2 } from "./smtp-transform-v1-to-v2";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../../../logger";
 
-const logger = createLogger({
-  name: "smtpConfigMigrationV1ToV2",
-});
+const logger = createLogger("smtpConfigMigrationV1ToV2");
 
 interface SmtpConfigMigrationV1ToV1Args {
   settingsManager: SettingsManager;

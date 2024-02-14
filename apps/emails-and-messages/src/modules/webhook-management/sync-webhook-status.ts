@@ -1,10 +1,10 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
 import { WebhookManagementService, AppWebhook } from "./webhook-management-service";
-import { createLogger } from "@saleor/apps-shared";
 import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({ name: "SyncWebhooksStatus" });
+const logger = createLogger("SyncWebhooksStatus");
 
 interface SyncWebhooksStatusArgs {
   smtpConfigurationService: SmtpConfigurationService;

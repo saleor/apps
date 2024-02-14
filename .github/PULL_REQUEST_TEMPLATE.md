@@ -11,3 +11,7 @@
 <!-- If the PR is not related to any app's or package changes, changesets should be skipped. Use "skip changeset" label for that -->
 
 - [ ] I added changesets and [read good practices](/.changeset/README.md). 
+
+## Known problems
+
+- If deployment of `saleor-app-search` fails - rerun vercel deployment. We work with Vercel of fixing that but for now we suggest this as workaround.

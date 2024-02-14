@@ -6,7 +6,13 @@ const isSentryPropertiesInEnvironment =
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
+  transpilePackages: [
+    "@saleor/apps-otel",
+    "@saleor/apps-logger",
+    "@saleor/apps-shared",
+    "@saleor/apps-ui",
+    "@saleor/react-hook-form-macaw",
+  ],
 };
 
 const configWithSentry = withSentryConfig(
@@ -22,7 +28,7 @@ const configWithSentry = withSentryConfig(
     tunnelRoute: "/monitoring",
     hideSourceMaps: true,
     disableLogger: true,
-  }
+  },
 );
 
 module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;

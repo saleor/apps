@@ -183,6 +183,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  if (p.gtin) {
+    item.push({
+      "g:gtin": [
+        {
+          "#text": p.gtin,
+        },
+      ],
+    });
+  }
+
   return {
     item,
   };

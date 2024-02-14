@@ -1,5 +1,17 @@
 # saleor-app-taxes
 
+## 1.22.1
+
+### Patch Changes
+
+- 221c924: App was deprecated in favor of Avatax and Taxjar individual apps
+
+## 1.22.0
+
+### Minor Changes
+
+- 6b8eb17: The app can now read the value of AvaTax's transaction `customerCode` from the `user.avataxCustomerCode` metadata field. If not provided, the app will use `user.id` for a logged-in user or the recommended fallback value.
+
 ## 1.21.2
 
 ### Patch Changes
