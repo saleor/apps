@@ -64,11 +64,11 @@ export class TaxJarWebhookService implements ProviderWebhookService {
 
   async cancelOrder(payload: OrderCancelledEventSubscriptionFragment) {
     // todo: implement
-    this.logger.debug("cancelOrder not implemented for TaxJar");
+    this.logger.warn("cancelOrder not implemented for TaxJar");
   }
 
   async refundTransaction(payload: OrderFullyRefundedPayload) {
     // todo: implement
-    this.logger.debug("refundOrder not implemented for TaxJar");
+    this.logger.warn("refundOrder not implemented for TaxJar");
   }
 }
