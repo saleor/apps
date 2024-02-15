@@ -9,6 +9,7 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { err, ok } from "neverthrow";
 
 export const config = {
   api: {
@@ -23,14 +24,14 @@ export type CalculateTaxesPayload = Extract<
 
 function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   if (!payload.taxBase.lines.length) {
-    throw new TaxIncompleteWebhookPayloadError("No lines found in taxBase");
+    return err(new TaxIncompleteWebhookPayloadError("No lines found in taxBase"));
   }
 
   if (!payload.taxBase.address) {
-    throw new TaxIncompleteWebhookPayloadError("No address found in taxBase");
+    return err(new TaxIncompleteWebhookPayloadError("No address found in taxBase"));
   }
 
-  return payload;
+  return ok(payload);
 }
 
 export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
@@ -50,8 +51,17 @@ export default withOtel(
     logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
     try {
-      verifyCalculateTaxesPayload(payload);
-      logger.debug("Payload validated Successfully");
+      const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+
+      payloadVerificationResult
+        .mapErr((error) => {
+          logger.error(`[${error.name}] ${error.message}`);
+
+          return webhookResponse.error(error);
+        })
+        .map(() => {
+          logger.debug("Payload validated Successfully");
+        });
 
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.taxBase.channel.slug;
