@@ -46,7 +46,7 @@ export default withOtel(
       const channelSlug = payload.order.channel.slug;
       const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-      logger.info("Cancelling order...");
+      logger.info("Cancelling order...", { payload });
 
       await taxProvider.cancelOrder(payload);
 

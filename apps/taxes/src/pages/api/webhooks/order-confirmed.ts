@@ -56,7 +56,7 @@ export default withOtel(
         return webhookResponse.error(new Error("Skipping fulfilled order to prevent duplication"));
       }
 
-      logger.info("Confirming order...");
+      logger.info("Confirming order...", { payload });
 
       const confirmedOrder = await taxProvider.confirmOrder(payload.order);
 

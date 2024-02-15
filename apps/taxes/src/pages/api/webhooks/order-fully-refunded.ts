@@ -47,7 +47,7 @@ export default orderFullyRefundedAsyncWebhook.createHandler(async (req, res, ctx
     const channelSlug = order.channel.slug;
     const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
-    logger.info("Refunding order...");
+    logger.info("Refunding order...", { payload });
 
     const refundedOrder = await taxProvider.refundTransaction(payload);
 

@@ -58,7 +58,7 @@ export default withOtel(
         ctx.authData,
       );
 
-      logger.info("Found active connection service. Calculating taxes...");
+      logger.info("Calculating taxes...", { payload });
       const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
 
       logger.info("Taxes calculated", { calculatedTaxes });
