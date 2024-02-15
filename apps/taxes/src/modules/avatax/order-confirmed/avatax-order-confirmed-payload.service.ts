@@ -3,7 +3,7 @@ import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphq
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
-import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
+import { transformAvataxOrderConfirmedPayload } from "./avatax-order-confirmed-payload-transformer";
 
 export class AvataxOrderConfirmedPayloadService {
   constructor(private authData: AuthData) {}
@@ -16,11 +16,10 @@ export class AvataxOrderConfirmedPayloadService {
 
   async getPayload(
     order: OrderConfirmedSubscriptionFragment,
-    avataxConfig: AvataxConfig
+    avataxConfig: AvataxConfig,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
-    const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer();
 
-    return payloadTransformer.transform(order, avataxConfig, matches);
+    return transformAvataxOrderConfirmedPayload(order, avataxConfig, matches);
   }
 }

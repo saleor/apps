@@ -1,10 +1,8 @@
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-import { AvataxDocumentCodeResolver } from "./avatax-document-code-resolver";
+import { avataxData } from "./avatax-data-resolver";
 import { expect, describe, it } from "vitest";
 
-const resolver = new AvataxDocumentCodeResolver();
-
-describe("AvataxDocumentCodeResolver", () => {
+describe("avataxData.documentCode.resolve", () => {
   it("returns document code when provided in metadata", () => {
     const order = {
       id: "id",
@@ -12,7 +10,10 @@ describe("AvataxDocumentCodeResolver", () => {
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id })
+      avataxData.documentCode.resolve({
+        avataxDocumentCode: order.avataxDocumentCode,
+        orderId: order.id,
+      }),
     ).toBe("123");
   });
   it("returns order id when document code is not provided in metadata", () => {
@@ -21,17 +22,26 @@ describe("AvataxDocumentCodeResolver", () => {
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id })
+      avataxData.documentCode.resolve({
+        avataxDocumentCode: order.avataxDocumentCode,
+        orderId: order.id,
+      }),
     ).toBe("id");
   });
   it("returns sliced document code when avataxDocumentCode too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: "123456789012345678901234567890", orderId: "id" })
+      avataxData.documentCode.resolve({
+        avataxDocumentCode: "123456789012345678901234567890",
+        orderId: "id",
+      }),
     ).toBe("12345678901234567890");
   });
   it("returns sliced document code when orderId too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: null, orderId: "123456789012345678901234567890" })
+      avataxData.documentCode.resolve({
+        avataxDocumentCode: null,
+        orderId: "123456789012345678901234567890",
+      }),
     ).toBe("12345678901234567890");
   });
 });

@@ -5,7 +5,7 @@ import { OrderFullyRefundedPayload } from "../../../pages/api/webhooks/order-ful
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { RefundTransactionParams } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
+import { avataxData } from "../avatax-data-resolver";
 
 export class AvataxOrderRefundedPayloadTransformer {
   private logger = createLogger("AvataxOrderRefundedPayloadTransformer");
@@ -23,9 +23,7 @@ export class AvataxOrderRefundedPayloadTransformer {
       new CriticalError("Order not found in payload"),
     );
 
-    const documentCodeResolver = new AvataxDocumentCodeResolver();
-
-    const code = documentCodeResolver.resolve({
+    const code = avataxData.documentCode.resolve({
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
