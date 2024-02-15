@@ -1,4 +1,3 @@
-import { ExpectedError } from "../../../error";
 import { createLogger } from "../../../logger";
 import { OrderFullyRefundedPayload } from "../../../pages/api/webhooks/order-fully-refunded";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -18,12 +17,6 @@ export class AvataxOrderFullyRefundedAdapter
       { payload },
       "Transforming the Saleor payload for refunding order with AvaTax...",
     );
-
-    if (!this.config.isAutocommit) {
-      throw new ExpectedError(
-        "Unable to refund transaction. AvaTax can only refund committed transactions.",
-      );
-    }
 
     const client = new AvataxClient(this.config);
     const payloadTransformer = new AvataxOrderRefundedPayloadTransformer();
