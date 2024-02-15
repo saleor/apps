@@ -13,24 +13,20 @@ export class AvataxOrderFullyRefundedAdapter
   constructor(private readonly config: AvataxConfig) {}
 
   async send(payload: OrderFullyRefundedPayload) {
-    this.logger.debug(
-      { payload },
-      "Transforming the Saleor payload for refunding order with AvaTax...",
-    );
+    this.logger.debug("Transforming the Saleor payload for refunding order with AvaTax...", {
+      payload,
+    });
 
     const client = new AvataxClient(this.config);
     const payloadTransformer = new AvataxOrderRefundedPayloadTransformer();
     const target = payloadTransformer.transform(payload, this.config);
 
-    this.logger.debug(
-      {
-        target,
-      },
-      `Refunding the transaction...`,
-    );
+    this.logger.debug(`Refunding the transaction...`, {
+      target,
+    });
 
     const response = await client.fullyRefundTransaction(target);
 
-    this.logger.debug({ response }, `Successfully refunded the transaction`);
+    this.logger.debug(`Successfully refunded the transaction`, { response });
   }
 }

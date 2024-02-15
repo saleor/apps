@@ -51,7 +51,7 @@ export default orderFullyRefundedAsyncWebhook.createHandler(async (req, res, ctx
 
     const refundedOrder = await taxProvider.refundTransaction(payload);
 
-    logger.info({ refundedOrder }, "Order refunded");
+    logger.info("Order refunded", { refundedOrder });
 
     return webhookResponse.success();
   } catch (error) {
