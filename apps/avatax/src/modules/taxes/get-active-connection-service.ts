@@ -8,10 +8,13 @@ import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { ProviderWebhookService } from "./tax-provider-webhook";
 import { createClientLogger } from "../logs/client-logger";
-import { ExpectedError } from "../../error";
+import { BaseError, ExpectedError } from "../../error";
 import { createLogger } from "../../logger";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 
-// todo: refactor to a factory
+/**
+ * TODO: Probably this abstraction should be removed
+ */
 class ActiveTaxProviderService implements ProviderWebhookService {
   private logger = createLogger("ActiveTaxProviderService");
   private client: AvataxWebhookService;
@@ -20,27 +23,17 @@ class ActiveTaxProviderService implements ProviderWebhookService {
     providerConnection: ProviderConnection,
     private authData: AuthData,
   ) {
-    const taxProviderName = providerConnection.provider;
     const clientLogger = createClientLogger({
       authData,
       configurationId: providerConnection.id,
     });
 
-    switch (taxProviderName) {
-      case "avatax": {
-        this.logger.debug("Selecting AvaTax as tax provider");
-        this.client = new AvataxWebhookService({
-          config: providerConnection.config,
-          authData: this.authData,
-          clientLogger,
-        });
-        break;
-      }
-
-      default: {
-        throw new Error(`Tax provider ${taxProviderName} doesn't match`);
-      }
-    }
+    this.logger.debug("Selecting AvaTax as tax provider");
+    this.client = new AvataxWebhookService({
+      config: providerConnection.config,
+      authData: this.authData,
+      clientLogger,
+    });
   }
 
   async calculateTaxes(payload: CalculateTaxesPayload) {
@@ -52,37 +45,89 @@ class ActiveTaxProviderService implements ProviderWebhookService {
   }
 
   async cancelOrder(payload: OrderCancelledPayload) {
-    this.client.cancelOrder(payload);
+    return this.client.cancelOrder(payload);
   }
 }
+
+const ActiveConnectionServiceError = BaseError.subclass("ActiveConnectionServiceError");
+
+export const ActiveConnectionServiceErrors = {
+  /**
+   * TODO: What does it mean?  How it should behave?
+   */
+  MissingChannelSlugError: ActiveConnectionServiceError.subclass("MissingChannelSlugError"),
+
+  MissingMetadataError: ActiveConnectionServiceError.subclass("MissingMetadataError"),
+
+  ProviderNotAssignedToChannelError: ActiveConnectionServiceError.subclass(
+    "ProviderNotAssignedToChannelError",
+  ),
+
+  /**
+   * Will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
+   */
+  WrongChannelError: ActiveConnectionServiceError.subclass("WrongChannelError"),
+
+  BrokenConfigurationError: ActiveConnectionServiceError.subclass("BrokenConfigurationError"),
+};
+
+export type ActiveConnectionServiceErrorsUnion =
+  (typeof ActiveConnectionServiceErrors)[keyof typeof ActiveConnectionServiceErrors];
 
 export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
   authData: AuthData,
-): ActiveTaxProviderService {
+) {
   const logger = createLogger("getActiveConnectionService");
 
   if (!channelSlug) {
-    throw new Error("Channel slug was not found in the webhook payload");
+    return err(
+      new ActiveConnectionServiceErrors.MissingChannelSlugError(
+        "Channel slug was not found in the webhook payload",
+      ),
+    );
   }
 
   if (!encryptedMetadata.length) {
-    throw new Error("App encryptedMetadata was not found in the webhook payload");
+    return err(
+      new ActiveConnectionServiceErrors.MissingMetadataError(
+        "App metadata was not found in Webhook payload. App is misconfigured or broken.",
+      ),
+    );
   }
 
-  const { providerConnections, channels } = getAppConfig(encryptedMetadata);
+  const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
+    encryptedMetadata,
+  );
+
+  appConfigResult.mapErr((error) => {
+    return err(error);
+  });
+
+  const { providerConnections, channels } = appConfigResult._unsafeUnwrap();
 
   if (!channels.length) {
-    throw new Error("You must assign a provider to the channel");
+    return err(
+      new ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError(
+        "Provider is not assigned to the channel. App is misconfigured",
+      ),
+    );
   }
 
   const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
   if (!channelConfig) {
-    // * will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-    logger.debug("Channel config was not found for channel slug", { channelSlug });
-    throw new ExpectedError(`Channel config was not found for channel ${channelSlug}`);
+    return err(
+      new ActiveConnectionServiceErrors.WrongChannelError(
+        `Channel config was not found for channel ${channelSlug}`,
+        {
+          props: {
+            channelSlug,
+          },
+        },
+      ),
+    );
   }
 
   const providerConnection = providerConnections.find(
@@ -94,10 +139,19 @@ export function getActiveConnectionService(
       "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
       { providerConnections, channelConfig },
     );
-    throw new ExpectedError(`Channel config providerConnectionId does not match any providers`);
+    return err(
+      new ActiveConnectionServiceErrors.BrokenConfigurationError(
+        `Channel config providerConnectionId does not match any providers`,
+        {
+          props: {
+            channelSlug: channelConfig.config.slug,
+          },
+        },
+      ),
+    );
   }
 
   const taxProvider = new ActiveTaxProviderService(providerConnection, authData);
 
-  return taxProvider;
+  return ok(taxProvider);
 }
