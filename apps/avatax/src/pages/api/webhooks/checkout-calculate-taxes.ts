@@ -5,11 +5,19 @@ import {
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+import {
+  ActiveConnectionServiceErrors,
+  ActiveConnectionServiceErrorsUnion,
+  getActiveConnectionService,
+} from "../../../modules/taxes/get-active-connection-service";
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { err, ok } from "neverthrow";
+import * as Sentry from "@sentry/nextjs";
+import { Simulate } from "react-dom/test-utils";
+import error = Simulate.error;
+import { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
   api: {
@@ -42,6 +50,20 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
 });
 
+const activeConnectionServiceErrorsStrategy = (
+  req: NextApiRequest,
+  res: NextApiResponse,
+): Record<keyof typeof ActiveConnectionServiceErrors, Function> => ({
+  BrokenConfigurationError: (err) =>
+    res
+      .status(400)
+      .send("App is not configured properly. Please verify configuration or reinstall the app"),
+  MissingMetadataError: () => {},
+  MissingChannelSlugError: () => {},
+  WrongChannelError: () => {},
+  ProviderNotAssignedToChannelError: () => {},
+});
+
 export default withOtel(
   checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
     const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
@@ -56,6 +78,7 @@ export default withOtel(
       payloadVerificationResult
         .mapErr((error) => {
           logger.error(`[${error.name}] ${error.message}`);
+          // todo Sentry
 
           return webhookResponse.error(error);
         })
@@ -65,17 +88,36 @@ export default withOtel(
 
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.taxBase.channel.slug;
-      const activeConnectionService = getActiveConnectionService(
+      const activeConnectionServiceResult = getActiveConnectionService(
         channelSlug,
         appMetadata,
         ctx.authData,
       );
 
-      logger.info("Found active connection service. Calculating taxes...");
-      const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
+      if (activeConnectionServiceResult.isErr()) {
+        const err = activeConnectionServiceResult.error; // todo error type
 
-      logger.info("Taxes calculated", { calculatedTaxes });
-      return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+        logger.debug(`Error in taxes calculation occured: ${err}`, { error: err });
+
+        const errorStrategy = activeConnectionServiceErrorsStrategy(req, res)[err.name];
+
+        if (errorStrategy) {
+          return errorStrategy(err);
+        } else {
+          Sentry.captureException(err);
+          logger.fatal(`UNHANDLED: ${error.name}`, {
+            error: error,
+          });
+
+          return res.status(500).send("Error calculating taxes");
+        }
+      } else {
+        logger.info("Found active connection service. Calculating taxes...");
+        const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+
+        logger.info("Taxes calculated", { calculatedTaxes });
+        return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+      }
     } catch (error) {
       return webhookResponse.error(error);
     }

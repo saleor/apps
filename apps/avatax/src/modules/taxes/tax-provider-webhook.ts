@@ -7,6 +7,9 @@ export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TA
 
 export type CreateOrderResponse = { id: string };
 
+/**
+ * @deprecated -> flat abstractions
+ */
 export interface ProviderWebhookService {
   calculateTaxes: (payload: CalculateTaxesPayload) => Promise<CalculateTaxesResponse>;
   confirmOrder: (payload: OrderConfirmedSubscriptionFragment) => Promise<CreateOrderResponse>;

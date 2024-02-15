@@ -1,53 +1,29 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { MetadataItem, OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-
-import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
-import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+import { MetadataItem } from "../../../generated/graphql";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
-import { ProviderWebhookService } from "./tax-provider-webhook";
 import { createClientLogger } from "../logs/client-logger";
-import { BaseError, ExpectedError } from "../../error";
+import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
-import { err, fromThrowable, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok } from "neverthrow";
 
-/**
- * TODO: Probably this abstraction should be removed
- */
-class ActiveTaxProviderService implements ProviderWebhookService {
-  private logger = createLogger("ActiveTaxProviderService");
-  private client: AvataxWebhookService;
-
-  constructor(
-    providerConnection: ProviderConnection,
-    private authData: AuthData,
-  ) {
-    const clientLogger = createClientLogger({
+const avataxProviderFactory = ({
+  providerConnection,
+  authData,
+}: {
+  providerConnection: ProviderConnection;
+  authData: AuthData;
+}) => {
+  return new AvataxWebhookService({
+    config: providerConnection.config,
+    authData,
+    clientLogger: createClientLogger({
       authData,
       configurationId: providerConnection.id,
-    });
-
-    this.logger.debug("Selecting AvaTax as tax provider");
-    this.client = new AvataxWebhookService({
-      config: providerConnection.config,
-      authData: this.authData,
-      clientLogger,
-    });
-  }
-
-  async calculateTaxes(payload: CalculateTaxesPayload) {
-    return this.client.calculateTaxes(payload);
-  }
-
-  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
-    return this.client.confirmOrder(order);
-  }
-
-  async cancelOrder(payload: OrderCancelledPayload) {
-    return this.client.cancelOrder(payload);
-  }
-}
+    }),
+  });
+};
 
 const ActiveConnectionServiceError = BaseError.subclass("ActiveConnectionServiceError");
 
@@ -69,7 +45,7 @@ export const ActiveConnectionServiceErrors = {
   WrongChannelError: ActiveConnectionServiceError.subclass("WrongChannelError"),
 
   BrokenConfigurationError: ActiveConnectionServiceError.subclass("BrokenConfigurationError"),
-};
+} as const;
 
 export type ActiveConnectionServiceErrorsUnion =
   (typeof ActiveConnectionServiceErrors)[keyof typeof ActiveConnectionServiceErrors];
@@ -151,7 +127,10 @@ export function getActiveConnectionService(
     );
   }
 
-  const taxProvider = new ActiveTaxProviderService(providerConnection, authData);
+  const taxProvider = avataxProviderFactory({
+    providerConnection,
+    authData,
+  });
 
   return ok(taxProvider);
 }
