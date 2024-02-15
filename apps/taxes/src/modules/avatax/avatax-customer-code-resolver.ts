@@ -15,14 +15,14 @@ export const avataxCustomerCode = {
     const avataxCustomerCode = user?.avataxCustomerCode;
 
     if (avataxCustomerCode) {
-      logger.trace({ avataxCustomerCode }, `Returning customer code found in the user metadata.`);
+      logger.trace(`Returning customer code found in the user metadata.`, { avataxCustomerCode });
       return avataxCustomerCode;
     }
 
     const userId = user?.id;
 
     if (userId) {
-      logger.trace({ userId }, `Returning user id as a customer code.`);
+      logger.trace(`Returning user id as a customer code.`, { userId });
       return userId;
     }
 

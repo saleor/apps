@@ -14,10 +14,9 @@ export class AvataxOrderRefundedPayloadTransformer {
     payload: OrderFullyRefundedPayload,
     avataxConfig: AvataxConfig,
   ): RefundTransactionParams {
-    this.logger.debug(
-      { payload },
-      "Transforming the Saleor payload for refunding order with AvaTax...",
-    );
+    this.logger.debug("Transforming the Saleor payload for refunding order with AvaTax...", {
+      payload,
+    });
 
     const order = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
       payload.order,

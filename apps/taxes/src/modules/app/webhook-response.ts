@@ -21,7 +21,7 @@ export class WebhookResponse {
     const normalizedError = CriticalError.normalize(error);
 
     Sentry.captureException(normalizedError);
-    this.logger.error({ error: normalizedError }, "CriticalError occurred");
+    this.logger.error("CriticalError occurred", { error: normalizedError });
     return this.respondWithError(normalizedError.message);
   }
 
