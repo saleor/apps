@@ -9,7 +9,7 @@ import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { describe, expect, it } from "vitest";
-import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
+import { transformAvataxOrderConfirmedResponse } from "./avatax-order-confirmed-response-transformer";
 
 const MOCKED_TRANSACTION: TransactionModel = {
   id: 0,
@@ -499,16 +499,13 @@ const MOCKED_TRANSACTION: TransactionModel = {
 
 describe("AvataxOrderConfirmedResponseTransformer", () => {
   it("returns orded id in response", () => {
-    const transformer = new AvataxOrderConfirmedResponseTransformer();
-    const result = transformer.transform(MOCKED_TRANSACTION);
+    const result = transformAvataxOrderConfirmedResponse(MOCKED_TRANSACTION);
 
     expect(result).toEqual({
       id: "8fc875ce-a929-4556-9f30-0165b1597d9f",
     });
   });
   it("throws an error when no transaction id is present", () => {
-    const transformer = new AvataxOrderConfirmedResponseTransformer();
-
-    expect(() => transformer.transform({} as any)).toThrowError();
+    expect(() => transformAvataxOrderConfirmedResponse({} as any)).toThrowError();
   });
 });

@@ -7,7 +7,7 @@ import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
-import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
+import { transformAvataxOrderConfirmedResponse } from "./avatax-order-confirmed-response-transformer";
 import { createLogger } from "../../../logger";
 
 type AvataxOrderConfirmedPayload = {
@@ -52,8 +52,7 @@ export class AvataxOrderConfirmedAdapter
 
       this.logger.debug("AvaTax createTransaction successfully responded");
 
-      const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
-      const transformedResponse = responseTransformer.transform(response);
+      const transformedResponse = transformAvataxOrderConfirmedResponse(response);
 
       this.logger.debug("Transformed AvaTax createTransaction response");
 
