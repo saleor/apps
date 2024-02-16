@@ -1,9 +1,13 @@
 import { authExchange } from "@urql/exchange-auth";
-import { cacheExchange, createClient as urqlCreateClient, fetchExchange } from "urql";
+import { cacheExchange, createClient as urqlCreateClient, fetchExchange, Exchange } from "urql";
 
-interface CreateGraphQLClientArgs {
+export interface CreateGraphQLClientArgs {
   saleorApiUrl: string;
   token?: string;
+  opts?: {
+    includeOtelTracing?: boolean;
+    exchange?: Exchange;
+  };
 }
 
 /*
@@ -17,7 +21,13 @@ interface CreateGraphQLClientArgs {
  *
  * In the context of developing Apps, the two first options are recommended.
  */
-export const createGraphQLClient = ({ saleorApiUrl, token }: CreateGraphQLClientArgs) => {
+export const createGraphQLClient = ({ saleorApiUrl, token, opts }: CreateGraphQLClientArgs) => {
+  const beforeFetch = [];
+
+  if (opts?.exchange) {
+    beforeFetch.push(opts?.exchange);
+  }
+
   return urqlCreateClient({
     url: saleorApiUrl,
     exchanges: [
@@ -39,6 +49,7 @@ export const createGraphQLClient = ({ saleorApiUrl, token }: CreateGraphQLClient
           async refreshAuth() {},
         };
       }),
+      ...beforeFetch,
       fetchExchange,
     ],
   });
