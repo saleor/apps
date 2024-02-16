@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { z } from "zod";
 import { createSettingsManager } from "../app/metadata-manager";
 import {
@@ -7,6 +6,7 @@ import {
   ClientLogsMetadataRepositoryParams,
   MetadataLogs,
 } from "./client-logs-metadata-repository";
+import { createInstrumentedGraphqlClient } from "../../lib/graphql-client";
 
 const clientLogSchema = z.object({
   date: z.string(),
@@ -75,7 +75,7 @@ export function createClientLogger({
   configurationId: string;
 }) {
   const { appId, saleorApiUrl, token } = authData;
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl,
     token,
   });

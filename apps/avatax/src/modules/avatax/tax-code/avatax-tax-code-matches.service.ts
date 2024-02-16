@@ -5,15 +5,15 @@ import {
   AvataxTaxCodeMatchRepository,
   AvataxTaxCodeMatches,
 } from "./avatax-tax-code-match-repository";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { createLogger } from "../../../logger";
+import { createInstrumentedGraphqlClient } from "../../../lib/graphql-client";
 
 export class AvataxTaxCodeMatchesService {
   private logger = createLogger("AvataxTaxCodeMatchesService");
   private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
 
   constructor(authData: AuthData) {
-    const client = createGraphQLClient({
+    const client = createInstrumentedGraphqlClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,
     });
