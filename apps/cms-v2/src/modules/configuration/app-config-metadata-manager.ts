@@ -1,8 +1,8 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { AppConfig } from "./app-config";
 import { createSettingsManager } from "./metadata-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createInstrumentedGraphqlClient } from "../trpc/graphql-client";
 
 export class AppConfigMetadataManager {
   public readonly metadataKey = "app-config-v1";
@@ -24,11 +24,11 @@ export class AppConfigMetadataManager {
 
   static createFromAuthData(authData: AuthData): AppConfigMetadataManager {
     const settingsManager = createSettingsManager(
-      createGraphQLClient({
+      createInstrumentedGraphqlClient({
         saleorApiUrl: authData.saleorApiUrl,
         token: authData.token,
       }),
-      authData.appId
+      authData.appId,
     );
 
     return new AppConfigMetadataManager(settingsManager);
