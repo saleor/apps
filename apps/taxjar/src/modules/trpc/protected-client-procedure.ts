@@ -3,8 +3,8 @@ import { middleware, procedure } from "./trpc-server";
 import { saleorApp } from "../../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { createLogger } from "../../logger";
+import { createInstrumentedGraphqlClient } from "../../lib/graphql-client";
 
 const logger = createLogger("protectedClientProcedure");
 
@@ -119,7 +119,7 @@ export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {
-    const client = createGraphQLClient({
+    const client = createInstrumentedGraphqlClient({
       saleorApiUrl: ctx.saleorApiUrl,
       token: ctx.appToken,
     });

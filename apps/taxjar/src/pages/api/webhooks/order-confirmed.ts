@@ -7,9 +7,9 @@ import {
 import { saleorApp } from "../../../../saleor-app";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { createInstrumentedGraphqlClient } from "../../../lib/graphql-client";
 
 export const config = {
   api: {
@@ -60,7 +60,7 @@ export default withOtel(
       const confirmedOrder = await taxProvider.confirmOrder(payload.order);
 
       logger.info("Order confirmed", { confirmedOrder });
-      const client = createGraphQLClient({
+      const client = createInstrumentedGraphqlClient({
         saleorApiUrl,
         token,
       });
