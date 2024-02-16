@@ -1,0 +1,14 @@
+{
+  "Address": {
+    "NewYork": {
+      "city": "New York",
+      "country": "US",
+      "countryArea": "NY",
+      "firstName": "John",
+      "lastName": "Smith",
+      "phone": "+12125094995",
+      "postalCode": "10001",
+      "streetAddress1": "8559 Lakes Avenue"
+    }
+  }
+}

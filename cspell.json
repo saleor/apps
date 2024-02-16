@@ -84,7 +84,8 @@
     "FAAS",
     "millis",
     "Parentfor",
-    "GTIN"
+    "GTIN",
+    "pactum"
   ],
   "ignorePaths": [
     "node_modules",
