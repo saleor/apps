@@ -7,6 +7,6 @@ export const createInstrumentedGraphqlClient = (props: CreateGraphQLClientProps)
   createGraphQLClient({
     ...props,
     opts: {
-      exchange: otelExchange,
+      prependingFetchExchanges: [otelExchange],
     },
   });

@@ -5,8 +5,7 @@ export interface CreateGraphQLClientArgs {
   saleorApiUrl: string;
   token?: string;
   opts?: {
-    includeOtelTracing?: boolean;
-    exchange?: Exchange;
+    prependingFetchExchanges?: Exchange[];
   };
 }
 
@@ -24,8 +23,8 @@ export interface CreateGraphQLClientArgs {
 export const createGraphQLClient = ({ saleorApiUrl, token, opts }: CreateGraphQLClientArgs) => {
   const beforeFetch = [];
 
-  if (opts?.exchange) {
-    beforeFetch.push(opts?.exchange);
+  if (opts?.prependingFetchExchanges) {
+    beforeFetch.push(...opts?.prependingFetchExchanges);
   }
 
   return urqlCreateClient({
