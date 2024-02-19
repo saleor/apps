@@ -74,8 +74,3 @@ body:graphql:vars {
       "deliveryMethodId": "{{deliveryMethodId}}"
   }
 }
-
-vars:post-response {
-  ~checkoutAmount: res.body.data.checkoutDeliveryMethodUpdate.checkout.totalPrice.gross.amount
-  ~checkoutCurrency: res.body.data.checkoutDeliveryMethodUpdate.checkout.totalPrice.gross.currency
-}
