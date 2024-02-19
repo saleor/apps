@@ -84,7 +84,8 @@
     "FAAS",
     "millis",
     "Parentfor",
-    "GTIN"
+    "GTIN",
+    "shopex"
   ],
   "ignorePaths": [
     "node_modules",
