@@ -85,7 +85,8 @@
     "millis",
     "Parentfor",
     "GTIN",
-    "pactum"
+    "pactum",
+    "shopex"
   ],
   "ignorePaths": [
     "node_modules",
