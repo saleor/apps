@@ -101,6 +101,7 @@
     "**/CHANGELOG.md",
     "**/schema.graphql",
     "**/*-generator.ts",
-    "apps/*/src/**"
+    "apps/*/src/**",
+    "apps/*/integration/data/**"
   ]
 }
