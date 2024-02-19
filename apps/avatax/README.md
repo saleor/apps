@@ -38,4 +38,4 @@ pnpm i
 
 After that, you have to prepare an environment for Bruno. Environments are a set of variables that are used in requests.
 
-The app has an example environment for `master.staging` in `environments/staging.bru`. You can copy it to bootstrap your own environment.
+The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment.
