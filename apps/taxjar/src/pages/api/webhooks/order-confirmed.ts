@@ -9,7 +9,7 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 export const config = {
   api: {

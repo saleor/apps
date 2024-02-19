@@ -1,2 +1,3 @@
 export { withOtel } from "./src/otel-wrapper";
-export { otelExchangeHandlers } from "./src/otel-graphql";
+export { otelExchange } from "./src/otel-exchange";
+export { createInstrumentedGraphqlClient } from "./src/create-instrumented-graphql-client";

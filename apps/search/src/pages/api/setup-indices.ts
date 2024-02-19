@@ -8,7 +8,7 @@ import { ChannelsDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
-import { createInstrumentedGraphqlClient } from "../../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 const logger = createLogger("setupIndicesHandler");
 

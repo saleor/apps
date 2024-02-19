@@ -1,7 +1,7 @@
 import { ChannelsFetcher } from "./channels-fetcher";
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { createInstrumentedGraphqlClient } from "../../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 export const channelsRouter = router({
   fetch: protectedClientProcedure.query(async ({ ctx }) => {

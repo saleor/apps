@@ -5,7 +5,7 @@ import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "@saleor/apps-logger";
-import { createInstrumentedGraphqlClient } from "../../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 

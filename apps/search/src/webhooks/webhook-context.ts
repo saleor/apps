@@ -2,7 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
-import { createInstrumentedGraphqlClient } from "../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 /**
  * Fetches and creates all shared entities required by webhook to proceed

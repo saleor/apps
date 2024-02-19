@@ -6,7 +6,7 @@ import {
   AvataxTaxCodeMatches,
 } from "./avatax-tax-code-match-repository";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 export class AvataxTaxCodeMatchesService {
   private logger = createLogger("AvataxTaxCodeMatchesService");

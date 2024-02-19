@@ -2,7 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../metadata";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createLogger } from "../logger";
-import { createInstrumentedGraphqlClient } from "../graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;

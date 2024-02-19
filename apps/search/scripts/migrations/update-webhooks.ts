@@ -3,7 +3,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { webhookMigrationRunner } from "@saleor/webhook-utils";
 import { appWebhooks } from "../../webhooks";
-import { createInstrumentedGraphqlClient } from "../../src/lib/graphql-client";
+import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
 
 export const updateWebhooksScript = async ({
   authData,
