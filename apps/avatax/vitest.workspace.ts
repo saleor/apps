@@ -6,13 +6,13 @@ export default defineWorkspace([
     extends: "./vitest.config.ts",
     test: {
       name: "react",
-      exclude: ["integration/**/*.spec.ts"],
+      exclude: ["e2e/**/*.spec.ts"],
     },
   },
   {
     test: {
-      include: ["integration/**/*.spec.ts"],
-      setupFiles: ["./integration/setup.ts"],
+      include: ["e2e/**/*.spec.ts"],
+      setupFiles: ["./e2e/setup.ts"],
       name: "integration",
       environment: "node",
       /*

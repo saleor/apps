@@ -5,6 +5,10 @@ import "./data/functions";
 beforeAll(() => {
   // TODO: Change me use API URL storage method
   request.setBaseUrl("https://shopex-avatax-318.eu.saleor.cloud");
-  request.setDefaultTimeout(20_000); // Sync webhooks timeout after 20s
-  stash.loadData("./integration/data");
+  /*
+   * Use a default 20s timeout for tests
+   * This is a timeout for sync webhooks in Saleor
+   */
+  request.setDefaultTimeout(20_000);
+  stash.loadData("./e2e/data");
 });
