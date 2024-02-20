@@ -1,0 +1,91 @@
+meta {
+  name: 1. Create checkout - US
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{storefrontUserToken}}
+}
+
+body:graphql {
+  mutation CreateCheckout($channelSlug: String!, $variantId: ID!, $email: String!) {
+    checkoutCreate(
+      input: {
+        channel: $channelSlug
+        lines: [{ quantity: 10, variantId: $variantId }]
+        email: $email
+        shippingAddress:{
+           city: "New York",
+           country: US,
+           countryArea: "NY",
+           firstName: "John",
+           lastName: "Smith",
+           phone: "+12125094995",
+           postalCode: "10001",
+           streetAddress1: "8559 Lakes Avenue"
+        },
+        billingAddress:{
+           city: "New York",
+           country: US,
+           countryArea: "NY",
+           firstName: "John",
+           lastName: "Smith",
+           phone: "+12125094995",
+           postalCode: "10001",
+           streetAddress1: "8559 Lakes Avenue"
+        }
+        languageCode: EN_US
+      }
+    ) {
+      errors {
+        field
+        message
+        code
+        variants
+        lines
+        addressType
+      }
+      checkout {
+        id
+        totalPrice {
+          gross {
+            currency
+            amount
+          }
+          tax {
+            currency
+            amount
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            currency
+            amount
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "variantId": "{{productVariantId}}",
+      "channelSlug": "{{channel_USD}}",
+      "email": "{{userEmail}}"
+  }
+}
+
+vars:post-response {
+  checkoutId: res.body.data.checkoutCreate.checkout.id
+}

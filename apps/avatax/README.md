@@ -21,3 +21,21 @@
 ## Documentation
 
 Visit [Taxes App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) to learn how to configure and develop the app locally.
+
+## Testing
+
+### Bruno
+
+[Bruno](https://docs.usebruno.com/) is an open source tool for exploring and testing APIs. It's similar to Postman or Insomnia.
+
+This app has a collection of requests to Saleor that go through fetching a product from channel, creating a checkout, adding shipping method and completing checkout (channel must have `allowUnpaidOrders` setting set to true)
+
+To set up Bruno, go to the `bruno` directory and run
+
+```bash
+pnpm i
+```
+
+After that, you have to prepare an environment for Bruno. Environments are a set of variables that are used in requests.
+
+The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment.

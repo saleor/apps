@@ -1,0 +1,37 @@
+meta {
+  name: 3. Complete checkout
+  type: graphql
+  seq: 4
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation CompleteCheckout($checkoutId:ID!) {
+    checkoutComplete(id: $checkoutId) {
+      order {
+        id
+      }
+      confirmationNeeded
+      confirmationData
+      errors {
+        field
+        message
+        code
+        variants
+        lines
+        addressType
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+      "checkoutId": "{{checkoutId}}"
+  }
+}
