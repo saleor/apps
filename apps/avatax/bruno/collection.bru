@@ -1,0 +1,9 @@
+script:pre-request {
+  const { faker } = require('@faker-js/faker');
+  
+  const configuredEmail = bru.getProcessEnv("USER_EMAIL");
+  
+  if (!configuredEmail) {
+    bru.setVar("userEmail", faker.internet.email());
+  }
+}
