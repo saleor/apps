@@ -69,6 +69,7 @@ it("should return taxes for product without taxes", async () => {
       amount: 26.63,
       currency: "USD",
     })
+    .retry()
     .stores("CheckoutId", "data.checkoutCreate.checkout.id");
 
   await spec()
@@ -140,7 +141,8 @@ it("should return taxes for product without taxes", async () => {
     .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
       currency: "USD",
       amount: 6.15,
-    });
+    })
+    .retry();
 
   await spec()
     .post("/graphql/")
