@@ -1,11 +1,11 @@
 import { it } from "vitest";
-import { handler, spec } from "pactum";
+import { spec } from "pactum";
 import { string } from "pactum-matchers";
 
 // Trick editor into highlighting gql, wihtout parsing
 const gql = String.raw;
 
-it("should return taxes for product without taxes", async () => {
+it("should return taxes for product without tax class", async () => {
   await spec()
     .post("/graphql/")
     .withGraphQLQuery(gql`
