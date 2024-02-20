@@ -1,9 +1,7 @@
 import { it, describe } from "vitest";
-import { spec, e2e } from "pactum";
+import { e2e } from "pactum";
 import { string } from "pactum-matchers";
-
-// Trick editor into highlighting gql, wihtout parsing
-const gql = String.raw;
+import { gql } from "../utils";
 
 describe("Product without assigned tax class", () => {
   const testCase = e2e("Product without tax class");
