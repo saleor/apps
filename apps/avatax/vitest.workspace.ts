@@ -15,7 +15,11 @@ export default defineWorkspace([
       setupFiles: ["./integration/setup.ts"],
       name: "integration",
       environment: "node",
-      testTimeout: 20_000, // sync webhook timeout is 20s
+      /*
+       * Use a default 20s timeout for tests
+       * This is a timeout for sync webhooks in Saleor
+       */
+      testTimeout: 20_000,
     },
   },
 ]);
