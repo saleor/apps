@@ -1,7 +1,0 @@
-{
-  "Environments": {
-    "Staging": {
-      "SALEOR_API_URL": "https://shopex-avatax-318.eu.saleor.cloud/graphql/"
-    }
-  }
-}

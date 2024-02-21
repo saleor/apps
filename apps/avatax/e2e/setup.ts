@@ -1,10 +1,26 @@
 import { beforeAll } from "vitest";
 import { request, stash } from "pactum";
 import "./data/functions";
+import "dotenv/config";
 
 beforeAll(() => {
-  // TODO: Change me use API URL storage method
-  request.setBaseUrl("https://shopex-avatax-318.eu.saleor.cloud");
+  const saleorApiUrl = process.env.TEST_SALEOR_API_URL;
+
+  if (!saleorApiUrl) {
+    throw new Error("Cannot run tests TEST_SALEOR_API_URL is not set");
+  }
+
+  const { origin: saleorBaseUrl } = new URL(saleorApiUrl);
+
+  if (!saleorBaseUrl) {
+    throw new Error("Cannot run tests TEST_SALEOR_API_URL is invalid");
+  }
+
+  /*
+   * We have to use baseUrl (without /graphql/ suffix)
+   * for Pactum to work properly, it expects a base URL + path for each request
+   */
+  request.setBaseUrl(saleorBaseUrl);
   /*
    * Use a default 20s timeout for tests
    * This is a timeout for sync webhooks in Saleor
