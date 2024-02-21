@@ -3,8 +3,9 @@ import { e2e } from "pactum";
 import { string } from "pactum-matchers";
 import { gql } from "../utils";
 
-describe("Product without assigned tax class", () => {
-  const testCase = e2e("Product without tax class");
+// Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
+describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
+  const testCase = e2e("Product without tax class [pricesEnteredWithTax: False]");
 
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 300;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.63;
