@@ -10,7 +10,7 @@ import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 
 export const config = {
   api: {

@@ -2,7 +2,7 @@ import { SaleorAsyncWebhook, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/
 import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../../generated/graphql";
 import { AppWebhookRepository } from "./app-webhook-repository";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 
 type AppWebhookMigratorOptions = {
   mode: "report" | "migrate";
