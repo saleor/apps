@@ -102,7 +102,7 @@
     "**/schema.graphql",
     "**/*-generator.ts",
     "apps/*/src/**",
-    "apps/*/integration/data/**",
+    "apps/*/e2e/data/**",
     "**/*.bru"
   ]
 }
