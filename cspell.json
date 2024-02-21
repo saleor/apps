@@ -101,6 +101,7 @@
     "**/schema.graphql",
     "**/*-generator.ts",
     "apps/*/src/**",
-    "**/*.bru"
+    "**/*.bru",
+    "**/.eslintrc"
   ]
 }
