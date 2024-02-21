@@ -1,5 +1,4 @@
 export const ObservabilityAttributes = {
-  ADYEN_ENV: "adyenEnv",
   SALEOR_API_URL: "saleorApiUrl",
   SALEOR_VERSION: "saleorVersion",
   CHANNEL_SLUG: "channelSlug",

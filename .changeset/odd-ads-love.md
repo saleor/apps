@@ -7,4 +7,4 @@
 "taxes": patch
 ---
 
-Use GraphQL OTEL exchange
+Apps that use OTEL can now collect and send spans containing details about GraphQL requests. 

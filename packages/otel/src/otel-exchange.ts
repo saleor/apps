@@ -59,7 +59,7 @@ export const otelExchange = mapExchange({
       span,
     });
   },
-  // @ts-ignore
+  // @ts-ignore - small hack, we're extending `operation` with `span`
   onResult({ error, operation }: { operation: ExtendedOperation; error?: CombinedError }) {
     const span = operation.context.span;
 
