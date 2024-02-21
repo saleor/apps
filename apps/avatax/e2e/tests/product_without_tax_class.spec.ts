@@ -220,27 +220,6 @@ describe("App should calculate taxes for checkout with product without tax class
             },
           },
         },
-      })
-      .stores("OrderId", "data.checkoutComplete.order.id")
-      .clean()
-      .post("/grpahql/")
-      .withGraphQLQuery(gql`
-        mutation OrderCancel($orderId: ID!) {
-          orderCancel(id: $orderId) {
-            errors {
-              field
-              message
-              code
-            }
-          }
-        }
-      `)
-      .withGraphQLVariables({
-        orderId: "$S{OrderId}",
       });
-  });
-
-  it("cleanup after tests", async () => {
-    await testCase.cleanup();
   });
 });
