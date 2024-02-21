@@ -33,8 +33,15 @@ export const ActiveConnectionServiceErrors = {
    */
   MissingChannelSlugError: ActiveConnectionServiceError.subclass("MissingChannelSlugError"),
 
+  /**
+   * TODO: What does it mean?  How it should behave?
+   */
   MissingMetadataError: ActiveConnectionServiceError.subclass("MissingMetadataError"),
 
+  /**
+   * TODO: What does it mean?  How it should behave?
+   * Should it be handled as BrokenConfigurationError?
+   */
   ProviderNotAssignedToChannelError: ActiveConnectionServiceError.subclass(
     "ProviderNotAssignedToChannelError",
   ),

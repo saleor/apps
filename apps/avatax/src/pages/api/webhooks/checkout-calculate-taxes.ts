@@ -18,6 +18,7 @@ import * as Sentry from "@sentry/nextjs";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 import { NextApiRequest, NextApiResponse } from "next";
+import { BaseError } from "../../../error";
 
 export const config = {
   api: {
@@ -50,19 +51,33 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
 });
 
-const activeConnectionServiceErrorsStrategy = (
-  req: NextApiRequest,
-  res: NextApiResponse,
-): Record<keyof typeof ActiveConnectionServiceErrors, Function> => ({
-  BrokenConfigurationError: (err) =>
-    res
-      .status(400)
-      .send("App is not configured properly. Please verify configuration or reinstall the app"),
-  MissingMetadataError: () => {},
-  MissingChannelSlugError: () => {},
-  WrongChannelError: () => {},
-  ProviderNotAssignedToChannelError: () => {},
-});
+/**
+ * Translate internal errors to responses back to Saleor
+ */
+const webhookErrorToResponseMapper = (req: NextApiRequest, res: NextApiResponse) => {
+  return new Map([
+    [
+      ActiveConnectionServiceErrors.BrokenConfigurationError,
+      () =>
+        res
+          .status(400)
+          .send("App is not configured properly. Please verify configuration or reinstall the app"),
+    ],
+    [
+      ActiveConnectionServiceErrors.MissingMetadataError,
+      () => res.status(400).send("App is not configured properly. Configure the app first"),
+    ],
+    [ActiveConnectionServiceErrors.MissingChannelSlugError, () => res.status(400).send("??? TODO")],
+    [ActiveConnectionServiceErrors.WrongChannelError, () => res.status(500).send("???")],
+    [
+      ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError,
+      () =>
+        res
+          .status(400)
+          .send("App is not configured properly. Please verify configuration or reinstall the app"),
+    ],
+  ]);
+};
 
 export default withOtel(
   checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
@@ -95,14 +110,14 @@ export default withOtel(
       );
 
       if (activeConnectionServiceResult.isErr()) {
-        const err = activeConnectionServiceResult.error; // todo error type
+        const err = activeConnectionServiceResult.error;
 
-        logger.debug(`Error in taxes calculation occured: ${err}`, { error: err });
+        logger.debug(`Error in taxes calculation occured: ${err.message}`, { error: err });
 
-        const errorStrategy = activeConnectionServiceErrorsStrategy(req, res)[err.name];
+        const errorStrategy = webhookErrorToResponseMapper(req, res).get(err); // todo fix type
 
         if (errorStrategy) {
-          return errorStrategy(err);
+          return errorStrategy();
         } else {
           Sentry.captureException(err);
           logger.fatal(`UNHANDLED: ${error.name}`, {
@@ -112,10 +127,11 @@ export default withOtel(
           return res.status(500).send("Error calculating taxes");
         }
       } else {
-        logger.info("Found active connection service. Calculating taxes...");
+        logger.debug("Found active connection service. Calculating taxes...");
+        // TODO: Improve errors handling like above
         const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
 
-        logger.info("Taxes calculated", { calculatedTaxes });
+        logger.debug("Taxes calculated", { calculatedTaxes });
         return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
       }
     } catch (error) {
