@@ -81,11 +81,11 @@ export function getActiveConnectionService(
     encryptedMetadata,
   );
 
-  appConfigResult.mapErr((error) => {
-    return err(error);
-  });
+  if (appConfigResult.isErr()) {
+    return err(appConfigResult.error);
+  }
 
-  const { providerConnections, channels } = appConfigResult._unsafeUnwrap();
+  const { providerConnections, channels } = appConfigResult.value;
 
   if (!channels.length) {
     return err(

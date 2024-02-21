@@ -106,16 +106,15 @@ export default withOtel(
     try {
       const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
-      payloadVerificationResult
-        .mapErr((error) => {
+      payloadVerificationResult.match(
+        (payload) => {
+          logger.debug("Payload validated Successfully");
+        },
+        (error) => {
           logger.error(`[${error.name}] ${error.message}`);
           Sentry.captureException("Invalid payload from Saleor was sent to Avatax app");
-
-          return webhookResponse.error(error);
-        })
-        .map(() => {
-          logger.debug("Payload validated Successfully");
-        });
+        },
+      );
 
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.taxBase.channel.slug;
@@ -132,10 +131,10 @@ export default withOtel(
           error: err,
         });
 
-        const errorStrategy = webhookErrorToResponseMapper(req, res).get(err.name);
+        const executeErrorStrategy = webhookErrorToResponseMapper(req, res).get(err.name);
 
-        if (errorStrategy) {
-          return errorStrategy();
+        if (executeErrorStrategy) {
+          return executeErrorStrategy();
         } else {
           Sentry.captureException(err);
           logger.fatal(`UNHANDLED: ${error.name}`, {
