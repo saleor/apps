@@ -6,6 +6,9 @@ import {
   providerConnectionsSchema,
 } from "../provider-connections/provider-connections";
 
+/**
+ * TODO: Make error handling in neverthrow
+ */
 export const getAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;

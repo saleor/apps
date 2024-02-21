@@ -103,6 +103,7 @@
     "**/*-generator.ts",
     "apps/*/src/**",
     "apps/*/e2e/data/**",
-    "**/*.bru"
+    "**/*.bru",
+    "**/.eslintrc"
   ]
 }
