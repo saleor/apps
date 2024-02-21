@@ -28,9 +28,9 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
   });
 
   it("includes products as lines", () => {
-    const [first, second, third] = lines;
+    const [firstProductLine, secondProductLine, thirdProductLine] = lines;
 
-    expect(first).toStrictEqual(
+    expect(firstProductLine).toStrictEqual(
       expect.objectContaining({
         itemCode: "328223580",
         description: "Monospace Tee",
@@ -38,7 +38,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
         amount: 65.18,
       }),
     );
-    expect(second).toStrictEqual(
+    expect(secondProductLine).toStrictEqual(
       expect.objectContaining({
         itemCode: "328223581",
         description: "Monospace Tee",
@@ -46,7 +46,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
         amount: 21.73,
       }),
     );
-    expect(third).toStrictEqual(
+    expect(thirdProductLine).toStrictEqual(
       expect.objectContaining({
         itemCode: "118223581",
         description: "Paul's Balance 420",
