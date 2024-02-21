@@ -107,6 +107,7 @@ const defaultTaxBase: TaxBase = {
   ],
   sourceObject: {
     avataxEntityCode: null,
+    id: "mock-id",
     __typename: "Checkout",
     user: {
       id: "123",

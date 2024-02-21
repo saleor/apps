@@ -45,7 +45,7 @@ export default withOtel(
     try {
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.order?.channel.slug;
-      const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
+      const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
       // todo: figure out what fields are needed and add validation
       if (!payload.order) {
@@ -58,23 +58,32 @@ export default withOtel(
 
       logger.info("Confirming order...");
 
-      const confirmedOrder = await taxProvider.confirmOrder(payload.order);
+      if (taxProviderResult.isOk()) {
+        const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
 
-      logger.info("Order confirmed", { confirmedOrder });
-      const client = createGraphQLClient({
-        saleorApiUrl,
-        token,
-      });
+        logger.info("Order confirmed", { confirmedOrder });
+        const client = createGraphQLClient({
+          saleorApiUrl,
+          token,
+        });
 
-      const orderMetadataManager = new OrderMetadataManager(client);
+        const orderMetadataManager = new OrderMetadataManager(client);
 
-      await orderMetadataManager.updateOrderMetadataWithExternalId(
-        payload.order.id,
-        confirmedOrder.id,
-      );
-      logger.info("Updated order metadata with externalId");
+        await orderMetadataManager.updateOrderMetadataWithExternalId(
+          payload.order.id,
+          confirmedOrder.id,
+        );
+        logger.info("Updated order metadata with externalId");
 
-      return webhookResponse.success();
+        return webhookResponse.success();
+      }
+
+      // TODO: Map errors
+      if (taxProviderResult.isErr()) {
+        logger.error("Error confirming order", { error: taxProviderResult.error });
+
+        return webhookResponse.error(taxProviderResult.error);
+      }
     } catch (error) {
       logger.error("Error executing webhook", { error });
       return webhookResponse.error(error);
