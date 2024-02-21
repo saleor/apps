@@ -9,7 +9,7 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest",
+    "test": "pnpm run test:ui",
     "test:integration": "vitest --project integration --watch=false",
     "test:ui": "vitest --project react"
   },
