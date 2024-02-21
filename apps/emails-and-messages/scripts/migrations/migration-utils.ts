@@ -2,7 +2,7 @@
 
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../../src/lib/metadata-manager";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 
 export const getMetadataManagerForEnv = (apiUrl: string, appToken: string, appId: string) => {
   const client = createInstrumentedGraphqlClient({

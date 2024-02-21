@@ -5,7 +5,7 @@ import { GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphq
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
