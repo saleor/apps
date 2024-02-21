@@ -1,4 +1,4 @@
-import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextWebhookApiHandler, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import {
   CalculateTaxesEventFragment,
   UntypedCalculateTaxesDocument,
@@ -18,7 +18,6 @@ import * as Sentry from "@sentry/nextjs";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 import { NextApiRequest, NextApiResponse } from "next";
-import { BaseError } from "../../../error";
 
 export const config = {
   api: {
@@ -53,24 +52,38 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
 
 /**
  * Translate internal errors to responses back to Saleor
+ *
+ * TODO: Maybe we can find more elegant and less verbose way to map Modern Errors to functions?
+ * Instances don't translate well with their constructors
  */
 const webhookErrorToResponseMapper = (req: NextApiRequest, res: NextApiResponse) => {
   return new Map([
     [
-      ActiveConnectionServiceErrors.BrokenConfigurationError,
+      "BrokenConfigurationError",
       () =>
         res
           .status(400)
           .send("App is not configured properly. Please verify configuration or reinstall the app"),
     ],
     [
-      ActiveConnectionServiceErrors.MissingMetadataError,
+      "MissingMetadataError",
       () => res.status(400).send("App is not configured properly. Configure the app first"),
     ],
-    [ActiveConnectionServiceErrors.MissingChannelSlugError, () => res.status(400).send("??? TODO")],
-    [ActiveConnectionServiceErrors.WrongChannelError, () => res.status(500).send("???")],
     [
-      ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError,
+      "MissingChannelSlugError",
+      () => res.status(500).send("Webhook didn't contain channel slug. This should not happen."),
+    ],
+    [
+      "WrongChannelError",
+      () =>
+        res
+          .status(500)
+          .send(
+            "Webhook was executed for channel that it was not configured with. This should not happen.",
+          ),
+    ],
+    [
+      "ProviderNotAssignedToChannelError",
       () =>
         res
           .status(400)
@@ -79,6 +92,9 @@ const webhookErrorToResponseMapper = (req: NextApiRequest, res: NextApiResponse)
   ]);
 };
 
+/**
+ * TODO: Add tests to handler
+ */
 export default withOtel(
   checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
     const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
@@ -93,7 +109,7 @@ export default withOtel(
       payloadVerificationResult
         .mapErr((error) => {
           logger.error(`[${error.name}] ${error.message}`);
-          // todo Sentry
+          Sentry.captureException("Invalid payload from Saleor was sent to Avatax app");
 
           return webhookResponse.error(error);
         })
@@ -112,9 +128,11 @@ export default withOtel(
       if (activeConnectionServiceResult.isErr()) {
         const err = activeConnectionServiceResult.error;
 
-        logger.debug(`Error in taxes calculation occured: ${err.message}`, { error: err });
+        logger.debug(`Error in taxes calculation occured: ${err.name} ${err.message}`, {
+          error: err,
+        });
 
-        const errorStrategy = webhookErrorToResponseMapper(req, res).get(err); // todo fix type
+        const errorStrategy = webhookErrorToResponseMapper(req, res).get(err.name);
 
         if (errorStrategy) {
           return errorStrategy();

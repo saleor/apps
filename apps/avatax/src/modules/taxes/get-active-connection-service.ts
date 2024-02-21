@@ -33,9 +33,6 @@ export const ActiveConnectionServiceErrors = {
    */
   MissingChannelSlugError: ActiveConnectionServiceError.subclass("MissingChannelSlugError"),
 
-  /**
-   * TODO: What does it mean?  How it should behave?
-   */
   MissingMetadataError: ActiveConnectionServiceError.subclass("MissingMetadataError"),
 
   /**
@@ -67,7 +64,7 @@ export function getActiveConnectionService(
   if (!channelSlug) {
     return err(
       new ActiveConnectionServiceErrors.MissingChannelSlugError(
-        "Channel slug was not found in the webhook payload",
+        "Channel slug was not found in the webhook payload. This should not happen",
       ),
     );
   }
@@ -75,7 +72,7 @@ export function getActiveConnectionService(
   if (!encryptedMetadata.length) {
     return err(
       new ActiveConnectionServiceErrors.MissingMetadataError(
-        "App metadata was not found in Webhook payload. App is misconfigured or broken.",
+        "App metadata was not found in Webhook payload. App was likely installed but never configured",
       ),
     );
   }
@@ -93,7 +90,7 @@ export function getActiveConnectionService(
   if (!channels.length) {
     return err(
       new ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError(
-        "Provider is not assigned to the channel. App is misconfigured",
+        "Provider is not assigned to the channel. App is configured partially.",
       ),
     );
   }

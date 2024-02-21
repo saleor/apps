@@ -80,7 +80,7 @@ importers:
         version: 13.2.3
       next:
         specifier: 13.4.8
-        version: 13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       prettier:
         specifier: 3.0.3
         version: 3.0.3
@@ -212,7 +212,7 @@ importers:
         version: 6.1.0
       next:
         specifier: 13.4.8
-        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -2268,7 +2268,7 @@ importers:
         version: 7.33.2(eslint@8.46.0)
       next:
         specifier: 13.4.8
-        version: 13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2464,7 +2464,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 13.4.8
-        version: 13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2531,7 +2531,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 13.4.8
-        version: 13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2562,7 +2562,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 13.4.8
-        version: 13.4.8(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10665,7 +10665,7 @@ packages:
       '@sentry/vercel-edge': 7.77.0
       '@sentry/webpack-plugin': 1.20.0
       chalk: 3.0.0
-      next: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+      next: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -11950,7 +11950,7 @@ packages:
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19)(@trpc/client@10.43.1)(@trpc/server@10.43.1)(react-dom@18.2.0)(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+      next: 13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -19593,7 +19593,6 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-    dev: false
 
   /next@13.4.8(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-lxUjndYKjZHGK3CWeN2RI+/6ni6EUvjiqGWXAYPxUfGIdFGQ5XoisrqAJ/dF74aP27buAfs8MKIbIMMdxjqSBg==}
