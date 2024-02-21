@@ -6,7 +6,7 @@ import { gql } from "urql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../logger";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 

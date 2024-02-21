@@ -4,7 +4,7 @@ import { saleorApp } from "../../../saleor-app";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { createLogger } from "../../logger";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const logger = createLogger("protectedClientProcedure");
 
