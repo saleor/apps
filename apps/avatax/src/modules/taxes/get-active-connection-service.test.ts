@@ -3,7 +3,10 @@ import { describe, expect, it, vi } from "vitest";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
-import { getActiveConnectionService } from "./get-active-connection-service";
+import {
+  ActiveConnectionServiceErrors,
+  getActiveConnectionService,
+} from "./get-active-connection-service";
 import { AuthData } from "@saleor/app-sdk/APL";
 
 const mockedInvalidMetadata: MetadataItem[] = [
@@ -79,54 +82,62 @@ const mockedAuthData: AuthData = {
 vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getActiveConnectionService", () => {
-  it("throws error when channel slug is missing", () => {
-    expect(() => getActiveConnectionService("", mockedInvalidMetadata, mockedAuthData)).toThrow(
-      "Channel slug was not found in the webhook payload",
+  it("throws MissingChannelSlugError error when channel slug is missing", () => {
+    const result = getActiveConnectionService("", mockedInvalidMetadata, mockedAuthData);
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      ActiveConnectionServiceErrors.MissingChannelSlugError,
     );
   });
 
-  it("throws error when there are no metadata items", () => {
-    expect(() => getActiveConnectionService("default-channel", [], mockedAuthData)).toThrow(
-      "App encryptedMetadata was not found in the webhook payload",
+  it("throws MissingMetadataError error when there are no metadata items", () => {
+    const result = getActiveConnectionService("default-channel", [], mockedAuthData);
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      ActiveConnectionServiceErrors.MissingMetadataError,
     );
   });
 
-  it("throws error when no providerConnectionId was found", () => {
-    expect(() =>
-      getActiveConnectionService(
-        "default-channel",
-        [
-          {
-            key: "providers",
-            value: mockedEncryptedProviders,
-          },
-          {
-            key: "channels",
-            value: mockedInvalidEncryptedChannels,
-          },
-        ],
-        mockedAuthData,
-      ),
-    ).toThrow("Channel config providerConnectionId does not match any providers");
+  it("throws BrokenConfigurationError error when no providerConnectionId was found", () => {
+    const result = getActiveConnectionService(
+      "default-channel",
+      [
+        {
+          key: "providers",
+          value: mockedEncryptedProviders,
+        },
+        {
+          key: "channels",
+          value: mockedInvalidEncryptedChannels,
+        },
+      ],
+      mockedAuthData,
+    );
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      ActiveConnectionServiceErrors.BrokenConfigurationError,
+    );
   });
 
-  it("throws error when no channel was found for channelSlug", () => {
-    expect(() =>
-      getActiveConnectionService(
-        "invalid-channel",
-        [
-          {
-            key: "providers",
-            value: mockedEncryptedProviders,
-          },
-          {
-            key: "channels",
-            value: mockedValidEncryptedChannels,
-          },
-        ],
-        mockedAuthData,
-      ),
-    ).toThrow("Channel config was not found for channel invalid-channel");
+  it("throws WrongChannelError error when no channel was found for channelSlug", () => {
+    const result = getActiveConnectionService(
+      "invalid-channel",
+      [
+        {
+          key: "providers",
+          value: mockedEncryptedProviders,
+        },
+        {
+          key: "channels",
+          value: mockedValidEncryptedChannels,
+        },
+      ],
+      mockedAuthData,
+    );
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      ActiveConnectionServiceErrors.WrongChannelError,
+    );
   });
 
   it("returns provider when data is correct", () => {
@@ -145,6 +156,6 @@ describe("getActiveConnectionService", () => {
       mockedAuthData,
     );
 
-    expect(result).toBeDefined();
+    expect(result._unsafeUnwrap()).toBeDefined();
   });
 });

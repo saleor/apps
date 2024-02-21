@@ -4,6 +4,9 @@ import { NextApiResponse } from "next";
 import { CriticalError, ExpectedError } from "../../error";
 import { createLogger } from "../../logger";
 
+/**
+ * @deprecated
+ */
 export class WebhookResponse {
   private logger = createLogger("WebhookResponse");
   constructor(private res: NextApiResponse) {}

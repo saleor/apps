@@ -52,17 +52,24 @@ export default withOtel(
 
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.taxBase.channel.slug;
-      const activeConnectionService = getActiveConnectionService(
+      const activeConnectionServiceResult = getActiveConnectionService(
         channelSlug,
         appMetadata,
         ctx.authData,
       );
 
       logger.info("Found active connection service. Calculating taxes...");
-      const calculatedTaxes = await activeConnectionService.calculateTaxes(payload);
 
-      logger.info("Taxes calculated", { calculatedTaxes });
-      return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+      if (activeConnectionServiceResult.isOk()) {
+        const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+
+        logger.info("Taxes calculated", { calculatedTaxes });
+
+        return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+      } else if (activeConnectionServiceResult.isErr()) {
+        // TODO Map errors like in CHECKOUT_CALCULATE_TAXES
+        return webhookResponse.error(activeConnectionServiceResult.error);
+      }
     } catch (error) {
       return webhookResponse.error(error);
     }

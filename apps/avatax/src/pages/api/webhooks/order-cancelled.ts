@@ -44,15 +44,22 @@ export default withOtel(
     try {
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.order.channel.slug;
-      const taxProvider = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
+      const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata, ctx.authData);
 
       logger.info("Cancelling order...");
 
-      await taxProvider.cancelOrder(payload);
+      if (taxProviderResult.isOk()) {
+        await taxProviderResult.value.cancelOrder(payload);
 
-      logger.info("Order cancelled");
+        logger.info("Order cancelled");
 
-      return webhookResponse.success();
+        return webhookResponse.success();
+      }
+
+      if (taxProviderResult.isErr()) {
+        // TODO: Map errors
+        return webhookResponse.error(taxProviderResult.error);
+      }
     } catch (error) {
       return webhookResponse.error(error);
     }
