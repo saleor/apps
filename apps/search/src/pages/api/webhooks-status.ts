@@ -14,7 +14,7 @@ import { Client } from "urql";
 import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
-import { createInstrumentedGraphqlClient } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const logger = createLogger("webhooksStatusHandler");
 
