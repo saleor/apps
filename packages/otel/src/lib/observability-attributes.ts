@@ -5,7 +5,7 @@ export const ObservabilityAttributes = {
   TRANSACTION_ID: "transactionId",
 } as const;
 
-export enum AttributeNames {
+export enum GraphQLAttributeNames {
   OPERATION_TYPE = "graphql.operation.type",
   OPERATION_NAME = "graphql.operation.name",
   OPERATION_BODY = "graphql.operation.body",

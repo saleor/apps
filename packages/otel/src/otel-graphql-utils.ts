@@ -1,5 +1,5 @@
 import { type Span } from "@opentelemetry/api";
-import { AttributeNames } from "./lib/observability-attributes";
+import { GraphQLAttributeNames } from "./lib/observability-attributes";
 
 export const addRequestHeaderAttributes = (
   span: Span,
@@ -32,7 +32,7 @@ const addInputVariableAttribute = (span: Span, key: string, variable: any) => {
       addInputVariableAttribute(span, `${key}.${nestedKey}`, value);
     });
   } else {
-    span.setAttribute(`${AttributeNames.VARIABLES}${String(key)}`, variable);
+    span.setAttribute(`${GraphQLAttributeNames.VARIABLES}${String(key)}`, variable);
   }
 };
 

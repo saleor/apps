@@ -1,7 +1,7 @@
 import { type Span, SpanKind, SpanStatusCode, context } from "@opentelemetry/api";
 import { type CombinedError, type Operation, makeOperation, mapExchange } from "urql";
 import { getOtelTracer } from "./otel-tracer";
-import { AttributeNames, ObservabilityAttributes } from "./lib/observability-attributes";
+import { GraphQLAttributeNames, ObservabilityAttributes } from "./lib/observability-attributes";
 import { addInputVariableAttributes, addRequestHeaderAttributes } from "./otel-graphql-utils";
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 
@@ -35,15 +35,18 @@ export const otelExchange = mapExchange({
     );
 
     span.setAttribute(
-      AttributeNames.OPERATION_NAME,
+      GraphQLAttributeNames.OPERATION_NAME,
       `${(operation.query.definitions[0] as Definition).name.value ?? "unknown"}`,
     );
 
-    span.setAttribute(AttributeNames.OPERATION_TYPE, operation.kind);
+    span.setAttribute(GraphQLAttributeNames.OPERATION_TYPE, operation.kind);
 
-    span.setAttribute(AttributeNames.OPERATION_BODY, operation.query.loc?.source.body ?? "unknown");
+    span.setAttribute(
+      GraphQLAttributeNames.OPERATION_BODY,
+      operation.query.loc?.source.body ?? "unknown",
+    );
 
-    span.setAttribute(AttributeNames.OPERATION_KEY, operation.key);
+    span.setAttribute(GraphQLAttributeNames.OPERATION_KEY, operation.key);
 
     span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, operation.context.url);
 
