@@ -9,6 +9,7 @@ import { AvataxEditAddressValidationService } from "./configuration/avatax-edit-
 import { AvataxEditAuthValidationService } from "./configuration/avatax-edit-auth-validation.service";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
 import { createLogger } from "../../logger";
+import { TRPCError } from "@trpc/server";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -129,9 +130,20 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidationService.validate(input.id, input.value);
 
-      logger.info(`AvaTax address was successfully validated`);
+      if (result.isErr()) {
+        logger.debug("Credentials validation failed");
 
-      return result;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Address validation failed",
+        });
+      }
+
+      if (result.isOk()) {
+        logger.debug("Address validation succeeded");
+
+        return result.value;
+      }
     }),
   createValidateAddress: protectedWithConnectionService
     .input(postInputSchema)
@@ -148,9 +160,20 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidation.validate(input.value.address);
 
-      logger.info(`AvaTax address was successfully validated`);
+      if (result.isErr()) {
+        logger.debug("Credentials validation failed");
 
-      return result;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Address validation failed",
+        });
+      }
+
+      if (result.isOk()) {
+        logger.debug("Address validation succeeded");
+
+        return result.value;
+      }
     }),
   /*
    * There are separate methods for credentials validation for edit and create
@@ -172,9 +195,22 @@ export const avataxConnectionRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
 
-      await authValidation.validate(input.id, input.value);
+      const result = await authValidation.validate(input.id, input.value);
 
-      logger.info(`AvaTax client was successfully validated`);
+      if (result.isErr()) {
+        logger.debug("Credentials validation failed");
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Provided credentials are invalid",
+        });
+      }
+
+      if (result.isOk()) {
+        logger.debug(`AvaTax client was successfully validated`);
+
+        return result.value;
+      }
     }),
   createValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema }))
@@ -189,8 +225,17 @@ export const avataxConnectionRouter = router({
 
       const result = await authValidation.validate();
 
-      logger.info(`AvaTax client was successfully validated`);
+      if (result.isErr()) {
+        logger.debug("Credentials validation failed");
 
-      return result;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Provided credentials are invalid",
+        });
+      }
+
+      if (result.isOk()) {
+        return result.value;
+      }
     }),
 });

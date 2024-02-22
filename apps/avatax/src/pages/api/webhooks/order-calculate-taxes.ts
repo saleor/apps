@@ -41,6 +41,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 });
 
 export default withOtel(
+  // TODO Test handler, including errors
   orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
     const logger = createLogger("orderCalculateTaxesSyncWebhook");
     const { payload } = ctx;
@@ -62,34 +63,35 @@ export default withOtel(
 
       logger.info("Found active connection service. Calculating taxes...");
 
-      if (activeConnectionServiceResult.isOk()) {
-        const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+      return activeConnectionServiceResult
+        .asyncMap(async (value) => {
+          const calculatedTaxes = await value.calculateTaxes(payload);
 
-        logger.info("Taxes calculated", { calculatedTaxes });
+          return calculatedTaxes.map((value) => {
+            logger.info("Taxes calculated", { calculatedTaxes });
 
-        return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
-      } else if (activeConnectionServiceResult.isErr()) {
-        const err = activeConnectionServiceResult.error;
-
-        logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-          error: err,
-        });
-
-        const executeErrorStrategy = calculateTaxesErrorsMapper(req, res).get(err.name);
-
-        if (executeErrorStrategy) {
-          return executeErrorStrategy();
-        } else {
-          Sentry.captureException(err);
-
-          logger.fatal(`UNHANDLED: ${err.name}`, {
-            error: err,
+            return webhookResponse.success(ctx.buildResponse(value));
           });
+        })
+        .mapErr((err) => {
+          const executeErrorStrategy = calculateTaxesErrorsMapper(req, res).get(err.name);
 
-          return res.status(500).send("Error calculating taxes");
-        }
-      }
+          if (executeErrorStrategy) {
+            return executeErrorStrategy();
+          } else {
+            Sentry.captureException(err);
+
+            logger.fatal(`UNHANDLED: ${err.name}`, {
+              error: err,
+            });
+
+            return res.status(500).send("Error calculating taxes");
+          }
+        });
     } catch (error) {
+      // Try-catch just to be sure nothing leaks
+      Sentry.captureException(error);
+
       return webhookResponse.error(error);
     }
   }),
