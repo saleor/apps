@@ -6,10 +6,13 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 import { createLogger } from "../../../logger";
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
-export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
+export class AvataxOrderCancelledAdapter
+  implements WebhookAdapter<OrderCancelledPayload, TransactionModel>
+{
   private logger = createLogger("AvataxOrderCancelledAdapter");
   private readonly clientLogger: ClientLogger;
   private readonly config: AvataxConfig;
@@ -47,6 +50,8 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
             output: error.message,
           },
         });
+
+        return err;
       });
   }
 }
