@@ -6,7 +6,7 @@
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "e2e": "vitest --project integration --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen --config .graphqlrc.ts",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
@@ -82,6 +82,7 @@
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "eslint-plugin-neverthrow": "^1.1.4",
+    "graphql-config": "^5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
     "typescript": "5.1.6"
