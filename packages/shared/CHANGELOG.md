@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.9.3
+
+### Patch Changes
+
+- 67afe8e4: Allow passing prepending fetch exchange to urql client
+
 ## 1.9.2
 
 ### Patch Changes
