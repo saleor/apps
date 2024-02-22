@@ -9,6 +9,8 @@ import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { calculateTaxesErrorsMapper } from "../../../modules/webhooks/calculate-taxes-errors-mapper";
+import * as Sentry from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -67,8 +69,25 @@ export default withOtel(
 
         return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
       } else if (activeConnectionServiceResult.isErr()) {
-        // TODO Map errors like in CHECKOUT_CALCULATE_TAXES
-        return webhookResponse.error(activeConnectionServiceResult.error);
+        const err = activeConnectionServiceResult.error;
+
+        logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
+          error: err,
+        });
+
+        const executeErrorStrategy = calculateTaxesErrorsMapper(req, res).get(err.name);
+
+        if (executeErrorStrategy) {
+          return executeErrorStrategy();
+        } else {
+          Sentry.captureException(err);
+
+          logger.fatal(`UNHANDLED: ${err.name}`, {
+            error: err,
+          });
+
+          return res.status(500).send("Error calculating taxes");
+        }
       }
     } catch (error) {
       return webhookResponse.error(error);

@@ -15,6 +15,10 @@ export const SHIPPING_ITEM_CODE = "Shipping";
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
+/**
+ * @deprecated
+ * We don't need adapter anymore
+ */
 export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
