@@ -8,6 +8,7 @@ import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
+import { RefundType } from "avatax/lib/enums/RefundType";
 
 type AvataxSettings = {
   appName: string;
@@ -51,6 +52,12 @@ export type ValidateAddressArgs = {
 };
 
 export type VoidTransactionArgs = {
+  transactionCode: string;
+  companyCode: string;
+};
+
+export type RefundTransactionParams = {
+  refundDate: Date;
   transactionCode: string;
   companyCode: string;
 };
@@ -110,6 +117,18 @@ export class AvataxClient {
     return this.client.listEntityUseCodes({
       // https://developer.avalara.com/avatax/filtering-in-rest/
       filter: `code eq ${useCode}`,
+    });
+  }
+
+  async fullyRefundTransaction(params: RefundTransactionParams) {
+    return this.client.refundTransaction({
+      transactionCode: params.transactionCode,
+      companyCode: params.companyCode,
+      model: {
+        refundTransactionCode: params.transactionCode,
+        refundDate: params.refundDate,
+        refundType: RefundType.Full,
+      },
     });
   }
 }
