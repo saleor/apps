@@ -28,25 +28,31 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
   });
 
   it("includes products as lines", () => {
-    const [first, second, third] = lines;
+    const [firstProductLine, secondProductLine, thirdProductLine] = lines;
 
-    expect(first).toContain({
-      itemCode: "328223580",
-      description: "Monospace Tee",
-      quantity: 3,
-      amount: 65.18,
-    });
-    expect(second).toContain({
-      itemCode: "328223581",
-      description: "Monospace Tee",
-      quantity: 1,
-      amount: 21.73,
-    });
-    expect(third).toContain({
-      itemCode: "118223581",
-      description: "Paul's Balance 420",
-      quantity: 2,
-      amount: 108.63,
-    });
+    expect(firstProductLine).toStrictEqual(
+      expect.objectContaining({
+        itemCode: "328223580",
+        description: "Monospace Tee",
+        quantity: 3,
+        amount: 65.18,
+      }),
+    );
+    expect(secondProductLine).toStrictEqual(
+      expect.objectContaining({
+        itemCode: "328223581",
+        description: "Monospace Tee",
+        quantity: 1,
+        amount: 21.73,
+      }),
+    );
+    expect(thirdProductLine).toStrictEqual(
+      expect.objectContaining({
+        itemCode: "118223581",
+        description: "Paul's Balance 420",
+        quantity: 2,
+        amount: 108.63,
+      }),
+    );
   });
 });

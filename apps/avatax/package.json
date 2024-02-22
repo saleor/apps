@@ -4,12 +4,13 @@
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "e2e": "vitest --project integration --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest --project react"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -59,11 +60,12 @@
     "react-hook-form": "^7.43.9",
     "urql": "^4.0.4",
     "usehooks-ts": "^2.9.1",
-    "vite": "4.4.8",
-    "vitest": "0.34.1",
+    "vite": "5.1.3",
+    "vitest": "1.2.2",
     "zod": "3.21.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/introspection": "4.0.0",
     "@graphql-codegen/schema-ast": "4.0.0",
@@ -76,10 +78,12 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.0.4",
+    "@vitejs/plugin-react": "4.2.1",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "eslint-plugin-neverthrow": "^1.1.4",
+    "pactum": "^3.6.0",
+    "pactum-matchers": "^1.1.6",
     "typescript": "5.1.6"
   },
   "private": true,
