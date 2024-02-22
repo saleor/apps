@@ -8,6 +8,7 @@ import { LogOptions } from "avatax/lib/utils/logger";
 import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
 import { BaseAvataxConfig } from "./avatax-connection-schema";
+import { createLogger } from "../../logger";
 
 type AvataxSettings = {
   appName: string;
@@ -55,6 +56,8 @@ export type VoidTransactionArgs = {
   companyCode: string;
 };
 
+const logger = createLogger("AvataxClient");
+
 export class AvataxClient {
   private client: Avatax;
 
@@ -66,16 +69,16 @@ export class AvataxClient {
   }
 
   async createTransaction({ model }: CreateTransactionArgs) {
+    logger.info("createTransaction was called", {
+      transaction: model,
+    });
+
     /*
      * We use createOrAdjustTransaction instead of createTransaction because
      * we must guarantee a way of idempotent update of the transaction due to the
      * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
      */
     return this.client.createOrAdjustTransaction({ model: { createTransactionModel: model } });
-  }
-
-  async commitTransaction(args: CommitTransactionArgs) {
-    return this.client.commitTransaction(args);
   }
 
   async voidTransaction({
@@ -85,6 +88,11 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
+    logger.info("voidTransaction was called", {
+      transactionCode,
+      companyCode,
+    });
+
     return this.client.voidTransaction({
       transactionCode,
       companyCode,
@@ -93,6 +101,8 @@ export class AvataxClient {
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
+    logger.debug("validateAddress was called");
+
     return this.client.resolveAddress(address);
   }
 
