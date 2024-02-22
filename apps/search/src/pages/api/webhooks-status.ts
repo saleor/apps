@@ -10,11 +10,11 @@ import {
 import { createLogger } from "../../lib/logger";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SearchProvider } from "../../lib/searchProvider";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const logger = createLogger("webhooksStatusHandler");
 
@@ -128,7 +128,10 @@ export default withOtel(
         return new AlgoliaSearchProvider({ appId, apiKey, enabledKeys: [] });
       },
       graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createGraphQLClient({ saleorApiUrl, token });
+        return createInstrumentedGraphqlClient({
+          saleorApiUrl,
+          token,
+        });
       },
     }),
     saleorApp.apl,

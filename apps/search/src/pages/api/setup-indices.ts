@@ -3,12 +3,12 @@ import { saleorApp } from "../../../saleor-app";
 import { createSettingsManager } from "../../lib/metadata";
 import { createLogger } from "../../lib/logger";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { ChannelsDocument } from "../../../generated/graphql";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const logger = createLogger("setupIndicesHandler");
 
@@ -71,7 +71,10 @@ export default withOtel(
     setupIndicesHandlerFactory({
       settingsManagerFactory: createSettingsManager,
       graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createGraphQLClient({ saleorApiUrl, token });
+        return createInstrumentedGraphqlClient({
+          saleorApiUrl,
+          token,
+        });
       },
     }),
     saleorApp.apl,
