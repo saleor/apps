@@ -9,6 +9,8 @@ import { ClientLogger, createClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 import { createLogger } from "../../logger";
+import { OrderFullyRefundedPayload } from "../../pages/api/webhooks/order-fully-refunded";
+import { AvataxOrderFullyRefundedAdapter } from "./order-fully-refunded/avatax-order-fully-refunded-adapter";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   private logger = createLogger("AvataxWebhookService");
@@ -61,5 +63,11 @@ export class AvataxWebhookService implements ProviderWebhookService {
     });
 
     await adapter.send(payload);
+  }
+
+  async refundTransaction(payload: OrderFullyRefundedPayload) {
+    const adapter = new AvataxOrderFullyRefundedAdapter(this.config);
+
+    return adapter.send(payload);
   }
 }
