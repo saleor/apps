@@ -2,7 +2,7 @@ import { SaleorAsyncWebhook, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/
 import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../../generated/graphql";
 import { AppWebhookRepository } from "./app-webhook-repository";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 
 type AppWebhookMigratorOptions = {
   mode: "report" | "migrate";
@@ -197,7 +197,7 @@ export class AppWebhookMigrator {
 }
 
 export function createAppWebhookMigrator(env: AuthData, options: AppWebhookMigratorOptions) {
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: env.saleorApiUrl,
     token: env.token,
   });
