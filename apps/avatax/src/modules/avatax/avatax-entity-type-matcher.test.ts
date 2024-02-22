@@ -1,44 +1,45 @@
 import { AvataxClient } from "./avatax-client";
 import { AvataxEntityTypeMatcher } from "./avatax-entity-type-matcher";
-import { describe, expect, it, vi } from "vitest";
-
-const mockGetEntityUseCode = vi.fn();
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ok, okAsync, ResultAsync } from "neverthrow";
 
 describe("AvataxEntityTypeMatcher", () => {
-  it("returns empty string when no entity code", async () => {
-    const mockAvataxClient = {
-      getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
-      ),
-    } as any as AvataxClient;
+  const mockGetEntityUseCode = vi.fn();
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+  const mockAvataxClient: Pick<AvataxClient, "getEntityUseCode"> = {
+    getEntityUseCode: mockGetEntityUseCode,
+  };
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("returns empty string when no entity code", async () => {
+    mockGetEntityUseCode.mockReturnValue(okAsync({ value: [{ code: "entityCode" }] }));
+
+    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient as AvataxClient });
     const result = await matcher.match(null);
 
-    expect(result).toBe("");
+    expect(result._unsafeUnwrap()).toBe("");
   });
+
   it("returns empty string when entity code is present in metadata but not in avatax", async () => {
-    const mockAvataxClient = {
-      getEntityUseCode: mockGetEntityUseCode.mockReturnValue(Promise.resolve({})),
-    } as any as AvataxClient;
+    mockGetEntityUseCode.mockReturnValue(okAsync({}));
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient as AvataxClient });
 
     const result = await matcher.match("entityCode");
 
-    expect(result).toBe("");
+    expect(result._unsafeUnwrap()).toBe("");
   });
-  it("returns entity code when entity code is present in metadata and in avatax", async () => {
-    const mockAvataxClient = {
-      getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
-      ),
-    } as any as AvataxClient;
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+  it("returns entity code when entity code is present in metadata and in avatax", async () => {
+    mockGetEntityUseCode.mockReturnValue(okAsync({ value: [{ code: "entityCode" }] }));
+
+    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient as AvataxClient });
 
     const result = await matcher.match("entityCode");
 
-    expect(result).toBe("entityCode");
+    expect(result._unsafeUnwrap()).toBe("entityCode");
   });
 });

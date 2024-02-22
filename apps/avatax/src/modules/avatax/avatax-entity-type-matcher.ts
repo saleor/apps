@@ -1,5 +1,6 @@
 import { AvataxClient } from "./avatax-client";
 import { createLogger } from "../../logger";
+import { ok } from "neverthrow";
 
 /*
  * Arbitrary key-value pair that is used to store the entity code in the metadata.
@@ -20,24 +21,18 @@ export class AvataxEntityTypeMatcher {
     return "";
   }
 
-  private async validateEntityCode(entityCode: string) {
-    const result = await this.client.getEntityUseCode(entityCode);
-
-    // If verified, return the entity code. If not, return empty string.
-    return result.map((v) => v.value?.[0].code).unwrapOr(this.returnFallback());
+  private validateEntityCode(entityCode: string) {
+    return this.client
+      .getEntityUseCode(entityCode)
+      .map((v) => v.value?.[0].code ?? this.returnFallback());
   }
 
   // TODO: Now that we get the customer code from user metadata, maybe we should get the entity code from the same place?
   async match(entityCode: string | null | undefined) {
     if (!entityCode) {
-      return this.returnFallback();
+      return ok(this.returnFallback());
     }
 
-    try {
-      return this.validateEntityCode(entityCode);
-    } catch (error) {
-      this.logger.debug("Failed to verify entity code", { error });
-      return this.returnFallback();
-    }
+    return this.validateEntityCode(entityCode).orElse(() => ok(this.returnFallback()));
   }
 }
