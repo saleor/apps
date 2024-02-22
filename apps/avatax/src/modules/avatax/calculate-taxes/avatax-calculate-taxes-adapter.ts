@@ -9,6 +9,7 @@ import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 import { createLogger } from "../../../logger";
+import { Result, ResultAsync } from "neverthrow";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
@@ -41,7 +42,7 @@ export class AvataxCalculateTaxesAdapter
     this.authData = authData;
   }
 
-  async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
+  async send(payload: CalculateTaxesPayload): Promise<Result<AvataxCalculateTaxesResponse, Error>> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
     const payloadService = new AvataxCalculateTaxesPayloadService(this.authData);
     const target = await payloadService.getPayload(payload, this.config);
@@ -50,29 +51,29 @@ export class AvataxCalculateTaxesAdapter
 
     const client = new AvataxClient(this.config);
 
-    try {
-      const response = await client.createTransaction(target);
+    return client
+      .createTransaction(target)
+      .map((value) => {
+        this.logger.debug("AvaTax createTransaction successfully responded");
 
-      this.logger.debug("AvaTax createTransaction successfully responded");
+        const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
+        const transformedResponse = responseTransformer.transform(value);
 
-      const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
-      const transformedResponse = responseTransformer.transform(response);
+        this.logger.debug("Transformed AvaTax createTransaction response");
 
-      this.logger.debug("Transformed AvaTax createTransaction response");
+        return transformedResponse;
+      })
+      .mapErr((err) => {
+        this.clientLogger.push({
+          event: "[CalculateTaxes] createTransaction",
+          status: "error",
+          payload: {
+            input: target,
+            output: err.message,
+          },
+        });
 
-      return transformedResponse;
-    } catch (e) {
-      const error = normalizeAvaTaxError(e);
-
-      this.clientLogger.push({
-        event: "[CalculateTaxes] createTransaction",
-        status: "error",
-        payload: {
-          input: target,
-          output: error.message,
-        },
+        return err;
       });
-      throw error;
-    }
   }
 }

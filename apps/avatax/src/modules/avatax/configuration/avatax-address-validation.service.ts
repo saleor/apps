@@ -12,12 +12,14 @@ export class AvataxAddressValidationService {
   async validate(address: AvataxConfig["address"]) {
     const formattedAddress = avataxAddressFactory.fromChannelAddress(address);
 
-    try {
-      return this.avataxClient.validateAddress({ address: formattedAddress });
-    } catch (error) {
-      const errorResolver = new AvataxValidationErrorResolver();
+    this.logger.debug("Validating address");
 
-      throw errorResolver.resolve(error);
-    }
+    return this.avataxClient.validateAddress({ address: formattedAddress }).mapErr((err) => {
+      this.logger.debug("Error validating address", {
+        error: err,
+      });
+
+      return err;
+    });
   }
 }

@@ -24,7 +24,7 @@ export class AvataxEntityTypeMatcher {
     const result = await this.client.getEntityUseCode(entityCode);
 
     // If verified, return the entity code. If not, return empty string.
-    return result.value?.[0].code || this.returnFallback();
+    return result.map((v) => v.value?.[0].code).unwrapOr(this.returnFallback());
   }
 
   // TODO: Now that we get the customer code from user metadata, maybe we should get the entity code from the same place?

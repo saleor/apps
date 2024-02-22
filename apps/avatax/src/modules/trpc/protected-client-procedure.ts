@@ -114,6 +114,9 @@ const logErrors = middleware(async ({ next }) => {
   return result;
 });
 
+/**
+ * TODO: Add middleware that unpacks Result and unwraps it
+ */
 export const protectedClientProcedure = procedure
   .use(logErrors)
   .use(attachAppToken)
