@@ -85,6 +85,7 @@
     "millis",
     "Parentfor",
     "GTIN",
+    "pactum",
     "shopex"
   ],
   "ignorePaths": [
@@ -101,6 +102,7 @@
     "**/schema.graphql",
     "**/*-generator.ts",
     "apps/*/src/**",
+    "apps/*/e2e/data/**",
     "**/*.bru",
     "**/.eslintrc"
   ]
