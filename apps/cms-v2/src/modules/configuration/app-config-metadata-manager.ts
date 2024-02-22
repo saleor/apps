@@ -1,8 +1,8 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { AppConfig } from "./app-config";
 import { createSettingsManager } from "./metadata-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createGraphQLClient } from "@saleor/apps-shared";
 
 export class AppConfigMetadataManager {
   public readonly metadataKey = "app-config-v1";
@@ -28,7 +28,7 @@ export class AppConfigMetadataManager {
         saleorApiUrl: authData.saleorApiUrl,
         token: authData.token,
       }),
-      authData.appId
+      authData.appId,
     );
 
     return new AppConfigMetadataManager(settingsManager);

@@ -1,8 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../metadata";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createLogger } from "../logger";
+import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
@@ -11,7 +11,7 @@ interface GetAlgoliaConfigurationArgs {
 const logger = createLogger("getAlgoliaConfiguration");
 
 export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurationArgs) => {
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
