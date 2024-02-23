@@ -16,7 +16,7 @@ const config: IGraphQLConfig = {
               preset: "import-types",
               plugins: ["typescript-operations", "typescript-document-nodes"],
               presetConfig: {
-                typesPath: "e2e/generated/types.ts",
+                typesPath: "./types",
               },
               config: {
                 // Export operations into raw string with `gql` used in template literals
