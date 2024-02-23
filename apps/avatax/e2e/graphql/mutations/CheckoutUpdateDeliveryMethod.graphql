@@ -4,39 +4,7 @@ mutation CheckoutUpdateDeliveryMethod($checkoutId: ID!, $deliveryMethodId: ID!) 
       ...CheckoutError
     }
     checkout {
-      id
-      lines {
-        totalPrice {
-          gross {
-            ...Money
-          }
-          tax {
-            ...Money
-          }
-        }
-      }
-      shippingPrice {
-        gross {
-          ...Money
-        }
-        tax {
-          ...Money
-        }
-        net {
-          ...Money
-        }
-      }
-      totalPrice {
-        net {
-          ...Money
-        }
-        gross {
-          ...Money
-        }
-        tax {
-          ...Money
-        }
-      }
+      ...CheckoutDetails
     }
   }
 }

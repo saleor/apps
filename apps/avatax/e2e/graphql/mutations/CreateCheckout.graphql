@@ -15,37 +15,10 @@ mutation CreateCheckout(
     }
   ) {
     errors {
-      field
-      message
-      code
-      variants
-      lines
-      addressType
+      ...CheckoutError
     }
     checkout {
-      id
-      totalPrice {
-        net {
-          currency
-          amount
-        }
-        gross {
-          currency
-          amount
-        }
-        tax {
-          currency
-          amount
-        }
-      }
-      shippingMethods {
-        id
-        name
-        price {
-          currency
-          amount
-        }
-      }
+      ...CheckoutDetails
     }
   }
 }

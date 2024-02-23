@@ -1,4 +1,4 @@
 fragment Money on Money {
-  currency
   amount
+  currency
 }
