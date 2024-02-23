@@ -1,10 +1,11 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
-import { SaleorVersionCompatibilityValidator, createGraphQLClient } from "@saleor/apps-shared";
+import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "@saleor/apps-logger";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -32,7 +33,7 @@ export default withOtel(
       let saleorVersion: string;
 
       try {
-        const client = createGraphQLClient({
+        const client = createInstrumentedGraphqlClient({
           saleorApiUrl: saleorApiUrl,
           token: token,
         });

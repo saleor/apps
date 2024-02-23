@@ -28,6 +28,9 @@
         "NEW_APP_LOG_LEVEL",
         "ENV"
       ]
+    },
+    "test": {
+      "env": ["TEST_SALEOR_API_URL"]
     }
   }
 }

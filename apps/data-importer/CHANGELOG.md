@@ -1,5 +1,12 @@
 # saleor-app-data-importer
 
+## 1.10.4
+
+### Patch Changes
+
+- Updated dependencies [67afe8e4]
+  - @saleor/apps-shared@1.9.3
+
 ## 1.10.3
 
 ### Patch Changes
