@@ -1,8 +1,11 @@
 import { it, describe } from "vitest";
 import { e2e } from "pactum";
 import { string } from "pactum-matchers";
-import { gql } from "../utils";
-import { CheckoutUpdateDeliveryMethod, CreateCheckout } from "../generated/graphql";
+import {
+  CheckoutUpdateDeliveryMethod,
+  CompleteCheckout,
+  CreateCheckout,
+} from "../generated/graphql";
 
 // Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
 describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
@@ -87,25 +90,7 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Complete checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation CompleteCheckout($checkoutId: ID!) {
-          checkoutComplete(id: $checkoutId) {
-            order {
-              id
-            }
-            confirmationNeeded
-            confirmationData
-            errors {
-              field
-              message
-              code
-              variants
-              lines
-              addressType
-            }
-          }
-        }
-      `)
+      .withGraphQLQuery(CompleteCheckout)
       .withGraphQLVariables({ checkoutId: "$S{CheckoutId}" })
       .expectJsonMatch({
         data: {
