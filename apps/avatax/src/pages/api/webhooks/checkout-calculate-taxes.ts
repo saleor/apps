@@ -18,29 +18,14 @@ import * as Sentry from "@sentry/nextjs";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 import { NextApiRequest, NextApiResponse } from "next";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-export type CalculateTaxesPayload = Extract<
-  CalculateTaxesEventFragment,
-  { __typename: "CalculateTaxes" }
->;
-
-function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
-  if (!payload.taxBase.lines.length) {
-    return err(new TaxIncompleteWebhookPayloadError("No lines found in taxBase"));
-  }
-
-  if (!payload.taxBase.address) {
-    return err(new TaxIncompleteWebhookPayloadError("No address found in taxBase"));
-  }
-
-  return ok(payload);
-}
 
 export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
   name: "CheckoutCalculateTaxes",
@@ -103,19 +88,17 @@ export default withOtel(
 
     logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
+    const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+
+    if (payloadVerificationResult.isErr()) {
+      logger.debug("Failed to calculate taxes, due to incomplete payload", {
+        error: payloadVerificationResult.error,
+      });
+
+      return res.status(400).send(payloadVerificationResult.error.message);
+    }
+
     try {
-      const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
-
-      payloadVerificationResult.match(
-        (payload) => {
-          logger.debug("Payload validated Successfully");
-        },
-        (error) => {
-          logger.error(`[${error.name}] ${error.message}`);
-          Sentry.captureException("Invalid payload from Saleor was sent to Avatax app");
-        },
-      );
-
       const appMetadata = payload.recipient?.privateMetadata ?? [];
       const channelSlug = payload.taxBase.channel.slug;
       const activeConnectionServiceResult = getActiveConnectionService(

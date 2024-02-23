@@ -9,26 +9,14 @@ import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-type CalculateTaxesPayload = Extract<CalculateTaxesEventFragment, { __typename: "CalculateTaxes" }>;
-
-function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
-  if (!payload.taxBase.lines.length) {
-    throw new TaxIncompleteWebhookPayloadError("No lines found in taxBase");
-  }
-
-  if (!payload.taxBase.address) {
-    throw new TaxIncompleteWebhookPayloadError("No address found in taxBase");
-  }
-
-  return payload;
-}
 
 export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
   name: "OrderCalculateTaxes",
@@ -46,8 +34,17 @@ export default withOtel(
 
     logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
+    const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+
+    if (payloadVerificationResult.isErr()) {
+      logger.debug("Failed to calculate taxes, due to incomplete payload", {
+        error: payloadVerificationResult.error,
+      });
+
+      return res.status(400).send(payloadVerificationResult.error.message);
+    }
+
     try {
-      verifyCalculateTaxesPayload(payload);
       logger.debug("Payload validated successfully");
 
       const appMetadata = payload.recipient?.privateMetadata ?? [];
