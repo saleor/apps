@@ -1,25 +1,16 @@
-import { NextWebhookApiHandler, SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
-import {
-  CalculateTaxesEventFragment,
-  UntypedCalculateTaxesDocument,
-} from "../../../../generated/graphql";
+import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import {
-  ActiveConnectionServiceErrors,
-  ActiveConnectionServiceErrorsUnion,
-  getActiveConnectionService,
-} from "../../../modules/taxes/get-active-connection-service";
-import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
+import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { err, ok } from "neverthrow";
 import * as Sentry from "@sentry/nextjs";
 import { Simulate } from "react-dom/test-utils";
-import error = Simulate.error;
 import { NextApiRequest, NextApiResponse } from "next";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import error = Simulate.error;
 
 export const config = {
   api: {

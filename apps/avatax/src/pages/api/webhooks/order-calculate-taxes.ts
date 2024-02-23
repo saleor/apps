@@ -1,12 +1,8 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
-import {
-  CalculateTaxesEventFragment,
-  UntypedCalculateTaxesDocument,
-} from "../../../../generated/graphql";
+import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { TaxIncompleteWebhookPayloadError } from "../../../modules/taxes/tax-error";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
