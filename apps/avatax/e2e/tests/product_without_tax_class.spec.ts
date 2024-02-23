@@ -2,6 +2,7 @@ import { it, describe } from "vitest";
 import { e2e } from "pactum";
 import { string } from "pactum-matchers";
 import { gql } from "../utils";
+import { CreateCheckout } from "../generated/graphql";
 
 // Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
 describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
@@ -24,59 +25,7 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Create checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation CreateCheckout(
-          $channelSlug: String!
-          $variantId: ID!
-          $email: String!
-          $address: AddressInput!
-        ) {
-          checkoutCreate(
-            input: {
-              channel: $channelSlug
-              lines: [{ quantity: 10, variantId: $variantId }]
-              email: $email
-              shippingAddress: $address
-              billingAddress: $address
-              languageCode: EN_US
-            }
-          ) {
-            errors {
-              field
-              message
-              code
-              variants
-              lines
-              addressType
-            }
-            checkout {
-              id
-              totalPrice {
-                net {
-                  currency
-                  amount
-                }
-                gross {
-                  currency
-                  amount
-                }
-                tax {
-                  currency
-                  amount
-                }
-              }
-              shippingMethods {
-                id
-                name
-                price {
-                  currency
-                  amount
-                }
-              }
-            }
-          }
-        }
-      `)
+      .withGraphQLQuery(CreateCheckout)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:USA",
       })
