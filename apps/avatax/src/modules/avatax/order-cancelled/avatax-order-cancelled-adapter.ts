@@ -6,10 +6,13 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 import { createLogger } from "../../../logger";
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
-export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
+export class AvataxOrderCancelledAdapter
+  implements WebhookAdapter<OrderCancelledPayload, TransactionModel>
+{
   private logger = createLogger("AvataxOrderCancelledAdapter");
   private readonly clientLogger: ClientLogger;
   private readonly config: AvataxConfig;
@@ -29,23 +32,26 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
 
     const client = new AvataxClient(this.config);
 
-    try {
-      await client.voidTransaction(target);
+    return client
+      .voidTransaction(target)
+      .map((v) => {
+        this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
 
-      this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
-    } catch (e) {
-      const error = normalizeAvaTaxError(e);
+        return v;
+      })
+      .mapErr((err) => {
+        const error = normalizeAvaTaxError(err);
 
-      this.clientLogger.push({
-        event: "[OrderCancelled] voidTransaction",
-        status: "error",
-        payload: {
-          input: target,
-          output: error.message,
-        },
+        this.clientLogger.push({
+          event: "[OrderCancelled] voidTransaction",
+          status: "error",
+          payload: {
+            input: target,
+            output: error.message,
+          },
+        });
+
+        return err;
       });
-
-      throw error;
-    }
   }
 }

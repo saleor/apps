@@ -9,6 +9,8 @@ import { ClientLogger, createClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 import { createLogger } from "../../logger";
+import { fromPromise, ok } from "neverthrow";
+import { BaseError } from "../../error";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   private logger = createLogger("AvataxWebhookService");
@@ -30,16 +32,14 @@ export class AvataxWebhookService implements ProviderWebhookService {
     this.clientLogger = clientLogger;
   }
 
-  async calculateTaxes(payload: CalculateTaxesPayload) {
+  calculateTaxes(payload: CalculateTaxesPayload) {
     const adapter = new AvataxCalculateTaxesAdapter({
       config: this.config,
       clientLogger: this.clientLogger,
       authData: this.authData,
     });
 
-    const response = await adapter.send(payload);
-
-    return response;
+    return adapter.send(payload);
   }
 
   async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
@@ -49,17 +49,16 @@ export class AvataxWebhookService implements ProviderWebhookService {
       authData: this.authData,
     });
 
-    const response = await adapter.send({ order });
-
-    return response;
+    // TODO custom errors mapping
+    return fromPromise(adapter.send({ order }), BaseError.normalize);
   }
 
-  async cancelOrder(payload: OrderCancelledPayload) {
+  cancelOrder(payload: OrderCancelledPayload) {
     const adapter = new AvataxOrderCancelledAdapter({
       config: this.config,
       clientLogger: this.clientLogger,
     });
 
-    await adapter.send(payload);
+    return adapter.send(payload);
   }
 }

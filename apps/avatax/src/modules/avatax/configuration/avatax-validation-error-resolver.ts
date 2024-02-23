@@ -14,6 +14,9 @@ const avataxErrorSchema = z.object({
   ),
 });
 
+/**
+ * @deprecated
+ */
 export class AvataxValidationErrorResolver {
   private logger = createLogger("AvataxValidationErrorResolver");
 
