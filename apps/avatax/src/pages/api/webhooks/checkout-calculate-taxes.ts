@@ -18,6 +18,7 @@ import * as Sentry from "@sentry/nextjs";
 import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 import { NextApiRequest, NextApiResponse } from "next";
+import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 export const config = {
   api: {
@@ -49,48 +50,6 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   query: UntypedCalculateTaxesDocument,
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
 });
-
-/**
- * Translate internal errors to responses back to Saleor
- *
- * TODO: Maybe we can find more elegant and less verbose way to map Modern Errors to functions?
- * Instances don't translate well with their constructors
- */
-const webhookErrorToResponseMapper = (req: NextApiRequest, res: NextApiResponse) => {
-  return new Map([
-    [
-      "BrokenConfigurationError",
-      () =>
-        res
-          .status(400)
-          .send("App is not configured properly. Please verify configuration or reinstall the app"),
-    ],
-    [
-      "MissingMetadataError",
-      () => res.status(400).send("App is not configured properly. Configure the app first"),
-    ],
-    [
-      "MissingChannelSlugError",
-      () => res.status(500).send("Webhook didn't contain channel slug. This should not happen."),
-    ],
-    [
-      "WrongChannelError",
-      () =>
-        res
-          .status(500)
-          .send(
-            "Webhook was executed for channel that it was not configured with. This should not happen.",
-          ),
-    ],
-    [
-      "ProviderNotAssignedToChannelError",
-      () =>
-        res
-          .status(400)
-          .send("App is not configured properly. Please verify configuration or reinstall the app"),
-    ],
-  ]);
-};
 
 /**
  * TODO: Add tests to handler
@@ -127,18 +86,19 @@ export default withOtel(
       if (activeConnectionServiceResult.isErr()) {
         const err = activeConnectionServiceResult.error;
 
-        logger.debug(`Error in taxes calculation occured: ${err.name} ${err.message}`, {
+        logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
           error: err,
         });
 
-        const executeErrorStrategy = webhookErrorToResponseMapper(req, res).get(err.name);
+        const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
 
         if (executeErrorStrategy) {
           return executeErrorStrategy();
         } else {
           Sentry.captureException(err);
-          logger.fatal(`UNHANDLED: ${error.name}`, {
-            error: error,
+
+          logger.fatal(`UNHANDLED: ${err.name}`, {
+            error: err,
           });
 
           return res.status(500).send("Error calculating taxes");
