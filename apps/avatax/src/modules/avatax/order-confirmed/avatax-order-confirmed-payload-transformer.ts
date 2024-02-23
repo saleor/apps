@@ -11,8 +11,6 @@ import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 
-export const SHIPPING_ITEM_CODE = "Shipping";
-
 export class AvataxOrderConfirmedPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
     if (!config.isDocumentRecordingEnabled) {

@@ -3,7 +3,7 @@ import { numbers } from "../../taxes/numbers";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { SHIPPING_ITEM_CODE } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
   transform(transaction: TransactionModel): CalculateTaxesResponse["lines"] {
