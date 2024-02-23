@@ -1,5 +1,15 @@
 # saleor-app-taxes
 
+## 1.22.2
+
+### Patch Changes
+
+- 67afe8e4: Apps that use OTEL can now collect and send spans containing details about GraphQL requests.
+- Updated dependencies [67afe8e4]
+- Updated dependencies [67afe8e4]
+  - @saleor/apps-shared@1.9.3
+  - @saleor/apps-otel@1.1.0
+
 ## 1.22.1
 
 ### Patch Changes
