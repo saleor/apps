@@ -2,7 +2,7 @@ import { it, describe } from "vitest";
 import { e2e } from "pactum";
 import { string } from "pactum-matchers";
 import { gql } from "../utils";
-import { CreateCheckout } from "../generated/graphql";
+import { CheckoutUpdateDeliveryMethod, CreateCheckout } from "../generated/graphql";
 
 // Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
 describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
@@ -51,61 +51,7 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Add delivery method")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation checkoutDeliveryMethodUpdate($checkoutId: ID!, $deliveryMethodId: ID!) {
-          checkoutDeliveryMethodUpdate(id: $checkoutId, deliveryMethodId: $deliveryMethodId) {
-            errors {
-              ...CheckoutErrorFragment
-            }
-            checkout {
-              id
-              lines {
-                totalPrice {
-                  gross {
-                    ...Money
-                  }
-                  tax {
-                    ...Money
-                  }
-                }
-              }
-              shippingPrice {
-                gross {
-                  ...Money
-                }
-                tax {
-                  ...Money
-                }
-                net {
-                  ...Money
-                }
-              }
-              totalPrice {
-                net {
-                  ...Money
-                }
-                gross {
-                  ...Money
-                }
-                tax {
-                  ...Money
-                }
-              }
-            }
-          }
-        }
-
-        fragment CheckoutErrorFragment on CheckoutError {
-          message
-          field
-          code
-        }
-
-        fragment Money on Money {
-          currency
-          amount
-        }
-      `)
+      .withGraphQLQuery(CheckoutUpdateDeliveryMethod)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "UpdateDeliveryMethod:USA",
       })
