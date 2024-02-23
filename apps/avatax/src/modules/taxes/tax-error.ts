@@ -5,6 +5,9 @@ export const TaxIncompleteWebhookPayloadError = ExpectedError.subclass(
   "TaxIncompleteWebhookPayloadError",
   {
     props: {
+      /**
+       * TODO: Remove this field
+       */
       sentrySeverity: "warning",
     } as CommonErrorProps,
   },

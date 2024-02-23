@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 1.15.1
+
+### Patch Changes
+
+- Updated dependencies [67afe8e4]
+  - @saleor/apps-shared@1.9.3
+  - @saleor/webhook-utils@0.0.4
+
 ## 1.15.0
 
 ### Minor Changes
