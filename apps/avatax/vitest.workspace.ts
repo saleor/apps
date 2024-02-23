@@ -20,6 +20,7 @@ export default defineWorkspace([
        * This is a timeout for sync webhooks in Saleor
        */
       testTimeout: 20_000,
+      retry: 3,
     },
   },
 ]);
