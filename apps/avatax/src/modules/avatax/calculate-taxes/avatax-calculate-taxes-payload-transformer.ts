@@ -4,10 +4,10 @@ import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { avataxData } from "../avatax-data-resolver";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -33,7 +33,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
-    const customerCode = avataxCustomerCode.resolve(payload.taxBase.sourceObject.user);
+    const customerCode = avataxData.customerCode.resolveFromCalculateTaxes(payload);
 
     return {
       model: {

@@ -1,0 +1,6 @@
+fragment WebhookApp on App {
+  privateMetadata {
+    key
+    value
+  }
+}

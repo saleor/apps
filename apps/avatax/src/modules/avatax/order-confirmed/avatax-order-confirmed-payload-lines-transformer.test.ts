@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
-import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
+import { transformAvataxOrderConfirmedPayloadLines } from "./avatax-order-confirmed-payload-lines-transformer";
+
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 
-const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
 const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const orderMock = mockGenerator.generateOrder();
+const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 const matches: AvataxTaxCodeMatches = [];
 
-describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
-  const lines = linesTransformer.transform(orderMock, avataxConfigMock, matches);
+describe("transformAvataxOrderConfirmedPayloadLines", () => {
+  const lines = transformAvataxOrderConfirmedPayloadLines(orderMock, avataxConfigMock, matches);
 
   it("returns the correct number of lines", () => {
     expect(lines).toHaveLength(4);

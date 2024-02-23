@@ -1,0 +1,39 @@
+fragment OrderBase on Order {
+  id
+  channel {
+    id
+    slug
+  }
+  ...AvataxOrderMetadata
+}
+
+fragment OrderFullyRefundedEventSubscription on Event {
+  __typename
+  ... on OrderFullyRefunded {
+    issuedAt
+    order {
+      ...OrderBase
+      grantedRefunds {
+        id
+        amount {
+          ...Money
+        }
+        lines {
+          id
+          orderLine {
+            ...OrderLine
+          }
+        }
+      }
+    }
+  }
+  recipient {
+    ...WebhookApp
+  }
+}
+
+subscription OrderFullyRefundedSubscription {
+  event {
+    ...OrderFullyRefundedEventSubscription
+  }
+}
