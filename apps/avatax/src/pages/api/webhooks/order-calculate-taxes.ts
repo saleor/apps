@@ -54,8 +54,6 @@ export default wrapWithLoggerContext(
           ctx.authData,
         );
 
-        logger.info("Found active connection service. Calculating taxes...");
-
         if (activeConnectionServiceResult.isOk()) {
           const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
 

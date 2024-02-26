@@ -48,6 +48,9 @@ export const attachLoggerOtelTransport = (
       {} as Record<string, LogAttributeValue>,
     );
 
+    console.log("Otel attrs");
+    console.log(serializedAttributes);
+
     logs.getLogger("app-logger-otel").emit({
       body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
       context: context.active(),

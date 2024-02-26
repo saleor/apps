@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
@@ -32,8 +32,13 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
   return (req: NextApiRequest, res: NextApiResponse) => {
     return loggerContext.wrap(() => {
       const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
+      const saleorEvent = req.headers[SALEOR_EVENT_HEADER] as string;
+
+      console.log(saleorApiUrl);
+      console.log(saleorEvent);
 
       loggerContext.set("saleorApiUrl", saleorApiUrl ?? null);
+      loggerContext.set("saleorEvent", saleorEvent ?? null);
 
       return handler(req, res);
     });
