@@ -20,7 +20,12 @@ export default defineWorkspace([
        * This is a timeout for sync webhooks in Saleor
        */
       testTimeout: 20_000,
-      retry: 3,
+      /*
+       * Request retries are done by PactumJS
+       * Making a retry in vitest would cause issues with e2e utility
+       * It would mark the test as successful even if it failed
+       */
+      retry: 0,
     },
   },
 ]);

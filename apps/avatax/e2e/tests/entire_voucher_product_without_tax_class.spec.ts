@@ -130,7 +130,7 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
       .expectJson("data.checkoutAddPromoCode.checkout.discountName", "$M{Voucher.Percentage.name}")
       .expectJson("data.checkoutAddPromoCode.checkout.discount", getMoney(VOUCHER_AMOUNT))
       .expectJson(
-        "data.checkoutAddPromoCode.lines[0].totalPrice",
+        "data.checkoutAddPromoCode.checkout.lines[0].totalPrice",
         getCompleteMoney({
           gross: PRODUCT_GROSS_PRICE_AFTER_VOUCHER,
           net: PRODUCT_NET_PRICE_AFTER_VOUCHER,
@@ -138,11 +138,11 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
         }),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.lines[0].undiscountedTotalPrice",
+        "data.checkoutAddPromoCode.checkout.lines[0].undiscountedTotalPrice",
         getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.shippingPrice",
+        "data.checkoutAddPromoCode.checkout.shippingPrice",
         getCompleteMoney({
           gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
           net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
@@ -150,14 +150,14 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
         }),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.totalPrice",
+        "data.checkoutAddPromoCode.checkout.totalPrice",
         getCompleteMoney({
           gross: TOTAL_GROSS_PRICE_AFTER_VOUCHER,
           net: TOTAL_NET_PRICE_AFTER_VOUCHER,
           tax: TOTAL_TAX_PRICE_AFTER_VOUCHER,
         }),
       )
-      .inspect();
+      .retry();
   });
 
   it("checkout should be able to complete", async () => {
