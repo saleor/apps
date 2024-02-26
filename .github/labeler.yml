@@ -5,6 +5,8 @@
 "App: Search": "apps/search/**/*"
 "App: Slack": "apps/slack/**/*"
 "App: Taxes": "apps/taxes/**/*"
+"App: Avatax": "apps/avatax/**/*"
+"App: Taxjar": "apps/taxjar/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
 "App: CMS": "apps/cms-v2/**/*"
 "App: CRM": "apps/crm/**/*"

@@ -15,6 +15,9 @@ export class WebhookResponse {
     return this.res.status(500).json({ error: errorMessage });
   }
 
+  /**
+   * @deprecated
+   */
   error(error: unknown) {
     if (error instanceof CriticalError) {
       Sentry.captureException(error);
