@@ -57,7 +57,7 @@ export default wrapWithLoggerContext(
         if (activeConnectionServiceResult.isOk()) {
           const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
 
-          logger.info("Taxes calculated", { calculatedTaxes });
+          logger.debug("Taxes calculated", { calculatedTaxes });
 
           return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
         } else if (activeConnectionServiceResult.isErr()) {
