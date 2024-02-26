@@ -112,7 +112,7 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
         },
         {
           amount: 48.33,
-          discounted: true,
+          discounted: false,
           itemCode: "Shipping",
           quantity: 1,
           taxCode: "FR000000",
