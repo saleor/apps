@@ -16,7 +16,7 @@ jobs:
       # Use Node.js as syncpack is written in that
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version-file: ".nvmrc"
       - uses: JamieMason/syncpack-github-action@c145cec44b3731b3fe8e859679e240d6ae011f0f
         continue-on-error: true
         with:
