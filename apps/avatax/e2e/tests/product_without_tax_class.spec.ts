@@ -33,16 +33,16 @@ describe("App should calculate taxes for checkout with product without tax class
         "@DATA:TEMPLATE@": "Checkout:USA",
       })
       .expectStatus(200)
+      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
+        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+        currency: "USD",
+      })
       .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
         amount: TOTAL_NET_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
       .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
         amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-        currency: "USD",
-      })
-      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
-        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
       .retry()
@@ -58,6 +58,10 @@ describe("App should calculate taxes for checkout with product without tax class
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "UpdateDeliveryMethod:USA",
       })
+      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.tax", {
+        currency: "USD",
+        amount: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+      })
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.net", {
         currency: "USD",
         amount: TOTAL_NET_PRICE_AFTER_SHIPPING,
@@ -66,9 +70,9 @@ describe("App should calculate taxes for checkout with product without tax class
         currency: "USD",
         amount: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
       })
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.tax", {
+      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
         currency: "USD",
-        amount: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+        amount: SHIPPING_TAX_PRICE,
       })
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.net", {
         currency: "USD",
@@ -77,10 +81,6 @@ describe("App should calculate taxes for checkout with product without tax class
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.gross", {
         currency: "USD",
         amount: SHIPPING_GROSS_PRICE,
-      })
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
-        currency: "USD",
-        amount: SHIPPING_TAX_PRICE,
       })
       .retry();
   });
