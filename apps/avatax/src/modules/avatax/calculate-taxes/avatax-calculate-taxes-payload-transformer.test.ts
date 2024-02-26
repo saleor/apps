@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
+import { CalculateTaxesPayload } from "../../webhooks/calculate-taxes-payload";
 
 const mockGenerator = new AvataxCalculateTaxesMockGenerator();
 const avataxConfigMock = mockGenerator.generateAvataxConfig();
