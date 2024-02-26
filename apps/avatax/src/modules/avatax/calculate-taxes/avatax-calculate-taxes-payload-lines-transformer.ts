@@ -1,5 +1,5 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderLine, TaxBaseFragment } from "../../../../generated/graphql";
+import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
@@ -42,7 +42,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
       const taxCode = matcher.match(line, matches);
 
       return {
-        amount: line.totalPrice.amount,
+        amount: getUndiscountedTotalPrice(line),
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
