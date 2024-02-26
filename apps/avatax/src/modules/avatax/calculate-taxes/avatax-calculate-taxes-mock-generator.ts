@@ -51,6 +51,11 @@ const defaultTaxBase: TaxBase = {
             },
           },
         },
+        undiscountedTotalPrice: {
+          net: {
+            amount: 70,
+          },
+        },
       },
       quantity: 3,
       unitPrice: {
@@ -73,6 +78,11 @@ const defaultTaxBase: TaxBase = {
             },
           },
         },
+        undiscountedTotalPrice: {
+          net: {
+            amount: 20,
+          },
+        },
       },
       quantity: 1,
       unitPrice: {
@@ -93,6 +103,11 @@ const defaultTaxBase: TaxBase = {
               id: "VGF4Q2xhc3M6TWjI=",
               name: "Sweets",
             },
+          },
+        },
+        undiscountedTotalPrice: {
+          net: {
+            amount: 100,
           },
         },
       },

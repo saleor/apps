@@ -12,6 +12,9 @@ fragment TaxBaseLine on TaxableObjectLine {
           }
         }
       }
+      undiscountedTotalPrice {
+        amount
+      }
     }
     ... on OrderLine {
       id
@@ -22,6 +25,11 @@ fragment TaxBaseLine on TaxableObjectLine {
             id
             name
           }
+        }
+      }
+      undiscountedTotalPrice {
+        net {
+          amount
         }
       }
     }

@@ -1,9 +1,30 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { OrderLine, TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { avataxShippingLine } from "./avatax-shipping-line";
+
+type TaxBaseLine = TaxBaseFragment["lines"][0];
+
+const getUndiscountedTotalPrice = (line: TaxBaseLine) => {
+  if (line.sourceLine.__typename === "CheckoutLine") {
+    return line.sourceLine.undiscountedTotalPrice.amount;
+  }
+
+  return line.sourceLine.undiscountedTotalPrice.net.amount;
+};
+
+const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
+  if (isDiscounted) {
+    const undiscountedTotalPrice = getUndiscountedTotalPrice(line);
+    const totalPrice = line.totalPrice.amount;
+
+    return totalPrice !== undiscountedTotalPrice;
+  }
+
+  return false;
+};
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
   transform(
@@ -25,7 +46,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
-        discounted: isDiscounted,
+        discounted: checkIfIsDiscountedLine(isDiscounted, line),
       };
     });
 
