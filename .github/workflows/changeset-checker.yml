@@ -11,7 +11,7 @@ jobs:
   changeset_check:
     name: Changeset added to the PR
     # Adding 'skip changesets' label to the PR will skip this job
-    if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changeset') || !startsWith(github.head_ref, 'changeset-release/') }}
+    if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changeset') && !startsWith(github.head_ref, 'changeset-release/') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
