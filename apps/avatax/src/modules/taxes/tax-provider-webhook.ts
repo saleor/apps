@@ -1,7 +1,7 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-import { CalculateTaxesPayload } from "../../pages/api/webhooks/checkout-calculate-taxes";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
+import { CalculateTaxesPayload } from "../webhooks/calculate-taxes-payload";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
 
