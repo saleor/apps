@@ -42,7 +42,9 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
       const taxCode = matcher.match(line, matches);
 
       return {
-        amount: getUndiscountedTotalPrice(line),
+        amount: taxBase.pricesEnteredWithTax
+          ? line.totalPrice.amount
+          : getUndiscountedTotalPrice(line),
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
