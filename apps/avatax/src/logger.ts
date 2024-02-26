@@ -8,13 +8,11 @@ if (process.env.NODE_ENV !== "production") {
 
 if (typeof window === "undefined") {
   import("@saleor/apps-logger/node").then(
-    ({ attachLoggerOtelTransport, attachLoggerSentryTransport, LoggerContext }) => {
+    async ({ attachLoggerOtelTransport, attachLoggerSentryTransport, LoggerContext }) => {
+      const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
+
       attachLoggerSentryTransport(logger);
-      attachLoggerOtelTransport(
-        logger,
-        require("../package.json").version,
-        require("./logger-context").loggerContext,
-      );
+      attachLoggerOtelTransport(logger, require("../package.json").version, loggerContext);
     },
   );
 }
