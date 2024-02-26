@@ -1,5 +1,4 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { CalculateTaxesPayload } from "../../../pages/api/webhooks/checkout-calculate-taxes";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -8,6 +7,7 @@ import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { CalculateTaxesPayload } from "../../webhooks/calculate-taxes-payload";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
