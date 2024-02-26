@@ -2,8 +2,9 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger, loggerContext } from "../../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
+import { createLogger } from "../../../logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 const logger = createLogger("tRPC error");
 

@@ -4,12 +4,13 @@ import { saleorApp } from "../../../../saleor-app";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger, loggerContext } from "../../../logger";
+import { createLogger } from "../../../logger";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 import * as Sentry from "@sentry/nextjs";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 export const config = {
   api: {

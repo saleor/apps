@@ -5,9 +5,10 @@ import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { gql } from "urql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger, loggerContext } from "../../logger";
+import { createLogger } from "../../logger";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../logger-context";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 

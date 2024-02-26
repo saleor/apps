@@ -7,8 +7,9 @@ import { saleorApp } from "../../../../saleor-app";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger, loggerContext } from "../../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
+import { createLogger } from "../../../logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 export const config = {
   api: {
     bodyParser: false,

@@ -9,9 +9,10 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger, loggerContext } from "../../../logger";
+import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 export const config = {
   api: {

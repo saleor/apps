@@ -8,8 +8,8 @@ import { orderConfirmedAsyncWebhook } from "./webhooks/order-confirmed";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { orderCancelledAsyncWebhook } from "./webhooks/order-cancelled";
 import { withOtel } from "@saleor/apps-otel";
-import { loggerContext } from "../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../logger-context";
 
 export default wrapWithLoggerContext(
   withOtel(

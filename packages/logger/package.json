@@ -18,6 +18,14 @@
     "vitest": "0.34.1"
   },
   "main": "index.ts",
+  "exports": {
+    ".": {
+      "default": "./index.ts"
+    },
+    "./node": {
+      "default": "./node.ts"
+    }
+  },
   "peerDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@sentry/nextjs": ">=7"
