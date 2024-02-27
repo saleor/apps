@@ -53,7 +53,7 @@ const defaultTaxBase: TaxBase = {
         },
         undiscountedTotalPrice: {
           net: {
-            amount: 70,
+            amount: 60,
           },
         },
       },
