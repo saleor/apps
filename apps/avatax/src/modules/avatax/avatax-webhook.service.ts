@@ -4,7 +4,7 @@ import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled"
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
-import { ClientLogger, createClientLogger } from "../logs/client-logger";
+import { ClientLogger } from "../logs/client-logger";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 import { createLogger } from "../../logger";
