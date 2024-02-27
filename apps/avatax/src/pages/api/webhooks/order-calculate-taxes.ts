@@ -5,8 +5,12 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
+import * as Sentry from "@sentry/nextjs";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 export const config = {
   api: {
@@ -22,50 +26,65 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
   webhookPath: "/api/webhooks/order-calculate-taxes",
 });
 
-export default withOtel(
-  orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-    const logger = createLogger("orderCalculateTaxesSyncWebhook");
-    const { payload } = ctx;
-    const webhookResponse = new WebhookResponse(res);
+export default wrapWithLoggerContext(
+  withOtel(
+    orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+      const logger = createLogger("orderCalculateTaxesSyncWebhook");
+      const { payload } = ctx;
+      const webhookResponse = new WebhookResponse(res);
 
-    logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+      logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
-    const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+      try {
+        const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
-    if (payloadVerificationResult.isErr()) {
-      logger.debug("Failed to calculate taxes, due to incomplete payload", {
-        error: payloadVerificationResult.error,
-      });
+        if (payloadVerificationResult.isErr()) {
+          logger.debug("Failed to calculate taxes, due to incomplete payload", {
+            error: payloadVerificationResult.error,
+          });
 
-      return res.status(400).send(payloadVerificationResult.error.message);
-    }
+          return res.status(400).send(payloadVerificationResult.error.message);
+        }
 
-    try {
-      logger.debug("Payload validated successfully");
+        const appMetadata = payload.recipient?.privateMetadata ?? [];
+        const channelSlug = payload.taxBase.channel.slug;
+        const activeConnectionServiceResult = getActiveConnectionService(
+          channelSlug,
+          appMetadata,
+          ctx.authData,
+        );
 
-      const appMetadata = payload.recipient?.privateMetadata ?? [];
-      const channelSlug = payload.taxBase.channel.slug;
-      const activeConnectionServiceResult = getActiveConnectionService(
-        channelSlug,
-        appMetadata,
-        ctx.authData,
-      );
+        if (activeConnectionServiceResult.isOk()) {
+          const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
 
-      logger.info("Found active connection service. Calculating taxes...");
+          logger.debug("Taxes calculated", { calculatedTaxes });
 
-      if (activeConnectionServiceResult.isOk()) {
-        const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+          return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+        } else if (activeConnectionServiceResult.isErr()) {
+          const err = activeConnectionServiceResult.error;
 
-        logger.info("Taxes calculated", { calculatedTaxes });
+          logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
+            error: err,
+          });
 
-        return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
-      } else if (activeConnectionServiceResult.isErr()) {
-        // TODO Map errors like in CHECKOUT_CALCULATE_TAXES
-        return webhookResponse.error(activeConnectionServiceResult.error);
+          const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
+
+          if (executeErrorStrategy) {
+            return executeErrorStrategy();
+          } else {
+            Sentry.captureException(err);
+            logger.fatal(`UNHANDLED: ${err.name}`, {
+              error: err,
+            });
+
+            return res.status(500).send("Error calculating taxes");
+          }
+        }
+      } catch (error) {
+        return webhookResponse.error(error);
       }
-    } catch (error) {
-      return webhookResponse.error(error);
-    }
-  }),
-  "/api/order-calculate-taxes",
+    }),
+    "/api/order-calculate-taxes",
+  ),
+  loggerContext,
 );
