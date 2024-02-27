@@ -40,4 +40,6 @@ jobs:
           TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
         run: pnpm --filter=app-avatax generate
       - name: Run e2e tests
+        env:
+          TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
         run: pnpm --filter=app-avatax e2e
