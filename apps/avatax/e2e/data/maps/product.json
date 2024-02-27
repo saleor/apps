@@ -4,6 +4,11 @@
       "variantId": "UHJvZHVjdFZhcmlhbnQ6MzQ2",
       "id": "UHJvZHVjdDoxMzI=",
       "name": "Blue Hoodie"
+    },
+    "Juice": {
+      "variantId": "UHJvZHVjdFZhcmlhbnQ6Mzg0",
+      "id": "UHJvZHVjdDoxNTI=",
+      "name": "Apple Juice"
     }
   }
 }

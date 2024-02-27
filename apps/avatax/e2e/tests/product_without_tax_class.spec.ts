@@ -1,7 +1,11 @@
 import { it, describe } from "vitest";
 import { e2e } from "pactum";
 import { string } from "pactum-matchers";
-import { gql } from "../utils";
+import {
+  CheckoutUpdateDeliveryMethod,
+  CompleteCheckout,
+  CreateCheckout,
+} from "../generated/graphql";
 
 // Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
 describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
@@ -24,73 +28,21 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Create checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation CreateCheckout(
-          $channelSlug: String!
-          $variantId: ID!
-          $email: String!
-          $address: AddressInput!
-        ) {
-          checkoutCreate(
-            input: {
-              channel: $channelSlug
-              lines: [{ quantity: 10, variantId: $variantId }]
-              email: $email
-              shippingAddress: $address
-              billingAddress: $address
-              languageCode: EN_US
-            }
-          ) {
-            errors {
-              field
-              message
-              code
-              variants
-              lines
-              addressType
-            }
-            checkout {
-              id
-              totalPrice {
-                net {
-                  currency
-                  amount
-                }
-                gross {
-                  currency
-                  amount
-                }
-                tax {
-                  currency
-                  amount
-                }
-              }
-              shippingMethods {
-                id
-                name
-                price {
-                  currency
-                  amount
-                }
-              }
-            }
-          }
-        }
-      `)
+      .withGraphQLQuery(CreateCheckout)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:USA",
       })
       .expectStatus(200)
+      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
+        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+        currency: "USD",
+      })
       .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
         amount: TOTAL_NET_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
       .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
         amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-        currency: "USD",
-      })
-      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
-        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
       .retry()
@@ -102,63 +54,13 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Add delivery method")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation checkoutDeliveryMethodUpdate($checkoutId: ID!, $deliveryMethodId: ID!) {
-          checkoutDeliveryMethodUpdate(id: $checkoutId, deliveryMethodId: $deliveryMethodId) {
-            errors {
-              ...CheckoutErrorFragment
-            }
-            checkout {
-              id
-              lines {
-                totalPrice {
-                  gross {
-                    ...Money
-                  }
-                  tax {
-                    ...Money
-                  }
-                }
-              }
-              shippingPrice {
-                gross {
-                  ...Money
-                }
-                tax {
-                  ...Money
-                }
-                net {
-                  ...Money
-                }
-              }
-              totalPrice {
-                net {
-                  ...Money
-                }
-                gross {
-                  ...Money
-                }
-                tax {
-                  ...Money
-                }
-              }
-            }
-          }
-        }
-
-        fragment CheckoutErrorFragment on CheckoutError {
-          message
-          field
-          code
-        }
-
-        fragment Money on Money {
-          currency
-          amount
-        }
-      `)
+      .withGraphQLQuery(CheckoutUpdateDeliveryMethod)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "UpdateDeliveryMethod:USA",
+      })
+      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.tax", {
+        currency: "USD",
+        amount: TOTAL_TAX_PRICE_AFTER_SHIPPING,
       })
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.net", {
         currency: "USD",
@@ -168,9 +70,9 @@ describe("App should calculate taxes for checkout with product without tax class
         currency: "USD",
         amount: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
       })
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.tax", {
+      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
         currency: "USD",
-        amount: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+        amount: SHIPPING_TAX_PRICE,
       })
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.net", {
         currency: "USD",
@@ -180,10 +82,6 @@ describe("App should calculate taxes for checkout with product without tax class
         currency: "USD",
         amount: SHIPPING_GROSS_PRICE,
       })
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
-        currency: "USD",
-        amount: SHIPPING_TAX_PRICE,
-      })
       .retry();
   });
 
@@ -192,25 +90,7 @@ describe("App should calculate taxes for checkout with product without tax class
       .step("Complete checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(gql`
-        mutation CompleteCheckout($checkoutId: ID!) {
-          checkoutComplete(id: $checkoutId) {
-            order {
-              id
-            }
-            confirmationNeeded
-            confirmationData
-            errors {
-              field
-              message
-              code
-              variants
-              lines
-              addressType
-            }
-          }
-        }
-      `)
+      .withGraphQLQuery(CompleteCheckout)
       .withGraphQLVariables({ checkoutId: "$S{CheckoutId}" })
       .expectJsonMatch({
         data: {
