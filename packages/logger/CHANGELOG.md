@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.0
+
+### Minor Changes
+
+- 1e07a6ff: Added logger context utility. It can wrap function (api handler) to share context within its invocation.
+
 ## 1.1.1
 
 ### Patch Changes
