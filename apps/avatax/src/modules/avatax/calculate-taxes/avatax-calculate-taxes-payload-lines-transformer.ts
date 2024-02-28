@@ -15,7 +15,7 @@ const getUndiscountedTotalPrice = (line: TaxBaseLine) => {
   return line.sourceLine.undiscountedTotalPrice.net.amount;
 };
 
-const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
+export const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
   if (isDiscounted) {
     const undiscountedTotalPrice = getUndiscountedTotalPrice(line);
     const totalPrice = line.totalPrice.amount;
@@ -30,7 +30,7 @@ const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
  * If entire checkout discount then lines in webhook subscription are not discounted
  * If one item is discounted then the line has discounted totalPrice
  */
-const checkDiscounts = (taxBase: TaxBaseFragment, isEntireSourceDiscounted: boolean) => {
+export const checkDiscounts = (taxBase: TaxBaseFragment, isEntireSourceDiscounted: boolean) => {
   let hasEntireCheckoutDiscount = false;
   let hasOncePerOrderVoucher = false;
   let discountedLinesCount = 0;
@@ -43,10 +43,11 @@ const checkDiscounts = (taxBase: TaxBaseFragment, isEntireSourceDiscounted: bool
         discountedLinesCount++;
       }
     }
+
+    // If none of the lines are discounted, but isEntireSourceDiscounted is true then it's entire checkout discount
+    hasEntireCheckoutDiscount = discountedLinesCount === 0;
   }
 
-  // If none of the lines are discounted, but isEntireSourceDiscounted is true then it's entire checkout discount
-  hasEntireCheckoutDiscount = discountedLinesCount === 0;
   hasOncePerOrderVoucher = discountedLinesCount === 1;
 
   return { hasEntireCheckoutDiscount, hasOncePerOrderVoucher };
