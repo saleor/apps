@@ -28,6 +28,6 @@ beforeAll(() => {
    * Use a default 20s timeout for tests
    * This is a timeout for sync webhooks in Saleor
    */
-  request.setDefaultTimeout(20_000);
+  request.setDefaultTimeout(21_000);
   stash.loadData("./e2e/data");
 });
