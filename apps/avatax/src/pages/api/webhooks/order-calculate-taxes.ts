@@ -11,6 +11,11 @@ import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-
 import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
+import {
+  CalculateTaxesUseCase,
+  CalculateTaxesUseCaseErrors,
+} from "../../../use-cases/calculate-taxes/calculate-taxes.use-case";
+import { BaseError } from "../../../error";
 
 export const config = {
   api: {
@@ -36,52 +41,44 @@ export default wrapWithLoggerContext(
       logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
       try {
-        const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+        const useCaseService = new CalculateTaxesUseCase(payload, ctx.authData);
 
-        if (payloadVerificationResult.isErr()) {
-          logger.debug("Failed to calculate taxes, due to incomplete payload", {
-            error: payloadVerificationResult.error,
-          });
+        return await useCaseService.calculateTaxes().match(
+          (calculatedTaxes) => {
+            return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+          },
+          (useCaseError) => {
+            logger.debug("Error executing webhook", { error: useCaseError });
 
-          return res.status(400).send(payloadVerificationResult.error.message);
-        }
+            switch (true) {
+              case useCaseError instanceof CalculateTaxesUseCaseErrors.AppMisconfiguredError: {
+                return res.status(400).send("App is not configured properly");
+              }
+              case useCaseError instanceof CalculateTaxesUseCaseErrors.WrongChannelError: {
+                return res.status(500).send("Webhook executed to the invalid channel");
+              }
+              case useCaseError instanceof CalculateTaxesUseCaseErrors.UnknownError: {
+                Sentry.captureException(useCaseError);
 
-        const appMetadata = payload.recipient?.privateMetadata ?? [];
-        const channelSlug = payload.taxBase.channel.slug;
-        const activeConnectionServiceResult = getActiveConnectionService(
-          channelSlug,
-          appMetadata,
-          ctx.authData,
+                logger.fatal(`UNHANDLED: ${useCaseError.message}`, {
+                  error: useCaseError,
+                });
+
+                return res.status(500).send("Webhook execution failed (unhandled)");
+              }
+            }
+          },
         );
+      } catch (e) {
+        const uncaughtError = BaseError.normalize(e);
 
-        if (activeConnectionServiceResult.isOk()) {
-          const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+        Sentry.captureException(uncaughtError);
 
-          logger.debug("Taxes calculated", { calculatedTaxes });
+        logger.fatal(`UNHANDLED: ${uncaughtError.message}`, {
+          error: e,
+        });
 
-          return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
-        } else if (activeConnectionServiceResult.isErr()) {
-          const err = activeConnectionServiceResult.error;
-
-          logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-            error: err,
-          });
-
-          const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
-
-          if (executeErrorStrategy) {
-            return executeErrorStrategy();
-          } else {
-            Sentry.captureException(err);
-            logger.fatal(`UNHANDLED: ${err.name}`, {
-              error: err,
-            });
-
-            return res.status(500).send("Error calculating taxes");
-          }
-        }
-      } catch (error) {
-        return webhookResponse.error(error);
+        return res.status(500).send("Error calculating taxes");
       }
     }),
     "/api/order-calculate-taxes",
