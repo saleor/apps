@@ -1,6 +1,5 @@
 import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { createLogger } from "@saleor/apps-shared";
 
 import { AppConfigSchema, imageSizeInputSchema, titleTemplateInputSchema } from "./app-config";
 import { z } from "zod";
@@ -10,6 +9,7 @@ import { TRPCError } from "@trpc/server";
 import { AttributeFetcher } from "./attribute-fetcher";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { prepareExampleVariantData } from "./prepare-example-variant-data";
+import { createLogger } from "../../logger";
 
 export const appConfigurationRouter = router({
   /**
@@ -34,7 +34,7 @@ export const appConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx: { saleorApiUrl }, input }) => {
-      const logger = createLogger({ saleorApiUrl: saleorApiUrl });
+      const logger = createLogger("Test S3 bucket configuration", { saleorApiUrl: saleorApiUrl });
 
       logger.debug("Validate the credentials");
 
@@ -59,7 +59,7 @@ export const appConfigurationRouter = router({
     .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
-      const logger = createLogger({ saleorApiUrl: saleorApiUrl });
+      const logger = createLogger("Set S3 bucket configuration", { saleorApiUrl: saleorApiUrl });
 
       logger.debug("Validate credentials");
 

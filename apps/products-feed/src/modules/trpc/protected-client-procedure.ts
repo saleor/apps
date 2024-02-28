@@ -3,15 +3,15 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { createLogger } from "@saleor/apps-shared";
 import { GraphqlClientFactory } from "../../lib/create-graphql-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
 import { attachLogger } from "./middlewares";
+import { createLogger } from "../../logger";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
-  const logger = createLogger({ name: "attachAppToken" });
+  const logger = createLogger("attachAppToken");
 
   if (!ctx.saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
@@ -45,7 +45,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
 });
 
 const validateClientToken = middleware(async ({ ctx, next, meta }) => {
-  const logger = createLogger({ name: "validateClientToken" });
+  const logger = createLogger("validateClientToken");
 
   if (!ctx.token) {
     throw new TRPCError({

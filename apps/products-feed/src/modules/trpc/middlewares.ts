@@ -1,11 +1,10 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 import { middleware } from "./trpc-server";
 
 export const attachLogger = middleware(async ({ ctx, next, type, path }) => {
   const loggerName = `tRPC ${type} ${path.replace(/\./g, "/")}`;
 
-  const logger = createLogger({
-    name: loggerName,
+  const logger = createLogger(loggerName, {
     requestType: type,
     path,
     saleorApiUrl: ctx.saleorApiUrl,

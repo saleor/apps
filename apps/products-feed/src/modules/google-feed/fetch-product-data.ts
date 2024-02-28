@@ -1,14 +1,14 @@
 import { url } from "inspector";
 import { Client } from "urql";
-import { createLogger } from "@saleor/apps-shared";
 import {
   FetchProductCursorsDocument,
   FetchProductDataForFeedDocument,
   GoogleFeedProductVariantFragment,
 } from "../../../generated/graphql";
+import { createLogger } from "../../logger";
 
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
-  const logger = createLogger({ saleorApiUrl: url, channel, fn: "getCursors" });
+  const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
 
   logger.debug(`Fetching cursors for channel ${channel}`);
 
@@ -47,7 +47,7 @@ const fetchVariants = async ({
   channel: string;
   imageSize?: number;
 }): Promise<GoogleFeedProductVariantFragment[]> => {
-  const logger = createLogger({ saleorApiUrl: url, channel, fn: "fetchVariants" });
+  const logger = createLogger("fetchVariants", { saleorApiUrl: url, channel });
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
 
@@ -81,7 +81,11 @@ export const fetchProductData = async ({
   cursors,
   imageSize,
 }: FetchProductDataArgs) => {
-  const logger = createLogger({ saleorApiUrl: url, channel, route: "Google Product Feed" });
+  const logger = createLogger("fetchProductData", {
+    saleorApiUrl: url,
+    channel,
+    route: "Google Product Feed",
+  });
 
   const cachedCursors = cursors || (await getCursors({ client, channel }));
 
