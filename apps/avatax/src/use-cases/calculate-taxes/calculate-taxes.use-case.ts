@@ -1,7 +1,7 @@
 import { CalculateTaxesPayload } from "../../modules/webhooks/calculate-taxes-payload";
 import {
   ActiveConnectionServiceErrors,
-  getActiveConnectionService,
+  ActiveConnectionServiceResolver,
 } from "../../modules/taxes/get-active-connection-service";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { BaseError } from "../../error";
@@ -19,20 +19,17 @@ export const CalculateTaxesUseCaseErrors = {
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
-  constructor(
-    private payload: CalculateTaxesPayload,
-    private authData: AuthData,
-  ) {}
+  private constructor(private avataxResolver: ActiveConnectionServiceResolver) {}
 
-  private createConnectionService() {
-    const appMetadata = this.payload.recipient?.privateMetadata ?? [];
-    const channelSlug = this.payload.taxBase.channel.slug;
-
-    return getActiveConnectionService(channelSlug, appMetadata, this.authData);
+  static create(dependencies: { avataxResolver: ActiveConnectionServiceResolver }) {
+    return new CalculateTaxesUseCase(dependencies.avataxResolver);
   }
 
-  calculateTaxes() {
-    const service = this.createConnectionService();
+  calculateTaxes(payload: CalculateTaxesPayload, authData: AuthData) {
+    const appMetadata = payload.recipient?.privateMetadata ?? [];
+    const channelSlug = payload.taxBase.channel.slug;
+
+    const service = this.avataxResolver.resolve(channelSlug, appMetadata, authData);
 
     if (service.isErr()) {
       const error = service.error;
@@ -70,7 +67,7 @@ export class CalculateTaxesUseCase {
       }
     }
 
-    return fromPromise(service.value.calculateTaxes(this.payload), (error) =>
+    return fromPromise(service.value.calculateTaxes(payload), (error) =>
       err(
         new CalculateTaxesUseCaseErrors.UnknownError("UNHANDLED Failed to calculate taxes", {
           errors: [error],

@@ -8,6 +8,8 @@ import { CalculateTaxesPayload } from "./calculate-taxes-payload";
  * 2. Lines are also required.
  *
  * In both cases we return early, because we can't calculate anything yet
+ *
+ * TODO: Add more validations, eg missing channel slug
  */
 export function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   if (!payload.taxBase.lines.length) {

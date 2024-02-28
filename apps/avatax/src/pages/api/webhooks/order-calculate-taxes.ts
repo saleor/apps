@@ -13,6 +13,7 @@ import {
   CalculateTaxesUseCaseErrors,
 } from "../../../use-cases/calculate-taxes/calculate-taxes.use-case";
 import { BaseError } from "../../../error";
+import { ActiveConnectionServiceResolver } from "../../../modules/taxes/get-active-connection-service";
 
 export const config = {
   api: {
@@ -28,6 +29,10 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
   webhookPath: "/api/webhooks/order-calculate-taxes",
 });
 
+const useCaseService = CalculateTaxesUseCase.create({
+  avataxResolver: new ActiveConnectionServiceResolver(),
+});
+
 export default wrapWithLoggerContext(
   withOtel(
     orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
@@ -38,9 +43,7 @@ export default wrapWithLoggerContext(
       logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
       try {
-        const useCaseService = new CalculateTaxesUseCase(payload, ctx.authData);
-
-        return await useCaseService.calculateTaxes().match(
+        return await useCaseService.calculateTaxes(payload, ctx.authData).match(
           (calculatedTaxes) => {
             return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
           },

@@ -14,6 +14,7 @@ import {
 } from "../../../use-cases/calculate-taxes/calculate-taxes.use-case";
 import { BaseError } from "../../../error";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { ActiveConnectionServiceResolver } from "../../../modules/taxes/get-active-connection-service";
 
 export const config = {
   api: {
@@ -27,6 +28,10 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   event: "CHECKOUT_CALCULATE_TAXES",
   query: UntypedCalculateTaxesDocument,
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
+});
+
+const useCaseService = CalculateTaxesUseCase.create({
+  avataxResolver: new ActiveConnectionServiceResolver(),
 });
 
 /**
@@ -55,9 +60,7 @@ export default wrapWithLoggerContext(
           return res.status(400).send(payloadVerificationResult.error.message);
         }
 
-        const useCaseService = new CalculateTaxesUseCase(payload, ctx.authData);
-
-        return await useCaseService.calculateTaxes().match(
+        return await useCaseService.calculateTaxes(payload, ctx.authData).match(
           (calculatedTaxes) => {
             return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
           },
