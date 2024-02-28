@@ -1,0 +1,28 @@
+mutation CreateCheckoutWithTwoLines(
+  $channelSlug: String!
+  $variantOneId: ID!
+  $variantTwoId: ID!
+  $email: String!
+  $address: AddressInput!
+) {
+  checkoutCreate(
+    input: {
+      channel: $channelSlug
+      lines: [
+        { quantity: 10, variantId: $variantOneId }
+        { quantity: 10, variantId: $variantTwoId }
+      ]
+      email: $email
+      shippingAddress: $address
+      billingAddress: $address
+      languageCode: EN_US
+    }
+  ) {
+    errors {
+      ...CheckoutError
+    }
+    checkout {
+      ...CheckoutDetails
+    }
+  }
+}

@@ -9,6 +9,11 @@
       "variantId": "UHJvZHVjdFZhcmlhbnQ6Mzg0",
       "id": "UHJvZHVjdDoxNTI=",
       "name": "Apple Juice"
+    },
+    "Shirt": {
+      "variantId": "UHJvZHVjdFZhcmlhbnQ6MzU4",
+      "id": "UHJvZHVjdDoxMzY=",
+      "name": "Darko Polo"
     }
   }
 }

@@ -2,5 +2,9 @@
   "AddVoucher:USA:Percentage": {
     "checkoutId": "$S{CheckoutId}",
     "promoCode": "$M{Voucher.Percentage.code}"
+  },
+  "AddVoucher:USA:CheapestProductPercentage": {
+    "checkoutId": "$S{CheckoutId}",
+    "promoCode": "$M{Voucher.CheapestProduct.code}"
   }
 }
