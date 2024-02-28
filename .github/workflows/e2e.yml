@@ -1,8 +1,6 @@
 name: E2E staging
 on:
   push:
-    branches:
-      - changeset-release/*
   workflow_dispatch:
 
 concurrency:
@@ -37,13 +35,15 @@ jobs:
       - name: Restore Saleor snapshot
         run: |
           pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="shopex-avatax-$SALEOR_VERSION" --skip-webhooks-update
-      - name: Generate GraphQL files
-        # TODO: Switch to 1pass item after https://linear.app/saleor/issue/SHOPX-303
+      - name: Load secrets
+        uses: 1password/load-secrets-action@971116bbffed9bfe57bd55447317d56fbc7a6a81 # v1.3.2
+        with:
+          export-env: true
         env:
-          TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
+      - name: Generate GraphQL files
         run: pnpm --filter=app-avatax generate
       - name: Run e2e tests
-        env:
-          TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
