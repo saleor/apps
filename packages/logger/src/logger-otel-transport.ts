@@ -2,8 +2,13 @@ import { ILogObj, Logger } from "tslog";
 import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
 import { context } from "@opentelemetry/api";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import { LoggerContext } from "./logger-context";
 
-export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: string) => {
+export const attachLoggerOtelTransport = (
+  logger: Logger<ILogObj>,
+  appVersion: string,
+  loggerContext?: LoggerContext,
+) => {
   logger.attachTransport((log) => {
     const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
       message: string;
@@ -19,7 +24,10 @@ export const attachLoggerOtelTransport = (logger: Logger<ILogObj>, appVersion: s
     /**
      * Prune empty keys and serialize top-level arrays, because OTEL can't consume them
      */
-    const serializedAttributes = Object.entries(attributes).reduce(
+    const serializedAttributes = Object.entries({
+      ...(loggerContext?.getRawContext() ?? {}),
+      ...attributes,
+    }).reduce(
       (acc, [key, value]) => {
         /**
          * Prune empty keys, to save bandwidth

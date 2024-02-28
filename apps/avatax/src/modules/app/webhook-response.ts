@@ -4,6 +4,9 @@ import { NextApiResponse } from "next";
 import { CriticalError, ExpectedError } from "../../error";
 import { createLogger } from "../../logger";
 
+/**
+ * @deprecated
+ */
 export class WebhookResponse {
   private logger = createLogger("WebhookResponse");
   constructor(private res: NextApiResponse) {}
@@ -12,6 +15,9 @@ export class WebhookResponse {
     return this.res.status(500).json({ error: errorMessage });
   }
 
+  /**
+   * @deprecated
+   */
   error(error: unknown) {
     if (error instanceof CriticalError) {
       Sentry.captureException(error);

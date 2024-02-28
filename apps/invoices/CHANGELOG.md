@@ -1,5 +1,13 @@
 # saleor-app-invoices
 
+## 1.17.4
+
+### Patch Changes
+
+- Updated dependencies [67afe8e4]
+  - @saleor/apps-shared@1.9.3
+  - @saleor/trpc@1.0.3
+
 ## 1.17.3
 
 ### Patch Changes

@@ -1,15 +1,15 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
 
 /**
  * Fetches and creates all shared entities required by webhook to proceed
  */
 export const createWebhookContext = async ({ authData }: { authData: AuthData }) => {
   const { settings, errors } = await getAlgoliaConfiguration({ authData });
-  const apiClient = createGraphQLClient({
+  const apiClient = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });

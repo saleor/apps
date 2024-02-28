@@ -1,10 +1,10 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
+import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -43,7 +43,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
 
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });

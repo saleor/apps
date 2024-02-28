@@ -3,8 +3,8 @@ import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphq
 import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { SHIPPING_ITEM_CODE } from "./avatax-order-confirmed-payload-transformer";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
+import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(

@@ -1,0 +1,51 @@
+name: E2E staging
+on:
+  push:
+    branches:
+      - changeset-release/*
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  e2e:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        saleor: [318, 319]
+    env:
+      ACCESS_TOKEN: ${{ secrets.SALEOR_TOKEN }}
+      SALEOR_VERSION: ${{ matrix.saleor }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Saleor CLI
+        run: |
+          jq --null-input \
+             --arg token "Token $ACCESS_TOKEN" \
+             '{"token":$token,"telemetry":"false","saleor_env":"production","cloud_api_url":"https://cloud.saleor.io/platform/api","organization_slug":"shopex","organization_name":"Shopex"}' > ~/.config/saleor.json
+      - name: Setup PNPM
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - args: [--frozen-lockfile, --filter=app-avatax]
+      - name: Get Saleor snapshot
+        run: |
+          BACKUP=$(pnpm dlx saleor backup list --name="snapshot-avatax-$SALEOR_VERSION" --latest --json)
+          BACKUP_ID=$(echo "$BACKUP" | jq -r '.[0].key')
+          echo "BACKUP_ID=$BACKUP_ID" >> "$GITHUB_ENV"
+      - name: Restore Saleor snapshot
+        run: |
+          pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="shopex-avatax-$SALEOR_VERSION" --skip-webhooks-update
+      - name: Load secrets
+        uses: 1password/load-secrets-action@971116bbffed9bfe57bd55447317d56fbc7a6a81 # v1.3.2
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
+      - name: Generate GraphQL files
+        run: pnpm --filter=app-avatax generate
+      - name: Run e2e tests
+        run: pnpm --filter=app-avatax e2e
+      # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304

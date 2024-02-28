@@ -3,7 +3,7 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
-import { SHIPPING_ITEM_CODE } from "./avatax-calculate-taxes-adapter";
+import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
   transform(
@@ -11,6 +11,10 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
+    /*
+     * // TODO: we should revisit how discounts are distributed and flagged. I see that we can outsource distributing the discounts to AvaTax, which is something we currently do on our side.
+     * https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
+     */
     const isDiscounted = taxBase.discounts.length > 0;
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
@@ -26,15 +30,12 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     });
 
     if (taxBase.shippingPrice.amount !== 0) {
-      // * In AvaTax, shipping is a regular line
-      const shippingLine: LineItemModel = {
+      const shippingLine = avataxShippingLine.create({
         amount: taxBase.shippingPrice.amount,
-        itemCode: SHIPPING_ITEM_CODE,
         taxCode: config.shippingTaxCode,
-        quantity: 1,
         taxIncluded: taxBase.pricesEnteredWithTax,
         discounted: isDiscounted,
-      };
+      });
 
       return [...productLines, shippingLine];
     }

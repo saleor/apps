@@ -1,0 +1,6 @@
+{
+  "UpdateDeliveryMethod:USA": {
+    "deliveryMethodId": "$M{Channel.USA.deliveryMethodId}",
+    "checkoutId": "$S{CheckoutId}"
+  }
+}

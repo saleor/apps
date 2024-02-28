@@ -1,9 +1,9 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { webhookMigrationRunner } from "@saleor/webhook-utils";
 import { appWebhooks } from "../../webhooks";
+import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 
 export const updateWebhooksScript = async ({
   authData,
@@ -14,7 +14,7 @@ export const updateWebhooksScript = async ({
 }) => {
   console.log("Working on env: ", authData.saleorApiUrl);
 
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });

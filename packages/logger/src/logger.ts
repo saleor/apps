@@ -1,5 +1,4 @@
 import { ILogObj, Logger } from "tslog";
-import { ISettings } from "tslog/dist/types/interfaces";
 
 function isObject(item: unknown) {
   return typeof item === "object" && !Array.isArray(item) && item !== null;

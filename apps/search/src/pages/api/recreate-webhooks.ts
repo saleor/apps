@@ -7,11 +7,12 @@ import {
 } from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { createGraphQLClient, getAppBaseUrl } from "@saleor/apps-shared";
+import { getAppBaseUrl } from "@saleor/apps-shared";
 import { Client } from "urql";
 import { isConfigured } from "../../lib/algolia/is-configured";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const logger = createLogger("recreateWebhooksHandler");
 
@@ -74,7 +75,10 @@ export default withOtel(
         return new WebhookActivityTogglerService(appId, client);
       },
       graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createGraphQLClient({ saleorApiUrl, token });
+        return createInstrumentedGraphqlClient({
+          saleorApiUrl,
+          token,
+        });
       },
     }),
     saleorApp.apl,

@@ -84,7 +84,9 @@
     "FAAS",
     "millis",
     "Parentfor",
-    "GTIN"
+    "GTIN",
+    "pactum",
+    "shopex"
   ],
   "ignorePaths": [
     "node_modules",
@@ -99,6 +101,9 @@
     "**/CHANGELOG.md",
     "**/schema.graphql",
     "**/*-generator.ts",
-    "apps/*/src/**"
+    "apps/*/src/**",
+    "apps/*/e2e/data/**",
+    "**/*.bru",
+    "**/.eslintrc"
   ]
 }
