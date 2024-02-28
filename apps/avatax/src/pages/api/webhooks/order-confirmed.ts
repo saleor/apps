@@ -16,6 +16,7 @@ import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
+import * as Sentry from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -68,7 +69,7 @@ export default wrapWithLoggerContext(
           );
         }
 
-        logger.info("Confirming order...");
+        logger.debug("Confirming order...");
 
         if (taxProviderResult.isOk()) {
           const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
@@ -95,22 +96,36 @@ export default wrapWithLoggerContext(
 
           logger.debug("Error confirming order", { error });
 
-          /**
-           * Subscription can listen on every channel or no channels.
-           * However, app works only for some of them (which are configured to be used with taxes routing).
-           * If this happens, webhook will be received, but this is no-op.
-           */
-          if (error instanceof ActiveConnectionServiceErrors.WrongChannelError) {
-            return res.status(202).send("Channel not configured with the app.");
-          }
+          switch (true) {
+            case error instanceof ActiveConnectionServiceErrors.WrongChannelError: {
+              /**
+               * Subscription can listen on every channel or no channels.
+               * However, app works only for some of them (which are configured to be used with taxes routing).
+               * If this happens, webhook will be received, but this is no-op.
+               */
+              return res.status(202).send("Channel not configured with the app.");
+            }
 
-          /**
-           * TODO: Proceed with mapping rest of errors
-           */
-          return webhookResponse.error(taxProviderResult.error);
+            case error instanceof ActiveConnectionServiceErrors.MissingMetadataError:
+            case error instanceof ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError:
+            case error instanceof ActiveConnectionServiceErrors.BrokenConfigurationError: {
+              return res.status(400).send("App is not configured properly.");
+            }
+            case error instanceof ActiveConnectionServiceErrors.MissingChannelSlugError: {
+              return res
+                .status(500)
+                .send("Webhook didn't contain channel slug. This should not happen.");
+            }
+            default: {
+              Sentry.captureException(taxProviderResult.error);
+              logger.fatal("Unhandled error", { error });
+
+              return res.status(500).send("Unhandled error");
+            }
+          }
         }
       } catch (error) {
-        logger.error("Error executing webhook", { error });
+        logger.error("Unhandled rrror executing webhook", { error });
         return webhookResponse.error(error);
       }
     }),
