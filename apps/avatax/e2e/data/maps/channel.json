@@ -2,7 +2,7 @@
   "Channel": {
     "USA": {
       "id": "Q2hhbm5lbDoz",
-      "slug": "channel-us",
+      "slug": "default-channel",
       "deliveryMethodId": "U2hpcHBpbmdNZXRob2Q6MTY=",
       "currency": "USD"
     }
