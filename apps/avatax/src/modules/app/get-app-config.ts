@@ -2,14 +2,19 @@ import { decrypt } from "@saleor/app-sdk/settings-manager";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
+  AppConfig,
   ProviderConnections,
   providerConnectionsSchema,
 } from "../provider-connections/provider-connections";
 
+export interface GetAppConfig {
+  (metadata: MetadataItem[]): AppConfig;
+}
+
 /**
  * TODO: Make error handling in neverthrow
  */
-export const getAppConfig = (metadata: MetadataItem[]) => {
+export const getAppConfig: GetAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;
 

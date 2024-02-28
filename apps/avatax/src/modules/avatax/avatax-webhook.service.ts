@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { OrderCancelledPayload } from "../../pages/api/webhooks/order-cancelled";
-import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { IAvataxService } from "../taxes/tax-provider-webhook";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { ClientLogger } from "../logs/client-logger";
@@ -10,56 +10,69 @@ import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-conf
 import { createLogger } from "../../logger";
 import { CalculateTaxesPayload } from "../webhooks/calculate-taxes-payload";
 
-export class AvataxWebhookService implements ProviderWebhookService {
+export class AvataxService implements IAvataxService {
   private logger = createLogger("AvataxWebhookService");
-  private config: AvataxConfig;
   private clientLogger: ClientLogger;
-  private authData: AuthData;
 
-  constructor({
-    config,
-    authData,
-    clientLogger,
-  }: {
-    config: AvataxConfig;
-    authData: AuthData;
-    clientLogger: ClientLogger;
-  }) {
-    this.authData = authData;
-    this.config = config;
+  constructor({ clientLogger }: { clientLogger: ClientLogger }) {
     this.clientLogger = clientLogger;
   }
 
-  async calculateTaxes(payload: CalculateTaxesPayload) {
+  async calculateTaxes({
+    payload,
+    config,
+    authData,
+  }: {
+    payload: CalculateTaxesPayload;
+    config: AvataxConfig;
+    authData: AuthData;
+  }) {
     const adapter = new AvataxCalculateTaxesAdapter({
-      config: this.config,
       clientLogger: this.clientLogger,
-      authData: this.authData,
     });
 
-    const response = await adapter.send(payload);
+    const response = await adapter.send({ payload, config, authData });
 
     return response;
   }
 
-  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+  async confirmOrder({
+    authData,
+    payload,
+    config,
+  }: {
+    payload: OrderConfirmedSubscriptionFragment;
+    config: AvataxConfig;
+    authData: AuthData;
+  }) {
     const adapter = new AvataxOrderConfirmedAdapter({
-      config: this.config,
       clientLogger: this.clientLogger,
-      authData: this.authData,
     });
 
-    const response = await adapter.send({ order });
+    const response = await adapter.send({
+      config,
+      authData,
+      payload: {
+        order: payload,
+      },
+    });
 
     return response;
   }
 
-  async cancelOrder(payload: OrderCancelledPayload) {
+  async cancelOrder({
+    config,
+    authData,
+    payload,
+  }: {
+    payload: OrderCancelledPayload;
+    config: AvataxConfig;
+    authData: AuthData;
+  }) {
     const adapter = new AvataxOrderCancelledAdapter({
-      config: this.config,
       clientLogger: this.clientLogger,
     });
 
-    await adapter.send(payload);
+    await adapter.send({ payload, config, authData });
   }
 }
