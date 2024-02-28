@@ -1,12 +1,13 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { MetadataItem } from "../../../generated/graphql";
 import { GetAppConfig } from "../app/get-app-config";
-import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { ProviderConnection } from "../provider-connections/provider-connections";
+import { AvataxService } from "../avatax/avatax-webhook.service";
+import { AppConfig, ProviderConnection } from "../provider-connections/provider-connections";
 import { createClientLogger } from "../logs/client-logger";
 import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
 import { err, fromThrowable, ok } from "neverthrow";
+import { AvataxConfig } from "../avatax/avatax-connection-schema";
 
 const ActiveConnectionServiceError = BaseError.subclass("ActiveConnectionServiceError");
 
@@ -44,13 +45,11 @@ export const ActiveConnectionServiceErrors = {
 } as const;
 
 export class ActiveConnectionServiceResolver {
-  constructor(private getAppConfig: GetAppConfig) {}
-
   resolve(
     // TODO Channel slug should be always required here and validated higher
     channelSlug: string | undefined,
-    encryptedMetadata: MetadataItem[],
     authData: AuthData,
+    appConfig: AppConfig,
   ) {
     const logger = createLogger("getActiveConnectionService");
 
@@ -62,23 +61,27 @@ export class ActiveConnectionServiceResolver {
       );
     }
 
-    if (!encryptedMetadata.length) {
-      return err(
-        new MissingMetadataError(
-          "App metadata was not found in Webhook payload. App was likely installed but never configured",
-        ),
-      );
-    }
+    /*
+     * if (!encryptedMetadata.length) {
+     *   return err(
+     *     new MissingMetadataError(
+     *       "App metadata was not found in Webhook payload. App was likely installed but never configured",
+     *     ),
+     *   );
+     * }
+     *
+     * const appConfigResult = fromThrowable(this.getAppConfig, (err) => BaseError.normalize(err))(
+     *   encryptedMetadata,
+     * );
+     */
 
-    const appConfigResult = fromThrowable(this.getAppConfig, (err) => BaseError.normalize(err))(
-      encryptedMetadata,
-    );
+    /*
+     * if (appConfigResult.isErr()) {
+     *   return err(appConfigResult.error);
+     * }
+     */
 
-    if (appConfigResult.isErr()) {
-      return err(appConfigResult.error);
-    }
-
-    const { providerConnections, channels } = appConfigResult.value;
+    const { providerConnections, channels } = appConfig;
 
     if (!channels.length) {
       return err(
@@ -136,9 +139,7 @@ export class ActiveConnectionServiceResolver {
     providerConnection: ProviderConnection;
     authData: AuthData;
   }) => {
-    return new AvataxWebhookService({
-      config: providerConnection.config,
-      authData,
+    return new AvataxService({
       clientLogger: createClientLogger({
         authData,
         configurationId: providerConnection.id,

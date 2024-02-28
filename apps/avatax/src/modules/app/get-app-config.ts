@@ -2,15 +2,13 @@ import { decrypt } from "@saleor/app-sdk/settings-manager";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
+  AppConfig,
   ProviderConnections,
   providerConnectionsSchema,
 } from "../provider-connections/provider-connections";
 
 export interface GetAppConfig {
-  (metadata: MetadataItem[]): {
-    providerConnections: ProviderConnections;
-    channels: ChannelsConfig;
-  };
+  (metadata: MetadataItem[]): AppConfig;
 }
 
 /**

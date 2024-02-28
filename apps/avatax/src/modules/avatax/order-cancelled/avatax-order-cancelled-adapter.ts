@@ -6,28 +6,35 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 import { createLogger } from "../../../logger";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
   private readonly clientLogger: ClientLogger;
-  private readonly config: AvataxConfig;
 
-  constructor({ config, clientLogger }: { config: AvataxConfig; clientLogger: ClientLogger }) {
-    this.config = config;
+  constructor({ clientLogger }: { clientLogger: ClientLogger }) {
     this.clientLogger = clientLogger;
   }
 
-  async send(payload: OrderCancelledPayload) {
+  async send({
+    payload,
+    authData,
+    config,
+  }: {
+    payload: OrderCancelledPayload;
+    config: AvataxConfig;
+    authData: AuthData;
+  }) {
     this.logger.debug("Transforming the Saleor payload for cancelling transaction with AvaTax...");
 
-    const payloadTransformer = new AvataxOrderCancelledPayloadTransformer(this.config);
+    const payloadTransformer = new AvataxOrderCancelledPayloadTransformer(config);
     const target = payloadTransformer.transform({ ...payload });
 
     this.logger.debug("Calling AvaTax voidTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
+    const client = new AvataxClient(config);
 
     try {
       await client.voidTransaction(target);
