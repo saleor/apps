@@ -1,6 +1,8 @@
 name: E2E staging
 on:
   push:
+    branches:
+      - changeset-release/*
   workflow_dispatch:
 
 concurrency:
