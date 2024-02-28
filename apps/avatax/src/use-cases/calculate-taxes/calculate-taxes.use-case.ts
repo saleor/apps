@@ -7,6 +7,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { BaseError } from "../../error";
 import { err, fromPromise } from "neverthrow";
 import { createLogger } from "../../logger";
+import { getAppConfig } from "../../modules/app/get-app-config";
 
 const CalculateTaxesUseCaseError = BaseError.subclass("CalculateTaxesUseCaseError");
 
@@ -19,10 +20,10 @@ export const CalculateTaxesUseCaseErrors = {
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
-  private constructor(private avataxResolver: ActiveConnectionServiceResolver) {}
+  constructor(private avataxResolver: ActiveConnectionServiceResolver) {}
 
-  static create(dependencies: { avataxResolver: ActiveConnectionServiceResolver }) {
-    return new CalculateTaxesUseCase(dependencies.avataxResolver);
+  static create() {
+    return new CalculateTaxesUseCase(new ActiveConnectionServiceResolver(getAppConfig));
   }
 
   calculateTaxes(payload: CalculateTaxesPayload, authData: AuthData) {

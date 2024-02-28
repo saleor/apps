@@ -5,16 +5,22 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { AvataxCalculateTaxesResponse } from "../../modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { WebhookAdapter } from "../../modules/taxes/tax-webhook-adapter";
 import { ActiveConnectionServiceResolver } from "../../modules/taxes/get-active-connection-service";
+import { GetAppConfig } from "../../modules/app/get-app-config";
 
 const getBasePayload = (): CalculateTaxesPayload => {
   return {
     __typename: "CalculateTaxes",
     recipient: {
-      privateMetadata: [],
+      privateMetadata: [
+        {
+          key: "app-config",
+          value: "{}",
+        },
+      ],
     },
     taxBase: {
       channel: {
-        slug: "test",
+        slug: "default",
       },
       currency: "PLN",
       discounts: [],
@@ -105,9 +111,44 @@ describe("CalculateTaxesUseCase", () => {
     const payload = getBasePayload();
     const authData = getAuthData();
 
-    const useCase = CalculateTaxesUseCase.create({
-      avataxResolver: new ActiveConnectionServiceResolver(),
+    const getAppConfig: GetAppConfig = () => ({
+      channels: [
+        {
+          config: {
+            slug: "default",
+            providerConnectionId: "1234",
+          },
+          id: "channel-config",
+        },
+      ],
+      providerConnections: [
+        {
+          id: "1234",
+          provider: "avatax",
+          config: {
+            name: "test",
+            companyCode: "default",
+            credentials: {
+              username: "foo",
+              password: "bar",
+            },
+            isAutocommit: false,
+            isDocumentRecordingEnabled: false,
+            isSandbox: true,
+            shippingTaxCode: "ABC",
+            address: {
+              zip: "11111",
+              street: "Some street 1",
+              city: "New York",
+              country: "United States",
+              state: "NY",
+            },
+          },
+        },
+      ],
     });
+    const resolver = new ActiveConnectionServiceResolver(getAppConfig);
+    const useCase = new CalculateTaxesUseCase(resolver);
 
     const result = await useCase.calculateTaxes(payload, authData);
 

@@ -29,9 +29,7 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
   webhookPath: "/api/webhooks/order-calculate-taxes",
 });
 
-const useCaseService = CalculateTaxesUseCase.create({
-  avataxResolver: new ActiveConnectionServiceResolver(),
-});
+const useCaseService = CalculateTaxesUseCase.create();
 
 export default wrapWithLoggerContext(
   withOtel(

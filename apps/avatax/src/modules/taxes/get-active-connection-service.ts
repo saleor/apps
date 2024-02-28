@@ -1,12 +1,12 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { MetadataItem } from "../../../generated/graphql";
-import { getAppConfig } from "../app/get-app-config";
+import { GetAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { createClientLogger } from "../logs/client-logger";
 import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
-import { err, fromThrowable, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok } from "neverthrow";
 
 const ActiveConnectionServiceError = BaseError.subclass("ActiveConnectionServiceError");
 
@@ -44,6 +44,8 @@ export const ActiveConnectionServiceErrors = {
 } as const;
 
 export class ActiveConnectionServiceResolver {
+  constructor(private getAppConfig: GetAppConfig) {}
+
   resolve(
     // TODO Channel slug should be always required here and validated higher
     channelSlug: string | undefined,
@@ -68,7 +70,7 @@ export class ActiveConnectionServiceResolver {
       );
     }
 
-    const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
+    const appConfigResult = fromThrowable(this.getAppConfig, (err) => BaseError.normalize(err))(
       encryptedMetadata,
     );
 
