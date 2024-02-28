@@ -12,6 +12,8 @@ import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
+import { withOtel } from "@saleor/apps-otel";
+import { trace } from "@opentelemetry/api";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -195,11 +197,15 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   try {
-    await uploadFile({
-      s3Client,
-      bucketName: bucketConfiguration.bucketName,
-      buffer: Buffer.from(xmlContent),
-      fileName,
+    trace.getTracer("product-feed").startActiveSpan("upload to s3", async (span) => {
+      await uploadFile({
+        s3Client,
+        bucketName: bucketConfiguration!.bucketName,
+        buffer: Buffer.from(xmlContent),
+        fileName,
+      });
+
+      span.end();
     });
 
     logger.debug("Feed uploaded to S3, redirecting the download URL");
@@ -216,4 +222,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default handler;
+export default withOtel(handler, "/api/feed/{url}/{channel}/google.xml");
