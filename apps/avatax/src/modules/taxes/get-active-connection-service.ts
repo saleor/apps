@@ -55,6 +55,7 @@ export type ActiveConnectionServiceErrorsUnion =
   (typeof ActiveConnectionServiceErrors)[keyof typeof ActiveConnectionServiceErrors];
 
 export function getActiveConnectionService(
+  // TODO Channel slug should be always required here and validated higher
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
   authData: AuthData,
