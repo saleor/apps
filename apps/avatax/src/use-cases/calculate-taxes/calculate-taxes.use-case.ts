@@ -7,7 +7,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { BaseError } from "../../error";
 import { err, fromPromise } from "neverthrow";
 import { createLogger } from "../../logger";
-import { getAppConfig } from "../../modules/app/get-app-config";
+import { GetAppConfig, getAppConfig } from "../../modules/app/get-app-config";
 
 const CalculateTaxesUseCaseError = BaseError.subclass("CalculateTaxesUseCaseError");
 
@@ -20,17 +20,23 @@ export const CalculateTaxesUseCaseErrors = {
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
-  constructor(private avataxResolver: ActiveConnectionServiceResolver) {}
+  constructor(
+    private avataxResolver: ActiveConnectionServiceResolver,
+    private getAppConfig: GetAppConfig,
+  ) {}
 
   static create() {
-    return new CalculateTaxesUseCase(new ActiveConnectionServiceResolver(getAppConfig));
+    return new CalculateTaxesUseCase(new ActiveConnectionServiceResolver(), getAppConfig);
   }
 
   calculateTaxes(payload: CalculateTaxesPayload, authData: AuthData) {
     const appMetadata = payload.recipient?.privateMetadata ?? [];
     const channelSlug = payload.taxBase.channel.slug;
 
-    const service = this.avataxResolver.resolve(channelSlug, appMetadata, authData);
+    // todo make it Result
+    const appConfig = getAppConfig(appMetadata);
+
+    const service = this.avataxResolver.resolve(channelSlug, authData, appConfig);
 
     if (service.isErr()) {
       const error = service.error;
@@ -68,12 +74,14 @@ export class CalculateTaxesUseCase {
       }
     }
 
-    return fromPromise(service.value.calculateTaxes(payload), (error) =>
-      err(
-        new CalculateTaxesUseCaseErrors.UnknownError("UNHANDLED Failed to calculate taxes", {
-          errors: [error],
-        }),
-      ),
+    return fromPromise(
+      service.value.calculateTaxes({ payload, authData, config: appConfig }),
+      (error) =>
+        err(
+          new CalculateTaxesUseCaseErrors.UnknownError("UNHANDLED Failed to calculate taxes", {
+            errors: [error],
+          }),
+        ),
     );
   }
 }
