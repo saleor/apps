@@ -6,136 +6,141 @@ import { ProviderConnection } from "../provider-connections/provider-connections
 import { createClientLogger } from "../logs/client-logger";
 import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
-import { err, fromThrowable, ok } from "neverthrow";
-
-const avataxProviderFactory = ({
-  providerConnection,
-  authData,
-}: {
-  providerConnection: ProviderConnection;
-  authData: AuthData;
-}) => {
-  return new AvataxWebhookService({
-    config: providerConnection.config,
-    authData,
-    clientLogger: createClientLogger({
-      authData,
-      configurationId: providerConnection.id,
-    }),
-  });
-};
+import { err, fromThrowable, ok, Result } from "neverthrow";
 
 const ActiveConnectionServiceError = BaseError.subclass("ActiveConnectionServiceError");
 
+/**
+ * TODO: This error should be verified in validation level
+ */
+const MissingChannelSlugError = ActiveConnectionServiceError.subclass("MissingChannelSlugError");
+
+const MissingMetadataError = ActiveConnectionServiceError.subclass("MissingMetadataError");
+
+const ProviderNotAssignedToChannelError = ActiveConnectionServiceError.subclass(
+  "ProviderNotAssignedToChannelError",
+);
+
+/**
+ * Will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
+ */
+const WrongChannelError = ActiveConnectionServiceError.subclass("WrongChannelError");
+
+const BrokenConfigurationError = ActiveConnectionServiceError.subclass("BrokenConfigurationError");
+
+type Errors =
+  | typeof MissingChannelSlugError
+  | typeof MissingMetadataError
+  | typeof ProviderNotAssignedToChannelError
+  | typeof WrongChannelError
+  | typeof BrokenConfigurationError;
+
 export const ActiveConnectionServiceErrors = {
-  /**
-   * TODO: What does it mean?  How it should behave?
-   */
-  MissingChannelSlugError: ActiveConnectionServiceError.subclass("MissingChannelSlugError"),
-
-  MissingMetadataError: ActiveConnectionServiceError.subclass("MissingMetadataError"),
-
-  /**
-   * TODO: What does it mean?  How it should behave?
-   * Should it be handled as BrokenConfigurationError?
-   */
-  ProviderNotAssignedToChannelError: ActiveConnectionServiceError.subclass(
-    "ProviderNotAssignedToChannelError",
-  ),
-
-  /**
-   * Will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
-   */
-  WrongChannelError: ActiveConnectionServiceError.subclass("WrongChannelError"),
-
-  BrokenConfigurationError: ActiveConnectionServiceError.subclass("BrokenConfigurationError"),
+  MissingChannelSlugError,
+  MissingMetadataError,
+  ProviderNotAssignedToChannelError,
+  WrongChannelError,
+  BrokenConfigurationError,
 } as const;
 
-export type ActiveConnectionServiceErrorsUnion =
-  (typeof ActiveConnectionServiceErrors)[keyof typeof ActiveConnectionServiceErrors];
+export class ActiveConnectionServiceResolver {
+  resolve(
+    // TODO Channel slug should be always required here and validated higher
+    channelSlug: string | undefined,
+    encryptedMetadata: MetadataItem[],
+    authData: AuthData,
+  ) {
+    const logger = createLogger("getActiveConnectionService");
 
-export function getActiveConnectionService(
-  // TODO Channel slug should be always required here and validated higher
-  channelSlug: string | undefined,
-  encryptedMetadata: MetadataItem[],
-  authData: AuthData,
-) {
-  const logger = createLogger("getActiveConnectionService");
+    if (!channelSlug) {
+      return err(
+        new MissingChannelSlugError(
+          "Channel slug was not found in the webhook payload. This should not happen",
+        ),
+      );
+    }
 
-  if (!channelSlug) {
-    return err(
-      new ActiveConnectionServiceErrors.MissingChannelSlugError(
-        "Channel slug was not found in the webhook payload. This should not happen",
-      ),
+    if (!encryptedMetadata.length) {
+      return err(
+        new MissingMetadataError(
+          "App metadata was not found in Webhook payload. App was likely installed but never configured",
+        ),
+      );
+    }
+
+    const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
+      encryptedMetadata,
     );
-  }
 
-  if (!encryptedMetadata.length) {
-    return err(
-      new ActiveConnectionServiceErrors.MissingMetadataError(
-        "App metadata was not found in Webhook payload. App was likely installed but never configured",
-      ),
-    );
-  }
+    if (appConfigResult.isErr()) {
+      return err(appConfigResult.error);
+    }
 
-  const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
-    encryptedMetadata,
-  );
+    const { providerConnections, channels } = appConfigResult.value;
 
-  if (appConfigResult.isErr()) {
-    return err(appConfigResult.error);
-  }
+    if (!channels.length) {
+      return err(
+        new ProviderNotAssignedToChannelError(
+          "Provider is not assigned to the channel. App is configured partially.",
+        ),
+      );
+    }
 
-  const { providerConnections, channels } = appConfigResult.value;
+    const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
 
-  if (!channels.length) {
-    return err(
-      new ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError(
-        "Provider is not assigned to the channel. App is configured partially.",
-      ),
-    );
-  }
-
-  const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
-
-  if (!channelConfig) {
-    return err(
-      new ActiveConnectionServiceErrors.WrongChannelError(
-        `Channel config was not found for channel ${channelSlug}`,
-        {
+    if (!channelConfig) {
+      return err(
+        new WrongChannelError(`Channel config was not found for channel ${channelSlug}`, {
           props: {
             channelSlug,
           },
-        },
-      ),
-    );
-  }
+        }),
+      );
+    }
 
-  const providerConnection = providerConnections.find(
-    (connection) => connection.id === channelConfig.config.providerConnectionId,
-  );
-
-  if (!providerConnection) {
-    logger.debug(
-      "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
-      { providerConnections, channelConfig },
+    const providerConnection = providerConnections.find(
+      (connection) => connection.id === channelConfig.config.providerConnectionId,
     );
-    return err(
-      new ActiveConnectionServiceErrors.BrokenConfigurationError(
-        `Channel config providerConnectionId does not match any providers`,
-        {
-          props: {
-            channelSlug: channelConfig.config.slug,
+
+    if (!providerConnection) {
+      logger.debug(
+        "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
+        { providerConnections, channelConfig },
+      );
+      return err(
+        new BrokenConfigurationError(
+          `Channel config providerConnectionId does not match any providers`,
+          {
+            props: {
+              channelSlug: channelConfig.config.slug,
+            },
           },
-        },
-      ),
-    );
+        ),
+      );
+    }
+
+    const taxProvider = this.avataxProviderFactory({
+      providerConnection,
+      authData,
+    });
+
+    return ok(taxProvider);
   }
 
-  const taxProvider = avataxProviderFactory({
+  private avataxProviderFactory = ({
     providerConnection,
     authData,
-  });
-
-  return ok(taxProvider);
+  }: {
+    providerConnection: ProviderConnection;
+    authData: AuthData;
+  }) => {
+    return new AvataxWebhookService({
+      config: providerConnection.config,
+      authData,
+      clientLogger: createClientLogger({
+        authData,
+        configurationId: providerConnection.id,
+      }),
+    });
+  };
 }
