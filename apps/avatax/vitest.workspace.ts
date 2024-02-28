@@ -13,7 +13,7 @@ export default defineWorkspace([
     test: {
       include: ["e2e/**/*.spec.ts"],
       setupFiles: ["./e2e/setup.ts"],
-      name: "integration",
+      name: "e2e",
       environment: "node",
       /*
        * Use a default 63s timeout for tests
