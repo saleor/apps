@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
@@ -14,6 +14,9 @@ import { RootConfig } from "../../../../../modules/app-configuration/app-config"
 import { z, ZodError } from "zod";
 import { withOtel } from "@saleor/apps-otel";
 import { trace } from "@opentelemetry/api";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { createLogger } from "../../../../../logger";
+import { loggerContext } from "../../../../../logger-context";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -36,7 +39,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
 
-  const logger = createLogger({
+  const logger = createLogger("Feed handler", {
     saleorApiUrl: url,
     channel,
     route: "api/feed/{url}/{channel}/google.xml",
@@ -222,4 +225,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withOtel(handler, "/api/feed/{url}/{channel}/google.xml");
+export default wrapWithLoggerContext(
+  withOtel(handler, "/api/feed/[url]/[channel]/google.xml"),
+  loggerContext,
+);
