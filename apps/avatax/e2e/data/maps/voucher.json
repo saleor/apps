@@ -4,6 +4,11 @@
       "id": "Vm91Y2hlcjo0",
       "code": "test_voucher_15percentage",
       "name": "VOUCHER 15%"
+    },
+    "CheapestProduct": {
+      "id": "Vm91Y2hlcjozNw==",
+      "code": "20usd",
+      "name": "20%USD"
     }
   }
 }

@@ -4,5 +4,12 @@
     "variantId": "$M{Product.Regular.variantId}",
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"
+  },
+  "CheckoutTwoLines:USA": {
+    "channelSlug": "$M{Channel.USA.slug}",
+    "variantOneId": "$M{Product.Regular.variantId}",
+    "variantTwoId": "$M{Product.Shirt.variantId}",
+    "email": "$F{UserEmail}",
+    "address": "$M{Address.NewYork}"
   }
 }
