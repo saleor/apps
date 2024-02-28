@@ -5,7 +5,10 @@ import {
   UntypedOrderConfirmedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+import {
+  ActiveConnectionServiceErrors,
+  getActiveConnectionService,
+} from "../../../modules/taxes/get-active-connection-service";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
@@ -87,10 +90,23 @@ export default wrapWithLoggerContext(
           return webhookResponse.success();
         }
 
-        // TODO: Map errors
         if (taxProviderResult.isErr()) {
-          logger.error("Error confirming order", { error: taxProviderResult.error });
+          const error = taxProviderResult.error;
 
+          logger.debug("Error confirming order", { error });
+
+          /**
+           * Subscription can listen on every channel or no channels.
+           * However, app works only for some of them (which are configured to be used with taxes routing).
+           * If this happens, webhook will be received, but this is no-op.
+           */
+          if (error instanceof ActiveConnectionServiceErrors.WrongChannelError) {
+            return res.status(202).send("Channel not configured with the app.");
+          }
+
+          /**
+           * TODO: Proceed with mapping rest of errors
+           */
           return webhookResponse.error(taxProviderResult.error);
         }
       } catch (error) {
