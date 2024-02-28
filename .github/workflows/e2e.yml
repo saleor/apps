@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        saleor: [318]
+        saleor: [318, 319]
     env:
       ACCESS_TOKEN: ${{ secrets.SALEOR_TOKEN }}
       SALEOR_VERSION: ${{ matrix.saleor }}
