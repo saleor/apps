@@ -31,7 +31,7 @@ const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
  * If one item is discounted then the line has discounted totalPrice
  */
 const checkDiscounts = (taxBase: TaxBaseFragment, isDiscounted: boolean) => {
-  let hasEntireCheckoutDiscount = true;
+  let hasEntireCheckoutDiscount = false;
   let hasOncePerOrderVoucher = false;
   let discountedLinesCount = 0;
 
@@ -40,12 +40,6 @@ const checkDiscounts = (taxBase: TaxBaseFragment, isDiscounted: boolean) => {
 
     if (isLineDiscounted) {
       discountedLinesCount++;
-    } else {
-      hasEntireCheckoutDiscount = false;
-    }
-
-    if (discountedLinesCount > 1) {
-      hasEntireCheckoutDiscount = false;
     }
   }
 
