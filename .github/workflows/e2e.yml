@@ -36,6 +36,7 @@ jobs:
         run: |
           pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="shopex-avatax-$SALEOR_VERSION" --skip-webhooks-update
       - name: Generate GraphQL files
+        # TODO: Switch to 1pass item after https://linear.app/saleor/issue/SHOPX-303
         env:
           TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
         run: pnpm --filter=app-avatax generate
@@ -43,3 +44,4 @@ jobs:
         env:
           TEST_SALEOR_API_URL: "https://shopex-avatax-${{ env.SALEOR_VERSION }}.eu.saleor.cloud/graphql/"
         run: pnpm --filter=app-avatax e2e
+      # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
