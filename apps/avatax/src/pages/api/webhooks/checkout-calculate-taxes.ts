@@ -14,7 +14,6 @@ import {
 } from "../../../use-cases/calculate-taxes/calculate-taxes.use-case";
 import { BaseError } from "../../../error";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { ActiveConnectionServiceResolver } from "../../../modules/taxes/get-active-connection-service";
 
 export const config = {
   api: {
@@ -30,9 +29,7 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
 });
 
-const useCaseService = CalculateTaxesUseCase.create({
-  avataxResolver: new ActiveConnectionServiceResolver(),
-});
+const useCaseService = CalculateTaxesUseCase.create();
 
 /**
  * TODO: Add tests to handler
