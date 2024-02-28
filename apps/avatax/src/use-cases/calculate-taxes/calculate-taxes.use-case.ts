@@ -63,6 +63,7 @@ export class CalculateTaxesUseCase {
           return err(
             new CalculateTaxesUseCaseErrors.UnknownError(
               "UNHANDLED Error retrieving taxes calculation service",
+              { errors: [error] },
             ),
           );
         }
