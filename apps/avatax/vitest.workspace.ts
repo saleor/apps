@@ -16,10 +16,10 @@ export default defineWorkspace([
       name: "integration",
       environment: "node",
       /*
-       * Use a default 20s timeout for tests
-       * This is a timeout for sync webhooks in Saleor
+       * Use a default 60s timeout for tests
+       * Each request has a timeout of 20s, and can be retried up to 3 times
        */
-      testTimeout: 20_000,
+      testTimeout: 60_000,
       /*
        * Request retries are done by PactumJS
        * Making a retry in vitest would cause issues with e2e utility

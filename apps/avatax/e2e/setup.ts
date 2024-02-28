@@ -16,7 +16,9 @@ beforeAll(() => {
     throw new Error("Cannot run tests TEST_SALEOR_API_URL is invalid");
   }
 
-  settings.setRequestDefaultRetryCount(3);
+  settings.setRequestDefaultRetryCount(3); // retry up to 3 times by default
+  settings.setRequestDefaultRetryDelay(50); // wait 50ms between retries
+
   /*
    * We have to use baseUrl (without /graphql/ suffix)
    * for Pactum to work properly, it expects a base URL + path for each request
@@ -26,6 +28,6 @@ beforeAll(() => {
    * Use a default 20s timeout for tests
    * This is a timeout for sync webhooks in Saleor
    */
-  request.setDefaultTimeout(60_000);
+  request.setDefaultTimeout(20_000);
   stash.loadData("./e2e/data");
 });
