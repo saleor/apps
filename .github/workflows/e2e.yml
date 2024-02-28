@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         saleor: [318, 319]
