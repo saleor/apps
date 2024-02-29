@@ -125,7 +125,7 @@ export default wrapWithLoggerContext(
           }
         }
       } catch (error) {
-        logger.error("Unhandled rrror executing webhook", { error });
+        logger.error("Unhandled error executing webhook", { error });
         return webhookResponse.error(error);
       }
     }),
