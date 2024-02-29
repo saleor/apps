@@ -44,7 +44,7 @@ export const ActiveConnectionServiceErrors = {
   ),
 
   /**
-   * Will happen when `order-created` webhook is triggered by creating an order in a channel that doesn't use the tax app
+   * Will happen when `order-confirmed` webhook is triggered by creating an order in a channel that doesn't use the tax app
    */
   WrongChannelError: ActiveConnectionServiceError.subclass("WrongChannelError"),
 
