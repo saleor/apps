@@ -3,6 +3,7 @@
 import * as dotenv from "dotenv";
 import { createAppWebhookMigrator } from "./app-webhook-migrator";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
+import { migrateAvatax } from "./1.1-avatax-migration";
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ const runMigration = async () => {
 
       const webhookMigrator = createAppWebhookMigrator(env, { mode: "migrate" });
 
-      throw new Error("No migrations registered");
+      await migrateAvatax(webhookMigrator);
     } catch (error) {
       console.log("⏩ Error while migrating webhook. Continuing with the next app.");
       continue;
