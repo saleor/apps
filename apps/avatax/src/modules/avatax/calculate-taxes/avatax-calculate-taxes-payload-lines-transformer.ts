@@ -1,5 +1,5 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { TaxBaseFragment, VoucherTypeEnum } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
@@ -15,62 +15,38 @@ const getUndiscountedTotalPrice = (line: TaxBaseLine) => {
   return line.sourceLine.undiscountedTotalPrice.net.amount;
 };
 
-export const checkIfIsDiscountedLine = (isDiscounted: boolean, line: TaxBaseLine) => {
-  if (isDiscounted) {
-    const undiscountedTotalPrice = getUndiscountedTotalPrice(line);
-    const totalPrice = line.totalPrice.amount;
+const checkIfIsDiscountedLine = (line: TaxBaseLine) => {
+  const undiscountedTotalPrice = getUndiscountedTotalPrice(line);
+  const totalPrice = line.totalPrice.amount;
 
-    return totalPrice !== undiscountedTotalPrice;
-  }
-
-  return false;
+  return totalPrice !== undiscountedTotalPrice;
 };
 
-/**
- * If entire checkout discount then lines in webhook subscription are not discounted
- * If one item is discounted then the line has discounted totalPrice
- */
-export const checkDiscounts = (taxBase: TaxBaseFragment, isEntireSourceDiscounted: boolean) => {
-  let hasEntireCheckoutDiscount = false;
-  let hasOncePerOrderVoucher = false;
-  let discountedLinesCount = 0;
+const isLineDiscounted = (line: TaxBaseLine, taxBase: TaxBaseFragment) => {
+  const isDiscounted = taxBase.discounts.length > 0;
 
-  if (isEntireSourceDiscounted) {
-    for (const line of taxBase.lines) {
-      const isLineDiscounted = checkIfIsDiscountedLine(isEntireSourceDiscounted, line);
-
-      if (isLineDiscounted) {
-        discountedLinesCount++;
-      }
-    }
-
-    // If none of the lines are discounted, but isEntireSourceDiscounted is true then it's entire checkout discount
-    hasEntireCheckoutDiscount = discountedLinesCount === 0;
-  }
-
-  hasOncePerOrderVoucher = discountedLinesCount === 1;
-
-  return { hasEntireCheckoutDiscount, hasOncePerOrderVoucher };
-};
-
-const isProductLineDiscounted = ({
-  line,
-  isDiscounted,
-  hasOncePerOrderVoucher,
-  hasEntireCheckoutDiscount,
-}: {
-  line: TaxBaseLine;
-  isDiscounted: boolean;
-  hasOncePerOrderVoucher: boolean;
-  hasEntireCheckoutDiscount: boolean;
-}) => {
   if (!isDiscounted) return false;
 
-  if (hasOncePerOrderVoucher) {
-    return checkIfIsDiscountedLine(isDiscounted, line);
-  }
+  const voucherType = taxBase.sourceObject.voucher?.type;
 
-  return hasEntireCheckoutDiscount;
+  switch (voucherType) {
+    case VoucherTypeEnum.EntireOrder:
+      return true;
+    case VoucherTypeEnum.SpecificProduct:
+      return checkIfIsDiscountedLine(line);
+    default:
+      return false;
+  }
+};
+
+const isShippingLineDiscounted = (taxBase: TaxBaseFragment) => {
+  const isDiscounted = taxBase.discounts.length > 0;
+
+  if (!isDiscounted) return false;
+
+  const voucherType = taxBase.sourceObject.voucher?.type;
+
+  return voucherType === VoucherTypeEnum.Shipping;
 };
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
@@ -83,12 +59,6 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
      * // TODO: we should revisit how discounts are distributed and flagged. I see that we can outsource distributing the discounts to AvaTax, which is something we currently do on our side.
      * https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
      */
-    const isDiscounted = taxBase.discounts.length > 0;
-    const { hasEntireCheckoutDiscount, hasOncePerOrderVoucher } = checkDiscounts(
-      taxBase,
-      isDiscounted,
-    );
-
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
@@ -98,12 +68,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
-        discounted: isProductLineDiscounted({
-          line,
-          isDiscounted,
-          hasOncePerOrderVoucher,
-          hasEntireCheckoutDiscount,
-        }),
+        discounted: isLineDiscounted(line, taxBase),
       };
     });
 
@@ -112,7 +77,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         amount: taxBase.shippingPrice.amount,
         taxCode: config.shippingTaxCode,
         taxIncluded: taxBase.pricesEnteredWithTax,
-        discounted: hasEntireCheckoutDiscount,
+        discounted: isShippingLineDiscounted(taxBase),
       });
 
       return [...productLines, shippingLine];

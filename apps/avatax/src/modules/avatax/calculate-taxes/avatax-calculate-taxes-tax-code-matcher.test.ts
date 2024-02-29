@@ -22,6 +22,11 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
           id: "1",
           product: {},
         },
+        undiscountedTotalPrice: {
+          net: {
+            amount: 100,
+          },
+        },
       },
     };
     const matches: AvataxTaxCodeMatches = [
@@ -55,6 +60,11 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
               name: "Clothing",
               id: "1",
             },
+          },
+        },
+        undiscountedTotalPrice: {
+          net: {
+            amount: 100,
           },
         },
       },
