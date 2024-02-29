@@ -13,10 +13,10 @@ import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
 import { withOtel } from "@saleor/apps-otel";
-import { trace } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { createLogger } from "../../../../../logger";
 import { loggerContext } from "../../../../../logger-context";
+import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -200,7 +200,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   try {
-    trace.getTracer("product-feed").startActiveSpan("upload to s3", async (span) => {
+    getOtelTracer().startActiveSpan("upload-feed-to-s3", async (span) => {
       await uploadFile({
         s3Client,
         bucketName: bucketConfiguration!.bucketName,
