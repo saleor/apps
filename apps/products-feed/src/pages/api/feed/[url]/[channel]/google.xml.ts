@@ -33,6 +33,8 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
+const tracer = getOtelTracer();
+
 /**
  * TODO Refactor and test
  */
@@ -200,7 +202,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channel,
   });
 
-  getOtelTracer().startActiveSpan("upload to s3", async (span) => {
+  await tracer.startActiveSpan("upload to s3", async (span) => {
+    span.setAttribute("bucketName", bucketConfiguration!.bucketName);
+    span.setAttribute("fileName", fileName);
+
     try {
       await uploadFile({
         s3Client,

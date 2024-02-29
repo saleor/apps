@@ -3,12 +3,12 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
-import { GraphqlClientFactory } from "../../lib/create-graphql-client";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
 import { attachLogger } from "./middlewares";
 import { createLogger } from "../../logger";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   const logger = createLogger("attachAppToken");
@@ -103,7 +103,7 @@ export const protectedClientProcedure = procedure
   .use(attachAppToken)
   .use(validateClientToken)
   .use(async ({ ctx, next }) => {
-    const client = GraphqlClientFactory.fromAuthData({
+    const client = createInstrumentedGraphqlClient({
       token: ctx.appToken,
       saleorApiUrl: ctx.saleorApiUrl,
     });
