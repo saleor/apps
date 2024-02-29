@@ -1,0 +1,5 @@
+fragment Voucher on Voucher {
+  __typename
+  id
+  type
+}

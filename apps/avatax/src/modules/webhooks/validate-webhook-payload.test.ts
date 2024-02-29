@@ -46,6 +46,11 @@ const getBasePayload = (): CalculateTaxesPayload => {
                 },
               },
             },
+            undiscountedTotalPrice: {
+              net: {
+                amount: 100,
+              },
+            },
             id: "1",
           },
         },
