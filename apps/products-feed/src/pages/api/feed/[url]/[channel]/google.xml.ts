@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
@@ -13,10 +12,12 @@ import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
 import { withOtel } from "@saleor/apps-otel";
-import { trace } from "@opentelemetry/api";
+import { SpanStatusCode, trace } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { createLogger } from "../../../../../logger";
 import { loggerContext } from "../../../../../logger-context";
+import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
+import { createInstrumentedGraphqlClient } from "../../../../../lib/create-instrumented-graphql-client";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -68,7 +69,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
    * use unauthorized client to eliminate possibility of spilling the non-public data
    */
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
@@ -199,8 +200,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channel,
   });
 
-  try {
-    trace.getTracer("products-feed").startActiveSpan("upload to s3", async (span) => {
+  getOtelTracer().startActiveSpan("upload to s3", async (span) => {
+    try {
       await uploadFile({
         s3Client,
         bucketName: bucketConfiguration!.bucketName,
@@ -208,21 +209,22 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         fileName,
       });
 
+      logger.debug("Feed uploaded to S3, redirecting the download URL");
+      const downloadUrl = getDownloadUrl({
+        s3BucketConfiguration: bucketConfiguration!,
+        saleorApiUrl: authData.saleorApiUrl,
+        channel,
+      });
+
+      return res.redirect(downloadUrl);
+    } catch (error) {
+      logger.error("Could not upload the feed to S3");
+      span.setStatus({ code: SpanStatusCode.ERROR });
+      return res.status(500).json({ error: "Could not upload the feed to S3" });
+    } finally {
       span.end();
-    });
-
-    logger.debug("Feed uploaded to S3, redirecting the download URL");
-    const downloadUrl = getDownloadUrl({
-      s3BucketConfiguration: bucketConfiguration,
-      saleorApiUrl: authData.saleorApiUrl,
-      channel,
-    });
-
-    return res.redirect(downloadUrl);
-  } catch (error) {
-    logger.error("Could not upload the feed to S3");
-    return res.status(500).json({ error: "Could not upload the feed to S3" });
-  }
+    }
+  });
 };
 
 export default wrapWithLoggerContext(
