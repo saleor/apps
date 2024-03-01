@@ -22,7 +22,7 @@ const checkIfIsDiscountedLine = (line: TaxBaseLine) => {
   return totalPrice !== undiscountedTotalPrice;
 };
 
-const isLineDiscounted = (line: TaxBaseLine, taxBase: TaxBaseFragment) => {
+const isProductLineDiscounted = (line: TaxBaseLine, taxBase: TaxBaseFragment) => {
   const isDiscounted = taxBase.discounts.length > 0;
 
   if (!isDiscounted) return false;
@@ -68,7 +68,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
-        discounted: isLineDiscounted(line, taxBase),
+        discounted: isProductLineDiscounted(line, taxBase),
       };
     });
 
