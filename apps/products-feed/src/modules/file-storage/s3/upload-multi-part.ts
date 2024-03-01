@@ -5,17 +5,15 @@ import {
   UploadPartCommand,
 } from "@aws-sdk/client-s3";
 import { UploadFileArgs } from "./upload-file";
-import { createLogger } from "@saleor/apps-shared";
 import { MULTI_PART_SIZE_THRESHOLD } from "./const";
+import { createLogger } from "../../../logger";
 
 /*
  * Code based on S3 docs:
  * https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/javascript_s3_code_examples.html
  */
 
-const logger = createLogger({
-  fn: "UploadMultiPart",
-});
+const logger = createLogger("UploadMultiPart");
 
 export const UploadMultiPart = async ({
   s3Client,
@@ -30,7 +28,7 @@ export const UploadMultiPart = async ({
       new CreateMultipartUploadCommand({
         Bucket: bucketName,
         Key: fileName,
-      })
+      }),
     );
 
     uploadId = multipartUpload.UploadId;
@@ -54,12 +52,12 @@ export const UploadMultiPart = async ({
               UploadId: uploadId,
               Body: buffer.subarray(start, end),
               PartNumber: i + 1,
-            })
+            }),
           )
           .then((d) => {
             logger.debug(`Part ${i + 1}/${numberOfParts} uploaded`);
             return d;
-          })
+          }),
       );
     }
 
@@ -76,7 +74,7 @@ export const UploadMultiPart = async ({
             PartNumber: i + 1,
           })),
         },
-      })
+      }),
     );
   } catch (err) {
     logger.error(err);

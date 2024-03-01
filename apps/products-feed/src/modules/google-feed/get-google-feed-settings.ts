@@ -1,15 +1,18 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
-import { GraphqlClientFactory } from "../../lib/create-graphql-client";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 export class GoogleFeedSettingsFetcher {
   static createFromAuthData(authData: AuthData) {
+    const client = createInstrumentedGraphqlClient({
+      saleorApiUrl: authData.saleorApiUrl,
+      token: authData.token,
+    });
+
     return new GoogleFeedSettingsFetcher({
-      settingsManager: new AppConfigMetadataManager(
-        createSettingsManager(GraphqlClientFactory.fromAuthData(authData)),
-      ),
+      settingsManager: new AppConfigMetadataManager(createSettingsManager(client)),
     });
   }
 
