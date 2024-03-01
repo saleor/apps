@@ -1,10 +1,10 @@
 {
   "name": "app-avatax",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
-    "e2e": "vitest --project integration --watch=false",
+    "e2e": "vitest --project e2e --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen --config .graphqlrc.ts",
