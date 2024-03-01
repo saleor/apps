@@ -1,11 +1,9 @@
 // TODO: PF and EAM apps use handlebars. Extract this module to shared package.
 
 import Handlebars from "handlebars";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({
-  name: "renderHandlebarsTemplate",
-});
+const logger = createLogger("renderHandlebarsTemplate");
 
 interface RenderHandlebarsTemplateArgs {
   template: string;

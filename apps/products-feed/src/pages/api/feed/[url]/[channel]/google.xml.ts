@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
@@ -12,6 +11,13 @@ import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
+import { withOtel } from "@saleor/apps-otel";
+import { SpanStatusCode, trace } from "@opentelemetry/api";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { createLogger } from "../../../../../logger";
+import { loggerContext } from "../../../../../logger-context";
+import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
+import { createInstrumentedGraphqlClient } from "../../../../../lib/create-instrumented-graphql-client";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -27,6 +33,8 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
+const tracer = getOtelTracer();
+
 /**
  * TODO Refactor and test
  */
@@ -34,13 +42,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
 
-  const logger = createLogger({
+  const logger = createLogger("Feed handler", {
     saleorApiUrl: url,
     channel,
     route: "api/feed/{url}/{channel}/google.xml",
   });
 
-  logger.debug("Feed route visited");
+  logger.info("Generating Google Feed");
 
   try {
     validateRequestParams(req);
@@ -63,7 +71,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   /**
    * use unauthorized client to eliminate possibility of spilling the non-public data
    */
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
@@ -129,7 +137,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
       .then((data) => data.LastModified)
       // If the file does not exist, error is thrown and we can ignore it
-      .catch(() => undefined);
+      .catch(() => {
+        logger.debug("Feed file not found in S3", {
+          bucketName: bucketConfiguration!.bucketName,
+          fileName,
+        });
+        return undefined;
+      });
 
     if (feedLastModificationDate) {
       logger.debug("Feed has been generated previously, checking the last modification date");
@@ -194,26 +208,40 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channel,
   });
 
-  try {
-    await uploadFile({
-      s3Client,
-      bucketName: bucketConfiguration.bucketName,
-      buffer: Buffer.from(xmlContent),
-      fileName,
-    });
+  await tracer.startActiveSpan("upload to s3", async (span) => {
+    span.setAttribute("bucketName", bucketConfiguration!.bucketName);
+    span.setAttribute("fileName", fileName);
 
-    logger.debug("Feed uploaded to S3, redirecting the download URL");
-    const downloadUrl = getDownloadUrl({
-      s3BucketConfiguration: bucketConfiguration,
-      saleorApiUrl: authData.saleorApiUrl,
-      channel,
-    });
+    try {
+      await uploadFile({
+        s3Client,
+        bucketName: bucketConfiguration!.bucketName,
+        buffer: Buffer.from(xmlContent),
+        fileName,
+      });
 
-    return res.redirect(downloadUrl);
-  } catch (error) {
-    logger.error("Could not upload the feed to S3");
-    return res.status(500).json({ error: "Could not upload the feed to S3" });
-  }
+      const downloadUrl = getDownloadUrl({
+        s3BucketConfiguration: bucketConfiguration!,
+        saleorApiUrl: authData.saleorApiUrl,
+        channel,
+      });
+
+      logger.debug("Feed uploaded to S3, redirecting the download URL", {
+        downloadUrl,
+      });
+
+      return res.redirect(downloadUrl);
+    } catch (error) {
+      logger.error("Could not upload the feed to S3");
+      span.setStatus({ code: SpanStatusCode.ERROR });
+      return res.status(500).json({ error: "Could not upload the feed to S3" });
+    } finally {
+      span.end();
+    }
+  });
 };
 
-export default handler;
+export default wrapWithLoggerContext(
+  withOtel(handler, "/api/feed/[url]/[channel]/google.xml"),
+  loggerContext,
+);

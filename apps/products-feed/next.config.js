@@ -7,6 +7,8 @@ const isSentryPropertiesInEnvironment =
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: [
+    "@saleor/apps-otel",
+    "@saleor/apps-logger",
     "@saleor/apps-shared",
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
