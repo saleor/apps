@@ -230,7 +230,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         downloadUrl,
       });
 
-      return res.redirect(200, downloadUrl);
+      return res.redirect(downloadUrl);
     } catch (error) {
       logger.error("Could not upload the feed to S3");
       span.setStatus({ code: SpanStatusCode.ERROR });
