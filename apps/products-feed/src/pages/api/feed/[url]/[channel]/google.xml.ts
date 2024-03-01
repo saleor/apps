@@ -48,7 +48,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     route: "api/feed/{url}/{channel}/google.xml",
   });
 
-  logger.debug("Feed route visited");
+  logger.info("Generating Google Feed");
 
   try {
     validateRequestParams(req);
@@ -137,7 +137,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
       .then((data) => data.LastModified)
       // If the file does not exist, error is thrown and we can ignore it
-      .catch(() => undefined);
+      .catch(() => {
+        logger.debug("Feed file not found in S3", {
+          bucketName: bucketConfiguration!.bucketName,
+          fileName,
+        });
+        return undefined;
+      });
 
     if (feedLastModificationDate) {
       logger.debug("Feed has been generated previously, checking the last modification date");
@@ -214,14 +220,17 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         fileName,
       });
 
-      logger.debug("Feed uploaded to S3, redirecting the download URL");
       const downloadUrl = getDownloadUrl({
         s3BucketConfiguration: bucketConfiguration!,
         saleorApiUrl: authData.saleorApiUrl,
         channel,
       });
 
-      return res.redirect(downloadUrl);
+      logger.debug("Feed uploaded to S3, redirecting the download URL", {
+        downloadUrl,
+      });
+
+      return res.redirect(200, downloadUrl);
     } catch (error) {
       logger.error("Could not upload the feed to S3");
       span.setStatus({ code: SpanStatusCode.ERROR });
