@@ -28,10 +28,11 @@ const isProductLineDiscounted = (line: TaxBaseLine, taxBase: TaxBaseFragment) =>
   if (!isDiscounted) return false;
 
   const voucherType = taxBase.sourceObject.voucher?.type;
+  const isOncePerOrder = taxBase.sourceObject.voucher?.applyOncePerOrder;
 
   switch (voucherType) {
     case VoucherTypeEnum.EntireOrder:
-      return true;
+      return isOncePerOrder ? checkIfIsDiscountedLine(line) : true;
     case VoucherTypeEnum.SpecificProduct:
       return checkIfIsDiscountedLine(line);
     default:
