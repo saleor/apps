@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.0.3
+
+### Patch Changes
+
+- 27df4d8b: Adjusted Vercel setup (via vercel.json) to limit lambdas resource: 320MB and 22s for sync webhooks
+- 3d5d17a0: Add handling of WrongChannelError for OrderConfirmed event. Now false-positive error will not be thrown
+
 ## 1.0.2
 
 ### Patch Changes
