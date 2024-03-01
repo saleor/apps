@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.16.0
+
+### Minor Changes
+
+- 6b974f54: Add open-telemetry to products-feed application
+
 ## 1.15.1
 
 ### Patch Changes
