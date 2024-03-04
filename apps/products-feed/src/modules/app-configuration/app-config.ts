@@ -1,5 +1,5 @@
-import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
+import { createLogger } from "../../logger";
 
 const imageSizeFieldSchema = z.coerce.number().gte(256).default(1024);
 
@@ -62,7 +62,7 @@ export type RootConfig = z.infer<typeof rootAppConfigSchema>;
 
 export type ChannelUrlsConfig = z.infer<typeof AppConfigSchema.channelUrls>;
 
-const logger = createLogger({ name: "AppConfig" });
+const logger = createLogger("AppConfig");
 
 export class AppConfig {
   private rootData: RootConfig = {

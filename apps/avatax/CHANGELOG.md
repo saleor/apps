@@ -1,5 +1,22 @@
 # app-avatax
 
+## 1.0.3
+
+### Patch Changes
+
+- 27df4d8b: Adjusted Vercel setup (via vercel.json) to limit lambdas resource: 320MB and 22s for sync webhooks
+- 3d5d17a0: Add handling of WrongChannelError for OrderConfirmed event. Now false-positive error will not be thrown
+
+## 1.0.2
+
+### Patch Changes
+
+- fa478d2b: Gracefully handle cases, where checkout/order in webhooks misses address and/or lines. These scenarios are possible when app is reached with partial checkout/order. It can happen when user haven't yet entered address or added lines. App will check this and return proper error with status 400
+- 1e07a6ff: Applied "logger context" that allows api handlers to share fields in the invocation context. It helps to avoid "prop drilling". This context will be sent with Open Telemetry logs attributes
+- cb620765: Unified the shipping line logic. Reading and creating a shipping line is now in `avatax-shipping-line.ts`.
+- Updated dependencies [1e07a6ff]
+  - @saleor/apps-logger@1.2.0
+
 ## 1.0.1
 
 ### Patch Changes

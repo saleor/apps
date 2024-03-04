@@ -8,5 +8,8 @@ mutation CheckoutAddVoucher($checkoutId: ID!, $promoCode: String!) {
       }
       discountName
     }
+    errors {
+      ...CheckoutError
+    }
   }
 }

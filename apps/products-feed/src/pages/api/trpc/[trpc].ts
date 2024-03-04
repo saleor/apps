@@ -1,11 +1,14 @@
 import * as trpcNext from "@trpc/server/adapters/next";
 import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
-import { createLogger } from "@saleor/apps-shared";
+import { withOtel } from "@saleor/apps-otel";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
+import { createLogger } from "../../../logger";
 
-const logger = createLogger({ name: "tRPC error" });
+const logger = createLogger("tRPC error");
 
-export default trpcNext.createNextApiHandler({
+const handler = trpcNext.createNextApiHandler({
   router: appRouter,
   createContext: createTrpcContext,
   onError: ({ path, error }) => {
@@ -16,3 +19,5 @@ export default trpcNext.createNextApiHandler({
     logger.debug(error, `${path} returned error:`);
   },
 });
+
+export default wrapWithLoggerContext(withOtel(handler, "/api/trpc"), loggerContext);
