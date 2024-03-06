@@ -1,5 +1,6 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 import {
+  AttributeInputTypeEnum,
   ProductAttributesDataFragment,
   ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
@@ -73,11 +74,36 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
     return undefined;
   }
 
+  /**
+   * TODO: How/When name can be empty?
+   */
   const filteredValues = attr.values.filter((v) => !!v.name?.length);
 
+  let value: string | boolean;
+
+  /**
+   * Strategy for boolean type only, assume that only one value is possible (no option to have booleans-dropdown).
+   * REF SHOPX-332
+   * TODO: Other input types should be handled and properly mapped
+   */
+  if (
+    filteredValues.length === 1 &&
+    filteredValues[0].inputType === AttributeInputTypeEnum.Boolean &&
+    typeof filteredValues[0].boolean === "boolean"
+  ) {
+    value = filteredValues[0].boolean;
+  } else {
+    /**
+     * Fallback to initial/previous behavior
+     * TODO: Its not correct to use "name" field always. E.g. for plaintext field more accurate is "plainText",
+     *   for "date" field there are date and dateTime fields. "Name" can work on the frontend but doesn't fit for faceting
+     */
+    value = filteredValues.map((v) => v.name).join(", ") || "";
+  }
+
   return {
-    [attr.attribute.name]: filteredValues.map((v) => v.name).join(", ") || "",
-  };
+    [attr.attribute.name]: value,
+  } as Record<string, string | boolean>;
 };
 
 export function productAndVariantToAlgolia({
