@@ -12,6 +12,7 @@ jobs:
   e2e:
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         saleor: [318, 319]
     env:
