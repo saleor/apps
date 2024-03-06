@@ -36,11 +36,11 @@ export default wrapWithLoggerContext(
       const webhookResponse = new WebhookResponse(res);
 
       try {
-        const logger = createLogger("checkoutCalculateTaxesSyncWebhook", {
-          checkoutId: ctx.payload.taxBase.sourceObject.id,
-          channelSlug: ctx.payload.taxBase.channel.slug,
-        });
+        const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
         const { payload } = ctx;
+
+        loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
+        loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
