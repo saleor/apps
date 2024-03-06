@@ -47,7 +47,7 @@ export class AvataxCalculateTaxesAdapter
     try {
       const response = await client.createTransaction(target);
 
-      this.logger.debug("AvaTax createTransaction successfully responded");
+      this.logger.info("AvaTax createTransaction successfully responded");
 
       const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
       const transformedResponse = responseTransformer.transform(response);
@@ -57,6 +57,11 @@ export class AvataxCalculateTaxesAdapter
       return transformedResponse;
     } catch (e) {
       const error = normalizeAvaTaxError(e);
+
+      /**
+       * TODO: Add handling of specific cases
+       */
+      this.logger.error("Error calculating taxes", { error });
 
       this.clientLogger.push({
         event: "[CalculateTaxes] createTransaction",
