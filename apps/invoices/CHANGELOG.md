@@ -1,5 +1,15 @@
 # saleor-app-invoices
 
+## 1.17.5
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+- Updated dependencies [29d10d4a]
+  - @saleor/apps-shared@1.9.4
+  - @saleor/trpc@1.0.4
+  - @saleor/apps-ui@1.2.3
+
 ## 1.17.4
 
 ### Patch Changes

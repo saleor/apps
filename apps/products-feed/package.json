@@ -1,6 +1,6 @@
 {
   "name": "products-feed",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",

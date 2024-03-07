@@ -1,5 +1,15 @@
 # saleor-app-slack
 
+## 1.10.2
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+- Updated dependencies [29d10d4a]
+  - @saleor/apps-shared@1.9.4
+  - @saleor/apps-ui@1.2.3
+  - @saleor/react-hook-form-macaw@0.2.6
+
 ## 1.10.1
 
 ### Patch Changes
