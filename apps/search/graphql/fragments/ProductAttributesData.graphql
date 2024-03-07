@@ -4,5 +4,8 @@ fragment ProductAttributesData on SelectedAttribute {
   }
   values {
     name
+    boolean
+    value
+    inputType
   }
 }
