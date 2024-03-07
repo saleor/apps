@@ -29,17 +29,21 @@ export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTax
 export default wrapWithLoggerContext(
   withOtel(
     orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-      const logger = createLogger("orderCalculateTaxesSyncWebhook");
-      const { payload } = ctx;
       const webhookResponse = new WebhookResponse(res);
 
-      logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
-
       try {
+        const logger = createLogger("orderCalculateTaxesSyncWebhook");
+        const { payload } = ctx;
+
+        loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
+        loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
+
+        logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+
         const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
         if (payloadVerificationResult.isErr()) {
-          logger.debug("Failed to calculate taxes, due to incomplete payload", {
+          logger.warn("Failed to calculate taxes, due to incomplete payload", {
             error: payloadVerificationResult.error,
           });
 
@@ -57,13 +61,13 @@ export default wrapWithLoggerContext(
         if (activeConnectionServiceResult.isOk()) {
           const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
 
-          logger.debug("Taxes calculated", { calculatedTaxes });
+          logger.info("Taxes calculated", { calculatedTaxes });
 
           return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
         } else if (activeConnectionServiceResult.isErr()) {
           const err = activeConnectionServiceResult.error;
 
-          logger.debug(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
+          logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
             error: err,
           });
 
@@ -81,6 +85,8 @@ export default wrapWithLoggerContext(
           }
         }
       } catch (error) {
+        Sentry.captureException(error);
+
         return webhookResponse.error(error);
       }
     }),
