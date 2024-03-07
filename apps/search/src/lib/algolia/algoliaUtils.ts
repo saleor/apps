@@ -65,6 +65,19 @@ export function categoryHierarchicalFacets({ product }: ProductVariantWebhookPay
 
 export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 
+const isAttributeValueBooleanType = (
+  attributeValue: ProductAttributesDataFragment["values"],
+): attributeValue is [{ boolean: boolean; inputType: AttributeInputTypeEnum.Boolean }] => {
+  return (
+    /**
+     * Boolean type can be only a single value. List API exists due to multi-value fields like multiselects
+     */
+    attributeValue.length === 1 &&
+    attributeValue[0].inputType === AttributeInputTypeEnum.Boolean &&
+    typeof attributeValue[0].boolean === "boolean"
+  );
+};
+
 /**
  *  Returns object with a key being attribute name and value of all attribute values
  *  separated by comma. If no value is selected, an empty string will be used instead.
@@ -82,15 +95,11 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
   let value: string | boolean;
 
   /**
-   * Strategy for boolean type only, assume that only one value is possible (no option to have booleans-dropdown).
+   * Strategy for boolean type only
    * REF SHOPX-332
    * TODO: Other input types should be handled and properly mapped
    */
-  if (
-    filteredValues.length === 1 &&
-    filteredValues[0].inputType === AttributeInputTypeEnum.Boolean &&
-    typeof filteredValues[0].boolean === "boolean"
-  ) {
+  if (isAttributeValueBooleanType(filteredValues)) {
     value = filteredValues[0].boolean;
   } else {
     /**
