@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.6
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+
 ## 0.4.5
 
 ### Patch Changes

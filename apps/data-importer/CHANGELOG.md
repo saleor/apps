@@ -1,5 +1,13 @@
 # saleor-app-data-importer
 
+## 1.10.5
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+- Updated dependencies [29d10d4a]
+  - @saleor/apps-shared@1.9.4
+
 ## 1.10.4
 
 ### Patch Changes

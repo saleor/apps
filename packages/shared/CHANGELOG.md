@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.9.4
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+
 ## 1.9.3
 
 ### Patch Changes

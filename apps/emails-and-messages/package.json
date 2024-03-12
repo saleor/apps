@@ -1,6 +1,6 @@
 {
   "name": "emails-and-messages",
-  "version": "1.11.2",
+  "version": "1.11.3",
   "scripts": {
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
