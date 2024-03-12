@@ -1,5 +1,17 @@
 # saleor-app-cms-v2
 
+## 2.6.5
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+- Updated dependencies [29d10d4a]
+  - @saleor/apps-shared@1.9.4
+  - @saleor/apps-ui@1.2.3
+  - @saleor/apps-logger@1.2.0
+  - @saleor/apps-otel@1.1.0
+  - @saleor/react-hook-form-macaw@0.2.6
+
 ## 2.6.4
 
 ### Patch Changes

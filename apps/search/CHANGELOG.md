@@ -1,5 +1,19 @@
 # saleor-app-search
 
+## 1.20.4
+
+### Patch Changes
+
+- 29d10d4a: Update Next.js to version 14.1.0.
+- 6bd6fa69: Fixed "boolean" attribute type mapping. Now it will look for raw boolean value (attribute.value.boolean) instead trying to stringify attribute name. The rest of attribute types were not touched.
+- Updated dependencies [29d10d4a]
+  - @saleor/apps-shared@1.9.4
+  - @saleor/apps-ui@1.2.3
+  - @saleor/apps-logger@1.2.0
+  - @saleor/apps-otel@1.1.0
+  - @saleor/react-hook-form-macaw@0.2.6
+  - @saleor/webhook-utils@0.0.5
+
 ## 1.20.3
 
 ### Patch Changes
