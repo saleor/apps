@@ -51,7 +51,9 @@ export class AvataxOrderConfirmedPayloadTransformer {
         commit: avataxConfig.isAutocommit,
         addresses: {
           shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
-          shipTo: avataxAddressFactory.fromSaleorAddress(order.shippingAddress!),
+          shipTo: avataxAddressFactory.fromSaleorAddress(
+            order.shippingAddress ?? order.billingAddress!,
+          ),
         },
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
