@@ -1774,8 +1774,8 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       tsx:
-        specifier: 4.1.2
-        version: 4.1.2
+        specifier: 4.7.1
+        version: 4.7.1
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -24550,13 +24550,13 @@ packages:
       typescript: 5.1.6
     dev: true
 
-  /tsx@4.1.2:
-    resolution: {integrity: sha512-1spM1bFV6MP2s4tO4tDC7g52fsaFdtEWdO4GfGdqi20qUgPbnAJqixOyIAvCSx1DDj3YIUB4CD06owTWUsOAuQ==}
+  /tsx@4.7.1:
+    resolution: {integrity: sha512-8d6VuibXHtlN5E3zFkgY8u4DX7Y3Z27zvvPKVmLon/D4AjuKzarkUBTLDBgj9iTQ0hg5xM7c/mYiRVM+HETf0g==}
     engines: {node: '>=18.0.0'}
+    hasBin: true
     dependencies:
-      esbuild: 0.18.20
+      esbuild: 0.19.12
       get-tsconfig: 4.7.2
-      source-map-support: 0.5.21
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
