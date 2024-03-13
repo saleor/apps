@@ -3,6 +3,7 @@ import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
+import { avataxProductLine } from "./avatax-product-line";
 import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
@@ -20,13 +21,13 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
 
-      return {
+      return avataxProductLine.create({
         amount: line.totalPrice.amount,
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
         discounted: isDiscounted,
-      };
+      });
     });
 
     if (taxBase.shippingPrice.amount !== 0) {

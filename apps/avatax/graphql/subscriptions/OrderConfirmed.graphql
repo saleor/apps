@@ -1,5 +1,6 @@
 fragment OrderLine on OrderLine {
   productSku
+  productVariantId
   productName
   quantity
   taxClass {
@@ -15,6 +16,9 @@ fragment OrderLine on OrderLine {
       amount
     }
     tax {
+      amount
+    }
+    gross {
       amount
     }
   }
