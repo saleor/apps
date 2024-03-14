@@ -63,23 +63,36 @@ export default wrapWithLoggerContext(
         logger.debug("Confirming order...");
 
         if (taxProviderResult.isOk()) {
-          const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
+          try {
+            const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
 
-          logger.info("Order confirmed", { confirmedOrder });
-          const client = createInstrumentedGraphqlClient({
-            saleorApiUrl,
-            token,
-          });
+            logger.info("Order confirmed", { confirmedOrder });
+            const client = createInstrumentedGraphqlClient({
+              saleorApiUrl,
+              token,
+            });
 
-          const orderMetadataManager = new OrderMetadataManager(client);
+            const orderMetadataManager = new OrderMetadataManager(client);
 
-          await orderMetadataManager.updateOrderMetadataWithExternalId(
-            payload.order.id,
-            confirmedOrder.id,
-          );
-          logger.info("Updated order metadata with externalId");
+            await orderMetadataManager.updateOrderMetadataWithExternalId(
+              payload.order.id,
+              confirmedOrder.id,
+            );
+            logger.info("Updated order metadata with externalId");
 
-          return webhookResponse.success();
+            return webhookResponse.success();
+          } catch (error) {
+            logger.debug("Error confirming order", { error });
+
+            switch (true) {
+              case error instanceof TaxBadPayloadError: {
+                return res.status(400).send(error.message);
+              }
+            }
+
+            logger.error("Unhandled error executing webhook", { error });
+            return webhookResponse.error(error);
+          }
         }
 
         if (taxProviderResult.isErr()) {

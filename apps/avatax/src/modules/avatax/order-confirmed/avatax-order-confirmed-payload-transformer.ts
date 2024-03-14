@@ -10,6 +10,9 @@ import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
+import { err, ok } from "neverthrow";
+import * as Sentry from "@sentry/nextjs";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -19,6 +22,21 @@ export class AvataxOrderConfirmedPayloadTransformer {
     }
 
     return DocumentType.SalesInvoice;
+  }
+  private getSaleorAddress(order: OrderConfirmedSubscriptionFragment) {
+    if (order.shippingAddress) {
+      return ok(order.shippingAddress);
+    }
+
+    if (order.billingAddress) {
+      Sentry.captureMessage(
+        "OrderConfirmedPayload has no shipping address, falling back to billing address",
+      );
+
+      return ok(order.billingAddress);
+    }
+
+    return err(new TaxBadPayloadError("OrderConfirmedPayload has no shipping or billing address"));
   }
   async transform(
     order: OrderConfirmedSubscriptionFragment,
@@ -39,6 +57,13 @@ export class AvataxOrderConfirmedPayloadTransformer {
       orderId: order.id,
     });
     const customerCode = avataxCustomerCode.resolve(order.user);
+    const addressPayload = this.getSaleorAddress(order);
+
+    if (addressPayload.isErr()) {
+      Sentry.captureException(addressPayload.error);
+
+      throw addressPayload.error;
+    }
 
     return {
       model: {
@@ -51,9 +76,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         commit: avataxConfig.isAutocommit,
         addresses: {
           shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
-          shipTo: avataxAddressFactory.fromSaleorAddress(
-            order.shippingAddress ?? order.billingAddress!,
-          ),
+          shipTo: avataxAddressFactory.fromSaleorAddress(addressPayload.value),
         },
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
