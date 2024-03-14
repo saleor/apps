@@ -2,9 +2,9 @@
   "name": "@saleor/apps-otel",
   "version": "1.1.0",
   "scripts": {
-    "lint:fix": "eslint --fix .",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",

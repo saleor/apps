@@ -3,14 +3,14 @@
   "version": "1.8.5",
   "scripts": {
     "build": "pnpm generate && next build",
+    "check-types": "tsc --noEmit",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest",
-    "check-types": "tsc --noEmit"
+    "test": "vitest"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",

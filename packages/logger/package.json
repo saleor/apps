@@ -2,10 +2,10 @@
   "name": "@saleor/apps-logger",
   "version": "1.2.0",
   "scripts": {
-    "lint:fix": "eslint --fix .",
-    "test": "vitest",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest"
   },
   "dependencies": {
     "eslint": "8.46.0",

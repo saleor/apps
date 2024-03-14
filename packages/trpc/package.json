@@ -2,9 +2,9 @@
   "name": "@saleor/trpc",
   "version": "1.0.4",
   "scripts": {
-    "lint:fix": "eslint --fix .",
+    "check-types": "tsc --noEmit",
     "lint": "eslint .",
-    "check-types": "tsc --noEmit"
+    "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",

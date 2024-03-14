@@ -2,10 +2,10 @@
   "name": "@saleor/apps-shared",
   "version": "1.9.4",
   "scripts": {
-    "lint:fix": "eslint --fix .",
-    "test": "vitest",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest"
   },
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",

@@ -3,6 +3,7 @@
   "version": "1.20.4",
   "scripts": {
     "build": "pnpm generate && next build",
+    "check-types": "tsc --noEmit",
     "deploy": "pnpm run build && tsx ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
@@ -11,8 +12,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
     "start": "next start",
-    "test": "vitest",
-    "check-types": "tsc --noEmit"
+    "test": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",

@@ -2,9 +2,9 @@
   "name": "@saleor/apps-ui",
   "version": "1.2.3",
   "scripts": {
-    "lint:fix": "eslint --fix .",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "eslint": "8.46.0",
