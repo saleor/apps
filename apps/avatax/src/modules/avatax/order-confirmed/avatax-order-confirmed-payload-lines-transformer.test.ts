@@ -27,14 +27,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
     },
   ] as const)(
     `should transform the order with tax included: $taxIncluded`,
-    ({
-      taxIncluded,
-      scenario,
-      shippingAmount,
-      firstProductAmount,
-      secondProductAmount,
-      thirdProductAmount,
-    }) => {
+    ({ scenario, shippingAmount, firstProductAmount, secondProductAmount, thirdProductAmount }) => {
       const mockGenerator = new AvataxOrderConfirmedMockGenerator(scenario);
       const orderMock = mockGenerator.generateOrder();
       const lines = linesTransformer.transform(orderMock, avataxConfigMock, matches);
