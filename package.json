@@ -16,7 +16,8 @@
     "lint-staged": "lint-staged",
     "prepare": "husky install",
     "start": "turbo run start",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "lint:fix": "turbo run lint:fix"
   },
   "dependencies": {
     "@opentelemetry/api": "1.7.0",
