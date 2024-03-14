@@ -86,6 +86,7 @@ export default wrapWithLoggerContext(
 
             switch (true) {
               case error instanceof TaxBadPayloadError: {
+                // @ts-ignore - Vercel uses old version of Typescript
                 return res.status(400).send(error.message);
               }
             }
