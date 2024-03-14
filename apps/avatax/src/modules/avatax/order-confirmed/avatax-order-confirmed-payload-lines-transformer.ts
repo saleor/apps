@@ -15,15 +15,11 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
-      const { gross, net } = line.totalPrice;
-      const isTaxIncluded = avataxProductLine.getIsTaxIncluded({
-        gross: gross.amount,
-        net: net.amount,
-      });
 
       return avataxProductLine.create({
-        amount: isTaxIncluded ? gross.amount : net.amount,
-        taxIncluded: isTaxIncluded,
+        amount: line.totalPrice.gross.amount,
+        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
+        taxIncluded: true,
         taxCode,
         quantity: line.quantity,
         discounted: order.discounts.length > 0,
@@ -33,17 +29,10 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      const {
-        shippingPrice: { gross, net },
-      } = order;
-      const isTaxIncluded = avataxShippingLine.getIsTaxIncluded({
-        gross: gross.amount,
-        net: net.amount,
-      });
-
       const shippingLine = avataxShippingLine.create({
-        amount: isTaxIncluded ? gross.amount : net.amount,
-        taxIncluded: isTaxIncluded,
+        amount: order.shippingPrice.gross.amount,
+        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
+        taxIncluded: true,
         /**
          * * Different shipping methods can have different tax codes.
          * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/

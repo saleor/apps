@@ -39,8 +39,4 @@ export const avataxShippingLine = {
 
     return shippingLine;
   },
-
-  getIsTaxIncluded({ gross, net }: { gross: number; net: number }): boolean {
-    return gross === net;
-  },
 };
