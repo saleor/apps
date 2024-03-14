@@ -5,7 +5,9 @@
     "build-storybook": "storybook build",
     "lint:fix": "eslint --fix .",
     "start-storybook-build": "pnpm dlx http-server ./storybook-static",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "eslint": "8.46.0"

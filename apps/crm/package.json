@@ -9,7 +9,8 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",

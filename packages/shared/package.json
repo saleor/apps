@@ -3,7 +3,9 @@
   "version": "1.9.4",
   "scripts": {
     "lint:fix": "eslint --fix .",
-    "test": "vitest"
+    "test": "vitest",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",
