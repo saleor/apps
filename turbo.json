@@ -17,6 +17,10 @@
       "inputs": ["src"],
       "outputs": []
     },
+    "check-types": {
+      "inputs": ["src"],
+      "outputs": []
+    },
     "dev": {
       "persistent": true,
       "cache": false

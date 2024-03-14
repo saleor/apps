@@ -1,0 +1,33 @@
+name: QA
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    env:
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - args: [--frozen-lockfile]
+      - name: Check linter
+        run: pnpm lint
+      - name: Check types
+        run: pnpm check-types
+
+  test:
+    runs-on: ubuntu-22.04
+    env:
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - args: [--frozen-lockfile]
+      - name: Run tests
+        run: pnpm test
