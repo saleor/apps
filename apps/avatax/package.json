@@ -3,6 +3,7 @@
   "version": "1.0.4",
   "scripts": {
     "build": "pnpm generate && next build",
+    "check-types": "tsc --noEmit",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "e2e": "vitest --project e2e --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
@@ -12,8 +13,7 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest --project react",
-    "check-types": "tsc --noEmit"
+    "test": "vitest --project react"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",

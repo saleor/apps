@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "check-deps": "syncpack list-mismatches",
     "check-spelling": "cspell **/*.{jsx,tsx,js,ts,md,mdx}",
+    "check-types": "turbo run check-types",
     "deploy": "turbo run deploy",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -15,8 +16,7 @@
     "lint-staged": "lint-staged",
     "prepare": "husky install",
     "start": "turbo run start",
-    "test": "turbo run test",
-    "check-types": "turbo run check-types"
+    "test": "turbo run test"
   },
   "dependencies": {
     "@opentelemetry/api": "1.7.0",
