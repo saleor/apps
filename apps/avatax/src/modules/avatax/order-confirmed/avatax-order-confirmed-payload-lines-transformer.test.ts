@@ -10,6 +10,7 @@ const matches: AvataxTaxCodeMatches = [];
 describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
   describe.each([
     {
+      // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
       taxIncluded: false,
       scenario: "default",
       shippingAmount: 59.17,
