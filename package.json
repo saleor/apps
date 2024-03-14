@@ -14,10 +14,10 @@
     "github:release": "pnpm changeset tag && git push --follow-tags",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
+    "lint:fix": "turbo run lint:fix",
     "prepare": "husky install",
     "start": "turbo run start",
-    "test": "turbo run test",
-    "lint:fix": "turbo run lint:fix"
+    "test": "turbo run test"
   },
   "dependencies": {
     "@opentelemetry/api": "1.7.0",
