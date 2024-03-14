@@ -16,6 +16,8 @@ jobs:
         with:
           run_install: |
             - args: [--frozen-lockfile]
+      - name: Generate GraphQL types
+        run: pnpm generate
       - name: Check linter
         run: pnpm lint
       - name: Check types
