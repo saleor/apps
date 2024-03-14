@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       HUSKY: 0
+      APL: file
+      MAILCHIMP_CLIENT_ID: "mocked"
+      MAILCHIMP_CLIENT_SECRET: "mocked"
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
@@ -29,5 +32,7 @@ jobs:
         with:
           run_install: |
             - args: [--frozen-lockfile]
+      - name: Generate GraphQL types
+        run: pnpm generate
       - name: Run tests
         run: pnpm test
