@@ -12,6 +12,8 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
+    const isDiscounted = order.discounts.length > 0;
+
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
@@ -22,8 +24,8 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
         taxIncluded: true,
         taxCode,
         quantity: line.quantity,
-        discounted: order.discounts.length > 0,
-        itemCode: line.productSku ?? line.productVariantId ?? "",
+        discounted: isDiscounted,
+        itemCode: avataxProductLine.getItemCode(line.productSku, line.productVariantId),
         description: line.productName,
       });
     });
@@ -38,7 +40,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
          * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/
          */
         taxCode: config.shippingTaxCode,
-        discounted: order.discounts.length > 0,
+        discounted: isDiscounted,
       });
 
       return [...productLines, shippingLine];

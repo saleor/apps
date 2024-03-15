@@ -28,4 +28,8 @@ export const avataxProductLine = {
       description,
     };
   },
+
+  getItemCode(sku: string | null | undefined, variantId: string | null | undefined) {
+    return sku ?? variantId ?? "";
+  },
 };

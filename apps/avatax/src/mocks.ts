@@ -1,6 +1,6 @@
 import { OrderConfirmedSubscriptionFragment, OrderStatus } from "../generated/graphql";
 
-const commonOrderFields = {
+export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
   user: {
     id: "VXNlcjoyMDg0NTEwNDEw",
@@ -43,120 +43,78 @@ const commonOrderFields = {
       amount: 15.54,
     },
   },
-  discounts: [],
-};
-
-const shippingPriceFactory = ({ gross, net }: { gross: number; net: number }) => ({
-  gross: {
-    amount: gross,
-  },
-  net: {
-    amount: net,
-  },
-});
-
-const productLineFactory = ({
-  sku,
-  name,
-  quantity,
-  unitPrice,
-  net,
-  tax,
-  gross,
-}: {
-  sku: string;
-  name: string;
-  quantity: number;
-  unitPrice: number;
-  net: number;
-  tax: number;
-  gross: number;
-}) => ({
-  productSku: sku,
-  productName: name,
-  quantity,
-  unitPrice: {
-    net: {
-      amount: unitPrice,
-    },
-  },
-  totalPrice: {
-    net: {
-      amount: net,
-    },
-    tax: {
-      amount: tax,
-    },
+  shippingPrice: {
     gross: {
-      amount: gross,
+      amount: 59.17,
+    },
+    net: {
+      amount: 59.17,
     },
   },
-});
-
-export const defaultOrder: OrderConfirmedSubscriptionFragment = {
-  ...commonOrderFields,
-  shippingPrice: shippingPriceFactory({ gross: 59.17, net: 50 }),
   lines: [
-    productLineFactory({
-      sku: "328223580",
-      name: "Monospace Tee",
+    {
+      productSku: "328223580",
+      productName: "Monospace Tee",
       quantity: 3,
-      unitPrice: 20,
-      net: 60,
-      tax: 5.18,
-      gross: 65.18,
-    }),
-    productLineFactory({
-      sku: "328223581",
-      name: "Monospace Tee",
+      unitPrice: {
+        net: {
+          amount: 20,
+        },
+      },
+      totalPrice: {
+        net: {
+          amount: 60,
+        },
+        tax: {
+          amount: 5.18,
+        },
+        gross: {
+          amount: 65.18,
+        },
+      },
+    },
+    {
+      productName: "Monospace Tee",
+      productVariantId: "dmFyaWFudC1pZA==",
       quantity: 1,
-      unitPrice: 20,
-      net: 20,
-      tax: 1.73,
-      gross: 21.73,
-    }),
-    productLineFactory({
-      sku: "118223581",
-      name: "Paul's Balance 420",
+      unitPrice: {
+        net: {
+          amount: 20,
+        },
+      },
+      totalPrice: {
+        net: {
+          amount: 20,
+        },
+        tax: {
+          amount: 1.73,
+        },
+        gross: {
+          amount: 21.73,
+        },
+      },
+    },
+    {
+      productSku: "118223581",
+      productName: "Paul's Balance 420",
       quantity: 2,
-      unitPrice: 50,
-      net: 100,
-      tax: 8.63,
-      gross: 108.63,
-    }),
+      unitPrice: {
+        net: {
+          amount: 50,
+        },
+      },
+      totalPrice: {
+        net: {
+          amount: 100,
+        },
+        tax: {
+          amount: 8.63,
+        },
+        gross: {
+          amount: 108.63,
+        },
+      },
+    },
   ],
-};
-
-export const orderWithTaxIncluded: OrderConfirmedSubscriptionFragment = {
-  ...commonOrderFields,
-  shippingPrice: shippingPriceFactory({ gross: 59.17, net: 59.17 }),
-  lines: [
-    productLineFactory({
-      sku: "328223580",
-      name: "Monospace Tee",
-      quantity: 3,
-      unitPrice: 20,
-      net: 65.18,
-      tax: 5.18,
-      gross: 65.18,
-    }),
-    productLineFactory({
-      sku: "328223581",
-      name: "Monospace Tee",
-      quantity: 1,
-      unitPrice: 20,
-      net: 21.73,
-      tax: 1.73,
-      gross: 21.73,
-    }),
-    productLineFactory({
-      sku: "118223581",
-      name: "Paul's Balance 420",
-      quantity: 2,
-      unitPrice: 50,
-      net: 108.63,
-      tax: 8.63,
-      gross: 108.63,
-    }),
-  ],
+  discounts: [],
 };
