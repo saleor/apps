@@ -1,5 +1,9 @@
 name: QA
-on: [pull_request]
+on:
+  pull_request:
+    types:
+      - synchronize
+      - opened
 
 jobs:
   lint:
