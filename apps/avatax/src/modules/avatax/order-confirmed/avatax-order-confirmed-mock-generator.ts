@@ -1,6 +1,6 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
-import { defaultOrder, orderWithTaxIncluded } from "../../../mocks";
+import { defaultOrder } from "../../../mocks";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { AvataxConfig } from "../avatax-connection-schema";
@@ -19,11 +19,6 @@ const defaultOrderConfirmedResponse: TransactionModel = orderConfirmedTransactio
 const testingScenariosMap = {
   default: {
     order: defaultOrder,
-    channelConfig: defaultChannelConfig,
-    response: defaultOrderConfirmedResponse,
-  },
-  withTaxIncluded: {
-    order: orderWithTaxIncluded,
     channelConfig: defaultChannelConfig,
     response: defaultOrderConfirmedResponse,
   },
