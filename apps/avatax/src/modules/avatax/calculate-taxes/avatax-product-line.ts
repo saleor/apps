@@ -1,5 +1,8 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 
+type SKU = string | null | undefined;
+type VariantId = string | null | undefined;
+
 export const avataxProductLine = {
   create({
     amount,
@@ -29,7 +32,7 @@ export const avataxProductLine = {
     };
   },
 
-  getItemCode(sku: string | null | undefined, variantId: string | null | undefined) {
+  getItemCode(sku: SKU, variantId: VariantId) {
     return sku ?? variantId ?? "";
   },
 };
