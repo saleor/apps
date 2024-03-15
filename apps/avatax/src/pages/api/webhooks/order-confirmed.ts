@@ -1,22 +1,23 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import * as Sentry from "@sentry/nextjs";
 import {
   OrderConfirmedEventSubscriptionFragment,
   OrderStatus,
   UntypedOrderConfirmedSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
+import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
 import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
 } from "../../../modules/taxes/get-active-connection-service";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
-import * as Sentry from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -47,6 +48,11 @@ export default wrapWithLoggerContext(
       const { saleorApiUrl, token } = authData;
       const webhookResponse = new WebhookResponse(res);
 
+      if (payload.version) {
+        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+      }
+
       logger.info("Handler called with payload");
 
       try {
@@ -60,7 +66,10 @@ export default wrapWithLoggerContext(
 
         // todo: figure out what fields are needed and add validation
         if (!payload.order) {
-          return webhookResponse.error(new Error("Insufficient order data"));
+          const error = new Error("Insufficient order data");
+
+          Sentry.captureException(error);
+          return webhookResponse.error(error);
         }
 
         if (payload.order.status === OrderStatus.Fulfilled) {
@@ -125,6 +134,7 @@ export default wrapWithLoggerContext(
           }
         }
       } catch (error) {
+        Sentry.captureException(error);
         logger.error("Unhandled error executing webhook", { error });
         return webhookResponse.error(error);
       }

@@ -1,5 +1,6 @@
 fragment CalculateTaxesEvent on Event {
   __typename
+  ...WebhookMetadata
   ... on CalculateTaxes {
     taxBase {
       ...TaxBase

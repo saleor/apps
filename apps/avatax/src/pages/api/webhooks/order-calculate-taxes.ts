@@ -1,16 +1,17 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import * as Sentry from "@sentry/nextjs";
 import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
-import * as Sentry from "@sentry/nextjs";
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
+import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -37,6 +38,10 @@ export default wrapWithLoggerContext(
 
         loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
         loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        }
 
         logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 

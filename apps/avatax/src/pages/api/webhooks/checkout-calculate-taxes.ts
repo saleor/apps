@@ -1,17 +1,18 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { withOtel } from "@saleor/apps-otel";
+import * as Sentry from "@sentry/nextjs";
 import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
+import { createLogger } from "../../../logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../../logger";
-import * as Sentry from "@sentry/nextjs";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { loggerContext } from "../../../logger-context";
+import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -41,6 +42,10 @@ export default wrapWithLoggerContext(
 
         loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
         loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        }
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 

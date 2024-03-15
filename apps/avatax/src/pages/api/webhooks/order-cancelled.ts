@@ -1,15 +1,18 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import * as Sentry from "@sentry/nextjs";
 import {
   OrderCancelledEventSubscriptionFragment,
   UntypedOrderCancelledSubscriptionDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+
 export const config = {
   api: {
     bodyParser: false,
@@ -38,10 +41,18 @@ export default wrapWithLoggerContext(
       const { payload } = ctx;
       const webhookResponse = new WebhookResponse(res);
 
+      if (payload.version) {
+        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+      }
+
       logger.info("Handler called with payload");
 
       if (!payload.order) {
-        return webhookResponse.error(new Error("Insufficient order data"));
+        const error = new Error("Insufficient order data");
+
+        Sentry.captureException(error);
+        return webhookResponse.error(error);
       }
 
       try {
@@ -64,10 +75,12 @@ export default wrapWithLoggerContext(
         }
 
         if (taxProviderResult.isErr()) {
+          Sentry.captureException(taxProviderResult.error);
           // TODO: Map errors
           return webhookResponse.error(taxProviderResult.error);
         }
       } catch (error) {
+        Sentry.captureException(error);
         return webhookResponse.error(error);
       }
     }),
