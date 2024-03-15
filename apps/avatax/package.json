@@ -5,6 +5,7 @@
     "build": "pnpm generate && next build",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "e2e": "vitest --project e2e --watch=false",
+    "deploy": "pnpm run build && tsx ./scripts/deploy.ts",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen --config .graphqlrc.ts",
@@ -12,7 +13,9 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest --project react"
+    "test": "vitest --project react",
+    "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
+    "migrate:dry-run": "pnpm tsx scripts/migrations/run-webhooks-migration-dry-run.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -90,7 +93,8 @@
     "graphql-config": "^5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "tsx": "4.7.1"
   },
   "private": true,
   "saleor": {
