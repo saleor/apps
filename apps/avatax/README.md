@@ -78,3 +78,19 @@ pnpm i
 After that, you have to prepare an environment for Bruno. Environments are a set of variables that are used in requests.
 
 The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment.
+
+### Webhook migration scripts
+
+You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first.
+
+Test migration with dry run, operation will not modify any data:
+
+```bash
+pnpm dlx tsx ./scripts/migrations/run-webhooks-migration-dry-run.ts
+```
+
+To start the migration run command:
+
+```bash
+pnpm dlx tsx scripts/migrations/run-webhooks-migration.ts
+```
