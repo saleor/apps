@@ -13,10 +13,21 @@ import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-
 import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
 import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
 import { ConnectedImageConfigurationForm } from "../modules/app-configuration/image-configuration-form";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const ConfigurationPage: NextPage = () => {
+  const { appBridgeState } = useAppBridge();
+
   useChannelsExistenceChecking();
   const { push } = useRouter();
+
+  if (!appBridgeState) {
+    return null;
+  }
+
+  if (appBridgeState.user?.permissions.includes("MANAGE_APPS") === false) {
+    return <Text>You do not have permission to access this page.</Text>;
+  }
 
   return (
     <Box>
