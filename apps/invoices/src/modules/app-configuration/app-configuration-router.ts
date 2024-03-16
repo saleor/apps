@@ -26,9 +26,6 @@ export const appConfigurationRouter = router({
     return appConfigV2.getChannelsOverrides();
   }),
   upsertChannelOverride: protectedClientProcedure
-    .meta({
-      requiredClientPermissions: ["MANAGE_APPS"],
-    })
     .input(UpsertAddressSchema)
     .mutation(async ({ ctx, input }) => {
       const appConfigV2 =
@@ -41,13 +38,10 @@ export const appConfigurationRouter = router({
       await mm.set(appConfigV2.serialize());
     }),
   removeChannelOverride: protectedClientProcedure
-    .meta({
-      requiredClientPermissions: ["MANAGE_APPS"],
-    })
     .input(
       z.object({
         channelSlug: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const appConfigV2 =

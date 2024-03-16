@@ -5,6 +5,7 @@ import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
 import { logger } from "@saleor/apps-shared";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -77,7 +78,10 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
         appId: ctx.appId,
         token: ctx.token,
         saleorApiUrl: ctx.saleorApiUrl,
-        requiredPermissions: meta?.requiredClientPermissions ?? [],
+        requiredPermissions: [
+          ...REQUIRED_SALEOR_PERMISSIONS,
+          ...(meta?.requiredClientPermissions || []),
+        ],
       });
     } catch (e) {
       logger.debug("JWT verification failed, throwing");

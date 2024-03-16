@@ -61,7 +61,6 @@ export const smtpConfigurationRouter = router({
     return ctx.smtpConfigurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -75,7 +74,6 @@ export const smtpConfigurationRouter = router({
       }
     }),
   getConfigurations: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -88,7 +86,6 @@ export const smtpConfigurationRouter = router({
       }
     }),
   createConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -106,7 +103,7 @@ export const smtpConfigurationRouter = router({
       }
     }),
   deleteConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(smtpConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -120,7 +117,6 @@ export const smtpConfigurationRouter = router({
       }
     }),
   getEventConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -138,7 +134,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   renderTemplate: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(
       z.object({
         template: z.string().optional(),
@@ -182,7 +177,7 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateBasicInformation: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(smtpUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -197,7 +192,7 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateSmtp: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(smtpUpdateSmtpSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -212,7 +207,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateSender: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(smtpUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -227,7 +221,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateChannels: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -249,7 +242,7 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateEvent: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(smtpUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -269,7 +262,7 @@ export const smtpConfigurationRouter = router({
       }
     }),
   updateEventArray: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(smtpUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });

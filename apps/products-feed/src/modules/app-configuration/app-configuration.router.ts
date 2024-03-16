@@ -31,7 +31,6 @@ export const appConfigurationRouter = router({
     }
   }),
   testS3BucketConfiguration: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx: { saleorApiUrl }, input }) => {
       const logger = createLogger("Test S3 bucket configuration", { saleorApiUrl: saleorApiUrl });
@@ -56,7 +55,6 @@ export const appConfigurationRouter = router({
     }),
 
   setS3BucketConfiguration: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.s3Bucket)
     .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
       const logger = createLogger("Set S3 bucket configuration", { saleorApiUrl: saleorApiUrl });
@@ -91,7 +89,6 @@ export const appConfigurationRouter = router({
       return null;
     }),
   setChannelsUrls: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(
       z.object({
         channelSlug: z.string(),
@@ -117,7 +114,6 @@ export const appConfigurationRouter = router({
       },
     ),
   setAttributeMapping: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigSchema.attributeMapping)
     .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
       logger.debug("Setting attribute mapping");
@@ -129,25 +125,22 @@ export const appConfigurationRouter = router({
       logger.debug("Attribute map set");
       return null;
     }),
-  getAttributes: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .query(async ({ ctx: { logger, apiClient } }) => {
-      const fetcher = new AttributeFetcher(apiClient);
+  getAttributes: protectedClientProcedure.query(async ({ ctx: { logger, apiClient } }) => {
+    const fetcher = new AttributeFetcher(apiClient);
 
-      const result = await fetcher.fetchAllAttributes().catch((e) => {
-        logger.error(e, "Can't fetch the attributes");
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Can't fetch the attributes",
-        });
+    const result = await fetcher.fetchAllAttributes().catch((e) => {
+      logger.error(e, "Can't fetch the attributes");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Can't fetch the attributes",
       });
+    });
 
-      logger.debug("Returning attributes");
+    logger.debug("Returning attributes");
 
-      return result;
-    }),
+    return result;
+  }),
   setImageSize: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(imageSizeInputSchema)
     .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
       logger.debug("Setting image size");
@@ -162,7 +155,6 @@ export const appConfigurationRouter = router({
     }),
 
   setTitleTemplate: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(titleTemplateInputSchema)
     .mutation(async ({ ctx: { getConfig, appConfigMetadataManager, logger }, input }) => {
       logger.debug("Setting title template");
@@ -191,7 +183,6 @@ export const appConfigurationRouter = router({
     }),
 
   renderTemplate: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(titleTemplateInputSchema)
     .mutation(async ({ ctx: { getConfig, logger }, input }) => {
       logger.debug(input, "renderTemplate called");
