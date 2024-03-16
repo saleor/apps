@@ -1,6 +1,8 @@
 import { NextApiHandler } from "next";
 import { MailchimpClientOAuth } from "../../../../modules/mailchimp/mailchimp-client";
 import { createLogger } from "@saleor/apps-shared";
+import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
+import { saleorApp } from "../../../../saleor-app";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;
@@ -45,8 +47,8 @@ const handler: NextApiHandler = async (req, res) => {
   await mc.ping();
 
   return res.redirect(
-    `/configuration/mailchimp/oauth-success?token=${access_token}&email=${metadata.login.email}&dc=${metadata.dc}`
+    `/configuration/mailchimp/oauth-success?token=${access_token}&email=${metadata.login.email}&dc=${metadata.dc}`,
   ); // todo maybe move to cookie
 };
 
-export default handler;
+export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]);

@@ -5,6 +5,8 @@ import { withOtel } from "@saleor/apps-otel";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
 import { createLogger } from "../../../logger";
+import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
+import { saleorApp } from "../../../saleor-app";
 
 const logger = createLogger("tRPC error");
 
@@ -20,4 +22,8 @@ const handler = trpcNext.createNextApiHandler({
   },
 });
 
-export default wrapWithLoggerContext(withOtel(handler, "/api/trpc"), loggerContext);
+export default createProtectedHandler(
+  wrapWithLoggerContext(withOtel(handler, "/api/trpc"), loggerContext),
+  saleorApp.apl,
+  ["MANAGE_APPS"],
+);
