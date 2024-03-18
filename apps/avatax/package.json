@@ -4,6 +4,7 @@
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
+    "deploy": "tsx ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "e2e": "vitest --project e2e --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
@@ -12,6 +13,8 @@
     "generate:e2e": "graphql-codegen --config .graphqlrc.ts --project e2e",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
+    "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
+    "migrate:dry-run": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "vitest --project react"
   },
@@ -38,6 +41,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
+    "@saleor/webhook-utils": "workspace:*",
     "@sentry/cli": "2.20.6",
     "@sentry/nextjs": "7.77.0",
     "@tanstack/react-query": "4.29.19",
@@ -90,6 +94,7 @@
     "graphql-config": "^5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,

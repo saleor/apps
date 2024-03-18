@@ -1,14 +1,11 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
-import packageJson from "../../../package.json";
-import { checkoutCalculateTaxesSyncWebhook } from "./webhooks/checkout-calculate-taxes";
-import { orderCalculateTaxesSyncWebhook } from "./webhooks/order-calculate-taxes";
-import { orderConfirmedAsyncWebhook } from "./webhooks/order-confirmed";
-import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
-import { orderCancelledAsyncWebhook } from "./webhooks/order-cancelled";
-import { withOtel } from "@saleor/apps-otel";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import packageJson from "../../../package.json";
+import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
+import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
 
 export default wrapWithLoggerContext(
@@ -37,12 +34,7 @@ export default wrapWithLoggerContext(
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
-          webhooks: [
-            orderCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
-            checkoutCalculateTaxesSyncWebhook.getWebhookManifest(apiBaseURL),
-            orderConfirmedAsyncWebhook.getWebhookManifest(apiBaseURL),
-            orderCancelledAsyncWebhook.getWebhookManifest(apiBaseURL),
-          ],
+          webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
         };
 
         return manifest;
