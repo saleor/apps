@@ -75,6 +75,7 @@ fragment OrderConfirmedSubscription on Order {
 }
 fragment OrderConfirmedEventSubscription on Event {
   __typename
+  ...WebhookMetadata
   ... on OrderConfirmed {
     order {
       ...OrderConfirmedSubscription
