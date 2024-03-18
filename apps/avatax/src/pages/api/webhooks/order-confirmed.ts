@@ -2,7 +2,11 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
+<<<<<<< HEAD
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+=======
+import { OrderStatus, TaxCalculationStrategy } from "../../../../generated/graphql";
+>>>>>>> d89d7bce (check channel's tax strategy before committing)
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -61,7 +65,7 @@ export default wrapWithLoggerContext(
                 new Error("Skipping fulfilled order to prevent duplication"),
               );
             }
-
+  
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
             metadataCache.setMetadata(appMetadata);
