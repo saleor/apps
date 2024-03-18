@@ -3,8 +3,8 @@
   "version": "1.0.4",
   "scripts": {
     "build": "pnpm generate && next build",
-    "deploy": "tsx ./scripts/deploy.ts",
     "check-types": "tsc --noEmit",
+    "deploy": "tsx ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "e2e": "vitest --project e2e --watch=false",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
