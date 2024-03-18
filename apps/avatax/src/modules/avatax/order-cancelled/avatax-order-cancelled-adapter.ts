@@ -1,11 +1,11 @@
-import { OrderCancelledPayload } from "../../../pages/api/webhooks/order-cancelled";
+import { createLogger } from "../../../logger";
 import { ClientLogger } from "../../logs/client-logger";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
 import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
-import { createLogger } from "../../../logger";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 

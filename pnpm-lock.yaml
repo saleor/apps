@@ -159,6 +159,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/webhook-utils':
+        specifier: workspace:*
+        version: link:../../packages/webhook-utils
       '@sentry/cli':
         specifier: 2.20.6
         version: 2.20.6
@@ -310,6 +313,9 @@ importers:
       pactum-matchers:
         specifier: ^1.1.6
         version: 1.1.6
+      tsx:
+        specifier: 4.7.1
+        version: 4.7.1
       typescript:
         specifier: 5.1.6
         version: 5.1.6

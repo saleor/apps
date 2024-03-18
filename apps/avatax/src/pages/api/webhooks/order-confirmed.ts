@@ -1,14 +1,8 @@
-import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
-import {
-  OrderConfirmedEventSubscriptionFragment,
-  OrderStatus,
-  UntypedOrderConfirmedSubscriptionDocument,
-} from "../../../../generated/graphql";
-import { saleorApp } from "../../../../saleor-app";
+import { OrderStatus } from "../../../../generated/graphql";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -24,19 +18,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-type OrderConfirmedPayload = Extract<
-  OrderConfirmedEventSubscriptionFragment,
-  { __typename: "OrderConfirmed" }
->;
-
-export const orderConfirmedAsyncWebhook = new SaleorAsyncWebhook<OrderConfirmedPayload>({
-  name: "OrderConfirmed",
-  apl: saleorApp.apl,
-  event: "ORDER_CONFIRMED",
-  query: UntypedOrderConfirmedSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-confirmed",
-});
 
 export default wrapWithLoggerContext(
   withOtel(

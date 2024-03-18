@@ -1,16 +1,12 @@
-import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
-import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
-import { saleorApp } from "../../../../saleor-app";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
-import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
@@ -18,14 +14,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
-  name: "OrderCalculateTaxes",
-  apl: saleorApp.apl,
-  event: "ORDER_CALCULATE_TAXES",
-  query: UntypedCalculateTaxesDocument,
-  webhookPath: "/api/webhooks/order-calculate-taxes",
-});
 
 export default wrapWithLoggerContext(
   withOtel(

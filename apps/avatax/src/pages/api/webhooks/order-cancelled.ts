@@ -19,19 +19,6 @@ export const config = {
   },
 };
 
-export type OrderCancelledPayload = Extract<
-  OrderCancelledEventSubscriptionFragment,
-  { __typename: "OrderCancelled" }
->;
-
-export const orderCancelledAsyncWebhook = new SaleorAsyncWebhook<OrderCancelledPayload>({
-  name: "OrderCancelled",
-  apl: saleorApp.apl,
-  event: "ORDER_CANCELLED",
-  query: UntypedOrderCancelledSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-cancelled",
-});
-
 export default wrapWithLoggerContext(
   withOtel(
     orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {

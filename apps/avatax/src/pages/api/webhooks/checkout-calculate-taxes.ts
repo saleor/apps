@@ -1,8 +1,8 @@
-import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { withOtel } from "@saleor/apps-otel";
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
-import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
-import { saleorApp } from "../../../../saleor-app";
+import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "../../../logger";
 import { createLogger } from "../../../logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
@@ -19,14 +19,6 @@ export const config = {
     bodyParser: false,
   },
 };
-
-export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
-  name: "CheckoutCalculateTaxes",
-  apl: saleorApp.apl,
-  event: "CHECKOUT_CALCULATE_TAXES",
-  query: UntypedCalculateTaxesDocument,
-  webhookPath: "/api/webhooks/checkout-calculate-taxes",
-});
 
 /**
  * TODO: Add tests to handler
