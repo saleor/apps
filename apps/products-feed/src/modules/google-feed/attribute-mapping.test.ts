@@ -12,6 +12,9 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
     name: "Category Name",
     googleCategoryId: "1",
   },
+  productType: {
+    isShippingRequired: true,
+  },
   description: "Product description",
   seoDescription: "Seo description",
   slug: "product-slug",

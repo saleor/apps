@@ -2,6 +2,8 @@
   "name": "@saleor/apps-otel",
   "version": "1.1.0",
   "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
