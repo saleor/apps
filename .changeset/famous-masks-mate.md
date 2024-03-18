@@ -1,18 +1,20 @@
 ---
-"emails-and-messages": major
-"data-importer": major
-"products-feed": major
-"@saleor/apps-shared": major
-"invoices": major
-"klaviyo": major
-"segment": major
-"app-avatax": major
-"cms-v2": major
-"search": major
-"app-taxjar": major
-"slack": major
-"taxes": major
-"crm": major
+"emails-and-messages": minor
+"data-importer": minor
+"products-feed": minor
+"@saleor/apps-shared": minor
+"invoices": minor
+"klaviyo": minor
+"segment": minor
+"app-avatax": minor
+"cms-v2": minor
+"search": minor
+"app-taxjar": minor
+"slack": minor
+"taxes": minor
+"crm": minor
 ---
 
-Prepare each app to handle user without "MANAGE_APPS" permission by checking permission on each tRPC endpoints, wrapped each handler into createProtectedHandler, and show a message to user without permission.
+Currently, Dashboard requires from a user to have "MANAGE_APPS" to have access to the apps tab. 
+Since the release 3.20 Dashboard will allow all users to access to apps tabs without checking permission.
+This means that apps will be checking if the user has "MANAGE_APPS" internally and show message "You do not have permission to access this page" if the user does not have the permission.
