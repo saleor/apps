@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "check-deps": "syncpack list-mismatches",
     "check-spelling": "cspell **/*.{jsx,tsx,js,ts,md,mdx}",
+    "check-types": "turbo run check-types",
     "deploy": "turbo run deploy",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -13,6 +14,7 @@
     "github:release": "pnpm changeset tag && git push --follow-tags",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
+    "lint:fix": "turbo run lint:fix",
     "prepare": "husky install",
     "start": "turbo run start",
     "test": "turbo run test"

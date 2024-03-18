@@ -2542,6 +2542,9 @@ importers:
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
+      typescript:
+        specifier: 5.1.6
+        version: 5.1.6
       zod:
         specifier: 3.21.4
         version: 3.21.4

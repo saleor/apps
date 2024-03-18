@@ -2,12 +2,12 @@ import { NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
 import { Client, OperationResult } from "urql";
-import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+import { Mock, beforeEach, describe, expect, it, vi } from "vitest";
 import { FetchOwnWebhooksQuery, WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { SearchProvider } from "../../lib/searchProvider";
-import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
 import { AppConfig } from "../../modules/configuration/configuration";
+import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
 
 /**
  * Context provided from ProtectedApiHandler to handler body
@@ -90,6 +90,7 @@ describe("webhooksStatusHandler", () => {
   it("Disables webhooks if Algolia settings are not saved in Saleor Metadata", async function () {
     const { req, res } = createMocks({});
 
+    // @ts-expect-error mocking the request for testing
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
@@ -113,6 +114,7 @@ describe("webhooksStatusHandler", () => {
 
     const { req, res } = createMocks({});
 
+    // @ts-expect-error mocking the request for testing
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
@@ -134,6 +136,7 @@ describe("webhooksStatusHandler", () => {
 
     const { req, res } = createMocks({});
 
+    // @ts-expect-error mocking the request for testing
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).not.toHaveBeenCalled();
