@@ -12,6 +12,7 @@ const batchProcessorConfig: BufferConfig = {
    */
   scheduledDelayMillis: 2 * 5 * 60 * 1000,
 };
+
 export const sharedOtelConfig = {
   flushTimeout: FLUSH_TIMEOUT,
   batchProcessorConfig: batchProcessorConfig,

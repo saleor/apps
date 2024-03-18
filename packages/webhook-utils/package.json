@@ -2,8 +2,10 @@
   "name": "@saleor/webhook-utils",
   "version": "0.0.5",
   "scripts": {
+    "check-types": "tsc --noEmit",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "vitest"
   },
