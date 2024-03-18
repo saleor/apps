@@ -1,10 +1,10 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
-import { numbers } from "../../taxes/numbers";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { avataxProductLine } from "../calculate-taxes/avatax-product-line";
+import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
-import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
@@ -12,37 +12,36 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
+    const isDiscounted = order.discounts.length > 0;
+
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
 
-      return {
-        // taxes are included because we treat what is passed in payload as the source of truth
+      return avataxProductLine.create({
+        amount: line.totalPrice.gross.amount,
+        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
         taxIncluded: true,
-        amount: numbers.roundFloatToTwoDecimals(
-          line.totalPrice.net.amount + line.totalPrice.tax.amount,
-        ),
         taxCode,
         quantity: line.quantity,
+        discounted: isDiscounted,
+        itemCode: avataxProductLine.getItemCode(line.productSku, line.productVariantId),
         description: line.productName,
-        itemCode: line.productSku ?? "",
-        discounted: order.discounts.length > 0,
-      };
+      });
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      // * In AvaTax, shipping is a regular line
-      const shippingLine: LineItemModel = {
+      const shippingLine = avataxShippingLine.create({
         amount: order.shippingPrice.gross.amount,
+        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
         taxIncluded: true,
-        itemCode: SHIPPING_ITEM_CODE,
         /**
          * * Different shipping methods can have different tax codes.
-         * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/\
+         * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/
          */
         taxCode: config.shippingTaxCode,
-        quantity: 1,
-      };
+        discounted: isDiscounted,
+      });
 
       return [...productLines, shippingLine];
     }
