@@ -32,11 +32,9 @@ export class AvataxOrderConfirmedPayloadTransformer {
     }
 
     if (order.billingAddress) {
-      const message =
-        "OrderConfirmedPayload has no shipping address, falling back to billing address";
-
-      this.logger.warn(message);
-      Sentry.captureMessage(message);
+      this.logger.warn(
+        "OrderConfirmedPayload has no shipping address, falling back to billing address",
+      );
 
       return ok(order.billingAddress);
     }
