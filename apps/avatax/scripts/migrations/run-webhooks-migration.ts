@@ -1,30 +1,31 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import * as dotenv from "dotenv";
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
-import { updateWebhooksScript } from "./update-webhooks";
+import { updateWebhooks } from "./update-webhooks";
 
 dotenv.config();
 
+const args = process.argv.slice(2);
+const dryRun = args.includes("--dry-run");
+
 const runMigration = async () => {
-  console.log("Starting running migration");
+  console.log(`Starting webhooks migration ${dryRun ? "(dry run)" : ""}`);
 
   verifyRequiredEnvs();
 
-  console.log("Envs verified, fetching envs");
+  console.log("Fetching environments from the Cloud APL");
 
   const allEnvs = await fetchCloudAplEnvs().catch((r) => {
-    console.error("Could not fetch instances from the APL");
+    console.error("Could not fetch instances from the Cloud APL");
     console.error(r);
 
     process.exit(1);
   });
 
   for (const env of allEnvs) {
-    await updateWebhooksScript({ authData: env, dryRun: false });
+    await updateWebhooks({ authData: env, dryRun });
   }
 
-  console.log("Migration complete");
+  console.log(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`);
 };
 
 runMigration();

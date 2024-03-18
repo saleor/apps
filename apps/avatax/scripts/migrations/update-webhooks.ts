@@ -1,18 +1,16 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import { AuthData } from "@saleor/app-sdk/APL";
 import { webhookMigrationRunner } from "@saleor/webhook-utils";
 import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 import { appWebhooks } from "../../webhooks";
 
-export const updateWebhooksScript = async ({
+export const updateWebhooks = async ({
   authData,
   dryRun,
 }: {
   authData: AuthData;
   dryRun: boolean;
 }) => {
-  console.log("Working on env: ", authData.saleorApiUrl);
+  console.log("Working on environment: ", authData.saleorApiUrl);
 
   const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
@@ -30,7 +28,6 @@ export const updateWebhooksScript = async ({
         return [];
       }
 
-      // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
       const enabled = webhooks.some((w) => w.isActive);
 
       const targetUrl = appDetails.appUrl;
@@ -41,6 +38,7 @@ export const updateWebhooksScript = async ({
 
       const baseUrl = new URL(targetUrl).origin;
 
+      // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
       return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
     },
   });
