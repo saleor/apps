@@ -1,23 +1,26 @@
-import { vi, expect, describe, it, afterEach } from "vitest";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
-import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { syncWebhookStatus } from "./sync-webhook-status";
-import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
-import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
-import { WebhookManagementService } from "./webhook-management-service";
 import { Client } from "urql";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
+import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
+import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
+import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
+import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import * as statusesExports from "./get-webhook-statuses-from-configurations";
+import { syncWebhookStatus } from "./sync-webhook-status";
+import { WebhookManagementService } from "./webhook-management-service";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
 describe("syncWebhookStatus", function () {
-  const createMockedClient = () => ({} as Client);
+  const createMockedClient = () => ({}) as Client;
+  const createMockedFeatureFlagService = () => ({}) as FeatureFlagService;
 
-  const webhookManagementService = new WebhookManagementService(
-    mockSaleorApiUrl,
-    createMockedClient()
-  );
+  const webhookManagementService = new WebhookManagementService({
+    appBaseUrl: mockSaleorApiUrl,
+    client: createMockedClient(),
+    featureFlagService: createMockedFeatureFlagService(),
+  });
 
   const createWebhookMock = vi
     .spyOn(webhookManagementService, "createWebhook")
@@ -29,7 +32,7 @@ describe("syncWebhookStatus", function () {
 
   const smtpConfigurator = new SmtpPrivateMetadataManager(
     null as unknown as SettingsManager,
-    mockSaleorApiUrl
+    mockSaleorApiUrl,
   );
 
   const smtpConfigurationService = new SmtpConfigurationService({
@@ -37,11 +40,12 @@ describe("syncWebhookStatus", function () {
     initialData: {
       configurations: [],
     },
+    featureFlagService: createMockedFeatureFlagService(),
   });
 
   const sendgridConfigurator = new SendgridPrivateMetadataManager(
     null as unknown as SettingsManager,
-    mockSaleorApiUrl
+    mockSaleorApiUrl,
   );
 
   const sendgridConfigurationService = new SendgridConfigurationService({
@@ -49,6 +53,7 @@ describe("syncWebhookStatus", function () {
     initialData: {
       configurations: [],
     },
+    featureFlagService: createMockedFeatureFlagService(),
   });
 
   afterEach(() => {
@@ -65,6 +70,7 @@ describe("syncWebhookStatus", function () {
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
       giftCardSentWebhook: false,
+      orderRefundedWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -78,6 +84,7 @@ describe("syncWebhookStatus", function () {
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
         giftCardSentWebhook: false,
+        orderRefundedWebhook: false,
       });
 
     await syncWebhookStatus({
@@ -101,6 +108,7 @@ describe("syncWebhookStatus", function () {
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
       giftCardSentWebhook: false,
+      orderRefundedWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -114,6 +122,7 @@ describe("syncWebhookStatus", function () {
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
         giftCardSentWebhook: false,
+        orderRefundedWebhook: false,
       });
 
     await syncWebhookStatus({
@@ -137,6 +146,7 @@ describe("syncWebhookStatus", function () {
       orderCreatedWebhook: false,
       orderFullyPaidWebhook: false,
       giftCardSentWebhook: false,
+      orderRefundedWebhook: false,
     });
 
     const getWebhooksStatusMock = vi
@@ -150,6 +160,7 @@ describe("syncWebhookStatus", function () {
         orderCreatedWebhook: false,
         orderFullyPaidWebhook: false,
         giftCardSentWebhook: false,
+        orderRefundedWebhook: false,
       });
 
     await syncWebhookStatus({
