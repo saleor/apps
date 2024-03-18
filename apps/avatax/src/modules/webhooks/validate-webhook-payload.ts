@@ -1,6 +1,6 @@
-import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
 import { err, ok } from "neverthrow";
-import { CalculateTaxesPayload } from "./calculate-taxes-payload";
+import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
+import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
 
 /**
  * Verify if needed fields exist.

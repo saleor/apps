@@ -9,7 +9,7 @@ const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
 export class CrudSettingsManager {
-  private logger = createLogger("CrudSettingsManager", { metadataKey: this.metadataKey });
+  private logger = createLogger("CrudSettingsManager");
 
   constructor(
     /*
@@ -39,7 +39,10 @@ export class CrudSettingsManager {
     const validation = settingsSchema.safeParse(data);
 
     if (!validation.success) {
-      this.logger.error("Error while validating metadata", { error: validation.error });
+      this.logger.error("Error while validating metadata", {
+        error: validation.error,
+        metadataKey: this.metadataKey,
+      });
       throw new Error("Error while validating metadata");
     }
 
@@ -55,7 +58,7 @@ export class CrudSettingsManager {
     const item = settings.find((item) => item.id === id);
 
     if (!item) {
-      this.logger.error("Item not found", { id });
+      this.logger.error("Item not found", { id, metadataKey: this.metadataKey });
       throw new Error("Item not found");
     }
 

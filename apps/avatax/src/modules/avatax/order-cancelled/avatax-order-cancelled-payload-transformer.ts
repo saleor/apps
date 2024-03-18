@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OrderCancelledPayload } from "../../../pages/api/webhooks/order-cancelled";
+import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
 
