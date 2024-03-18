@@ -6,6 +6,7 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { loggerContext } from "../../../logger-context";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
@@ -30,6 +31,10 @@ export default wrapWithLoggerContext(
 
         loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
         loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        }
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 

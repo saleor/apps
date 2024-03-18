@@ -1,5 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -26,6 +27,10 @@ export default wrapWithLoggerContext(
 
         loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
         loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        }
 
         logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 

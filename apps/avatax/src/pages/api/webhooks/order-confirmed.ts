@@ -1,5 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { OrderStatus } from "../../../../generated/graphql";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
@@ -29,6 +30,11 @@ export default wrapWithLoggerContext(
       const { saleorApiUrl, token } = authData;
       const webhookResponse = new WebhookResponse(res);
 
+      if (payload.version) {
+        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+      }
+
       logger.info("Handler called with payload");
 
       try {
@@ -42,7 +48,10 @@ export default wrapWithLoggerContext(
 
         // todo: figure out what fields are needed and add validation
         if (!payload.order) {
-          return webhookResponse.error(new Error("Insufficient order data"));
+          const error = new Error("Insufficient order data");
+
+          Sentry.captureException(error);
+          return webhookResponse.error(error);
         }
 
         if (payload.order.status === OrderStatus.Fulfilled) {
@@ -107,6 +116,7 @@ export default wrapWithLoggerContext(
           }
         }
       } catch (error) {
+        Sentry.captureException(error);
         logger.error("Unhandled error executing webhook", { error });
         return webhookResponse.error(error);
       }
