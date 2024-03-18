@@ -68,11 +68,14 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
         tax: {
           amount: 5.18,
         },
+        gross: {
+          amount: 65.18,
+        },
       },
     },
     {
-      productSku: "328223581",
       productName: "Monospace Tee",
+      productVariantId: "dmFyaWFudC1pZA==",
       quantity: 1,
       unitPrice: {
         net: {
@@ -85,6 +88,9 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
         },
         tax: {
           amount: 1.73,
+        },
+        gross: {
+          amount: 21.73,
         },
       },
     },
@@ -103,6 +109,9 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
         },
         tax: {
           amount: 8.63,
+        },
+        gross: {
+          amount: 108.63,
         },
       },
     },

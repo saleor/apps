@@ -1,5 +1,5 @@
-import { OrderLineFragment } from "../../../../generated/graphql";
 import { describe, expect, it } from "vitest";
+import { OrderLineFragment } from "../../../../generated/graphql";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
@@ -21,6 +21,9 @@ const mockedLine: OrderLineFragment = {
     },
     tax: {
       amount: 1,
+    },
+    gross: {
+      amount: 11,
     },
   },
 };
