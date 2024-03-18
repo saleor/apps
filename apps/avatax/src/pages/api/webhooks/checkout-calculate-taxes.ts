@@ -1,8 +1,5 @@
 import { withOtel } from "@saleor/apps-otel";
-import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
-import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "../../../logger";
 import { createLogger } from "../../../logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
@@ -11,7 +8,7 @@ import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculat
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { loggerContext } from "../../../logger-context";
-import { CalculateTaxesPayload } from "../../../modules/webhooks/calculate-taxes-payload";
+import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
