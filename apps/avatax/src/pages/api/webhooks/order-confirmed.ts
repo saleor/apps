@@ -66,7 +66,7 @@ export default wrapWithLoggerContext(
           try {
             const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
 
-            logger.info("Order confirmed", { confirmedOrder });
+            logger.info("Order confirmed", { orderId: confirmedOrder.id });
             const client = createInstrumentedGraphqlClient({
               saleorApiUrl,
               token,

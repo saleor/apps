@@ -13,8 +13,11 @@ import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-conf
 import { err, ok } from "neverthrow";
 import * as Sentry from "@sentry/nextjs";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
+import { createLogger } from "@saleor/apps-logger";
 
 export class AvataxOrderConfirmedPayloadTransformer {
+  private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
+
   private matchDocumentType(config: AvataxConfig): DocumentType {
     if (!config.isDocumentRecordingEnabled) {
       // isDocumentRecordingEnabled = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
@@ -29,9 +32,11 @@ export class AvataxOrderConfirmedPayloadTransformer {
     }
 
     if (order.billingAddress) {
-      Sentry.captureMessage(
-        "OrderConfirmedPayload has no shipping address, falling back to billing address",
-      );
+      const message =
+        "OrderConfirmedPayload has no shipping address, falling back to billing address";
+
+      this.logger.warn(message);
+      Sentry.captureMessage(message);
 
       return ok(order.billingAddress);
     }
@@ -61,6 +66,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     if (addressPayload.isErr()) {
       Sentry.captureException(addressPayload.error);
+      this.logger.error("Error while transforming OrderConfirmedPayload", addressPayload.error);
 
       throw addressPayload.error;
     }
