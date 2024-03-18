@@ -59,7 +59,6 @@ export const sendgridConfigurationRouter = router({
     return ctx.sendgridConfigurationService.getConfigurationRoot();
   }),
   getConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridConfigurationIdInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -74,7 +73,6 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   getConfigurations: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetConfigurationsInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -89,7 +87,6 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   createConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridCreateConfigurationInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -105,7 +102,7 @@ export const sendgridConfigurationRouter = router({
       return await ctx.sendgridConfigurationService.createConfiguration(newConfiguration);
     }),
   deleteConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(sendgridConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -121,7 +118,6 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   getEventConfiguration: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridGetEventConfigurationInputSchema)
     .query(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -140,7 +136,7 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   updateBasicInformation: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(sendgridUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -156,7 +152,6 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   updateApiConnection: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateApiConnectionSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -173,7 +168,6 @@ export const sendgridConfigurationRouter = router({
     }),
 
   updateSender: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(sendgridUpdateSenderSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -212,7 +206,6 @@ export const sendgridConfigurationRouter = router({
       }
     }),
   updateChannels: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(updateChannelsInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -236,7 +229,7 @@ export const sendgridConfigurationRouter = router({
     }),
 
   updateEvent: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(sendgridUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {
@@ -259,7 +252,7 @@ export const sendgridConfigurationRouter = router({
     }),
 
   updateEventArray: protectedWithConfigurationServices
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"], updateWebhooks: true })
+    .meta({ updateWebhooks: true })
     .input(sendgridUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("sendgridConfigurationRouter", {

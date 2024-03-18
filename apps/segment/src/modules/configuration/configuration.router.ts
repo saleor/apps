@@ -20,24 +20,21 @@ export const configurationRouter = router({
 
     return config.getConfig();
   }),
-  setConfig: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(z.string().min(1))
-    .mutation(async ({ input, ctx }) => {
-      logger.info("Request to set config");
+  setConfig: protectedClientProcedure.input(z.string().min(1)).mutation(async ({ input, ctx }) => {
+    logger.info("Request to set config");
 
-      const manager = AppConfigMetadataManager.createFromAuthData({
-        appId: ctx.appId,
-        saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken,
-      });
+    const manager = AppConfigMetadataManager.createFromAuthData({
+      appId: ctx.appId,
+      saleorApiUrl: ctx.saleorApiUrl,
+      token: ctx.appToken,
+    });
 
-      const config = await manager.get();
+    const config = await manager.get();
 
-      config.setSegmentWriteKey(input);
+    config.setSegmentWriteKey(input);
 
-      await manager.set(config);
+    await manager.set(config);
 
-      logger.info("Config set successfully");
-    }),
+    logger.info("Config set successfully");
+  }),
 });

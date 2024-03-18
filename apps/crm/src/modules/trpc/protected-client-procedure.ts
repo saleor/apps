@@ -3,6 +3,7 @@ import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../saleor-app";
+import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
 
 import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
 
@@ -45,7 +46,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
     {
       permissions: meta?.requiredClientPermissions,
     },
-    "Calling validateClientToken middleware with permissions required"
+    "Calling validateClientToken middleware with permissions required",
   );
 
   if (!ctx.token) {
@@ -79,7 +80,10 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
         appId: ctx.appId,
         token: ctx.token,
         saleorApiUrl: ctx.saleorApiUrl,
-        requiredPermissions: meta?.requiredClientPermissions ?? [],
+        requiredPermissions: [
+          ...REQUIRED_SALEOR_PERMISSIONS,
+          ...(meta?.requiredClientPermissions || []),
+        ],
       });
     } catch (e) {
       logger.debug("JWT verification failed, throwing");
