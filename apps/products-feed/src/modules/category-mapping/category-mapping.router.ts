@@ -23,13 +23,12 @@ export const categoryMappingRouter = router({
       logger.debug("Returning categories");
 
       return result;
-    }
+    },
   ),
   /**
    * Sets the Google category mapping for a given category in its public metadata
    */
   setCategoryMapping: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(SetCategoryMappingInputSchema)
     .mutation(async ({ ctx: { logger, apiClient }, input }) => {
       const { error } = await apiClient
@@ -43,7 +42,7 @@ export const categoryMappingRouter = router({
         {
           input,
         },
-        "Updated category mapping"
+        "Updated category mapping",
       );
 
       if (error) {

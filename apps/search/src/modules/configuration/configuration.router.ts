@@ -42,7 +42,6 @@ export const configurationRouter = router({
     }
   }),
   setConnectionConfig: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
       const { data: channelsData } = await ctx.apiClient.query(ChannelsDocument, {}).toPromise();
@@ -88,7 +87,6 @@ export const configurationRouter = router({
       return null;
     }),
   setFieldsMappingConfig: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(FieldsConfigSchema)
     .mutation(async ({ ctx, input }) => {
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);

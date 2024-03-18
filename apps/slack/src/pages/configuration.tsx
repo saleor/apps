@@ -66,6 +66,14 @@ function Configuration() {
     );
   };
 
+  if (!appBridgeState) {
+    return null;
+  }
+
+  if (appBridgeState.user?.permissions.includes("MANAGE_APPS") === false) {
+    return <Text>You do not have permission to access this page.</Text>;
+  }
+
   if (error) {
     console.error("Can't establish connection with the App API: ", error);
     return <ConfigurationError />;

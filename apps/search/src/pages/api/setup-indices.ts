@@ -78,7 +78,7 @@ export default withOtel(
       },
     }),
     saleorApp.apl,
-    [],
+    ["MANAGE_APPS"],
   ),
   "api/setup-indices",
 );

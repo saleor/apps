@@ -2,11 +2,22 @@ import { BulkSyncSection } from "@/modules/bulk-sync/bulk-sync-section";
 import { ChannelProviderConnectionList } from "@/modules/channel-provider-connection/channels-provider-connection-list";
 import { ProvidersList } from "@/modules/providers-listing/providers-list";
 import { AppHeader } from "@/modules/ui/app-header";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 const ConfigurationPage: NextPage = () => {
+  const { appBridgeState } = useAppBridge();
+
+  if (!appBridgeState) {
+    return null;
+  }
+
+  if (appBridgeState.user?.permissions.includes("MANAGE_APPS") === false) {
+    return <Text>You do not have permission to access this page.</Text>;
+  }
+
   return (
     <Box>
       <AppHeader />
