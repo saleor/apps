@@ -12,6 +12,7 @@ import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
 } from "../../../modules/taxes/get-active-connection-service";
+import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
