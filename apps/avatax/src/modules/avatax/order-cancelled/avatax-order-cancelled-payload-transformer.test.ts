@@ -1,7 +1,7 @@
-import { OrderCancelledPayload } from "../../../pages/api/webhooks/order-cancelled";
+import { describe, expect, it } from "vitest";
+import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
-import { describe, expect, it } from "vitest";
 
 const configMockGenerator = new AvataxConfigMockGenerator();
 const avataxMockConfig = configMockGenerator.generateAvataxConfig();

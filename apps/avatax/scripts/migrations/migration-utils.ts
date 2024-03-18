@@ -1,30 +1,19 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
-import { createSettingsManager } from "../../src/modules/app/metadata-manager";
-import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
-
-export const getMetadataManagerForEnv = (apiUrl: string, appToken: string, appId: string) => {
-  const client = createInstrumentedGraphqlClient({
-    saleorApiUrl: apiUrl,
-    token: appToken,
-  });
-
-  return createSettingsManager(client, appId);
-};
 
 export const verifyRequiredEnvs = () => {
-  const requiredEnvs = ["SALEOR_CLOUD_TOKEN", "SALEOR_CLOUD_RESOURCE_URL", "SECRET_KEY"];
+  const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 
   if (!requiredEnvs.every((env) => process.env[env])) {
-    throw new Error(`Missing envs: ${requiredEnvs.join(" | ")}`);
+    throw new Error(`Missing environment variables: ${requiredEnvs.join(" | ")}`);
   }
+
+  console.debug("All required environment variables are present");
 };
 
 export const fetchCloudAplEnvs = () => {
   const saleorAPL = new SaleorCloudAPL({
-    token: process.env.SALEOR_CLOUD_TOKEN!,
-    resourceUrl: process.env.SALEOR_CLOUD_RESOURCE_URL!,
+    token: process.env.REST_APL_TOKEN!,
+    resourceUrl: process.env.REST_APL_ENDPOINT!,
   });
 
   return saleorAPL.getAll();

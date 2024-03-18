@@ -78,3 +78,23 @@ pnpm i
 After that, you have to prepare an environment for Bruno. Environments are a set of variables that are used in requests.
 
 The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment.
+
+### Webhook migration scripts
+
+> [!NOTE]
+> This section refers to apps hosted by Saleor or using REST APL. If you self host Avatax app you need to write your own logic for updating migration scripts.
+> See [How to update app webhooks](https://docs.saleor.io/docs/3.x/developer/extending/apps/updating-app-webhooks) for more info.
+
+You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first.
+
+Test migration with dry run, operation will not modify any data:
+
+```bash
+pnpm migrate:dry-run
+```
+
+To start the migration run command:
+
+```bash
+pnpm migrate
+```
