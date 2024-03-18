@@ -9,7 +9,7 @@ const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
 export class CrudSettingsManager {
-  private logger = createLogger("CrudSettingsManager", { metadataKey: this.metadataKey });
+  private logger = createLogger("CrudSettingsManager");
 
   constructor(
     /*
