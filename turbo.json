@@ -17,6 +17,10 @@
       "inputs": ["src"],
       "outputs": []
     },
+    "check-types": {
+      "inputs": ["src"],
+      "outputs": []
+    },
     "dev": {
       "persistent": true,
       "cache": false
@@ -30,6 +34,9 @@
     "generate": {
       "outputs": ["generated/"]
     },
-    "lint:fix": {}
+    "lint:fix": {
+      "inputs": ["src"],
+      "outputs": []
+    }
   }
 }

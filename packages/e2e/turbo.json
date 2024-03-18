@@ -3,6 +3,9 @@
   "extends": ["//"],
   "pipeline": {
     "e2e": {},
-    "e2e:ui": {}
+    "e2e:ui": {},
+    "lint": {
+      "env": ["INSTANCE_URL", "DASHBOARD_USER_EMAIL", "DASHBOARD_USER_PASSWORD"]
+    }
   }
 }

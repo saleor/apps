@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
-import { CalculateTaxesPayload } from "./calculate-taxes-payload";
+import { describe, expect, it } from "vitest";
 import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
+import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
+import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
 
 const getBasePayload = (): CalculateTaxesPayload => {
   return {

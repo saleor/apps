@@ -1,9 +1,8 @@
-import { test, expect, Page } from "@playwright/test";
-import { logInIntoDashboard } from "./operations/log-in-to-dashboard";
-import { installTheApp } from "./operations/install-app";
-import { appUrls, routing } from "../setup/routing";
+import { Page, test } from "@playwright/test";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { assertAppAvailable } from "./assertions/assert-app-available";
+import { installTheApp } from "./operations/install-app";
+import { logInIntoDashboard } from "./operations/log-in-to-dashboard";
 
 /**
  * Hardcoded list of every app deployed on staging and production.
@@ -20,7 +19,7 @@ const apps: string[] = [
   "slack",
   "invoices",
   "data-importer",
-].reduce((urls, appSegment) => {
+].reduce<Array<string>>((urls, appSegment) => {
   urls.push(`https://${appSegment}.saleor.app`);
   urls.push(`https://${appSegment}.staging.saleor.app`);
 

@@ -44,3 +44,5 @@ apps/**/generated
 
 .vscode/
 .cspellcache
+
+*.tsbuildinfo

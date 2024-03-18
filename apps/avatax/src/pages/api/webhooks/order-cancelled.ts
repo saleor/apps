@@ -1,33 +1,15 @@
-import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import {
-  OrderCancelledEventSubscriptionFragment,
-  UntypedOrderCancelledSubscriptionDocument,
-} from "../../../../generated/graphql";
-import { saleorApp } from "../../../../saleor-app";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
+import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
+import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-export type OrderCancelledPayload = Extract<
-  OrderCancelledEventSubscriptionFragment,
-  { __typename: "OrderCancelled" }
->;
-
-export const orderCancelledAsyncWebhook = new SaleorAsyncWebhook<OrderCancelledPayload>({
-  name: "OrderCancelled",
-  apl: saleorApp.apl,
-  event: "ORDER_CANCELLED",
-  query: UntypedOrderCancelledSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-cancelled",
-});
 
 export default wrapWithLoggerContext(
   withOtel(

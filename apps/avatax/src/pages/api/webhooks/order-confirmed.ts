@@ -1,41 +1,23 @@
-import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import {
-  OrderConfirmedEventSubscriptionFragment,
-  OrderStatus,
-  UntypedOrderConfirmedSubscriptionDocument,
-} from "../../../../generated/graphql";
-import { saleorApp } from "../../../../saleor-app";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import * as Sentry from "@sentry/nextjs";
+import { OrderStatus } from "../../../../generated/graphql";
+import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
+import { WebhookResponse } from "../../../modules/app/webhook-response";
 import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
 } from "../../../modules/taxes/get-active-connection-service";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
-import * as Sentry from "@sentry/nextjs";
+import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-type OrderConfirmedPayload = Extract<
-  OrderConfirmedEventSubscriptionFragment,
-  { __typename: "OrderConfirmed" }
->;
-
-export const orderConfirmedAsyncWebhook = new SaleorAsyncWebhook<OrderConfirmedPayload>({
-  name: "OrderConfirmed",
-  apl: saleorApp.apl,
-  event: "ORDER_CONFIRMED",
-  query: UntypedOrderConfirmedSubscriptionDocument,
-  webhookPath: "/api/webhooks/order-confirmed",
-});
 
 export default wrapWithLoggerContext(
   withOtel(
