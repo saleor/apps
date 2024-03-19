@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
 import { updateWebhooks } from "./update-webhooks";
 
 dotenv.config();
@@ -8,6 +7,9 @@ const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 
 const runMigration = async () => {
+  // Must use dynamic import for env variables to load properly
+  const { fetchCloudAplEnvs, verifyRequiredEnvs } = await import("./migration-utils");
+
   console.log(`Starting webhooks migration ${dryRun ? "(dry run)" : ""}`);
 
   verifyRequiredEnvs();
