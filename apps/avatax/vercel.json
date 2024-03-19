@@ -10,10 +10,12 @@
       "maxDuration": 22
     },
     "src/pages/api/webhooks/order-cancelled.ts": {
-      "memory": 320
+      "memory": 320,
+      "maxDuration": 22
     },
     "src/pages/api/webhooks/order-confirmed.ts": {
-      "memory": 320
+      "memory": 320,
+      "maxDuration": 22
     }
   }
 }
