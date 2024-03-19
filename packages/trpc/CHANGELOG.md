@@ -1,5 +1,12 @@
 # @saleor/trpc
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [b29318a2]
+  - @saleor/apps-shared@1.10.0
+
 ## 1.0.4
 
 ### Patch Changes
