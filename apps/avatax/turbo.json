@@ -3,7 +3,7 @@
   "extends": ["//"],
   "globalPassThroughEnv": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"],
   "pipeline": {
-    "build": {
+    "deploy": {
       "env": [
         "ALLOWED_DOMAIN_PATTERN",
         "APL",
