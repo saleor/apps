@@ -1,5 +1,22 @@
 # app-avatax
 
+## 1.1.0
+
+### Minor Changes
+
+- b29318a2: Currently, Dashboard requires from a user to have "MANAGE_APPS" to have access to the apps tab.
+  Since the release 3.20 Dashboard will allow all users to access to apps tabs without checking permission.
+  This means that apps will be checking if the user has "MANAGE_APPS" internally and show message "You do not have permission to access this page" if the user does not have the permission.
+- 0f1a38d1: Avatax app will now send `productVariantId` from `OrderLine` to Avatax if there is no `productSku` while processing `ORDER_CREATED` webhook.
+
+### Patch Changes
+
+- 4a898bfa: Add `issuedAt` and `version` fields to GraphQL subscriptions. This enhance our logs with debug information.
+- 23a57e21: Avatax app now uses shipping address for order tax calculations
+- Updated dependencies [b29318a2]
+  - @saleor/apps-shared@1.10.0
+  - @saleor/webhook-utils@0.0.6
+
 ## 1.0.4
 
 ### Patch Changes
