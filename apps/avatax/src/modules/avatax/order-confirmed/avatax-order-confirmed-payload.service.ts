@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxAppOrder, DeprecatedOrderConfirmedSubscriptionFragment } from "../order-parser";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 
@@ -15,12 +15,13 @@ export class AvataxOrderConfirmedPayloadService {
   }
 
   async getPayload(
-    order: OrderConfirmedSubscriptionFragment,
+    order: DeprecatedOrderConfirmedSubscriptionFragment,
+    avataxAppOrder: AvataxAppOrder,
     avataxConfig: AvataxConfig,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
     const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer();
 
-    return payloadTransformer.transform(order, avataxConfig, matches);
+    return payloadTransformer.transform(order, avataxAppOrder, avataxConfig, matches);
   }
 }

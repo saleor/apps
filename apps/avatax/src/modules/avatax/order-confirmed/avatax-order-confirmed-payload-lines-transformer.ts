@@ -1,14 +1,15 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { avataxProductLine } from "../calculate-taxes/avatax-product-line";
 import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
+import { AvataxAppOrder, DeprecatedOrderConfirmedSubscriptionFragment } from "../order-parser";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
-    order: OrderConfirmedSubscriptionFragment,
+    order: DeprecatedOrderConfirmedSubscriptionFragment,
+    avataxAppOrder: AvataxAppOrder,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
@@ -20,8 +21,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
 
       return avataxProductLine.create({
         amount: line.totalPrice.gross.amount,
-        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
-        taxIncluded: true,
+        taxIncluded: avataxAppOrder.taxIncluded,
         taxCode,
         quantity: line.quantity,
         discounted: isDiscounted,
@@ -33,8 +33,7 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     if (order.shippingPrice.net.amount !== 0) {
       const shippingLine = avataxShippingLine.create({
         amount: order.shippingPrice.gross.amount,
-        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
-        taxIncluded: true,
+        taxIncluded: avataxAppOrder.taxIncluded,
         /**
          * * Different shipping methods can have different tax codes.
          * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/

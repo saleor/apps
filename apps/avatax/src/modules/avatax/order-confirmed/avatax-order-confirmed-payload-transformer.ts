@@ -1,5 +1,4 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { discountUtils } from "../../taxes/discount-utils";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
@@ -8,6 +7,7 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { AvataxAppOrder, DeprecatedOrderConfirmedSubscriptionFragment } from "../order-parser";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 
@@ -21,7 +21,8 @@ export class AvataxOrderConfirmedPayloadTransformer {
     return DocumentType.SalesInvoice;
   }
   async transform(
-    order: OrderConfirmedSubscriptionFragment,
+    order: DeprecatedOrderConfirmedSubscriptionFragment,
+    avataxAppOrder: AvataxAppOrder,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
@@ -57,7 +58,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
-        lines: linesTransformer.transform(order, avataxConfig, matches),
+        lines: linesTransformer.transform(order, avataxAppOrder, avataxConfig, matches),
         date,
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount),
