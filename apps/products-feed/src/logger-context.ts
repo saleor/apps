@@ -3,4 +3,4 @@ import { LoggerContext } from "@saleor/apps-logger/node";
 /**
  * Server-side only
  */
-export const loggerContext = new LoggerContext("saleor-app-product-feed");
+export const loggerContext = new LoggerContext();

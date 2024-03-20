@@ -5,7 +5,7 @@ describe("LoggerContext", () => {
   it("Wraps context and shares context globally", () => {
     expect.assertions(1);
 
-    const loggerContext = new LoggerContext("package-logger");
+    const loggerContext = new LoggerContext();
 
     const assertFunction = () => {
       loggerContext.set("baz", "1");
@@ -14,7 +14,6 @@ describe("LoggerContext", () => {
         foo: "bar",
         initialState: "exists",
         baz: "1",
-        project_name: "package-logger",
       });
     };
 
