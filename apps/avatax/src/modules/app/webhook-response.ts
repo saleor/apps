@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
 import { NextApiResponse } from "next";
 
 import { CriticalError, ExpectedError } from "../../error";
@@ -16,11 +15,10 @@ export class WebhookResponse {
   }
 
   /**
-   * @deprecated
+   * @deprecated use `NextApiResponse.res.status(500)` instead
    */
   error(error: unknown) {
     if (error instanceof CriticalError) {
-      Sentry.captureException(error);
       this.logger.error("CriticalError occurred", { error });
       return this.respondWithError(error.message);
     }
@@ -30,8 +28,6 @@ export class WebhookResponse {
       return this.respondWithError(error.message);
     }
 
-    Sentry.captureMessage("Unhandled error occurred");
-    Sentry.captureException(error);
     this.logger.error("Unhandled error occurred", { error });
     return this.respondWithError("Unhandled error occurred");
   }

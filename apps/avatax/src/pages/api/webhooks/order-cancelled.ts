@@ -33,7 +33,8 @@ export default wrapWithLoggerContext(
       if (!payload.order) {
         const error = new Error("Insufficient order data");
 
-        Sentry.captureException(error);
+        logger.error("Insufficient order data", { error });
+
         return webhookResponse.error(error);
       }
 
