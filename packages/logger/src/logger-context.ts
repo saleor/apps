@@ -5,7 +5,7 @@ import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/cons
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
 
-  constructor(private projectName?: string) {}
+  constructor(private projectName: string) {}
 
   getRawContext() {
     const store = this.als.getStore();
@@ -23,7 +23,7 @@ export class LoggerContext {
     return this.als.run(
       {
         ...initialState,
-        project_name: this.projectName ?? "unknown",
+        project_name: this.projectName,
       },
       fn,
     );
