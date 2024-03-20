@@ -5,6 +5,8 @@ import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/cons
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
 
+  constructor(private projectName?: string) {}
+
   getRawContext() {
     const store = this.als.getStore();
 
@@ -18,7 +20,13 @@ export class LoggerContext {
   }
 
   async wrap(fn: (...args: unknown[]) => unknown, initialState = {}) {
-    return this.als.run(initialState, fn);
+    return this.als.run(
+      {
+        ...initialState,
+        project_name: this.projectName ?? "unknown",
+      },
+      fn,
+    );
   }
 
   set(key: string, value: string | number | Record<string, unknown> | null) {
@@ -33,7 +41,9 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
     return loggerContext.wrap(() => {
       const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
       const saleorEvent = req.headers[SALEOR_EVENT_HEADER] as string;
+      const path = req.url as string;
 
+      loggerContext.set("path", path);
       loggerContext.set("saleorApiUrl", saleorApiUrl ?? null);
       loggerContext.set("saleorEvent", saleorEvent ?? null);
 
