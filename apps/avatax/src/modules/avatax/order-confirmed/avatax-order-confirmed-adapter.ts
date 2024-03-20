@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
-import { ClientLogger } from "../../logs/client-logger";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
@@ -21,20 +20,10 @@ export class AvataxOrderConfirmedAdapter
   private logger = createLogger("AvataxOrderConfirmedAdapter");
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
-  private readonly clientLogger: ClientLogger;
 
-  constructor({
-    config,
-    authData,
-    clientLogger,
-  }: {
-    config: AvataxConfig;
-    clientLogger: ClientLogger;
-    authData: AuthData;
-  }) {
+  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
     this.config = config;
     this.authData = authData;
-    this.clientLogger = clientLogger;
   }
 
   async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {
@@ -60,15 +49,6 @@ export class AvataxOrderConfirmedAdapter
       return transformedResponse;
     } catch (e) {
       const error = normalizeAvaTaxError(e);
-
-      this.clientLogger.push({
-        event: "[OrderConfirmed] createTransaction",
-        status: "error",
-        payload: {
-          input: target,
-          output: error.message,
-        },
-      });
 
       throw error;
     }
