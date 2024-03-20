@@ -5,6 +5,8 @@ import {
   FetchAppDetailsQuery,
   UpdatePrivateMetadataDocument,
 } from "../../../generated/graphql";
+import { metadataCache } from "../../lib/app-metadata-cache";
+import { createLogger } from "../../logger";
 
 gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
@@ -63,6 +65,8 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[], 
   );
 }
 
+const logger = createLogger("SettingsManager");
+
 export const createSettingsManager = (client: Client, appId: string) => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
@@ -72,8 +76,16 @@ export const createSettingsManager = (client: Client, appId: string) => {
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,
-    fetchMetadata: () => {
-      console.warn("Calling FETCH ALL METADATA");
+    fetchMetadata: async () => {
+      const cachedMetadata = metadataCache.getRawMetadata();
+
+      if (cachedMetadata) {
+        logger.debug("Using cached metadata");
+
+        return cachedMetadata;
+      }
+
+      logger.debug("Cache not found, fetching metadata");
       return fetchAllMetadata(client);
     },
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),

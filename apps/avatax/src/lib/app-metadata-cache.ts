@@ -15,7 +15,7 @@ export class AppMetadataCache {
     if (!store) {
       console.debug("You cant use LoggerContext outside of the wrapped scope. Will fallback to {}");
 
-      return [];
+      return null;
     }
 
     return store.metadata;
