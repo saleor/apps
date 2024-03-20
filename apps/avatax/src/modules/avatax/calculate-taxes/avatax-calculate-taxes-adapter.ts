@@ -1,6 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "../../../logger";
-import { ClientLogger } from "../../logs/client-logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
@@ -19,19 +18,9 @@ export class AvataxCalculateTaxesAdapter
   private logger = createLogger("AvataxCalculateTaxesAdapter");
   private readonly config: AvataxConfig;
   private readonly authData: AuthData;
-  private readonly clientLogger: ClientLogger;
 
-  constructor({
-    config,
-    authData,
-    clientLogger,
-  }: {
-    config: AvataxConfig;
-    clientLogger: ClientLogger;
-    authData: AuthData;
-  }) {
+  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
     this.config = config;
-    this.clientLogger = clientLogger;
     this.authData = authData;
   }
 
@@ -63,14 +52,6 @@ export class AvataxCalculateTaxesAdapter
        */
       this.logger.error("Error calculating taxes", { error });
 
-      this.clientLogger.push({
-        event: "[CalculateTaxes] createTransaction",
-        status: "error",
-        payload: {
-          input: target,
-          output: error.message,
-        },
-      });
       throw error;
     }
   }
