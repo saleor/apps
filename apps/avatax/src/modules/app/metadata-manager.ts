@@ -72,7 +72,10 @@ export const createSettingsManager = (client: Client, appId: string) => {
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,
-    fetchMetadata: () => fetchAllMetadata(client),
+    fetchMetadata: () => {
+      console.warn("Calling FETCH ALL METADATA");
+      return fetchAllMetadata(client);
+    },
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
   });
 };
