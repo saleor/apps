@@ -1,34 +1,38 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
+import { MetadataItem } from "../../generated/graphql";
 
 /**
  * Set global context that stores metadata from webhook payload.
  * Use it as a temporary storage that provides access to metadata in the request scope
  */
 export class AppMetadataCache {
-  private als = new AsyncLocalStorage<Record<string, unknown>>();
+  private als = new AsyncLocalStorage<{ metadata: MetadataItem[] | null }>();
 
-  getRawContext() {
+  getRawMetadata(): MetadataItem[] | null {
     const store = this.als.getStore();
 
     if (!store) {
       console.debug("You cant use LoggerContext outside of the wrapped scope. Will fallback to {}");
 
-      return {};
+      return [];
     }
 
-    return store;
+    return store.metadata;
   }
 
-  async wrap(fn: (...args: unknown[]) => unknown, initialState = {}) {
-    return this.als.run(initialState, fn);
+  async wrap(fn: (...args: unknown[]) => unknown) {
+    return this.als.run({ metadata: null }, fn);
   }
 
-  set(key: string, value: string | number | Record<string, unknown> | null) {
-    const store = this.getRawContext();
+  setMetadata(metadata: MetadataItem[]) {
+    const store = this.als.getStore();
 
-    store[key] = value;
+    if (!store) {
+      throw new Error("Cant set metadata to AppMetadataCache. Function must be wrapped");
+    }
+
+    store.metadata = metadata;
   }
 }
 

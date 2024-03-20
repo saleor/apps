@@ -53,6 +53,9 @@ export default wrapWithLoggerContext(
           }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
+
+          metadataCache.setMetadata(appMetadata);
+
           const channelSlug = payload.taxBase.channel.slug;
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
