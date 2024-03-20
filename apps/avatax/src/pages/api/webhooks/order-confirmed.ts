@@ -12,8 +12,8 @@ import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
 } from "../../../modules/taxes/get-active-connection-service";
-import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
+import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
@@ -51,7 +51,6 @@ export default wrapWithLoggerContext(
         if (!payload.order) {
           const error = new Error("Insufficient order data");
 
-          Sentry.captureException(error);
           return webhookResponse.error(error);
         }
 
@@ -90,7 +89,7 @@ export default wrapWithLoggerContext(
                 return res.status(400).send("Order data is not valid.");
               }
             }
-
+            Sentry.captureException(error);
             logger.error("Unhandled error executing webhook", { error });
             return webhookResponse.error(error);
           }
