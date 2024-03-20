@@ -13,10 +13,6 @@ export const ProvidersTable = () => {
     router.push(`/providers/${item.provider}/${item.id}`);
   };
 
-  const logsClickHandler = (item: ProviderConnection) => {
-    router.push(`/providers/${item.provider}/${item.id}/logs`);
-  };
-
   return (
     <Table.Container>
       <Table.THead color={"textNeutralSubdued"}>
@@ -34,14 +30,6 @@ export const ProvidersTable = () => {
             </Table.TD>
             <Table.TD>
               <Box display={"flex"} justifyContent={"flex-end"} gap={2}>
-                <Button
-                  onClick={() => logsClickHandler(item)}
-                  icon={<ViewTableIcon />}
-                  variant="tertiary"
-                  data-testid="provider-logs-button"
-                >
-                  Logs
-                </Button>
                 <Button
                   onClick={() => editClickHandler(item)}
                   icon={<EditIcon />}
