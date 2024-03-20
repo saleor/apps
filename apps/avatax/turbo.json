@@ -26,6 +26,7 @@
         "OTEL_SERVICE_NAME",
         "VERCEL_GIT_COMMIT_SHA",
         "NEW_APP_LOG_LEVEL",
+        "AVATAX_CLIENT_TIMEOUT",
         "ENV"
       ]
     },

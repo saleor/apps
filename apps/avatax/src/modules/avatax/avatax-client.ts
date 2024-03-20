@@ -23,7 +23,7 @@ const defaultAvataxSettings: AvataxSettings = {
   appVersion: packageJson.version,
   environment: "sandbox",
   machineName: "tax-app",
-  timeout: 5000,
+  timeout: parseInt(process.env.AVATAX_CLIENT_TIMEOUT ?? "15000", 10),
 };
 
 const createAvataxSettings = ({ isSandbox }: { isSandbox: boolean }): AvataxSettings => {
