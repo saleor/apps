@@ -8,5 +8,5 @@ jobs:
     if: ${{ github.event.label.name == 'run e2e' }}
     uses: saleor/apps/.github/workflows/e2e.yml@update-e2e-workflow-dispatch
     secrets:
-      saleor_token: ${{ secrets.SALEOR_TOKEN }}
-      op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      saleor-token: ${{ secrets.SALEOR_TOKEN }}
+      op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
