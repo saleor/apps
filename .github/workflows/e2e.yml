@@ -1,16 +1,11 @@
-name: E2E staging
-on:
-  pull_request:
-    types: [labeled]
-  workflow_dispatch:
+name: Run e2e tests
+on: workflow_call
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   e2e:
-    # Only run when the label is added or when the workflow is manually triggered
-    if: ${{ github.event.label.name == 'run e2e' || github.event.action == 'requested' }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false

@@ -1,0 +1,6 @@
+name: E2E staging (dispatched)
+on: workflow_dispatch
+
+jobs:
+  e2e-dispatch:
+    uses: saleor/apps/.github/workflows/e2e.yml@v1
