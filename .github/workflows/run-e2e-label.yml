@@ -6,4 +6,4 @@ on:
 jobs:
   e2e-label:
     if: ${{ github.event.label.name == 'run e2e' }}
-    uses: saleor/apps/.github/workflows/e2e.yml@v1
+    uses: saleor/apps/.github/workflows/e2e.yml@update-e2e-workflow-dispatch
