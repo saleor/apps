@@ -1,5 +1,10 @@
 name: Run e2e tests
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      token:
+        description: "Saleor token"
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,7 +17,7 @@ jobs:
       matrix:
         saleor: [318, 319]
     env:
-      ACCESS_TOKEN: ${{ secrets.SALEOR_TOKEN }}
+      ACCESS_TOKEN: ${{ secrets.token }}
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
       - uses: actions/checkout@v4

@@ -4,6 +4,8 @@ on:
     types: [labeled]
 
 jobs:
-  e2e-label:
+  run:
     if: ${{ github.event.label.name == 'run e2e' }}
     uses: saleor/apps/.github/workflows/e2e.yml@update-e2e-workflow-dispatch
+    secrets:
+      token: ${{ secrets.SALEOR_TOKEN }}
