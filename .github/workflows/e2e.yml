@@ -9,7 +9,8 @@ concurrency:
 
 jobs:
   e2e:
-    if: ${{ github.event.label.name == 'run e2e' }}
+    # Only run when the label is added or when the workflow is manually triggered
+    if: ${{ github.event.label.name == 'run e2e' || github.event.action == 'requested' }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -39,14 +40,18 @@ jobs:
         run: |
           pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="shopex-avatax-$SALEOR_VERSION" --skip-webhooks-update
       - name: Load secrets
-        uses: 1password/load-secrets-action@971116bbffed9bfe57bd55447317d56fbc7a6a81 # v1.3.2
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
+          REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_TOKEN"
+          REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_ENDPOINT"
       - name: Generate GraphQL files
         run: pnpm --filter=app-avatax generate
+      - name: Run migrations
+        run: pnpm --filter=app-avatax migrate:silent
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
