@@ -5,6 +5,7 @@ dotenv.config();
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
+const silent = args.includes("--silent");
 
 const runMigration = async () => {
   // Must use dynamic import for env variables to load properly
@@ -24,7 +25,7 @@ const runMigration = async () => {
   });
 
   for (const env of allEnvs) {
-    await updateWebhooks({ authData: env, dryRun });
+    await updateWebhooks({ authData: env, dryRun, silent });
   }
 
   console.log(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`);
