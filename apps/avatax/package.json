@@ -15,6 +15,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --dry-run",
+    "migrate:silent": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --silent",
     "start": "next start",
     "test": "vitest --project react"
   },
