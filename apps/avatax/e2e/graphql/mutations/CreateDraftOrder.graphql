@@ -1,0 +1,7 @@
+mutation CreateDraftOrder($channelID: ID!) {
+  draftOrderCreate(input: { channelId: $channelID }) {
+    order {
+      id
+    }
+  }
+}

@@ -1,0 +1,22 @@
+mutation DraftOrderUpdateAddress(
+  $orderId: ID!
+  $billingAddress: AddressInput
+  $shippingAddress: AddressInput
+  $userEmail: String
+) {
+  draftOrderUpdate(
+    id: $orderId
+    input: {
+      billingAddress: $billingAddress
+      shippingAddress: $shippingAddress
+      userEmail: $userEmail
+    }
+  ) {
+    errors {
+      ...OrderError
+    }
+    order {
+      ...OrderDetailsFragment
+    }
+  }
+}

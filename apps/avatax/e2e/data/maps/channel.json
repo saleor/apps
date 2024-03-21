@@ -5,6 +5,12 @@
       "slug": "channel-us",
       "deliveryMethodId": "U2hpcHBpbmdNZXRob2Q6MTY=",
       "currency": "USD"
+    },
+    "WithTax": {
+      "id": "Q2hhbm5lbDoz",
+      "slug": "channel-with-tax",
+      "deliveryMethodId": "U2hpcHBpbmdNZXRob2Q6MTY=",
+      "currency": "USD"
     }
   }
 }
