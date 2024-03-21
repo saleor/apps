@@ -4,3 +4,6 @@ on: workflow_dispatch
 jobs:
   e2e-dispatch:
     uses: saleor/apps/.github/workflows/e2e.yml@main
+    secrets:
+      saleor-token: ${{ secrets.SALEOR_TOKEN }}
+      op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

@@ -6,7 +6,7 @@ on:
 jobs:
   run:
     if: ${{ github.event.label.name == 'run e2e' }}
-    uses: saleor/apps/.github/workflows/e2e.yml@update-e2e-workflow-dispatch
+    uses: saleor/apps/.github/workflows/e2e.yml@main
     secrets:
       saleor-token: ${{ secrets.SALEOR_TOKEN }}
       op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
