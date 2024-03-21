@@ -5,6 +5,8 @@ import {
   FetchAppDetailsQuery,
   UpdatePrivateMetadataDocument,
 } from "../../../generated/graphql";
+import { AppMetadataCache } from "../../lib/app-metadata-cache";
+import { createLogger } from "../../logger";
 
 gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
@@ -31,7 +33,7 @@ gql`
   }
 `;
 
-export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
+export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
@@ -43,7 +45,11 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(client: Client, metadata: MetadataEntry[], appId: string) {
+export async function mutateMetadata(
+  client: Pick<Client, "mutation">,
+  metadata: MetadataEntry[],
+  appId: string,
+) {
   const { error: mutationError, data: mutationData } = await client
     .mutation(UpdatePrivateMetadataDocument, {
       id: appId,
@@ -63,7 +69,13 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[], 
   );
 }
 
-export const createSettingsManager = (client: Client, appId: string) => {
+const logger = createLogger("SettingsManager");
+
+export const createSettingsManager = (
+  client: Pick<Client, "mutation" | "query">,
+  appId: string,
+  cache: AppMetadataCache,
+) => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.
@@ -72,7 +84,18 @@ export const createSettingsManager = (client: Client, appId: string) => {
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: process.env.SECRET_KEY!,
-    fetchMetadata: () => fetchAllMetadata(client),
+    fetchMetadata: async () => {
+      const cachedMetadata = cache.getRawMetadata();
+
+      if (cachedMetadata) {
+        logger.debug("Using cached metadata");
+
+        return cachedMetadata;
+      }
+
+      logger.debug("Cache not found, fetching metadata");
+      return fetchAllMetadata(client);
+    },
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
   });
 };

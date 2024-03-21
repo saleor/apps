@@ -7,6 +7,7 @@ import {
 } from "./avatax-tax-code-match-repository";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { metadataCache } from "../../../lib/app-metadata-cache";
 
 export class AvataxTaxCodeMatchesService {
   private logger = createLogger("AvataxTaxCodeMatchesService");
@@ -18,7 +19,7 @@ export class AvataxTaxCodeMatchesService {
       token: authData.token,
     });
     const { appId, saleorApiUrl } = authData;
-    const settingsManager = createSettingsManager(client, appId);
+    const settingsManager = createSettingsManager(client, appId, metadataCache);
 
     this.taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);
   }

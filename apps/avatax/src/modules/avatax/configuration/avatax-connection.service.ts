@@ -6,6 +6,7 @@ import { AvataxConnectionRepository } from "./avatax-connection-repository";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxClient } from "../avatax-client";
 import { createLogger } from "../../../logger";
+import { metadataCache } from "../../../lib/app-metadata-cache";
 
 export class AvataxConnectionService {
   private logger = createLogger("AvataxConnectionService");
@@ -20,7 +21,7 @@ export class AvataxConnectionService {
     appId: string;
     saleorApiUrl: string;
   }) {
-    const settingsManager = createSettingsManager(client, appId);
+    const settingsManager = createSettingsManager(client, appId, metadataCache);
 
     this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);
   }
