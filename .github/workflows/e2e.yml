@@ -2,8 +2,9 @@ name: Run e2e tests
 on:
   workflow_call:
     secrets:
-      token:
-        description: "Saleor token"
+      saleor_token:
+        required: true
+      op_service_account_token:
         required: true
 
 concurrency:
@@ -17,7 +18,7 @@ jobs:
       matrix:
         saleor: [318, 319]
     env:
-      ACCESS_TOKEN: ${{ secrets.token }}
+      ACCESS_TOKEN: ${{ secrets.saleor_token }}
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +45,7 @@ jobs:
         with:
           export-env: true
         env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op_service_account_token }}
           TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
           REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_TOKEN"
           REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_ENDPOINT"
