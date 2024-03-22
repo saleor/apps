@@ -201,7 +201,10 @@ describe("App should calculates taxes for order with product with tax calss [pri
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", { key: "avataxId" })
-      .retry(2, 2000);
+      .expectJsonLike("data.order.metadata[key=avataxId]", {
+        key: "avataxId",
+        value: "typeof $V === 'string'",
+      })
+      .retry(4, 2000);
   });
 });

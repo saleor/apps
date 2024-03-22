@@ -1,9 +1,11 @@
 import { e2e } from "pactum";
 import { it, describe } from "vitest";
 import {
+  CheckoutAddBilling,
+  CheckoutAddShipping,
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
-  CreateCheckout,
+  CreateCheckoutNoAddress,
   OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
@@ -26,12 +28,18 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
 
+  const addressVerification = {
+    city: "$M{Address.NewYork.city}",
+    streetAddress1: "$M{Address.NewYork.streetAddress1}",
+    postalCode: "$M{Address.NewYork.postalCode}",
+  };
+
   it("should have created a checkout", async () => {
     await testCase
       .step("Create checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(CreateCheckout)
+      .withGraphQLQuery(CreateCheckoutNoAddress)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:WithTax",
         "@OVERRIDES@": {
@@ -40,19 +48,70 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
         },
       })
       .expectStatus(200)
-      .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
+      .stores("CheckoutId", "data.checkoutCreate.checkout.id");
+  });
+
+  it("should add a valid shipping address", async () => {
+    await testCase
+      .step("Add shipping address")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(CheckoutAddShipping)
+      .withGraphQLVariables({
+        id: "$S{CheckoutId}",
+        shippingAddress: "$M{Address.NewYork}",
+      })
+      .expectStatus(200)
+      .expectJsonLike(
+        "data.checkoutShippingAddressUpdate.checkout.shippingAddress",
+        addressVerification,
+      )
+      .expectJson("data.checkoutShippingAddressUpdate.checkout.billingAddress", null)
+      .expectJson("data.checkoutShippingAddressUpdate.checkout.totalPrice.net", {
         amount: TOTAL_NET_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
-      .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
+      .expectJson("data.checkoutShippingAddressUpdate.checkout.totalPrice.gross", {
         amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
-      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
+      .expectJson("data.checkoutShippingAddressUpdate.checkout.totalPrice.tax", {
         amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
         currency: "USD",
+      });
+  });
+
+  it("should add a valid billing address", async () => {
+    await testCase
+      .step("Add billing address")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(CheckoutAddBilling)
+      .withGraphQLVariables({
+        id: "$S{CheckoutId}",
+        billingAddress: "$M{Address.NewYork}",
       })
-      .stores("CheckoutId", "data.checkoutCreate.checkout.id");
+      .expectStatus(200)
+      .expectJsonLike(
+        "data.checkoutBillingAddressUpdate.checkout.shippingAddress",
+        addressVerification,
+      )
+      .expectJsonLike(
+        "data.checkoutBillingAddressUpdate.checkout.billingAddress",
+        addressVerification,
+      )
+      .expectJson("data.checkoutBillingAddressUpdate.checkout.totalPrice.net", {
+        amount: TOTAL_NET_PRICE_BEFORE_SHIPPING,
+        currency: "USD",
+      })
+      .expectJson("data.checkoutBillingAddressUpdate.checkout.totalPrice.gross", {
+        amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
+        currency: "USD",
+      })
+      .expectJson("data.checkoutBillingAddressUpdate.checkout.totalPrice.tax", {
+        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+        currency: "USD",
+      });
   });
 
   it("should update delivery method and calculate shipping price", async () => {
@@ -87,8 +146,7 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
         currency: "USD",
         amount: SHIPPING_TAX_PRICE,
-      })
-      .inspect();
+      });
   });
 
   it("should finalize the checkout", async () => {
@@ -181,6 +239,7 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
         key: "avataxId",
         value: "typeof $V === 'string'",
       })
+      .inspect()
       .retry(4, 2000);
   });
 });

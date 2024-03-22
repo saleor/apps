@@ -4,5 +4,11 @@
     "variantId": "$M{Product.Regular.variantId}",
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"
+  },
+  "Checkout:WithTax": {
+    "channelSlug": "$M{Channel.WithTax.slug}",
+    "variantId": "$M{Product.Regular.variantId}",
+    "email": "$F{UserEmail}",
+    "address": "$M{Address.NewYork}"
   }
 }
