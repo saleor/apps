@@ -48,6 +48,18 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
         },
       })
       .expectStatus(200)
+      .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
+        amount: 0,
+        currency: "USD",
+      })
+      .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
+        amount: 0,
+        currency: "USD",
+      })
+      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
+        amount: 0,
+        currency: "USD",
+      })
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
   });
 
