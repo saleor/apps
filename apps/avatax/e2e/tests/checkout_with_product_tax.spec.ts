@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
 import { it, describe } from "vitest";
 import {
@@ -11,6 +12,10 @@ import { string } from "pactum-matchers";
 
 describe("App should calculate taxes for checkout with product tax [pricesEnteredWithTax: True]", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
+  const staffCredentials = {
+    email: process.env.E2E_USER_NAME as string,
+    password: process.env.E2E_USER_PASSWORD as string,
+  };
 
   const CURRENCY = "USD";
 
@@ -148,11 +153,7 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(StaffUserTokenCreate)
-      // TODO: use 1password to get the user credentials
-      .withGraphQLVariables({
-        email: "test@test.com",
-        password: "test1234",
-      })
+      .withGraphQLVariables(staffCredentials)
       .expectStatus(200)
       .expectJsonLike({
         data: {

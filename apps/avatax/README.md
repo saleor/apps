@@ -34,6 +34,8 @@ Before running tests, you have to set up `.env` file with `TEST_SALEOR_API_URL` 
 cp .env.example .env
 ```
 
+You should also add `E2E_USER_NAME` and `E2E_USER_PASSWORD` which are credentials for a staff user that has permissions of `MANAGE_ORDERS`.
+
 You also have to generate GraphQL files using `graphql-codegen`:
 
 ```bash
