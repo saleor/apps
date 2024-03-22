@@ -54,11 +54,11 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
       })
       .expectStatus(200)
       .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
-        amount: 0,
+        amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING, // no taxes are calculated yet
         currency: "USD",
       })
       .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
-        amount: 0,
+        amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
         currency: "USD",
       })
       .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
@@ -252,7 +252,6 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
         key: "avataxId",
         value: "typeof $V === 'string'",
       })
-      .inspect()
       .retry(4, 2000);
   });
 });

@@ -92,8 +92,7 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
       .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
         currency: "USD",
         amount: SHIPPING_TAX_PRICE,
-      })
-      .inspect();
+      });
   });
 
   it("should finalize the checkout", async () => {
