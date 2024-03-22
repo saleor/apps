@@ -19,10 +19,7 @@ export class AvataxConnectionRepository {
   private logger = createLogger("AvataxConnectionRepository", {
     metadataKey: TAX_PROVIDER_KEY,
   });
-  constructor(
-    private settingsManager: EncryptedMetadataManager,
-    private saleorApiUrl: string,
-  ) {
+  constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager(
       settingsManager,
       saleorApiUrl,

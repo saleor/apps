@@ -9,6 +9,7 @@ import { getActiveConnectionService } from "../../../modules/taxes/get-active-co
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 
 export const config = {
   api: {
@@ -16,74 +17,82 @@ export const config = {
   },
 };
 
+const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
 export default wrapWithLoggerContext(
   withOtel(
-    orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-      const webhookResponse = new WebhookResponse(res);
+    withMetadataCache(
+      orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+        const webhookResponse = new WebhookResponse(res);
 
-      try {
-        const logger = createLogger("orderCalculateTaxesSyncWebhook");
-        const { payload } = ctx;
+        try {
+          const logger = createLogger("orderCalculateTaxesSyncWebhook");
+          const { payload } = ctx;
 
-        loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
-        loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
-        if (payload.version) {
-          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        }
+          loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
+          loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
+          if (payload.version) {
+            Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+            loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          }
 
-        logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+          logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
 
-        const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+          const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
-        if (payloadVerificationResult.isErr()) {
-          logger.warn("Failed to calculate taxes, due to incomplete payload", {
-            error: payloadVerificationResult.error,
-          });
+          if (payloadVerificationResult.isErr()) {
+            logger.warn("Failed to calculate taxes, due to incomplete payload", {
+              error: payloadVerificationResult.error,
+            });
 
-          return res.status(400).send(payloadVerificationResult.error.message);
-        }
+            return res.status(400).send(payloadVerificationResult.error.message);
+          }
 
-        const appMetadata = payload.recipient?.privateMetadata ?? [];
-        const channelSlug = payload.taxBase.channel.slug;
-        const activeConnectionServiceResult = getActiveConnectionService(
-          channelSlug,
-          appMetadata,
-          ctx.authData,
-        );
+          const appMetadata = payload.recipient?.privateMetadata ?? [];
 
-        if (activeConnectionServiceResult.isOk()) {
-          const calculatedTaxes = await activeConnectionServiceResult.value.calculateTaxes(payload);
+          metadataCache.setMetadata(appMetadata);
 
-          logger.info("Taxes calculated", { calculatedTaxes });
+          const channelSlug = payload.taxBase.channel.slug;
+          const activeConnectionServiceResult = getActiveConnectionService(
+            channelSlug,
+            appMetadata,
+            ctx.authData,
+          );
 
-          return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
-        } else if (activeConnectionServiceResult.isErr()) {
-          const err = activeConnectionServiceResult.error;
+          if (activeConnectionServiceResult.isOk()) {
+            const calculatedTaxes =
+              await activeConnectionServiceResult.value.calculateTaxes(payload);
 
-          logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-            error: err,
-          });
+            logger.info("Taxes calculated", { calculatedTaxes });
 
-          const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
+            return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+          } else if (activeConnectionServiceResult.isErr()) {
+            const err = activeConnectionServiceResult.error;
 
-          if (executeErrorStrategy) {
-            return executeErrorStrategy();
-          } else {
-            Sentry.captureException(err);
-            logger.fatal(`UNHANDLED: ${err.name}`, {
+            logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
               error: err,
             });
 
-            return res.status(500).send("Error calculating taxes");
-          }
-        }
-      } catch (error) {
-        Sentry.captureException(error);
+            const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
 
-        return webhookResponse.error(error);
-      }
-    }),
+            if (executeErrorStrategy) {
+              return executeErrorStrategy();
+            } else {
+              Sentry.captureException(err);
+              logger.fatal(`UNHANDLED: ${err.name}`, {
+                error: err,
+              });
+
+              return res.status(500).send("Error calculating taxes");
+            }
+          }
+        } catch (error) {
+          Sentry.captureException(error);
+
+          return webhookResponse.error(error);
+        }
+      }),
+    ),
     "/api/order-calculate-taxes",
   ),
   loggerContext,

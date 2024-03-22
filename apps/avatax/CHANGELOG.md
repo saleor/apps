@@ -1,5 +1,22 @@
 # app-avatax
 
+## 1.3.0
+
+### Minor Changes
+
+- 4f2c17c0: Added caching to App Metadata. Now, when webhook is called by Saleor, metadata from payload will be cached and consumed in MetadataManager. If cache doesn't exist, MetadataManager will fetch missing metadata. This change removes unnecessary graphql call that was timing out the handler.
+
+## 1.2.0
+
+### Minor Changes
+
+- a4d35fe8: Removed "Client Logs" feature. It was effectively breaking taxes calculation, because it performed heavy data+network operations during short time period of a webhook execution.
+
+### Patch Changes
+
+- c6e6c1f2: Cleanup `WebhookResponse.error` function - now it won't capture exception to Sentry. Instead you should use `Sentry.captureException` explicitly when there is unhandled exception.
+- e3c44c5e: Changed maximum timeout on Avatax client calls to 15s from 5s
+
 ## 1.1.0
 
 ### Minor Changes

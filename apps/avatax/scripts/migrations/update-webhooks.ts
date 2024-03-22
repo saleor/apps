@@ -6,11 +6,15 @@ import { appWebhooks } from "../../webhooks";
 export const updateWebhooks = async ({
   authData,
   dryRun,
+  silent,
 }: {
   authData: AuthData;
   dryRun: boolean;
+  silent: boolean;
 }) => {
-  console.log("Working on environment: ", authData.saleorApiUrl);
+  if (!silent) {
+    console.log("Working on environment: ", authData.saleorApiUrl);
+  }
 
   const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,

@@ -6,6 +6,7 @@ import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { createSettingsManager } from "../app/metadata-manager";
 import { createLogger } from "../../logger";
+import { metadataCache } from "../../lib/app-metadata-cache";
 
 export class ChannelConfigurationService {
   private configurationRepository: ChannelConfigurationRepository;
@@ -16,7 +17,7 @@ export class ChannelConfigurationService {
     private appId: string,
     private saleorApiUrl: string,
   ) {
-    const settingsManager = createSettingsManager(client, appId);
+    const settingsManager = createSettingsManager(client, appId, metadataCache);
 
     this.settingsManager = settingsManager;
 
