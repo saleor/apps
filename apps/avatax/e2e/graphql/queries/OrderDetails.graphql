@@ -3,6 +3,7 @@ query OrderDetails($id: ID!) {
     ...OrderDetailsFragment
     metadata {
       key
+      value
     }
   }
 }
