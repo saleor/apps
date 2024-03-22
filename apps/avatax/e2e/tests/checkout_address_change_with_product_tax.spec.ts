@@ -46,10 +46,10 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
       .post("/graphql/")
       .withGraphQLQuery(CreateCheckoutNoAddress)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "Checkout:WithTax",
+        "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
         "@OVERRIDES@": {
           variantId: "$M{Product.Juice.variantId}",
-          channelSlug: "$M{Channel.WithTax.slug}",
+          channelSlug: "$M{Channel.PricesWithTax.slug}",
         },
       })
       .expectStatus(200)

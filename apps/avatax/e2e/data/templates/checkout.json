@@ -5,8 +5,8 @@
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"
   },
-  "Checkout:WithTax": {
-    "channelSlug": "$M{Channel.WithTax.slug}",
+  "Checkout:PricesWithTax": {
+    "channelSlug": "$M{Channel.PricesWithTax.slug}",
     "variantId": "$M{Product.Regular.variantId}",
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"

@@ -56,7 +56,7 @@ describe("App should calculates taxes for order with product with tax calss [pri
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:WithTax",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax",
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -100,7 +100,7 @@ describe("App should calculates taxes for order with product with tax calss [pri
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateAddress)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:WithTax:Address",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax:Address",
         "@OVERRIDES@": {
           orderId: "$S{OrderID}",
         },
@@ -125,7 +125,7 @@ describe("App should calculates taxes for order with product with tax calss [pri
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateShippingMethod)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:WithTax:ShippingMethod",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax:ShippingMethod",
         "@OVERRIDES@": {
           orderId: "$S{OrderID}",
         },

@@ -1,13 +1,13 @@
 {
-  "DraftOrder:WithTax": {
-    "channelID": "$M{Channel.WithTax.id}"
+  "DraftOrder:PricesWithTax": {
+    "channelID": "$M{Channel.PricesWithTax.id}"
   },
-  "DraftOrder:WithTax:Address": {
+  "DraftOrder:PricesWithTax:Address": {
     "billingAddress": "$M{Address.NewYork}",
     "shippingAddress": "$M{Address.NewYork}",
     "userEmail": "$F{UserEmail}"
   },
-  "DraftOrder:WithTax:ShippingMethod": {
-    "deliveryMethodId": "$M{Channel.WithTax.deliveryMethodId}"
+  "DraftOrder:PricesWithTax:ShippingMethod": {
+    "deliveryMethodId": "$M{Channel.PricesWithTax.deliveryMethodId}"
   }
 }
