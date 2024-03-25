@@ -82,7 +82,7 @@ export default withOtel(
       },
     }),
     saleorApp.apl,
-    [],
+    ["MANAGE_APPS"],
   ),
   "/api/recreate-webhooks",
 );

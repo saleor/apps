@@ -7,6 +7,7 @@ import { loggerContext } from "../../../logger-context";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 
 export const config = {
   api: {
@@ -14,58 +15,66 @@ export const config = {
   },
 };
 
+const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
 export default wrapWithLoggerContext(
   withOtel(
-    orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
-      const logger = createLogger("orderCancelledAsyncWebhook", {
-        saleorApiUrl: ctx.authData.saleorApiUrl,
-      });
-      const { payload } = ctx;
-      const webhookResponse = new WebhookResponse(res);
+    withMetadataCache(
+      orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
+        const logger = createLogger("orderCancelledAsyncWebhook", {
+          saleorApiUrl: ctx.authData.saleorApiUrl,
+        });
+        const { payload } = ctx;
+        const webhookResponse = new WebhookResponse(res);
 
-      if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-      }
-
-      logger.info("Handler called with payload");
-
-      if (!payload.order) {
-        const error = new Error("Insufficient order data");
-
-        Sentry.captureException(error);
-        return webhookResponse.error(error);
-      }
-
-      try {
-        const appMetadata = payload.recipient?.privateMetadata ?? [];
-        const channelSlug = payload.order.channel.slug;
-        const taxProviderResult = getActiveConnectionService(
-          channelSlug,
-          appMetadata,
-          ctx.authData,
-        );
-
-        logger.info("Cancelling order...");
-
-        if (taxProviderResult.isOk()) {
-          await taxProviderResult.value.cancelOrder(payload);
-
-          logger.info("Order cancelled");
-
-          return webhookResponse.success();
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         }
 
-        if (taxProviderResult.isErr()) {
-          Sentry.captureException(taxProviderResult.error);
-          // TODO: Map errors
-          return webhookResponse.error(taxProviderResult.error);
+        logger.info("Handler called with payload");
+
+        if (!payload.order) {
+          const error = new Error("Insufficient order data");
+
+          logger.error("Insufficient order data", { error });
+
+          return webhookResponse.error(error);
         }
-      } catch (error) {
-        Sentry.captureException(error);
-        return webhookResponse.error(error);
-      }
-    }),
+
+        try {
+          const appMetadata = payload.recipient?.privateMetadata ?? [];
+
+          metadataCache.setMetadata(appMetadata);
+
+          const channelSlug = payload.order.channel.slug;
+          const taxProviderResult = getActiveConnectionService(
+            channelSlug,
+            appMetadata,
+            ctx.authData,
+          );
+
+          logger.info("Cancelling order...");
+
+          if (taxProviderResult.isOk()) {
+            await taxProviderResult.value.cancelOrder(payload);
+
+            logger.info("Order cancelled");
+
+            return webhookResponse.success();
+          }
+
+          if (taxProviderResult.isErr()) {
+            Sentry.captureException(taxProviderResult.error);
+            // TODO: Map errors
+            return webhookResponse.error(taxProviderResult.error);
+          }
+        } catch (error) {
+          Sentry.captureException(error);
+          return webhookResponse.error(error);
+        }
+      }),
+    ),
     "/api/webhooks/order-cancelled",
   ),
   loggerContext,

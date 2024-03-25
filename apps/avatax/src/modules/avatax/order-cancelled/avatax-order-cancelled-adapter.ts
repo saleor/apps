@@ -1,5 +1,4 @@
 import { createLogger } from "../../../logger";
-import { ClientLogger } from "../../logs/client-logger";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
 import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
@@ -11,12 +10,10 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
-  private readonly clientLogger: ClientLogger;
   private readonly config: AvataxConfig;
 
-  constructor({ config, clientLogger }: { config: AvataxConfig; clientLogger: ClientLogger }) {
+  constructor({ config }: { config: AvataxConfig }) {
     this.config = config;
-    this.clientLogger = clientLogger;
   }
 
   async send(payload: OrderCancelledPayload) {
@@ -35,15 +32,6 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
       this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
     } catch (e) {
       const error = normalizeAvaTaxError(e);
-
-      this.clientLogger.push({
-        event: "[OrderCancelled] voidTransaction",
-        status: "error",
-        payload: {
-          input: target,
-          output: error.message,
-        },
-      });
 
       throw error;
     }

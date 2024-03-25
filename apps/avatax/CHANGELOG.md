@@ -1,5 +1,39 @@
 # app-avatax
 
+## 1.3.0
+
+### Minor Changes
+
+- 4f2c17c0: Added caching to App Metadata. Now, when webhook is called by Saleor, metadata from payload will be cached and consumed in MetadataManager. If cache doesn't exist, MetadataManager will fetch missing metadata. This change removes unnecessary graphql call that was timing out the handler.
+
+## 1.2.0
+
+### Minor Changes
+
+- a4d35fe8: Removed "Client Logs" feature. It was effectively breaking taxes calculation, because it performed heavy data+network operations during short time period of a webhook execution.
+
+### Patch Changes
+
+- c6e6c1f2: Cleanup `WebhookResponse.error` function - now it won't capture exception to Sentry. Instead you should use `Sentry.captureException` explicitly when there is unhandled exception.
+- e3c44c5e: Changed maximum timeout on Avatax client calls to 15s from 5s
+
+## 1.1.0
+
+### Minor Changes
+
+- b29318a2: Currently, Dashboard requires from a user to have "MANAGE_APPS" to have access to the apps tab.
+  Since the release 3.20 Dashboard will allow all users to access to apps tabs without checking permission.
+  This means that apps will be checking if the user has "MANAGE_APPS" internally and show message "You do not have permission to access this page" if the user does not have the permission.
+- 0f1a38d1: Avatax app will now send `productVariantId` from `OrderLine` to Avatax if there is no `productSku` while processing `ORDER_CREATED` webhook.
+
+### Patch Changes
+
+- 4a898bfa: Add `issuedAt` and `version` fields to GraphQL subscriptions. This enhance our logs with debug information.
+- 23a57e21: Avatax app now uses shipping address for order tax calculations
+- Updated dependencies [b29318a2]
+  - @saleor/apps-shared@1.10.0
+  - @saleor/webhook-utils@0.0.6
+
 ## 1.0.4
 
 ### Patch Changes

@@ -3,7 +3,6 @@ import { MetadataItem } from "../../../generated/graphql";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { ProviderConnection } from "../provider-connections/provider-connections";
-import { createClientLogger } from "../logs/client-logger";
 import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
 import { err, fromThrowable, ok } from "neverthrow";
@@ -18,10 +17,6 @@ const avataxProviderFactory = ({
   return new AvataxWebhookService({
     config: providerConnection.config,
     authData,
-    clientLogger: createClientLogger({
-      authData,
-      configurationId: providerConnection.id,
-    }),
   });
 };
 

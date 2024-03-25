@@ -1,17 +1,19 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
 import * as Sentry from "@sentry/nextjs";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
 import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
 } from "../../../modules/taxes/get-active-connection-service";
+import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
@@ -20,74 +22,84 @@ export const config = {
   },
 };
 
+const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
 export default wrapWithLoggerContext(
   withOtel(
-    orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
-      const logger = createLogger("orderConfirmedAsyncWebhook", {
-        saleorApiUrl: ctx.authData.saleorApiUrl,
-      });
-      const { payload, authData } = ctx;
-      const { saleorApiUrl, token } = authData;
-      const webhookResponse = new WebhookResponse(res);
+    withMetadataCache(
+      orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
+        const logger = createLogger("orderConfirmedAsyncWebhook", {
+          saleorApiUrl: ctx.authData.saleorApiUrl,
+        });
+        const { payload, authData } = ctx;
+        const { saleorApiUrl, token } = authData;
+        const webhookResponse = new WebhookResponse(res);
 
-      if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-      }
+        if (payload.version) {
+          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        }
 
-      logger.info("Handler called with payload");
+        logger.info("Handler called with payload");
 
-      const parseOrderResult = SaleorOrderParser.parse(payload);
-
-      if (parseOrderResult.isErr()) {
-        const error = parseOrderResult.error;
-
-        Sentry.captureException(error);
-        logger.error("Error parsing webhook payload into app order", { error });
-        return webhookResponse.error(error);
-      }
-
-      if (parseOrderResult.isOk()) {
         try {
-          const saleorOrder = new SaleorOrder(parseOrderResult.value);
+          const appMetadata = payload.recipient?.privateMetadata ?? [];
 
-          if (saleorOrder.isFulfilled()) {
+          metadataCache.setMetadata(appMetadata);
+
+          const channelSlug = payload.order?.channel.slug;
+          const taxProviderResult = getActiveConnectionService(
+            channelSlug,
+            appMetadata,
+            ctx.authData,
+          );
+
+          // todo: figure out what fields are needed and add validation
+          if (!payload.order) {
+            const error = new Error("Insufficient order data");
+
+            return webhookResponse.error(error);
+          }
+
+          if (payload.order.status === OrderStatus.Fulfilled) {
             return webhookResponse.error(
               new Error("Skipping fulfilled order to prevent duplication"),
             );
           }
 
-          const appMetadata = payload.recipient?.privateMetadata ?? [];
-          const taxProviderResult = getActiveConnectionService(
-            saleorOrder.channelSlug,
-            appMetadata,
-            ctx.authData,
-          );
-
           logger.debug("Confirming order...");
 
           if (taxProviderResult.isOk()) {
-            const confirmedOrder = await taxProviderResult.value.confirmOrder(
-              // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
-              payload.order,
-              saleorOrder,
-            );
+            try {
+              const confirmedOrder = await taxProviderResult.value.confirmOrder(payload.order);
 
-            logger.info("Order confirmed", { confirmedOrder });
-            const client = createInstrumentedGraphqlClient({
-              saleorApiUrl,
-              token,
-            });
+              logger.info("Order confirmed", { orderId: confirmedOrder.id });
+              const client = createInstrumentedGraphqlClient({
+                saleorApiUrl,
+                token,
+              });
 
-            const orderMetadataManager = new OrderMetadataManager(client);
+              const orderMetadataManager = new OrderMetadataManager(client);
 
-            await orderMetadataManager.updateOrderMetadataWithExternalId(
-              saleorOrder.id,
-              confirmedOrder.id,
-            );
-            logger.info("Updated order metadata with externalId");
+              await orderMetadataManager.updateOrderMetadataWithExternalId(
+                payload.order.id,
+                confirmedOrder.id,
+              );
+              logger.info("Updated order metadata with externalId");
 
-            return webhookResponse.success();
+              return webhookResponse.success();
+            } catch (error) {
+              logger.debug("Error confirming order", { error });
+
+              switch (true) {
+                case error instanceof TaxBadPayloadError: {
+                  return res.status(400).send("Order data is not valid.");
+                }
+              }
+              Sentry.captureException(error);
+              logger.error("Unhandled error executing webhook", { error });
+              return webhookResponse.error(error);
+            }
           }
 
           if (taxProviderResult.isErr()) {
@@ -128,8 +140,8 @@ export default wrapWithLoggerContext(
           logger.error("Unhandled error executing webhook", { error });
           return webhookResponse.error(error);
         }
-      }
-    }),
+      }),
+    ),
     "/api/webhooks/order-confirmed",
   ),
   loggerContext,

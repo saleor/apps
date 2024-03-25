@@ -26,21 +26,17 @@ type ConfiguredResponse =
 
 // todo extract settings manager
 const mailchimpConfigRouter = router({
-  setToken: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .input(setTokenInput)
-    .mutation(({ ctx, input }) => {
-      const logger = createLogger({
-        context: "mailchimpConfigRouter",
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+  setToken: protectedClientProcedure.input(setTokenInput).mutation(({ ctx, input }) => {
+    const logger = createLogger({
+      context: "mailchimpConfigRouter",
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
 
-      logger.info("Saving Mailchimp token");
+    logger.info("Saving Mailchimp token");
 
-      return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).setConfig(input);
-    }),
+    return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).setConfig(input);
+  }),
   setWebhookConfig: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
     .input(CustomerCreatedEventConfig)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger({
@@ -71,7 +67,7 @@ const mailchimpConfigRouter = router({
 
       const config = await new MailchimpConfigSettingsManager(
         ctx.apiClient,
-        ctx.appId!
+        ctx.appId!,
       ).getConfig();
 
       logger.debug(config, "Received config from metadata");
@@ -108,13 +104,11 @@ const mailchimpConfigRouter = router({
           reason: "CANT_PING",
         };
       }
-    }
+    },
   ),
-  removeToken: protectedClientProcedure
-    .meta({ requiredClientPermissions: ["MANAGE_APPS"] })
-    .mutation(({ ctx }) => {
-      return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).removeConfig();
-    }),
+  removeToken: protectedClientProcedure.mutation(({ ctx }) => {
+    return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).removeConfig();
+  }),
 });
 
 export const MailchimpConfigRouter = {

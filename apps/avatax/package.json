@@ -1,6 +1,6 @@
 {
   "name": "app-avatax",
-  "version": "1.0.4",
+  "version": "1.3.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -15,6 +15,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --dry-run",
+    "migrate:silent": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --silent",
     "start": "next start",
     "test": "vitest --project react"
   },
