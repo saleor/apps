@@ -1,15 +1,17 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import {
+  DeprecatedOrderConfirmedSubscriptionFragment,
+  SaleorOrder,
+  SaleorOrderLine,
+} from "../../saleor";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { avataxProductLine } from "../calculate-taxes/avatax-product-line";
-import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
-import { AvataxAppOrder, DeprecatedOrderConfirmedSubscriptionFragment } from "../order-parser";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    avataxAppOrder: AvataxAppOrder,
+    saleorOrder: SaleorOrder,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
@@ -18,22 +20,26 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
+      const orderLine = new SaleorOrderLine(saleorOrder.taxIncluded);
 
-      return avataxProductLine.create({
-        amount: line.totalPrice.gross.amount,
-        taxIncluded: avataxAppOrder.taxIncluded,
+      return orderLine.toAvataxLineItem({
+        gross: line.totalPrice.gross.amount,
+        net: line.totalPrice.net.amount,
         taxCode,
         quantity: line.quantity,
         discounted: isDiscounted,
-        itemCode: avataxProductLine.getItemCode(line.productSku, line.productVariantId),
+        productSku: line.productSku,
+        productVariantId: line.productVariantId,
         description: line.productName,
       });
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      const shippingLine = avataxShippingLine.create({
-        amount: order.shippingPrice.gross.amount,
-        taxIncluded: avataxAppOrder.taxIncluded,
+      const orderLine = new SaleorOrderLine(saleorOrder.taxIncluded);
+
+      const shippingLine = orderLine.toAvataxShippingLineItem({
+        net: order.shippingPrice.net.amount,
+        gross: order.shippingPrice.gross.amount,
         /**
          * * Different shipping methods can have different tax codes.
          * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/

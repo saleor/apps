@@ -1,6 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "../../logger";
 import { ClientLogger } from "../logs/client-logger";
+import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../saleor";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
@@ -8,7 +9,6 @@ import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
-import { AvataxAppOrder, DeprecatedOrderConfirmedSubscriptionFragment } from "./order-parser";
 
 export class AvataxWebhookService implements ProviderWebhookService {
   private logger = createLogger("AvataxWebhookService");
@@ -44,7 +44,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async confirmOrder(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    avataxAppOrder: AvataxAppOrder,
+    saleorOrder: SaleorOrder,
   ) {
     const adapter = new AvataxOrderConfirmedAdapter({
       config: this.config,
@@ -52,7 +52,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
       authData: this.authData,
     });
 
-    const response = await adapter.send({ order, avataxAppOrder });
+    const response = await adapter.send({ order, saleorOrder });
 
     return response;
   }

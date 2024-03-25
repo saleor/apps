@@ -13,6 +13,9 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   channel: {
     id: "Q2hhbm5lbDox",
     slug: "default-channel",
+    taxConfiguration: {
+      pricesEnteredWithTax: true,
+    },
   },
   shippingAddress: {
     streetAddress1: "600 Montgomery St",
@@ -48,7 +51,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       amount: 59.17,
     },
     net: {
-      amount: 59.17,
+      amount: 50,
     },
   },
   lines: [

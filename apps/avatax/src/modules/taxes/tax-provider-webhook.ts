@@ -1,6 +1,6 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
-import { AvataxAppOrder } from "../avatax/order-parser";
+import { SaleorOrder } from "../saleor";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
 
@@ -18,7 +18,7 @@ export interface ProviderWebhookService {
   calculateTaxes: (payload: CalculateTaxesPayload) => Promise<CalculateTaxesResponse>;
   confirmOrder: (
     payload: OrderConfirmedSubscriptionFragment,
-    avataxAppOrder: AvataxAppOrder,
+    saleorOrder: SaleorOrder,
   ) => Promise<CreateOrderResponse>;
   cancelOrder: (payload: OrderCancelledPayload) => Promise<void>;
 }

@@ -7,7 +7,7 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
-import { AvataxAppOrderParser } from "../../../modules/avatax/order-parser";
+import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
 import {
   ActiveConnectionServiceErrors,
   getActiveConnectionService,
@@ -37,7 +37,7 @@ export default wrapWithLoggerContext(
 
       logger.info("Handler called with payload");
 
-      const parseOrderResult = AvataxAppOrderParser.parse(payload);
+      const parseOrderResult = SaleorOrderParser.parse(payload);
 
       if (parseOrderResult.isErr()) {
         const error = parseOrderResult.error;
@@ -49,9 +49,9 @@ export default wrapWithLoggerContext(
 
       if (parseOrderResult.isOk()) {
         try {
-          const avataxAppOrder = parseOrderResult.value;
+          const saleorOrder = new SaleorOrder(parseOrderResult.value);
 
-          if (avataxAppOrder.isFulfilled) {
+          if (saleorOrder.isFulfilled()) {
             return webhookResponse.error(
               new Error("Skipping fulfilled order to prevent duplication"),
             );
@@ -59,7 +59,7 @@ export default wrapWithLoggerContext(
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
           const taxProviderResult = getActiveConnectionService(
-            avataxAppOrder.channelSlug,
+            saleorOrder.channelSlug,
             appMetadata,
             ctx.authData,
           );
@@ -70,7 +70,7 @@ export default wrapWithLoggerContext(
             const confirmedOrder = await taxProviderResult.value.confirmOrder(
               // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
               payload.order,
-              avataxAppOrder,
+              saleorOrder,
             );
 
             logger.info("Order confirmed", { confirmedOrder });
@@ -82,7 +82,7 @@ export default wrapWithLoggerContext(
             const orderMetadataManager = new OrderMetadataManager(client);
 
             await orderMetadataManager.updateOrderMetadataWithExternalId(
-              avataxAppOrder.id,
+              saleorOrder.id,
               confirmedOrder.id,
             );
             logger.info("Updated order metadata with externalId");
