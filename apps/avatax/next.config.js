@@ -31,4 +31,11 @@ const configWithSentry = withSentryConfig(
   },
 );
 
-module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  enabled: process.env.ANALYZE_BUNDLE === "true",
+});
+
+module.exports = withBundleAnalyzer(config);
