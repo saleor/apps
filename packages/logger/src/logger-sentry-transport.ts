@@ -53,8 +53,7 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
         message: message,
         type: levelToBreadcrumbType(log._meta.logLevelName),
         level: loggerLevelToSentryLevel(log._meta.logLevelName),
-        // @ts-expect-error Invalid type in Sentry SDK
-        timestamp: new Date().toDateString(),
+        timestamp: new Date().getTime(),
         data: attributes,
       });
     });
