@@ -1,8 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "../../../logger";
-import { ClientLogger } from "../../logs/client-logger";
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";

@@ -1,6 +1,10 @@
+import { createLogger } from "@saleor/apps-logger";
+import * as Sentry from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { err, ok } from "neverthrow";
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
 import { discountUtils } from "../../taxes/discount-utils";
+import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -10,10 +14,6 @@ import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
-import { err, ok } from "neverthrow";
-import * as Sentry from "@sentry/nextjs";
-import { TaxBadPayloadError } from "../../taxes/tax-error";
-import { createLogger } from "@saleor/apps-logger";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
@@ -26,7 +26,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     return DocumentType.SalesInvoice;
   }
-  private getSaleorAddress(order: OrderConfirmedSubscriptionFragment) {
+  private getSaleorAddress(order: DeprecatedOrderConfirmedSubscriptionFragment) {
     if (order.shippingAddress) {
       return ok(order.shippingAddress);
     }
