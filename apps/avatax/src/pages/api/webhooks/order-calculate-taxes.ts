@@ -1,7 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
-import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
@@ -10,6 +9,7 @@ import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculat
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { captureException, setTag } from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -32,7 +32,7 @@ export default wrapWithLoggerContext(
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
           if (payload.version) {
-            Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+            setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
             loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           }
 
@@ -78,7 +78,7 @@ export default wrapWithLoggerContext(
             if (executeErrorStrategy) {
               return executeErrorStrategy();
             } else {
-              Sentry.captureException(err);
+              captureException(err);
               logger.fatal(`UNHANDLED: ${err.name}`, {
                 error: err,
               });
@@ -87,7 +87,7 @@ export default wrapWithLoggerContext(
             }
           }
         } catch (error) {
-          Sentry.captureException(error);
+          captureException(error);
 
           return webhookResponse.error(error);
         }

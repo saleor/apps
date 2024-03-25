@@ -11,9 +11,9 @@ import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { err, ok } from "neverthrow";
-import * as Sentry from "@sentry/nextjs";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { createLogger } from "@saleor/apps-logger";
+import { captureException } from "@sentry/nextjs";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
@@ -63,7 +63,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const addressPayload = this.getSaleorAddress(order);
 
     if (addressPayload.isErr()) {
-      Sentry.captureException(addressPayload.error);
+      captureException(addressPayload.error);
       this.logger.error("Error while transforming OrderConfirmedPayload", {
         error: addressPayload.error,
       });

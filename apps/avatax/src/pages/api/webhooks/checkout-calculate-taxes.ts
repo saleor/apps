@@ -1,5 +1,4 @@
 import { withOtel } from "@saleor/apps-otel";
-import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
@@ -11,6 +10,7 @@ import { loggerContext } from "../../../logger-context";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { captureException, setTag } from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -36,7 +36,7 @@ export default wrapWithLoggerContext(
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
           if (payload.version) {
-            Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+            setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
             loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           }
 
@@ -75,7 +75,7 @@ export default wrapWithLoggerContext(
             if (executeErrorStrategy) {
               return executeErrorStrategy();
             } else {
-              Sentry.captureException(err);
+              captureException(err);
 
               logger.fatal(`UNHANDLED: ${err.name}`, {
                 error: err,
@@ -93,7 +93,7 @@ export default wrapWithLoggerContext(
             return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
           }
         } catch (error) {
-          Sentry.captureException(error);
+          captureException(error);
 
           return webhookResponse.error(error);
         }
