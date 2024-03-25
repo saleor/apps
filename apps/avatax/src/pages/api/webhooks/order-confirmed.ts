@@ -1,7 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
-import * as Sentry from "@sentry/nextjs";
 import { OrderStatus } from "../../../../generated/graphql";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../logger";
@@ -15,6 +14,7 @@ import {
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { captureException, setTag } from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -36,7 +36,7 @@ export default wrapWithLoggerContext(
         const webhookResponse = new WebhookResponse(res);
 
         if (payload.version) {
-          Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         }
 
@@ -96,7 +96,7 @@ export default wrapWithLoggerContext(
                   return res.status(400).send("Order data is not valid.");
                 }
               }
-              Sentry.captureException(error);
+              captureException(error);
               logger.error("Unhandled error executing webhook", { error });
               return webhookResponse.error(error);
             }
@@ -128,7 +128,7 @@ export default wrapWithLoggerContext(
                   .send("Webhook didn't contain channel slug. This should not happen.");
               }
               default: {
-                Sentry.captureException(taxProviderResult.error);
+                captureException(taxProviderResult.error);
                 logger.fatal("Unhandled error", { error });
 
                 return res.status(500).send("Unhandled error");
@@ -136,7 +136,7 @@ export default wrapWithLoggerContext(
             }
           }
         } catch (error) {
-          Sentry.captureException(error);
+          captureException(error);
           logger.error("Unhandled error executing webhook", { error });
           return webhookResponse.error(error);
         }

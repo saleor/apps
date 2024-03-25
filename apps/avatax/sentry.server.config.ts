@@ -4,14 +4,14 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import * as Sentry from "@sentry/nextjs";
 import { CriticalError } from "./src/error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
+import { init, Integrations } from "@sentry/nextjs";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
-Sentry.init({
+init({
   dsn: SENTRY_DSN,
   // Adjust this value in production, or use tracesSampler for greater control
   enableTracing: false,
@@ -40,7 +40,7 @@ Sentry.init({
     return errorEvent;
   },
   integrations: [
-    new Sentry.Integrations.LocalVariables({
+    new Integrations.LocalVariables({
       captureAllExceptions: true,
     }),
   ],
