@@ -2,7 +2,7 @@ import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 
 export class MissingAddressAvataxWebhookService {
-  public static calculateTaxes(payload: CalculateTaxesPayload): CalculateTaxesResponse {
+  public static calculateTaxesNoop(payload: CalculateTaxesPayload): CalculateTaxesResponse {
     /*
      * If there is missing address in the payload, we won't be able to calculate taxes but we can return totalPrice
      * and shippingPrice from the payload as a fallback so users will see the correct prices in the cart instead of 0.

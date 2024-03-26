@@ -54,7 +54,8 @@ export default wrapWithLoggerContext(
                 logger.debug(
                   "Missing address in the payload. Returning totalPrice and shippingPrice as a fallback.",
                 );
-                const calculatedTaxes = MissingAddressAvataxWebhookService.calculateTaxes(payload);
+                const calculatedTaxes =
+                  MissingAddressAvataxWebhookService.calculateTaxesNoop(payload);
 
                 return res.status(200).send(ctx.buildResponse(calculatedTaxes));
               default:
