@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
+import { TaxIncompletePayloadErrors } from "../taxes/tax-error";
 import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
 
@@ -68,9 +68,9 @@ describe("verifyCalculateTaxesPayload", () => {
 
     const result = verifyCalculateTaxesPayload(payload);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(TaxIncompleteWebhookPayloadError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(TaxIncompletePayloadErrors.MissingLinesError);
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[TaxIncompleteWebhookPayloadError: No lines found in taxBase]`,
+      `[MissingLinesError: No lines found in taxBase]`,
     );
   });
 
@@ -81,9 +81,11 @@ describe("verifyCalculateTaxesPayload", () => {
 
     const result = verifyCalculateTaxesPayload(payload);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(TaxIncompleteWebhookPayloadError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      TaxIncompletePayloadErrors.MissingAddressError,
+    );
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[TaxIncompleteWebhookPayloadError: No address found in taxBase]`,
+      `[MissingAddressError: No address found in taxBase]`,
     );
   });
 });
