@@ -4,7 +4,6 @@ import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/cons
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   private project_name = process.env.OTEL_SERVICE_NAME as string | undefined;
 
   getRawContext() {
