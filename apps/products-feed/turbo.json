@@ -22,7 +22,8 @@
         "PORT",
         "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
-        "APP_API_BASE_URL"
+        "APP_API_BASE_URL",
+        "OTEL_SERVICE_NAME"
       ]
     }
   }
