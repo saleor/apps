@@ -98,5 +98,3 @@ To start the migration run command:
 ```bash
 pnpm migrate
 ```
-
-Noop
