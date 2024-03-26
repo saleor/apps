@@ -10,6 +10,9 @@ import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-pay
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
 type AvataxOrderConfirmedPayload = {
+  /**
+   * @deprecated use `saleorOrder` instead
+   */
   order: DeprecatedOrderConfirmedSubscriptionFragment;
   saleorOrder: SaleorOrder;
 };

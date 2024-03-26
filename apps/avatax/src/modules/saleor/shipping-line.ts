@@ -1,9 +1,7 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import { SHIPPING_ITEM_CODE } from "../avatax/calculate-taxes/avatax-shipping-line";
 
-type SKU = string | null | undefined;
-type VariantId = string | null | undefined;
-
-export class SaleorOrderLine {
+export class SaleorShippingLine {
   private getAmount({
     gross,
     net,
@@ -16,39 +14,26 @@ export class SaleorOrderLine {
     return taxIncluded ? gross : net;
   }
 
-  private getItemCode(sku: SKU, variantId: VariantId) {
-    return sku ?? variantId ?? "";
-  }
-
   public toAvataxLineItem({
     taxIncluded,
-    gross,
     net,
+    gross,
     taxCode,
-    quantity,
     discounted,
-    productSku,
-    productVariantId,
-    description,
   }: {
-    gross: number;
     net: number;
-    taxCode: string;
-    quantity: number;
+    gross: number;
+    taxCode: string | undefined;
     discounted: boolean;
-    productSku: SKU;
-    productVariantId: VariantId;
-    description: string;
     taxIncluded: boolean;
   }): LineItemModel {
     return {
       amount: this.getAmount({ taxIncluded, gross, net }),
       taxIncluded,
       taxCode,
-      quantity,
+      quantity: 1,
       discounted,
-      itemCode: this.getItemCode(productSku, productVariantId),
-      description,
+      itemCode: SHIPPING_ITEM_CODE,
     };
   }
 }

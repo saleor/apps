@@ -4,6 +4,7 @@ import {
   SaleorOrder,
   SaleorOrderLine,
 } from "../../saleor";
+import { SaleorShippingLine } from "../../saleor/shipping-line";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
@@ -20,9 +21,10 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
-      const orderLine = new SaleorOrderLine(saleorOrder.taxIncluded);
+      const orderLine = new SaleorOrderLine();
 
       return orderLine.toAvataxLineItem({
+        taxIncluded: saleorOrder.taxIncluded,
         gross: line.totalPrice.gross.amount,
         net: line.totalPrice.net.amount,
         taxCode,
@@ -35,9 +37,10 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      const orderLine = new SaleorOrderLine(saleorOrder.taxIncluded);
+      const saleorShippingLine = new SaleorShippingLine();
 
-      const shippingLine = orderLine.toAvataxShippingLineItem({
+      const shippingLine = saleorShippingLine.toAvataxLineItem({
+        taxIncluded: saleorOrder.taxIncluded,
         net: order.shippingPrice.net.amount,
         gross: order.shippingPrice.gross.amount,
         /**

@@ -49,7 +49,7 @@ export default wrapWithLoggerContext(
           // Capture error when there is problem with parsing webhook payload - it should not happen
           Sentry.captureException(error);
           logger.error("Error parsing webhook payload into Saleor order", { error });
-          return webhookResponse.error(error);
+          return res.status(500).send(error.message);
         }
 
         if (parseOrderResult.isOk()) {

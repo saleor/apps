@@ -1,6 +1,6 @@
 import { SaleorOrder } from "./order";
 
-export class SaleorOrderFactory {
+export class SaleorMockOrderFactory {
   private static getData = (pricesEnteredWithTax: boolean) => ({
     order: {
       channel: {
@@ -15,7 +15,7 @@ export class SaleorOrderFactory {
   });
 
   public static create({ pricesEnteredWithTax }: { pricesEnteredWithTax: boolean }) {
-    const data = SaleorOrderFactory.getData(pricesEnteredWithTax);
+    const data = SaleorMockOrderFactory.getData(pricesEnteredWithTax);
 
     return new SaleorOrder(data);
   }

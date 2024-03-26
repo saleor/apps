@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
+
 export class SaleorOrder {
   public static schema = z.object({
     order: z.object({
@@ -12,9 +14,9 @@ export class SaleorOrder {
     }),
   });
 
-  private data: z.infer<typeof SaleorOrder.schema>;
+  private data: SaleorOrderData;
 
-  constructor(data: z.infer<typeof SaleorOrder.schema>) {
+  constructor(data: SaleorOrderData) {
     this.data = data;
   }
 

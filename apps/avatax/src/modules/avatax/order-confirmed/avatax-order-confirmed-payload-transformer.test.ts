@@ -1,11 +1,11 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
-import { SaleorOrderFactory } from "../../saleor/order-factory";
+import { SaleorMockOrderFactory } from "../../saleor/mock-order-factory";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 
 const mockGenerator = new AvataxOrderConfirmedMockGenerator();
-const saleorOrderMock = SaleorOrderFactory.create({ pricesEnteredWithTax: true });
+const saleorOrderMock = SaleorMockOrderFactory.create({ pricesEnteredWithTax: true });
 
 const orderMock = mockGenerator.generateOrder();
 const discountedOrderMock = mockGenerator.generateOrder({

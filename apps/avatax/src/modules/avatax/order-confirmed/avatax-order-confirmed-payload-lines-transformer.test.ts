@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defaultOrder } from "../../../mocks";
-import { SaleorOrderFactory } from "../../saleor/order-factory";
+import { SaleorMockOrderFactory } from "../../saleor/mock-order-factory";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
@@ -37,7 +37,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
       thirdProductAmount,
       shippingAmount,
     }) => {
-      const saleorOrderMock = SaleorOrderFactory.create({ pricesEnteredWithTax });
+      const saleorOrderMock = SaleorMockOrderFactory.create({ pricesEnteredWithTax });
 
       const lines = linesTransformer.transform(
         orderMock,
