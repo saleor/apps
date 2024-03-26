@@ -69,9 +69,7 @@ describe("verifyCalculateTaxesPayload", () => {
     const result = verifyCalculateTaxesPayload(payload);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(TaxIncompletePayloadErrors.MissingLinesError);
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[MissingLinesError: No lines found in taxBase]`,
-    );
+    expect(result._unsafeUnwrapErr().message).toBe("No lines found in taxBase");
   });
 
   it("Returns error if address is empty in the payload", () => {
@@ -84,8 +82,6 @@ describe("verifyCalculateTaxesPayload", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TaxIncompletePayloadErrors.MissingAddressError,
     );
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[MissingAddressError: No address found in taxBase]`,
-    );
+    expect(result._unsafeUnwrapErr().message).toBe("No address found in taxBase");
   });
 });
