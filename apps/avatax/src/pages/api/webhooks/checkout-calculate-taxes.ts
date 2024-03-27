@@ -10,11 +10,12 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { loggerContext } from "../../../logger-context";
 import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calculate-taxes/missing-address-avatax-webhook-service";
-import { TaxIncompletePayloadErrors } from "../../../modules/taxes/tax-error";
+import {
+  InvalidAppAddressError,
+  TaxIncompletePayloadErrors,
+} from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 
 export const config = {
   api: {
