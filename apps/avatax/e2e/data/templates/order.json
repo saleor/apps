@@ -1,0 +1,13 @@
+{
+  "DraftOrder:PricesWithTax": {
+    "channelID": "$M{Channel.PricesWithTax.id}"
+  },
+  "DraftOrder:PricesWithTax:Address": {
+    "billingAddress": "$M{Address.NewYork}",
+    "shippingAddress": "$M{Address.NewYork}",
+    "userEmail": "$F{UserEmail}"
+  },
+  "DraftOrder:PricesWithTax:ShippingMethod": {
+    "deliveryMethodId": "$M{Channel.PricesWithTax.deliveryMethodId}"
+  }
+}

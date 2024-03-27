@@ -1,0 +1,17 @@
+mutation CreateCheckoutNoAddress($channelSlug: String!, $variantId: ID!, $email: String!) {
+  checkoutCreate(
+    input: {
+      channel: $channelSlug
+      lines: [{ quantity: 10, variantId: $variantId }]
+      email: $email
+      languageCode: EN_US
+    }
+  ) {
+    errors {
+      ...CheckoutError
+    }
+    checkout {
+      ...CheckoutDetails
+    }
+  }
+}

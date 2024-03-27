@@ -1,0 +1,14 @@
+mutation DraftOrderComplete($id: ID!) {
+  draftOrderComplete(id: $id) {
+    errors {
+      ...OrderError
+    }
+    order {
+      ...OrderDetailsFragment
+      metadata {
+        key
+        value
+      }
+    }
+  }
+}
