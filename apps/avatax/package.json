@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
-    "@next/bundle-analyzer": "^14.1.4",
+    "@next/bundle-analyzer": "14.1.4",
     "@next/env": "^13.5.4",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
     "@opentelemetry/api-logs": "../../node_modules/@opentelemetry/api-logs",
