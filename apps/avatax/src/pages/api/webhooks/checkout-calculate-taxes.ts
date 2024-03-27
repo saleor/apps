@@ -51,7 +51,7 @@ export default wrapWithLoggerContext(
 
             switch (true) {
               case error instanceof TaxIncompletePayloadErrors.MissingAddressError:
-                logger.debug(
+                logger.info(
                   "Missing address in the payload. Returning totalPrice and shippingPrice as a fallback.",
                 );
                 const calculatedTaxes =
