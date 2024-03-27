@@ -1,3 +1,4 @@
+import { TaxCalculationStrategy } from "../../../generated/graphql";
 import { SaleorOrder } from "./order";
 
 export class SaleorMockOrderFactory {
@@ -6,6 +7,7 @@ export class SaleorMockOrderFactory {
       channel: {
         taxConfiguration: {
           pricesEnteredWithTax,
+          taxCalculationStrategy: TaxCalculationStrategy.TaxApp,
         },
         slug: "test",
       },

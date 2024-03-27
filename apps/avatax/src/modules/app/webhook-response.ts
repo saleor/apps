@@ -32,6 +32,9 @@ export class WebhookResponse {
     return this.respondWithError("Unhandled error occurred");
   }
 
+  /**
+   * @deprecated use `NextApiResponse.status(200).end()` instead
+   */
   success(data?: unknown) {
     return this.res.status(200).json(data ?? {});
   }

@@ -62,6 +62,11 @@ export default wrapWithLoggerContext(
               );
             }
 
+            if (saleorOrder.isStrategyFlatRates()) {
+              logger.info("Order has flat rates tax strategy, skipping...");
+              return res.status(202).send("Order has flat rates tax strategy.");
+            }
+
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
             metadataCache.setMetadata(appMetadata);
