@@ -1,6 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
+import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../saleor";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
@@ -30,13 +30,16 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return response;
   }
 
-  async confirmOrder(order: OrderConfirmedSubscriptionFragment) {
+  async confirmOrder(
+    order: DeprecatedOrderConfirmedSubscriptionFragment,
+    saleorOrder: SaleorOrder,
+  ) {
     const adapter = new AvataxOrderConfirmedAdapter({
       config: this.config,
       authData: this.authData,
     });
 
-    const response = await adapter.send({ order });
+    const response = await adapter.send({ order, saleorOrder });
 
     return response;
   }
