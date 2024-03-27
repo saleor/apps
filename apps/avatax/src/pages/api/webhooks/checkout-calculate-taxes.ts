@@ -7,11 +7,15 @@ import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculat
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { loggerContext } from "../../../logger-context";
+import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calculate-taxes/missing-address-avatax-webhook-service";
+import {
+  InvalidAppAddressError,
+  TaxIncompletePayloadErrors,
+} from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 
 export const config = {
   api: {
@@ -46,11 +50,23 @@ export default wrapWithLoggerContext(
           const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
           if (payloadVerificationResult.isErr()) {
-            logger.warn("Failed to calculate taxes, due to incomplete payload", {
-              error: payloadVerificationResult.error,
-            });
+            const error = payloadVerificationResult.error;
 
-            return res.status(400).send(payloadVerificationResult.error.message);
+            switch (true) {
+              case error instanceof TaxIncompletePayloadErrors.MissingAddressError:
+                logger.info(
+                  "Missing address in the payload. Returning totalPrice and shippingPrice as a fallback.",
+                );
+                const calculatedTaxes =
+                  MissingAddressAvataxWebhookService.calculateTaxesNoop(payload);
+
+                return res.status(200).send(ctx.buildResponse(calculatedTaxes));
+              default:
+                logger.warn("Failed to calculate taxes, due to incomplete payload", {
+                  error: payloadVerificationResult.error,
+                });
+                return res.status(400).send(error.message);
+            }
           }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
