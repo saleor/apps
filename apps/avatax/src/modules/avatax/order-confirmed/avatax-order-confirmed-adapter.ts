@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
+import { createLogger } from "../../../logger";
+import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
@@ -7,10 +8,13 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
-import { createLogger } from "../../../logger";
 
 type AvataxOrderConfirmedPayload = {
-  order: OrderConfirmedSubscriptionFragment;
+  /**
+   * @deprecated use `saleorOrder` instead
+   */
+  order: DeprecatedOrderConfirmedSubscriptionFragment;
+  saleorOrder: SaleorOrder;
 };
 type AvataxOrderConfirmedResponse = CreateOrderResponse;
 
@@ -30,7 +34,7 @@ export class AvataxOrderConfirmedAdapter
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
     const payloadService = new AvataxOrderConfirmedPayloadService(this.authData);
-    const target = await payloadService.getPayload(payload.order, this.config);
+    const target = await payloadService.getPayload(payload.order, payload.saleorOrder, this.config);
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
