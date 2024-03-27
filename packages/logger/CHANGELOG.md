@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.2.1
+
+### Patch Changes
+
+- 0a441ac9: Changed format of Sentry breadcrumbs "timestamp" attribute. Now date is sent as time integer
+- f7ecb7bd: Logger context can now pass path and project_name to help with debugging
+
 ## 1.2.0
 
 ### Minor Changes

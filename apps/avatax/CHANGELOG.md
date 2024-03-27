@@ -1,5 +1,22 @@
 # app-avatax
 
+## 1.4.0
+
+### Minor Changes
+
+- 5f86c2e7: Fixed bug when app sends wrong information to Avatax indicating if tax is included in prices. After this change app will get this information from Saleor.
+
+### Patch Changes
+
+- 95d3b9e6: Avatax app now has new e2e tests for channels that have `pricesEnteredWithTax: True`. The tests include order and checkout creation.
+- 0b158170: Fixed issue when `totalPrice` was set to 0 when checkout did not have address. After this change app will return `totalPrice` as fallback for `gross` and `net` so storefront user won't be confused with prices being 0.
+- f7ecb7bd: Logger context can now pass path and project_name to help with debugging
+- 04a11abd: Avatax app no longer creates new transactions if Saleor is set to use flat rates.
+- ce6d61d2: Add handling for Avatax error that was raised when app was configured incorrectly. For now only invalid zip code handling was added. This error will be logged as "warning" and Sentry will not be triggered. Other, not handled errors will raise Sentry exceptions
+- Updated dependencies [0a441ac9]
+- Updated dependencies [f7ecb7bd]
+  - @saleor/apps-logger@1.2.1
+
 ## 1.3.0
 
 ### Minor Changes
