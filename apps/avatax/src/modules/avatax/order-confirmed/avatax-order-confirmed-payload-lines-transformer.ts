@@ -1,14 +1,18 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
+import {
+  DeprecatedOrderConfirmedSubscriptionFragment,
+  SaleorOrder,
+  SaleorOrderLine,
+} from "../../saleor";
+import { SaleorShippingLine } from "../../saleor/shipping-line";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { avataxProductLine } from "../calculate-taxes/avatax-product-line";
-import { avataxShippingLine } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
 export class AvataxOrderConfirmedPayloadLinesTransformer {
   transform(
-    order: OrderConfirmedSubscriptionFragment,
+    order: DeprecatedOrderConfirmedSubscriptionFragment,
+    saleorOrder: SaleorOrder,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
@@ -17,24 +21,28 @@ export class AvataxOrderConfirmedPayloadLinesTransformer {
     const productLines: LineItemModel[] = order.lines.map((line) => {
       const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);
+      const orderLine = new SaleorOrderLine();
 
-      return avataxProductLine.create({
-        amount: line.totalPrice.gross.amount,
-        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
-        taxIncluded: true,
+      return orderLine.toAvataxLineItem({
+        taxIncluded: saleorOrder.taxIncluded,
+        gross: line.totalPrice.gross.amount,
+        net: line.totalPrice.net.amount,
         taxCode,
         quantity: line.quantity,
         discounted: isDiscounted,
-        itemCode: avataxProductLine.getItemCode(line.productSku, line.productVariantId),
+        productSku: line.productSku,
+        productVariantId: line.productVariantId,
         description: line.productName,
       });
     });
 
     if (order.shippingPrice.net.amount !== 0) {
-      const shippingLine = avataxShippingLine.create({
-        amount: order.shippingPrice.gross.amount,
-        // TODO: fix after https://linear.app/saleor/issue/SHOPX-359 is done
-        taxIncluded: true,
+      const saleorShippingLine = new SaleorShippingLine();
+
+      const shippingLine = saleorShippingLine.toAvataxLineItem({
+        taxIncluded: saleorOrder.taxIncluded,
+        net: order.shippingPrice.net.amount,
+        gross: order.shippingPrice.gross.amount,
         /**
          * * Different shipping methods can have different tax codes.
          * https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/designing/non-standard-items/
