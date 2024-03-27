@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TaxCalculationStrategy } from "../../../generated/graphql";
 
 type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
 
@@ -8,7 +9,7 @@ export class SaleorOrder {
       channel: z.object({
         taxConfiguration: z.object({
           pricesEnteredWithTax: z.boolean(),
-          taxCalculationStrategy: z.enum(["FLAT_RATES", "TAX_APP"]),
+          taxCalculationStrategy: z.nativeEnum(TaxCalculationStrategy),
         }),
         slug: z.string(),
       }),
@@ -32,7 +33,10 @@ export class SaleorOrder {
   }
 
   public isStrategyFlatRates() {
-    return this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
+    return (
+      this.data.order.channel.taxConfiguration.taxCalculationStrategy ===
+      TaxCalculationStrategy.FlatRates
+    );
   }
 
   public get id() {
