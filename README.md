@@ -55,7 +55,6 @@ In the `apps` folder, you will find the following applications:
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
-- [taxes](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) - DEPRECATED - please use Avatax or Taxjar
 - [Taxjar](./apps/taxjar) - Calculates dynamic taxes via Taxjar API
 
 #### Other official apps
