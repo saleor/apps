@@ -1,5 +1,14 @@
 # saleor-app-products-feed
 
+## 1.17.1
+
+### Patch Changes
+
+- f7ecb7bd: Logger context can now pass path and project_name to help with debugging
+- Updated dependencies [0a441ac9]
+- Updated dependencies [f7ecb7bd]
+  - @saleor/apps-logger@1.2.1
+
 ## 1.17.0
 
 ### Minor Changes
