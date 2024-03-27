@@ -29,3 +29,5 @@ export const TaxExternalError = CriticalError.subclass("TaxExternalError", {
     sentrySeverity: "error",
   } as CommonErrorProps,
 });
+
+export const InvalidAppAddressError = ExpectedError.subclass("InvalidAppAddressError");

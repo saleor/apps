@@ -13,6 +13,8 @@ import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calc
 import { TaxIncompletePayloadErrors } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 
 export const config = {
   api: {
@@ -30,9 +32,9 @@ export default wrapWithLoggerContext(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
         const webhookResponse = new WebhookResponse(res);
+        const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
         try {
-          const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
           const { payload } = ctx;
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
@@ -107,6 +109,17 @@ export default wrapWithLoggerContext(
             return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
           }
         } catch (error) {
+          if (error instanceof InvalidAppAddressError) {
+            logger.warn(
+              "InvalidAppAddressError: App returns status 400 due to broken address configuration",
+              { error },
+            );
+
+            return res.status(400).json({
+              message: "InvalidAppAddressError: Check address in app configuration",
+            });
+          }
+
           Sentry.captureException(error);
 
           return webhookResponse.error(error);

@@ -8,6 +8,9 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
+import { z } from "zod";
+import * as Sentry from "@sentry/nextjs";
+import { InvalidAppAddressError } from "../../taxes/tax-error";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
@@ -22,6 +25,61 @@ export class AvataxCalculateTaxesAdapter
   constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
     this.config = config;
     this.authData = authData;
+  }
+
+  /**
+   * Catch specific domain errors and transform them to errors that can be handled properly on the higher level.
+   * TODO: This should be part of larger refactor of the app architecture, how errors are handled.
+   */
+  private parseAvataxError(err: unknown) {
+    const errorDetailSchema = z.object({
+      /**
+       * In avatax response this field contains specific issue, like invalid postal code.
+       * Other fields are too generic - they contain error group and messages which we don't want ot parse
+       */
+      faultSubCode: z.string(),
+    });
+
+    const errorShape = z.object({
+      details: z.array(errorDetailSchema),
+    });
+
+    const parsedError = errorShape.safeParse(err);
+
+    if (!parsedError.success) {
+      Sentry.addBreadcrumb({
+        level: "error",
+        data: err as Error,
+      });
+      Sentry.captureException("Avatax returned error with unknown shape");
+
+      return normalizeAvaTaxError(err);
+    }
+
+    if (
+      parsedError.data.details.some((detail) => {
+        /**
+         * Check against address errors.
+         * TODO: This list will grow, we should have centralized placed for exhaustive checks for every errors.
+         *   Current implementation is temporary fix for specific issues we already faced in Sentry
+         */
+        switch (detail.faultSubCode) {
+          case "InvalidZipForStateError":
+          case "PostalCodeException": {
+            return true;
+          }
+          default:
+            return false;
+        }
+      })
+    ) {
+      return InvalidAppAddressError.normalize(err);
+    }
+
+    /**
+     * Pass through previous, default behavior.
+     */
+    return normalizeAvaTaxError(err);
   }
 
   async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
@@ -45,10 +103,10 @@ export class AvataxCalculateTaxesAdapter
 
       return transformedResponse;
     } catch (e) {
-      const error = normalizeAvaTaxError(e);
+      const error = this.parseAvataxError(e);
 
       /**
-       * TODO: Add handling of specific cases
+       * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
        */
       this.logger.error("Error calculating taxes", { error });
 
