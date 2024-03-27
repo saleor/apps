@@ -6,7 +6,10 @@ export class SaleorOrder {
   public static schema = z.object({
     order: z.object({
       channel: z.object({
-        taxConfiguration: z.object({ pricesEnteredWithTax: z.boolean() }),
+        taxConfiguration: z.object({
+          pricesEnteredWithTax: z.boolean(),
+          taxCalculationStrategy: z.enum(["FLAT_RATES", "TAX_APP"]),
+        }),
         slug: z.string(),
       }),
       status: z.string(),
@@ -26,6 +29,10 @@ export class SaleorOrder {
 
   public isFulfilled() {
     return this.data.order.status === "FULFILLED";
+  }
+
+  public isStrategyFlatRates() {
+    return this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
   }
 
   public get id() {
