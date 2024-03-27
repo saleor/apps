@@ -38,6 +38,7 @@ fragment OrderConfirmedSubscription on Order {
     slug
     taxConfiguration {
       pricesEnteredWithTax
+      taxCalculationStrategy
     }
   }
   shippingAddress {
