@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { beforeAll } from "vitest";
 import { request, settings, stash } from "pactum";
 import "./data/functions";
@@ -6,8 +7,17 @@ import "dotenv/config";
 beforeAll(() => {
   const saleorApiUrl = process.env.TEST_SALEOR_API_URL;
 
+  const staffCredentials = {
+    email: process.env.E2E_USER_NAME,
+    password: process.env.E2E_USER_PASSWORD,
+  };
+
   if (!saleorApiUrl) {
     throw new Error("Cannot run tests TEST_SALEOR_API_URL is not set");
+  }
+
+  if (!staffCredentials.email || !staffCredentials.password) {
+    throw new Error("Cannot run tests E2E_USER_NAME or E2E_USER_PASSWORD is not set");
   }
 
   const { origin: saleorBaseUrl } = new URL(saleorApiUrl);

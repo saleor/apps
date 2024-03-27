@@ -1,0 +1,10 @@
+mutation DraftOrderUpdateShippingMethod($orderId: ID!, $deliveryMethodId: ID) {
+  orderUpdateShipping(order: $orderId, input: { shippingMethod: $deliveryMethodId }) {
+    errors {
+      ...OrderError
+    }
+    order {
+      ...OrderDetailsFragment
+    }
+  }
+}
