@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
+import { TaxIncompletePayloadErrors } from "../taxes/tax-error";
 import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
 
 /**
@@ -11,11 +11,11 @@ import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
  */
 export function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   if (!payload.taxBase.lines.length) {
-    return err(new TaxIncompleteWebhookPayloadError("No lines found in taxBase"));
+    return err(new TaxIncompletePayloadErrors.MissingLinesError("No lines found in taxBase"));
   }
 
   if (!payload.taxBase.address) {
-    return err(new TaxIncompleteWebhookPayloadError("No address found in taxBase"));
+    return err(new TaxIncompletePayloadErrors.MissingAddressError("No address found in taxBase"));
   }
 
   return ok(payload);
