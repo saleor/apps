@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { TaxIncompletePayloadErrors } from "../taxes/tax-error";
 import { WebhookResponse } from "./webhook-response";
-import { TaxIncompleteWebhookPayloadError } from "../taxes/tax-error";
 
 let jsonMock = vi.fn();
 let statusMock = vi.fn().mockReturnValueOnce({ json: jsonMock });
@@ -30,7 +30,9 @@ describe("WebhookResponse", () => {
   });
   it("returns 500 when thrown TaxIncompleteWebhookPayloadError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
-    const badWebhookPayloadError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+    const badWebhookPayloadError = new TaxIncompletePayloadErrors.MissingLinesError(
+      "Bad webhook payload",
+    );
 
     webhookResponse.error(badWebhookPayloadError);
 
@@ -38,7 +40,7 @@ describe("WebhookResponse", () => {
   });
   it("returns 500 when thrown CriticalError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
-    const criticalError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+    const criticalError = new TaxIncompletePayloadErrors.MissingAddressError("Bad webhook payload");
 
     webhookResponse.error(criticalError);
 
@@ -46,7 +48,9 @@ describe("WebhookResponse", () => {
   });
   it("returns 500 when thrown TaxBadPayloadError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
-    const badPayloadError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+    const badPayloadError = new TaxIncompletePayloadErrors.MissingAddressError(
+      "Bad webhook payload",
+    );
 
     webhookResponse.error(badPayloadError);
 
@@ -54,7 +58,9 @@ describe("WebhookResponse", () => {
   });
   it("returns 500 when thrown TaxBadProviderResponseError", () => {
     const webhookResponse = new WebhookResponse(mockResponse);
-    const badProviderResponseError = new TaxIncompleteWebhookPayloadError("Bad webhook payload");
+    const badProviderResponseError = new TaxIncompletePayloadErrors.MissingAddressError(
+      "Bad webhook payload",
+    );
 
     webhookResponse.error(badProviderResponseError);
 

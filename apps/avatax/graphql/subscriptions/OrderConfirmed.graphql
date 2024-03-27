@@ -36,6 +36,10 @@ fragment OrderConfirmedSubscription on Order {
   channel {
     id
     slug
+    taxConfiguration {
+      pricesEnteredWithTax
+      taxCalculationStrategy
+    }
   }
   shippingAddress {
     ...Address

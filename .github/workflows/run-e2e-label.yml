@@ -1,0 +1,12 @@
+name: E2E staging (label)
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  run:
+    if: ${{ github.event.label.name == 'run e2e' }}
+    uses: ./.github/workflows/e2e.yml
+    secrets:
+      saleor-token: ${{ secrets.SALEOR_TOKEN }}
+      op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

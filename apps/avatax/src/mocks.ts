@@ -1,4 +1,8 @@
-import { OrderConfirmedSubscriptionFragment, OrderStatus } from "../generated/graphql";
+import {
+  OrderConfirmedSubscriptionFragment,
+  OrderStatus,
+  TaxCalculationStrategy,
+} from "../generated/graphql";
 
 export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
@@ -13,6 +17,10 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   channel: {
     id: "Q2hhbm5lbDox",
     slug: "default-channel",
+    taxConfiguration: {
+      pricesEnteredWithTax: true,
+      taxCalculationStrategy: TaxCalculationStrategy.TaxApp,
+    },
   },
   shippingAddress: {
     streetAddress1: "600 Montgomery St",
@@ -48,7 +56,7 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       amount: 59.17,
     },
     net: {
-      amount: 59.17,
+      amount: 50,
     },
   },
   lines: [

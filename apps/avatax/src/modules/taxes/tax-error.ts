@@ -1,17 +1,10 @@
-import { CriticalError, CommonErrorProps, ExpectedError } from "../../error";
+import { CommonErrorProps, CriticalError, ExpectedError } from "../../error";
 
-// Error thrown when there is not enough data in webhook payload to proceed with the process. Not reported.
-export const TaxIncompleteWebhookPayloadError = ExpectedError.subclass(
-  "TaxIncompleteWebhookPayloadError",
-  {
-    props: {
-      /**
-       * TODO: Remove this field
-       */
-      sentrySeverity: "warning",
-    } as CommonErrorProps,
-  },
-);
+// Error thrown when there is not enough data in webhook payload to proceed with. Not reported to Sentry.
+export const TaxIncompletePayloadErrors = {
+  MissingAddressError: ExpectedError.subclass("MissingAddressError"),
+  MissingLinesError: ExpectedError.subclass("MissingLinesError"),
+};
 
 // Error thrown when expected data is not present in the payload.
 export const TaxBadPayloadError = CriticalError.subclass("TaxBadPayloadError", {
@@ -36,3 +29,5 @@ export const TaxExternalError = CriticalError.subclass("TaxExternalError", {
     sentrySeverity: "error",
   } as CommonErrorProps,
 });
+
+export const InvalidAppAddressError = ExpectedError.subclass("InvalidAppAddressError");
