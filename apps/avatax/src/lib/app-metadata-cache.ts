@@ -13,7 +13,9 @@ export class AppMetadataCache {
     const store = this.als.getStore();
 
     if (!store) {
-      console.debug("You cant use LoggerContext outside of the wrapped scope. Will fallback to {}");
+      console.debug(
+        "You cant use AppMetadataCache store outside of the wrapped scope. Will fallback to null",
+      );
 
       return null;
     }

@@ -1,6 +1,6 @@
+import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
@@ -10,7 +10,11 @@ export class LoggerContext {
     const store = this.als.getStore();
 
     if (!store) {
-      console.debug("You cant use LoggerContext outside of the wrapped scope. Will fallback to {}");
+      if (!process.env.CI && process.env.OTEL_ENABLED === "true") {
+        console.warn(
+          "You cant use LoggerContext outside of the wrapped scope. Will fallback to {}",
+        );
+      }
 
       return {};
     }
