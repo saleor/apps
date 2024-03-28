@@ -19,16 +19,23 @@ const nextConfig = {
   },
 };
 
-const configWithSentry = require("@sentry/nextjs").withSentryConfig(nextConfig, {
-  silent: true,
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  hideSourceMaps: true,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  transpileClientSDK: true,
-  tunnelRoute: "/monitoring",
-});
+const { withSentryConfig } = require("@sentry/nextjs");
+
+const configWithSentry = withSentryConfig(
+  nextConfig,
+  {
+    silent: true,
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+  },
+  {
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+    disableLogger: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+  },
+);
 
 const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
 
