@@ -1,4 +1,6 @@
-const { withSentryConfig } = require("@sentry/nextjs");
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+import { withSentryConfig } from "@sentry/nextjs";
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
@@ -31,4 +33,10 @@ const configWithSentry = withSentryConfig(
   },
 );
 
-module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE_BUNDLE === "true",
+});
+
+export default withBundleAnalyzer(config);
