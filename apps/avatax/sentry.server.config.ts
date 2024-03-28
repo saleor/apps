@@ -9,13 +9,12 @@ import { CriticalError } from "./src/error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
-const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
 Sentry.init({
   dsn: SENTRY_DSN,
   // Adjust this value in production, or use tracesSampler for greater control
   enableTracing: false,
-  environment: SENTRY_ENVIRONMENT,
+  environment: process.env.ENV,
   includeLocalVariables: true,
   ignoreErrors: [
     // Ignore user configuration errors
