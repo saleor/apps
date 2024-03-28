@@ -4,11 +4,32 @@ function isObject(item: unknown) {
   return typeof item === "object" && !Array.isArray(item) && item !== null;
 }
 
+function getMinLevel() {
+  switch (process.env.APP_LOG_LEVEL) {
+    case "silent":
+      return 0;
+    case "trace":
+      return 1;
+    case "info":
+      return 3;
+    case "debug":
+      return 2;
+    case "warn":
+      return 4;
+    case "error":
+      return 5;
+    case "fatal":
+      return 6;
+    default:
+      return 3;
+  }
+}
+
 /*
  * TODO: Add test
  */
 export const logger = new Logger<ILogObj>({
-  minLevel: parseInt(process.env.APP_LOG_LEVEL ?? "3", 10),
+  minLevel: getMinLevel(),
   hideLogPositionForProduction: true,
   /**
    * Use custom console.log transport, because built-in API for pretty logger is limited
