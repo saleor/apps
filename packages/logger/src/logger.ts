@@ -5,15 +5,13 @@ function isObject(item: unknown) {
 }
 
 /*
- * TODO: Add loggerContext
  * TODO: Add test
  */
 export const logger = new Logger<ILogObj>({
   /**
    * TODO: Change env name when fully migrated from Pino
    */
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  minLevel: parseInt(process.env.NEW_APP_LOG_LEVEL ?? "3", 10),
+  minLevel: parseInt(process.env.APP_LOG_LEVEL ?? "3", 10),
   hideLogPositionForProduction: true,
   /**
    * Use custom console.log transport, because built-in API for pretty logger is limited

@@ -6,6 +6,7 @@
     "check-types": "tsc --noEmit",
     "deploy": "tsx ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "dev:debug": "APP_LOG_LEVEL=2 pnpm dev",
     "e2e": "vitest --project e2e --watch=false",
     "e2e:watch": "vitest --project e2e --watch",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
