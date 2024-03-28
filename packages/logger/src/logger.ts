@@ -8,9 +8,6 @@ function isObject(item: unknown) {
  * TODO: Add test
  */
 export const logger = new Logger<ILogObj>({
-  /**
-   * TODO: Change env name when fully migrated from Pino
-   */
   minLevel: parseInt(process.env.APP_LOG_LEVEL ?? "3", 10),
   hideLogPositionForProduction: true,
   /**
