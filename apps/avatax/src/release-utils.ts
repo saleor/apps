@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import packageJson from "../../../package.json";
+import packageJson from "../package.json";
 
 // todo: move to shared
 
@@ -23,7 +23,7 @@ const getCommitHash = () => {
 export const getReleaseTag = () => {
   const version = packageJson.version;
 
-  if (process.env.NODE_ENV === "production" && process.env.SENTRY_ENVIRONMENT === "production") {
+  if (process.env.NODE_ENV === "production" && process.env.ENV === "production") {
     return version;
   }
 

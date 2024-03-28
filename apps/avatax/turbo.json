@@ -19,7 +19,6 @@
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_DSN",
-        "SENTRY_ENVIRONMENT",
         "SENTRY_ORG",
         "SENTRY_PROJECT",
         "OTEL_ENABLED",
