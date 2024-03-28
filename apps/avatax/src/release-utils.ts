@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import packageJson from "../../../package.json";
+import packageJson from "../package.json";
 
 // todo: move to shared
 
