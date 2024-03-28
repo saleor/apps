@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.4.1
+
+### Patch Changes
+
+- 5d8c7e9b: App environment and version should be now send properly to Sentry.
+- 93a03072: Add bundle-analyzer to Next.js config. Now with an ANALYZE_BUNDLE env, bundle size report will be generated during the build
+
 ## 1.4.0
 
 ### Minor Changes
