@@ -11,11 +11,8 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
   ],
-  webpack: (config, { dev, isServer }) => {
-    if (isServer) {
-      config.resolve.alias["@sentry/nextjs"] = require.resolve("@sentry/nextjs/cjs/edge");
-    }
-    return config;
+  experimental: {
+    optimizePackageImports: ["@sentry/nextjs", "usehooks-ts", "@saleor/app-sdk"],
   },
 };
 
