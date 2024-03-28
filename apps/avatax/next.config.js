@@ -1,7 +1,3 @@
-import bundleAnalyzer from "@next/bundle-analyzer";
-
-import { withSentryConfig } from "@sentry/nextjs";
-
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
@@ -15,7 +11,12 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
   ],
+  experimental: {
+    optimizePackageImports: ["@sentry/nextjs", "usehooks-ts", "@saleor/app-sdk"],
+  },
 };
+
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const configWithSentry = withSentryConfig(
   nextConfig,
@@ -35,8 +36,8 @@ const configWithSentry = withSentryConfig(
 
 const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
 
-const withBundleAnalyzer = bundleAnalyzer({
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE_BUNDLE === "true",
 });
 
-export default withBundleAnalyzer(config);
+module.exports = withBundleAnalyzer(config);
