@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === "production" && forbiddenProductionLevels.includes(
   throw new Error(
     `Production app can only log INFO or higher log level. "${logLevel}" is development only.`,
   );
-  process.exit(1);
 }
 
 /**
