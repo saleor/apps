@@ -9,12 +9,11 @@ import { CriticalError } from "./src/error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
-const SENTRY_ENVIRONMENT = process.env.SENTRY_ENVIRONMENT;
 
 Sentry.init({
   dsn: SENTRY_DSN,
   enableTracing: false,
-  environment: SENTRY_ENVIRONMENT,
+  environment: process.env.ENV,
   includeLocalVariables: true,
   ignoreErrors: ["TRPCClientError"],
   beforeSend(errorEvent, hint) {
