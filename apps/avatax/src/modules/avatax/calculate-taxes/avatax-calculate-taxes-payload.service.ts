@@ -6,13 +6,13 @@ import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 
 export class AvataxCalculateTaxesPayloadService {
-  constructor(private authData: AuthData) {}
+  constructor(
+    private taxCodeMatchesService: AvataxTaxCodeMatchesService,
+    private payloadTransformer: AvataxCalculateTaxesPayloadTransformer,
+  ) {}
 
   private getMatches() {
-    // todo inject
-    const taxCodeMatchesService = new AvataxTaxCodeMatchesService(this.authData);
-
-    return taxCodeMatchesService.getAll();
+    return this.taxCodeMatchesService.getAll();
   }
 
   async getPayload(
@@ -20,8 +20,7 @@ export class AvataxCalculateTaxesPayloadService {
     avataxConfig: AvataxConfig,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
-    const payloadTransformer = new AvataxCalculateTaxesPayloadTransformer();
 
-    return payloadTransformer.transform(payload, avataxConfig, matches);
+    return this.payloadTransformer.transform(payload, avataxConfig, matches);
   }
 }

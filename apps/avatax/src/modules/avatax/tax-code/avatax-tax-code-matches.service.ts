@@ -10,19 +10,7 @@ import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumente
 import { metadataCache } from "../../../lib/app-metadata-cache";
 
 export class AvataxTaxCodeMatchesService {
-  private logger = createLogger("AvataxTaxCodeMatchesService");
-  private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
-
-  constructor(authData: AuthData) {
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    });
-    const { appId, saleorApiUrl } = authData;
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    this.taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);
-  }
+  constructor(private taxCodeMatchRepository: AvataxTaxCodeMatchRepository) {}
 
   async getAll(): Promise<AvataxTaxCodeMatches> {
     return this.taxCodeMatchRepository.getAll();
