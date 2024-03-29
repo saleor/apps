@@ -10,6 +10,7 @@ import { loggerContext } from "../../../logger-context";
 import { OrderCalculateTaxesController } from "./order-calculate-taxes.controller";
 import { ICalculateTaxesPayload } from "../calculate-taxes-payload";
 import { OrderCalculateTaxesUseCase } from "./order-calculate-taxes.use-case";
+import { MetadataDecryptor } from "../metadata-decryptor";
 
 /**
  * Manifest for this webhook
@@ -26,7 +27,8 @@ const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ICalculateTaxesPayl
  * Create root dependencies
  */
 const useCase = new OrderCalculateTaxesUseCase();
-const controller = new OrderCalculateTaxesController(useCase);
+const metadataDecryptor = new MetadataDecryptor(process.env.SECRET_KEY as string);
+const controller = new OrderCalculateTaxesController(useCase, metadataCache, metadataDecryptor);
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 

@@ -1,8 +1,9 @@
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync, Result, ResultAsync } from "neverthrow";
 import { CalculateTaxesPayload } from "../calculate-taxes-payload";
 import { IMetadataAppConfig } from "../metadata-app-config";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { OrderCalculateTaxesErrors } from "./order-calculate-taxes.errors";
+import { getActiveConnectionService } from "../../taxes/get-active-connection-service";
 
 type Errors = typeof OrderCalculateTaxesErrors.MissingConfigError;
 
@@ -11,11 +12,12 @@ export interface IOrderCalculateTaxesUseCase {
     payload: CalculateTaxesPayload;
     appConfig: IMetadataAppConfig;
     authData: AuthData;
-  }): ResultAsync<any, Errors["prototype"]>;
+    // TODO Verify difference with ResultAsync
+  }): Promise<Result<any, Errors["prototype"]>>;
 }
 
 export class OrderCalculateTaxesUseCase implements IOrderCalculateTaxesUseCase {
-  calculateTaxes({
+  async calculateTaxes({
     payload,
     appConfig,
     authData,
@@ -23,7 +25,7 @@ export class OrderCalculateTaxesUseCase implements IOrderCalculateTaxesUseCase {
     payload: CalculateTaxesPayload;
     appConfig: IMetadataAppConfig;
     authData: AuthData;
-  }): ResultAsync<any, Errors["prototype"]> {
+  }) {
     if (!appConfig.hasMetadata()) {
       const error = new OrderCalculateTaxesErrors.MissingConfigError(
         "Missing metadata in webhook payload. ",
@@ -32,6 +34,22 @@ export class OrderCalculateTaxesUseCase implements IOrderCalculateTaxesUseCase {
       return errAsync(error);
     }
 
-    return okAsync(null);
+    /**
+     * TODO Remove this service and clean this up. For now I need to keep it because configuration logic is so complicated that I need separate day to refactor it.
+     */
+    const activeConnectionServiceResult = getActiveConnectionService(
+      payload.getChannelSlug(),
+      appConfig.getRawItems(),
+      authData,
+    );
+
+    if (activeConnectionServiceResult.isErr()) {
+      // TODO: Translate errors to higher level
+      return errAsync(activeConnectionServiceResult.error);
+    }
+
+    const result = await activeConnectionServiceResult.value.calculateTaxes(payload.rawPayload);
+
+    return okAsync(result);
   }
 }

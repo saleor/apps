@@ -5,7 +5,7 @@ export interface IMetadataDecryptor {
   decrypt(metadataItems: MetadataItem[]): MetadataItem[];
 }
 
-export class MetadataEncryptor implements IMetadataDecryptor {
+export class MetadataDecryptor implements IMetadataDecryptor {
   constructor(private secretKey: string) {}
 
   decrypt(metadataItems: MetadataItem[]): MetadataItem[] {
