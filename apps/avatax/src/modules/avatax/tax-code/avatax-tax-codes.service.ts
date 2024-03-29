@@ -7,11 +7,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxTaxCodesService {
-  private client: AvataxClient;
-
-  constructor(config: AvataxConfig) {
-    this.client = new AvataxClient(new AvataxSdkClientFactory().createClient(config));
-  }
+  constructor(private client: AvataxClient) {}
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
     return taxCodes.map((item) => ({
