@@ -32,28 +32,30 @@ const controller = new OrderCalculateTaxesController(useCase, metadataCache, met
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
-const handler = wrapWithLoggerContext(
-  withOtel(
-    withMetadataCache(
-      orderCalculateTaxesSyncWebhook.createHandler(
-        async (req, res, { event, payload, authData, baseUrl }) => {
-          controller.execute(req, res, {
-            event: event as "ORDER_CALCULATE_TAXES",
-            payload,
-            authData,
-          });
-        },
+const handler = (controller: OrderCalculateTaxesController) =>
+  wrapWithLoggerContext(
+    withOtel(
+      withMetadataCache(
+        orderCalculateTaxesSyncWebhook.createHandler(
+          async (req, res, { event, payload, authData, baseUrl }) => {
+            await controller.execute(req, res, {
+              event: event as "ORDER_CALCULATE_TAXES",
+              payload,
+              authData,
+            });
+          },
+        ),
       ),
+      "/api/order-calculate-taxes",
     ),
-    "/api/order-calculate-taxes",
-  ),
-  loggerContext,
-);
+    loggerContext,
+  );
 
 /**
  * Root "infra" layer that registers webhooks handlers - framework specific.
  */
 export const OrderCalculateTaxesWebhook = {
-  registerHandler: () => orderCalculateTaxesSyncWebhook.createHandler(handler),
+  registerHandler: (ctrl = controller) =>
+    orderCalculateTaxesSyncWebhook.createHandler(() => handler(ctrl)),
   getManifest: orderCalculateTaxesSyncWebhook.getWebhookManifest,
 };
