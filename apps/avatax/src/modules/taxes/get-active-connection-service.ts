@@ -49,6 +49,9 @@ export const ActiveConnectionServiceErrors = {
 export type ActiveConnectionServiceErrorsUnion =
   (typeof ActiveConnectionServiceErrors)[keyof typeof ActiveConnectionServiceErrors];
 
+/**
+ * @deprecated
+ */
 export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],

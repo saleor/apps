@@ -8,6 +8,7 @@ import {
 
 /**
  * TODO: Make error handling in neverthrow
+ * @deprecated
  */
 export const getAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
