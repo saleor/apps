@@ -5,7 +5,9 @@ import { CalculateTaxesPayload, ICalculateTaxesPayload } from "../calculate-taxe
 import { IOrderCalculateTaxesUseCase } from "./order-calculate-taxes.use-case";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 import { createLogger } from "@saleor/apps-logger";
-import { MetadataAppConfig } from "../app-config";
+import { MetadataAppConfig } from "../metadata-app-config";
+import { AppMetadataCache } from "../../../lib/app-metadata-cache";
+import { IMetadataDecryptor } from "../metadata-decryptor";
 
 /**
  * Controllers:
@@ -19,7 +21,14 @@ import { MetadataAppConfig } from "../app-config";
 export class OrderCalculateTaxesController {
   private logger = createLogger("OrderCalculateTaxesController");
 
-  constructor(private useCase: IOrderCalculateTaxesUseCase) {}
+  constructor(
+    private useCase: IOrderCalculateTaxesUseCase,
+    /**
+     * TODO: Inject factory instead creating metadata here
+     */
+    private metadataCache: AppMetadataCache,
+    private metadataDecryptor: IMetadataDecryptor,
+  ) {}
 
   private applyObservabilityMetadata() {
     /**
@@ -40,7 +49,16 @@ export class OrderCalculateTaxesController {
     },
   ) {
     const payload = new CalculateTaxesPayload(ctx.payload);
-    const appConfig = new MetadataAppConfig(payload.getPrivateMetadataItems());
+    const appConfig = new MetadataAppConfig(
+      payload.getPrivateMetadataItems(),
+      this.metadataCache,
+      this.metadataDecryptor,
+    );
+
+    /**
+     * This is not perfect, but replacing metadata app config with DB will need a little of refactor anyway. I decided not to be super pure here.
+     */
+    appConfig.setCache();
 
     const payloadVerificationResult = verifyCalculateTaxesPayload(payload.rawPayload);
 
@@ -55,6 +73,7 @@ export class OrderCalculateTaxesController {
     const useCaseResult = await this.useCase.calculateTaxes({
       payload,
       appConfig,
+      authData: ctx.authData,
     });
 
     // TODO Handle errors, return response
