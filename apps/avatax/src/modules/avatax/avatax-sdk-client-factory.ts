@@ -28,7 +28,17 @@ const createAvataxSettings = ({ isSandbox }: { isSandbox: boolean }): AvataxSett
   return settings;
 };
 
-export class AvataxSdkClientFactory {
+export interface IAvataxSdkClientFactory {
+  createClient(opts: {
+    isSandbox: boolean;
+    credentials: {
+      username: string;
+      password: string;
+    };
+  }): Avatax;
+}
+
+export class AvataxSdkClientFactory implements IAvataxSdkClientFactory {
   createClient(config: {
     isSandbox: boolean;
     credentials: {

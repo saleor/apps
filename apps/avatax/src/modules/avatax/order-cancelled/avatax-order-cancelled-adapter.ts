@@ -5,6 +5,7 @@ import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
@@ -24,7 +25,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
 
     this.logger.debug("Calling AvaTax voidTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
+    const client = new AvataxClient(new AvataxSdkClientFactory().createClient(this.config));
 
     try {
       await client.voidTransaction(target);

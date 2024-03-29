@@ -8,6 +8,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 type AvataxOrderConfirmedPayload = {
   /**
@@ -38,7 +39,7 @@ export class AvataxOrderConfirmedAdapter
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
+    const client = new AvataxClient(new AvataxSdkClientFactory().createClient(this.config));
 
     try {
       const response = await client.createTransaction(target);

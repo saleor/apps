@@ -11,6 +11,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 import { z } from "zod";
 import * as Sentry from "@sentry/nextjs";
 import { InvalidAppAddressError } from "../../taxes/tax-error";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
@@ -89,7 +90,7 @@ export class AvataxCalculateTaxesAdapter
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
+    const client = new AvataxClient(new AvataxSdkClientFactory().createClient(this.config));
 
     try {
       const response = await client.createTransaction(target);

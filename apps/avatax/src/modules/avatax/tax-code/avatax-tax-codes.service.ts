@@ -4,12 +4,13 @@ import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxTaxCodesService {
   private client: AvataxClient;
 
   constructor(config: AvataxConfig) {
-    this.client = new AvataxClient(config);
+    this.client = new AvataxClient(new AvataxSdkClientFactory().createClient(config));
   }
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {

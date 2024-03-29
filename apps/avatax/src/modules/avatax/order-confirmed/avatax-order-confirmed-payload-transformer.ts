@@ -14,6 +14,7 @@ import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
@@ -47,7 +48,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
-    const avataxClient = new AvataxClient(avataxConfig);
+    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
 
     const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });

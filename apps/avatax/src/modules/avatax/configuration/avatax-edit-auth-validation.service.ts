@@ -4,6 +4,7 @@ import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
 import { AvataxClient } from "../avatax-client";
 import { createLogger } from "../../../logger";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxEditAuthValidationService {
   private logger = createLogger("AvataxAuthValidationService");
@@ -32,7 +33,9 @@ export class AvataxEditAuthValidationService {
       saleorApiUrl: this.saleorApiUrl,
     });
     const credentials = await transformer.patchCredentials(id, input.credentials);
-    const avataxClient = new AvataxClient({ ...input, credentials });
+    const avataxClient = new AvataxClient(
+      new AvataxSdkClientFactory().createClient({ ...input, credentials }),
+    );
 
     const authValidationService = new AvataxAuthValidationService(avataxClient);
 

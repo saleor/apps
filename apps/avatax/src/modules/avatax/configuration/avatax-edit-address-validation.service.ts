@@ -3,6 +3,7 @@ import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxAddressValidationService } from "./avatax-address-validation.service";
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxEditAddressValidationService {
   private client: Client;
@@ -32,7 +33,7 @@ export class AvataxEditAddressValidationService {
 
     const config = await transformer.patchInput(id, input);
 
-    const avataxClient = new AvataxClient(config);
+    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(config));
     const addressValidation = new AvataxAddressValidationService(avataxClient);
 
     return addressValidation.validate(input.address);
