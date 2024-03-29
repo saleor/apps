@@ -1,14 +1,36 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { SyncWebhookEventType } from "@saleor/app-sdk/types";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { ICalculateTaxesPayload } from "../calculate-taxes-payload";
+import { CalculateTaxesPayload, ICalculateTaxesPayload } from "../calculate-taxes-payload";
+import { IOrderCalculateTaxesUseCase } from "./order-calculate-taxes.use-case";
+import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
+import { createLogger } from "@saleor/apps-logger";
+import { MetadataAppConfig } from "../app-config";
 
+/**
+ * Controllers:
+ * 1. Are created top level in webhook layer
+ * 2. Are invoked by thin framework layer (api handler)
+ * 3. Validate request, transform payload, throw early if needed
+ * 4. Call use case to perform business logic
+ * 5. Handle domain errors from use case
+ * 6. Transform to response
+ */
 export class OrderCalculateTaxesController {
-  constructor(private useCase: any) {
-    //todo
+  private logger = createLogger("OrderCalculateTaxesController");
+
+  constructor(private useCase: IOrderCalculateTaxesUseCase) {}
+
+  private applyObservabilityMetadata() {
+    /**
+     * TODO:
+     *  - Apply logger context
+     *  - Apply OTEL params
+     *  - Apply Sentry scope data
+     */
   }
 
-  execute(
+  async execute(
     request: NextApiRequest,
     response: NextApiResponse,
     ctx: {
@@ -17,6 +39,24 @@ export class OrderCalculateTaxesController {
       payload: ICalculateTaxesPayload;
     },
   ) {
-    // todo: extract body, invoke useCase, handle errors
+    const payload = new CalculateTaxesPayload(ctx.payload);
+    const appConfig = new MetadataAppConfig(payload.getPrivateMetadataItems());
+
+    const payloadVerificationResult = verifyCalculateTaxesPayload(payload.rawPayload);
+
+    if (payloadVerificationResult.isErr()) {
+      this.logger.warn("Failed to calculate taxes, due to incomplete payload", {
+        error: payloadVerificationResult.error,
+      });
+
+      return response.status(400).send(payloadVerificationResult.error.message);
+    }
+
+    const useCaseResult = await this.useCase.calculateTaxes({
+      payload,
+      appConfig,
+    });
+
+    // TODO Handle errors, return response
   }
 }
