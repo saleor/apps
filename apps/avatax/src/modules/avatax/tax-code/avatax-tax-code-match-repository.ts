@@ -10,7 +10,7 @@ export const avataxTaxCodeMatchSchema = z.object({
 
 export type AvataxTaxCodeMatch = z.infer<typeof avataxTaxCodeMatchSchema>;
 
-const avataxTaxCodeMatchesSchema = z.array(
+export const avataxTaxCodeMatchesSchema = z.array(
   z.object({
     id: z.string(),
     data: avataxTaxCodeMatchSchema,
