@@ -77,6 +77,9 @@ export class OrderCalculateTaxesController {
     });
 
     if (useCaseResult.isErr()) {
+      console.log("ERRROR CONTROLER");
+      console.error(useCaseResult.error);
+
       // todo error mapping
       return response.status(500).send("error");
     } else {

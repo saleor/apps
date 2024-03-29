@@ -15,7 +15,7 @@ import { MetadataDecryptor } from "../metadata-decryptor";
 /**
  * Manifest for this webhook
  */
-const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ICalculateTaxesPayload>({
+export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ICalculateTaxesPayload>({
   name: "OrderCalculateTaxes",
   apl: saleorApp.apl,
   event: "ORDER_CALCULATE_TAXES",
@@ -32,30 +32,33 @@ const controller = new OrderCalculateTaxesController(useCase, metadataCache, met
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
-const handler = (controller: OrderCalculateTaxesController) =>
-  wrapWithLoggerContext(
-    withOtel(
-      withMetadataCache(
-        orderCalculateTaxesSyncWebhook.createHandler(
-          async (req, res, { event, payload, authData, baseUrl }) => {
+// TODO: Inject constructor via DI
+const handler = wrapWithLoggerContext(
+  withOtel(
+    withMetadataCache(
+      orderCalculateTaxesSyncWebhook.createHandler(
+        async (req, res, { event, payload, authData, baseUrl }) => {
+          console.log("call handler");
+
+          try {
             await controller.execute(req, res, {
               event: event as "ORDER_CALCULATE_TAXES",
               payload,
               authData,
             });
-          },
-        ),
-      ),
-      "/api/order-calculate-taxes",
-    ),
-    loggerContext,
-  );
+          } catch (e) {
+            // handle unhandled error root level
+            console.log("ERROR");
+            console.error(e);
 
-/**
- * Root "infra" layer that registers webhooks handlers - framework specific.
- */
-export const OrderCalculateTaxesWebhook = {
-  registerHandler: (ctrl = controller) =>
-    orderCalculateTaxesSyncWebhook.createHandler(() => handler(ctrl)),
-  getManifest: orderCalculateTaxesSyncWebhook.getWebhookManifest,
-};
+            return res.status(500).send("Unhandled error");
+          }
+        },
+      ),
+    ),
+    "/api/order-calculate-taxes",
+  ),
+  loggerContext,
+);
+
+export const nextHandler = orderCalculateTaxesSyncWebhook.createHandler(handler);
