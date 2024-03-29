@@ -76,6 +76,11 @@ export class OrderCalculateTaxesController {
       authData: ctx.authData,
     });
 
-    // TODO Handle errors, return response
+    if (useCaseResult.isErr()) {
+      // todo error mapping
+      return response.status(500).send("error");
+    } else {
+      return response.status(200).json(useCaseResult.value);
+    }
   }
 }
