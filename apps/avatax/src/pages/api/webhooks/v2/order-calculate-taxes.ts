@@ -1,4 +1,4 @@
-import { nextHandler } from "../../../../modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
+import { orderCalculateTaxesNextApiHandler } from "../../../../modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
 
 export const config = {
   api: {
@@ -6,4 +6,4 @@ export const config = {
   },
 };
 
-export default nextHandler;
+export default orderCalculateTaxesNextApiHandler;

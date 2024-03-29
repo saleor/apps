@@ -33,13 +33,11 @@ const controller = new OrderCalculateTaxesController(useCase, metadataCache, met
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 // TODO: Inject constructor via DI
-const handler = wrapWithLoggerContext(
+export const orderCalculateTaxesNextApiHandler = wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderCalculateTaxesSyncWebhook.createHandler(
         async (req, res, { event, payload, authData, baseUrl }) => {
-          console.log("call handler");
-
           try {
             await controller.execute(req, res, {
               event: event as "ORDER_CALCULATE_TAXES",
@@ -47,7 +45,7 @@ const handler = wrapWithLoggerContext(
               authData,
             });
           } catch (e) {
-            // handle unhandled error root level
+            // handle unhandled error root level todo sentry
             console.log("ERROR");
             console.error(e);
 
@@ -60,5 +58,3 @@ const handler = wrapWithLoggerContext(
   ),
   loggerContext,
 );
-
-export const nextHandler = orderCalculateTaxesSyncWebhook.createHandler(handler);
