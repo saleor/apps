@@ -9,7 +9,11 @@ import { loggerContext } from "../../../logger-context";
 
 import { OrderCalculateTaxesController } from "./order-calculate-taxes.controller";
 import { ICalculateTaxesPayload } from "../calculate-taxes-payload";
+import { OrderCalculateTaxesUseCase } from "./order-calculate-taxes.use-case";
 
+/**
+ * Manifest for this webhook
+ */
 const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ICalculateTaxesPayload>({
   name: "OrderCalculateTaxes",
   apl: saleorApp.apl,
@@ -18,9 +22,13 @@ const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<ICalculateTaxesPayl
   webhookPath: "/api/webhooks/v2/order-calculate-taxes",
 });
 
-const withMetadataCache = wrapWithMetadataCache(metadataCache);
+/**
+ * Create root dependencies
+ */
+const useCase = new OrderCalculateTaxesUseCase();
+const controller = new OrderCalculateTaxesController(useCase);
 
-const controller = new OrderCalculateTaxesController();
+const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 const handler = wrapWithLoggerContext(
   withOtel(
@@ -40,6 +48,9 @@ const handler = wrapWithLoggerContext(
   loggerContext,
 );
 
+/**
+ * Root "infra" layer that registers webhooks handlers - framework specific.
+ */
 export const OrderCalculateTaxesWebhook = {
   registerHandler: () => orderCalculateTaxesSyncWebhook.createHandler(handler),
   getManifest: orderCalculateTaxesSyncWebhook.getWebhookManifest,
