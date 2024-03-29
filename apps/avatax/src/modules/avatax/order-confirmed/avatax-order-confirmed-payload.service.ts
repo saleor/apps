@@ -15,17 +15,7 @@ export class AvataxOrderConfirmedPayloadService {
   constructor(private avataxClient: AvataxClient) {}
 
   private getMatches(authData: AuthData) {
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    });
-    const { appId, saleorApiUrl } = authData;
-
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);
-
-    const taxCodeMatchesService = new AvataxTaxCodeMatchesService(taxCodeMatchRepository);
+    const taxCodeMatchesService = AvataxTaxCodeMatchesService.createFromAuthData(authData);
 
     return taxCodeMatchesService.getAll();
   }

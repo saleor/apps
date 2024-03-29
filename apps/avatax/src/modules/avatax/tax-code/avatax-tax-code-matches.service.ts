@@ -28,4 +28,19 @@ export class AvataxTaxCodeMatchesService {
 
     return this.taxCodeMatchRepository.create(input);
   }
+
+  static createFromAuthData(authData: Pick<AuthData, "saleorApiUrl" | "token" | "appId">) {
+    const client = createInstrumentedGraphqlClient({
+      saleorApiUrl: authData.saleorApiUrl,
+      token: authData.token,
+    });
+    const settingsManager = createSettingsManager(client, authData.appId, metadataCache);
+
+    const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(
+      settingsManager,
+      authData.saleorApiUrl,
+    );
+
+    return new AvataxTaxCodeMatchesService(taxCodeMatchRepository);
+  }
 }

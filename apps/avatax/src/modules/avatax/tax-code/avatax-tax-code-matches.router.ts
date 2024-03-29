@@ -13,20 +13,13 @@ import { AvataxCalculateTaxesPayloadService } from "../calculate-taxes/avatax-ca
 import { AvataxCalculateTaxesPayloadTransformer } from "../calculate-taxes/avatax-calculate-taxes-payload-transformer";
 
 const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) => {
-  const client = createInstrumentedGraphqlClient({
-    saleorApiUrl: ctx.saleorApiUrl,
-    token: ctx.token,
-  });
-  const settingsManager = createSettingsManager(client, ctx.appId, metadataCache);
-
-  const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(
-    settingsManager,
-    ctx.saleorApiUrl,
-  );
-
   return next({
     ctx: {
-      taxCodeMatchesService: new AvataxTaxCodeMatchesService(taxCodeMatchRepository),
+      taxCodeMatchesService: AvataxTaxCodeMatchesService.createFromAuthData({
+        saleorApiUrl: ctx.saleorApiUrl,
+        token: ctx.appToken,
+        appId: ctx.appId,
+      }),
     },
   });
 });

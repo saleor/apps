@@ -91,16 +91,8 @@ export class AvataxCalculateTaxesAdapter
   ): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
 
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    });
-    const { appId, saleorApiUrl } = authData;
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);
     const payloadService = new AvataxCalculateTaxesPayloadService(
-      new AvataxTaxCodeMatchesService(taxCodeMatchRepository),
+      AvataxTaxCodeMatchesService.createFromAuthData(authData),
       new AvataxCalculateTaxesPayloadTransformer(),
     );
 
