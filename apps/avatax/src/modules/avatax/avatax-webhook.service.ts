@@ -8,24 +8,19 @@ import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
+import { AvataxClient } from "./avatax-client";
 
 export class AvataxWebhookService implements ProviderWebhookService {
-  private logger = createLogger("AvataxWebhookService");
-  private config: AvataxConfig;
-  private authData: AuthData;
+  constructor(private avataxClient: AvataxClient) {}
 
-  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
-    this.authData = authData;
-    this.config = config;
-  }
+  async calculateTaxes(
+    payload: CalculateTaxesPayload,
+    avataxConfig: AvataxConfig,
+    authData: AuthData,
+  ) {
+    const adapter = new AvataxCalculateTaxesAdapter(this.avataxClient);
 
-  async calculateTaxes(payload: CalculateTaxesPayload) {
-    const adapter = new AvataxCalculateTaxesAdapter({
-      config: this.config,
-      authData: this.authData,
-    });
-
-    const response = await adapter.send(payload, this.config, this.authData);
+    const response = await adapter.send(payload, avataxConfig, authData);
 
     return response;
   }
@@ -33,19 +28,19 @@ export class AvataxWebhookService implements ProviderWebhookService {
   async confirmOrder(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
     saleorOrder: SaleorOrder,
+    avataxConfig: AvataxConfig,
+    authData: AuthData,
   ) {
-    const adapter = new AvataxOrderConfirmedAdapter();
+    const adapter = new AvataxOrderConfirmedAdapter(this.avataxClient);
 
-    const response = await adapter.send({ order, saleorOrder }, this.config, this.authData);
+    const response = await adapter.send({ order, saleorOrder }, avataxConfig, authData);
 
     return response;
   }
 
-  async cancelOrder(payload: OrderCancelledPayload) {
-    const adapter = new AvataxOrderCancelledAdapter({
-      config: this.config,
-    });
+  async cancelOrder(payload: OrderCancelledPayload, avataxConfig: AvataxConfig) {
+    const adapter = new AvataxOrderCancelledAdapter(this.avataxClient);
 
-    await adapter.send(payload);
+    await adapter.send(payload, avataxConfig);
   }
 }

@@ -15,7 +15,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelle
 
   constructor(private avataxClient: AvataxClient) {}
 
-  async send(payload: OrderCancelledPayload, config: AvataxConfig, authData: AuthData) {
+  async send(payload: OrderCancelledPayload, config: AvataxConfig) {
     this.logger.debug("Transforming the Saleor payload for cancelling transaction with AvaTax...");
 
     const payloadTransformer = new AvataxOrderCancelledPayloadTransformer();

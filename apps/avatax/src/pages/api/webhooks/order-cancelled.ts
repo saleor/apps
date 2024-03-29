@@ -7,6 +7,7 @@ import { loggerContext } from "../../../logger-context";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { getAppConfig } from "../../../modules/app/get-app-config";
 
 export const config = {
   api: {
@@ -52,6 +53,8 @@ export default wrapWithLoggerContext(
             appMetadata,
             ctx.authData,
           );
+
+          const config = getAppConfig(appMetadata);
 
           logger.info("Cancelling order...");
 
