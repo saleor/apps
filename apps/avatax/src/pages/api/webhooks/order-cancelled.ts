@@ -4,7 +4,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -25,7 +24,6 @@ export default wrapWithLoggerContext(
           saleorApiUrl: ctx.authData.saleorApiUrl,
         });
         const { payload } = ctx;
-        const webhookResponse = new WebhookResponse(res);
 
         if (payload.version) {
           Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
@@ -38,8 +36,9 @@ export default wrapWithLoggerContext(
           const error = new Error("Insufficient order data");
 
           logger.error("Insufficient order data", { error });
+          Sentry.captureException("Insufficient order data");
 
-          return webhookResponse.error(error);
+          return res.status(400).send("Invalid order payload");
         }
 
         try {
@@ -61,17 +60,18 @@ export default wrapWithLoggerContext(
 
             logger.info("Order cancelled");
 
-            return webhookResponse.success();
+            return res.status(200).end();
           }
 
           if (taxProviderResult.isErr()) {
             Sentry.captureException(taxProviderResult.error);
             // TODO: Map errors
-            return webhookResponse.error(taxProviderResult.error);
+            return res.status(500).send("Unhandled error");
           }
         } catch (error) {
           Sentry.captureException(error);
-          return webhookResponse.error(error);
+
+          return res.status(500).send("Unhandled error");
         }
       }),
     ),
