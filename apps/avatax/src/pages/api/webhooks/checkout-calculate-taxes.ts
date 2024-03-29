@@ -1,7 +1,6 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
@@ -32,7 +31,6 @@ export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const webhookResponse = new WebhookResponse(res);
         const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
         try {
@@ -107,7 +105,8 @@ export default wrapWithLoggerContext(
               await activeConnectionServiceResult.value.calculateTaxes(payload);
 
             logger.info("Taxes calculated", { calculatedTaxes });
-            return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+
+            return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           }
         } catch (error) {
           if (error instanceof InvalidAppAddressError) {
@@ -123,7 +122,7 @@ export default wrapWithLoggerContext(
 
           Sentry.captureException(error);
 
-          return webhookResponse.error(error);
+          return res.status(500).send("Unhandled error");
         }
       }),
     ),

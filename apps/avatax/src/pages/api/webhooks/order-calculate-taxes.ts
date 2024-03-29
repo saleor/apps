@@ -4,7 +4,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
@@ -24,7 +23,6 @@ export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const webhookResponse = new WebhookResponse(res);
         const logger = createLogger("orderCalculateTaxesSyncWebhook");
 
         try {
@@ -66,7 +64,7 @@ export default wrapWithLoggerContext(
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
-            return webhookResponse.success(ctx.buildResponse(calculatedTaxes));
+            return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (activeConnectionServiceResult.isErr()) {
             const err = activeConnectionServiceResult.error;
 
@@ -101,7 +99,7 @@ export default wrapWithLoggerContext(
 
           Sentry.captureException(error);
 
-          return webhookResponse.error(error);
+          return res.status(500).send("Unhandled error");
         }
       }),
     ),
