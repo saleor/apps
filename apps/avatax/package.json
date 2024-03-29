@@ -18,7 +18,7 @@
     "migrate:dry-run": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --dry-run",
     "migrate:silent": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts --silent",
     "start": "next start",
-    "test": "vitest --project react"
+    "test": "vitest --project units"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
