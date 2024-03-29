@@ -33,7 +33,6 @@ export class OrderCalculateTaxesUseCase implements IOrderCalculateTaxesUseCase {
 
       return errAsync(error);
     }
-    console.log(appConfig.getDecryptedItems());
 
     /**
      * TODO Remove this service and clean this up. For now I need to keep it because configuration logic is so complicated that I need separate day to refactor it.

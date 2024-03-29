@@ -15,6 +15,9 @@ import { InvalidAppAddressError } from "../../taxes/tax-error";
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
+/**
+ * @deprecated
+ */
 export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
