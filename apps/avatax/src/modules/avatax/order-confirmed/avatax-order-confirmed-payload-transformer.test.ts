@@ -28,20 +28,20 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
     const payload = await transformer.transform(orderMock, saleorOrderMock, avataxConfigMock, []);
 
     expect(payload.model.type).toBe(DocumentType.SalesInvoice);
-  }),
-    it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", async () => {
-      const payload = await transformer.transform(
-        orderMock,
-        saleorOrderMock,
-        {
-          ...avataxConfigMock,
-          isDocumentRecordingEnabled: false,
-        },
-        [],
-      );
+  });
+  it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", async () => {
+    const payload = await transformer.transform(
+      orderMock,
+      saleorOrderMock,
+      {
+        ...avataxConfigMock,
+        isDocumentRecordingEnabled: false,
+      },
+      [],
+    );
 
-      expect(payload.model.type).toBe(DocumentType.SalesOrder);
-    });
+    expect(payload.model.type).toBe(DocumentType.SalesOrder);
+  });
   it("returns lines with discounted: true when there are discounts", async () => {
     const payload = await transformer.transform(
       discountedOrderMock,

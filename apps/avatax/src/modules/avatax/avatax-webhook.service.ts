@@ -25,7 +25,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
       authData: this.authData,
     });
 
-    const response = await adapter.send(payload);
+    const response = await adapter.send(payload, this.config, this.authData);
 
     return response;
   }
@@ -34,12 +34,9 @@ export class AvataxWebhookService implements ProviderWebhookService {
     order: DeprecatedOrderConfirmedSubscriptionFragment,
     saleorOrder: SaleorOrder,
   ) {
-    const adapter = new AvataxOrderConfirmedAdapter({
-      config: this.config,
-      authData: this.authData,
-    });
+    const adapter = new AvataxOrderConfirmedAdapter();
 
-    const response = await adapter.send({ order, saleorOrder });
+    const response = await adapter.send({ order, saleorOrder }, this.config, this.authData);
 
     return response;
   }
