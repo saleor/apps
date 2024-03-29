@@ -55,12 +55,12 @@ export default wrapWithLoggerContext(
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
             appMetadata,
-            ctx.authData,
           );
 
           if (activeConnectionServiceResult.isOk()) {
-            const calculatedTaxes =
-              await activeConnectionServiceResult.value.calculateTaxes(payload);
+            const { taxProvider, config } = activeConnectionServiceResult.value;
+
+            const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);
 
             logger.info("Taxes calculated", { calculatedTaxes });
 

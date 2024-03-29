@@ -74,17 +74,20 @@ export default wrapWithLoggerContext(
             const taxProviderResult = getActiveConnectionService(
               saleorOrder.channelSlug,
               appMetadata,
-              ctx.authData,
             );
 
             logger.debug("Confirming order...");
 
             if (taxProviderResult.isOk()) {
+              const { config, taxProvider } = taxProviderResult.value;
+
               try {
-                const confirmedOrder = await taxProviderResult.value.confirmOrder(
+                const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
                   saleorOrder,
+                  config,
+                  ctx.authData,
                 );
 
                 logger.info("Order confirmed", { orderId: confirmedOrder.id });

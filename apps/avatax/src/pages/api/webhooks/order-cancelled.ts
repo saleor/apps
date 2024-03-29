@@ -48,36 +48,14 @@ export default wrapWithLoggerContext(
           metadataCache.setMetadata(appMetadata);
 
           const channelSlug = payload.order.channel.slug;
-          const taxProviderResult = getActiveConnectionService(
-            channelSlug,
-            appMetadata,
-            ctx.authData,
-          );
-
-          /**
-           * TODO Make it DRY
-           */
-          const config = getAppConfig(appMetadata);
-          const channelConfig = config.channels.find(
-            (channel) => channel.config.slug === channelSlug,
-          );
-
-          if (!channelConfig) {
-            throw new Error("invalid config");
-          }
-
-          const providerConnection = config.providerConnections.find(
-            (connection) => connection.id === channelConfig.config.providerConnectionId,
-          );
-
-          if (!providerConnection) {
-            throw new Error("invalid config");
-          }
+          const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
 
           logger.info("Cancelling order...");
 
           if (taxProviderResult.isOk()) {
-            await taxProviderResult.value.cancelOrder(payload, providerConnection.config);
+            const { taxProvider, config } = taxProviderResult.value;
+
+            await taxProvider.cancelOrder(payload, config);
 
             logger.info("Order cancelled");
 

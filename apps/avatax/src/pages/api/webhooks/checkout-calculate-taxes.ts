@@ -75,7 +75,6 @@ export default wrapWithLoggerContext(
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
             appMetadata,
-            ctx.authData,
           );
 
           if (activeConnectionServiceResult.isErr()) {
@@ -100,9 +99,11 @@ export default wrapWithLoggerContext(
             }
           } else {
             logger.info("Found active connection service. Calculating taxes...");
+
+            const { taxProvider, config } = activeConnectionServiceResult.value;
+
             // TODO: Improve errors handling like above
-            const calculatedTaxes =
-              await activeConnectionServiceResult.value.calculateTaxes(payload);
+            const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
