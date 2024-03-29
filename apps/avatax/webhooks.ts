@@ -2,11 +2,12 @@ import { checkoutCalculateTaxesSyncWebhook } from "./src/modules/webhooks/defini
 import { orderCalculateTaxesSyncWebhook } from "./src/modules/webhooks/definitions/order-calculate-taxes";
 import { orderCancelledAsyncWebhook } from "./src/modules/webhooks/definitions/order-cancelled";
 import { orderConfirmedAsyncWebhook } from "./src/modules/webhooks/definitions/order-confirmed";
-import { OrderCalculateTaxesWebhook } from "./src/modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
+// import { OrderCalculateTaxesWebhook } from "./src/modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
 
 export const appWebhooks = [
   checkoutCalculateTaxesSyncWebhook,
-  orderCalculateTaxesSyncWebhook,
+  // orderCalculateTaxesSyncWebhook, // todo -> refactor to v2
   orderCancelledAsyncWebhook,
   orderConfirmedAsyncWebhook,
+  orderCalculateTaxesSyncWebhook,
 ];

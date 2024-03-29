@@ -1,3 +1,9 @@
-import { OrderCalculateTaxesWebhook } from "../../../../modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
+import { nextHandler } from "../../../../modules/calculate-taxes/order-calculate-taxes/order-calculate-taxes.webhook";
 
-export default OrderCalculateTaxesWebhook.registerHandler();
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default nextHandler;

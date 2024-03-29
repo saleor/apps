@@ -1,4 +1,4 @@
-import { err, errAsync, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { errAsync, okAsync, Result } from "neverthrow";
 import { CalculateTaxesPayload } from "../calculate-taxes-payload";
 import { IMetadataAppConfig } from "../metadata-app-config";
 import { AuthData } from "@saleor/app-sdk/APL";
@@ -33,6 +33,7 @@ export class OrderCalculateTaxesUseCase implements IOrderCalculateTaxesUseCase {
 
       return errAsync(error);
     }
+    console.log(appConfig.getDecryptedItems());
 
     /**
      * TODO Remove this service and clean this up. For now I need to keep it because configuration logic is so complicated that I need separate day to refactor it.
