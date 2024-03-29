@@ -54,12 +54,30 @@ export default wrapWithLoggerContext(
             ctx.authData,
           );
 
+          /**
+           * TODO Make it DRY
+           */
           const config = getAppConfig(appMetadata);
+          const channelConfig = config.channels.find(
+            (channel) => channel.config.slug === channelSlug,
+          );
+
+          if (!channelConfig) {
+            throw new Error("invalid config");
+          }
+
+          const providerConnection = config.providerConnections.find(
+            (connection) => connection.id === channelConfig.config.providerConnectionId,
+          );
+
+          if (!providerConnection) {
+            throw new Error("invalid config");
+          }
 
           logger.info("Cancelling order...");
 
           if (taxProviderResult.isOk()) {
-            await taxProviderResult.value.cancelOrder(payload);
+            await taxProviderResult.value.cancelOrder(payload, providerConnection.config);
 
             logger.info("Order cancelled");
 
