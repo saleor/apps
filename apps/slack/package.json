@@ -30,7 +30,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
-    "@sentry/nextjs": "7.77.0",
+    "@sentry/nextjs": "7.93.0",
     "@urql/exchange-auth": "^2.1.4",
     "eslint": "8.46.0",
     "graphql": "16.7.1",
