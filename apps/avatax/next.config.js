@@ -12,7 +12,7 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
   ],
   experimental: {
-    optimizePackageImports: ["@sentry/nextjs", "usehooks-ts", "@saleor/app-sdk"],
+    optimizePackageImports: ["@sentry/*", "usehooks-ts", "@saleor/app-sdk", "@trpc/*"],
   },
 };
 
