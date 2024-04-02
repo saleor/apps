@@ -53,7 +53,8 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
         message: message,
         type: levelToBreadcrumbType(log._meta.logLevelName),
         level: loggerLevelToSentryLevel(log._meta.logLevelName),
-        timestamp: new Date().getTime(),
+        // @ts-ignore
+        timestamp: log._meta.date.toISOString(),
         data: attributes,
       });
     });
