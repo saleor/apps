@@ -8,12 +8,9 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
-import {
-  ActiveConnectionServiceErrors,
-  getActiveConnectionService,
-} from "../../../modules/taxes/get-active-connection-service";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
+import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
 
 export const config = {
   api: {
@@ -70,6 +67,10 @@ export default wrapWithLoggerContext(
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
             metadataCache.setMetadata(appMetadata);
+
+            const getActiveConnectionService = await import(
+              "../../../modules/taxes/get-active-connection-service"
+            ).then((m) => m.getActiveConnectionService);
 
             const taxProviderResult = getActiveConnectionService(
               saleorOrder.channelSlug,
