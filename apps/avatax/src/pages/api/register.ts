@@ -1,3 +1,5 @@
+"skip ssr";
+
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";

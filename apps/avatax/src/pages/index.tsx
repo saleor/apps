@@ -1,3 +1,5 @@
+"skip ssr";
+
 import { NextPage } from "next";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useEffect } from "react";

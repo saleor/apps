@@ -1,3 +1,5 @@
+"skip ssr";
+
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
