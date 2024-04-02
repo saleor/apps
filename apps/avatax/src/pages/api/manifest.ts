@@ -7,16 +7,11 @@ import packageJson from "../../../package.json";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
-import { captureException } from "@sentry/nextjs";
 
 export default wrapWithLoggerContext(
   withOtel(
     createManifestHandler({
-      async manifestFactory({ appBaseUrl, request }) {
-        if (request.query.forceerror) {
-          captureException(new Error("Force error TEST"));
-        }
-
+      async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
