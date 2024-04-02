@@ -15,6 +15,9 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
   ],
+  experimental: {
+    esmExternals: false,
+  },
 };
 
 const configWithSentry = withSentryConfig(
