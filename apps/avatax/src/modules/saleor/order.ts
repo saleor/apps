@@ -47,3 +47,36 @@ export class SaleorOrder {
     return this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
   }
 }
+
+type SaleorCancelledOrderData = z.infer<typeof SaleorCancelledOrder.schema>;
+
+export class SaleorCancelledOrder {
+  public static schema = z.object({
+    order: z.object({
+      channel: z.object({
+        id: z.string(),
+        slug: z.string(),
+      }),
+      id: z.string(),
+      avataxId: z.string(),
+    }),
+    recipient: z.object({
+      privateMetadata: z.array(
+        z.object({
+          key: z.string(),
+          value: z.string(),
+        }),
+      ),
+    }),
+  });
+
+  private data: SaleorCancelledOrderData;
+
+  constructor(data: SaleorCancelledOrderData) {
+    this.data = data;
+  }
+
+  public get payload() {
+    return this.data;
+  }
+}
