@@ -1,3 +1,5 @@
+"skip ssr";
+
 import "../styles/globals.css";
 import "@saleor/macaw-ui/style";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";

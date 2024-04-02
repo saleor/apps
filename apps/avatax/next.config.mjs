@@ -1,6 +1,8 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 
 import { withSentryConfig } from "@sentry/nextjs";
+import {withElacca} from "elacca";
+
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
@@ -39,4 +41,4 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE_BUNDLE === "true",
 });
 
-export default withBundleAnalyzer(config);
+export default withElacca()(withBundleAnalyzer(config));

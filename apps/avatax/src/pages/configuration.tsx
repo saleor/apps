@@ -1,3 +1,5 @@
+"skip ssr";
+
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
