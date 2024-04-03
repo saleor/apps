@@ -1,6 +1,7 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
-import { it, describe } from "vitest";
+import { string } from "pactum-matchers";
+import { describe, it } from "vitest";
 import {
   CheckoutAddBilling,
   CheckoutAddShipping,
@@ -10,7 +11,6 @@ import {
   OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { string } from "pactum-matchers";
 
 describe("App should calculate taxes for checkout with product tax [pricesEnteredWithTax: True]", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
@@ -253,6 +253,7 @@ describe("App should calculate taxes for checkout with product tax [pricesEntere
         key: "avataxId",
         value: "typeof $V === 'string'",
       })
-      .retry(4, 2000);
+      .retry(4, 2000)
+      .inspect();
   });
 });
