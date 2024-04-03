@@ -6,7 +6,6 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { verifyOrderCanceledPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
@@ -40,11 +39,9 @@ export default wrapWithLoggerContext(
         try {
           const cancelledOrder = new SaleorCancelledOrder(payload);
 
-          const saleorOrderCancelledPaylod = cancelledOrder.payload;
+          const appMetadata = cancelledOrder.privateMetadata ?? [];
 
-          const appMetadata = saleorOrderCancelledPaylod.recipient?.privateMetadata ?? [];
-
-          const channelSlug = saleorOrderCancelledPaylod.order.channel.slug;
+          const channelSlug = cancelledOrder.channelSlug;
 
           const getActiveConnectionService = await import(
             "../../../modules/taxes/get-active-connection-service"
@@ -59,7 +56,7 @@ export default wrapWithLoggerContext(
           logger.info("Cancelling order...");
 
           if (taxProviderResult.isOk()) {
-            await taxProviderResult.value.cancelOrder(saleorOrderCancelledPaylod);
+            await taxProviderResult.value.cancelOrder(cancelledOrder.avataxId);
 
             logger.info("Order cancelled");
 

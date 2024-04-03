@@ -8,7 +8,7 @@ import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
-export class AvataxOrderCancelledAdapter implements WebhookAdapter<OrderCancelledPayload, void> {
+export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
 
   constructor(private avataxClient: AvataxClient) {}

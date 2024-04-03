@@ -95,7 +95,15 @@ export class SaleorCancelledOrder {
     this.data = data as z.infer<typeof SaleorCancelledOrder.schema>;
   }
 
-  public get payload() {
-    return this.data;
+  public get privateMetadata() {
+    return this.data.recipient.privateMetadata;
+  }
+
+  public get channelSlug() {
+    return this.data.order.channel.slug;
+  }
+
+  public get avataxId() {
+    return this.data.order.avataxId;
   }
 }

@@ -22,5 +22,5 @@ export interface ProviderWebhookService {
     avataxConfig: AvataxConfig,
     authData: AuthData,
   ) => Promise<CreateOrderResponse>;
-  cancelOrder: (payload: OrderCancelledPayload, avataxConfig: AvataxConfig) => Promise<void>;
+  cancelOrder: (avataxId: string, avataxConfig: AvataxConfig) => Promise<void>;
 }
