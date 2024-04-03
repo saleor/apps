@@ -4,7 +4,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 
@@ -47,6 +46,11 @@ export default wrapWithLoggerContext(
           metadataCache.setMetadata(appMetadata);
 
           const channelSlug = payload.order.channel.slug;
+
+          const getActiveConnectionService = await import(
+            "../../../modules/taxes/get-active-connection-service"
+          ).then((m) => m.getActiveConnectionService);
+
           const taxProviderResult = getActiveConnectionService(
             channelSlug,
             appMetadata,
