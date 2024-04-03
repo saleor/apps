@@ -7,14 +7,10 @@ import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumente
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { WebhookResponse } from "../../../modules/app/webhook-response";
 import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
-import {
-  ActiveConnectionServiceErrors,
-  getActiveConnectionService,
-} from "../../../modules/taxes/get-active-connection-service";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
+import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
 
 export const config = {
   api: {
@@ -33,7 +29,6 @@ export default wrapWithLoggerContext(
         });
         const { payload, authData } = ctx;
         const { saleorApiUrl, token } = authData;
-        const webhookResponse = new WebhookResponse(res);
 
         if (payload.version) {
           Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
@@ -57,9 +52,11 @@ export default wrapWithLoggerContext(
             const saleorOrder = new SaleorOrder(parseOrderResult.value);
 
             if (saleorOrder.isFulfilled()) {
-              return webhookResponse.error(
-                new Error("Skipping fulfilled order to prevent duplication"),
-              );
+              /**
+               * TODO Should it be 400? Maybe just 200?
+               */
+              logger.warn("Order is fulfilled, skipping");
+              return res.status(400).send("Skipping fulfilled order to prevent duplication");
             }
 
             if (saleorOrder.isStrategyFlatRates()) {
@@ -70,6 +67,10 @@ export default wrapWithLoggerContext(
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
             metadataCache.setMetadata(appMetadata);
+
+            const getActiveConnectionService = await import(
+              "../../../modules/taxes/get-active-connection-service"
+            ).then((m) => m.getActiveConnectionService);
 
             const taxProviderResult = getActiveConnectionService(
               saleorOrder.channelSlug,
@@ -101,7 +102,7 @@ export default wrapWithLoggerContext(
                 );
                 logger.info("Updated order metadata with externalId");
 
-                return webhookResponse.success();
+                return res.status(200).end();
               } catch (error) {
                 logger.debug("Error confirming order", { error });
 
@@ -112,7 +113,8 @@ export default wrapWithLoggerContext(
                 }
                 Sentry.captureException(error);
                 logger.error("Unhandled error executing webhook", { error });
-                return webhookResponse.error(error);
+
+                return res.status(500).send("Unhandled error");
               }
             }
 
@@ -153,7 +155,8 @@ export default wrapWithLoggerContext(
           } catch (error) {
             Sentry.captureException(error);
             logger.error("Unhandled error executing webhook", { error });
-            return webhookResponse.error(error);
+
+            return res.status(500).send("Unhandled error");
           }
         }
       }),
