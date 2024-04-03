@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { TaxCalculationStrategy } from "../../../generated/graphql";
+import { verifyOrderCanceledPayload } from "../webhooks/validate-webhook-payload";
+import { BaseError } from "../../error";
+import { Result } from "neverthrow";
+import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
 
 type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
 
@@ -47,11 +51,8 @@ export class SaleorOrder {
     return this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
   }
 }
-
-type SaleorCancelledOrderData = z.infer<typeof SaleorCancelledOrder.schema>;
-
 export class SaleorCancelledOrder {
-  public static schema = z.object({
+  private static schema = z.object({
     order: z.object({
       channel: z.object({
         id: z.string(),
@@ -68,12 +69,30 @@ export class SaleorCancelledOrder {
         }),
       ),
     }),
+    __typename: z.literal("OrderCancelled"),
   });
 
-  private data: SaleorCancelledOrderData;
+  private data: z.infer<typeof SaleorCancelledOrder.schema>;
 
-  constructor(data: SaleorCancelledOrderData) {
-    this.data = data;
+  constructor(data: OrderCancelledPayload) {
+    const verifiedPayload = verifyOrderCanceledPayload(data);
+
+    if (verifiedPayload.isErr()) {
+      throw verifiedPayload.error;
+    }
+
+    const ParsingError = BaseError.subclass("AvataxAppSaleorOrderCancelledParsingError");
+
+    const parse = Result.fromThrowable(SaleorCancelledOrder.schema.parse, ParsingError.normalize);
+
+    const parsedData = parse(data);
+
+    if (parsedData.isErr()) {
+      throw parsedData.error;
+    }
+
+    // Payload is  parsed and verified to be compatible with the schema
+    this.data = data as z.infer<typeof SaleorCancelledOrder.schema>;
   }
 
   public get payload() {

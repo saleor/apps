@@ -37,11 +37,43 @@ export default wrapWithLoggerContext(
 
         logger.info("Handler called with payload");
 
-        const verifiedPayload = verifyOrderCanceledPayload(payload);
+        try {
+          const cancelledOrder = new SaleorCancelledOrder(payload);
 
-        if (verifiedPayload.isErr()) {
-          const error = verifiedPayload.error;
+          const saleorOrderCancelledPaylod = cancelledOrder.payload;
 
+          const appMetadata = saleorOrderCancelledPaylod.recipient?.privateMetadata ?? [];
+
+          const channelSlug = saleorOrderCancelledPaylod.order.channel.slug;
+
+          const getActiveConnectionService = await import(
+            "../../../modules/taxes/get-active-connection-service"
+          ).then((m) => m.getActiveConnectionService);
+
+          const taxProviderResult = getActiveConnectionService(
+            channelSlug,
+            appMetadata,
+            ctx.authData,
+          );
+
+          logger.info("Cancelling order...");
+
+          if (taxProviderResult.isOk()) {
+            await taxProviderResult.value.cancelOrder(saleorOrderCancelledPaylod);
+
+            logger.info("Order cancelled");
+
+            return res.status(200).end();
+          }
+
+          if (taxProviderResult.isErr()) {
+            logger.error("Tax provider couldn't cancel the order:", taxProviderResult.error);
+
+            Sentry.captureException(taxProviderResult.error);
+            // TODO: Map errors
+            return res.status(500).send("Unhandled error");
+          }
+        } catch (error: unknown) {
           switch (true) {
             case error instanceof OrderCancelPayloadOrderError: {
               logger.error("Insufficient order data", { error });
@@ -59,48 +91,6 @@ export default wrapWithLoggerContext(
 
               return res.status(500).send("Unhandled error");
             }
-          }
-        }
-
-        if (verifiedPayload.isOk()) {
-          try {
-            const saleorOrderCancelled = new SaleorCancelledOrder(verifiedPayload.value).payload;
-
-            const appMetadata = saleorOrderCancelled.recipient?.privateMetadata ?? [];
-
-            const channelSlug = saleorOrderCancelled.order.channel.slug;
-
-            const getActiveConnectionService = await import(
-              "../../../modules/taxes/get-active-connection-service"
-            ).then((m) => m.getActiveConnectionService);
-
-            const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
-
-            logger.info("Cancelling order...");
-
-            if (taxProviderResult.isOk()) {
-              const { taxProvider, config } = taxProviderResult.value;
-
-              await taxProvider.cancelOrder(payload, config);
-
-              logger.info("Order cancelled");
-
-              return res.status(200).end();
-            }
-
-            if (taxProviderResult.isErr()) {
-              logger.error("Tax provider couldn't cancel the order:", taxProviderResult.error);
-
-              Sentry.captureException(taxProviderResult.error);
-              // TODO: Map errors
-              return res.status(500).send("Unhandled error");
-            }
-          } catch (error) {
-            logger.error("Unhandled error, failed to cancel the order", error);
-
-            Sentry.captureException(error);
-
-            return res.status(500).send("Unhandled error");
           }
         }
       }),
