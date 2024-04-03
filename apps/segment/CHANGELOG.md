@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 1.2.1
+
+### Patch Changes
+
+- Updated dependencies [f22f2b8a]
+  - @saleor/apps-shared@1.10.1
+  - @saleor/trpc@2.0.1
+
 ## 1.2.0
 
 ### Minor Changes

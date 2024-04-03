@@ -1,5 +1,12 @@
 # @saleor/webhook-utils
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [f22f2b8a]
+  - @saleor/apps-shared@1.10.1
+
 ## 0.0.6
 
 ### Patch Changes

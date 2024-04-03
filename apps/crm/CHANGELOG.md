@@ -1,5 +1,12 @@
 # saleor-app-crm
 
+## 1.9.1
+
+### Patch Changes
+
+- Updated dependencies [f22f2b8a]
+  - @saleor/apps-shared@1.10.1
+
 ## 1.9.0
 
 ### Minor Changes
