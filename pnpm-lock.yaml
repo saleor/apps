@@ -61,8 +61,8 @@ importers:
         specifier: 2.20.6
         version: 2.20.6
       '@types/node':
-        specifier: 18.15.3
-        version: 18.15.3
+        specifier: 20.12.3
+        version: 20.12.3
       cspell:
         specifier: ^7.2.0
         version: 7.2.0
@@ -242,10 +242,10 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 5.1.3
-        version: 5.1.3(@types/node@18.15.3)
+        version: 5.1.3(@types/node@20.12.3)
       vitest:
         specifier: 1.2.2
-        version: 1.2.2(@types/node@18.15.3)(jsdom@20.0.3)
+        version: 1.2.2(@types/node@20.12.3)(jsdom@20.0.3)
       zod:
         specifier: 3.21.4
         version: 3.21.4
@@ -255,7 +255,7 @@ importers:
         version: 8.4.1
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/import-types-preset':
         specifier: ^3.0.0
         version: 3.0.0(graphql@16.7.1)
@@ -309,7 +309,7 @@ importers:
         version: 1.1.4(@typescript-eslint/parser@5.59.11)(eslint@8.46.0)(typescript@5.1.6)
       graphql-config:
         specifier: ^5.0.3
-        version: 5.0.3(@types/node@18.15.3)(graphql@16.7.1)
+        version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)
       pactum:
         specifier: ^3.6.0
         version: 3.6.0
@@ -465,7 +465,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -475,7 +475,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -643,7 +643,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -653,7 +653,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -800,7 +800,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -810,7 +810,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1008,7 +1008,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -1018,7 +1018,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1199,7 +1199,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1250,7 +1250,7 @@ importers:
         version: 5.1.6
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -1349,14 +1349,14 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1548,7 +1548,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -1558,7 +1558,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1742,7 +1742,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1790,7 +1790,7 @@ importers:
         version: 5.1.6
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -1922,7 +1922,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -1932,7 +1932,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -2076,14 +2076,14 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -2278,7 +2278,7 @@ importers:
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -2288,7 +2288,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -2403,7 +2403,7 @@ importers:
         version: link:../eslint-config-saleor
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -2510,7 +2510,7 @@ importers:
         version: 18.2.5
       '@vanilla-extract/vite-plugin':
         specifier: ^3.8.1
-        version: 3.8.1(@types/node@18.15.3)(vite@4.4.8)
+        version: 3.8.1(@types/node@20.12.3)(vite@4.4.8)
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -2531,7 +2531,7 @@ importers:
         version: 5.1.6
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       webpack:
         specifier: ^5.82.1
         version: 5.82.1(esbuild@0.17.19)
@@ -2589,7 +2589,7 @@ importers:
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -2718,7 +2718,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6)
+        version: 5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
@@ -2745,7 +2745,7 @@ importers:
         version: 5.1.6
       vite:
         specifier: 4.4.8
-        version: 4.4.8(@types/node@18.15.3)
+        version: 4.4.8(@types/node@20.12.3)
       vitest:
         specifier: 0.34.1
         version: 0.34.1(jsdom@20.0.3)
@@ -8577,7 +8577,7 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@graphql-codegen/cli@5.0.2(@types/node@18.15.3)(graphql@16.7.1)(typescript@5.1.6):
+  /@graphql-codegen/cli@5.0.2(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.1.6):
     resolution: {integrity: sha512-MBIaFqDiLKuO4ojN6xxG9/xL9wmfD3ZjZ7RsPjwQnSHBCUXnEkdKvX+JVpx87Pq29Ycn8wTJUguXnTZ7Di0Mlw==}
     hasBin: true
     peerDependencies:
@@ -8596,12 +8596,12 @@ packages:
       '@graphql-tools/apollo-engine-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/code-file-loader': 8.1.1(graphql@16.7.1)
       '@graphql-tools/git-loader': 8.0.5(graphql@16.7.1)
-      '@graphql-tools/github-loader': 8.0.0(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/github-loader': 8.0.0(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/load': 8.0.1(graphql@16.7.1)
-      '@graphql-tools/prisma-loader': 8.0.2(@types/node@18.15.3)(graphql@16.7.1)
-      '@graphql-tools/url-loader': 8.0.1(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
@@ -8609,7 +8609,7 @@ packages:
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.7.1
-      graphql-config: 5.0.3(@types/node@18.15.3)(graphql@16.7.1)
+      graphql-config: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -9009,7 +9009,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/executor-http@1.0.2(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/executor-http@1.0.2(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-JKTB4E3kdQM2/1NEcyrVPyQ8057ZVthCV5dFJiKktqY9IdmF00M8gupFcW3jlbM/Udn78ickeUBsUzA3EouqpA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -9020,14 +9020,14 @@ packages:
       '@whatwg-node/fetch': 0.9.9
       extract-files: 11.0.0
       graphql: 16.7.1
-      meros: 1.3.0(@types/node@18.15.3)
+      meros: 1.3.0(@types/node@20.12.3)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
     dev: true
 
-  /@graphql-tools/executor-http@1.0.8(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/executor-http@1.0.8(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-tBHT4aRkMCeyo+tcfEz7znqdd4QqoYF9vY1YTSo2+FV00usBB+R1YL3YaINBQNVkSVpZ41elffoF/fjI+QE8ZQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -9038,7 +9038,7 @@ packages:
       '@whatwg-node/fetch': 0.9.16
       extract-files: 11.0.0
       graphql: 16.7.1
-      meros: 1.3.0(@types/node@18.15.3)
+      meros: 1.3.0(@types/node@20.12.3)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -9124,14 +9124,14 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-tools/github-loader@8.0.0(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/github-loader@8.0.0(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-VuroArWKcG4yaOWzV0r19ElVIV6iH6UKDQn1MXemND0xu5TzrFme0kf3U9o0YwNo0kUYEk9CyFM0BYg4he17FA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/executor-http': 1.0.8(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/executor-http': 1.0.8(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/graphql-tag-pluck': 8.3.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@whatwg-node/fetch': 0.9.16
@@ -9268,13 +9268,13 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@graphql-tools/prisma-loader@8.0.2(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/prisma-loader@8.0.2(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-8d28bIB0bZ9Bj0UOz9sHagVPW+6AHeqvGljjERtwCnWl8OCQw2c2pNboYXISLYUG5ub76r4lDciLLTU+Ks7Q0w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-tools/url-loader': 8.0.1(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@types/js-yaml': 4.0.9
       '@types/json-stable-stringify': 1.0.36
@@ -9356,7 +9356,7 @@ packages:
       value-or-promise: 1.0.12
     dev: true
 
-  /@graphql-tools/url-loader@8.0.0(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/url-loader@8.0.0(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-rPc9oDzMnycvz+X+wrN3PLrhMBQkG4+sd8EzaFN6dypcssiefgWKToXtRKI8HHK68n2xEq1PyrOpkjHFJB+GwA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -9365,7 +9365,7 @@ packages:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/delegate': 10.0.0(graphql@16.7.1)
       '@graphql-tools/executor-graphql-ws': 1.1.0(graphql@16.7.1)
-      '@graphql-tools/executor-http': 1.0.2(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/executor-http': 1.0.2(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/executor-legacy-ws': 1.0.1(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       '@graphql-tools/wrap': 10.0.0(graphql@16.7.1)
@@ -9383,7 +9383,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@graphql-tools/url-loader@8.0.1(@types/node@18.15.3)(graphql@16.7.1):
+  /@graphql-tools/url-loader@8.0.1(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-B2k8KQEkEQmfV1zhurT5GLoXo8jbXP+YQHUayhCSxKYlRV7j/1Fhp1b21PDM8LXIDGlDRXaZ0FbWKOs7eYXDuQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -9392,7 +9392,7 @@ packages:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/delegate': 10.0.3(graphql@16.7.1)
       '@graphql-tools/executor-graphql-ws': 1.1.0(graphql@16.7.1)
-      '@graphql-tools/executor-http': 1.0.8(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/executor-http': 1.0.8(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/executor-legacy-ws': 1.0.5(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@graphql-tools/wrap': 10.0.1(graphql@16.7.1)
@@ -9495,7 +9495,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.10
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: false
 
   /@grpc/proto-loader@0.7.10:
@@ -9619,7 +9619,7 @@ packages:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       '@types/yargs': 16.0.5
       chalk: 4.1.2
     dev: true
@@ -9631,7 +9631,7 @@ packages:
       '@jest/schemas': 29.6.0
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: true
@@ -9650,7 +9650,7 @@ packages:
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.1.6)
       typescript: 5.1.6
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     dev: true
 
   /@jridgewell/gen-mapping@0.3.3:
@@ -10492,7 +10492,7 @@ packages:
     resolution: {integrity: sha512-b5YoFe6J9exsMYg0pQAobNDR85T1nLumUYgUTtKm4d21iX2L7WqKq9dW8NGJ+2vX0etZd+Y7UeuqsxDXm9+5ZA==}
     engines: {node: '>=16'}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       playwright-core: 1.35.1
     optionalDependencies:
       fsevents: 2.3.2
@@ -12224,7 +12224,7 @@ packages:
       remark-slug: 6.1.0
       rollup: 3.27.0
       typescript: 5.1.6
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12650,7 +12650,7 @@ packages:
       react: 18.2.0
       react-docgen: 6.0.0-alpha.3
       react-dom: 18.2.0(react@18.2.0)
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - supports-color
@@ -13052,7 +13052,7 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/chai-subset@1.3.3:
@@ -13066,7 +13066,7 @@ packages:
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/debug@4.1.8:
@@ -13133,7 +13133,7 @@ packages:
   /@types/express-serve-static-core@4.17.35:
     resolution: {integrity: sha512-wALWQwrgiB2AWTT91CB62b6Yt0sNHpznUXeZEcnPU3DRdlDIz74x8Qg1UUYKSVFi+va5vKOLYRBI1bRKiLLKIg==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -13156,20 +13156,20 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/glob@8.1.0:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/graceful-fs@4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/html-to-text@9.0.0:
@@ -13278,7 +13278,7 @@ packages:
   /@types/node-fetch@2.6.4:
     resolution: {integrity: sha512-1ZX9fcN4Rvkvgv4E6PAY5WXUFWFcRWxZa3EW83UjycOB9ljJCedb2CupIP4RZMEwF/M3eTcCihbBRgwtGbg5Rg==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       form-data: 3.0.1
 
   /@types/node@12.20.55:
@@ -13293,19 +13293,15 @@ packages:
     resolution: {integrity: sha512-8egDX8dE50XyXWH6C6PRCNkTP106DuUrvdrednFouDSmCi7IOvrqr0frznfZaHifHH/3aq/7a7v9N4wdXMqhBQ==}
     dev: true
 
-  /@types/node@18.15.3:
-    resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
-
-  /@types/node@20.11.19:
-    resolution: {integrity: sha512-7xMnVEcZFu0DikYjWOlRq7NTPETrm7teqUT2WkQjrTIkEgUyyGdWsj/Zg8bEJt5TNklzbPD1X3fqfsHw3SpapQ==}
+  /@types/node@20.12.3:
+    resolution: {integrity: sha512-sD+ia2ubTeWrOu+YMF+MTAB7E+O7qsMqAbMfW7DG3K1URwhZ5hN1pLlRVGbf4wDFzSfikL05M17EyorS86jShw==}
     dependencies:
       undici-types: 5.26.5
-    dev: true
 
   /@types/nodemailer@6.4.7:
     resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/normalize-package-data@2.4.1:
@@ -13356,7 +13352,7 @@ packages:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/scheduler@0.16.3:
@@ -13370,14 +13366,14 @@ packages:
     resolution: {integrity: sha512-Cwo8LE/0rnvX7kIIa3QHCkcuF21c05Ayb0ZfxPiv0W8VRiZiNW/WuRupHKpqqGVGf7SUA44QSOUKaEd9lIrd/Q==}
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/serve-static@1.15.1:
     resolution: {integrity: sha512-NUo5XNiAdULrJENtJXZZ3fHtfMolzZwczzBbnAeBbqBwG+LaG6YaJtuwzwGSQZ2wsCrxjEhNNjAkKigy3n8teQ==}
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/shimmer@1.0.5:
@@ -13391,13 +13387,13 @@ packages:
   /@types/ws@8.5.10:
     resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
     dependencies:
-      '@types/node': 20.11.19
+      '@types/node': 20.12.3
     dev: true
 
   /@types/ws@8.5.5:
     resolution: {integrity: sha512-lwhs8hktwxSjf9UaZ9tG5M03PGogvFaH8gUgLNbN9HKIg0dvv6q+gkSuJ8HN4/VbyxkuLzCjlN7GquQ0gUJfIg==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /@types/yargs-parser@21.0.0:
@@ -13664,7 +13660,7 @@ packages:
       modern-ahocorasick: 1.0.1
       outdent: 0.8.0
 
-  /@vanilla-extract/integration@6.2.1(@types/node@18.15.3):
+  /@vanilla-extract/integration@6.2.1(@types/node@20.12.3):
     resolution: {integrity: sha512-+xYJz07G7TFAMZGrOqArOsURG+xcYvqctujEkANjw2McCBvGEK505RxQqOuNiA9Mi9hgGdNp2JedSa94f3eoLg==}
     dependencies:
       '@babel/core': 7.22.11
@@ -13678,8 +13674,8 @@ packages:
       lodash: 4.17.21
       mlly: 1.4.0
       outdent: 0.8.0
-      vite: 4.4.8(@types/node@18.15.3)
-      vite-node: 0.28.5(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
+      vite-node: 0.28.5(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -13701,16 +13697,16 @@ packages:
     dependencies:
       '@vanilla-extract/css': 1.14.1
 
-  /@vanilla-extract/vite-plugin@3.8.1(@types/node@18.15.3)(vite@4.4.8):
+  /@vanilla-extract/vite-plugin@3.8.1(@types/node@20.12.3)(vite@4.4.8):
     resolution: {integrity: sha512-Ruw0we95/ugcgidBVOh/jy/LsspsRz4WFHPPnydOgyPOu7h3Vo3BqDA4K0fQ+WmKKfyY8rEasJdbyFYqz8XxnQ==}
     peerDependencies:
       vite: ^2.2.3 || ^3.0.0 || ^4.0.3
     dependencies:
-      '@vanilla-extract/integration': 6.2.1(@types/node@18.15.3)
+      '@vanilla-extract/integration': 6.2.1(@types/node@20.12.3)
       outdent: 0.8.0
       postcss: 8.4.24
       postcss-load-config: 3.1.4(postcss@8.4.24)
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -13734,7 +13730,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.22.5(@babel/core@7.22.11)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -13749,7 +13745,7 @@ packages:
       '@babel/plugin-transform-react-jsx-self': 7.22.5(@babel/core@7.23.3)
       '@babel/plugin-transform-react-jsx-source': 7.22.5(@babel/core@7.23.3)
       react-refresh: 0.14.0
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -13764,7 +13760,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 5.1.3(@types/node@18.15.3)
+      vite: 5.1.3(@types/node@20.12.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -18302,7 +18298,7 @@ packages:
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  /graphql-config@5.0.3(@types/node@18.15.3)(graphql@16.7.1):
+  /graphql-config@5.0.3(@types/node@20.12.3)(graphql@16.7.1):
     resolution: {integrity: sha512-BNGZaoxIBkv9yy6Y7omvsaBUHOzfFcII3UN++tpH8MGOKFPFkCPZuwx09ggANMt8FgyWP1Od8SWPmrUEZca4NQ==}
     engines: {node: '>= 16.0.0'}
     peerDependencies:
@@ -18316,7 +18312,7 @@ packages:
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/load': 8.0.0(graphql@16.7.1)
       '@graphql-tools/merge': 9.0.0(graphql@16.7.1)
-      '@graphql-tools/url-loader': 8.0.0(@types/node@18.15.3)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.0(@types/node@20.12.3)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.4(graphql@16.7.1)
       cosmiconfig: 8.2.0
       graphql: 16.7.1
@@ -19315,7 +19311,7 @@ packages:
     dependencies:
       '@jest/types': 29.5.0
       '@types/graceful-fs': 4.1.6
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -19333,7 +19329,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /jest-regex-util@29.4.3:
@@ -19346,7 +19342,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.5.0
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
@@ -19357,7 +19353,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -19366,7 +19362,7 @@ packages:
     resolution: {integrity: sha512-NcrQnevGoSp4b5kg+akIpthoAFHxPBcb5P6mYPY0fUNT+sSvmtu6jlkEle3anczUKIKEbMxFimk9oTP/tpIPgA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       jest-util: 29.5.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -20259,7 +20255,7 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /meros@1.3.0(@types/node@18.15.3):
+  /meros@1.3.0(@types/node@20.12.3):
     resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
     engines: {node: '>=13'}
     peerDependencies:
@@ -20268,7 +20264,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
     dev: true
 
   /methods@1.1.2:
@@ -22118,7 +22114,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       long: 5.2.3
     dev: false
 
@@ -24661,7 +24657,6 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
-    dev: true
 
   /undici@5.22.1:
     resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
@@ -25029,7 +25024,7 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vite-node@0.28.5(@types/node@18.15.3):
+  /vite-node@0.28.5(@types/node@20.12.3):
     resolution: {integrity: sha512-LmXb9saMGlrMZbXTvOveJKwMTBTNUH66c8rJnQ0ZPNX+myPEol64+szRzXtV5ORb0Hb/91yq+/D3oERoyAt6LA==}
     engines: {node: '>=v14.16.0'}
     dependencies:
@@ -25040,7 +25035,7 @@ packages:
       picocolors: 1.0.0
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -25052,7 +25047,7 @@ packages:
       - terser
     dev: true
 
-  /vite-node@0.34.1(@types/node@18.15.3):
+  /vite-node@0.34.1(@types/node@20.12.3):
     resolution: {integrity: sha512-odAZAL9xFMuAg8aWd7nSPT+hU8u2r9gU3LRm9QKjxBEF2rRdWpMuqkrkjvyVQEdNFiBctqr2Gg4uJYizm5Le6w==}
     engines: {node: '>=v14.18.0'}
     dependencies:
@@ -25061,7 +25056,7 @@ packages:
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.4.8(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -25072,7 +25067,7 @@ packages:
       - supports-color
       - terser
 
-  /vite-node@1.2.2(@types/node@18.15.3):
+  /vite-node@1.2.2(@types/node@20.12.3):
     resolution: {integrity: sha512-1as4rDTgVWJO3n1uHmUYqq7nsFgINQ9u+mRcXpjeOMJUmviqNKjcZB7UfRZrlM7MjYXMKpuWp5oGkjaFLnjawg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -25081,7 +25076,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.1.3(@types/node@18.15.3)
+      vite: 5.1.3(@types/node@20.12.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -25093,7 +25088,7 @@ packages:
       - terser
     dev: false
 
-  /vite@4.4.8(@types/node@18.15.3):
+  /vite@4.4.8(@types/node@20.12.3):
     resolution: {integrity: sha512-LONawOUUjxQridNWGQlNizfKH89qPigK36XhMI7COMGztz8KNY0JHim7/xDd71CZwGT4HtSRgI7Hy+RlhG0Gvg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -25121,14 +25116,14 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       esbuild: 0.18.20
       postcss: 8.4.27
       rollup: 3.27.0
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vite@5.1.3(@types/node@18.15.3):
+  /vite@5.1.3(@types/node@20.12.3):
     resolution: {integrity: sha512-UfmUD36DKkqhi/F75RrxvPpry+9+tTkrXfMNZD+SboZqBCMsxKtO52XeGzzuh7ioz+Eo/SYDBbdb0Z7vgcDJew==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -25156,7 +25151,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       esbuild: 0.19.12
       postcss: 8.4.35
       rollup: 4.12.0
@@ -25196,7 +25191,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.5
       '@types/chai-subset': 1.3.3
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       '@vitest/expect': 0.34.1
       '@vitest/runner': 0.34.1
       '@vitest/snapshot': 0.34.1
@@ -25216,8 +25211,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.0
       tinypool: 0.7.0
-      vite: 4.4.8(@types/node@18.15.3)
-      vite-node: 0.34.1(@types/node@18.15.3)
+      vite: 4.4.8(@types/node@20.12.3)
+      vite-node: 0.34.1(@types/node@20.12.3)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
@@ -25228,7 +25223,7 @@ packages:
       - supports-color
       - terser
 
-  /vitest@1.2.2(@types/node@18.15.3)(jsdom@20.0.3):
+  /vitest@1.2.2(@types/node@20.12.3)(jsdom@20.0.3):
     resolution: {integrity: sha512-d5Ouvrnms3GD9USIK36KG8OZ5bEvKEkITFtnGv56HFaSlbItJuYr7hv2Lkn903+AvRAgSixiamozUVfORUekjw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -25253,7 +25248,7 @@ packages:
       jsdom:
         optional: true
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 20.12.3
       '@vitest/expect': 1.2.2
       '@vitest/runner': 1.2.2
       '@vitest/snapshot': 1.2.2
@@ -25273,8 +25268,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.6.0
       tinypool: 0.8.2
-      vite: 5.1.3(@types/node@18.15.3)
-      vite-node: 1.2.2(@types/node@18.15.3)
+      vite: 5.1.3(@types/node@20.12.3)
+      vite-node: 1.2.2(@types/node@20.12.3)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
