@@ -1,6 +1,6 @@
-import { it, describe } from "vitest";
 import { e2e } from "pactum";
 import { string } from "pactum-matchers";
+import { describe, it } from "vitest";
 import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
@@ -46,7 +46,8 @@ describe("App should calculate taxes for checkout with product without tax class
         currency: "USD",
       })
       .retry()
-      .stores("CheckoutId", "data.checkoutCreate.checkout.id");
+      .stores("CheckoutId", "data.checkoutCreate.checkout.id")
+      .inspect();
   });
 
   it("should have taxes calculated when shipping is added to checkout", async () => {
