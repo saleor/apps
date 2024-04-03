@@ -10,7 +10,7 @@ import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
 } from "../../../modules/saleor/order-cancel-error";
-import { SaleorCancelledOrder } from "../../../modules/saleor";
+import { SaleorOrderCancelledParser } from "../../../modules/saleor";
 
 export const config = {
   api: {
@@ -37,7 +37,7 @@ export default wrapWithLoggerContext(
         logger.info("Handler called with payload");
 
         try {
-          const cancelledOrder = new SaleorCancelledOrder(payload);
+          const cancelledOrder = SaleorOrderCancelledParser.parse(payload);
 
           const appMetadata = cancelledOrder.privateMetadata ?? [];
 

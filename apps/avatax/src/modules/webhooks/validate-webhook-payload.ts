@@ -1,4 +1,4 @@
-import { err, ok } from "neverthrow";
+import { Result, err, ok } from "neverthrow";
 import { TaxIncompletePayloadErrors } from "../taxes/tax-error";
 import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "./payloads/order-cancelled-payload";
@@ -26,7 +26,9 @@ export function verifyCalculateTaxesPayload(payload: CalculateTaxesPayload) {
   return ok(payload);
 }
 
-export function verifyOrderCanceledPayload(payload: OrderCancelledPayload) {
+export function verifyOrderCanceledPayload(_payload: unknown) {
+  const payload = _payload as OrderCancelledPayload;
+
   if (!payload.order) {
     return err(new OrderCancelPayloadOrderError("Insufficient order data"));
   }

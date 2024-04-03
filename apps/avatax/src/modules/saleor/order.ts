@@ -1,8 +1,5 @@
 import { z } from "zod";
 import { TaxCalculationStrategy } from "../../../generated/graphql";
-import { verifyOrderCanceledPayload } from "../webhooks/validate-webhook-payload";
-import { BaseError } from "../../error";
-import { Result } from "neverthrow";
 import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
 
 type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
@@ -69,29 +66,11 @@ export class SaleorCancelledOrder {
         }),
       ),
     }),
-    __typename: z.literal("OrderCancelled"),
   });
 
   private data: z.infer<typeof SaleorCancelledOrder.schema>;
 
-  constructor(data: OrderCancelledPayload) {
-    const verifiedPayload = verifyOrderCanceledPayload(data);
-
-    if (verifiedPayload.isErr()) {
-      throw verifiedPayload.error;
-    }
-
-    const ParsingError = BaseError.subclass("AvataxAppSaleorOrderCancelledParsingError");
-
-    const parse = Result.fromThrowable(SaleorCancelledOrder.schema.parse, ParsingError.normalize);
-
-    const parsedData = parse(data);
-
-    if (parsedData.isErr()) {
-      throw parsedData.error;
-    }
-
-    // Payload is  parsed and verified to be compatible with the schema
+  constructor(data: Omit<OrderCancelledPayload, "__typename">) {
     this.data = data as z.infer<typeof SaleorCancelledOrder.schema>;
   }
 
@@ -105,5 +84,9 @@ export class SaleorCancelledOrder {
 
   public get avataxId() {
     return this.data.order.avataxId;
+  }
+
+  public static parser(data: unknown) {
+    return SaleorCancelledOrder.schema.parse(data);
   }
 }
