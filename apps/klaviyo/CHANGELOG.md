@@ -1,5 +1,12 @@
 # saleor-app-klaviyo
 
+## 1.11.1
+
+### Patch Changes
+
+- Updated dependencies [f22f2b8a]
+  - @saleor/apps-shared@1.10.1
+
 ## 1.11.0
 
 ### Minor Changes

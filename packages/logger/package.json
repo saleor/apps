@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-logger",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",

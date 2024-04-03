@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.2.2
+
+### Patch Changes
+
+- f22f2b8a: Combine `APP_LOG_LEVEL` variable for `pino` & `tslog` libraries. After this change `APP_LOG_LEVEL` will take string which is one of `silent | trace | debug | info | warn | error | fatal`.
+- df03c571: Fix Sentry breadcrumbs transport, to properly parse dates
+
 ## 1.2.1
 
 ### Patch Changes

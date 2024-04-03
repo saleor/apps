@@ -1,5 +1,20 @@
 # app-avatax
 
+## 1.4.1
+
+### Patch Changes
+
+- f22f2b8a: Combine `APP_LOG_LEVEL` variable for `pino` & `tslog` libraries. After this change `APP_LOG_LEVEL` will take string which is one of `silent | trace | debug | info | warn | error | fatal`.
+- 5d8c7e9b: App environment and version should be now send properly to Sentry.
+- d011ef05: Update Node.js version to 20.11
+- 5f0f8b79: Added dynamic loading of business services in webhooks. Now, when webhook is executed for incomplete payload (like missing address or lines), handler will return early. If payload is complete, further services will be loaded dynamically. This change speed up Vercel cold start by ~7s.
+- 93a03072: Add bundle-analyzer to Next.js config. Now with an ANALYZE_BUNDLE env, bundle size report will be generated during the build
+- Updated dependencies [f22f2b8a]
+- Updated dependencies [df03c571]
+  - @saleor/apps-logger@1.2.2
+  - @saleor/apps-shared@1.10.1
+  - @saleor/webhook-utils@0.0.7
+
 ## 1.4.0
 
 ### Minor Changes
