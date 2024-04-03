@@ -5,8 +5,6 @@ import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
-import { AuthData } from "@saleor/app-sdk/APL";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 

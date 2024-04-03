@@ -2,10 +2,9 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
   AvataxTaxCodeMatch,
-  AvataxTaxCodeMatchRepository,
   AvataxTaxCodeMatches,
+  AvataxTaxCodeMatchRepository,
 } from "./avatax-tax-code-match-repository";
-import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { metadataCache } from "../../../lib/app-metadata-cache";
 

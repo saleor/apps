@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createLogger } from "../../logger";
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../saleor";
 import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";

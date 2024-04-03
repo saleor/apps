@@ -3,8 +3,6 @@ import type { TaxCode } from "../../taxes/tax-code";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxTaxCodesService {
   constructor(private client: AvataxClient) {}

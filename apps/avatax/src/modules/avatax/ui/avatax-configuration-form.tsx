@@ -8,8 +8,8 @@ import { AppCard } from "../../ui/app-card";
 import { ProviderLabel } from "../../ui/provider-label";
 import {
   AvataxConfig,
-  BaseAvataxConfig,
   avataxConfigSchema,
+  BaseAvataxConfig,
   defaultAvataxConfig,
 } from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";

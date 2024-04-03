@@ -11,13 +11,8 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 import { z } from "zod";
 import * as Sentry from "@sentry/nextjs";
 import { InvalidAppAddressError } from "../../taxes/tax-error";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { metadataCache } from "../../../lib/app-metadata-cache";
-import { AvataxTaxCodeMatchRepository } from "../tax-code/avatax-tax-code-match-repository";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;

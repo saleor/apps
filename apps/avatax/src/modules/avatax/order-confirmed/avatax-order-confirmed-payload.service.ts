@@ -4,12 +4,6 @@ import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
-import { AvataxTaxCodeMatchRepository } from "../tax-code/avatax-tax-code-match-repository";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { metadataCache } from "../../../lib/app-metadata-cache";
-import { AvataxCalculateTaxesPayloadService } from "../calculate-taxes/avatax-calculate-taxes-payload.service";
-import { AvataxCalculateTaxesPayloadTransformer } from "../calculate-taxes/avatax-calculate-taxes-payload-transformer";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 
 export class AvataxOrderConfirmedPayloadService {
   constructor(private avataxClient: AvataxClient) {}

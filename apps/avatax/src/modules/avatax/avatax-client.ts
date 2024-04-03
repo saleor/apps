@@ -4,10 +4,7 @@ import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
-import { LogOptions } from "avatax/lib/utils/logger";
-import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
-import { BaseAvataxConfig } from "./avatax-connection-schema";
 
 export type CommitTransactionArgs = {
   companyCode: string;

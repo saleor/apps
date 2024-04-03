@@ -1,4 +1,3 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
