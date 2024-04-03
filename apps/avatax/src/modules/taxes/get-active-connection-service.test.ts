@@ -3,11 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
-import {
-  ActiveConnectionServiceErrors,
-  getActiveConnectionService,
-} from "./get-active-connection-service";
+import { getActiveConnectionService } from "./get-active-connection-service";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { ActiveConnectionServiceErrors } from "./get-active-connection-service-errors";
 
 const mockedInvalidMetadata: MetadataItem[] = [
   {

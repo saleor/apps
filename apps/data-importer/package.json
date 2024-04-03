@@ -1,6 +1,6 @@
 {
   "name": "data-importer",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -29,7 +29,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
-    "@sentry/nextjs": "7.77.0",
+    "@sentry/nextjs": "7.93.0",
     "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.4",
     "dot-object": "^2.1.4",

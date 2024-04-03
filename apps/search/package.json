@@ -1,6 +1,6 @@
 {
   "name": "search",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -37,7 +37,7 @@
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
-    "@sentry/nextjs": "7.77.0",
+    "@sentry/nextjs": "7.93.0",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",

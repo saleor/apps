@@ -1,7 +1,6 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
-import { getActiveConnectionService } from "../../../modules/taxes/get-active-connection-service";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
@@ -72,6 +71,11 @@ export default wrapWithLoggerContext(
           metadataCache.setMetadata(appMetadata);
 
           const channelSlug = payload.taxBase.channel.slug;
+
+          const getActiveConnectionService = await import(
+            "../../../modules/taxes/get-active-connection-service"
+          ).then((m) => m.getActiveConnectionService);
+
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
             appMetadata,

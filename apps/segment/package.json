@@ -1,6 +1,6 @@
 {
   "name": "segment",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -34,7 +34,7 @@
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/trpc": "workspace:*",
     "@segment/analytics-node": "^1.1.0",
-    "@sentry/nextjs": "7.77.0",
+    "@sentry/nextjs": "7.93.0",
     "@tanstack/react-query": "^4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",

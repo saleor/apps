@@ -1,5 +1,15 @@
 # saleor-app-cms-v2
 
+## 2.7.2
+
+### Patch Changes
+
+- f22f2b8a: Combine `APP_LOG_LEVEL` variable for `pino` & `tslog` libraries. After this change `APP_LOG_LEVEL` will take string which is one of `silent | trace | debug | info | warn | error | fatal`.
+- Updated dependencies [f22f2b8a]
+- Updated dependencies [df03c571]
+  - @saleor/apps-logger@1.2.2
+  - @saleor/apps-shared@1.10.1
+
 ## 2.7.1
 
 ### Patch Changes

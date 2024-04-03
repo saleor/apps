@@ -1,6 +1,6 @@
 {
   "name": "invoices",
-  "version": "1.18.0",
+  "version": "1.18.1",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -32,7 +32,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/trpc": "workspace:*",
-    "@sentry/nextjs": "7.77.0",
+    "@sentry/nextjs": "7.93.0",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",
