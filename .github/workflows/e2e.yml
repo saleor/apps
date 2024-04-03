@@ -57,4 +57,6 @@ jobs:
         run: pnpm --filter=app-avatax migrate:silent
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
+        env:
+          APP_LOG_LEVEL: "error"
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
