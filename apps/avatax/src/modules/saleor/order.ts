@@ -96,11 +96,15 @@ export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderEvent {
 
   static create(payload: OrderCancelledPayloadFragment) {
     if (!payload.order) {
-      return err(new OrderCancelPayloadOrderError("Insufficient order data"));
+      return err(new OrderCancelPayloadOrderError("Insufficient order data (missing 'order')"));
     }
 
     if (!payload.order.avataxId) {
-      return err(new OrderCancelNoAvataxIdError("No AvaTax id found in order"));
+      return err(
+        new OrderCancelNoAvataxIdError(
+          "No AvaTax id found in order (missing 'avataxId' in 'order')",
+        ),
+      );
     }
 
     const parser = Result.fromThrowable(
@@ -111,7 +115,7 @@ export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderEvent {
     const parsedPayload = parser(payload);
 
     if (parsedPayload.isErr()) {
-      throw parsedPayload.error;
+      return err(parsedPayload.error);
     }
 
     return ok(new SaleorCancelledOrderEvent(parsedPayload.value));
