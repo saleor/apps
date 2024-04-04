@@ -1,23 +1,73 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { MetadataItem } from "../../../generated/graphql";
+import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { err } from "neverthrow";
-import { AppConfig } from "../../lib/app-config";
+import { ProviderConnection } from "../provider-connections/provider-connections";
 import { BaseError } from "../../error";
+import { createLogger } from "../../logger";
+import { err, fromThrowable, ok } from "neverthrow";
+import { ActiveConnectionServiceErrors } from "./get-active-connection-service-errors";
 
-export const MissingChannelSlugError = BaseError.subclass("MissingChannelSlugError");
-export const CantCreateConnectionServiceError = BaseError.subclass(
-  "CantCreateConnectionServiceError",
-);
+const avataxProviderFactory = ({
+  providerConnection,
+  authData,
+}: {
+  providerConnection: ProviderConnection;
+  authData: AuthData;
+}) => {
+  return new AvataxWebhookService({
+    config: providerConnection.config,
+    authData,
+  });
+};
 
 export function getActiveConnectionService(
   channelSlug: string | undefined,
+  encryptedMetadata: MetadataItem[],
   authData: AuthData,
-  config: AppConfig,
 ) {
+  const logger = createLogger("getActiveConnectionService");
+
   if (!channelSlug) {
     return err(
-      new MissingChannelSlugError(
+      new ActiveConnectionServiceErrors.MissingChannelSlugError(
         "Channel slug was not found in the webhook payload. This should not happen",
+      ),
+    );
+  }
+
+  if (!encryptedMetadata.length) {
+    return err(
+      new ActiveConnectionServiceErrors.MissingMetadataError(
+        "App metadata was not found in Webhook payload. App was likely installed but never configured",
+      ),
+    );
+  }
+
+  const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
+    encryptedMetadata,
+  );
+
+  if (appConfigResult.isErr()) {
+    return err(appConfigResult.error);
+  }
+
+  const { providerConnections, channels } = appConfigResult.value;
+
+  if (!channels.length) {
+    return err(
+      new ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError(
+        "Provider is not assigned to the channel. App is configured partially.",
+      ),
+    );
+  }
+
+  const channelConfig = channels.find((channel) => channel.config.slug === channelSlug);
+
+  if (!channelConfig) {
+    return err(
+      new ActiveConnectionServiceErrors.WrongChannelError(
+        `Channel config was not found for channel ${channelSlug}`,
         {
           props: {
             channelSlug,
@@ -27,18 +77,31 @@ export function getActiveConnectionService(
     );
   }
 
-  return config
-    .getConfigForChannelSlug(channelSlug)
-    .map((config) => {
-      return new AvataxWebhookService({ config: config.avataxConfig.config, authData });
-    })
-    .mapErr(
-      (error) =>
-        new CantCreateConnectionServiceError(
-          "Cant create connection to avatax due to broken config",
-          {
-            cause: error,
-          },
-        ),
+  const providerConnection = providerConnections.find(
+    (connection) => connection.id === channelConfig.config.providerConnectionId,
+  );
+
+  if (!providerConnection) {
+    logger.debug(
+      "In the providers array, there is no item with an id that matches the channel config providerConnectionId.",
+      { providerConnections, channelConfig },
     );
+    return err(
+      new ActiveConnectionServiceErrors.BrokenConfigurationError(
+        `Channel config providerConnectionId does not match any providers`,
+        {
+          props: {
+            channelSlug: channelConfig.config.slug,
+          },
+        },
+      ),
+    );
+  }
+
+  const taxProvider = avataxProviderFactory({
+    providerConnection,
+    authData,
+  });
+
+  return ok(taxProvider);
 }

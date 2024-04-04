@@ -1,6 +1,7 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
+import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -13,11 +14,6 @@ import {
 } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { AppConfig } from "../../../lib/app-config";
-import {
-  CantCreateConnectionServiceError,
-  MissingChannelSlugError,
-} from "../../../modules/taxes/get-active-connection-service";
 
 export const config = {
   api: {
@@ -80,19 +76,10 @@ export default wrapWithLoggerContext(
             "../../../modules/taxes/get-active-connection-service"
           ).then((m) => m.getActiveConnectionService);
 
-          const configResult = AppConfig.createFromEncryptedMetadata(appMetadata);
-
-          if (configResult.isErr()) {
-            Sentry.captureException(configResult.error);
-            logger.error(configResult.error);
-
-            return res.status(500).send("Failed to resolve app config");
-          }
-
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
+            appMetadata,
             ctx.authData,
-            configResult.value,
           );
 
           if (activeConnectionServiceResult.isErr()) {
@@ -102,18 +89,18 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
-            switch (err.constructor) {
-              default:
-              case MissingChannelSlugError:
-              case CantCreateConnectionServiceError: {
-                Sentry.captureException(err);
+            const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
 
-                logger.fatal(`UNHANDLED: ${err.name}`, {
-                  error: err,
-                });
+            if (executeErrorStrategy) {
+              return executeErrorStrategy();
+            } else {
+              Sentry.captureException(err);
 
-                return res.status(500).send("Error calculating taxes");
-              }
+              logger.fatal(`UNHANDLED: ${err.name}`, {
+                error: err,
+              });
+
+              return res.status(500).send("Error calculating taxes");
             }
           } else {
             logger.info("Found active connection service. Calculating taxes...");
