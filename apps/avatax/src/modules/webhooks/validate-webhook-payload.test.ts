@@ -54,7 +54,7 @@ const getBasePayload = (): CalculateTaxesPayload => {
         id: "123",
         avataxEntityCode: "",
         __typename: "Checkout",
-        user: { __typename: "User", email: "", avataxCustomerCode: "", id: "" },
+        user: { __typename: "User", email: "", legacyAvataxCustomerCode: "", id: "" },
       },
     },
   };
