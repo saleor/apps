@@ -21,6 +21,8 @@ type GetConfigForChannelResult = Result<
   ConfigPerChannelErrors["prototype"]
 >;
 
+type ParsedConfig = { channels: ChannelsConfig; providerConnections: ProviderConnections };
+
 export interface IAppConfig {
   getConfigForChannelSlug(slug: string): GetConfigForChannelResult;
 }
@@ -71,7 +73,14 @@ export class AppConfig implements IAppConfig {
     });
   }
 
+  static createFromParsedConfig(parsedConfig: ParsedConfig) {
+    return new AppConfig(parsedConfig);
+  }
+
   static createFromEncryptedMetadata(encryptedMetadata: MetadataItem[]) {
+    /**
+     * To make it testable, we need to refactor getAppConfig and allow to inject dependencies first
+     */
     const appConfigResult = fromThrowable(getAppConfig, (err) => BaseError.normalize(err))(
       encryptedMetadata,
     );
