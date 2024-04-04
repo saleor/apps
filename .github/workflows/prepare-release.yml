@@ -41,5 +41,20 @@ jobs:
         env:
           # Use private access token so Github can trigger another workflow from this one
           GITHUB_TOKEN: ${{ secrets.PAT }}
-      - name: print outputs
-        run: "echo '${{toJSON(steps.changesets)}}}'"
+      - name: Find previous comment with checklist on release PR
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        uses: peter-evans/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3.0.0
+        id: find-comment
+        with:
+          issue-number: ${{ steps.changesets.outputs.pullRequestNumber }}
+          body-includes: Releasing Avatax app checklist
+
+      - name: Add release checklist comment to release PR
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          issue-number: ${{ steps.changesets.outputs.pullRequestNumber }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            🚀 [Releasing Avatax app checklist](https://www.notion.so/saleor/Releasing-Avatax-app-checklist-5bf7928b942042e09e4197b70903c570?pvs=4)
