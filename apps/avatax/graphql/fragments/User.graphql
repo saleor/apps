@@ -1,5 +1,5 @@
 fragment User on User {
   id
   email
-  avataxCustomerCode: metafield(key: "avataxCustomerCode")
+  legacyAvataxCustomerCode: metafield(key: "legacyAvataxCustomerCode")
 }

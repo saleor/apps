@@ -1,30 +1,52 @@
 import { describe, expect, it } from "vitest";
-import { UserFragment } from "../../../generated/graphql";
 import { avataxCustomerCode } from "./avatax-customer-code-resolver";
 
 describe("avataxCustomerCode", () => {
   describe("resolve", () => {
-    it("returns user id when present in sourceObject", () => {
+    const avataxCustomerCodeFromCheckout = "CC-2137";
+    const legacyAvataxCustomerCode = "2137";
+    const legacyUserId = "user:42";
+
+    it("returns avataxCustomerCode when present on checkout", () => {
       const customerCode = avataxCustomerCode.resolve({
-        email: "demo@saleor.io",
-        id: "123",
+        avataxCustomerCode: avataxCustomerCodeFromCheckout,
+        legacyAvataxCustomerCode: legacyAvataxCustomerCode,
+        legacyUserId: legacyUserId,
+        source: "Checkout",
       });
 
-      expect(customerCode).toBe("123");
+      expect(customerCode).toBe(avataxCustomerCodeFromCheckout);
     });
-    it("returns avataxCustomerCode when present in sourceObject", () => {
+
+    it("returns avataxCustomerCode when present in legacy sourceObject", () => {
       const customerCode = avataxCustomerCode.resolve({
-        email: "demo@saleor.io",
-        id: "123",
-        avataxCustomerCode: "456",
+        avataxCustomerCode: null,
+        legacyAvataxCustomerCode: legacyAvataxCustomerCode,
+        legacyUserId: legacyUserId,
+        source: "Checkout",
       });
 
-      expect(customerCode).toBe("456");
+      expect(customerCode).toBe(legacyAvataxCustomerCode);
     });
-    it("returns 0 when no user id", () => {
+
+    it("returns user id when present in legacy sourceObject", () => {
       const customerCode = avataxCustomerCode.resolve({
-        email: "demo@saleor.io",
-      } as UserFragment);
+        avataxCustomerCode: null,
+        legacyAvataxCustomerCode: null,
+        legacyUserId: legacyUserId,
+        source: "Checkout",
+      });
+
+      expect(customerCode).toBe(legacyUserId);
+    });
+
+    it("returns 0 as fallback", () => {
+      const customerCode = avataxCustomerCode.resolve({
+        avataxCustomerCode: null,
+        legacyAvataxCustomerCode: null,
+        legacyUserId: null,
+        source: "Checkout",
+      });
 
       expect(customerCode).toBe("0");
     });

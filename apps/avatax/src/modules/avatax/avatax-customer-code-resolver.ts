@@ -1,5 +1,4 @@
 import { createLogger } from "@saleor/apps-logger";
-import { UserFragment } from "../../../generated/graphql";
 
 const logger = createLogger("avataxCustomerCode");
 
@@ -9,24 +8,38 @@ const logger = createLogger("avataxCustomerCode");
  */
 const FALLBACK_CUSTOMER_CODE = "0";
 
-export const avataxCustomerCode = {
-  resolve(user: UserFragment | null | undefined): string {
-    // see: docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax/overview#customer-code
-    const avataxCustomerCode = user?.avataxCustomerCode;
+type NullableString = string | null | undefined;
 
+// see: docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax/overview#customer-code
+export const avataxCustomerCode = {
+  resolve({
+    avataxCustomerCode,
+    legacyAvataxCustomerCode,
+    legacyUserId,
+    source,
+  }: {
+    avataxCustomerCode: NullableString;
+    legacyAvataxCustomerCode: NullableString;
+    legacyUserId: NullableString;
+    source: "Order" | "Checkout";
+  }): string {
     if (avataxCustomerCode) {
-      logger.trace({ avataxCustomerCode }, `Returning customer code found in the user metadata.`);
+      logger.info(`Returning customer code found in the ${source} metadata.`);
       return avataxCustomerCode;
     }
 
-    const userId = user?.id;
-
-    if (userId) {
-      logger.trace({ userId }, `Returning user id as a customer code.`);
-      return userId;
+    // TODO: Remove legacy customer code handling after clients migrate to customer code on order / checkout
+    if (legacyAvataxCustomerCode) {
+      logger.info("Returning legacy customer code found in the user metadata.");
+      return legacyAvataxCustomerCode;
     }
 
-    logger.trace(`Returning fallback customer code.`);
+    if (legacyUserId) {
+      logger.info("Returning user id as legacy customer code");
+      return legacyUserId;
+    }
+
+    logger.info("Returning fallback customer code.");
     return FALLBACK_CUSTOMER_CODE;
   },
 };
