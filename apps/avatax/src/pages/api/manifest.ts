@@ -29,7 +29,7 @@ export default wrapWithLoggerContext(
           homepageUrl: "https://github.com/saleor/apps",
           id: "saleor.app.avatax",
           name: "Avatax",
-          permissions: ["HANDLE_TAXES", "MANAGE_ORDERS", "MANAGE_USERS"],
+          permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
           requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
