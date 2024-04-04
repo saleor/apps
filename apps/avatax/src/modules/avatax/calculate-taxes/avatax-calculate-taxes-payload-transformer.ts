@@ -35,7 +35,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
 
     const customerCode = avataxCustomerCode.resolve({
       avataxCustomerCode: payload.taxBase.sourceObject.avataxCustomerCode,
-      legacyAvataxCustomerCode: payload.taxBase.sourceObject.user?.legacyAvataxCustomerCode,
+      legacyAvataxCustomerCode: payload.taxBase.sourceObject.user?.avataxCustomerCode,
       legacyUserId: payload.taxBase.sourceObject.user?.id,
       source: payload.taxBase.sourceObject.__typename,
     });

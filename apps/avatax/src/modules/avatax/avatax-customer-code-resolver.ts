@@ -19,7 +19,13 @@ export const avataxCustomerCode = {
     source,
   }: {
     avataxCustomerCode: NullableString;
+    /**
+     * @deprecated use `avataxCustomerCode` from order or checkout metadata instead
+     */
     legacyAvataxCustomerCode: NullableString;
+    /**
+     * @deprecated use `avataxCustomerCode` from order or checkout metadata instead
+     */
     legacyUserId: NullableString;
     source: "Order" | "Checkout";
   }): string {

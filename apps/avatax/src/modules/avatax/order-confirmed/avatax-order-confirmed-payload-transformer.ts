@@ -62,7 +62,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     });
     const customerCode = avataxCustomerCode.resolve({
       avataxCustomerCode: order.avataxCustomerCode,
-      legacyAvataxCustomerCode: order.user?.legacyAvataxCustomerCode,
+      legacyAvataxCustomerCode: order.user?.avataxCustomerCode,
       legacyUserId: order.user?.id,
       source: "Order",
     });
