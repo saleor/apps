@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { TaxCalculationStrategy } from "../../../generated/graphql";
-import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
+import { OrderCancelledPayload as OrderCancelledPayloadFragment } from "../webhooks/payloads/order-cancelled-payload";
+import { Result, err, ok } from "neverthrow";
+import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./order-cancel-error";
+import { BaseError } from "../../error";
 
 type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
 
@@ -48,7 +51,14 @@ export class SaleorOrder {
     return this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
   }
 }
-export class SaleorCancelledOrder {
+
+interface ISaleorCancelledOrderPayload {
+  getChannelSlug(): string;
+  getAvataxId(): string;
+  getPrivateMetadata(): Array<{ key: string; value: string }>;
+}
+
+export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderPayload {
   private static schema = z.object({
     order: z.object({
       channel: z.object({
@@ -68,25 +78,42 @@ export class SaleorCancelledOrder {
     }),
   });
 
-  private data: z.infer<typeof SaleorCancelledOrder.schema>;
+  private constructor(private data: z.infer<typeof SaleorCancelledOrderEvent.schema>) {}
 
-  constructor(data: Omit<OrderCancelledPayload, "__typename">) {
-    this.data = data as z.infer<typeof SaleorCancelledOrder.schema>;
-  }
-
-  public get privateMetadata() {
+  getPrivateMetadata() {
     return this.data.recipient.privateMetadata;
   }
 
-  public get channelSlug() {
+  getChannelSlug() {
     return this.data.order.channel.slug;
   }
 
-  public get avataxId() {
+  getAvataxId() {
     return this.data.order.avataxId;
   }
 
-  public static parser(data: unknown) {
-    return SaleorCancelledOrder.schema.parse(data);
+  static create(payload: OrderCancelledPayloadFragment) {
+    if (!payload.order) {
+      return err(new OrderCancelPayloadOrderError("Insufficient order data"));
+    }
+
+    if (!payload.order.avataxId) {
+      return err(new OrderCancelNoAvataxIdError("No AvaTax id found in order"));
+    }
+
+    const ParsingError = BaseError.subclass("AvataxAppSaleorOrderCancelledParsingError");
+
+    const parser = Result.fromThrowable(
+      SaleorCancelledOrderEvent.schema.parse,
+      ParsingError.normalize,
+    );
+
+    const parsedPayload = parser(payload);
+
+    if (parsedPayload.isErr()) {
+      throw parsedPayload.error;
+    }
+
+    return ok(new SaleorCancelledOrderEvent(parsedPayload.value));
   }
 }
