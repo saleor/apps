@@ -1,20 +1,28 @@
 meta {
-  name: 3. Complete checkout
+  name: 6. Complete checkout
   type: graphql
-  seq: 4
+  seq: 6
 }
 
 post {
   url: {{API_URL}}
   body: graphql
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{storefrontUserToken}}
 }
 
 body:graphql {
-  mutation CompleteCheckout($checkoutId:ID!) {
+  mutation CompleteCheckout($checkoutId: ID!) {
     checkoutComplete(id: $checkoutId) {
       order {
         id
+        metadata {
+          key
+          value
+        }
       }
       confirmationNeeded
       confirmationData
@@ -28,6 +36,7 @@ body:graphql {
       }
     }
   }
+  
 }
 
 body:graphql:vars {

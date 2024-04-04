@@ -46,3 +46,6 @@ apps/**/generated
 .cspellcache
 
 *.tsbuildinfo
+
+# bruno
+cloud.bru

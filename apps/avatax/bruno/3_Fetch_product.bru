@@ -1,13 +1,17 @@
 meta {
-  name: 0. Fetch product
+  name: 3. Fetch product
   type: graphql
-  seq: 1
+  seq: 3
 }
 
 post {
   url: {{API_URL}}
   body: graphql
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{storefrontUserToken}}
 }
 
 body:graphql {
