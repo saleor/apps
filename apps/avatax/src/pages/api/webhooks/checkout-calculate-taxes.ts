@@ -14,6 +14,7 @@ import {
 } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { AppConfig } from "../../../lib/app-config";
 
 export const config = {
   api: {
@@ -76,10 +77,19 @@ export default wrapWithLoggerContext(
             "../../../modules/taxes/get-active-connection-service"
           ).then((m) => m.getActiveConnectionService);
 
+          const configResult = AppConfig.createFromEncryptedMetadata(appMetadata);
+
+          if (configResult.isErr()) {
+            Sentry.captureException(configResult.error);
+            logger.error(configResult.error);
+
+            return res.status(500).send("Failed to resolve app config");
+          }
+
           const activeConnectionServiceResult = getActiveConnectionService(
             channelSlug,
-            appMetadata,
             ctx.authData,
+            configResult.value,
           );
 
           if (activeConnectionServiceResult.isErr()) {
@@ -89,6 +99,7 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
+            // todo strategy must be updated
             const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
 
             if (executeErrorStrategy) {
