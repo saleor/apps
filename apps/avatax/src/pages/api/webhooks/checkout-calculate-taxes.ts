@@ -14,6 +14,10 @@ import {
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { AppConfig } from "../../../lib/app-config";
+import {
+  CantCreateConnectionServiceError,
+  MissingChannelSlugError,
+} from "../../../modules/taxes/get-active-connection-service";
 
 export const config = {
   api: {
@@ -98,15 +102,19 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
-            // todo handle error
+            switch (err.constructor) {
+              default:
+              case MissingChannelSlugError:
+              case CantCreateConnectionServiceError: {
+                Sentry.captureException(err);
 
-            Sentry.captureException(err);
+                logger.fatal(`UNHANDLED: ${err.name}`, {
+                  error: err,
+                });
 
-            logger.fatal(`UNHANDLED: ${err.name}`, {
-              error: err,
-            });
-
-            return res.status(500).send("Error calculating taxes");
+                return res.status(500).send("Error calculating taxes");
+              }
+            }
           } else {
             logger.info("Found active connection service. Calculating taxes...");
             // TODO: Improve errors handling like above

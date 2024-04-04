@@ -18,7 +18,7 @@ type GetConfigForChannelResult = Result<
     channelSlug: string;
     avataxConfig: ProviderConnection;
   },
-  ConfigPerChannelErrors["prototype"]
+  InstanceType<ConfigPerChannelErrors>
 >;
 
 type ParsedConfig = { channels: ChannelsConfig; providerConnections: ProviderConnections };
