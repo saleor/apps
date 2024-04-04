@@ -1,7 +1,7 @@
 meta {
-  name: 1. Create checkout - US
+  name: 4. Create checkout - US
   type: graphql
-  seq: 2
+  seq: 4
 }
 
 post {
@@ -15,31 +15,35 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation CreateCheckout($channelSlug: String!, $variantId: ID!, $email: String!) {
+  mutation CreateCheckout(
+    $channelSlug: String!
+    $variantId: ID!
+    $email: String!
+  ) {
     checkoutCreate(
       input: {
         channel: $channelSlug
         lines: [{ quantity: 10, variantId: $variantId }]
         email: $email
-        shippingAddress:{
-           city: "New York",
-           country: US,
-           countryArea: "NY",
-           firstName: "John",
-           lastName: "Smith",
-           phone: "+12125094995",
-           postalCode: "10001",
-           streetAddress1: "8559 Lakes Avenue"
-        },
-        billingAddress:{
-           city: "New York",
-           country: US,
-           countryArea: "NY",
-           firstName: "John",
-           lastName: "Smith",
-           phone: "+12125094995",
-           postalCode: "10001",
-           streetAddress1: "8559 Lakes Avenue"
+        shippingAddress: {
+          city: "New York"
+          country: US
+          countryArea: "NY"
+          firstName: "John"
+          lastName: "Smith"
+          phone: "+12125094995"
+          postalCode: "10001"
+          streetAddress1: "8559 Lakes Avenue"
+        }
+        billingAddress: {
+          city: "New York"
+          country: US
+          countryArea: "NY"
+          firstName: "John"
+          lastName: "Smith"
+          phone: "+12125094995"
+          postalCode: "10001"
+          streetAddress1: "8559 Lakes Avenue"
         }
         languageCode: EN_US
       }
@@ -54,6 +58,14 @@ body:graphql {
       }
       checkout {
         id
+        lines {
+          variant {
+            name
+            product {
+              name
+            }
+          }
+        }
         totalPrice {
           gross {
             currency
@@ -82,7 +94,7 @@ body:graphql:vars {
   {
       "variantId": "{{productVariantId}}",
       "channelSlug": "{{channel_USD}}",
-      "email": "{{userEmail}}"
+      "email": "{{storefrontUserEmail}}"
   }
 }
 

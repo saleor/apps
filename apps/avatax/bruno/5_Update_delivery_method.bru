@@ -1,7 +1,7 @@
 meta {
-  name: 2. Update delivery method
+  name: 5. Update delivery method
   type: graphql
-  seq: 3
+  seq: 5
 }
 
 post {
@@ -25,6 +25,10 @@ body:graphql {
       }
       checkout {
         id
+        metadata {
+            key
+            value
+          }
         lines {
           totalPrice {
             gross {

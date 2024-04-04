@@ -1,0 +1,82 @@
+meta {
+  name: 1. Create storefront user
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation CreateStoreFrontUser(
+    $channelSlug: String
+    $email: String!
+    $password: String!
+    $firstName: String
+  ) {
+    accountRegister(
+      input: {
+        firstName: $firstName
+        email: $email
+        password: $password
+        channel: $channelSlug
+        metadata: [{ key: "avataxCustomerCode", value: "code" }]
+      }
+    ) {
+      user {
+        id
+        metadata {
+          key
+          value
+        }
+      }
+      errors {
+        code
+        field
+        message
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "channelSlug": "{{channel_USD}}",
+      "email": "{{storefrontUserEmail}}",
+      "password": "{{storefrontUserPassword}}",
+      "firstName": "{{storefrontUserFirstName}}"
+  }
+}
+
+script:pre-request {
+  const { faker } = require('@faker-js/faker');
+  
+  const configuredEmail = bru.getProcessEnv("STOREFRONT_USER_EMAIL");
+  
+  if (configuredEmail) {
+    bru.setVar("storefrontUserEmail", configuredEmail);
+  } else {
+    bru.setVar("storefrontUserEmail", faker.internet.email());
+  }
+  
+  const configuredPassword = bru.getProcessEnv("STOREFRONT_USER_PASSWORD");
+  
+  if (configuredPassword) {
+    bru.setVar("storefrontUserPassword", configuredPassword);
+  } else {
+    bru.setVar("storefrontUserPassword", faker.internet.password());
+  }
+
+  const configuredFirstName = bru.getProcessEnv("STOREFRONT_USER_NAME");
+
+  if (configuredFirstName) {
+    bru.setVar("storefrontUserFirstName", configuredFirstName);
+  } else {
+    bru.setVar("storefrontUserFirstName", faker.name.firstName());
+  }
+
+}
