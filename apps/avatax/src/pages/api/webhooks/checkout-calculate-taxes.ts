@@ -1,7 +1,6 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
-import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -99,20 +98,15 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
-            // todo strategy must be updated
-            const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
+            // todo handle error
 
-            if (executeErrorStrategy) {
-              return executeErrorStrategy();
-            } else {
-              Sentry.captureException(err);
+            Sentry.captureException(err);
 
-              logger.fatal(`UNHANDLED: ${err.name}`, {
-                error: err,
-              });
+            logger.fatal(`UNHANDLED: ${err.name}`, {
+              error: err,
+            });
 
-              return res.status(500).send("Error calculating taxes");
-            }
+            return res.status(500).send("Error calculating taxes");
           } else {
             logger.info("Found active connection service. Calculating taxes...");
             // TODO: Improve errors handling like above
