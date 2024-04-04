@@ -41,16 +41,16 @@ vars:post-response {
 script:pre-request {
   const { faker } = require('@faker-js/faker');
   
-  const configuredEmail = bru.getProcessEnv("USER_EMAIL");
+  const configuredEmail = bru.getProcessEnv("STOREFRONT_USER_EMAIL");
   
   if (configuredEmail) {
-    bru.setVar("storefrontUserEmail", faker.internet.email());
+    bru.setVar("storefrontUserEmail", configuredEmail);
   }
   
-  const configuredPassword = bru.getProcessEnv("USER_PASSWORD");
+  const configuredPassword = bru.getProcessEnv("STOREFRONT_USER_PASSWORD");
   
   if (configuredPassword) {
-    bru.setVar("storefrontUserPassword", faker.internet.password());
+    bru.setVar("storefrontUserPassword", configuredPassword);
   }
   
 }

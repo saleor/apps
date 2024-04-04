@@ -23,7 +23,7 @@ body:graphql {
         email: $email
         password: $password
         channel: $channelSlug
-        metadata: [{ key: "avataxCustomerCode", value: "OKON" }]
+        metadata: [{ key: "avataxCustomerCode", value: "code" }]
       }
     ) {
       user {
@@ -55,17 +55,28 @@ body:graphql:vars {
 script:pre-request {
   const { faker } = require('@faker-js/faker');
   
-  const configuredEmail = bru.getProcessEnv("USER_EMAIL");
+  const configuredEmail = bru.getProcessEnv("STOREFRONT_USER_EMAIL");
   
-  if (!configuredEmail) {
+  if (configuredEmail) {
+    bru.setVar("storefrontUserEmail", configuredEmail);
+  } else {
     bru.setVar("storefrontUserEmail", faker.internet.email());
   }
   
-  const configuredPassword = bru.getProcessEnv("USER_PASSWORD");
+  const configuredPassword = bru.getProcessEnv("STOREFRONT_USER_PASSWORD");
   
-  if (!configuredPassword) {
+  if (configuredPassword) {
+    bru.setVar("storefrontUserPassword", configuredPassword);
+  } else {
     bru.setVar("storefrontUserPassword", faker.internet.password());
   }
-  
-  bru.setVar("storefrontUserFirstName", faker.name.firstName());
+
+  const configuredFirstName = bru.getProcessEnv("STOREFRONT_USER_NAME");
+
+  if (configuredFirstName) {
+    bru.setVar("storefrontUserFirstName", configuredFirstName);
+  } else {
+    bru.setVar("storefrontUserFirstName", faker.name.firstName());
+  }
+
 }
