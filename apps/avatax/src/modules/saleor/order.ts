@@ -52,13 +52,13 @@ export class SaleorOrder {
   }
 }
 
-interface ISaleorCancelledOrderPayload {
+interface ISaleorCancelledOrderEvent {
   getChannelSlug(): string;
   getAvataxId(): string;
   getPrivateMetadata(): Array<{ key: string; value: string }>;
 }
 
-export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderPayload {
+export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderEvent {
   private static schema = z.object({
     order: z.object({
       channel: z.object({
@@ -92,6 +92,8 @@ export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderPayload {
     return this.data.order.avataxId;
   }
 
+  public static ParsingError = BaseError.subclass("AvataxAppSaleorOrderCancelledParsingError");
+
   static create(payload: OrderCancelledPayloadFragment) {
     if (!payload.order) {
       return err(new OrderCancelPayloadOrderError("Insufficient order data"));
@@ -101,11 +103,9 @@ export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderPayload {
       return err(new OrderCancelNoAvataxIdError("No AvaTax id found in order"));
     }
 
-    const ParsingError = BaseError.subclass("AvataxAppSaleorOrderCancelledParsingError");
-
     const parser = Result.fromThrowable(
       SaleorCancelledOrderEvent.schema.parse,
-      ParsingError.normalize,
+      SaleorCancelledOrderEvent.ParsingError.normalize,
     );
 
     const parsedPayload = parser(payload);

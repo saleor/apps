@@ -52,6 +52,12 @@ export default wrapWithLoggerContext(
               logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", { error });
               return res.status(200).send("Invalid order payload. Likely not an AvaTax order.");
             }
+            case error instanceof SaleorCancelledOrderEvent.ParsingError: {
+              logger.error("Error parsing order payload", { error });
+              Sentry.captureException(error);
+
+              return res.status(400).send("Invalid order payload");
+            }
             default: {
               logger.error("Unhandled error", { error });
               Sentry.captureException(error);
