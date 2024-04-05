@@ -1,8 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../saleor";
-import { ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { CancelOrderPayload, ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
-import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
@@ -37,7 +36,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
     return response;
   }
 
-  async cancelOrder(payload: OrderCancelledPayload, avataxConfig: AvataxConfig) {
+  async cancelOrder(payload: CancelOrderPayload, avataxConfig: AvataxConfig) {
     const adapter = new AvataxOrderCancelledAdapter(this.avataxClient);
 
     await adapter.send(payload, avataxConfig);

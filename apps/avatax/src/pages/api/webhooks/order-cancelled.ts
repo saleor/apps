@@ -6,6 +6,11 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import {
+  OrderCancelNoAvataxIdError,
+  OrderCancelPayloadOrderError,
+} from "../../../modules/saleor/order-cancel-error";
+import { SaleorCancelledOrderEvent } from "../../../modules/saleor/order";
 
 export const config = {
   api: {
@@ -31,48 +36,73 @@ export default wrapWithLoggerContext(
 
         logger.info("Handler called with payload");
 
-        if (!payload.order) {
-          const error = new Error("Insufficient order data");
+        const cancelledOrderFromPayload = SaleorCancelledOrderEvent.create(payload);
 
-          logger.error("Insufficient order data", { error });
-          Sentry.captureException("Insufficient order data");
+        if (cancelledOrderFromPayload.isErr()) {
+          const error = cancelledOrderFromPayload.error;
 
-          return res.status(400).send("Invalid order payload");
+          switch (true) {
+            case error instanceof OrderCancelPayloadOrderError: {
+              logger.error("Insufficient order data", { error });
+              Sentry.captureException("Insufficient order data");
+
+              return res.status(400).send("Invalid order payload");
+            }
+            case error instanceof OrderCancelNoAvataxIdError: {
+              logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
+                error,
+              });
+              return res.status(200).send("Invalid order payload. Likely not an AvaTax order.");
+            }
+            case error instanceof SaleorCancelledOrderEvent.ParsingError: {
+              logger.error("Error parsing order payload", { error });
+              Sentry.captureException(error);
+
+              return res.status(400).send("Invalid order payload");
+            }
+            default: {
+              logger.error("Unhandled error", { error });
+              Sentry.captureException(error);
+
+              return res.status(500).send("Unhandled error");
+            }
+          }
         }
 
-        try {
-          const appMetadata = payload.recipient?.privateMetadata ?? [];
+        const cancelledOrderInstance = cancelledOrderFromPayload.value;
 
-          metadataCache.setMetadata(appMetadata);
+        const appMetadata = cancelledOrderInstance.getPrivateMetadata() || [];
 
-          const channelSlug = payload.order.channel.slug;
+        const channelSlug = cancelledOrderInstance.getChannelSlug();
 
-          const getActiveConnectionService = await import(
-            "../../../modules/taxes/get-active-connection-service"
-          ).then((m) => m.getActiveConnectionService);
+        const getActiveConnectionService = await import(
+          "../../../modules/taxes/get-active-connection-service"
+        ).then((m) => m.getActiveConnectionService);
 
-          const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
+        const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
 
-          logger.info("Cancelling order...");
+        logger.info("Cancelling order...");
 
-          if (taxProviderResult.isOk()) {
-            const { taxProvider, config } = taxProviderResult.value;
+        if (taxProviderResult.isOk()) {
+          const { taxProvider, config } = taxProviderResult.value;
 
-            await taxProvider.cancelOrder(payload, config);
+          await taxProvider.cancelOrder(
+            {
+              avataxId: cancelledOrderInstance.getAvataxId(),
+            },
+            config,
+          );
 
-            logger.info("Order cancelled");
+          logger.info("Order cancelled");
 
-            return res.status(200).end();
-          }
+          return res.status(200).end();
+        }
 
-          if (taxProviderResult.isErr()) {
-            Sentry.captureException(taxProviderResult.error);
-            // TODO: Map errors
-            return res.status(500).send("Unhandled error");
-          }
-        } catch (error) {
-          Sentry.captureException(error);
+        if (taxProviderResult.isErr()) {
+          logger.error("Tax provider couldn't cancel the order:", taxProviderResult.error);
 
+          Sentry.captureException(taxProviderResult.error);
+          // TODO: Map errors
           return res.status(500).send("Unhandled error");
         }
       }),
