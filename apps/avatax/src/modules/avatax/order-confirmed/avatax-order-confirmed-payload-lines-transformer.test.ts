@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { defaultOrder } from "../../../mocks";
 import { SaleorMockOrderFactory } from "../../saleor/mock-order-factory";
+import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
@@ -69,7 +70,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           description: "Monospace Tee",
           quantity: 3,
           amount: firstProductAmount,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: pricesEnteredWithTax,
         });
         expect(second).toEqual({
@@ -78,7 +79,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           quantity: 1,
           amount: secondProductAmount,
           discounted: false,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: pricesEnteredWithTax,
         });
         expect(third).toEqual({
@@ -87,7 +88,7 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           quantity: 2,
           amount: thirdProductAmount,
           discounted: false,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: pricesEnteredWithTax,
         });
       });
