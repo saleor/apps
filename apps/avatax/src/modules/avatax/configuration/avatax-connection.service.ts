@@ -7,6 +7,7 @@ import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxClient } from "../avatax-client";
 import { createLogger } from "../../../logger";
 import { metadataCache } from "../../../lib/app-metadata-cache";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxConnectionService {
   private logger = createLogger("AvataxConnectionService");
@@ -27,7 +28,7 @@ export class AvataxConnectionService {
   }
 
   private async checkIfAuthorized(input: AvataxConfig) {
-    const avataxClient = new AvataxClient(input);
+    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input));
     const authValidationService = new AvataxAuthValidationService(avataxClient);
 
     await authValidationService.validate();

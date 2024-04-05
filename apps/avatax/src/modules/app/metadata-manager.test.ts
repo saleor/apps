@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, Mock } from "vitest";
+import { describe, expect, it, Mock, vi } from "vitest";
 import { createSettingsManager } from "./metadata-manager";
 import { Client } from "urql";
 import { AppMetadataCache } from "../../lib/app-metadata-cache";

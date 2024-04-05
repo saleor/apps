@@ -1,6 +1,6 @@
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { ResolutionQuality } from "avatax/lib/enums/ResolutionQuality";
 import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 

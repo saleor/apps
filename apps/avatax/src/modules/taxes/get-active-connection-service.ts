@@ -1,30 +1,16 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { MetadataItem } from "../../../generated/graphql";
 import { getAppConfig } from "../app/get-app-config";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { ProviderConnection } from "../provider-connections/provider-connections";
 import { BaseError } from "../../error";
 import { createLogger } from "../../logger";
 import { err, fromThrowable, ok } from "neverthrow";
+import { AvataxClient } from "../avatax/avatax-client";
+import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
 import { ActiveConnectionServiceErrors } from "./get-active-connection-service-errors";
-
-const avataxProviderFactory = ({
-  providerConnection,
-  authData,
-}: {
-  providerConnection: ProviderConnection;
-  authData: AuthData;
-}) => {
-  return new AvataxWebhookService({
-    config: providerConnection.config,
-    authData,
-  });
-};
 
 export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
-  authData: AuthData,
 ) {
   const logger = createLogger("getActiveConnectionService");
 
@@ -77,6 +63,9 @@ export function getActiveConnectionService(
     );
   }
 
+  /**
+   * Abstract to some config layer with repository operations
+   */
   const providerConnection = providerConnections.find(
     (connection) => connection.id === channelConfig.config.providerConnectionId,
   );
@@ -98,10 +87,13 @@ export function getActiveConnectionService(
     );
   }
 
-  const taxProvider = avataxProviderFactory({
-    providerConnection,
-    authData,
-  });
+  const taxProvider = new AvataxWebhookService(
+    new AvataxClient(new AvataxSdkClientFactory().createClient(providerConnection.config)),
+  );
 
-  return ok(taxProvider);
+  /**
+   * Adding config here, to have single place where its resolved.
+   * TODO: Extract this
+   */
+  return ok({ taxProvider, config: providerConnection.config });
 }

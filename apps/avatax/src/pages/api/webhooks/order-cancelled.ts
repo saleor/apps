@@ -51,16 +51,14 @@ export default wrapWithLoggerContext(
             "../../../modules/taxes/get-active-connection-service"
           ).then((m) => m.getActiveConnectionService);
 
-          const taxProviderResult = getActiveConnectionService(
-            channelSlug,
-            appMetadata,
-            ctx.authData,
-          );
+          const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
 
           logger.info("Cancelling order...");
 
           if (taxProviderResult.isOk()) {
-            await taxProviderResult.value.cancelOrder(payload);
+            const { taxProvider, config } = taxProviderResult.value;
+
+            await taxProvider.cancelOrder(payload, config);
 
             logger.info("Order cancelled");
 

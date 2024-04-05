@@ -1,8 +1,8 @@
 import { Client } from "urql";
 import {
-  TaxClassFragment,
   TaxClassesListDocument,
   TaxClassesListQueryVariables,
+  TaxClassFragment,
 } from "../../../generated/graphql";
 
 export class TaxClassesFetcher {

@@ -9,21 +9,23 @@ const avataxMockConfig = configMockGenerator.generateAvataxConfig();
 describe("AvataxOrderCancelledPayloadTransformer", () => {
   it("throws an error when order = null", () => {
     const payload = { order: null } as any as OrderCancelledPayload;
-    const transformer = new AvataxOrderCancelledPayloadTransformer(avataxMockConfig);
+    const transformer = new AvataxOrderCancelledPayloadTransformer();
 
-    expect(() => transformer.transform(payload)).toThrow("Order is required");
+    expect(() => transformer.transform(payload, avataxMockConfig.companyCode)).toThrow(
+      "Order is required",
+    );
   });
   it("throws an error when no avataxId is present", () => {
     const payload = { order: {} } as any as OrderCancelledPayload;
-    const transformer = new AvataxOrderCancelledPayloadTransformer(avataxMockConfig);
+    const transformer = new AvataxOrderCancelledPayloadTransformer();
 
-    expect(() => transformer.transform(payload)).toThrow();
+    expect(() => transformer.transform(payload, avataxMockConfig.companyCode)).toThrow();
   });
   it("returns a valid AvataxOrderCancelledTarget", () => {
     const payload = { order: { avataxId: "123" } } as any as OrderCancelledPayload;
-    const transformer = new AvataxOrderCancelledPayloadTransformer(avataxMockConfig);
+    const transformer = new AvataxOrderCancelledPayloadTransformer();
 
-    const target = transformer.transform(payload);
+    const target = transformer.transform(payload, avataxMockConfig.companyCode);
 
     expect(target).toEqual({ transactionCode: "123", companyCode: "DEFAULT" });
   });

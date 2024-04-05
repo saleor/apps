@@ -4,17 +4,17 @@ import { router } from "../../trpc/trpc-server";
 import { avataxTaxCodeMatchSchema } from "./avatax-tax-code-match-repository";
 import { createLogger } from "../../../logger";
 
-const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) =>
-  next({
+const protectedWithAvataxTaxCodeMatchesService = protectedClientProcedure.use(({ next, ctx }) => {
+  return next({
     ctx: {
-      taxCodeMatchesService: new AvataxTaxCodeMatchesService({
+      taxCodeMatchesService: AvataxTaxCodeMatchesService.createFromAuthData({
         saleorApiUrl: ctx.saleorApiUrl,
-        token: ctx.appToken!,
-        appId: ctx.appId!,
+        token: ctx.appToken,
+        appId: ctx.appId,
       }),
     },
-  }),
-);
+  });
+});
 
 export const avataxTaxCodeMatchesRouter = router({
   getAll: protectedWithAvataxTaxCodeMatchesService.query(async ({ ctx }) => {

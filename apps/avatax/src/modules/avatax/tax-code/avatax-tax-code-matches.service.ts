@@ -2,27 +2,14 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
   AvataxTaxCodeMatch,
-  AvataxTaxCodeMatchRepository,
   AvataxTaxCodeMatches,
+  AvataxTaxCodeMatchRepository,
 } from "./avatax-tax-code-match-repository";
-import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { metadataCache } from "../../../lib/app-metadata-cache";
 
 export class AvataxTaxCodeMatchesService {
-  private logger = createLogger("AvataxTaxCodeMatchesService");
-  private taxCodeMatchRepository: AvataxTaxCodeMatchRepository;
-
-  constructor(authData: AuthData) {
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: authData.saleorApiUrl,
-      token: authData.token,
-    });
-    const { appId, saleorApiUrl } = authData;
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    this.taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(settingsManager, saleorApiUrl);
-  }
+  constructor(private taxCodeMatchRepository: AvataxTaxCodeMatchRepository) {}
 
   async getAll(): Promise<AvataxTaxCodeMatches> {
     return this.taxCodeMatchRepository.getAll();
@@ -39,5 +26,20 @@ export class AvataxTaxCodeMatchesService {
     }
 
     return this.taxCodeMatchRepository.create(input);
+  }
+
+  static createFromAuthData(authData: Pick<AuthData, "saleorApiUrl" | "token" | "appId">) {
+    const client = createInstrumentedGraphqlClient({
+      saleorApiUrl: authData.saleorApiUrl,
+      token: authData.token,
+    });
+    const settingsManager = createSettingsManager(client, authData.appId, metadataCache);
+
+    const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(
+      settingsManager,
+      authData.saleorApiUrl,
+    );
+
+    return new AvataxTaxCodeMatchesService(taxCodeMatchRepository);
   }
 }

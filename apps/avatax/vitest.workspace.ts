@@ -5,7 +5,7 @@ export default defineWorkspace([
   {
     extends: "./vitest.config.ts",
     test: {
-      name: "react",
+      name: "units",
       exclude: ["e2e/**/*.spec.ts"],
     },
   },

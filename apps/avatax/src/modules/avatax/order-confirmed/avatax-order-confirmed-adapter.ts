@@ -22,26 +22,28 @@ export class AvataxOrderConfirmedAdapter
   implements WebhookAdapter<AvataxOrderConfirmedPayload, AvataxOrderConfirmedResponse>
 {
   private logger = createLogger("AvataxOrderConfirmedAdapter");
-  private readonly config: AvataxConfig;
-  private readonly authData: AuthData;
 
-  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
-    this.config = config;
-    this.authData = authData;
-  }
+  constructor(private avataxClient: AvataxClient) {}
 
-  async send(payload: AvataxOrderConfirmedPayload): Promise<AvataxOrderConfirmedResponse> {
+  async send(
+    payload: AvataxOrderConfirmedPayload,
+    config: AvataxConfig,
+    authData: AuthData,
+  ): Promise<AvataxOrderConfirmedResponse> {
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
-    const payloadService = new AvataxOrderConfirmedPayloadService(this.authData);
-    const target = await payloadService.getPayload(payload.order, payload.saleorOrder, this.config);
+    const payloadService = new AvataxOrderConfirmedPayloadService(this.avataxClient);
+    const target = await payloadService.getPayload(
+      payload.order,
+      payload.saleorOrder,
+      config,
+      authData,
+    );
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
-
     try {
-      const response = await client.createTransaction(target);
+      const response = await this.avataxClient.createTransaction(target);
 
       this.logger.debug("AvaTax createTransaction successfully responded");
 

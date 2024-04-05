@@ -1,5 +1,5 @@
 import { TaxExternalError } from "../taxes/tax-error";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { AvalaraError } from "avatax/lib/AvaTaxClient";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 

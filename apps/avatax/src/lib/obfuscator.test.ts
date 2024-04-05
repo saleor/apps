@@ -1,5 +1,6 @@
 import { Obfuscator } from "./obfuscator";
 import { describe, expect, it } from "vitest";
+
 const obfuscator = new Obfuscator();
 
 describe("Obfuscator", () => {

@@ -81,7 +81,7 @@ vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getActiveConnectionService", () => {
   it("throws MissingChannelSlugError error when channel slug is missing", () => {
-    const result = getActiveConnectionService("", mockedInvalidMetadata, mockedAuthData);
+    const result = getActiveConnectionService("", mockedInvalidMetadata);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       ActiveConnectionServiceErrors.MissingChannelSlugError,
@@ -89,7 +89,7 @@ describe("getActiveConnectionService", () => {
   });
 
   it("throws MissingMetadataError error when there are no metadata items", () => {
-    const result = getActiveConnectionService("default-channel", [], mockedAuthData);
+    const result = getActiveConnectionService("default-channel", []);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       ActiveConnectionServiceErrors.MissingMetadataError,
@@ -97,20 +97,16 @@ describe("getActiveConnectionService", () => {
   });
 
   it("throws BrokenConfigurationError error when no providerConnectionId was found", () => {
-    const result = getActiveConnectionService(
-      "default-channel",
-      [
-        {
-          key: "providers",
-          value: mockedEncryptedProviders,
-        },
-        {
-          key: "channels",
-          value: mockedInvalidEncryptedChannels,
-        },
-      ],
-      mockedAuthData,
-    );
+    const result = getActiveConnectionService("default-channel", [
+      {
+        key: "providers",
+        value: mockedEncryptedProviders,
+      },
+      {
+        key: "channels",
+        value: mockedInvalidEncryptedChannels,
+      },
+    ]);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       ActiveConnectionServiceErrors.BrokenConfigurationError,
@@ -118,20 +114,16 @@ describe("getActiveConnectionService", () => {
   });
 
   it("throws WrongChannelError error when no channel was found for channelSlug", () => {
-    const result = getActiveConnectionService(
-      "invalid-channel",
-      [
-        {
-          key: "providers",
-          value: mockedEncryptedProviders,
-        },
-        {
-          key: "channels",
-          value: mockedValidEncryptedChannels,
-        },
-      ],
-      mockedAuthData,
-    );
+    const result = getActiveConnectionService("invalid-channel", [
+      {
+        key: "providers",
+        value: mockedEncryptedProviders,
+      },
+      {
+        key: "channels",
+        value: mockedValidEncryptedChannels,
+      },
+    ]);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       ActiveConnectionServiceErrors.WrongChannelError,
@@ -139,20 +131,16 @@ describe("getActiveConnectionService", () => {
   });
 
   it("returns provider when data is correct", () => {
-    const result = getActiveConnectionService(
-      "default-channel",
-      [
-        {
-          key: "providers",
-          value: mockedEncryptedProviders,
-        },
-        {
-          key: "channels",
-          value: mockedValidEncryptedChannels,
-        },
-      ],
-      mockedAuthData,
-    );
+    const result = getActiveConnectionService("default-channel", [
+      {
+        key: "providers",
+        value: mockedEncryptedProviders,
+      },
+      {
+        key: "channels",
+        value: mockedValidEncryptedChannels,
+      },
+    ]);
 
     expect(result._unsafeUnwrap()).toBeDefined();
   });
