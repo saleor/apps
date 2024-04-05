@@ -1,5 +1,18 @@
 # app-avatax
 
+## 1.4.2
+
+### Patch Changes
+
+- 6bdc1332: Changed how app resolves `avataxCustomerCode`:
+  1. Checkout or Order metadata (`avataxCustomerCode` key).
+  2. User metadata (`avataxCustomerCode` key).
+  3. User id.
+  4. As a fallback app sends `0` to Avatax.
+- a82631f0: Added more logging for Avatax app tax code matcher. App now is more explicit and sends `P0000000` as default tax class id to Avatax.
+- 3c6ff94d: Improve logging for AvataxCustomerCodeResolver.
+- a5ef57cc: Attach Sentry to tRPC errors. This will help us with catching unhandled exceptions.
+
 ## 1.4.1
 
 ### Patch Changes

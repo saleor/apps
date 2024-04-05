@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
@@ -18,21 +19,21 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
         {
           amount: 60,
           quantity: 3,
-          taxCode: "P0000000",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
         {
           amount: 20,
           quantity: 1,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
         {
           amount: 100,
           quantity: 2,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
@@ -58,21 +59,21 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
         {
           amount: 60,
           quantity: 3,
-          taxCode: "P0000000",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
         {
           amount: 20,
           quantity: 1,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
         {
           amount: 100,
           quantity: 2,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: false,
         },
@@ -92,21 +93,21 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
         {
           amount: 60,
           quantity: 3,
-          taxCode: "P0000000",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: true,
         },
         {
           amount: 20,
           quantity: 1,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: true,
         },
         {
           amount: 100,
           quantity: 2,
-          taxCode: "",
+          taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
           discounted: true,
         },
