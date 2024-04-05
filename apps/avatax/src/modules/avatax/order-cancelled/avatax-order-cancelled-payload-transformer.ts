@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
 import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
+import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
 
 export class AvataxOrderCancelledPayloadTransformer {
   constructor() {}
 
-  transform(avataxId: string, companyCode: string): AvataxOrderCancelledTarget {
-    const transactionCode = z.string().min(1).parse(avataxId);
+  transform(payload: CancelOrderPayload, companyCode: string): AvataxOrderCancelledTarget {
+    const transactionCode = z.string().min(1).parse(payload.avataxId);
 
     return {
       transactionCode,

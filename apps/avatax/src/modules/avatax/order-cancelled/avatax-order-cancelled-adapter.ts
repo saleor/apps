@@ -18,7 +18,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
 
     const payloadTransformer = new AvataxOrderCancelledPayloadTransformer();
     const target = payloadTransformer.transform(
-      payload.avataxId,
+      payload,
       config.companyCode ?? defaultAvataxConfig.companyCode,
     );
 
