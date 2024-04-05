@@ -29,9 +29,7 @@ describe("SaleorCancelledOrderEvent", () => {
 
     expect(result.isOk()).toBe(true);
 
-    if (result.isOk()) {
-      expect(result.value).toBeInstanceOf(SaleorCancelledOrderEvent);
-    }
+    expect(result._unsafeUnwrap()).toBeInstanceOf(SaleorCancelledOrderEvent);
   });
 
   it("should fail to create a SaleorCancelledOrderEvent when 'order' is missing", () => {
@@ -61,7 +59,7 @@ describe("SaleorCancelledOrderEvent", () => {
     if (result.isErr()) {
       expect(result.error).toBeInstanceOf(OrderCancelNoAvataxIdError);
       expect(result.error.message).toBe(
-        "No AvaTax id found in order (missing 'avataxId' in 'order')",
+        '"avataxId" missing in "order"\nNo AvaTax id found in order',
       );
     }
   });

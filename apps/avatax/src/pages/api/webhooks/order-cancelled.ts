@@ -49,7 +49,9 @@ export default wrapWithLoggerContext(
               return res.status(400).send("Invalid order payload");
             }
             case error instanceof OrderCancelNoAvataxIdError: {
-              logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", { error });
+              logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
+                error,
+              });
               return res.status(200).send("Invalid order payload. Likely not an AvaTax order.");
             }
             case error instanceof SaleorCancelledOrderEvent.ParsingError: {
