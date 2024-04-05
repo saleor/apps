@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { OrderLineFragment } from "../../../../generated/graphql";
+import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "./avatax-order-confirmed-tax-code-matcher";
 
@@ -49,12 +50,12 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
   it("should return empty string if tax class is not found", () => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
-    expect(matcher.match(mockedLine, matches)).toEqual("");
+    expect(matcher.match(mockedLine, matches)).toEqual(DEFAULT_TAX_CLASS_ID);
   });
   it("should return tax code if tax class is found", () => {
     const line = structuredClone({ ...mockedLine, taxClass: { id: "tax-class-id" } });
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
-    expect(matcher.match(line, matches)).toEqual("P0000000");
+    expect(matcher.match(line, matches)).toEqual(DEFAULT_TAX_CLASS_ID);
   });
 });
