@@ -60,7 +60,12 @@ export class AvataxOrderConfirmedPayloadTransformer {
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
-    const customerCode = avataxCustomerCode.resolve(order.user);
+    const customerCode = avataxCustomerCode.resolve({
+      avataxCustomerCode: order.avataxCustomerCode,
+      legacyAvataxCustomerCode: order.user?.avataxCustomerCode,
+      legacyUserId: order.user?.id,
+      source: "Order",
+    });
     const addressPayload = this.getSaleorAddress(order);
 
     if (addressPayload.isErr()) {
