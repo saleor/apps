@@ -5,6 +5,8 @@ import { protectedClientProcedure } from "../../trpc/protected-client-procedure"
 import { AvataxConnectionService } from "../configuration/avatax-connection.service";
 import { AvataxTaxCodesService } from "./avatax-tax-codes.service";
 import { createLogger } from "../../../logger";
+import { AvataxClient } from "../avatax-client";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 const getAllForIdSchema = z.object({
   connectionId: z.string(),
@@ -23,7 +25,9 @@ export const avataxTaxCodesRouter = router({
     });
 
     const connection = await connectionService.getById(input.connectionId);
-    const taxCodesService = new AvataxTaxCodesService(connection.config);
+    const taxCodesService = new AvataxTaxCodesService(
+      new AvataxClient(new AvataxSdkClientFactory().createClient(connection.config)),
+    );
 
     logger.debug("Returning tax codes");
 

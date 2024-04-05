@@ -3,14 +3,9 @@ import type { TaxCode } from "../../taxes/tax-code";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
 
 export class AvataxTaxCodesService {
-  private client: AvataxClient;
-
-  constructor(config: AvataxConfig) {
-    this.client = new AvataxClient(config);
-  }
+  constructor(private client: AvataxClient) {}
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
     return taxCodes.map((item) => ({

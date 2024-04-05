@@ -8,6 +8,7 @@ import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -26,7 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
-    const avataxClient = new AvataxClient(avataxConfig);
+    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
 
     const entityUseCode = await entityTypeMatcher.match(

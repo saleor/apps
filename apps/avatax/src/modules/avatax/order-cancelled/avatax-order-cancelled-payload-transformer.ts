@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
 
 export class AvataxOrderCancelledPayloadTransformer {
-  constructor(private readonly config: AvataxConfig) {}
+  constructor() {}
 
-  transform({ order }: OrderCancelledPayload): AvataxOrderCancelledTarget {
+  transform({ order }: OrderCancelledPayload, companyCode: string): AvataxOrderCancelledTarget {
     if (!order) {
       throw new Error("Order is required");
     }
@@ -15,7 +14,7 @@ export class AvataxOrderCancelledPayloadTransformer {
 
     return {
       transactionCode,
-      companyCode: this.config.companyCode ?? defaultAvataxConfig.companyCode,
+      companyCode: companyCode,
     };
   }
 }

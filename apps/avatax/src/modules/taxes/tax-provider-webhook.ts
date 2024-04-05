@@ -3,22 +3,24 @@ import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { SaleorOrder } from "../saleor";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
+import { AvataxConfig } from "../avatax/avatax-connection-schema";
+import { AuthData } from "@saleor/app-sdk/APL";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
 
 export type CreateOrderResponse = { id: string };
 
-/**
- * @deprecated -> flat abstractions
- *
- * This is not needed, it was added when more providers (avatax, taxjar) was used.
- * It can be flattened now and classes that implement this interface can be removed
- */
 export interface ProviderWebhookService {
-  calculateTaxes: (payload: CalculateTaxesPayload) => Promise<CalculateTaxesResponse>;
+  calculateTaxes: (
+    payload: CalculateTaxesPayload,
+    avataxConfig: AvataxConfig,
+    authData: AuthData,
+  ) => Promise<CalculateTaxesResponse>;
   confirmOrder: (
     payload: OrderConfirmedSubscriptionFragment,
     saleorOrder: SaleorOrder,
+    avataxConfig: AvataxConfig,
+    authData: AuthData,
   ) => Promise<CreateOrderResponse>;
-  cancelOrder: (payload: OrderCancelledPayload) => Promise<void>;
+  cancelOrder: (payload: OrderCancelledPayload, avataxConfig: AvataxConfig) => Promise<void>;
 }

@@ -18,6 +18,8 @@ import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-conf
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
 
+  constructor(private avataxClient: AvataxClient) {}
+
   private matchDocumentType(config: AvataxConfig): DocumentType {
     if (!config.isDocumentRecordingEnabled) {
       // isDocumentRecordingEnabled = false changes all the DocTypes within your AvaTax requests to SalesOrder. This will stop any transaction from being recorded within AvaTax.
@@ -47,10 +49,8 @@ export class AvataxOrderConfirmedPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
-    const avataxClient = new AvataxClient(avataxConfig);
-
     const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
-    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
 

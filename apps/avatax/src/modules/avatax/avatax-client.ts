@@ -4,36 +4,7 @@ import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
-import { LogOptions } from "avatax/lib/utils/logger";
-import packageJson from "../../../package.json";
 import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
-import { BaseAvataxConfig } from "./avatax-connection-schema";
-
-type AvataxSettings = {
-  appName: string;
-  appVersion: string;
-  environment: "sandbox" | "production";
-  machineName: string;
-  timeout: number;
-  logOptions?: LogOptions;
-};
-
-const defaultAvataxSettings: AvataxSettings = {
-  appName: packageJson.name,
-  appVersion: packageJson.version,
-  environment: "sandbox",
-  machineName: "tax-app",
-  timeout: parseInt(process.env.AVATAX_CLIENT_TIMEOUT ?? "15000", 10),
-};
-
-const createAvataxSettings = ({ isSandbox }: { isSandbox: boolean }): AvataxSettings => {
-  const settings: AvataxSettings = {
-    ...defaultAvataxSettings,
-    environment: isSandbox ? "sandbox" : "production",
-  };
-
-  return settings;
-};
 
 export type CommitTransactionArgs = {
   companyCode: string;
@@ -56,14 +27,7 @@ export type VoidTransactionArgs = {
 };
 
 export class AvataxClient {
-  private client: Avatax;
-
-  constructor(baseConfig: BaseAvataxConfig) {
-    const settings = createAvataxSettings({ isSandbox: baseConfig.isSandbox });
-    const avataxClient = new Avatax(settings).withSecurity(baseConfig.credentials);
-
-    this.client = avataxClient;
-  }
+  constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
     /*

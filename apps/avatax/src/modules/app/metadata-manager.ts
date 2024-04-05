@@ -74,6 +74,9 @@ const logger = createLogger("SettingsManager");
 export const createSettingsManager = (
   client: Pick<Client, "mutation" | "query">,
   appId: string,
+  /**
+   * Cache is a temporary solution, once we refactor the app we should pass it properly instead implicit caching
+   */
   cache: AppMetadataCache,
 ) => {
   /*

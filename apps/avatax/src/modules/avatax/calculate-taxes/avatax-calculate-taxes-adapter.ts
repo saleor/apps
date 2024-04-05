@@ -11,6 +11,8 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 import { z } from "zod";
 import * as Sentry from "@sentry/nextjs";
 import { InvalidAppAddressError } from "../../taxes/tax-error";
+import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
+import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
@@ -19,13 +21,8 @@ export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
   private logger = createLogger("AvataxCalculateTaxesAdapter");
-  private readonly config: AvataxConfig;
-  private readonly authData: AuthData;
 
-  constructor({ config, authData }: { config: AvataxConfig; authData: AuthData }) {
-    this.config = config;
-    this.authData = authData;
-  }
+  constructor(private avataxClient: AvataxClient) {}
 
   /**
    * Catch specific domain errors and transform them to errors that can be handled properly on the higher level.
@@ -82,17 +79,24 @@ export class AvataxCalculateTaxesAdapter
     return normalizeAvaTaxError(err);
   }
 
-  async send(payload: CalculateTaxesPayload): Promise<AvataxCalculateTaxesResponse> {
+  async send(
+    payload: CalculateTaxesPayload,
+    config: AvataxConfig,
+    authData: AuthData,
+  ): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
-    const payloadService = new AvataxCalculateTaxesPayloadService(this.authData);
-    const target = await payloadService.getPayload(payload, this.config);
+
+    const payloadService = new AvataxCalculateTaxesPayloadService(
+      AvataxTaxCodeMatchesService.createFromAuthData(authData),
+      new AvataxCalculateTaxesPayloadTransformer(),
+    );
+
+    const target = await payloadService.getPayload(payload, config);
 
     this.logger.debug("Calling AvaTax createTransaction with transformed payload...");
 
-    const client = new AvataxClient(this.config);
-
     try {
-      const response = await client.createTransaction(target);
+      const response = await this.avataxClient.createTransaction(target);
 
       this.logger.info("AvaTax createTransaction successfully responded");
 

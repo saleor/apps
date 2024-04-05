@@ -9,6 +9,7 @@ import { AvataxEditAddressValidationService } from "./configuration/avatax-edit-
 import { AvataxEditAuthValidationService } from "./configuration/avatax-edit-auth-validation.service";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
 import { createLogger } from "../../logger";
+import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -142,7 +143,7 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Route called");
 
-      const avataxClient = new AvataxClient(input.value);
+      const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input.value));
 
       const addressValidation = new AvataxAddressValidationService(avataxClient);
 
@@ -183,7 +184,7 @@ export const avataxConnectionRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
 
-      const avataxClient = new AvataxClient(input.value);
+      const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input.value));
 
       const authValidation = new AvataxAuthValidationService(avataxClient);
 
