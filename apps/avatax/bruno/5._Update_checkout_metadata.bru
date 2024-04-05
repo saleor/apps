@@ -1,0 +1,48 @@
+meta {
+  name: 5. Update checkout metadata
+  type: graphql
+  seq: 5
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{storefrontUserToken}}
+}
+
+body:graphql {
+  mutation UpdateMetadata($checkoutId: ID!, $input: [MetadataInput!]!) {
+    updateMetadata(id: $checkoutId, input: $input) {
+      errors {
+        field
+        message
+      }
+      item {
+        ... on Checkout {
+          id
+          metadata {
+            key
+            value
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "checkoutId": "{{checkoutId}}",
+    "input": [
+      {
+        "key": "avataxCustomerCode",
+        "value": "code"
+      }
+    ]
+  }
+}
