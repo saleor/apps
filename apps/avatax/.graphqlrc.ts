@@ -43,7 +43,11 @@ const config: IGraphQLConfig = {
           generates: {
             "generated/graphql.ts": {
               plugins: [
-                "typescript",
+                {
+                  typescript: {
+                    enumsAsTypes: true,
+                  },
+                },
                 "typescript-operations",
                 {
                   "typescript-urql": {
