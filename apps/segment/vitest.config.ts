@@ -13,5 +13,12 @@ export default defineConfig({
     alias: {
       "@": "./src",
     },
+    sequence: {
+      /**
+       * Shuffle tests to avoid side effects, where test_2 relies on something that test_1 did.
+       * Now tests will fail a little earlier
+       */
+      shuffle: true,
+    },
   },
 });
