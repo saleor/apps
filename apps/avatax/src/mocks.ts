@@ -13,13 +13,13 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   number: "1234",
   avataxEntityCode: null,
   created: "2023-05-25T09:18:55.203440+00:00",
-  status: OrderStatus.Unfulfilled,
+  status: "UNFULFILLED",
   channel: {
     id: "Q2hhbm5lbDox",
     slug: "default-channel",
     taxConfiguration: {
       pricesEnteredWithTax: true,
-      taxCalculationStrategy: TaxCalculationStrategy.TaxApp,
+      taxCalculationStrategy: "TAX_APP",
     },
   },
   shippingAddress: {
