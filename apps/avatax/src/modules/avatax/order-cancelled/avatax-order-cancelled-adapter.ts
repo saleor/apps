@@ -14,7 +14,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
   constructor(private avataxClient: AvataxClient) {}
 
   async send(payload: CancelOrderPayload, config: AvataxConfig) {
-    this.logger.debug("Transforming the Saleor payload for cancelling transaction with AvaTax...");
+    this.logger.info("Transforming the Saleor payload for cancelling transaction with AvaTax...");
 
     const payloadTransformer = new AvataxOrderCancelledPayloadTransformer();
     const target = payloadTransformer.transform(
@@ -22,14 +22,28 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
       config.companyCode ?? defaultAvataxConfig.companyCode,
     );
 
-    this.logger.debug("Calling AvaTax voidTransaction with transformed payload...");
+    this.logger.info("Calling AvaTax voidTransaction with transformed payload...", {
+      transactionCode: target.transactionCode,
+      companyCode: target.companyCode,
+      avataxId: payload.avataxId,
+    });
 
     try {
       await this.avataxClient.voidTransaction(target);
 
-      this.logger.debug(`Successfully voided the transaction of id: ${target.transactionCode}`);
+      this.logger.info("Successfully voided the transaction", {
+        transactionCode: target.transactionCode,
+        companyCode: target.companyCode,
+        avataxId: payload.avataxId,
+      });
     } catch (e) {
       const error = normalizeAvaTaxError(e);
+
+      this.logger.error("Error voiding the transaction", {
+        transactionCode: target.transactionCode,
+        companyCode: target.companyCode,
+        avataxId: payload.avataxId,
+      });
 
       throw error;
     }
