@@ -7,7 +7,7 @@ import {
 } from "../provider-connections/provider-connections";
 
 /**
- * TODO: Make error handling in neverthrow
+ * TODO: Refactor, use DI to inject encrypt/decrypt logic
  */
 export const getAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
