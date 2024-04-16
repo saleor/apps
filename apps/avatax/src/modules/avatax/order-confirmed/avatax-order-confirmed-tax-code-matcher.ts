@@ -26,8 +26,8 @@ export class AvataxOrderConfirmedTaxCodeMatcher {
       return possibleMatch.data.avataxTaxCode;
     }
 
-    this.logger.info("Tax class not matched with tax code", {
-      taxClassId,
+    this.logger.info("Tax class not matched with tax code, returning default tax class id", {
+      taxClassId: DEFAULT_TAX_CLASS_ID,
     });
 
     return DEFAULT_TAX_CLASS_ID;
