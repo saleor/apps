@@ -2,15 +2,15 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { SaleorCancelledOrderEvent } from "../../../modules/saleor/order";
 import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
 } from "../../../modules/saleor/order-cancel-error";
-import { SaleorCancelledOrderEvent } from "../../../modules/saleor/order";
+import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 
 export const config = {
   api: {

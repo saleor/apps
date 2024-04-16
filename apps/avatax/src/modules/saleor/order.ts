@@ -13,7 +13,7 @@ export class SaleorOrder {
       channel: z.object({
         taxConfiguration: z.object({
           pricesEnteredWithTax: z.boolean(),
-          taxCalculationStrategy: z.nativeEnum(TaxCalculationStrategy),
+          taxCalculationStrategy: z.union([z.literal("TAX_APP"), z.literal("FLAT_RATES")]),
         }),
         slug: z.string(),
       }),
@@ -37,10 +37,7 @@ export class SaleorOrder {
   }
 
   public isStrategyFlatRates() {
-    return (
-      this.data.order.channel.taxConfiguration.taxCalculationStrategy ===
-      TaxCalculationStrategy.FlatRates
-    );
+    return this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
   }
 
   public get id() {

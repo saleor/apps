@@ -18,7 +18,7 @@ export function transformAvataxTransactionModelIntoShipping(
   const shippingLine = avataxShippingLine.getFromTransactionModel(transaction);
 
   if (!shippingLine) {
-    logger.warn(
+    logger.info(
       "Shipping line was not found in the response from AvaTax. The app will return 0s for shipping fields.",
     );
 
