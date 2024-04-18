@@ -71,7 +71,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     if (addressPayload.isErr()) {
       Sentry.captureException(addressPayload.error);
       this.logger.error("Error while transforming OrderConfirmedPayload", {
-        error: addressPayload.error,
+        exception: addressPayload.error,
       });
 
       throw addressPayload.error;

@@ -32,7 +32,7 @@ describe("AppConfigurationLogger", () => {
 
     expect(mockWarn).toHaveBeenCalledWith("Failed to resolve configuration properly", {
       [ObservabilityAttributes.CHANNEL_SLUG]: "default-channel",
-      error: expect.any(AppConfig.MissingConfigurationError),
+      exception: expect.any(AppConfig.MissingConfigurationError),
     });
   });
 

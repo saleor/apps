@@ -40,7 +40,7 @@ describe("Logger", () => {
   });
 
   describe("Otel Transport", () => {
-    it("Calls Open Telemtry logger emit() function, passing there required attributes", () => {
+    it("Calls Open Telemetry logger emit() function, passing there required attributes", () => {
       const logger = createLogger("Test Logger", {
         rootScopePrimitiveArg: 1,
         rootScopeObjectArg: {
@@ -74,6 +74,67 @@ describe("Logger", () => {
         context: expect.anything(), // Unique otel context
         body: "[Test Logger] Test Message",
         attributes: {
+          rootScopePrimitiveArg: 1,
+          rootScopeObjectArg: {
+            objectKey: "objectValue",
+          },
+          childScopeObjectArg: {
+            objectKey: "objectValue",
+          },
+          childScopePrimitiveArg: 2,
+          [SemanticResourceAttributes.SERVICE_NAME]: "otel service name",
+          [SemanticResourceAttributes.SERVICE_VERSION]: "1.0.0",
+          [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: "development",
+          "commit-sha": "ASD#!@#",
+        },
+      });
+    });
+
+    it("Calls Open Telemetry logger emit() function, passing there error attribute", () => {
+      expect.assertions(3);
+
+      const logger = createLogger("Test Logger", {
+        rootScopePrimitiveArg: 1,
+        rootScopeObjectArg: {
+          objectKey: "objectValue",
+        },
+      });
+
+      const mockOtelEmit = vi.fn().mockImplementation((log) => {
+        const error = log.attributes.exception;
+
+        expect(error.message).toBe("Error Message");
+        expect(error.cause).toBe("Error cause");
+      });
+
+      vi.spyOn(logs, "getLogger").mockImplementation(() => {
+        return {
+          emit: mockOtelEmit,
+        };
+      });
+
+      vi.stubEnv("OTEL_SERVICE_NAME", "otel service name");
+      vi.stubEnv("ENV", "development");
+      vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "ASD#!@#");
+
+      attachLoggerOtelTransport(logger, "1.0.0");
+
+      logger.error("Test Message", {
+        childScopePrimitiveArg: 2,
+        childScopeObjectArg: {
+          objectKey: "objectValue",
+        },
+        exception: new Error("Error Message", {
+          cause: "Error cause",
+        }),
+      });
+
+      expect(mockOtelEmit).toHaveBeenCalledWith({
+        severityText: "ERROR",
+        context: expect.anything(), // Unique otel context
+        body: "[Test Logger] Test Message",
+        attributes: {
+          exception: expect.any(Error),
           rootScopePrimitiveArg: 1,
           rootScopeObjectArg: {
             objectKey: "objectValue",
