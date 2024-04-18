@@ -11,6 +11,11 @@ import { captureException } from "@sentry/nextjs";
 import { AppConfigurationLogger } from "../../lib/app-configuration-logger";
 import { AppConfig } from "../../lib/app-config";
 
+/**
+ * Error raised when loggic configuration fails
+ */
+const LogConfigurationMetricError = BaseError.subclass("LogConfigurationMetricError");
+
 export function getActiveConnectionService(
   channelSlug: string | undefined,
   encryptedMetadata: MetadataItem[],
@@ -53,7 +58,9 @@ export function getActiveConnectionService(
       channelSlug,
     );
   } catch (e) {
-    captureException(new Error("Failed to log configuration metric", { cause: e }));
+    captureException(
+      new LogConfigurationMetricError("Failed to log configuration metric", { cause: e }),
+    );
   }
 
   const { providerConnections, channels } = appConfigResult.value;
