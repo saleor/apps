@@ -48,6 +48,15 @@ export const attachLoggerOtelTransport = (
       {} as Record<string, AnyValue>,
     );
 
+    if (serializedAttributes.error) {
+      serializedAttributes.error = JSON.stringify(serializedAttributes.error);
+    }
+    if (serializedAttributes.exception) {
+      serializedAttributes.exception = JSON.parse(JSON.stringify(serializedAttributes.exception));
+    }
+
+    console.log(serializedAttributes);
+
     logs.getLogger("app-logger-otel").emit({
       body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
       context: context.active(),
@@ -61,6 +70,7 @@ export const attachLoggerOtelTransport = (
         ["commit-sha"]: process.env.VERCEL_GIT_COMMIT_SHA,
         // eslint-disable-next-line turbo/no-undeclared-env-vars
         [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
+        level: log._meta.logLevelName,
       },
     });
   });
