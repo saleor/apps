@@ -1,5 +1,5 @@
 import { ILogObj, Logger } from "tslog";
-import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
+import { AnyValue, logs } from "@opentelemetry/api-logs";
 import { context } from "@opentelemetry/api";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { LoggerContext } from "./logger-context";
@@ -45,7 +45,7 @@ export const attachLoggerOtelTransport = (
 
         return acc;
       },
-      {} as Record<string, LogAttributeValue>,
+      {} as Record<string, AnyValue>,
     );
 
     logs.getLogger("app-logger-otel").emit({
