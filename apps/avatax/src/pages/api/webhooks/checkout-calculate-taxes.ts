@@ -60,7 +60,7 @@ export default wrapWithLoggerContext(
                 return res.status(200).send(ctx.buildResponse(calculatedTaxes));
               default:
                 logger.warn("Failed to calculate taxes, due to incomplete payload", {
-                  error: payloadVerificationResult.error,
+                  exception: payloadVerificationResult.error,
                 });
                 return res.status(400).send(error.message);
             }
@@ -85,7 +85,7 @@ export default wrapWithLoggerContext(
             const err = activeConnectionServiceResult.error;
 
             logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-              error: err,
+              exception: err,
             });
 
             const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
@@ -96,7 +96,7 @@ export default wrapWithLoggerContext(
               Sentry.captureException(err);
 
               logger.fatal(`UNHANDLED: ${err.name}`, {
-                error: err,
+                exception: err,
               });
 
               return res.status(500).send("Error calculating taxes");

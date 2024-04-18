@@ -112,7 +112,7 @@ const logErrors = middleware(async ({ next }) => {
   const result = await next();
 
   if (!result.ok) {
-    logger.error(result.error.message, { error: result.error });
+    logger.error(result.error.message, { exception: result.error });
   }
 
   return result;

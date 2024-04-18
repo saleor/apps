@@ -40,7 +40,7 @@ export default wrapWithLoggerContext(
 
           if (payloadVerificationResult.isErr()) {
             logger.warn("Failed to calculate taxes, due to incomplete payload", {
-              error: payloadVerificationResult.error,
+              exception: payloadVerificationResult.error,
             });
 
             return res.status(400).send(payloadVerificationResult.error.message);
@@ -73,7 +73,7 @@ export default wrapWithLoggerContext(
             const err = activeConnectionServiceResult.error;
 
             logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-              error: err,
+              exception: err,
             });
 
             const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
@@ -83,7 +83,7 @@ export default wrapWithLoggerContext(
             } else {
               Sentry.captureException(err);
               logger.fatal(`UNHANDLED: ${err.name}`, {
-                error: err,
+                exception: err,
               });
 
               return res.status(500).send("Error calculating taxes");
@@ -93,7 +93,7 @@ export default wrapWithLoggerContext(
           if (error instanceof InvalidAppAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
-              { error },
+              { exception: error },
             );
 
             return res.status(400).json({
