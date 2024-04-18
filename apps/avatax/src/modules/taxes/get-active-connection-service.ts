@@ -7,6 +7,14 @@ import { err, fromThrowable, ok } from "neverthrow";
 import { AvataxClient } from "../avatax/avatax-client";
 import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
 import { ActiveConnectionServiceErrors } from "./get-active-connection-service-errors";
+import { captureException } from "@sentry/nextjs";
+import { AppConfigurationLogger } from "../../lib/app-configuration-logger";
+import { AppConfig } from "../../lib/app-config";
+
+/**
+ * Error raised when loggic configuration fails
+ */
+const LogConfigurationMetricError = BaseError.subclass("LogConfigurationMetricError");
 
 export function getActiveConnectionService(
   channelSlug: string | undefined,
@@ -36,6 +44,23 @@ export function getActiveConnectionService(
 
   if (appConfigResult.isErr()) {
     return err(appConfigResult.error);
+  }
+
+  /**
+   * This class is called on every webhook and config is resolved here for now. Before we refactor, we log here
+   * resolved configuration.
+   * Since this is constant refactor, wrap it in try/catch so broken log doesn't break the app.
+   * In the future we should extract configuration retrieval higher and pass in down the app's logic.
+   */
+  try {
+    new AppConfigurationLogger(logger).logConfiguration(
+      AppConfig.createFromParsedConfig(appConfigResult.value),
+      channelSlug,
+    );
+  } catch (e) {
+    captureException(
+      new LogConfigurationMetricError("Failed to log configuration metric", { cause: e }),
+    );
   }
 
   const { providerConnections, channels } = appConfigResult.value;
