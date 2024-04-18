@@ -1,5 +1,15 @@
 # app-avatax
 
+## 1.4.3
+
+### Patch Changes
+
+- 0f9874aa: Add logs to cancel order webhook in Avatax
+- 9119aa46: Add log that will print anonymized app config once its retrieved in the webhook
+- 4fc1f36d: Warning log about missing shipping line is now INFO. Its valid business case where shipping is missing so app shouldn't warn about it
+- 2f995310: Fix tax class id log - now it should be clear what is default tax class id.
+- 8378f439: Avatax app no longer throws an error when not an Avatax order is cancelled.
+
 ## 1.4.2
 
 ### Patch Changes
