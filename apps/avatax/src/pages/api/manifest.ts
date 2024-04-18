@@ -26,10 +26,20 @@ export default wrapWithLoggerContext(
 
         const logger = createLogger("manifest");
 
-        logger.error("test error log with error field", { error: new Err() });
-        logger.error("test error log with exception field", { exception: new Err() });
-        logger.warn("test warn log with error field", { error: new Err() });
-        logger.warn("test warn log with exception field", { exception: new Err() });
+        logger.error("test error log with error field", {
+          error: new Err("test manifest err", {
+            props: {
+              inlineProp: 1,
+            },
+          }),
+        });
+        logger.error("test error log with exception field", {
+          exception: new Err("test manifest err"),
+        });
+        logger.warn("test warn log with error field", { error: new Err("test manifest err") });
+        logger.warn("test warn log with exception field", {
+          exception: new Err("test manifest err"),
+        });
 
         const manifest: AppManifest = {
           about: "App connects with Avatax to dynamically calculate taxes",
