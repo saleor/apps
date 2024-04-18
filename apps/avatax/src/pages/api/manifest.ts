@@ -7,6 +7,8 @@ import packageJson from "../../../package.json";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
+import { BaseError } from "../../error";
+import { createLogger } from "../../logger";
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -14,6 +16,18 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
+        const err = BaseError.subclass("TestError", {
+          props: {
+            prop1: "prop1",
+            subError: new Error("sub error"),
+          },
+        });
+
+        createLogger("manifest").error("test error log with error field", { error: err });
+        createLogger("manifest").error("test error log with exception field", { exception: err });
+        createLogger("manifest").warn("test warn log with error field", { error: err });
+        createLogger("manifest").warn("test warn log with exception field", { exception: err });
 
         const manifest: AppManifest = {
           about: "App connects with Avatax to dynamically calculate taxes",
