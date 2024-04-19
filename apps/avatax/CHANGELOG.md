@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.4.4
+
+### Patch Changes
+
+- Updated dependencies [528b981e]
+  - @saleor/apps-logger@1.2.3
+
 ## 1.4.3
 
 ### Patch Changes
