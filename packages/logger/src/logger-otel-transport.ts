@@ -48,6 +48,25 @@ export const attachLoggerOtelTransport = (
       {} as Record<string, LogAttributeValue>,
     );
 
+    /**
+     * Try to serialize Error. Modern-errors has plugin to serialize
+     * https://github.com/ehmicky/modern-errors-serialize
+     *
+     * It add "serialize" method that converts class to plain object, working for OTEL.
+     *
+     * This is not perfect, doesn't work for nested object. We probably need to introduce some abstraction
+     * on logger error?
+     */
+    try {
+      const errorAttribute = serializedAttributes.error;
+      const ErrorConstructor = errorAttribute["constructor"];
+
+      // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
+      serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error);
+      // @ts-expect-error - Additional mapping for Datadog
+      serializedAttributes.error.type = serializedAttributes.error.name;
+    } catch (e) {}
+
     logs.getLogger("app-logger-otel").emit({
       body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
       context: context.active(),
