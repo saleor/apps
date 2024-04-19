@@ -101,7 +101,7 @@ describe("Logger", () => {
       });
 
       const mockOtelEmit = vi.fn().mockImplementation((log) => {
-        const error = log.attributes.exception;
+        const error = log.attributes.error;
 
         expect(error.message).toBe("Error Message");
         expect(error.cause).toBe("Error cause");
@@ -124,7 +124,7 @@ describe("Logger", () => {
         childScopeObjectArg: {
           objectKey: "objectValue",
         },
-        exception: new Error("Error Message", {
+        error: new Error("Error Message", {
           cause: "Error cause",
         }),
       });
@@ -134,7 +134,7 @@ describe("Logger", () => {
         context: expect.anything(), // Unique otel context
         body: "[Test Logger] Test Message",
         attributes: {
-          exception: expect.any(Error),
+          error: expect.any(Error),
           rootScopePrimitiveArg: 1,
           rootScopeObjectArg: {
             objectKey: "objectValue",
