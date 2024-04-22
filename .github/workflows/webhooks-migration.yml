@@ -1,6 +1,5 @@
 name: Webhooks migration
 on:
-  push:
   workflow_dispatch:
     inputs:
       enviroment:
@@ -35,7 +34,7 @@ jobs:
         with:
           export-env: true
         env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_TOKEN"
           REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_ENDPOINT"
           OTEL_ENABLED: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_ENABLED"
