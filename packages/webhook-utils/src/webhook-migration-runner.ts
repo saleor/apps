@@ -1,3 +1,4 @@
+import { NodeSDK } from "@opentelemetry/sdk-node";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
 import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
@@ -10,87 +11,123 @@ import {
   SaleorInstanceDetails,
   getSaleorInstanceDetails,
 } from "./operations/get-saleor-instance-details";
-import { updateWebhooks } from "./update-webhooks";
+import { Logger, LoggerContext } from "./types";
+import { WebhookUpdater } from "./webhook-updater";
 
-export interface WebhookMigrationRunnerArgs {
-  client: Client;
-  getManifests: ({
-    appDetails,
-    instanceDetails,
-  }: {
-    appDetails: AppDetails;
-    instanceDetails: SaleorInstanceDetails;
-  }) => Promise<Array<WebhookManifest>>;
-  dryRun?: boolean;
-  apiUrl: string;
-  logger: {
-    debug: (message: string, data?: Record<string, any>) => void;
-    info: (message: string, data?: Record<string, any>) => void;
-    warn: (message: string, data?: Record<string, any>) => void;
-    error: (message: string, data?: Record<string, any>) => void;
-  };
-  loggerContext: any;
-}
+export class WebhookMigrationRunner {
+  private dryRun: boolean;
+  private logger: Logger;
+  private loggerContext: LoggerContext;
+  private otelSdk: NodeSDK;
 
-export const webhookMigrationRunner = async ({
-  client,
-  getManifests,
-  dryRun,
-  apiUrl,
-  logger,
-  loggerContext,
-}: WebhookMigrationRunnerArgs) => {
-  loggerContext.wrap(async () => {
-    try {
-      loggerContext.set(OBSERVABILITY_ATTRIBUTES.API_URL, apiUrl);
+  constructor(args: {
+    dryRun: boolean;
+    logger: Logger;
+    loggerContext: LoggerContext;
+    otelSdk: NodeSDK;
+  }) {
+    this.dryRun = args.dryRun;
+    this.logger = args.logger;
+    this.loggerContext = args.loggerContext;
+    this.otelSdk = args.otelSdk;
 
-      logger.debug("Getting app details and webhooks data");
+    this.setupOtel();
+  }
 
-      const appDetails = await getAppDetailsAndWebhooksData({ client });
-
-      logger.debug("Getting Saleor instance details");
-
-      const instanceDetails = await getSaleorInstanceDetails({ client });
-
-      loggerContext.set(OBSERVABILITY_ATTRIBUTES.SALEOR_VERSION, instanceDetails.version);
-
-      logger.debug("Generate list of webhook manifests");
-
-      const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
-
-      logger.debug("Updating webhooks");
-
-      await updateWebhooks({
-        client,
-        webhookManifests: newWebhookManifests,
-        existingWebhooksData: appDetails.webhooks || [],
-        dryRun,
-        logger,
-      });
-      logger.info(`${apiUrl}: Migration finished successfully.`);
-    } catch (error) {
-      switch (true) {
-        case error instanceof AppPermissionDeniedError:
-          logger.warn(
-            `${apiUrl}: wasn't migrated due to request being denied (app probably uninstalled)`,
-            {
-              error,
-              reason: "App probably uninstalled",
-            },
-          );
-          break;
-        case error instanceof NetworkError:
-          logger.warn(`${apiUrl}: wasn't migrated due to network error (Saleor not available)`, {
-            error,
-            reason: "Saleor not available",
-          });
-          break;
-        case error instanceof UnknownConnectionError:
-          logger.error(`${apiUrl}: Error while fetching data from Saleor`, { error });
-          break;
-        default:
-          logger.error(`${apiUrl}: Error while running migrations`, { error });
-      }
+  private setupOtel = () => {
+    if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
+      this.otelSdk.start();
     }
-  });
-};
+
+    process.on("beforeExit", () => {
+      this.otelSdk
+        .shutdown()
+        .then(() =>
+          this.logger.info(`Webhook migration ${this.dryRun ? "(dry run)" : ""} complete`, {
+            dryRun: this.dryRun,
+          }),
+        )
+        .catch((error) =>
+          this.logger.error(`Error during webhook migration ${this.dryRun ? "(dry run)" : ""}`, {
+            error,
+            dryRun: this.dryRun,
+          }),
+        )
+        .finally(() => process.exit(0));
+    });
+  };
+
+  public migrate = async ({
+    getManifests,
+    saleorApiUrl,
+    client,
+  }: {
+    getManifests: ({
+      appDetails,
+      instanceDetails,
+    }: {
+      appDetails: AppDetails;
+      instanceDetails: SaleorInstanceDetails;
+    }) => Promise<Array<WebhookManifest>>;
+    saleorApiUrl: string;
+    client: Client;
+  }) => {
+    this.loggerContext.wrap(async () => {
+      try {
+        this.loggerContext.set(OBSERVABILITY_ATTRIBUTES.API_URL, saleorApiUrl);
+
+        this.logger.debug("Getting app details and webhooks data");
+
+        const appDetails = await getAppDetailsAndWebhooksData({ client });
+
+        this.logger.debug("Getting Saleor instance details");
+
+        const instanceDetails = await getSaleorInstanceDetails({ client });
+
+        this.loggerContext.set(OBSERVABILITY_ATTRIBUTES.SALEOR_VERSION, instanceDetails.version);
+
+        this.logger.debug("Generate list of webhook manifests");
+
+        const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
+
+        const updater = new WebhookUpdater({
+          dryRun: this.dryRun,
+          logger: this.logger,
+          client,
+          webhookManifests: newWebhookManifests,
+          existingWebhooksData: appDetails.webhooks || [],
+        });
+
+        await updater.update();
+
+        this.logger.info(`${saleorApiUrl}: Migration finished successfully.`);
+      } catch (error) {
+        switch (true) {
+          case error instanceof AppPermissionDeniedError:
+            this.logger.warn(
+              `${saleorApiUrl}: wasn't migrated due to request being denied (app probably uninstalled)`,
+              {
+                error,
+                reason: "App probably uninstalled",
+              },
+            );
+            break;
+          case error instanceof NetworkError:
+            this.logger.warn(
+              `${saleorApiUrl}: wasn't migrated due to network error (Saleor not available)`,
+              {
+                error,
+                reason: "Saleor not available",
+              },
+            );
+            break;
+          case error instanceof UnknownConnectionError:
+            this.logger.error(`${saleorApiUrl}: Error while fetching data from Saleor`, { error });
+            break;
+          default:
+            this.logger.error(`${saleorApiUrl}: Error while running migrations`, { error });
+        }
+      }
+    });
+  };
+}
