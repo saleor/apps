@@ -49,6 +49,10 @@ jobs:
       - name: Run migrations (dry run)
         if: ${{ env.DRY_RUN }}
         run: pnpm --filter=app-avatax migrate:dry-run
+        env:
+          NODE_ENV: production
       - name: Run migrations
         if: ${{ !env.DRY_RUN }}
         run: pnpm --filter=app-avatax migrate
+        env:
+          NODE_ENV: production
