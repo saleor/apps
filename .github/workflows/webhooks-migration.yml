@@ -23,7 +23,8 @@ jobs:
     env:
       #   SALEOR_ENVIRONMENT: ${{ github.event.inputs.enviroment }}
       SALEOR_ENVIRONMENT: staging
-      DRY_RUN: ${{ github.event.inputs.dry-run }}
+      #   DRY_RUN: ${{ github.event.inputs.dry-run }}
+      DRY_RUN: true
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
@@ -43,9 +44,11 @@ jobs:
           OTEL_SERVICE_NAME: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_SERVICE_NAME"
           OTEL_EXPORTER_OTLP_ENDPOINT: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_EXPORTER_OTLP_ENDPOINT"
           OTEL_ACCESS_TOKEN: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_ACCESS_TOKEN"
+      - name: Generate GraphQL files
+        run: pnpm --filter=app-avatax generate
       - name: Run migrations (dry run)
-        # if: ${{ env.DRY_RUN }}
+        if: ${{ env.DRY_RUN }}
         run: pnpm --filter=app-avatax migrate:dry-run
-    #   - name: Run migrations
-    # if: ${{ !env.DRY_RUN }}
-    # run: pnpm --filter=app-avatax migrate
+      - name: Run migrations
+        if: ${{ !env.DRY_RUN }}
+        run: pnpm --filter=app-avatax migrate
