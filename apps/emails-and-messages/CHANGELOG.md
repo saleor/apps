@@ -1,5 +1,12 @@
 # saleor-app-emails-and-messages
 
+## 1.12.3
+
+### Patch Changes
+
+- Updated dependencies [528b981e]
+  - @saleor/apps-logger@1.2.3
+
 ## 1.12.2
 
 ### Patch Changes

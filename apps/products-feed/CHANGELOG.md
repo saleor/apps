@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.17.3
+
+### Patch Changes
+
+- Updated dependencies [528b981e]
+  - @saleor/apps-logger@1.2.3
+
 ## 1.17.2
 
 ### Patch Changes
