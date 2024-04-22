@@ -1,5 +1,6 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
@@ -14,6 +15,8 @@ import {
 } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 
 export const config = {
   api: {
@@ -67,22 +70,48 @@ export default wrapWithLoggerContext(
           }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
+          const channelSlug = payload.taxBase.channel.slug;
+
+          const configExtractor = new AppConfigExtractor();
+
+          const config = configExtractor
+            .extractAppConfigFromPrivateMetadata(appMetadata)
+            .map((config) => {
+              try {
+                new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
+              } catch (e) {
+                captureException(
+                  new AppConfigExtractor.LogConfigurationMetricError(
+                    "Failed to log configuration metric",
+                    {
+                      cause: e,
+                    },
+                  ),
+                );
+              }
+
+              return config;
+            });
+
+          if (config.isErr()) {
+            logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+            return res.status(400).send("App configuration is broken");
+          }
 
           metadataCache.setMetadata(appMetadata);
 
-          const channelSlug = payload.taxBase.channel.slug;
-
-          const getActiveConnectionService = await import(
+          const AvataxWebhookServiceFactoryResult = await import(
             "../../../modules/taxes/get-active-connection-service"
-          ).then((m) => m.getActiveConnectionService);
+          ).then((m) => m.AvataxWebhookServiceFactory);
 
-          const activeConnectionServiceResult = getActiveConnectionService(
+          const webhookServiceResult = AvataxWebhookServiceFactoryResult.createFromConfig(
+            config.value,
             channelSlug,
-            appMetadata,
           );
 
-          if (activeConnectionServiceResult.isErr()) {
-            const err = activeConnectionServiceResult.error;
+          if (webhookServiceResult.isErr()) {
+            const err = webhookServiceResult.error;
 
             logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
               error: err,
@@ -104,7 +133,7 @@ export default wrapWithLoggerContext(
           } else {
             logger.info("Found active connection service. Calculating taxes...");
 
-            const { taxProvider, config } = activeConnectionServiceResult.value;
+            const { taxProvider, config } = webhookServiceResult.value;
 
             // TODO: Improve errors handling like above
             const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);

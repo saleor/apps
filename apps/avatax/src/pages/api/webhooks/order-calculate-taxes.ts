@@ -9,6 +9,10 @@ import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/defini
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { captureException } from "@sentry/nextjs";
+import { BaseError } from "../../../error";
 
 export const config = {
   api: {
@@ -29,6 +33,7 @@ export default wrapWithLoggerContext(
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
+
           if (payload.version) {
             Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
             loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
@@ -48,29 +53,56 @@ export default wrapWithLoggerContext(
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
 
+          const configExtractor = new AppConfigExtractor();
+
+          const config = configExtractor
+            .extractAppConfigFromPrivateMetadata(appMetadata)
+            .map((config) => {
+              try {
+                new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
+              } catch (e) {
+                captureException(
+                  new AppConfigExtractor.LogConfigurationMetricError(
+                    "Failed to log configuration metric",
+                    {
+                      cause: e,
+                    },
+                  ),
+                );
+              }
+
+              return config;
+            });
+
+          if (config.isErr()) {
+            logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+            return res.status(400).send("App configuration is broken");
+          }
+
           metadataCache.setMetadata(appMetadata);
 
           const channelSlug = payload.taxBase.channel.slug;
 
-          const getActiveConnectionService = await import(
+          const AvataxWebhookServiceFactory = await import(
             "../../../modules/taxes/get-active-connection-service"
-          ).then((m) => m.getActiveConnectionService);
+          ).then((m) => m.AvataxWebhookServiceFactory);
 
-          const activeConnectionServiceResult = getActiveConnectionService(
+          const avataxWebhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
+            config.value,
             channelSlug,
-            appMetadata,
           );
 
-          if (activeConnectionServiceResult.isOk()) {
-            const { taxProvider, config } = activeConnectionServiceResult.value;
+          if (avataxWebhookServiceResult.isOk()) {
+            const { taxProvider, config } = avataxWebhookServiceResult.value;
 
             const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
-          } else if (activeConnectionServiceResult.isErr()) {
-            const err = activeConnectionServiceResult.error;
+          } else if (avataxWebhookServiceResult.isErr()) {
+            const err = avataxWebhookServiceResult.error;
 
             logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
               error: err,
