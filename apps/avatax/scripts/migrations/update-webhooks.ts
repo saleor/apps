@@ -1,20 +1,19 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createLogger } from "@saleor/apps-logger";
 import { webhookMigrationRunner } from "@saleor/webhook-utils";
 import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 import { appWebhooks } from "../../webhooks";
 
+const logger = createLogger("UpdateWebhooks");
+
 export const updateWebhooks = async ({
   authData,
   dryRun,
-  silent,
 }: {
   authData: AuthData;
   dryRun: boolean;
-  silent: boolean;
 }) => {
-  if (!silent) {
-    console.log("Working on environment: ", authData.saleorApiUrl);
-  }
+  logger.debug("Working on environment: ", authData.saleorApiUrl);
 
   const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
@@ -22,13 +21,17 @@ export const updateWebhooks = async ({
   });
 
   await webhookMigrationRunner({
+    apiUrl: authData.saleorApiUrl,
     client,
     dryRun,
-    getManifests: async ({ appDetails }) => {
+    getManifests: async ({ appDetails, instanceDetails }) => {
       const webhooks = appDetails.webhooks;
 
       if (!webhooks?.length) {
-        console.info("The environment does not have any webhooks, skipping");
+        logger.info("The environment does not have any webhooks, skipping", {
+          apiUrl: authData.saleorApiUrl,
+          saleorVersion: instanceDetails.version,
+        });
         return [];
       }
 
@@ -37,7 +40,11 @@ export const updateWebhooks = async ({
       const targetUrl = appDetails.appUrl;
 
       if (!targetUrl?.length) {
-        throw new Error("App has no defined appUrl, skipping");
+        logger.error("App has no defined appUrl, skipping", {
+          apiUrl: authData.saleorApiUrl,
+          saleorVersion: instanceDetails.version,
+        });
+        return [];
       }
 
       const baseUrl = new URL(targetUrl).origin;

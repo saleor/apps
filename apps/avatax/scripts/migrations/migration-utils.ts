@@ -1,4 +1,7 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { createLogger } from "@saleor/apps-logger";
+
+const logger = createLogger("MigrationUtils");
 
 export const verifyRequiredEnvs = () => {
   const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
@@ -7,7 +10,7 @@ export const verifyRequiredEnvs = () => {
     throw new Error(`Missing environment variables: ${requiredEnvs.join(" | ")}`);
   }
 
-  console.debug("All required environment variables are present");
+  logger.debug("All required environment variables are present");
 };
 
 export const fetchCloudAplEnvs = () => {

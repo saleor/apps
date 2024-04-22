@@ -1,3 +1,4 @@
+import { createLogger } from "@saleor/apps-logger";
 import * as dotenv from "dotenv";
 import { updateWebhooks } from "./update-webhooks";
 
@@ -5,30 +6,30 @@ dotenv.config();
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
-const silent = args.includes("--silent");
+
+const logger = createLogger("RunWebhooksMigration");
 
 const runMigration = async () => {
   // Must use dynamic import for env variables to load properly
   const { fetchCloudAplEnvs, verifyRequiredEnvs } = await import("./migration-utils");
 
-  console.log(`Starting webhooks migration ${dryRun ? "(dry run)" : ""}`);
+  logger.info(`Starting webhooks migration ${dryRun ? "(dry run)" : ""}`, { dryRun });
 
   verifyRequiredEnvs();
 
-  console.log("Fetching environments from the Cloud APL");
+  logger.info("Fetching environments from the Cloud APL");
 
-  const allEnvs = await fetchCloudAplEnvs().catch((r) => {
-    console.error("Could not fetch instances from the Cloud APL");
-    console.error(r);
+  const allEnvs = await fetchCloudAplEnvs().catch((error) => {
+    logger.error("Could not fetch instances from the Cloud APL", error);
 
     process.exit(1);
   });
 
   for (const env of allEnvs) {
-    await updateWebhooks({ authData: env, dryRun, silent });
+    await updateWebhooks({ authData: env, dryRun });
   }
 
-  console.log(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`);
+  logger.info(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`, { dryRun });
 };
 
 runMigration();
