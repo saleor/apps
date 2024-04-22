@@ -1,4 +1,5 @@
 import { createLogger } from "@saleor/apps-logger";
+import { otelWebhooksMigrationWrapper } from "@saleor/apps-otel";
 import * as dotenv from "dotenv";
 import { updateWebhooks } from "./update-webhooks";
 
@@ -32,4 +33,4 @@ const runMigration = async () => {
   logger.info(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`, { dryRun });
 };
 
-runMigration();
+otelWebhooksMigrationWrapper(runMigration);
