@@ -1,8 +1,7 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
+import { WebhookData } from "../types";
 
-type WebhookPartial = { id: string; name: string };
-
-interface GetWebhookIdsAndQueriesToUpdateArgs<T extends WebhookPartial> {
+interface GetWebhookIdsAndQueriesToUpdateArgs<T extends WebhookData> {
   newWebhookManifests: Array<WebhookManifest>;
   existingWebhooksPartial: Array<T>;
 }
@@ -10,7 +9,7 @@ interface GetWebhookIdsAndQueriesToUpdateArgs<T extends WebhookPartial> {
 type ReturnType = { webhookId: string; webhookManifest: WebhookManifest };
 
 // Couples the webhook id with the manifest to update
-export const getWebhookIdsAndManifestsToUpdate = <T extends WebhookPartial>({
+export const getWebhookIdsAndManifestsToUpdate = <T extends WebhookData>({
   newWebhookManifests,
   existingWebhooksPartial,
 }: GetWebhookIdsAndQueriesToUpdateArgs<T>): Array<ReturnType> => {

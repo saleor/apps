@@ -1,6 +1,6 @@
 mutation RemoveAppWebhook($id: ID!) {
-  webhookDelete(id: $id){
-    errors{
+  webhookDelete(id: $id) {
+    errors {
       field
       message
     }

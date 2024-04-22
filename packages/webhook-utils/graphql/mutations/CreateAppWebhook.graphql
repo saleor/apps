@@ -1,9 +1,9 @@
 mutation CreateAppWebhook($input: WebhookCreateInput!) {
-  webhookCreate(input:$input){
-    webhook{
+  webhookCreate(input: $input) {
+    webhook {
       ...WebhookDetailsFragment
     }
-    errors{
+    errors {
       code
       field
       message

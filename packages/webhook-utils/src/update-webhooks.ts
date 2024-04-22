@@ -1,25 +1,25 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
-import { webhooksToRemove } from "./filters/webhooks-to-remove";
+import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
+import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
 import { getWebhookIdsAndManifestsToUpdate } from "./filters/get-webhook-ids-and-manifests-to-update";
 import { webhooksToAdd } from "./filters/webhooks-to-add";
-import { createLogger } from "@saleor/apps-shared";
-import { removeAppWebhook } from "./operations/remove-app-webhook";
-import { WebhookDetailsFragment } from "../generated/graphql";
-import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
+import { webhooksToRemove } from "./filters/webhooks-to-remove";
+import { createLogger } from "./logger";
 import { modifyAppWebhookFromManifest } from "./modify-app-webhook-from-manifest";
-import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
 import { modifyAppWebhookFromWebhookDetails } from "./modify-app-webhook-from-webhook-details";
+import { removeAppWebhook } from "./operations/remove-app-webhook";
+import { WebhookData } from "./types";
 
-const logger = createLogger({ name: "updateWebhooks" });
+const logger = createLogger("UpdateWebhooks");
 
 interface RollbackArgs {
   client: Client;
   webhookManifests: Array<WebhookManifest>;
-  existingWebhooksData: Array<WebhookDetailsFragment>;
-  addedWebhooks: Array<WebhookDetailsFragment>;
-  modifiedWebhooks: Array<WebhookDetailsFragment>;
-  removedWebhooks: Array<WebhookDetailsFragment>;
+  existingWebhooksData: Array<WebhookData>;
+  addedWebhooks: Array<WebhookData>;
+  modifiedWebhooks: Array<WebhookData>;
+  removedWebhooks: Array<WebhookData>;
 }
 
 const rollback = async ({
@@ -71,7 +71,7 @@ const rollback = async ({
 interface UpdateWebhooksArgs {
   client: Client;
   webhookManifests: Array<WebhookManifest>;
-  existingWebhooksData: Array<WebhookDetailsFragment>;
+  existingWebhooksData: Array<WebhookData>;
   dryRun?: boolean;
 }
 
@@ -151,8 +151,8 @@ export const updateWebhooks = async ({
     }
 
     logger.info("Migration finished successfully");
-  } catch (e) {
-    logger.error(e, "Error during update procedure, rolling back changes");
+  } catch (error) {
+    logger.error("Error during update procedure, rolling back changes", { error });
     await rollback({
       client,
       addedWebhooks,
