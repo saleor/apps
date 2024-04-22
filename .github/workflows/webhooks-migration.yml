@@ -37,6 +37,10 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
           REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_TOKEN"
           REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_ENDPOINT"
+          OTEL_ENABLED: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_ENABLED"
+          OTEL_SERVICE_NAME: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_SERVICE_NAME"
+          OTEL_EXPORTER_OTLP_ENDPOINT: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_EXPORTER_OTLP_ENDPOINT"
+          OTEL_ACCESS_TOKEN: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/OTEL_ACCESS_TOKEN"
       - name: Run migrations (dry run)
         if: ${{ env.DRY_RUN }}
         run: pnpm --filter=app-avatax migrate:dry-run
