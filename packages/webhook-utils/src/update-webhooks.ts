@@ -5,13 +5,10 @@ import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook
 import { getWebhookIdsAndManifestsToUpdate } from "./filters/get-webhook-ids-and-manifests-to-update";
 import { webhooksToAdd } from "./filters/webhooks-to-add";
 import { webhooksToRemove } from "./filters/webhooks-to-remove";
-import { createLogger } from "./logger";
 import { modifyAppWebhookFromManifest } from "./modify-app-webhook-from-manifest";
 import { modifyAppWebhookFromWebhookDetails } from "./modify-app-webhook-from-webhook-details";
 import { removeAppWebhook } from "./operations/remove-app-webhook";
 import { WebhookData } from "./types";
-
-const logger = createLogger("UpdateWebhooks");
 
 interface RollbackArgs {
   client: Client;
@@ -20,6 +17,12 @@ interface RollbackArgs {
   addedWebhooks: Array<WebhookData>;
   modifiedWebhooks: Array<WebhookData>;
   removedWebhooks: Array<WebhookData>;
+  logger: {
+    debug: (message: string, data?: Record<string, any>) => void;
+    info: (message: string, data?: Record<string, any>) => void;
+    warn: (message: string, data?: Record<string, any>) => void;
+    error: (message: string, data?: Record<string, any>) => void;
+  };
 }
 
 const rollback = async ({
@@ -28,6 +31,7 @@ const rollback = async ({
   modifiedWebhooks,
   existingWebhooksData,
   removedWebhooks,
+  logger,
 }: RollbackArgs) => {
   if (addedWebhooks.length) {
     logger.info("Removing added webhooks");
@@ -73,6 +77,12 @@ interface UpdateWebhooksArgs {
   webhookManifests: Array<WebhookManifest>;
   existingWebhooksData: Array<WebhookData>;
   dryRun?: boolean;
+  logger: {
+    debug: (message: string, data?: Record<string, any>) => void;
+    info: (message: string, data?: Record<string, any>) => void;
+    warn: (message: string, data?: Record<string, any>) => void;
+    error: (message: string, data?: Record<string, any>) => void;
+  };
 }
 
 /*
@@ -88,6 +98,7 @@ export const updateWebhooks = async ({
   webhookManifests,
   existingWebhooksData,
   dryRun,
+  logger,
 }: UpdateWebhooksArgs) => {
   const addedWebhooks = [];
   const modifiedWebhooks = [];
@@ -160,6 +171,7 @@ export const updateWebhooks = async ({
       modifiedWebhooks,
       webhookManifests,
       removedWebhooks,
+      logger,
     });
     logger.info("Changes rolled back");
   }

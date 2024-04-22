@@ -1,4 +1,5 @@
-import { type ClientRequest } from "node:http";
+import { SpanStatusCode } from "@opentelemetry/api";
+import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { Resource } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
@@ -6,16 +7,16 @@ import {
   SemanticAttributes,
   SemanticResourceAttributes,
 } from "@opentelemetry/semantic-conventions";
-// import { diag, DiagConsoleLogger, DiagLogLevel, trace } from "@opentelemetry/api";
-import { W3CTraceContextPropagator } from "@opentelemetry/core";
-import { SpanStatusCode } from "@opentelemetry/api";
-import { batchSpanProcessor } from "./otel-traces-setup";
+import { type ClientRequest } from "node:http";
 import { otelLogsProcessor } from "./otel-logs-setup";
+import { batchSpanProcessor } from "./otel-traces-setup";
 
 /*
  * For troubleshooting, set the log level to DiagLogLevel.DEBUG
  * diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
  */
+
+// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({

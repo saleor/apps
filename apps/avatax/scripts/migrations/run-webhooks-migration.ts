@@ -1,9 +1,10 @@
-import { createLogger } from "@saleor/apps-logger";
-import { otelWebhooksMigrationWrapper } from "@saleor/apps-otel";
+import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
 import * as dotenv from "dotenv";
+import { createLogger } from "../../src/logger";
 import { updateWebhooks } from "./update-webhooks";
 
 dotenv.config();
+otelSdk.start();
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -26,11 +27,23 @@ const runMigration = async () => {
     process.exit(1);
   });
 
-  for (const env of allEnvs) {
-    await updateWebhooks({ authData: env, dryRun });
+  try {
+    for (const env of allEnvs) {
+      await updateWebhooks({ authData: env, dryRun, logger });
+    }
+  } catch (error) {
+    console.error("Errp", error);
   }
 
   logger.info(`Webhook migration ${dryRun ? "(dry run)" : ""} complete`, { dryRun });
 };
 
-otelWebhooksMigrationWrapper(runMigration);
+runMigration();
+
+process.on("beforeExit", () => {
+  otelSdk
+    .shutdown()
+    .then(() => console.log("Tracing terminated"))
+    .catch((error) => console.log("Error terminating tracing", error))
+    .finally(() => process.exit(0));
+});

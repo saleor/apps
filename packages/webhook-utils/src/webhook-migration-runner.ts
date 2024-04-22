@@ -1,8 +1,7 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
 import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
-import { createLogger } from "./logger";
-import { OBSERVABILITY_ATTRIBUTES, loggerContext } from "./logger-context";
+import { OBSERVABILITY_ATTRIBUTES } from "./logger-context";
 import {
   AppDetails,
   getAppDetailsAndWebhooksData,
@@ -13,9 +12,7 @@ import {
 } from "./operations/get-saleor-instance-details";
 import { updateWebhooks } from "./update-webhooks";
 
-const logger = createLogger("WebhookMigrationRunner");
-
-interface WebhookMigrationRunnerArgs {
+export interface WebhookMigrationRunnerArgs {
   client: Client;
   getManifests: ({
     appDetails,
@@ -26,6 +23,13 @@ interface WebhookMigrationRunnerArgs {
   }) => Promise<Array<WebhookManifest>>;
   dryRun?: boolean;
   apiUrl: string;
+  logger: {
+    debug: (message: string, data?: Record<string, any>) => void;
+    info: (message: string, data?: Record<string, any>) => void;
+    warn: (message: string, data?: Record<string, any>) => void;
+    error: (message: string, data?: Record<string, any>) => void;
+  };
+  loggerContext: any;
 }
 
 export const webhookMigrationRunner = async ({
@@ -33,55 +37,60 @@ export const webhookMigrationRunner = async ({
   getManifests,
   dryRun,
   apiUrl,
+  logger,
+  loggerContext,
 }: WebhookMigrationRunnerArgs) => {
-  try {
-    loggerContext.set(OBSERVABILITY_ATTRIBUTES.API_URL, apiUrl);
+  loggerContext.wrap(async () => {
+    try {
+      loggerContext.set(OBSERVABILITY_ATTRIBUTES.API_URL, apiUrl);
 
-    logger.debug("Getting app details and webhooks data");
+      logger.debug("Getting app details and webhooks data");
 
-    const appDetails = await getAppDetailsAndWebhooksData({ client });
+      const appDetails = await getAppDetailsAndWebhooksData({ client });
 
-    logger.debug("Getting Saleor instance details");
+      logger.debug("Getting Saleor instance details");
 
-    const instanceDetails = await getSaleorInstanceDetails({ client });
+      const instanceDetails = await getSaleorInstanceDetails({ client });
 
-    loggerContext.set(OBSERVABILITY_ATTRIBUTES.SALEOR_VERSION, instanceDetails.version);
+      loggerContext.set(OBSERVABILITY_ATTRIBUTES.SALEOR_VERSION, instanceDetails.version);
 
-    logger.debug("Generate list of webhook manifests");
+      logger.debug("Generate list of webhook manifests");
 
-    const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
+      const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
 
-    logger.debug("Updating webhooks");
+      logger.debug("Updating webhooks");
 
-    await updateWebhooks({
-      client,
-      webhookManifests: newWebhookManifests,
-      existingWebhooksData: appDetails.webhooks || [],
-      dryRun,
-    });
-    logger.info(`${apiUrl}: Migration finished successfully.`);
-  } catch (error) {
-    switch (true) {
-      case error instanceof AppPermissionDeniedError:
-        logger.warn(
-          `⚠️ ${apiUrl}: wasn't migrated due to request being denied (app probably uninstalled)`,
-          {
+      await updateWebhooks({
+        client,
+        webhookManifests: newWebhookManifests,
+        existingWebhooksData: appDetails.webhooks || [],
+        dryRun,
+        logger,
+      });
+      logger.info(`${apiUrl}: Migration finished successfully.`);
+    } catch (error) {
+      switch (true) {
+        case error instanceof AppPermissionDeniedError:
+          logger.warn(
+            `${apiUrl}: wasn't migrated due to request being denied (app probably uninstalled)`,
+            {
+              error,
+              reason: "App probably uninstalled",
+            },
+          );
+          break;
+        case error instanceof NetworkError:
+          logger.warn(`${apiUrl}: wasn't migrated due to network error (Saleor not available)`, {
             error,
-            reason: "App probably uninstalled",
-          },
-        );
-        break;
-      case error instanceof NetworkError:
-        logger.warn(`${apiUrl}: wasn't migrated due to network error (Saleor not available)`, {
-          error,
-          reason: "Saleor not available",
-        });
-        break;
-      case error instanceof UnknownConnectionError:
-        logger.error(`${apiUrl}: Error while fetching data from Saleor`, { error });
-        break;
-      default:
-        logger.error(`${apiUrl}: Error while running migrations`, { error });
+            reason: "Saleor not available",
+          });
+          break;
+        case error instanceof UnknownConnectionError:
+          logger.error(`${apiUrl}: Error while fetching data from Saleor`, { error });
+          break;
+        default:
+          logger.error(`${apiUrl}: Error while running migrations`, { error });
+      }
     }
-  }
+  });
 };

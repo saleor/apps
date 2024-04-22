@@ -80,7 +80,7 @@ importers:
         version: 13.2.3
       next:
         specifier: 14.1.0
-        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       prettier:
         specifier: 3.0.3
         version: 3.0.3
@@ -2375,7 +2375,7 @@ importers:
         version: 7.33.2(eslint@8.46.0)
       next:
         specifier: 14.1.0
-        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2574,7 +2574,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 14.1.0
-        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2641,7 +2641,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 14.1.0
-        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2672,7 +2672,7 @@ importers:
         version: link:../eslint-config-saleor
       next:
         specifier: 14.1.0
-        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2682,51 +2682,9 @@ importers:
 
   packages/webhook-utils:
     dependencies:
-      '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
-      '@opentelemetry/api-logs':
-        specifier: ../../node_modules/@opentelemetry/api-logs
-        version: link:../../node_modules/@opentelemetry/api-logs
-      '@opentelemetry/core':
-        specifier: ../../node_modules/@opentelemetry/core
-        version: link:../../node_modules/@opentelemetry/core
-      '@opentelemetry/exporter-logs-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
-      '@opentelemetry/instrumentation-http':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-http
-        version: link:../../node_modules/@opentelemetry/instrumentation-http
-      '@opentelemetry/instrumentation-winston':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-winston
-        version: link:../../node_modules/@opentelemetry/instrumentation-winston
-      '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-logs':
-        specifier: ../../node_modules/@opentelemetry/sdk-logs
-        version: link:../../node_modules/@opentelemetry/sdk-logs
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
-      '@opentelemetry/sdk-trace-base':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-base
-        version: link:../../node_modules/@opentelemetry/sdk-trace-base
-      '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
-      '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
-      '@saleor/apps-logger':
-        specifier: workspace:*
-        version: link:../logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../shared
@@ -2750,7 +2708,7 @@ importers:
         version: 6.0.0(modern-errors@7.0.1)
       next:
         specifier: 14.1.0
-        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1
@@ -20890,6 +20848,45 @@ packages:
   /neverthrow@6.1.0:
     resolution: {integrity: sha512-xNbNjp/6M5vUV+mststgneJN9eJeJCDSYSBTaf3vxgvcKooP+8L0ATFpM8DGfmH7UWKJeoa24Qi33tBP9Ya3zA==}
     dev: false
+
+  /next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wlzrsbfeSU48YQBjZhDzOwhWhGsy+uQycR8bHAOt1LY1bn3zZEcDyHQOEoN3aWzQ8LHCAJ1nqrWCc9XF2+O45Q==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.1.0
+      '@opentelemetry/api': 1.7.0
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
 
   /next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-wlzrsbfeSU48YQBjZhDzOwhWhGsy+uQycR8bHAOt1LY1bn3zZEcDyHQOEoN3aWzQ8LHCAJ1nqrWCc9XF2+O45Q==}
