@@ -54,7 +54,7 @@ jobs:
       - name: Generate GraphQL files
         run: pnpm --filter=app-avatax generate
       - name: Run migrations
-        run: pnpm --filter=app-avatax migrate:silent
+        run: pnpm --filter=app-avatax migrate
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304

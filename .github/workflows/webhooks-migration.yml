@@ -1,0 +1,45 @@
+name: Webhooks migration
+on:
+  workflow_dispatch:
+    inputs:
+      enviroment:
+        description: "Saleor enviroment to run migrations on"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      dry-run:
+        description: "Run migrations without applying them"
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  run:
+    runs-on: ubuntu-22.04
+    env:
+      SALEOR_ENVIRONMENT: ${{ github.event.inputs.enviroment }}
+      DRY_RUN: ${{ github.event.inputs.dry-run }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        with:
+          run_install: |
+            - args: [--frozen-lockfile, --filter=app-avatax]
+      - name: Load secrets
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
+          REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_TOKEN"
+          REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-webhooks-migrations-${{ env.SALEOR_ENVIRONMENT }}/REST_APL_ENDPOINT"
+      - name: Run migrations (dry run)
+        if: ${{ env.DRY_RUN }}
+        run: pnpm --filter=app-avatax migrate:dry-run
+      - name: Run migrations
+        if: ${{ !env.DRY_RUN }}
+        run: pnpm --filter=app-avatax migrate
