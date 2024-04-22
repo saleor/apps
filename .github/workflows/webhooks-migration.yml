@@ -21,7 +21,8 @@ jobs:
   run:
     runs-on: ubuntu-22.04
     env:
-      SALEOR_ENVIRONMENT: ${{ github.event.inputs.enviroment }}
+      #   SALEOR_ENVIRONMENT: ${{ github.event.inputs.enviroment }}
+      SALEOR_ENVIRONMENT: staging
       DRY_RUN: ${{ github.event.inputs.dry-run }}
     steps:
       - uses: actions/checkout@v4
