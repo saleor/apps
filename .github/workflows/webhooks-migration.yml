@@ -1,5 +1,6 @@
 name: Webhooks migration
 on:
+  push:
   workflow_dispatch:
     inputs:
       enviroment:
@@ -44,6 +45,6 @@ jobs:
       - name: Run migrations (dry run)
         if: ${{ env.DRY_RUN }}
         run: pnpm --filter=app-avatax migrate:dry-run
-      - name: Run migrations
-        if: ${{ !env.DRY_RUN }}
-        run: pnpm --filter=app-avatax migrate
+    #   - name: Run migrations
+    # if: ${{ !env.DRY_RUN }}
+    # run: pnpm --filter=app-avatax migrate
