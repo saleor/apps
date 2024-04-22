@@ -62,7 +62,7 @@ export const otelSdk = new NodeSDK({
 
       ignoreOutgoingUrls: [
         (url) => url.includes("ingest.sentry.io"),
-        (url) => url.includes("/v1/logs"),
+        // (url) => url.includes("/v1/logs"),
       ],
     }),
   ],

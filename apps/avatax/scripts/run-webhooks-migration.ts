@@ -2,10 +2,10 @@ import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as dotenv from "dotenv";
-import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
-import { createLogger } from "../../src/logger";
-import { loggerContext } from "../../src/logger-context";
-import { appWebhooks } from "../../webhooks";
+import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-graphql-client";
+import { createLogger } from "../src/logger";
+import { loggerContext } from "../src/logger-context";
+import { appWebhooks } from "../webhooks";
 
 dotenv.config();
 
@@ -17,16 +17,17 @@ const dryRun = args.includes("--dry-run");
 const logger = createLogger("RunWebhooksMigration");
 
 const runMigration = async () => {
-  if (!requiredEnvs.every((env) => process.env[env])) {
-    throw new Error(`Missing environment variables: ${requiredEnvs.join(" | ")}`);
-  }
-
   const runner = new WebhookMigrationRunner({
     dryRun,
     logger,
     loggerContext,
     otelSdk: otelSdk,
   });
+
+  if (!requiredEnvs.every((env) => process.env[env])) {
+    logger.error(`Missing environment variables: ${requiredEnvs.join(" | ")}`);
+    process.exit(1);
+  }
 
   logger.info(`Starting webhooks migration ${dryRun ? "(dry run)" : ""}`, { dryRun });
 
