@@ -7,10 +7,10 @@ import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumente
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
+import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
+import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
-import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
 
 export const config = {
   api: {
@@ -36,10 +36,10 @@ export default wrapWithLoggerContext(
         }
 
         logger.info("Handler called with payload");
-        const parseOrderResult = SaleorOrderParser.parse(payload);
+        const confirmedOrderFromPayload = SaleorOrderConfirmedEvent.create(payload);
 
-        if (parseOrderResult.isErr()) {
-          const error = parseOrderResult.error;
+        if (confirmedOrderFromPayload.isErr()) {
+          const error = confirmedOrderFromPayload.error;
 
           // Capture error when there is problem with parsing webhook payload - it should not happen
           Sentry.captureException(error);
@@ -47,11 +47,11 @@ export default wrapWithLoggerContext(
           return res.status(500).send(error.message);
         }
 
-        if (parseOrderResult.isOk()) {
+        if (confirmedOrderFromPayload.isOk()) {
           try {
-            const saleorOrder = new SaleorOrder(parseOrderResult.value);
+            const confirmedOrderEvent = confirmedOrderFromPayload.value;
 
-            if (saleorOrder.isFulfilled()) {
+            if (confirmedOrderEvent.isFulfilled()) {
               /**
                * TODO Should it be 400? Maybe just 200?
                */
@@ -59,7 +59,7 @@ export default wrapWithLoggerContext(
               return res.status(400).send("Skipping fulfilled order to prevent duplication");
             }
 
-            if (saleorOrder.isStrategyFlatRates()) {
+            if (confirmedOrderEvent.isStrategyFlatRates()) {
               logger.info("Order has flat rates tax strategy, skipping...");
               return res.status(202).send("Order has flat rates tax strategy.");
             }
@@ -73,7 +73,7 @@ export default wrapWithLoggerContext(
             ).then((m) => m.getActiveConnectionService);
 
             const taxProviderResult = getActiveConnectionService(
-              saleorOrder.channelSlug,
+              confirmedOrderEvent.getChannelSlug(),
               appMetadata,
             );
 
@@ -86,7 +86,7 @@ export default wrapWithLoggerContext(
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
-                  saleorOrder,
+                  confirmedOrderEvent,
                   config,
                   ctx.authData,
                 );
@@ -100,7 +100,7 @@ export default wrapWithLoggerContext(
                 const orderMetadataManager = new OrderMetadataManager(client);
 
                 await orderMetadataManager.updateOrderMetadataWithExternalId(
-                  saleorOrder.id,
+                  confirmedOrderEvent.getOrderId(),
                   confirmedOrder.id,
                 );
                 logger.info("Updated order metadata with externalId");

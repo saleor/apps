@@ -2,7 +2,10 @@ import { createLogger } from "@saleor/apps-logger";
 import * as Sentry from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
-import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
+import {
+  DeprecatedOrderConfirmedSubscriptionFragment,
+  ISaleorConfirmedOrderEvent,
+} from "../../saleor";
 import { discountUtils } from "../../taxes/discount-utils";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
@@ -45,11 +48,16 @@ export class AvataxOrderConfirmedPayloadTransformer {
   }
   async transform(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    saleorOrder: SaleorOrder,
+    confirmedOrderEvent: ISaleorConfirmedOrderEvent,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
-    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
+    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer({
+      productLines: confirmedOrderEvent.getLines(),
+      shippingLine: confirmedOrderEvent.getShippingLine(avataxConfig),
+      hasShipping: confirmedOrderEvent.hasShipping(),
+      matches,
+    });
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
@@ -93,7 +101,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
-        lines: linesTransformer.transform(order, saleorOrder, avataxConfig, matches),
+        lines: linesTransformer.transform(),
         date,
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount),

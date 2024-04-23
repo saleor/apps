@@ -1,14 +1,30 @@
-import { z } from "zod";
-import { TaxCalculationStrategy } from "../../../generated/graphql";
-import { OrderCancelledPayload as OrderCancelledPayloadFragment } from "../webhooks/payloads/order-cancelled-payload";
 import { Result, err, ok } from "neverthrow";
-import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./order-cancel-error";
+import { z } from "zod";
 import { BaseError } from "../../error";
+import { AvataxConfig } from "../avatax/avatax-connection-schema";
+import { OrderCancelledPayload as OrderCancelledPayloadFragment } from "../webhooks/payloads/order-cancelled-payload";
+import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./order-cancel-error";
+import { ISaleorOrderConfrimedOrderLine, SaleorOrderConfirmedLine } from "./order-line";
+import {
+  ISaleorOrderConfirmedShippingLine,
+  SaleorOrderConfirmedShippingLine,
+} from "./shipping-line";
 
-type SaleorOrderData = z.infer<typeof SaleorOrder.schema>;
+export interface ISaleorConfirmedOrderEvent {
+  getChannelSlug(): string;
+  getOrderId(): string;
+  isFulfilled(): boolean;
+  isStrategyFlatRates(): boolean;
+  getIsTaxIncluded(): boolean;
+  // getProductLines
+  getLines(): ISaleorOrderConfrimedOrderLine[];
+  getIsDiscounted(): boolean;
+  hasShipping(): boolean;
+  getShippingLine(config: AvataxConfig): ISaleorOrderConfirmedShippingLine;
+}
 
-export class SaleorOrder {
-  public static schema = z.object({
+export class SaleorOrderConfirmedEvent implements ISaleorConfirmedOrderEvent {
+  private static schema = z.object({
     order: z.object({
       channel: z.object({
         taxConfiguration: z.object({
@@ -19,33 +35,88 @@ export class SaleorOrder {
       }),
       status: z.string(),
       id: z.string(),
+      lines: z.array(SaleorOrderConfirmedLine.schema),
+      discounts: z.array(z.object({})),
+      shippingPrice: SaleorOrderConfirmedShippingLine.schema,
     }),
   });
 
-  private data: SaleorOrderData;
+  private constructor(private data: z.infer<typeof SaleorOrderConfirmedEvent.schema>) {}
 
-  constructor(data: SaleorOrderData) {
-    this.data = data;
+  public static ParsingError = BaseError.subclass("SaleorOrderConfirmedEventParsingError");
+
+  public static create(payload: unknown) {
+    const parser = Result.fromThrowable(
+      SaleorOrderConfirmedEvent.schema.parse,
+      SaleorOrderConfirmedEvent.ParsingError.normalize,
+    );
+
+    const parsedPayload = parser(payload);
+
+    if (parsedPayload.isErr()) {
+      return err(parsedPayload.error);
+    }
+
+    return ok(new SaleorOrderConfirmedEvent(parsedPayload.value));
   }
 
-  public get channelSlug() {
+  getChannelSlug(): string {
     return this.data.order.channel.slug;
   }
 
-  public isFulfilled() {
-    return this.data.order.status === "FULFILLED";
-  }
-
-  public isStrategyFlatRates() {
-    return this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
-  }
-
-  public get id() {
+  getOrderId(): string {
     return this.data.order.id;
   }
 
-  public get taxIncluded() {
+  isFulfilled(): boolean {
+    return this.data.order.status === "FULFILLED";
+  }
+
+  isStrategyFlatRates(): boolean {
+    return this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
+  }
+
+  getIsTaxIncluded(): boolean {
     return this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
+  }
+
+  getIsDiscounted(): boolean {
+    return this.data.order.discounts.length > 0;
+  }
+
+  getLines(): ISaleorOrderConfrimedOrderLine[] {
+    return this.data.order.lines.map((line) => {
+      const possibleLine = SaleorOrderConfirmedLine.create(
+        line,
+        this.getIsTaxIncluded(),
+        this.getIsDiscounted(),
+      );
+
+      if (possibleLine.isErr()) {
+        throw possibleLine.error;
+      }
+
+      return possibleLine.value;
+    });
+  }
+
+  hasShipping(): boolean {
+    return this.data.order.shippingPrice.net.amount !== 0;
+  }
+
+  getShippingLine(config: AvataxConfig): ISaleorOrderConfirmedShippingLine {
+    const possibleShippingLine = SaleorOrderConfirmedShippingLine.create(
+      this.data.order.shippingPrice,
+      this.getIsTaxIncluded(),
+      this.getIsDiscounted(),
+      config.shippingTaxCode,
+    );
+
+    if (possibleShippingLine.isErr()) {
+      throw possibleShippingLine.error;
+    }
+
+    return possibleShippingLine.value;
   }
 }
 
@@ -55,6 +126,7 @@ interface ISaleorCancelledOrderEvent {
   getPrivateMetadata(): Array<{ key: string; value: string }>;
 }
 
+// TODO: extract to its own file
 export class SaleorCancelledOrderEvent implements ISaleorCancelledOrderEvent {
   private static schema = z.object({
     order: z.object({

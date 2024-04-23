@@ -1,6 +1,6 @@
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 
 /**
- * @deprecated use `SaleorOrder` instead
+ * @deprecated use `ISaleorConfirmedOrderEvent` instead
  */
 export type DeprecatedOrderConfirmedSubscriptionFragment = OrderConfirmedSubscriptionFragment;

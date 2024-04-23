@@ -1,5 +1,4 @@
 import { createLogger } from "@saleor/apps-logger";
-import { OrderLineFragment } from "../../../../generated/graphql";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
@@ -10,12 +9,7 @@ export class AvataxOrderConfirmedTaxCodeMatcher {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
 
-  private getTaxClassId(line: OrderLineFragment): string | undefined {
-    return line.taxClass?.id;
-  }
-
-  match(line: OrderLineFragment, matches: AvataxTaxCodeMatches) {
-    const taxClassId = this.getTaxClassId(line);
+  match({ taxClassId, matches }: { taxClassId?: string; matches: AvataxTaxCodeMatches }) {
     const possibleMatch = this.mapTaxClassWithTaxMatch(taxClassId, matches);
 
     if (possibleMatch) {
