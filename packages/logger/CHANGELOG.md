@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.3
+
+### Patch Changes
+
+- 528b981e: Add proper serialization of errors in Open Telemetry logs transport
+
 ## 1.2.2
 
 ### Patch Changes
