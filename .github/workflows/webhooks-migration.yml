@@ -1,4 +1,4 @@
-name: Webhooks migration
+name: Avatax webhooks migration
 on:
   workflow_dispatch:
     inputs:
