@@ -1,5 +1,3 @@
-import * as dotenv from "dotenv";
-
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
@@ -9,8 +7,6 @@ import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-
 import { loggerContext } from "../src/logger-context";
 import { appWebhooks } from "../webhooks";
 import { createLogger } from "./logger";
-
-dotenv.config();
 
 const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 

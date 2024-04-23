@@ -1,4 +1,4 @@
-import { SpanStatusCode } from "@opentelemetry/api";
+import { DiagConsoleLogger, DiagLogLevel, SpanStatusCode, diag } from "@opentelemetry/api";
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { Resource } from "@opentelemetry/resources";
@@ -11,12 +11,9 @@ import { type ClientRequest } from "node:http";
 import { otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 
-/*
- * For troubleshooting, set the log level to DiagLogLevel.DEBUG
- * diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
- */
-
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+if (process.env.ENABLE_DEBUG_OTEL_DIAG === "true") {
+  diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+}
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({
@@ -62,7 +59,7 @@ export const otelSdk = new NodeSDK({
 
       ignoreOutgoingUrls: [
         (url) => url.includes("ingest.sentry.io"),
-        // (url) => url.includes("/v1/logs"),
+        (url) => url.includes("/v1/logs"),
       ],
     }),
   ],

@@ -27,7 +27,8 @@
         "APP_LOG_LEVEL",
         "AVATAX_CLIENT_TIMEOUT",
         "ENV",
-        "ANALYZE_BUNDLE"
+        "ANALYZE_BUNDLE",
+        "DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER"
       ]
     },
     "test": {

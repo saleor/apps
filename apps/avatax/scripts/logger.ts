@@ -4,7 +4,7 @@ import { loggerContext } from "../src/logger-context";
 
 logger.settings.maskValuesOfKeys = ["username", "password", "token"];
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER === "true") {
   attachLoggerConsoleTransport(logger);
 }
 

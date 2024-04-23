@@ -21,52 +21,46 @@ type GetManifestFunction = ({
 }) => Promise<Array<WebhookManifest>>;
 
 export class WebhookMigrationRunner {
-  private dryRun: boolean;
-  private logger: Logger;
-  private client: Client;
-  private getManifests: GetManifestFunction;
-
-  constructor(args: {
-    dryRun: boolean;
-    logger: Logger;
-    client: Client;
-    getManifests: GetManifestFunction;
-  }) {
-    this.dryRun = args.dryRun;
-    this.logger = args.logger;
-    this.client = args.client;
-    this.getManifests = args.getManifests;
-  }
+  constructor(
+    private args: {
+      dryRun: boolean;
+      logger: Logger;
+      client: Client;
+      getManifests: GetManifestFunction;
+    },
+  ) {}
 
   public migrate = async () => {
+    const { dryRun, logger, client, getManifests } = this.args;
+
     try {
-      this.logger.debug("Getting app details and webhooks data");
+      logger.debug("Getting app details and webhooks data");
 
-      const appDetails = await getAppDetailsAndWebhooksData({ client: this.client });
+      const appDetails = await getAppDetailsAndWebhooksData({ client });
 
-      this.logger.debug("Getting Saleor instance details");
+      logger.debug("Getting Saleor instance details");
 
-      const instanceDetails = await getSaleorInstanceDetails({ client: this.client });
+      const instanceDetails = await getSaleorInstanceDetails({ client });
 
-      this.logger.debug("Generate list of webhook manifests");
+      logger.debug("Generate list of webhook manifests");
 
-      const newWebhookManifests = await this.getManifests({ appDetails, instanceDetails });
+      const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
 
       const updater = new WebhookUpdater({
-        dryRun: this.dryRun,
-        logger: this.logger,
-        client: this.client,
+        dryRun,
+        logger,
+        client,
         webhookManifests: newWebhookManifests,
         existingWebhooksData: appDetails.webhooks || [],
       });
 
       await updater.update();
 
-      this.logger.info(`Migration finished successfully.`);
+      logger.info(`Migration finished successfully.`);
     } catch (error) {
       switch (true) {
         case error instanceof AppPermissionDeniedError:
-          this.logger.warn(
+          logger.warn(
             `Migration finished with warning: request being denied (app probably uninstalled)`,
             {
               error,
@@ -75,21 +69,18 @@ export class WebhookMigrationRunner {
           );
           break;
         case error instanceof NetworkError:
-          this.logger.warn(
-            `Migration finished with warning: network error (Saleor not available)`,
-            {
-              error,
-              reason: "Saleor not available",
-            },
-          );
+          logger.warn(`Migration finished with warning: network error (Saleor not available)`, {
+            error,
+            reason: "Saleor not available",
+          });
           break;
         case error instanceof UnknownConnectionError:
-          this.logger.error(`Migration finished with error while fetching data from Saleor`, {
+          logger.error(`Migration finished with error while fetching data from Saleor`, {
             error,
           });
           break;
         default:
-          this.logger.error(`Migration finished with error while running migrations`, { error });
+          logger.error(`Migration finished with error while running migrations`, { error });
       }
     }
   };
