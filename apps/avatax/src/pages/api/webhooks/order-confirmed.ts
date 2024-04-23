@@ -11,7 +11,6 @@ import { OrderMetadataManager } from "../../../modules/app/order-metadata-manage
 import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
-import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
@@ -104,15 +103,15 @@ export default wrapWithLoggerContext(
               "../../../modules/taxes/get-active-connection-service"
             ).then((m) => m.AvataxWebhookServiceFactory);
 
-            const taxProviderResult = AvataxWebhookServiceFactory.createFromConfig(
+            const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
               config.value,
               saleorOrder.channelSlug,
             );
 
             logger.debug("Confirming order...");
 
-            if (taxProviderResult.isOk()) {
-              const { config, taxProvider } = taxProviderResult.value;
+            if (webhookServiceResult.isOk()) {
+              const { config, taxProvider } = webhookServiceResult.value;
 
               try {
                 const confirmedOrder = await taxProvider.confirmOrder(
@@ -153,34 +152,17 @@ export default wrapWithLoggerContext(
               }
             }
 
-            if (taxProviderResult.isErr()) {
-              const error = taxProviderResult.error;
+            if (webhookServiceResult.isErr()) {
+              const error = webhookServiceResult.error;
 
               logger.debug("Error confirming order", { error });
 
-              switch (true) {
-                case error instanceof ActiveConnectionServiceErrors.WrongChannelError: {
-                  /**
-                   * Subscription can listen on every channel or no channels.
-                   * However, app works only for some of them (which are configured to be used with taxes routing).
-                   * If this happens, webhook will be received, but this is no-op.
-                   */
-                  return res.status(202).send("Channel not configured with the app.");
-                }
-
-                case error instanceof ActiveConnectionServiceErrors.MissingMetadataError:
-                case error instanceof
-                  ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError:
-                case error instanceof ActiveConnectionServiceErrors.BrokenConfigurationError: {
+              switch (error["constructor"]) {
+                case AvataxWebhookServiceFactory.BrokenConfigurationError: {
                   return res.status(400).send("App is not configured properly.");
                 }
-                case error instanceof ActiveConnectionServiceErrors.MissingChannelSlugError: {
-                  return res
-                    .status(500)
-                    .send("Webhook didn't contain channel slug. This should not happen.");
-                }
                 default: {
-                  Sentry.captureException(taxProviderResult.error);
+                  Sentry.captureException(webhookServiceResult.error);
                   logger.fatal("Unhandled error", { error });
 
                   return res.status(500).send("Unhandled error");

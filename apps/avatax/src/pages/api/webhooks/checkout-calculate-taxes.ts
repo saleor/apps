@@ -2,7 +2,6 @@ import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
-import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -101,11 +100,11 @@ export default wrapWithLoggerContext(
 
           metadataCache.setMetadata(appMetadata);
 
-          const AvataxWebhookServiceFactoryResult = await import(
+          const AvataxWebhookServiceFactory = await import(
             "../../../modules/taxes/get-active-connection-service"
           ).then((m) => m.AvataxWebhookServiceFactory);
 
-          const webhookServiceResult = AvataxWebhookServiceFactoryResult.createFromConfig(
+          const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
             config.value,
             channelSlug,
           );
@@ -117,18 +116,16 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
-            const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
+            switch (err["constructor"]) {
+              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+                return res.status(400).send("App is not configured properly.");
+              }
+              default: {
+                Sentry.captureException(webhookServiceResult.error);
+                logger.fatal("Unhandled error", { error: err });
 
-            if (executeErrorStrategy) {
-              return executeErrorStrategy();
-            } else {
-              Sentry.captureException(err);
-
-              logger.fatal(`UNHANDLED: ${err.name}`, {
-                error: err,
-              });
-
-              return res.status(500).send("Error calculating taxes");
+                return res.status(500).send("Unhandled error");
+              }
             }
           } else {
             logger.info("Found active connection service. Calculating taxes...");

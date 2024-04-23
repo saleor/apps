@@ -4,7 +4,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { calculateTaxesErrorsStrategy } from "../../../modules/webhooks/calculate-taxes-errors-strategy";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -12,7 +11,6 @@ import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { captureException } from "@sentry/nextjs";
-import { BaseError } from "../../../error";
 
 export const config = {
   api: {
@@ -108,17 +106,16 @@ export default wrapWithLoggerContext(
               error: err,
             });
 
-            const executeErrorStrategy = calculateTaxesErrorsStrategy(req, res).get(err.name);
+            switch (err["constructor"]) {
+              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+                return res.status(400).send("App is not configured properly.");
+              }
+              default: {
+                Sentry.captureException(avataxWebhookServiceResult.error);
+                logger.fatal("Unhandled error", { error: err });
 
-            if (executeErrorStrategy) {
-              return executeErrorStrategy();
-            } else {
-              Sentry.captureException(err);
-              logger.fatal(`UNHANDLED: ${err.name}`, {
-                error: err,
-              });
-
-              return res.status(500).send("Error calculating taxes");
+                return res.status(500).send("Unhandled error");
+              }
             }
           }
         } catch (error) {

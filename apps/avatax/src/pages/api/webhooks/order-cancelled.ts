@@ -134,8 +134,18 @@ export default wrapWithLoggerContext(
         if (avataxWebhookServiceResult.isErr()) {
           logger.error("Tax provider couldn't cancel the order:", avataxWebhookServiceResult.error);
 
-          Sentry.captureException(avataxWebhookServiceResult.error);
-          // TODO: Map errors
+          switch (avataxWebhookServiceResult.error["constructor"]) {
+            case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+              return res.status(400).send("App is not configured properly.");
+            }
+            default: {
+              Sentry.captureException(avataxWebhookServiceResult.error);
+              logger.fatal("Unhandled error", { error: avataxWebhookServiceResult.error });
+
+              return res.status(500).send("Unhandled error");
+            }
+          }
+
           return res.status(500).send("Unhandled error");
         }
       }),

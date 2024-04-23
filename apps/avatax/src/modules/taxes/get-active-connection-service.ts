@@ -1,27 +1,20 @@
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
-import { createLogger } from "../../logger";
 import { err, ok } from "neverthrow";
 import { AvataxClient } from "../avatax/avatax-client";
 import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
-import { ActiveConnectionServiceErrors } from "./get-active-connection-service-errors";
 import { AppConfig } from "../../lib/app-config";
+import { BaseError } from "../../error";
 
 // todo rename file
 export class AvataxWebhookServiceFactory {
-  static createFromConfig(config: AppConfig, channelSlug: string) {
-    if (!channelSlug) {
-      return err(
-        new ActiveConnectionServiceErrors.MissingChannelSlugError(
-          "Channel slug was not found in the webhook payload. This should not happen",
-        ),
-      );
-    }
+  static BrokenConfigurationError = BaseError.subclass("BrokenConfigurationError");
 
+  static createFromConfig(config: AppConfig, channelSlug: string) {
     const channelConfig = config.getConfigForChannelSlug(channelSlug);
 
     if (channelConfig.isErr()) {
       return err(
-        new ActiveConnectionServiceErrors.BrokenConfigurationError(
+        new this.BrokenConfigurationError(
           `Channel config was not found for channel ${channelSlug}`,
           {
             props: {
