@@ -83,7 +83,7 @@ export default wrapWithLoggerContext(
           const channelSlug = payload.taxBase.channel.slug;
 
           const AvataxWebhookServiceFactory = await import(
-            "../../../modules/taxes/get-active-connection-service"
+            "../../../modules/taxes/avatax-webhook-service-factory"
           ).then((m) => m.AvataxWebhookServiceFactory);
 
           const avataxWebhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(

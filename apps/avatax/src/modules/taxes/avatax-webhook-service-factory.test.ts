@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
-import { AvataxWebhookServiceFactory } from "./get-active-connection-service";
+import { AvataxWebhookServiceFactory } from "./avatax-webhook-service-factory";
 import { AppConfig } from "../../lib/app-config";
 
 const mockedProviders: ProviderConnections = [

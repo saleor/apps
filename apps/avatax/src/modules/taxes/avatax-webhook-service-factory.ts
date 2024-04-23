@@ -5,7 +5,6 @@ import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
 import { AppConfig } from "../../lib/app-config";
 import { BaseError } from "../../error";
 
-// todo rename file
 export class AvataxWebhookServiceFactory {
   static BrokenConfigurationError = BaseError.subclass("BrokenConfigurationError");
 
