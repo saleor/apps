@@ -50,6 +50,7 @@ export default wrapWithLoggerContext(
           }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
+          const channelSlug = payload.taxBase.channel.slug;
 
           const configExtractor = new AppConfigExtractor();
 
@@ -79,8 +80,6 @@ export default wrapWithLoggerContext(
           }
 
           metadataCache.setMetadata(appMetadata);
-
-          const channelSlug = payload.taxBase.channel.slug;
 
           const AvataxWebhookServiceFactory = await import(
             "../../../modules/taxes/avatax-webhook-service-factory"

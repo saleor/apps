@@ -50,7 +50,7 @@ const mockedValidChannels: ChannelsConfig = [
   },
 ];
 
-describe("getActiveConnectionService", () => {
+describe("AvataxWebhookServiceFactory", () => {
   it("throws BrokenConfigurationError error when no providerConnectionId was found", () => {
     const result = AvataxWebhookServiceFactory.createFromConfig(
       AppConfig.createFromParsedConfig({
