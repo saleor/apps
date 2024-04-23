@@ -117,13 +117,18 @@ export default wrapWithLoggerContext(
         logger.info("Cancelling order...");
 
         if (avataxWebhookServiceResult.isOk()) {
-          const { taxProvider, config } = avataxWebhookServiceResult.value;
+          const { taxProvider } = avataxWebhookServiceResult.value;
+          const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+
+          if (providerConfig.isErr()) {
+            return res.status(400).send("App is not configured properly.");
+          }
 
           await taxProvider.cancelOrder(
             {
               avataxId: cancelledOrderInstance.getAvataxId(),
             },
-            config,
+            providerConfig.value.avataxConfig.config,
           );
 
           logger.info("Order cancelled");

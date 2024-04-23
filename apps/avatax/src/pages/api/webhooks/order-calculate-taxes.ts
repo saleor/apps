@@ -92,9 +92,18 @@ export default wrapWithLoggerContext(
           );
 
           if (avataxWebhookServiceResult.isOk()) {
-            const { taxProvider, config } = avataxWebhookServiceResult.value;
+            const { taxProvider } = avataxWebhookServiceResult.value;
+            const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
-            const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);
+            if (providerConfig.isErr()) {
+              return res.status(400).send("App is not configured properly.");
+            }
+
+            const calculatedTaxes = await taxProvider.calculateTaxes(
+              payload,
+              providerConfig.value.avataxConfig.config,
+              ctx.authData,
+            );
 
             logger.info("Taxes calculated", { calculatedTaxes });
 

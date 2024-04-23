@@ -130,10 +130,19 @@ export default wrapWithLoggerContext(
           } else {
             logger.info("Found active connection service. Calculating taxes...");
 
-            const { taxProvider, config } = webhookServiceResult.value;
+            const { taxProvider } = webhookServiceResult.value;
+            const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+
+            if (providerConfig.isErr()) {
+              return res.status(400).send("App is not configured properly.");
+            }
 
             // TODO: Improve errors handling like above
-            const calculatedTaxes = await taxProvider.calculateTaxes(payload, config, ctx.authData);
+            const calculatedTaxes = await taxProvider.calculateTaxes(
+              payload,
+              providerConfig.value.avataxConfig.config,
+              ctx.authData,
+            );
 
             logger.info("Taxes calculated", { calculatedTaxes });
 

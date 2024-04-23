@@ -111,14 +111,19 @@ export default wrapWithLoggerContext(
             logger.debug("Confirming order...");
 
             if (webhookServiceResult.isOk()) {
-              const { config, taxProvider } = webhookServiceResult.value;
+              const { taxProvider } = webhookServiceResult.value;
+              const providerConfig = config.value.getConfigForChannelSlug(saleorOrder.channelSlug);
+
+              if (providerConfig.isErr()) {
+                return res.status(400).send("App is not configured properly.");
+              }
 
               try {
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
                   saleorOrder,
-                  config,
+                  providerConfig.value.avataxConfig.config,
                   ctx.authData,
                 );
 
