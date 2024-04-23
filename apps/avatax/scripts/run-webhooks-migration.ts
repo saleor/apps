@@ -24,6 +24,8 @@ if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
 const logger = createLogger("RunWebhooksMigration");
 
 loggerContext.wrap(async () => {
+  loggerContext.set("dryRun", dryRun.toString());
+
   if (!requiredEnvs.every((env) => process.env[env])) {
     logger.error(`Missing environment variables: ${requiredEnvs.join(" | ")}`);
     process.exit(1);
@@ -34,7 +36,7 @@ loggerContext.wrap(async () => {
     logger,
   });
 
-  logger.info(`Starting webhooks migration`, { dryRun });
+  logger.info(`Starting webhooks migration`);
 
   const saleorAPL = new SaleorCloudAPL({
     token: process.env.REST_APL_TOKEN!,
@@ -65,7 +67,13 @@ loggerContext.wrap(async () => {
       client,
       saleorApiUrl,
       getManifests: async ({ appDetails, instanceDetails }) => {
-        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, instanceDetails.version);
+        if (instanceDetails.version) {
+          loggerContext.set(
+            ObservabilityAttributes.SALEOR_VERSION,
+            instanceDetails.version?.toFixed(2),
+          );
+        }
+
         const webhooks = appDetails.webhooks;
 
         if (!webhooks?.length) {
@@ -90,9 +98,7 @@ loggerContext.wrap(async () => {
     });
   }
 
-  logger.info(`Webhook migration complete`, {
-    dryRun: dryRun,
-  });
+  logger.info(`Webhook migration complete`);
 });
 
 process.on("beforeExit", () => {
