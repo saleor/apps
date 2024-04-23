@@ -44,15 +44,18 @@ export default wrapWithLoggerContext(
 
           logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
-          return useCase
-            .calculateTaxes(payload, authData)
-            .map((result) => {
-              return res.status(200).send(ctx.buildResponse(result.value));
-            })
-            .mapErr((err) => {
-              // switch/case error and http
-            });
+          return useCase.calculateTaxes(payload, authData).then((result) => {
+            return result.match(
+              (value) => {
+                return res.status(200).send(ctx.buildResponse(value));
+              },
+              (err) => {
+                return res.status(500).send("Unhandled error "); // todo map error
+              },
+            );
+          });
         } catch (error) {
+          // todo this should be now available in usecase, refactor
           if (error instanceof InvalidAppAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",

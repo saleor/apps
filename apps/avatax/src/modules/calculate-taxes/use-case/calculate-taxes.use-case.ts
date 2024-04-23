@@ -5,11 +5,11 @@ import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-p
 import { AuthData } from "@saleor/app-sdk/APL";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
-import { err, fromPromise, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { err, fromPromise, Result } from "neverthrow";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { metadataCache } from "../../../lib/app-metadata-cache";
-import * as Sentry from "@sentry/nextjs";
 import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class CalculateTaxesUseCase {
@@ -31,30 +31,37 @@ export class CalculateTaxesUseCase {
     },
   ) {}
 
-  async calculateTaxes(
-    payload: CalculateTaxesPayload,
-    authData: AuthData,
-  ): Promise<Result<AvataxCalculateTaxesResponse, any>> {
+  private verifyPayload(payload: CalculateTaxesPayload) {
     const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
-    const mappedError = payloadVerificationResult.mapErr((innerError) => {
+    return payloadVerificationResult.mapErr((innerError) => {
       switch (innerError["constructor"]) {
         case TaxIncompletePayloadErrors.MissingLinesError:
         case TaxIncompletePayloadErrors.MissingAddressError: {
-          return err(
-            new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
-              "Payload is incomplete and taxes cant be calculated. This is expected",
-              {
-                errors: [innerError],
-              },
-            ),
+          return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
+            "Payload is incomplete and taxes cant be calculated. This is expected",
+            {
+              errors: [innerError],
+            },
           );
+        }
+        default: {
+          return new CalculateTaxesUseCase.UnhandledError("Failed to verify payload", {
+            errors: [innerError],
+          });
         }
       }
     });
+  }
 
-    if (mappedError.isErr()) {
-      return mappedError;
+  async calculateTaxes(
+    payload: CalculateTaxesPayload,
+    authData: AuthData,
+  ): Promise<Result<AvataxCalculateTaxesResponse, Error>> {
+    const payloadVerificationResult = this.verifyPayload(payload);
+
+    if (payloadVerificationResult.isErr()) {
+      return err(payloadVerificationResult.error);
     }
 
     const appMetadata = payload.recipient?.privateMetadata ?? [];
@@ -144,7 +151,7 @@ export class CalculateTaxesUseCase {
         );
       }
 
-      const calculatedTaxes = await fromPromise(
+      return fromPromise(
         taxProvider.calculateTaxes(payload, providerConfig.value.avataxConfig.config, authData),
         (err) =>
           new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
@@ -155,8 +162,6 @@ export class CalculateTaxesUseCase {
 
         return results;
       });
-
-      return calculatedTaxes;
     }
   }
 }
