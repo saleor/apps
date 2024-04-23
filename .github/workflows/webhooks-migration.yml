@@ -22,8 +22,6 @@ jobs:
     env:
       SALEOR_ENVIRONMENT: ${{ github.event.inputs.enviroment }}
       DRY_RUN: ${{ github.event.inputs.dry-run }}
-      # don't attach OTEL console transport
-      NODE_ENV: production
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
