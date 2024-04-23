@@ -10,6 +10,7 @@ import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
+import { captureException } from "@sentry/nextjs";
 
 export const config = {
   api: {
@@ -37,6 +38,7 @@ export default wrapWithLoggerContext(
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
+
           if (payload.version) {
             Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
             loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
@@ -54,12 +56,33 @@ export default wrapWithLoggerContext(
                 return res.status(200).send(ctx.buildResponse(value));
               },
               (err) => {
-                return res.status(500).send("Unhandled error "); // todo map error
+                logger.warn("Error calculating taxes", { error: err });
+
+                switch (err.constructor) {
+                  case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
+                    return res.status(500).send("Failed to calculate taxes");
+                  }
+                  case CalculateTaxesUseCase.ConfigBrokenError: {
+                    return res
+                      .status(500)
+                      .send("Failed to calculate taxes due to invalid configuration");
+                  }
+                  case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
+                    return res
+                      .status(400)
+                      .send("Taxes cant be calculated due to incomplete payload");
+                  }
+                  case CalculateTaxesUseCase.UnhandledError: {
+                    captureException(err);
+
+                    return res.status(500).send("Failed to calculate taxes (Unhandled error)");
+                  }
+                }
               },
             );
           });
         } catch (error) {
-          // todo this should be now available in usecase, refactor
+          // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
           if (error instanceof InvalidAppAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
