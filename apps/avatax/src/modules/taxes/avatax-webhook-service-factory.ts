@@ -30,10 +30,6 @@ export class AvataxWebhookServiceFactory {
       ),
     );
 
-    /**
-     * Adding config here, to have single place where its resolved.
-     * TODO: Extract this
-     */
-    return ok({ taxProvider, config: channelConfig.value.avataxConfig.config });
+    return ok({ taxProvider });
   }
 }

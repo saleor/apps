@@ -5,6 +5,9 @@ import { BaseError } from "../error";
 import { AppConfig } from "./app-config";
 import { createLogger } from "../logger";
 
+/**
+ * Extracts app configuration from metadata. Performs initial validation, shared by all clients
+ */
 export class AppConfigExtractor {
   static AppConfigExtractorError = BaseError.subclass("AppConfigExtractorError");
   static MissingMetadataError = this.AppConfigExtractorError.subclass("MissingMetadataError");
