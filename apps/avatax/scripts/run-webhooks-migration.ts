@@ -31,11 +31,6 @@ loggerContext.wrap(async () => {
     process.exit(1);
   }
 
-  const runner = new WebhookMigrationRunner({
-    dryRun,
-    logger,
-  });
-
   logger.info(`Starting webhooks migration`);
 
   const saleorAPL = new SaleorCloudAPL({
@@ -63,9 +58,10 @@ loggerContext.wrap(async () => {
       token: token,
     });
 
-    await runner.migrate({
+    const runner = new WebhookMigrationRunner({
+      dryRun,
+      logger,
       client,
-      saleorApiUrl,
       getManifests: async ({ appDetails, instanceDetails }) => {
         if (instanceDetails.version) {
           loggerContext.set(
@@ -96,6 +92,8 @@ loggerContext.wrap(async () => {
         return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
       },
     });
+
+    await runner.migrate();
   }
 
   logger.info(`Webhook migration complete`);

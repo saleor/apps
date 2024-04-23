@@ -1,8 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { webhookMigrationRunner } from "@saleor/webhook-utils";
+import { createGraphQLClient } from "@saleor/apps-shared";
+import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
 export const updateWebhooksScript = async ({
   authData,
@@ -18,12 +18,15 @@ export const updateWebhooksScript = async ({
     token: authData.token,
   });
 
-  await webhookMigrationRunner({
-    client,
+  const runner = new WebhookMigrationRunner({
     dryRun,
+    logger: console,
+    client,
     getManifests: async ({ appDetails }) => {
       // Products feed application has currently no webhooks, so we return empty array
       return [];
     },
   });
+
+  await runner.migrate();
 };

@@ -14,8 +14,24 @@ describe("webhooksToRemove", () => {
     expect(
       webhooksToRemove({
         existingWebhooksPartial: [
-          { id: "1", name: "webhook1" },
-          { id: "1", name: "webhook2" },
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+          {
+            id: "1",
+            name: "webhook2",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
         ],
         newWebhookManifests: [
           {
@@ -42,22 +58,70 @@ describe("webhooksToRemove", () => {
     expect(
       webhooksToRemove({
         existingWebhooksPartial: [
-          { id: "1", name: "webhook1" },
-          { id: "2", name: "webhook2" },
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+          {
+            id: "2",
+            name: "webhook2",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
         ],
         newWebhookManifests: [],
       }),
     ).toStrictEqual([
-      { id: "1", name: "webhook1" },
-      { id: "2", name: "webhook2" },
+      {
+        id: "1",
+        name: "webhook1",
+        query: "",
+        targetUrl: "",
+        isActive: true,
+        syncEventsTypes: [],
+        asyncEventsTypes: [],
+      },
+      {
+        id: "2",
+        name: "webhook2",
+        query: "",
+        targetUrl: "",
+        isActive: true,
+        syncEventsTypes: [],
+        asyncEventsTypes: [],
+      },
     ]);
   });
   it("Returns list with the webhook one webhook to remove, when it was not specified in the new manifests", () => {
     expect(
       webhooksToRemove({
         existingWebhooksPartial: [
-          { id: "1", name: "webhook1" },
-          { id: "2", name: "webhook2" },
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+          {
+            id: "2",
+            name: "webhook2",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
         ],
         newWebhookManifests: [
           {
@@ -70,6 +134,16 @@ describe("webhooksToRemove", () => {
           },
         ],
       }),
-    ).toStrictEqual([{ id: "2", name: "webhook2" }]);
+    ).toStrictEqual([
+      {
+        id: "2",
+        name: "webhook2",
+        asyncEventsTypes: [],
+        syncEventsTypes: [],
+        query: "",
+        targetUrl: "",
+        isActive: true,
+      },
+    ]);
   });
 });
