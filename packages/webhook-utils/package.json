@@ -10,7 +10,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@opentelemetry/sdk-node": "../../node_modules/@opentelemetry/sdk-node",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@urql/exchange-auth": "2.1.4",

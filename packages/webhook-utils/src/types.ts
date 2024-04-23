@@ -16,8 +16,3 @@ export type Logger = {
   error: (message: string, meta?: Record<string, unknown>) => void;
   warn: (message: string, meta?: Record<string, unknown>) => void;
 };
-
-export type LoggerContext = {
-  wrap: (fn: (...args: unknown[]) => unknown, initialState?: Record<string, unknown>) => unknown;
-  set: (key: string, value: string | number | Record<string, unknown> | null) => void;
-};

@@ -21,7 +21,6 @@ if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
 const OTEL_FLUSH_TIMEOUT = sharedOtelConfig.flushTimeout;
 
 export const flushOtel = async () => {
-  console.log("Flushing OTEL");
   await race({
     promise: loggerProvider.forceFlush(),
     error: new Error("Timeout flushing OTEL logs from provider"),
