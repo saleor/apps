@@ -44,6 +44,10 @@ export default wrapWithLoggerContext(
 
           logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
+          const appMetadata = payload.recipient?.privateMetadata ?? [];
+
+          metadataCache.setMetadata(appMetadata);
+
           return useCase.calculateTaxes(payload, authData).then((result) => {
             return result.match(
               (value) => {

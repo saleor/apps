@@ -1,6 +1,6 @@
 import { createLogger } from "@saleor/apps-logger";
 import { BaseError } from "../../../error";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
@@ -9,7 +9,6 @@ import { err, fromPromise, Result } from "neverthrow";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
-import { metadataCache } from "../../../lib/app-metadata-cache";
 import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 
 export class CalculateTaxesUseCase {
@@ -27,7 +26,7 @@ export class CalculateTaxesUseCase {
 
   constructor(
     private deps: {
-      configExtractor: AppConfigExtractor;
+      configExtractor: IAppConfigExtractor;
     },
   ) {}
 
@@ -95,8 +94,6 @@ export class CalculateTaxesUseCase {
         }),
       );
     }
-
-    metadataCache.setMetadata(appMetadata);
 
     const AvataxWebhookServiceFactory = await import(
       "../../../modules/taxes/avatax-webhook-service-factory"
