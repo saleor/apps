@@ -1,21 +1,12 @@
 import { Result, err, ok } from "neverthrow";
 import { z } from "zod";
+import { OrderLineFragment } from "../../../generated/graphql";
 import { BaseError } from "../../error";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";
 import { AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";
 
-export interface ISaleorOrderConfrimedOrderLine {
-  getAmount(): number;
-  getTaxIncluded(): boolean;
-  getTaxCode(matches: AvataxTaxCodeMatches): string;
-  getQuantity(): number;
-  getItemCode(): string;
-  getDescription(): string;
-  getIsDiscounted(): boolean;
-}
-
-export class SaleorOrderConfirmedLine implements ISaleorOrderConfrimedOrderLine {
-  public static schema = z.object({
+export class SaleorOrderLine {
+  private static schema = z.object({
     totalPrice: z.object({
       gross: z.object({
         amount: z.number(),
@@ -31,18 +22,14 @@ export class SaleorOrderConfirmedLine implements ISaleorOrderConfrimedOrderLine 
     taxClass: z.object({ id: z.string() }).optional(),
   });
 
-  private constructor(
-    private data: z.infer<typeof SaleorOrderConfirmedLine.schema>,
-    private isTaxIncluded: boolean,
-    private isDiscounted: boolean,
-  ) {}
+  private constructor(private data: z.infer<typeof SaleorOrderLine.schema>) {}
 
-  public static ParsingError = BaseError.subclass("SaleorOrderConfirmedLineParsingError");
+  static ParsingError = BaseError.subclass("SaleorOrderLineParsingError");
 
-  public static create(payload: unknown, isTaxIncluded: boolean, isDiscounted: boolean) {
+  static createFromGraphQL = (payload: OrderLineFragment) => {
     const parser = Result.fromThrowable(
-      SaleorOrderConfirmedLine.schema.parse,
-      SaleorOrderConfirmedLine.ParsingError.normalize,
+      SaleorOrderLine.schema.parse,
+      SaleorOrderLine.ParsingError.normalize,
     );
 
     const parsedPayload = parser(payload);
@@ -51,39 +38,24 @@ export class SaleorOrderConfirmedLine implements ISaleorOrderConfrimedOrderLine 
       return err(parsedPayload.error);
     }
 
-    return ok(new SaleorOrderConfirmedLine(parsedPayload.value, isTaxIncluded, isDiscounted));
-  }
+    return ok(new SaleorOrderLine(parsedPayload.value));
+  };
 
-  public getAmount() {
-    return this.isTaxIncluded ? this.data.totalPrice.gross.amount : this.data.totalPrice.net.amount;
-  }
+  getAmount = ({ isTaxIncluded }: { isTaxIncluded: boolean }) =>
+    isTaxIncluded ? this.data.totalPrice.gross.amount : this.data.totalPrice.net.amount;
 
-  public getTaxIncluded() {
-    return this.isTaxIncluded;
-  }
-
-  public getTaxCode(matches: AvataxTaxCodeMatches): string {
+  getTaxCode = (matches: AvataxTaxCodeMatches) => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
     return matcher.match({
       taxClassId: this.data.taxClass?.id,
       matches,
     });
-  }
+  };
 
-  public getQuantity(): number {
-    return this.data.quantity;
-  }
+  getQuantity = () => this.data.quantity;
 
-  public getItemCode(): string {
-    return this.data.productSku ?? this.data.productVariantId ?? "";
-  }
+  getItemCode = () => this.data.productSku ?? this.data.productVariantId ?? "";
 
-  public getDescription(): string {
-    return this.data.productName;
-  }
-
-  public getIsDiscounted(): boolean {
-    return this.isDiscounted;
-  }
+  getDescription = () => this.data.productName;
 }

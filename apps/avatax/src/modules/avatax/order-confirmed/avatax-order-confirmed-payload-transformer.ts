@@ -52,12 +52,6 @@ export class AvataxOrderConfirmedPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
-    const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer({
-      productLines: confirmedOrderEvent.getLines(),
-      shippingLine: confirmedOrderEvent.getShippingLine(avataxConfig),
-      hasShipping: confirmedOrderEvent.hasShipping(),
-      matches,
-    });
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
@@ -101,7 +95,11 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
-        lines: linesTransformer.transform(),
+        lines: AvataxOrderConfirmedPayloadLinesTransformer.transform({
+          confirmedOrderTransformerData: confirmedOrderEvent,
+          matches,
+          avataxConfig,
+        }),
         date,
         discount: discountUtils.sumDiscounts(
           order.discounts.map((discount) => discount.amount.amount),

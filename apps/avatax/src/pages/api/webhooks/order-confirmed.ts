@@ -36,7 +36,7 @@ export default wrapWithLoggerContext(
         }
 
         logger.info("Handler called with payload");
-        const confirmedOrderFromPayload = SaleorOrderConfirmedEvent.create(payload);
+        const confirmedOrderFromPayload = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
         if (confirmedOrderFromPayload.isErr()) {
           const error = confirmedOrderFromPayload.error;

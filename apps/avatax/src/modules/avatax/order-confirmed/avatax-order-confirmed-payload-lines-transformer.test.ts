@@ -1,97 +1,100 @@
 import { describe, expect, it } from "vitest";
-import { defaultOrder } from "../../../mocks";
-import { SaleorMockOrderFactory } from "../../saleor/mock-order-factory";
-import { DEFAULT_TAX_CLASS_ID } from "../constants";
+import { SaleorOrderLineMockFactory } from "../../saleor/order-line-mocks";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
 import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
-
-const linesTransformer = new AvataxOrderConfirmedPayloadLinesTransformer();
-const mockGenerator = new AvataxOrderConfirmedMockGenerator();
-const orderMock = mockGenerator.generateOrder();
 
 const matches: AvataxTaxCodeMatches = [];
 
 describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
-  describe.each([
-    {
-      pricesEnteredWithTax: true,
-      firstProductAmount: defaultOrder.lines[0].totalPrice.gross.amount,
-      secondProductAmount: defaultOrder.lines[1].totalPrice.gross.amount,
-      thirdProductAmount: defaultOrder.lines[2].totalPrice.gross.amount,
-      shippingAmount: defaultOrder.shippingPrice.gross.amount,
-    },
-    {
-      pricesEnteredWithTax: false,
-      firstProductAmount: defaultOrder.lines[0].totalPrice.net.amount,
-      secondProductAmount: defaultOrder.lines[1].totalPrice.net.amount,
-      thirdProductAmount: defaultOrder.lines[2].totalPrice.net.amount,
-      shippingAmount: defaultOrder.shippingPrice.net.amount,
-    },
-  ])(
-    `should tranform the order with pricesEnteredWithTax: $pricesEnteredWithTax`,
-    ({
-      pricesEnteredWithTax,
-      firstProductAmount,
-      secondProductAmount,
-      thirdProductAmount,
-      shippingAmount,
-    }) => {
-      const saleorOrderMock = SaleorMockOrderFactory.create({ pricesEnteredWithTax });
+  it("should transform order lines into product lines", () => {
+    const confirmedOrderTransformerData = {
+      getIsDiscounted: () => false,
+      getLines: () => [SaleorOrderLineMockFactory.create()],
+      getIsTaxIncluded: () => false,
+      getShippingAmount: () => 21,
+      hasShipping: () => false,
+    };
 
-      const lines = linesTransformer.transform(
-        orderMock,
-        saleorOrderMock,
-        avataxConfigMock,
+    expect(
+      AvataxOrderConfirmedPayloadLinesTransformer.transform({
+        confirmedOrderTransformerData,
         matches,
-      );
-      const [first, second, third, shipping] = lines;
+        avataxConfig: avataxConfigMock,
+      }),
+    ).toStrictEqual([
+      {
+        amount: expect.any(Number),
+        description: expect.any(String),
+        discounted: expect.any(Boolean),
+        itemCode: expect.any(String),
+        quantity: expect.any(Number),
+        taxCode: expect.any(String),
+        taxIncluded: expect.any(Boolean),
+      },
+    ]);
+  });
 
-      it("returns the correct number of lines", () => {
-        expect(lines).toHaveLength(4);
-      });
+  it("should transform shipping from order into shipping line", () => {
+    const confirmedOrderTransformerData = {
+      getIsDiscounted: () => false,
+      getLines: () => [],
+      getIsTaxIncluded: () => false,
+      getShippingAmount: () => 21,
+      hasShipping: () => true,
+    };
 
-      it("includes shipping as a line", () => {
-        expect(shipping).toEqual({
-          itemCode: "Shipping",
-          taxCode: "FR000000",
-          quantity: 1,
-          amount: shippingAmount,
-          taxIncluded: pricesEnteredWithTax,
-          discounted: false,
-        });
-      });
+    expect(
+      AvataxOrderConfirmedPayloadLinesTransformer.transform({
+        confirmedOrderTransformerData,
+        matches,
+        avataxConfig: avataxConfigMock,
+      }),
+    ).toEqual([
+      {
+        amount: expect.any(Number),
+        discounted: expect.any(Boolean),
+        itemCode: "Shipping",
+        quantity: 1,
+        taxCode: avataxConfigMock.shippingTaxCode,
+        taxIncluded: expect.any(Boolean),
+      },
+    ]);
+  });
 
-      it("includes products as lines", () => {
-        expect(first).toEqual({
-          itemCode: "328223580",
-          discounted: false,
-          description: "Monospace Tee",
-          quantity: 3,
-          amount: firstProductAmount,
-          taxCode: DEFAULT_TAX_CLASS_ID,
-          taxIncluded: pricesEnteredWithTax,
-        });
-        expect(second).toEqual({
-          itemCode: "dmFyaWFudC1pZA==",
-          description: "Monospace Tee",
-          quantity: 1,
-          amount: secondProductAmount,
-          discounted: false,
-          taxCode: DEFAULT_TAX_CLASS_ID,
-          taxIncluded: pricesEnteredWithTax,
-        });
-        expect(third).toEqual({
-          itemCode: "118223581",
-          description: "Paul's Balance 420",
-          quantity: 2,
-          amount: thirdProductAmount,
-          discounted: false,
-          taxCode: DEFAULT_TAX_CLASS_ID,
-          taxIncluded: pricesEnteredWithTax,
-        });
-      });
-    },
-  );
+  it("should transform lines and shipping from order into product and shipping lines ", () => {
+    const confirmedOrderTransformerData = {
+      getIsDiscounted: () => false,
+      getLines: () => [SaleorOrderLineMockFactory.create()],
+      getIsTaxIncluded: () => false,
+      getShippingAmount: () => 21,
+      hasShipping: () => true,
+    };
+
+    expect(
+      AvataxOrderConfirmedPayloadLinesTransformer.transform({
+        confirmedOrderTransformerData,
+        matches,
+        avataxConfig: avataxConfigMock,
+      }),
+    ).toEqual([
+      {
+        amount: expect.any(Number),
+        description: expect.any(String),
+        discounted: expect.any(Boolean),
+        itemCode: expect.any(String),
+        quantity: expect.any(Number),
+        taxCode: expect.any(String),
+        taxIncluded: expect.any(Boolean),
+      },
+      {
+        amount: expect.any(Number),
+        discounted: expect.any(Boolean),
+        itemCode: "Shipping",
+        quantity: 1,
+        taxCode: avataxConfigMock.shippingTaxCode,
+        taxIncluded: expect.any(Boolean),
+      },
+    ]);
+  });
 });

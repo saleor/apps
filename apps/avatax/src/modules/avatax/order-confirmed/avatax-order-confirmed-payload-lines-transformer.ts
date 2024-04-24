@@ -1,39 +1,45 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { ISaleorOrderConfrimedOrderLine } from "../../saleor";
-import { ISaleorOrderConfirmedShippingLine } from "../../saleor/shipping-line";
+import { ISaleorConfirmedOrderEvent } from "../../saleor";
+import { AvataxConfig } from "../avatax-connection-schema";
+import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
-export class AvataxOrderConfirmedPayloadLinesTransformer {
-  constructor(
-    private args: {
-      productLines: ISaleorOrderConfrimedOrderLine[];
-      shippingLine: ISaleorOrderConfirmedShippingLine;
-      hasShipping: boolean;
-      matches: AvataxTaxCodeMatches;
-    },
-  ) {}
+export type ConfirmedOrderTransformerData = Pick<
+  ISaleorConfirmedOrderEvent,
+  "getIsDiscounted" | "getLines" | "getIsTaxIncluded" | "getShippingAmount" | "hasShipping"
+>;
 
-  transform(): LineItemModel[] {
-    const productLines: LineItemModel[] = this.args.productLines.map((line) => ({
-      amount: line.getAmount(),
-      taxIncluded: line.getTaxIncluded(),
-      taxCode: line.getTaxCode(this.args.matches),
+export class AvataxOrderConfirmedPayloadLinesTransformer {
+  static transform({
+    confirmedOrderTransformerData,
+    matches,
+    avataxConfig,
+  }: {
+    confirmedOrderTransformerData: ConfirmedOrderTransformerData;
+    matches: AvataxTaxCodeMatches;
+    avataxConfig: AvataxConfig;
+  }): LineItemModel[] {
+    const { getIsTaxIncluded, getIsDiscounted, getLines, hasShipping, getShippingAmount } =
+      confirmedOrderTransformerData;
+
+    const productLines: LineItemModel[] = getLines().map((line) => ({
+      amount: line.getAmount({ isTaxIncluded: getIsTaxIncluded() }),
+      taxIncluded: getIsTaxIncluded(),
+      taxCode: line.getTaxCode(matches),
       quantity: line.getQuantity(),
-      discounted: line.getIsDiscounted(),
+      discounted: getIsDiscounted(),
       itemCode: line.getItemCode(),
       description: line.getDescription(),
     }));
 
-    if (this.args.hasShipping) {
-      const line = this.args.shippingLine;
-
+    if (hasShipping()) {
       const shippingLine: LineItemModel = {
-        amount: line.getAmount(),
-        taxIncluded: line.getIsTaxIncluded(),
-        taxCode: line.getShippingTaxCode(),
-        quantity: line.getQuantity(),
-        discounted: line.getIsDiscounted(),
-        itemCode: line.getItemCode(),
+        amount: getShippingAmount(),
+        taxIncluded: getIsTaxIncluded(),
+        taxCode: avataxConfig.shippingTaxCode,
+        quantity: 1,
+        discounted: getIsDiscounted(),
+        itemCode: SHIPPING_ITEM_CODE,
       };
 
       return [...productLines, shippingLine];

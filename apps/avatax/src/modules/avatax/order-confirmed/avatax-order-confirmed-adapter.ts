@@ -14,7 +14,7 @@ import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirme
 
 type AvataxOrderConfirmedPayload = {
   /**
-   * @deprecated use `saleorOrder` instead
+   * @deprecated use `ISaleorConfirmedOrderEvent` instead
    */
   order: DeprecatedOrderConfirmedSubscriptionFragment;
   confirmedOrderEvent: ISaleorConfirmedOrderEvent;

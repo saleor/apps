@@ -5,11 +5,11 @@ import * as Sentry from "@sentry/nextjs";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { SaleorCancelledOrderEvent } from "../../../modules/saleor/order";
+import { SaleorCancelledOrderEvent } from "../../../modules/saleor";
 import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
-} from "../../../modules/saleor/order-cancel-error";
+} from "../../../modules/saleor/order-cancelled/errors";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
 
 export const config = {
