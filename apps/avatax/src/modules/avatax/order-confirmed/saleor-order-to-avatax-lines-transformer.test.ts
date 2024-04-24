@@ -40,4 +40,41 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       },
     ]);
   });
+
+  it("should transform only lines from order into product if there is no shipping", () => {
+    const saleorConfirmedOrderEventWithoutShipping = SaleorOrderConfirmedEventFactory.create({
+      ...SaleorOrderConfirmedEventFactory.graphqlPayload,
+      order: {
+        ...SaleorOrderConfirmedEventFactory.graphqlPayload.order,
+        shippingPrice: {
+          gross: {
+            amount: 0,
+          },
+          net: {
+            amount: 0,
+          },
+        },
+      },
+    });
+
+    const { order } = SaleorOrderConfirmedEventFactory.graphqlPayload;
+
+    expect(
+      saleorOrderToAvataxLinesTransformer.transform({
+        confirmedOrderEvent: saleorConfirmedOrderEventWithoutShipping,
+        matches,
+        avataxConfig: avataxConfigMock,
+      }),
+    ).toStrictEqual([
+      {
+        amount: order.lines[0].totalPrice.gross.amount,
+        description: order.lines[0].productName,
+        discounted: false,
+        itemCode: order.lines[0].productSku,
+        quantity: order.lines[0].quantity,
+        taxCode: DEFAULT_TAX_CLASS_ID,
+        taxIncluded: true,
+      },
+    ]);
+  });
 });

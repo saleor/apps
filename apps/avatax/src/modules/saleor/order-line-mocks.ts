@@ -1,7 +1,8 @@
+import { OrderLineFragment } from "../../../generated/graphql";
 import { SaleorOrderLine } from "./order-line";
 
 export class SaleorOrderLineMockFactory {
-  public static graphqlPayload = {
+  static graphqlPayload = {
     totalPrice: {
       gross: {
         amount: 10,
@@ -27,10 +28,8 @@ export class SaleorOrderLineMockFactory {
     },
   };
 
-  public static create() {
-    const possibleOrderLine = SaleorOrderLine.createFromGraphQL(
-      SaleorOrderLineMockFactory.graphqlPayload,
-    );
+  static create(graphqlPayload: OrderLineFragment = SaleorOrderLineMockFactory.graphqlPayload) {
+    const possibleOrderLine = SaleorOrderLine.createFromGraphQL(graphqlPayload);
 
     if (possibleOrderLine.isErr()) {
       throw possibleOrderLine.error;

@@ -1,4 +1,5 @@
 import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
+import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 
@@ -44,10 +45,10 @@ export class SaleorOrderConfirmedEventFactory {
     __typename: "OrderConfirmed" as const,
   };
 
-  static create() {
-    const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(
-      SaleorOrderConfirmedEventFactory.graphqlPayload,
-    );
+  static create(
+    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventFactory.graphqlPayload,
+  ) {
+    const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(graphqlPayload);
 
     if (possibleOrderLine.isErr()) {
       throw possibleOrderLine.error;
