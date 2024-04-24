@@ -145,7 +145,7 @@ describe("CalculateTaxesUseCase", () => {
     const error = result._unsafeUnwrapErr();
 
     expect(error).toBeInstanceOf(CalculateTaxesUseCase.ConfigBrokenError);
-    expect(error.errors[0]).toBeInstanceOf(AppConfigExtractor.MissingMetadataError);
+    expect(error.errors![0]).toBeInstanceOf(AppConfigExtractor.MissingMetadataError);
   });
 
   it("Returns ConfigBrokenError when config was found, but config for selected channel was missing", async () => {
@@ -160,7 +160,7 @@ describe("CalculateTaxesUseCase", () => {
     const error = result._unsafeUnwrapErr();
 
     expect(error).toBeInstanceOf(CalculateTaxesUseCase.ConfigBrokenError);
-    expect(error.errors[0]).toBeInstanceOf(AvataxWebhookServiceFactory.BrokenConfigurationError);
+    expect(error.errors![0]).toBeInstanceOf(AvataxWebhookServiceFactory.BrokenConfigurationError);
   });
 
   it("Returns XXX error if taxes calculation fails", async () => {
@@ -174,6 +174,6 @@ describe("CalculateTaxesUseCase", () => {
 
     expect(error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
     // Expect any error to be attached. We dont yet specify errors so these tests will be added later
-    expect(error.errors[0]).toBeInstanceOf(Error);
+    expect(error.errors![0]).toBeInstanceOf(Error);
   });
 });

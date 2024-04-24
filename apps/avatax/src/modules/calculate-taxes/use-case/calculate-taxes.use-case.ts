@@ -78,7 +78,12 @@ export class CalculateTaxesUseCase {
   async calculateTaxes(
     payload: CalculateTaxesPayload,
     authData: AuthData,
-  ): Promise<Result<AvataxCalculateTaxesResponse, Error>> {
+  ): Promise<
+    Result<
+      AvataxCalculateTaxesResponse,
+      (typeof CalculateTaxesUseCase.CalculateTaxesUseCaseError)["prototype"]
+    >
+  > {
     const payloadVerificationResult = this.verifyPayload(payload);
 
     if (payloadVerificationResult.isErr()) {
