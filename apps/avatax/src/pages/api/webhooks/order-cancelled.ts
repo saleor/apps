@@ -2,6 +2,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -11,6 +12,8 @@ import {
   OrderCancelPayloadOrderError,
 } from "../../../modules/saleor/order-cancel-error";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
@@ -75,22 +78,57 @@ export default wrapWithLoggerContext(
 
         const channelSlug = cancelledOrderInstance.getChannelSlug();
 
-        const getActiveConnectionService = await import(
-          "../../../modules/taxes/get-active-connection-service"
-        ).then((m) => m.getActiveConnectionService);
+        const configExtractor = new AppConfigExtractor();
 
-        const taxProviderResult = getActiveConnectionService(channelSlug, appMetadata);
+        const config = configExtractor
+          .extractAppConfigFromPrivateMetadata(appMetadata)
+          .map((config) => {
+            try {
+              new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
+            } catch (e) {
+              captureException(
+                new AppConfigExtractor.LogConfigurationMetricError(
+                  "Failed to log configuration metric",
+                  {
+                    cause: e,
+                  },
+                ),
+              );
+            }
+
+            return config;
+          });
+
+        if (config.isErr()) {
+          logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+          return res.status(400).send("App configuration is broken");
+        }
+
+        const AvataxWebhookServiceFactory = await import(
+          "../../../modules/taxes/avatax-webhook-service-factory"
+        ).then((m) => m.AvataxWebhookServiceFactory);
+
+        const avataxWebhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
+          config.value,
+          channelSlug,
+        );
 
         logger.info("Cancelling order...");
 
-        if (taxProviderResult.isOk()) {
-          const { taxProvider, config } = taxProviderResult.value;
+        if (avataxWebhookServiceResult.isOk()) {
+          const { taxProvider } = avataxWebhookServiceResult.value;
+          const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+
+          if (providerConfig.isErr()) {
+            return res.status(400).send("App is not configured properly.");
+          }
 
           await taxProvider.cancelOrder(
             {
               avataxId: cancelledOrderInstance.getAvataxId(),
             },
-            config,
+            providerConfig.value.avataxConfig.config,
           );
 
           logger.info("Order cancelled");
@@ -98,11 +136,21 @@ export default wrapWithLoggerContext(
           return res.status(200).end();
         }
 
-        if (taxProviderResult.isErr()) {
-          logger.error("Tax provider couldn't cancel the order:", taxProviderResult.error);
+        if (avataxWebhookServiceResult.isErr()) {
+          logger.error("Tax provider couldn't cancel the order:", avataxWebhookServiceResult.error);
 
-          Sentry.captureException(taxProviderResult.error);
-          // TODO: Map errors
+          switch (avataxWebhookServiceResult.error["constructor"]) {
+            case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+              return res.status(400).send("App is not configured properly.");
+            }
+            default: {
+              Sentry.captureException(avataxWebhookServiceResult.error);
+              logger.fatal("Unhandled error", { error: avataxWebhookServiceResult.error });
+
+              return res.status(500).send("Unhandled error");
+            }
+          }
+
           return res.status(500).send("Unhandled error");
         }
       }),
