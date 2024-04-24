@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
-  ISaleorConfirmedOrderEvent,
+  SaleorOrderConfirmedEvent,
 } from "../../saleor";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
@@ -19,7 +19,7 @@ export class AvataxOrderConfirmedPayloadService {
 
   async getPayload(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    confirmedOrderEvent: ISaleorConfirmedOrderEvent,
+    confirmedOrderEvent: SaleorOrderConfirmedEvent,
     avataxConfig: AvataxConfig,
     authData: AuthData,
   ): Promise<CreateTransactionArgs> {

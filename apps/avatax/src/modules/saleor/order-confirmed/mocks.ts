@@ -1,4 +1,5 @@
 import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
+import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 
 export class SaleorOrderConfirmedEventFactory {
@@ -37,7 +38,7 @@ export class SaleorOrderConfirmedEventFactory {
         },
         currency: "USD",
       },
-      lines: [],
+      lines: [SaleorOrderLineMockFactory.graphqlPayload],
       __typename: "Order" as const,
     },
     __typename: "OrderConfirmed" as const,

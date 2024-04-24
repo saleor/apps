@@ -1,0 +1,43 @@
+import { describe, expect, it } from "vitest";
+import { SaleorOrderConfirmedEventFactory } from "../../saleor/order-confirmed/mocks";
+import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
+import { DEFAULT_TAX_CLASS_ID } from "../constants";
+import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
+import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
+
+const matches: AvataxTaxCodeMatches = [];
+const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
+const saleorConfirmedOrderEvent = SaleorOrderConfirmedEventFactory.create();
+
+describe("SaleorOrderToAvataxLinesTransformer", () => {
+  it("should transform lines and shipping from order into product and shipping lines ", () => {
+    const { order } = SaleorOrderConfirmedEventFactory.graphqlPayload;
+
+    expect(
+      saleorOrderToAvataxLinesTransformer.transform({
+        confirmedOrderEvent: saleorConfirmedOrderEvent,
+        matches,
+        avataxConfig: avataxConfigMock,
+      }),
+    ).toStrictEqual([
+      {
+        amount: order.lines[0].totalPrice.gross.amount,
+        description: order.lines[0].productName,
+        discounted: false,
+        itemCode: order.lines[0].productSku,
+        quantity: order.lines[0].quantity,
+        taxCode: DEFAULT_TAX_CLASS_ID,
+        taxIncluded: true,
+      },
+      {
+        amount: order.shippingPrice.gross.amount,
+        discounted: false,
+        itemCode: SHIPPING_ITEM_CODE,
+        quantity: 1,
+        taxCode: avataxConfigMock.shippingTaxCode,
+        taxIncluded: expect.any(Boolean),
+      },
+    ]);
+  });
+});

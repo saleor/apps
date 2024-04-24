@@ -2,7 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "../../../logger";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
-  ISaleorConfirmedOrderEvent,
+  SaleorOrderConfirmedEvent,
 } from "../../saleor";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -14,10 +14,10 @@ import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirme
 
 type AvataxOrderConfirmedPayload = {
   /**
-   * @deprecated use `ISaleorConfirmedOrderEvent` instead
+   * @deprecated use `SaleorOrderConfirmedEvent` instead
    */
   order: DeprecatedOrderConfirmedSubscriptionFragment;
-  confirmedOrderEvent: ISaleorConfirmedOrderEvent;
+  confirmedOrderEvent: SaleorOrderConfirmedEvent;
 };
 type AvataxOrderConfirmedResponse = CreateOrderResponse;
 

@@ -4,7 +4,7 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
-  ISaleorConfirmedOrderEvent,
+  SaleorOrderConfirmedEvent,
 } from "../../saleor";
 import { discountUtils } from "../../taxes/discount-utils";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
@@ -16,7 +16,7 @@ import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxOrderConfirmedPayloadLinesTransformer } from "./avatax-order-confirmed-payload-lines-transformer";
+import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
@@ -48,10 +48,11 @@ export class AvataxOrderConfirmedPayloadTransformer {
   }
   async transform(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    confirmedOrderEvent: ISaleorConfirmedOrderEvent,
+    confirmedOrderEvent: SaleorOrderConfirmedEvent,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): Promise<CreateTransactionArgs> {
+    const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
@@ -95,8 +96,8 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
-        lines: AvataxOrderConfirmedPayloadLinesTransformer.transform({
-          confirmedOrderTransformerData: confirmedOrderEvent,
+        lines: saleorOrderToAvataxLinesTransformer.transform({
+          confirmedOrderEvent,
           matches,
           avataxConfig,
         }),
