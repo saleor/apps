@@ -2,6 +2,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../logger";
@@ -10,14 +11,14 @@ import { OrderMetadataManager } from "../../../modules/app/order-metadata-manage
 import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
-import { ActiveConnectionServiceErrors } from "../../../modules/taxes/get-active-connection-service-errors";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 export default wrapWithLoggerContext(
@@ -66,28 +67,63 @@ export default wrapWithLoggerContext(
 
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
+            const configExtractor = new AppConfigExtractor();
+
+            const config = configExtractor
+              .extractAppConfigFromPrivateMetadata(appMetadata)
+              .map((config) => {
+                try {
+                  new AppConfigurationLogger(logger).logConfiguration(
+                    config,
+                    saleorOrder.channelSlug,
+                  );
+                } catch (e) {
+                  captureException(
+                    new AppConfigExtractor.LogConfigurationMetricError(
+                      "Failed to log configuration metric",
+                      {
+                        cause: e,
+                      },
+                    ),
+                  );
+                }
+
+                return config;
+              });
+
+            if (config.isErr()) {
+              logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+              return res.status(400).send("App configuration is broken");
+            }
+
             metadataCache.setMetadata(appMetadata);
 
-            const getActiveConnectionService = await import(
-              "../../../modules/taxes/get-active-connection-service"
-            ).then((m) => m.getActiveConnectionService);
+            const AvataxWebhookServiceFactory = await import(
+              "../../../modules/taxes/avatax-webhook-service-factory"
+            ).then((m) => m.AvataxWebhookServiceFactory);
 
-            const taxProviderResult = getActiveConnectionService(
+            const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
+              config.value,
               saleorOrder.channelSlug,
-              appMetadata,
             );
 
             logger.debug("Confirming order...");
 
-            if (taxProviderResult.isOk()) {
-              const { config, taxProvider } = taxProviderResult.value;
+            if (webhookServiceResult.isOk()) {
+              const { taxProvider } = webhookServiceResult.value;
+              const providerConfig = config.value.getConfigForChannelSlug(saleorOrder.channelSlug);
+
+              if (providerConfig.isErr()) {
+                return res.status(400).send("App is not configured properly.");
+              }
 
               try {
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
                   saleorOrder,
-                  config,
+                  providerConfig.value.avataxConfig.config,
                   ctx.authData,
                 );
 
@@ -121,34 +157,17 @@ export default wrapWithLoggerContext(
               }
             }
 
-            if (taxProviderResult.isErr()) {
-              const error = taxProviderResult.error;
+            if (webhookServiceResult.isErr()) {
+              const error = webhookServiceResult.error;
 
               logger.debug("Error confirming order", { error });
 
-              switch (true) {
-                case error instanceof ActiveConnectionServiceErrors.WrongChannelError: {
-                  /**
-                   * Subscription can listen on every channel or no channels.
-                   * However, app works only for some of them (which are configured to be used with taxes routing).
-                   * If this happens, webhook will be received, but this is no-op.
-                   */
-                  return res.status(202).send("Channel not configured with the app.");
-                }
-
-                case error instanceof ActiveConnectionServiceErrors.MissingMetadataError:
-                case error instanceof
-                  ActiveConnectionServiceErrors.ProviderNotAssignedToChannelError:
-                case error instanceof ActiveConnectionServiceErrors.BrokenConfigurationError: {
+              switch (error["constructor"]) {
+                case AvataxWebhookServiceFactory.BrokenConfigurationError: {
                   return res.status(400).send("App is not configured properly.");
                 }
-                case error instanceof ActiveConnectionServiceErrors.MissingChannelSlugError: {
-                  return res
-                    .status(500)
-                    .send("Webhook didn't contain channel slug. This should not happen.");
-                }
                 default: {
-                  Sentry.captureException(taxProviderResult.error);
+                  Sentry.captureException(webhookServiceResult.error);
                   logger.fatal("Unhandled error", { error });
 
                   return res.status(500).send("Unhandled error");
