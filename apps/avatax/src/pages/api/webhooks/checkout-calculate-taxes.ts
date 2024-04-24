@@ -1,5 +1,6 @@
 import { withOtel } from "@saleor/apps-otel";
 import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
@@ -10,7 +11,7 @@ import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { captureException } from "@sentry/nextjs";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
@@ -47,6 +48,34 @@ export default wrapWithLoggerContext(
           logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
+          const channelSlug = payload.taxBase.channel.slug;
+
+          const configExtractor = new AppConfigExtractor();
+
+          const config = configExtractor
+            .extractAppConfigFromPrivateMetadata(appMetadata)
+            .map((config) => {
+              try {
+                new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
+              } catch (e) {
+                captureException(
+                  new AppConfigExtractor.LogConfigurationMetricError(
+                    "Failed to log configuration metric",
+                    {
+                      cause: e,
+                    },
+                  ),
+                );
+              }
+
+              return config;
+            });
+
+          if (config.isErr()) {
+            logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+            return res.status(400).send("App configuration is broken");
+          }
 
           metadataCache.setMetadata(appMetadata);
 
