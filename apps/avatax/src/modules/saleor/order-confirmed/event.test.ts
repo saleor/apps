@@ -27,114 +27,124 @@ describe("SaleorOrderConfirmedEvent", () => {
     }
   });
 
-  it("should return true if order has status FULLFILLED", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+  describe("isFulfilled method", () => {
+    it("should return true if order has status FULLFILLED", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(event.isFulfilled()).toBe(true);
+      expect(event.isFulfilled()).toBe(true);
+    });
+
+    it("should return false if order has other status than FULLFILLED", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...validPayload,
+        order: {
+          ...validPayload.order,
+          status: OrderStatus.Canceled,
+        },
+      })._unsafeUnwrap();
+
+      expect(event.isFulfilled()).toBe(false);
+    });
   });
 
-  it("should return false if order has other status than FULLFILLED", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
-      order: {
-        ...validPayload.order,
-        status: OrderStatus.Canceled,
-      },
-    })._unsafeUnwrap();
+  describe("isStrategyFlatRates method", () => {
+    it("should return false if order has tax calculation startegy set to TAX_APP", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(event.isFulfilled()).toBe(false);
-  });
+      expect(event.isStrategyFlatRates()).toBe(false);
+    });
 
-  it("should return false if order has tax calculation startegy set to TAX_APP", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
-
-    expect(event.isStrategyFlatRates()).toBe(false);
-  });
-
-  it("should return true if order has tax calculation startegy set to FLAT_RATES", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
-      order: {
-        ...validPayload.order,
-        channel: {
-          slug: "channel-slug",
-          id: "channel-id",
-          taxConfiguration: {
-            pricesEnteredWithTax: true,
-            taxCalculationStrategy: "FLAT_RATES",
+    it("should return true if order has tax calculation startegy set to FLAT_RATES", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...validPayload,
+        order: {
+          ...validPayload.order,
+          channel: {
+            slug: "channel-slug",
+            id: "channel-id",
+            taxConfiguration: {
+              pricesEnteredWithTax: true,
+              taxCalculationStrategy: "FLAT_RATES",
+            },
           },
         },
-      },
-    })._unsafeUnwrap();
+      })._unsafeUnwrap();
 
-    expect(event.isStrategyFlatRates()).toBe(true);
+      expect(event.isStrategyFlatRates()).toBe(true);
+    });
   });
 
-  it("should return false if order don't have discounts", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+  describe("getIsDiscounted method", () => {
+    it("should return false if order don't have discounts", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(event.getIsDiscounted()).toEqual(false);
+      expect(event.getIsDiscounted()).toEqual(false);
+    });
+
+    it("should return true if order have discounts", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...validPayload,
+        order: {
+          ...validPayload.order,
+          discounts: [{ id: "discount-id", amount: { amount: 10 } }],
+        },
+      })._unsafeUnwrap();
+
+      expect(event.getIsDiscounted()).toEqual(true);
+    });
   });
 
-  it("should return true if order have discounts", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
-      order: {
-        ...validPayload.order,
-        discounts: [{ id: "discount-id", amount: { amount: 10 } }],
-      },
-    })._unsafeUnwrap();
-
-    expect(event.getIsDiscounted()).toEqual(true);
-  });
-
-  it("should return false if order has shippingPrice net set to 0", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
-      order: {
-        ...validPayload.order,
-        shippingPrice: {
-          gross: {
-            amount: 10,
-          },
-          net: {
-            amount: 0,
+  describe("hasShipping method", () => {
+    it("should return false if order has shippingPrice net set to 0", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...validPayload,
+        order: {
+          ...validPayload.order,
+          shippingPrice: {
+            gross: {
+              amount: 10,
+            },
+            net: {
+              amount: 0,
+            },
           },
         },
-      },
-    })._unsafeUnwrap();
+      })._unsafeUnwrap();
 
-    expect(event.hasShipping()).toEqual(false);
+      expect(event.hasShipping()).toEqual(false);
+    });
+
+    it("should return true if order has shippingPrice net set to value other than 0", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+
+      expect(event.hasShipping()).toEqual(true);
+    });
   });
 
-  it("should return true if order has shippingPrice net set to value other than 0", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+  describe("getShippingAmount method", () => {
+    it("should get shipping amount as shippingPrice gross with tax included", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(event.hasShipping()).toEqual(true);
-  });
+      expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.gross.amount);
+    });
 
-  it("should get shipping amount as shippingPrice gross with tax included", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
-
-    expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.gross.amount);
-  });
-
-  it("should get shipping amount as shippingPrice net without tax included", () => {
-    const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
-      order: {
-        ...validPayload.order,
-        channel: {
-          slug: "channel-slug",
-          id: "channel-id",
-          taxConfiguration: {
-            pricesEnteredWithTax: false,
-            taxCalculationStrategy: "FLAT_RATES",
+    it("should get shipping amount as shippingPrice net without tax included", () => {
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...validPayload,
+        order: {
+          ...validPayload.order,
+          channel: {
+            slug: "channel-slug",
+            id: "channel-id",
+            taxConfiguration: {
+              pricesEnteredWithTax: false,
+              taxCalculationStrategy: "FLAT_RATES",
+            },
           },
         },
-      },
-    })._unsafeUnwrap();
+      })._unsafeUnwrap();
 
-    expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.net.amount);
+      expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.net.amount);
+    });
   });
 });

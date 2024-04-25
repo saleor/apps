@@ -75,7 +75,7 @@ export default wrapWithLoggerContext(
                 try {
                   new AppConfigurationLogger(logger).logConfiguration(
                     config,
-                    saleorOrder.channelSlug,
+                    confirmedOrderEvent.getChannelSlug(),
                   );
                 } catch (e) {
                   captureException(
@@ -105,14 +105,16 @@ export default wrapWithLoggerContext(
 
             const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
               config.value,
-              saleorOrder.channelSlug,
+              confirmedOrderEvent.getChannelSlug(),
             );
 
             logger.debug("Confirming order...");
 
             if (webhookServiceResult.isOk()) {
               const { taxProvider } = webhookServiceResult.value;
-              const providerConfig = config.value.getConfigForChannelSlug(saleorOrder.channelSlug);
+              const providerConfig = config.value.getConfigForChannelSlug(
+                confirmedOrderEvent.getChannelSlug(),
+              );
 
               if (providerConfig.isErr()) {
                 return res.status(400).send("App is not configured properly.");
@@ -122,7 +124,7 @@ export default wrapWithLoggerContext(
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
-                  saleorOrder,
+                  confirmedOrderEvent,
                   providerConfig.value.avataxConfig.config,
                   ctx.authData,
                 );

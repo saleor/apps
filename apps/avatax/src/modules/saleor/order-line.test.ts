@@ -24,40 +24,44 @@ describe("SaleorOrderLine", () => {
     }
   });
 
-  it("should get gross amount when tax is included", () => {
-    const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+  describe("getAmount method", () => {
+    it("should get gross amount when tax is included", () => {
+      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(line.getAmount({ isTaxIncluded: true })).toBe(validPayload.totalPrice.gross.amount);
+      expect(line.getAmount({ isTaxIncluded: true })).toBe(validPayload.totalPrice.gross.amount);
+    });
+
+    it("should get net amount when tax is not included", () => {
+      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+
+      expect(line.getAmount({ isTaxIncluded: false })).toBe(validPayload.totalPrice.net.amount);
+    });
   });
 
-  it("should get net amount when tax is not included", () => {
-    const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+  describe("getItemCode method", () => {
+    it("should get product sku as item code if present", () => {
+      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
 
-    expect(line.getAmount({ isTaxIncluded: false })).toBe(validPayload.totalPrice.net.amount);
-  });
+      expect(line.getItemCode()).toBe(validPayload.productSku);
+    });
 
-  it("should get product sku as item code if present", () => {
-    const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+    it("should get product variant id as item code if sku is not present", () => {
+      const line = SaleorOrderLine.createFromGraphQL({
+        ...validPayload,
+        productSku: null,
+      })._unsafeUnwrap();
 
-    expect(line.getItemCode()).toBe(validPayload.productSku);
-  });
+      expect(line.getItemCode()).toBe(validPayload.productVariantId);
+    });
 
-  it("should get product variant id as item code if sku is not present", () => {
-    const line = SaleorOrderLine.createFromGraphQL({
-      ...validPayload,
-      productSku: null,
-    })._unsafeUnwrap();
+    it("should get empty string as item code if neither sku nor variant id is present", () => {
+      const line = SaleorOrderLine.createFromGraphQL({
+        ...validPayload,
+        productSku: null,
+        productVariantId: null,
+      })._unsafeUnwrap();
 
-    expect(line.getItemCode()).toBe(validPayload.productVariantId);
-  });
-
-  it("should get empty string as item code if neither sku nor variant id is present", () => {
-    const line = SaleorOrderLine.createFromGraphQL({
-      ...validPayload,
-      productSku: null,
-      productVariantId: null,
-    })._unsafeUnwrap();
-
-    expect(line.getItemCode()).toBe("");
+      expect(line.getItemCode()).toBe("");
+    });
   });
 });

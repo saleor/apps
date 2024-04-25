@@ -1,8 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import {
-  DeprecatedOrderConfirmedSubscriptionFragment,
-  ISaleorConfirmedOrderEvent,
-} from "../saleor";
+import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrderConfirmedEvent } from "../saleor";
 import { CancelOrderPayload, ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { AvataxClient } from "./avatax-client";
@@ -28,7 +25,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
 
   async confirmOrder(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    confirmedOrderEvent: ISaleorConfirmedOrderEvent,
+    confirmedOrderEvent: SaleorOrderConfirmedEvent,
     avataxConfig: AvataxConfig,
     authData: AuthData,
   ) {

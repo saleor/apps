@@ -10,6 +10,9 @@ const match = {
 };
 
 describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
+  // We don't use global constant here so if someone changes default tax id in the future, this test will fail
+  const CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID = "P0000000";
+
   it("should return default tax class id if Saleor tax class is not found in tax classes from Avatax", () => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
@@ -18,7 +21,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
         taxClassId: "non-existing",
         matches: [match],
       }),
-    ).toEqual("P0000000");
+    ).toEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
   });
 
   it("should return tax code if Saleor tax class is found in Avatax tax classes", () => {
@@ -40,6 +43,6 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
         taxClassId: "tax-class-id",
         matches: [],
       }),
-    ).toEqual("P0000000");
+    ).toEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
   });
 });
