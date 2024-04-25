@@ -41,5 +41,6 @@
   },
   "saleor": {
     "schemaVersion": "3.19"
-  }
+  },
+  "type": "module"
 }
