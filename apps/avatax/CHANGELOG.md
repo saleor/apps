@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.4.5
+
+### Patch Changes
+
+- 7902ddee: Added more data to logs when app is calling AvaTax
+
 ## 1.4.4
 
 ### Patch Changes
