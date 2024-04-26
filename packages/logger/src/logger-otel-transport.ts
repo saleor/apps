@@ -1,7 +1,7 @@
-import { ILogObj, Logger } from "tslog";
-import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
 import { context } from "@opentelemetry/api";
+import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import { ILogObj, Logger } from "tslog";
 import { LoggerContext } from "./logger-context";
 
 export const attachLoggerOtelTransport = (
@@ -29,13 +29,6 @@ export const attachLoggerOtelTransport = (
       ...attributes,
     }).reduce(
       (acc, [key, value]) => {
-        /**
-         * Prune empty keys, to save bandwidth
-         */
-        if (!value) {
-          return acc;
-        }
-
         if (Array.isArray(value)) {
           acc[key] = JSON.stringify(value);
         } else {
