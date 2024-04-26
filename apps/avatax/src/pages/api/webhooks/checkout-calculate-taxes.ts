@@ -5,6 +5,9 @@ import { createLogger } from "../../../logger";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { GraphQLError } from "graphql";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { loggerContext } from "../../../logger-context";
 import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calculate-taxes/missing-address-avatax-webhook-service";
@@ -14,8 +17,6 @@ import {
 } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 
 export const config = {
   api: {
@@ -39,6 +40,19 @@ export default wrapWithLoggerContext(
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
+
+          // @ts-expect-errors - not typed field
+          if (payload.errors) {
+            // @ts-expect-errors - not typed field
+            logger.warn("Payload contains errors", { errors: payload.errors });
+            // @ts-expect-errors - not typed field
+            const errors = payload.errors as GraphQLError[];
+
+            captureException(new Error("Payload contains errors"));
+          }
+
+          console.log("payload", payload);
+
           if (payload.version) {
             Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
             loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
