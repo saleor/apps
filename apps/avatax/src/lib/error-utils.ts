@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
 import { GraphQLError } from "graphql";
+import { BaseError } from "../error";
 import { createLogger } from "../logger";
 
 function resolveTrpcClientError(error: unknown) {
@@ -14,6 +15,39 @@ function resolveTrpcClientError(error: unknown) {
 export const errorUtils = {
   resolveTrpcClientError,
 };
+
+export class SubscriptionPayloadErrorChecker {
+  static SubscriptionPayloadError = BaseError.subclass("SubscriptionPayloadError");
+
+  static check(payload: any, subscription: string) {
+    // errors field is not yet typed on subscription payloads
+    const possibleErrors = payload?.errors as GraphQLError[];
+
+    if (possibleErrors) {
+      logger.warn(`Payload contains GraphQL errors ${subscription}`, { subscription });
+
+      possibleErrors.forEach((error) => {
+        const graphQLError = new SubscriptionPayloadErrorChecker.SubscriptionPayloadError(
+          error.message,
+          {
+            props: {
+              subscription,
+              source: error.source,
+            },
+          },
+        );
+
+        logger.error("GraphQL error", {
+          error: graphQLError,
+          subscription,
+        });
+
+        captureException(graphQLError);
+      });
+    }
+  }
+  constructor() {}
+}
 
 const logger = createLogger("errorUtils");
 
