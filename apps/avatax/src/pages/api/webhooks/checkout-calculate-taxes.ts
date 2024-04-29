@@ -9,6 +9,7 @@ import { GraphQLError } from "graphql";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { loggerContext } from "../../../logger-context";
 import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calculate-taxes/missing-address-avatax-webhook-service";
 import {
@@ -24,7 +25,11 @@ export const config = {
   },
 };
 
+const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
+
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 /**
  * TODO: Add tests to handler
@@ -33,10 +38,10 @@ export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
-
         try {
           const { payload } = ctx;
+
+          subscriptionErrorChecker.checkPayload(payload);
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);

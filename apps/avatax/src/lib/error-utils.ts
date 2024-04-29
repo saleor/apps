@@ -1,10 +1,12 @@
-import { captureException } from "@sentry/nextjs";
 import { TRPCClientError } from "@trpc/client";
 import { GraphQLError } from "graphql";
 import { BaseError } from "../error";
-import { createLogger } from "../logger";
+import { logger } from "../logger";
+import { CalculateTaxesPayload } from "../modules/webhooks/payloads/calculate-taxes-payload";
+import { OrderCancelledPayload } from "../modules/webhooks/payloads/order-cancelled-payload";
+import { OrderConfirmedPayload } from "../modules/webhooks/payloads/order-confirmed-payload";
 
-function resolveTrpcClientError(error: unknown) {
+export function resolveTrpcClientError(error: unknown) {
   if (error instanceof TRPCClientError) {
     return error.message;
   }
@@ -12,20 +14,21 @@ function resolveTrpcClientError(error: unknown) {
   return "Unknown error";
 }
 
-export const errorUtils = {
-  resolveTrpcClientError,
-};
-
 export class SubscriptionPayloadErrorChecker {
   static SubscriptionPayloadError = BaseError.subclass("SubscriptionPayloadError");
 
-  static check(payload: any, subscription: string) {
-    // errors field is not yet typed on subscription payloads
+  constructor(
+    private injectedLogger: Pick<typeof logger, "error">,
+    private injectedErrorCapture: (expection: any) => void,
+  ) {}
+
+  checkPayload(payload: CalculateTaxesPayload | OrderCancelledPayload | OrderConfirmedPayload) {
+    // @ts-expect-error errors field is not yet typed on subscription payloads
     const possibleErrors = payload?.errors as GraphQLError[];
 
-    if (possibleErrors) {
-      logger.warn(`Payload contains GraphQL errors ${subscription}`, { subscription });
+    const subscription = payload.__typename;
 
+    if (possibleErrors) {
       possibleErrors.forEach((error) => {
         const graphQLError = new SubscriptionPayloadErrorChecker.SubscriptionPayloadError(
           error.message,
@@ -37,44 +40,13 @@ export class SubscriptionPayloadErrorChecker {
           },
         );
 
-        logger.error("GraphQL error", {
+        this.injectedLogger.error(`Payload contains GraphQL error for ${subscription}`, {
           error: graphQLError,
           subscription,
         });
 
-        captureException(graphQLError);
+        this.injectedErrorCapture(graphQLError);
       });
     }
   }
-  constructor() {}
 }
-
-const logger = createLogger("errorUtils");
-
-export const checkSubscriptionPayloadForGraphQLErrors = (payload: any, subscription: string) => {
-  // errors field is not yet typed on subscription payloads
-  const possibleErrors = payload?.errors as GraphQLError[];
-
-  if (possibleErrors) {
-    logger.warn(`Payload contains GraphQL errors ${subscription}`, { subscription });
-
-    possibleErrors.forEach((error) => {
-      const graphQLError = new GraphQLError(
-        error.message,
-        error.nodes,
-        error.source,
-        error.positions,
-        error.path,
-        error.originalError,
-        error.extensions,
-      );
-
-      logger.error("GraphQL error", {
-        error: graphQLError,
-        subscription,
-      });
-
-      captureException(graphQLError);
-    });
-  }
-};

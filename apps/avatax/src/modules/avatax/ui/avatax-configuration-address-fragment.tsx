@@ -4,12 +4,12 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { errorUtils } from "../../../lib/error-utils";
+import { resolveTrpcClientError } from "../../../lib/error-utils";
 import { CountrySelect } from "../../ui/country-select";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { FormSection } from "./form-section";
-import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 
 const FieldSuggestion = ({ suggestion }: { suggestion: string }) => {
   return (
@@ -83,7 +83,7 @@ export const AvataxConfigurationAddressFragment = (
       setStatus("address_valid");
     } catch (e) {
       setStatus("address_invalid");
-      notifyError("Invalid address", errorUtils.resolveTrpcClientError(e));
+      notifyError("Invalid address", resolveTrpcClientError(e));
     }
   }, [getValues, notifyError, notifyInfo, notifySuccess, props, setStatus]);
 

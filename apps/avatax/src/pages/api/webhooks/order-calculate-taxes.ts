@@ -2,15 +2,16 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "../../../logger";
-import { loggerContext } from "../../../logger-context";
-import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
+import { captureException } from "@sentry/nextjs";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { captureException } from "@sentry/nextjs";
+import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
+import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -18,16 +19,20 @@ export const config = {
   },
 };
 
+const logger = createLogger("orderCalculateTaxesSyncWebhook");
+
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("orderCalculateTaxesSyncWebhook");
-
         try {
           const { payload } = ctx;
+
+          subscriptionErrorChecker.checkPayload(payload);
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
