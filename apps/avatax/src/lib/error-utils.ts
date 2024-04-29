@@ -36,6 +36,7 @@ export class SubscriptionPayloadErrorChecker {
             props: {
               subscription,
               source: error.source,
+              path: error.path,
             },
           },
         );
