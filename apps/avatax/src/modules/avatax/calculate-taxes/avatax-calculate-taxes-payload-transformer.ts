@@ -1,14 +1,13 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { discountUtils } from "../../taxes/discount-utils";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -56,9 +55,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
         currencyCode: payload.taxBase.currency,
         lines: payloadLinesTransformer.transform(payload.taxBase, avataxConfig, matches),
         date: new Date(),
-        discount: discountUtils.sumDiscounts(
-          payload.taxBase.discounts.map((discount) => discount.amount.amount),
-        ),
       },
     };
   }

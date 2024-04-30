@@ -17,7 +17,7 @@ export const avataxShippingLine = {
     amount: number;
     taxCode: string | undefined;
     taxIncluded: boolean;
-    discounted: boolean;
+    discounted?: boolean;
   }): LineItemModel {
     return {
       amount,
@@ -26,6 +26,7 @@ export const avataxShippingLine = {
       itemCode: SHIPPING_ITEM_CODE,
       quantity: 1,
       discounted,
+      ref1: "Discounted shipping line",
     };
   },
   getFromTransactionModel(transactionModel: TransactionModel) {

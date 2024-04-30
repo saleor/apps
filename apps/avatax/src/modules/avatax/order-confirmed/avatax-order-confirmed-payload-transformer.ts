@@ -3,7 +3,6 @@ import * as Sentry from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
-import { discountUtils } from "../../taxes/discount-utils";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
@@ -95,9 +94,6 @@ export class AvataxOrderConfirmedPayloadTransformer {
         email: order.user?.email ?? order.userEmail ?? "",
         lines: linesTransformer.transform(order, saleorOrder, avataxConfig, matches),
         date,
-        discount: discountUtils.sumDiscounts(
-          order.discounts.map((discount) => discount.amount.amount),
-        ),
       },
     };
   }

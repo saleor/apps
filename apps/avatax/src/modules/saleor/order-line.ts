@@ -35,7 +35,7 @@ export class SaleorOrderLine {
     net: number;
     taxCode: string;
     quantity: number;
-    discounted: boolean;
+    discounted?: boolean;
     productSku: SKU;
     productVariantId: VariantId;
     description: string;
@@ -49,6 +49,7 @@ export class SaleorOrderLine {
       discounted,
       itemCode: this.getItemCode(productSku, productVariantId),
       description,
+      ref1: "Discounted line",
     };
   }
 }

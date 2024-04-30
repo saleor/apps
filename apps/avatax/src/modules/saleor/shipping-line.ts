@@ -24,7 +24,7 @@ export class SaleorShippingLine {
     net: number;
     gross: number;
     taxCode: string | undefined;
-    discounted: boolean;
+    discounted?: boolean;
     taxIncluded: boolean;
   }): LineItemModel {
     return {
@@ -34,6 +34,7 @@ export class SaleorShippingLine {
       quantity: 1,
       discounted,
       itemCode: SHIPPING_ITEM_CODE,
+      ref1: "Discounted shipping line",
     };
   }
 }
