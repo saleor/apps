@@ -1,14 +1,20 @@
 import { MetadataItem } from "../../generated/graphql";
-import { err, fromThrowable, ok } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 import { getAppConfig } from "../modules/app/get-app-config";
 import { BaseError } from "../error";
 import { AppConfig } from "./app-config";
 import { createLogger } from "../logger";
 
+export interface IAppConfigExtractor {
+  extractAppConfigFromPrivateMetadata(
+    encryptedPrivateMetadata: MetadataItem[],
+  ): Result<AppConfig, (typeof BaseError)["prototype"]>;
+}
+
 /**
  * Extracts app configuration from metadata. Performs initial validation, shared by all clients
  */
-export class AppConfigExtractor {
+export class AppConfigExtractor implements IAppConfigExtractor {
   static AppConfigExtractorError = BaseError.subclass("AppConfigExtractorError");
   static MissingMetadataError = this.AppConfigExtractorError.subclass("MissingMetadataError");
   static CantResolveAppConfigError = this.AppConfigExtractorError.subclass(
