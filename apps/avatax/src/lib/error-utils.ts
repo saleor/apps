@@ -19,7 +19,9 @@ export class SubscriptionPayloadErrorChecker {
 
   constructor(
     private injectedLogger: Pick<typeof logger, "error">,
-    private injectedErrorCapture: (expection: any) => void,
+    private injectedErrorCapture: (
+      exception: InstanceType<typeof SubscriptionPayloadErrorChecker.SubscriptionPayloadError>,
+    ) => void,
   ) {}
 
   checkPayload(payload: CalculateTaxesPayload | OrderCancelledPayload | OrderConfirmedPayload) {
