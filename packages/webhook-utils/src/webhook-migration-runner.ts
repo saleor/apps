@@ -56,7 +56,7 @@ export class WebhookMigrationRunner {
 
       await updater.update();
 
-      logger.info(`Migration finished successfully.`);
+      logger.info("Migration finished successfully");
     } catch (error) {
       switch (true) {
         case error instanceof AppPermissionDeniedError:
