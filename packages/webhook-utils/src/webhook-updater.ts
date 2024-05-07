@@ -97,8 +97,6 @@ export class WebhookUpdater {
         logger.debug("Webhook removed");
         this.removedWebhooks.push(webhookDetails);
       }
-
-      logger.info("Migration finished successfully");
     } catch (error) {
       logger.error("Error during update procedure, rolling back changes", { error });
 
