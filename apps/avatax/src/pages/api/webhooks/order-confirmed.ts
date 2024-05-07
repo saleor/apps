@@ -3,32 +3,37 @@ import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+const logger = createLogger("orderConfirmedAsyncWebhook");
+
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("orderConfirmedAsyncWebhook", {
-          saleorApiUrl: ctx.authData.saleorApiUrl,
-        });
         const { payload, authData } = ctx;
+
+        subscriptionErrorChecker.checkPayload(payload);
+
         const { saleorApiUrl, token } = authData;
 
         if (payload.version) {

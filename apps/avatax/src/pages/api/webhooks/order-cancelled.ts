@@ -3,7 +3,10 @@ import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { SaleorCancelledOrderEvent } from "../../../modules/saleor/order";
@@ -12,8 +15,6 @@ import {
   OrderCancelPayloadOrderError,
 } from "../../../modules/saleor/order-cancel-error";
 import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
@@ -21,16 +22,17 @@ export const config = {
   },
 };
 
+const logger = createLogger("orderCancelledAsyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("orderCancelledAsyncWebhook", {
-          saleorApiUrl: ctx.authData.saleorApiUrl,
-        });
         const { payload } = ctx;
+
+        subscriptionErrorChecker.checkPayload(payload);
 
         if (payload.version) {
           Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
@@ -150,8 +152,6 @@ export default wrapWithLoggerContext(
               return res.status(500).send("Unhandled error");
             }
           }
-
-          return res.status(500).send("Unhandled error");
         }
       }),
     ),

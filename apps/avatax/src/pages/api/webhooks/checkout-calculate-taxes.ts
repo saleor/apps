@@ -5,13 +5,14 @@ import { createLogger } from "../../../logger";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { AppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { loggerContext } from "../../../logger-context";
+import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 
 export const config = {
   api: {
@@ -19,8 +20,11 @@ export const config = {
   },
 };
 
+const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
+
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
 });
@@ -32,10 +36,10 @@ export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
-
         try {
           const { payload, authData } = ctx;
+
+          subscriptionErrorChecker.checkPayload(payload);
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
