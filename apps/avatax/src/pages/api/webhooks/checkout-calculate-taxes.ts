@@ -10,13 +10,9 @@ import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { loggerContext } from "../../../logger-context";
-import { MissingAddressAvataxWebhookService } from "../../../modules/avatax/calculate-taxes/missing-address-avatax-webhook-service";
-import {
-  InvalidAppAddressError,
-  TaxIncompletePayloadErrors,
-} from "../../../modules/taxes/tax-error";
+import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
+import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -29,6 +25,9 @@ const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+const useCase = new CalculateTaxesUseCase({
+  configExtractor: new AppConfigExtractor(),
+});
 
 /**
  * TODO: Add tests to handler
@@ -38,7 +37,7 @@ export default wrapWithLoggerContext(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
         try {
-          const { payload } = ctx;
+          const { payload, authData } = ctx;
 
           subscriptionErrorChecker.checkPayload(payload);
 
@@ -51,28 +50,6 @@ export default wrapWithLoggerContext(
           }
 
           logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
-
-          const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
-
-          if (payloadVerificationResult.isErr()) {
-            const error = payloadVerificationResult.error;
-
-            switch (true) {
-              case error instanceof TaxIncompletePayloadErrors.MissingAddressError:
-                logger.info(
-                  "Missing address in the payload. Returning totalPrice and shippingPrice as a fallback.",
-                );
-                const calculatedTaxes =
-                  MissingAddressAvataxWebhookService.calculateTaxesNoop(payload);
-
-                return res.status(200).send(ctx.buildResponse(calculatedTaxes));
-              default:
-                logger.warn("Failed to calculate taxes, due to incomplete payload", {
-                  error: payloadVerificationResult.error,
-                });
-                return res.status(400).send(error.message);
-            }
-          }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
           const channelSlug = payload.taxBase.channel.slug;
@@ -106,55 +83,39 @@ export default wrapWithLoggerContext(
 
           metadataCache.setMetadata(appMetadata);
 
-          const AvataxWebhookServiceFactory = await import(
-            "../../../modules/taxes/avatax-webhook-service-factory"
-          ).then((m) => m.AvataxWebhookServiceFactory);
+          return useCase.calculateTaxes(payload, authData).then((result) => {
+            return result.match(
+              (value) => {
+                return res.status(200).send(ctx.buildResponse(value));
+              },
+              (err) => {
+                logger.warn("Error calculating taxes", { error: err });
 
-          const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-            config.value,
-            channelSlug,
-          );
+                switch (err.constructor) {
+                  case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
+                    return res.status(500).send("Failed to calculate taxes");
+                  }
+                  case CalculateTaxesUseCase.ConfigBrokenError: {
+                    return res
+                      .status(500)
+                      .send("Failed to calculate taxes due to invalid configuration");
+                  }
+                  case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
+                    return res
+                      .status(400)
+                      .send("Taxes cant be calculated due to incomplete payload");
+                  }
+                  case CalculateTaxesUseCase.UnhandledError: {
+                    captureException(err);
 
-          if (webhookServiceResult.isErr()) {
-            const err = webhookServiceResult.error;
-
-            logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-              error: err,
-            });
-
-            switch (err["constructor"]) {
-              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                return res.status(400).send("App is not configured properly.");
-              }
-              default: {
-                Sentry.captureException(webhookServiceResult.error);
-                logger.fatal("Unhandled error", { error: err });
-
-                return res.status(500).send("Unhandled error");
-              }
-            }
-          } else {
-            logger.info("Found active connection service. Calculating taxes...");
-
-            const { taxProvider } = webhookServiceResult.value;
-            const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
-
-            if (providerConfig.isErr()) {
-              return res.status(400).send("App is not configured properly.");
-            }
-
-            // TODO: Improve errors handling like above
-            const calculatedTaxes = await taxProvider.calculateTaxes(
-              payload,
-              providerConfig.value.avataxConfig.config,
-              ctx.authData,
+                    return res.status(500).send("Failed to calculate taxes (Unhandled error)");
+                  }
+                }
+              },
             );
-
-            logger.info("Taxes calculated", { calculatedTaxes });
-
-            return res.status(200).json(ctx.buildResponse(calculatedTaxes));
-          }
+          });
         } catch (error) {
+          // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
           if (error instanceof InvalidAppAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
