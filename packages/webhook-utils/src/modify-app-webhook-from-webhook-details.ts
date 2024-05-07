@@ -1,10 +1,10 @@
-import { Client } from "urql";
-import { WebhookDetailsFragment } from "../generated/graphql";
+import { type Client } from "urql";
 import { modifyAppWebhook } from "./operations/modify-app-webhook";
+import { type WebhookData } from "./types";
 
 interface ModifyAppWebhookFromWebhookDetailsArgs {
   client: Client;
-  webhookDetails: WebhookDetailsFragment;
+  webhookDetails: WebhookData;
 }
 
 export const modifyAppWebhookFromWebhookDetails = async ({
@@ -15,12 +15,12 @@ export const modifyAppWebhookFromWebhookDetails = async ({
     client,
     webhookId: webhookDetails.id,
     input: {
-      asyncEvents: webhookDetails.asyncEvents.map((event) => event.eventType),
-      syncEvents: webhookDetails.syncEvents.map((event) => event.eventType),
+      asyncEvents: webhookDetails.asyncEventsTypes,
+      syncEvents: webhookDetails.syncEventsTypes,
       isActive: webhookDetails.isActive,
       name: webhookDetails.name,
       targetUrl: webhookDetails.targetUrl,
-      query: webhookDetails.subscriptionQuery,
+      query: webhookDetails.query,
     },
   });
 };

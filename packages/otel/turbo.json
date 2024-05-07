@@ -3,7 +3,7 @@
   "extends": ["//"],
   "pipeline": {
     "lint": {
-      "env": ["OTEL_ACCESS_TOKEN"]
+      "env": ["OTEL_ACCESS_TOKEN", "ENABLE_DEBUG_OTEL_DIAG"]
     }
   }
 }

@@ -14,8 +14,24 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
     expect(
       getWebhookIdsAndManifestsToUpdate({
         existingWebhooksPartial: [
-          { id: "1", name: "webhook1" },
-          { id: "2", name: "webhook2" },
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+          {
+            id: "2",
+            name: "webhook2",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
         ],
         newWebhookManifests: [
           {
@@ -64,7 +80,17 @@ describe("getWebhookIdsAndQueriesToUpdate", () => {
   it("Returns subset of entries, when existing webhook list contain some of them", () => {
     expect(
       getWebhookIdsAndManifestsToUpdate({
-        existingWebhooksPartial: [{ id: "1", name: "webhook1" }],
+        existingWebhooksPartial: [
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+        ],
         newWebhookManifests: [
           {
             asyncEvents: [],

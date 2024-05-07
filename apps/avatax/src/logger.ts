@@ -17,4 +17,4 @@ if (typeof window === "undefined") {
   );
 }
 
-export { logger, createLogger };
+export { createLogger, logger };

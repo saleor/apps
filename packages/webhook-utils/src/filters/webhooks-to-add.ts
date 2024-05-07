@@ -1,8 +1,9 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
+import { WebhookData } from "../types";
 
 interface WebhooksToAddArgs {
   newWebhookManifests: Array<WebhookManifest>;
-  existingWebhooksPartial: Array<{ id: string; name: string }>;
+  existingWebhooksPartial: Array<WebhookData>;
 }
 
 export const webhooksToAdd = ({
