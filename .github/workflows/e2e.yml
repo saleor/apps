@@ -47,14 +47,10 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
           TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
-          REST_APL_TOKEN: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_TOKEN"
-          REST_APL_ENDPOINT: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/REST_APL_ENDPOINT"
           E2E_USER_NAME: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_NAME"
           E2E_USER_PASSWORD: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_PASSWORD"
       - name: Generate GraphQL files
         run: pnpm --filter=app-avatax generate
-      - name: Run migrations
-        run: pnpm --filter=app-avatax migrate:silent
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
