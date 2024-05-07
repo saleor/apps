@@ -1,18 +1,18 @@
+import { AdjustmentReason } from "avatax/lib/enums/AdjustmentReason";
+import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
+import { ChargedTo } from "avatax/lib/enums/ChargedTo";
+import { DocumentStatus } from "avatax/lib/enums/DocumentStatus";
+import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
+import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
+import { LiabilityType } from "avatax/lib/enums/LiabilityType";
+import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
-import { DocumentStatus } from "avatax/lib/enums/DocumentStatus";
-import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { AdjustmentReason } from "avatax/lib/enums/AdjustmentReason";
-import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
-import { LiabilityType } from "avatax/lib/enums/LiabilityType";
-import { RateType } from "avatax/lib/enums/RateType";
-import { ChargedTo } from "avatax/lib/enums/ChargedTo";
-import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
-import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
+import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
+import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 type TaxBase = TaxBaseFragment;
@@ -23,7 +23,6 @@ const defaultTaxBase: TaxBase = {
   channel: {
     slug: "default-channel",
   },
-  discounts: [],
   address: {
     streetAddress1: "600 Montgomery St",
     streetAddress2: "",

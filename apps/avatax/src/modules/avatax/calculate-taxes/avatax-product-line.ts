@@ -8,7 +8,6 @@ export const avataxProductLine = {
     amount,
     taxCode,
     taxIncluded,
-    discounted,
     quantity,
     itemCode,
     description,
@@ -16,7 +15,6 @@ export const avataxProductLine = {
     amount: number;
     taxCode: string;
     taxIncluded: boolean;
-    discounted?: boolean;
     quantity: number;
     itemCode?: string;
     description?: string;
@@ -26,10 +24,8 @@ export const avataxProductLine = {
       taxIncluded,
       taxCode,
       quantity,
-      discounted,
       itemCode,
       description,
-      ref1: "Discounted line",
     };
   },
 

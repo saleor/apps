@@ -12,10 +12,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
   ): LineItemModel[] {
-    /*
-     * // TODO: we should revisit how discounts are distributed and flagged. I see that we can outsource distributing the discounts to AvaTax, which is something we currently do on our side.
-     * https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
-     */
+    // Price reduction discounts - we send totalPrices with or without discounts as values and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);

@@ -59,14 +59,12 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           quantity: 1,
           amount: shippingAmount,
           taxIncluded: pricesEnteredWithTax,
-          discounted: false,
         });
       });
 
       it("includes products as lines", () => {
         expect(first).toEqual({
           itemCode: "328223580",
-          discounted: false,
           description: "Monospace Tee",
           quantity: 3,
           amount: firstProductAmount,
@@ -78,7 +76,6 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           description: "Monospace Tee",
           quantity: 1,
           amount: secondProductAmount,
-          discounted: false,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: pricesEnteredWithTax,
         });
@@ -87,7 +84,6 @@ describe("AvataxOrderConfirmedPayloadLinesTransformer", () => {
           description: "Paul's Balance 420",
           quantity: 2,
           amount: thirdProductAmount,
-          discounted: false,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: pricesEnteredWithTax,
         });
