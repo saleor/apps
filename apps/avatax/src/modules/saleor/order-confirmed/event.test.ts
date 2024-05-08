@@ -1,4 +1,3 @@
-import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
 import { describe, expect, it } from "vitest";
 import { SaleorOrderConfirmedEvent } from "./event";
 import { SaleorOrderConfirmedEventMockFactory } from "./mocks";
@@ -41,7 +40,7 @@ describe("SaleorOrderConfirmedEvent", () => {
         ...payload,
         order: {
           ...payload.order,
-          status: OrderStatus.Canceled,
+          status: "CANCELED",
         },
       })._unsafeUnwrap();
 

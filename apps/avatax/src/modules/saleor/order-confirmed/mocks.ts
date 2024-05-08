@@ -1,4 +1,3 @@
-import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
 import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
@@ -9,7 +8,7 @@ export class SaleorOrderConfirmedEventMockFactory {
       id: "order-id",
       number: "order-number",
       created: "2021-01-01T00:00:00Z",
-      status: OrderStatus.Fulfilled,
+      status: "FULFILLED" as const,
       discounts: [],
       channel: {
         id: "channel-id",
