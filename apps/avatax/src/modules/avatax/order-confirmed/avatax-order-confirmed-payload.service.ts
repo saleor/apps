@@ -1,5 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrder } from "../../saleor";
+import {
+  DeprecatedOrderConfirmedSubscriptionFragment,
+  SaleorOrderConfirmedEvent,
+} from "../../saleor";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
@@ -16,13 +19,13 @@ export class AvataxOrderConfirmedPayloadService {
 
   async getPayload(
     order: DeprecatedOrderConfirmedSubscriptionFragment,
-    saleorOrder: SaleorOrder,
+    confirmedOrderEvent: SaleorOrderConfirmedEvent,
     avataxConfig: AvataxConfig,
     authData: AuthData,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches(authData);
     const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer(this.avataxClient);
 
-    return payloadTransformer.transform(order, saleorOrder, avataxConfig, matches);
+    return payloadTransformer.transform({ order, confirmedOrderEvent, avataxConfig, matches });
   }
 }

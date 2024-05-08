@@ -1,7 +1,7 @@
-import { OrderCancelledPayload } from "../webhooks/payloads/order-cancelled-payload";
-import { SaleorCancelledOrderEvent } from "./order";
-import { expect, it, describe } from "vitest";
-import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./order-cancel-error";
+import { describe, expect, it } from "vitest";
+import { OrderCancelledPayload } from "../../webhooks/payloads/order-cancelled-payload";
+import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./errors";
+import { SaleorCancelledOrderEvent } from "./event";
 
 describe("SaleorCancelledOrderEvent", () => {
   const validPayload = {
