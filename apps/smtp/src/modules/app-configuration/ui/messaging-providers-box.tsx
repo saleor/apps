@@ -5,20 +5,18 @@ import { BoxFooter } from "../../../components/box-footer";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { useRouter } from "next/router";
 import { smtpUrls } from "../../smtp/urls";
-import { appUrls } from "../urls";
 import React from "react";
-import { SmtpLogo } from "../../smtp/ui/smtp-logo";
 
 const NoExistingConfigurations = () => {
   const { push } = useRouter();
 
-  const redirectToProvidersSelection = () => {
-    push(appUrls.chooseProvider());
+  const redirectToNewConfiguration = () => {
+    push(smtpUrls.newConfiguration());
   };
 
   return (
     <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
-      <Button onClick={redirectToProvidersSelection}>Add first provider</Button>
+      <Button onClick={redirectToNewConfiguration}>Add first configuration</Button>
     </BoxWithBorder>
   );
 };
@@ -60,7 +58,7 @@ export const MessagingProvidersBox = ({
   }
 
   const redirectToProvidersSelection = () => {
-    push(appUrls.chooseProvider());
+    push(smtpUrls.newConfiguration());
   };
 
   const getEditLink = (configuration: ConfigurationListItem) => {
@@ -70,19 +68,9 @@ export const MessagingProvidersBox = ({
     }
   };
 
-  const getProviderLogo = (configuration: ConfigurationListItem) => {
-    switch (configuration.provider) {
-      case "smtp":
-        return <SmtpLogo height={20} width={20} />;
-    }
-  };
-
   return (
     <BoxWithBorder>
-      <Box padding={defaultPadding} display="grid" gridTemplateColumns={4} gap={defaultPadding}>
-        <Text variant="caption" color="textNeutralSubdued">
-          Provider
-        </Text>
+      <Box padding={defaultPadding} display="grid" gridTemplateColumns={3} gap={defaultPadding}>
         <Text variant="caption" color="textNeutralSubdued">
           Configuration name
         </Text>
@@ -92,11 +80,6 @@ export const MessagingProvidersBox = ({
         <Box />
         {configurations.map((configuration) => (
           <React.Fragment key={configuration.id}>
-            <Box display="flex" gap={defaultPadding}>
-              {getProviderLogo(configuration)}
-              <Text>{providerLabels[configuration.provider]}</Text>
-            </Box>
-
             <Text>{configuration.name}</Text>
             <Box __maxWidth="fit-content">
               <SemanticChip variant={configuration.active ? "success" : "error"}>
@@ -118,7 +101,7 @@ export const MessagingProvidersBox = ({
         ))}
       </Box>
       <BoxFooter>
-        <Button onClick={redirectToProvidersSelection}>Add provider</Button>
+        <Button onClick={redirectToProvidersSelection}>Add configuration</Button>
       </BoxFooter>
     </BoxWithBorder>
   );

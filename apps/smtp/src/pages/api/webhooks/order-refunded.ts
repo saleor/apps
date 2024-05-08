@@ -1,8 +1,10 @@
-import { OrderDetailsFragmentDoc } from "../../../../generated/graphql";
+import {
+  OrderDetailsFragmentDoc,
+  OrderRefundedWebhookPayloadFragment,
+} from "../../../../generated/graphql";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
-import { OrderRefundedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";

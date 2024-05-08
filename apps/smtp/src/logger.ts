@@ -1,4 +1,4 @@
-import { logger, createLogger, attachLoggerConsoleTransport } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
 
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 

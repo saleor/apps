@@ -1,7 +1,7 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
-import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
+import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";

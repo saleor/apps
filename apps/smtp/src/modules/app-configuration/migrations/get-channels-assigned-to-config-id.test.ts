@@ -1,4 +1,4 @@
-import { expect, describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getChannelsAssignedToConfigId } from "./get-channels-assigned-to-config-id";
 
 describe("getChannelsAssignedToConfigId", function () {

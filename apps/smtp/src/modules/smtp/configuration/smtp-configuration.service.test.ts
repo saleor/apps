@@ -1,4 +1,4 @@
-import { vi, expect, describe, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";

@@ -1,4 +1,4 @@
-import { expect, describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { smtpTransformV1toV2 } from "./smtp-transform-v1-to-v2";
 
 describe("smtpTransformV1toV2", function () {

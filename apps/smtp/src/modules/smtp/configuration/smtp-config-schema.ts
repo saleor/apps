@@ -1,10 +1,10 @@
 import {
-  SmtpConfigV2,
-  SmtpConfigurationV2,
-  SmtpEventConfigurationV2,
-  smtpConfigV2Schema,
   smtpConfigurationEventV2Schema,
+  SmtpConfigurationV2,
   smtpConfigurationV2Schema,
+  SmtpConfigV2,
+  smtpConfigV2Schema,
+  SmtpEventConfigurationV2,
 } from "./migrations/smtp-config-schema-v2";
 
 export const smtpEncryptionTypes = ["NONE", "TLS", "SSL"] as const;

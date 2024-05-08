@@ -1,1 +1,1 @@
-export const appName = "Emails and messages";
+export const appName = "SMTP App";
