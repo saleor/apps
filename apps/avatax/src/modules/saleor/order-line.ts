@@ -19,7 +19,7 @@ export class SaleorOrderLine {
     productSku: z.string().nullable(),
     productVariantId: z.string().nullable(),
     productName: z.string(),
-    taxClass: z.object({ id: z.string() }).nullable(),
+    taxClass: z.object({ id: z.string() }).nullable().optional(),
   });
 
   private constructor(private data: z.infer<typeof SaleorOrderLine.schema>) {}
