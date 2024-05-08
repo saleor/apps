@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.4
+
+### Patch Changes
+
+- eec25524: Send empty keys to OTEL. Thanks to that change our queries that consume OTEL will have access to falsy values.
+
 ## 1.2.3
 
 ### Patch Changes

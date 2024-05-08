@@ -1,5 +1,12 @@
 # app-taxjar
 
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [eec25524]
+  - @saleor/apps-logger@1.2.4
+
 ## 1.1.3
 
 ### Patch Changes

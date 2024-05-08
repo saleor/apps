@@ -1,5 +1,14 @@
 # saleor-app-products-feed
 
+## 1.17.4
+
+### Patch Changes
+
+- Updated dependencies [eec25524]
+- Updated dependencies [827be8c8]
+  - @saleor/apps-logger@1.2.4
+  - @saleor/webhook-utils@0.1.0
+
 ## 1.17.3
 
 ### Patch Changes
