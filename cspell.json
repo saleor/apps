@@ -79,7 +79,8 @@
     "Vercel",
     "webhoook",
     "XYZAAABB",
-    "XYZAAABB00"
+    "XYZAAABB00",
+    "mailhog"
   ],
   "ignorePaths": [
     "node_modules",
