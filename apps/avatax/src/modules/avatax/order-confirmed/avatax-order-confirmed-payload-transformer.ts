@@ -46,12 +46,17 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     return err(new TaxBadPayloadError("OrderConfirmedPayload has no shipping or billing address"));
   }
-  async transform(
-    order: DeprecatedOrderConfirmedSubscriptionFragment,
-    confirmedOrderEvent: SaleorOrderConfirmedEvent,
-    avataxConfig: AvataxConfig,
-    matches: AvataxTaxCodeMatches,
-  ): Promise<CreateTransactionArgs> {
+  async transform({
+    order,
+    confirmedOrderEvent,
+    avataxConfig,
+    matches,
+  }: {
+    order: DeprecatedOrderConfirmedSubscriptionFragment;
+    confirmedOrderEvent: SaleorOrderConfirmedEvent;
+    avataxConfig: AvataxConfig;
+    matches: AvataxTaxCodeMatches;
+  }): Promise<CreateTransactionArgs> {
     const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
     const dateResolver = new AvataxCalculationDateResolver();

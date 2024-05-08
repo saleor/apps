@@ -1,13 +1,12 @@
 import { OrderStatus } from "@saleor/webhook-utils/generated/graphql";
 import { describe, expect, it } from "vitest";
 import { SaleorOrderConfirmedEvent } from "./event";
-import { SaleorOrderConfirmedEventFactory } from "./mocks";
+import { SaleorOrderConfirmedEventMockFactory } from "./mocks";
 
 describe("SaleorOrderConfirmedEvent", () => {
-  const validPayload = SaleorOrderConfirmedEventFactory.graphqlPayload;
-
   it("should create a SaleorOrderConfirmedEvent from a valid payload", () => {
-    const result = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload);
+    const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+    const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
     expect(result.isOk()).toBe(true);
 
@@ -15,8 +14,9 @@ describe("SaleorOrderConfirmedEvent", () => {
   });
 
   it("should fail to create a SaleorOrderConfirmedEvent when 'order' is missing", () => {
+    const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
     const result = SaleorOrderConfirmedEvent.createFromGraphQL({
-      ...validPayload,
+      ...payload,
       order: undefined,
     });
 
@@ -29,16 +29,18 @@ describe("SaleorOrderConfirmedEvent", () => {
 
   describe("isFulfilled method", () => {
     it("should return true if order has status FULLFILLED", () => {
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
       expect(event.isFulfilled()).toBe(true);
     });
 
     it("should return false if order has other status than FULLFILLED", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         order: {
-          ...validPayload.order,
+          ...payload.order,
           status: OrderStatus.Canceled,
         },
       })._unsafeUnwrap();
@@ -49,16 +51,18 @@ describe("SaleorOrderConfirmedEvent", () => {
 
   describe("isStrategyFlatRates method", () => {
     it("should return false if order has tax calculation startegy set to TAX_APP", () => {
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
       expect(event.isStrategyFlatRates()).toBe(false);
     });
 
     it("should return true if order has tax calculation startegy set to FLAT_RATES", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         order: {
-          ...validPayload.order,
+          ...payload.order,
           channel: {
             slug: "channel-slug",
             id: "channel-id",
@@ -76,16 +80,19 @@ describe("SaleorOrderConfirmedEvent", () => {
 
   describe("getIsDiscounted method", () => {
     it("should return false if order don't have discounts", () => {
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
       expect(event.getIsDiscounted()).toEqual(false);
     });
 
     it("should return true if order have discounts", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         order: {
-          ...validPayload.order,
+          ...payload.order,
           discounts: [{ id: "discount-id", amount: { amount: 10 } }],
         },
       })._unsafeUnwrap();
@@ -96,10 +103,11 @@ describe("SaleorOrderConfirmedEvent", () => {
 
   describe("hasShipping method", () => {
     it("should return false if order has shippingPrice net set to 0", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         order: {
-          ...validPayload.order,
+          ...payload.order,
           shippingPrice: {
             gross: {
               amount: 10,
@@ -115,7 +123,8 @@ describe("SaleorOrderConfirmedEvent", () => {
     });
 
     it("should return true if order has shippingPrice net set to value other than 0", () => {
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
       expect(event.hasShipping()).toEqual(true);
     });
@@ -123,16 +132,18 @@ describe("SaleorOrderConfirmedEvent", () => {
 
   describe("getShippingAmount method", () => {
     it("should get shipping amount as shippingPrice gross with tax included", () => {
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.gross.amount);
+      expect(event.getShippingAmount()).toEqual(payload.order.shippingPrice.gross.amount);
     });
 
     it("should get shipping amount as shippingPrice net without tax included", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         order: {
-          ...validPayload.order,
+          ...payload.order,
           channel: {
             slug: "channel-slug",
             id: "channel-id",
@@ -144,7 +155,7 @@ describe("SaleorOrderConfirmedEvent", () => {
         },
       })._unsafeUnwrap();
 
-      expect(event.getShippingAmount()).toEqual(validPayload.order.shippingPrice.net.amount);
+      expect(event.getShippingAmount()).toEqual(payload.order.shippingPrice.net.amount);
     });
   });
 });

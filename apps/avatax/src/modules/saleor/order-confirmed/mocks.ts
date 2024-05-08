@@ -3,8 +3,8 @@ import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-p
 import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 
-export class SaleorOrderConfirmedEventFactory {
-  static graphqlPayload = {
+export class SaleorOrderConfirmedEventMockFactory {
+  private static graphqlPayload = {
     order: {
       id: "order-id",
       number: "order-number",
@@ -39,14 +39,14 @@ export class SaleorOrderConfirmedEventFactory {
         },
         currency: "USD",
       },
-      lines: [SaleorOrderLineMockFactory.graphqlPayload],
+      lines: [SaleorOrderLineMockFactory.getGraphqlPayload()],
       __typename: "Order" as const,
     },
     __typename: "OrderConfirmed" as const,
   };
 
   static create(
-    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventFactory.graphqlPayload,
+    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventMockFactory.graphqlPayload,
   ) {
     const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(graphqlPayload);
 
@@ -56,4 +56,6 @@ export class SaleorOrderConfirmedEventFactory {
 
     return possibleOrderLine.value;
   }
+
+  static getGraphqlPayload = () => SaleorOrderConfirmedEventMockFactory.graphqlPayload;
 }

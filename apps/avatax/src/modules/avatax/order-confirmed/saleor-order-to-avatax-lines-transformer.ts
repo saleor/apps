@@ -5,8 +5,6 @@ import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 export class SaleorOrderToAvataxLinesTransformer {
-  constructor() {}
-
   transform({
     confirmedOrderEvent,
     matches,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SaleorOrderConfirmedEventFactory } from "../../saleor/order-confirmed/mocks";
+import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
@@ -8,11 +8,11 @@ import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-li
 
 const matches: AvataxTaxCodeMatches = [];
 const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
-const saleorConfirmedOrderEvent = SaleorOrderConfirmedEventFactory.create();
+const saleorConfirmedOrderEvent = SaleorOrderConfirmedEventMockFactory.create();
 
 describe("SaleorOrderToAvataxLinesTransformer", () => {
   it("should transform lines and shipping from order into product and shipping lines ", () => {
-    const { order } = SaleorOrderConfirmedEventFactory.graphqlPayload;
+    const { order } = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
     expect(
       saleorOrderToAvataxLinesTransformer.transform({
@@ -42,10 +42,12 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
   });
 
   it("should transform only lines from order into product if there is no shipping", () => {
-    const saleorConfirmedOrderEventWithoutShipping = SaleorOrderConfirmedEventFactory.create({
-      ...SaleorOrderConfirmedEventFactory.graphqlPayload,
+    const orderConfirmedEventPayload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+    const saleorConfirmedOrderEventWithoutShipping = SaleorOrderConfirmedEventMockFactory.create({
+      ...orderConfirmedEventPayload,
       order: {
-        ...SaleorOrderConfirmedEventFactory.graphqlPayload.order,
+        ...orderConfirmedEventPayload.order,
         shippingPrice: {
           gross: {
             amount: 0,
@@ -57,7 +59,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       },
     });
 
-    const { order } = SaleorOrderConfirmedEventFactory.graphqlPayload;
+    const { order } = orderConfirmedEventPayload;
 
     expect(
       saleorOrderToAvataxLinesTransformer.transform({

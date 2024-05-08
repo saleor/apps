@@ -4,19 +4,7 @@ import { BaseError } from "../../../error";
 import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLine } from "../order-line";
 
-export interface ISaleorConfirmedOrderEvent {
-  getChannelSlug(): string;
-  getOrderId(): string;
-  isFulfilled(): boolean;
-  isStrategyFlatRates(): boolean;
-  getIsTaxIncluded(): boolean;
-  getLines(): SaleorOrderLine[];
-  getIsDiscounted(): boolean;
-  hasShipping(): boolean;
-  getShippingAmount(): number;
-}
-
-export class SaleorOrderConfirmedEvent implements ISaleorConfirmedOrderEvent {
+export class SaleorOrderConfirmedEvent {
   private static schema = z.object({
     order: z.object({
       channel: z.object({

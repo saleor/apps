@@ -4,10 +4,9 @@ import { SaleorOrderLine } from "./order-line";
 import { SaleorOrderLineMockFactory } from "./order-line-mocks";
 
 describe("SaleorOrderLine", () => {
-  const validPayload = SaleorOrderLineMockFactory.graphqlPayload;
-
   it("should create a SaleorOrderLine from a valid payload", () => {
-    const result = SaleorOrderLine.createFromGraphQL(validPayload);
+    const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
+    const result = SaleorOrderLine.createFromGraphQL(payload);
 
     expect(result.isOk()).toBe(true);
 
@@ -26,37 +25,42 @@ describe("SaleorOrderLine", () => {
 
   describe("getAmount method", () => {
     it("should get gross amount when tax is included", () => {
-      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
+      const line = SaleorOrderLine.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(line.getAmount({ isTaxIncluded: true })).toBe(validPayload.totalPrice.gross.amount);
+      expect(line.getAmount({ isTaxIncluded: true })).toBe(payload.totalPrice.gross.amount);
     });
 
     it("should get net amount when tax is not included", () => {
-      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
+      const line = SaleorOrderLine.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(line.getAmount({ isTaxIncluded: false })).toBe(validPayload.totalPrice.net.amount);
+      expect(line.getAmount({ isTaxIncluded: false })).toBe(payload.totalPrice.net.amount);
     });
   });
 
   describe("getItemCode method", () => {
     it("should get product sku as item code if present", () => {
-      const line = SaleorOrderLine.createFromGraphQL(validPayload)._unsafeUnwrap();
+      const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
+      const line = SaleorOrderLine.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(line.getItemCode()).toBe(validPayload.productSku);
+      expect(line.getItemCode()).toBe(payload.productSku);
     });
 
     it("should get product variant id as item code if sku is not present", () => {
+      const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
       const line = SaleorOrderLine.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         productSku: null,
       })._unsafeUnwrap();
 
-      expect(line.getItemCode()).toBe(validPayload.productVariantId);
+      expect(line.getItemCode()).toBe(payload.productVariantId);
     });
 
     it("should get empty string as item code if neither sku nor variant id is present", () => {
+      const payload = SaleorOrderLineMockFactory.getGraphqlPayload();
       const line = SaleorOrderLine.createFromGraphQL({
-        ...validPayload,
+        ...payload,
         productSku: null,
         productVariantId: null,
       })._unsafeUnwrap();

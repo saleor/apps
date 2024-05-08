@@ -26,6 +26,6 @@ export class AvataxOrderConfirmedPayloadService {
     const matches = await this.getMatches(authData);
     const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer(this.avataxClient);
 
-    return payloadTransformer.transform(order, confirmedOrderEvent, avataxConfig, matches);
+    return payloadTransformer.transform({ order, confirmedOrderEvent, avataxConfig, matches });
   }
 }
