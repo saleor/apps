@@ -14,8 +14,24 @@ describe("webhooksToAdd", () => {
     expect(
       webhooksToAdd({
         existingWebhooksPartial: [
-          { id: "1", name: "webhook1" },
-          { id: "1", name: "webhook2" },
+          {
+            id: "1",
+            name: "webhook1",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+          {
+            id: "1",
+            name: "webhook2",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
         ],
         newWebhookManifests: [
           {
@@ -83,7 +99,17 @@ describe("webhooksToAdd", () => {
   it("Returns list with the new webhook to add, when it was not specified in the existing manifests", () => {
     expect(
       webhooksToAdd({
-        existingWebhooksPartial: [{ id: "1", name: "webhookOld" }],
+        existingWebhooksPartial: [
+          {
+            id: "1",
+            name: "webhookOld",
+            isActive: true,
+            targetUrl: "",
+            query: "",
+            asyncEventsTypes: [],
+            syncEventsTypes: [],
+          },
+        ],
         newWebhookManifests: [
           {
             asyncEvents: [],

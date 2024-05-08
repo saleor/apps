@@ -4,7 +4,7 @@ import { Box, Button } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { errorUtils } from "../../../lib/error-utils";
+import { resolveTrpcClientError } from "../../../lib/error-utils";
 import { AppToggle } from "../../ui/app-toggle";
 import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
@@ -46,7 +46,7 @@ export const AvataxConfigurationCredentialsFragment = (
       notifySuccess("Credentials verified");
       setStatus("authenticated");
     } catch (e) {
-      notifyError("Invalid credentials", errorUtils.resolveTrpcClientError(e));
+      notifyError("Invalid credentials", resolveTrpcClientError(e));
 
       setStatus("not_authenticated");
     }

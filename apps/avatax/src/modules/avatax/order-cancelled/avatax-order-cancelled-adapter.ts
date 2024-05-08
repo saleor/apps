@@ -22,11 +22,14 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
       config.companyCode ?? defaultAvataxConfig.companyCode,
     );
 
-    this.logger.info("Calling AvaTax voidTransaction with transformed payload...", {
-      transactionCode: target.transactionCode,
-      companyCode: target.companyCode,
-      avataxId: payload.avataxId,
-    });
+    this.logger.info(
+      "Calling AvaTax voidTransaction with transformed payload for order cancelled event",
+      {
+        transactionCode: target.transactionCode,
+        companyCode: target.companyCode,
+        avataxId: payload.avataxId,
+      },
+    );
 
     try {
       await this.avataxClient.voidTransaction(target);

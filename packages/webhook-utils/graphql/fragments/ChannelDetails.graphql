@@ -1,6 +1,0 @@
-fragment ChannelDetailsFragment on Channel {
-    id
-    slug
-    name
-    currencyCode
-}

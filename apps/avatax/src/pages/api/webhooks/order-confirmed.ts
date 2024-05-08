@@ -7,6 +7,7 @@ import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
@@ -19,16 +20,20 @@ export const config = {
     bodyParser: false,
   },
 };
+
+const logger = createLogger("orderConfirmedAsyncWebhook");
+
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
-        const logger = createLogger("orderConfirmedAsyncWebhook", {
-          saleorApiUrl: ctx.authData.saleorApiUrl,
-        });
         const { payload, authData } = ctx;
+
+        subscriptionErrorChecker.checkPayload(payload);
+
         const { saleorApiUrl, token } = authData;
 
         if (payload.version) {

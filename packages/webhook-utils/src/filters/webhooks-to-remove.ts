@@ -1,8 +1,7 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
+import { WebhookData } from "../types";
 
-type WebhookPartial = { id: string; name: string };
-
-interface WebhooksToRemoveArgs<T extends WebhookPartial> {
+interface WebhooksToRemoveArgs<T extends WebhookData> {
   newWebhookManifests: Array<WebhookManifest>;
   existingWebhooksPartial: Array<T>;
 }
@@ -11,7 +10,7 @@ interface WebhooksToRemoveArgs<T extends WebhookPartial> {
  * Returns partials of the existing webhooks which are not specified in the manifests.
  * The comparison is based on webhook names.
  */
-export const webhooksToRemove = <T extends WebhookPartial>({
+export const webhooksToRemove = <T extends WebhookData>({
   newWebhookManifests,
   existingWebhooksPartial,
 }: WebhooksToRemoveArgs<T>) => {

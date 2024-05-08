@@ -1,59 +1,87 @@
-import { Client } from "urql";
-import { AppDetailsFragment } from "../generated/graphql";
 import { WebhookManifest } from "@saleor/app-sdk/types";
-import { getAppDetailsAndWebhooksData } from "./operations/get-app-details-and-webhooks-data";
-import { createLogger } from "@saleor/apps-shared";
-import { updateWebhooks } from "./update-webhooks";
+import { Client } from "urql";
+import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
+import {
+  AppDetails,
+  getAppDetailsAndWebhooksData,
+} from "./operations/get-app-details-and-webhooks-data";
+import {
+  SaleorInstanceDetails,
+  getSaleorInstanceDetails,
+} from "./operations/get-saleor-instance-details";
+import { Logger } from "./types";
+import { WebhookUpdater } from "./webhook-updater";
 
-const logger = createLogger({ name: "updateScript" });
+type GetManifestFunction = ({
+  appDetails,
+  instanceDetails,
+}: {
+  appDetails: AppDetails;
+  instanceDetails: SaleorInstanceDetails;
+}) => Promise<Array<WebhookManifest>>;
 
-interface WebhookMigrationRunnerArgs {
-  client: Client;
-  getManifests: ({
-    appDetails,
-  }: {
-    appDetails: AppDetailsFragment;
-  }) => Promise<Array<WebhookManifest>>;
-  dryRun?: boolean;
+export class WebhookMigrationRunner {
+  constructor(
+    private args: {
+      dryRun: boolean;
+      logger: Logger;
+      client: Client;
+      getManifests: GetManifestFunction;
+    },
+  ) {}
+
+  public migrate = async () => {
+    const { dryRun, logger, client, getManifests } = this.args;
+
+    try {
+      logger.debug("Getting app details and webhooks data");
+
+      const appDetails = await getAppDetailsAndWebhooksData({ client });
+
+      logger.debug("Getting Saleor instance details");
+
+      const instanceDetails = await getSaleorInstanceDetails({ client });
+
+      logger.debug("Generate list of webhook manifests");
+
+      const newWebhookManifests = await getManifests({ appDetails, instanceDetails });
+
+      const updater = new WebhookUpdater({
+        dryRun,
+        logger,
+        client,
+        webhookManifests: newWebhookManifests,
+        existingWebhooksData: appDetails.webhooks || [],
+      });
+
+      await updater.update();
+
+      logger.info("Migration finished successfully");
+    } catch (error) {
+      switch (true) {
+        case error instanceof AppPermissionDeniedError:
+          logger.warn(
+            `Migration finished with warning: request being denied (app probably uninstalled)`,
+            {
+              error,
+              reason: "App probably uninstalled",
+            },
+          );
+          break;
+        case error instanceof NetworkError:
+          logger.warn(`Migration finished with warning: network error (Saleor not available)`, {
+            error,
+            reason: "Saleor not available",
+          });
+          break;
+        case error instanceof UnknownConnectionError:
+          logger.error(`Migration finished with error while fetching data from Saleor`, {
+            error,
+          });
+          break;
+        default:
+          logger.error(`Migration finished with error while running migrations`, { error });
+      }
+    }
+  };
 }
-
-export const webhookMigrationRunner = async ({
-  client,
-  getManifests,
-  dryRun,
-}: WebhookMigrationRunnerArgs) => {
-  logger.info("Getting app details and webhooks data");
-
-  let appDetails: AppDetailsFragment | undefined;
-
-  try {
-    appDetails = await getAppDetailsAndWebhooksData({ client });
-  } catch (e) {
-    logger.error(e, "Couldn't fetch the app details.");
-    return;
-  }
-
-  if (!appDetails) {
-    logger.error("No app details.");
-    return;
-  }
-
-  logger.debug("Got app details and webhooks data. Generate list of webhook manifests");
-  let newWebhookManifests: Array<WebhookManifest> = [];
-
-  try {
-    newWebhookManifests = await getManifests({ appDetails });
-  } catch (e) {
-    logger.error(e, "Couldn't prepare list of manifests.");
-    return;
-  }
-
-  logger.debug("Got list of webhook manifests. Updating webhooks");
-  await updateWebhooks({
-    client,
-    webhookManifests: newWebhookManifests,
-    existingWebhooksData: appDetails.webhooks || [],
-    dryRun,
-  });
-  logger.info("Migration finished.");
-};

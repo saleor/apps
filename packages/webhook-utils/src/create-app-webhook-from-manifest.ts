@@ -1,6 +1,6 @@
+import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
 import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../generated/graphql";
-import { WebhookManifest } from "@saleor/app-sdk/types";
 import { createAppWebhook } from "./operations/create-app-webhook";
 
 interface CreateAppWebhookFromManifestArgs {
