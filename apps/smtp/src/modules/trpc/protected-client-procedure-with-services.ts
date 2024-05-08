@@ -1,6 +1,4 @@
 import { createSettingsManager } from "../../lib/metadata-manager";
-import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
-import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
@@ -37,18 +35,9 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
       featureFlagService,
     });
 
-    const sendgridConfigurationService = new SendgridConfigurationService({
-      metadataManager: new SendgridPrivateMetadataManager(
-        createSettingsManager(ctx.apiClient, ctx.appId!),
-        ctx.saleorApiUrl,
-      ),
-      featureFlagService,
-    });
-
     const result = await next({
       ctx: {
         smtpConfigurationService,
-        sendgridConfigurationService,
         featureFlagService,
       },
     });
@@ -63,7 +52,6 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
       });
 
       await syncWebhookStatus({
-        sendgridConfigurationService,
         smtpConfigurationService,
         webhookManagementService,
       });

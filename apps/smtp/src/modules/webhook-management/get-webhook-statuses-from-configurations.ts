@@ -1,4 +1,3 @@
-import { SendgridConfiguration } from "../sendgrid/configuration/sendgrid-config-schema";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import { AppWebhook, eventToWebhookMapping } from "./webhook-management-service";
 import { webhookStatusesFactory } from "./webhook-status-dict";
@@ -9,10 +8,8 @@ import { webhookStatusesFactory } from "./webhook-status-dict";
  */
 export const getWebhookStatusesFromConfigurations = ({
   smtpConfigurations,
-  sendgridConfigurations,
 }: {
   smtpConfigurations: SmtpConfiguration[];
-  sendgridConfigurations: SendgridConfiguration[];
 }) => {
   // TODO: this dict should be generated in one place instead of manually edited
   const statuses: Record<AppWebhook, boolean> = webhookStatusesFactory({});
@@ -28,17 +25,6 @@ export const getWebhookStatusesFromConfigurations = ({
          * Mapping is mandatory since multiple events can be mapped to one webhook,
          * as in case of NOTIFY
          */
-        statuses[eventToWebhookMapping[event.eventType]] = true;
-      }
-    });
-  });
-
-  sendgridConfigurations.forEach(async (config) => {
-    if (!config.active) {
-      return;
-    }
-    config.events.forEach(async (event) => {
-      if (event.active) {
         statuses[eventToWebhookMapping[event.eventType]] = true;
       }
     });

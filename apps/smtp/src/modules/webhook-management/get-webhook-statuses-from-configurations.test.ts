@@ -1,7 +1,6 @@
 import { expect, describe, it } from "vitest";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
-import { SendgridConfiguration } from "../sendgrid/configuration/sendgrid-config-schema";
 import { webhookStatusesFactory } from "./webhook-status-dict";
 
 export const nonActiveSmtpConfiguration: SmtpConfiguration = {
@@ -90,85 +89,11 @@ export const nonActiveSmtpConfiguration: SmtpConfiguration = {
   senderName: "Sender Name",
 };
 
-const nonActiveSendgridConfiguration: SendgridConfiguration = {
-  id: "1685343953413npk9p",
-  active: false,
-  name: "Best name",
-  sandboxMode: false,
-  apiKey: "SG.123",
-  channels: {
-    override: false,
-    channels: [],
-    mode: "restrict",
-  },
-  events: [
-    {
-      active: false,
-      eventType: "ORDER_CREATED",
-      template: "1",
-    },
-    {
-      active: false,
-      eventType: "ORDER_FULFILLED",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ORDER_CONFIRMED",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ORDER_CANCELLED",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ORDER_FULLY_PAID",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "INVOICE_SENT",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ACCOUNT_CONFIRMATION",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ACCOUNT_PASSWORD_RESET",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ACCOUNT_CHANGE_EMAIL_REQUEST",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
-      template: undefined,
-    },
-    {
-      active: false,
-      eventType: "ACCOUNT_DELETE",
-      template: undefined,
-    },
-  ],
-  sender: "1",
-  senderEmail: "no-reply@example.com",
-  senderName: "Sender Name",
-};
-
 describe("getWebhookStatusesFromConfigurations", function () {
   it("Statuses should be set to false, when no configurations passed", async () => {
     expect(
       getWebhookStatusesFromConfigurations({
         smtpConfigurations: [],
-        sendgridConfigurations: [],
       }),
     ).toStrictEqual(webhookStatusesFactory({}));
   });
@@ -177,7 +102,6 @@ describe("getWebhookStatusesFromConfigurations", function () {
     expect(
       getWebhookStatusesFromConfigurations({
         smtpConfigurations: [nonActiveSmtpConfiguration],
-        sendgridConfigurations: [nonActiveSendgridConfiguration],
       }),
     ).toStrictEqual(webhookStatusesFactory({}));
   });
@@ -191,7 +115,6 @@ describe("getWebhookStatusesFromConfigurations", function () {
     expect(
       getWebhookStatusesFromConfigurations({
         smtpConfigurations: [smtpConfiguration],
-        sendgridConfigurations: [nonActiveSendgridConfiguration],
       }),
     ).toStrictEqual(webhookStatusesFactory({}));
   });
@@ -213,7 +136,6 @@ describe("getWebhookStatusesFromConfigurations", function () {
     expect(
       getWebhookStatusesFromConfigurations({
         smtpConfigurations: [nonActiveSmtpConfiguration, smtpConfiguration],
-        sendgridConfigurations: [nonActiveSendgridConfiguration],
       }),
     ).toStrictEqual(webhookStatusesFactory({ enabledWebhooks: ["invoiceSentWebhook"] }));
   });
@@ -241,7 +163,6 @@ describe("getWebhookStatusesFromConfigurations", function () {
     expect(
       getWebhookStatusesFromConfigurations({
         smtpConfigurations: [nonActiveSmtpConfiguration, smtpConfiguration],
-        sendgridConfigurations: [nonActiveSendgridConfiguration],
       }),
     ).toStrictEqual(webhookStatusesFactory({ enabledWebhooks: ["notifyWebhook"] }));
   });

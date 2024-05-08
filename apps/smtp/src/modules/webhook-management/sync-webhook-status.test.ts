@@ -2,8 +2,6 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
-import { SendgridConfigurationService } from "../sendgrid/configuration/sendgrid-configuration.service";
-import { SendgridPrivateMetadataManager } from "../sendgrid/configuration/sendgrid-metadata-manager";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import * as statusesExports from "./get-webhook-statuses-from-configurations";
@@ -43,19 +41,6 @@ describe("syncWebhookStatus", function () {
     featureFlagService: createMockedFeatureFlagService(),
   });
 
-  const sendgridConfigurator = new SendgridPrivateMetadataManager(
-    null as unknown as SettingsManager,
-    mockSaleorApiUrl,
-  );
-
-  const sendgridConfigurationService = new SendgridConfigurationService({
-    metadataManager: sendgridConfigurator,
-    initialData: {
-      configurations: [],
-    },
-    featureFlagService: createMockedFeatureFlagService(),
-  });
-
   afterEach(() => {
     vi.resetAllMocks();
   });
@@ -89,7 +74,6 @@ describe("syncWebhookStatus", function () {
 
     await syncWebhookStatus({
       smtpConfigurationService,
-      sendgridConfigurationService,
       webhookManagementService,
     });
 
@@ -127,7 +111,6 @@ describe("syncWebhookStatus", function () {
 
     await syncWebhookStatus({
       smtpConfigurationService,
-      sendgridConfigurationService,
       webhookManagementService,
     });
 
@@ -165,7 +148,6 @@ describe("syncWebhookStatus", function () {
 
     await syncWebhookStatus({
       smtpConfigurationService,
-      sendgridConfigurationService,
       webhookManagementService,
     });
 

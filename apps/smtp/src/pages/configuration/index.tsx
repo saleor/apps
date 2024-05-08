@@ -12,19 +12,11 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const ConfigurationPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
-  const { data: dataSendgrid, isLoading: isLoadingSendgrid } =
-    trpcClient.sendgridConfiguration.getConfigurations.useQuery();
 
   const { data: dataSmtp, isLoading: isLoadingSmtp } =
     trpcClient.smtpConfiguration.getConfigurations.useQuery();
 
   const data: ConfigurationListItem[] = [
-    ...(dataSendgrid?.map((configuration) => ({
-      name: configuration.name,
-      provider: "sendgrid" as const,
-      id: configuration.id,
-      active: configuration.active,
-    })) || []),
     ...(dataSmtp?.map((configuration) => ({
       name: configuration.name,
       provider: "smtp" as const,
@@ -33,7 +25,7 @@ const ConfigurationPage: NextPage = () => {
     })) || []),
   ];
 
-  const isLoading = isLoadingSendgrid || isLoadingSmtp;
+  const isLoading = isLoadingSmtp;
 
   if (!appBridgeState) {
     return null;

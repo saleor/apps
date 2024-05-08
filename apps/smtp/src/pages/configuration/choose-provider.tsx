@@ -3,11 +3,9 @@ import { NextPage } from "next";
 import { SectionWithDescription } from "../../components/section-with-description";
 import { ProviderSelectionBox } from "../../modules/app-configuration/ui/provider-selection-box";
 import { useRouter } from "next/router";
-import { sendgridUrls } from "../../modules/sendgrid/urls";
 import { smtpUrls } from "../../modules/smtp/urls";
 import { appUrls } from "../../modules/app-configuration/urls";
 import { BasicLayout } from "../../components/basic-layout";
-import { SendgridLogo } from "../../modules/sendgrid/ui/sendgrid-logo";
 import { SmtpLogo } from "../../modules/smtp/ui/smtp-logo";
 
 const ChooseProviderPage: NextPage = () => {
@@ -27,13 +25,6 @@ const ChooseProviderPage: NextPage = () => {
       </Box>
       <SectionWithDescription title="Choose provider">
         <Box display="grid" gridTemplateColumns={2} gap={3}>
-          <ProviderSelectionBox
-            providerName="SendGrid"
-            providerLogo={<SendgridLogo height={20} width={20} />}
-            providerDescription="Use dynamic templates created in SendGrid dashboard to send messages. Event data will be forwarded to SendGrid."
-            onClick={() => push(sendgridUrls.newConfiguration())}
-          />
-
           <ProviderSelectionBox
             providerName="SMTP"
             providerLogo={<SmtpLogo height={20} width={20} />}
