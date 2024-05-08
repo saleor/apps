@@ -1,54 +1,61 @@
-import { LineItemModel } from "avatax/lib/models/LineItemModel";
-
-type SKU = string | null | undefined;
-type VariantId = string | null | undefined;
+import { Result, err, ok } from "neverthrow";
+import { z } from "zod";
+import { OrderLineFragment } from "../../../generated/graphql";
+import { BaseError } from "../../error";
+import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";
+import { AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";
 
 export class SaleorOrderLine {
-  private getAmount({
-    gross,
-    net,
-    taxIncluded,
-  }: {
-    gross: number;
-    net: number;
-    taxIncluded: boolean;
-  }) {
-    return taxIncluded ? gross : net;
-  }
+  private static schema = z.object({
+    totalPrice: z.object({
+      gross: z.object({
+        amount: z.number(),
+      }),
+      net: z.object({
+        amount: z.number(),
+      }),
+    }),
+    quantity: z.number(),
+    productSku: z.string().nullable(),
+    productVariantId: z.string().nullable(),
+    productName: z.string(),
+    taxClass: z.object({ id: z.string() }).nullable().optional(),
+  });
 
-  private getItemCode(sku: SKU, variantId: VariantId) {
-    return sku ?? variantId ?? "";
-  }
+  private constructor(private data: z.infer<typeof SaleorOrderLine.schema>) {}
 
-  public toAvataxLineItem({
-    taxIncluded,
-    gross,
-    net,
-    taxCode,
-    quantity,
-    discounted,
-    productSku,
-    productVariantId,
-    description,
-  }: {
-    gross: number;
-    net: number;
-    taxCode: string;
-    quantity: number;
-    discounted: boolean;
-    productSku: SKU;
-    productVariantId: VariantId;
-    description: string;
-    taxIncluded: boolean;
-  }): LineItemModel {
-    return {
-      amount: this.getAmount({ taxIncluded, gross, net }),
-      taxIncluded,
-      taxCode,
-      quantity,
-      discounted,
-      itemCode: this.getItemCode(productSku, productVariantId),
-      description,
-    };
-  }
+  static ParsingError = BaseError.subclass("SaleorOrderLineParsingError");
+
+  static createFromGraphQL = (payload: OrderLineFragment) => {
+    const parser = Result.fromThrowable(
+      SaleorOrderLine.schema.parse,
+      SaleorOrderLine.ParsingError.normalize,
+    );
+
+    const parsedPayload = parser(payload);
+
+    if (parsedPayload.isErr()) {
+      return err(parsedPayload.error);
+    }
+
+    return ok(new SaleorOrderLine(parsedPayload.value));
+  };
+
+  getAmount = ({ isTaxIncluded }: { isTaxIncluded: boolean }) =>
+    isTaxIncluded ? this.data.totalPrice.gross.amount : this.data.totalPrice.net.amount;
+
+  getTaxCode = (matches: AvataxTaxCodeMatches) => {
+    const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
+
+    return matcher.match({
+      taxClassId: this.data.taxClass?.id,
+      matches,
+    });
+  };
+
+  getQuantity = () => this.data.quantity;
+
+  getItemCode = () => this.data.productSku ?? this.data.productVariantId ?? "";
+
+  getDescription = () => this.data.productName;
 }

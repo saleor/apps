@@ -11,7 +11,7 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { SaleorOrder, SaleorOrderParser } from "../../../modules/saleor";
+import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
@@ -42,10 +42,10 @@ export default wrapWithLoggerContext(
         }
 
         logger.info("Handler called with payload");
-        const parseOrderResult = SaleorOrderParser.parse(payload);
+        const confirmedOrderFromPayload = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
-        if (parseOrderResult.isErr()) {
-          const error = parseOrderResult.error;
+        if (confirmedOrderFromPayload.isErr()) {
+          const error = confirmedOrderFromPayload.error;
 
           // Capture error when there is problem with parsing webhook payload - it should not happen
           Sentry.captureException(error);
@@ -53,11 +53,11 @@ export default wrapWithLoggerContext(
           return res.status(500).send(error.message);
         }
 
-        if (parseOrderResult.isOk()) {
+        if (confirmedOrderFromPayload.isOk()) {
           try {
-            const saleorOrder = new SaleorOrder(parseOrderResult.value);
+            const confirmedOrderEvent = confirmedOrderFromPayload.value;
 
-            if (saleorOrder.isFulfilled()) {
+            if (confirmedOrderEvent.isFulfilled()) {
               /**
                * TODO Should it be 400? Maybe just 200?
                */
@@ -65,7 +65,7 @@ export default wrapWithLoggerContext(
               return res.status(400).send("Skipping fulfilled order to prevent duplication");
             }
 
-            if (saleorOrder.isStrategyFlatRates()) {
+            if (confirmedOrderEvent.isStrategyFlatRates()) {
               logger.info("Order has flat rates tax strategy, skipping...");
               return res.status(202).send("Order has flat rates tax strategy.");
             }
@@ -80,7 +80,7 @@ export default wrapWithLoggerContext(
                 try {
                   new AppConfigurationLogger(logger).logConfiguration(
                     config,
-                    saleorOrder.channelSlug,
+                    confirmedOrderEvent.getChannelSlug(),
                   );
                 } catch (e) {
                   captureException(
@@ -110,14 +110,16 @@ export default wrapWithLoggerContext(
 
             const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
               config.value,
-              saleorOrder.channelSlug,
+              confirmedOrderEvent.getChannelSlug(),
             );
 
             logger.debug("Confirming order...");
 
             if (webhookServiceResult.isOk()) {
               const { taxProvider } = webhookServiceResult.value;
-              const providerConfig = config.value.getConfigForChannelSlug(saleorOrder.channelSlug);
+              const providerConfig = config.value.getConfigForChannelSlug(
+                confirmedOrderEvent.getChannelSlug(),
+              );
 
               if (providerConfig.isErr()) {
                 return res.status(400).send("App is not configured properly.");
@@ -127,7 +129,7 @@ export default wrapWithLoggerContext(
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
                   payload.order,
-                  saleorOrder,
+                  confirmedOrderEvent,
                   providerConfig.value.avataxConfig.config,
                   ctx.authData,
                 );
@@ -141,7 +143,7 @@ export default wrapWithLoggerContext(
                 const orderMetadataManager = new OrderMetadataManager(client);
 
                 await orderMetadataManager.updateOrderMetadataWithExternalId(
-                  saleorOrder.id,
+                  confirmedOrderEvent.getOrderId(),
                   confirmedOrder.id,
                 );
                 logger.info("Updated order metadata with externalId");
