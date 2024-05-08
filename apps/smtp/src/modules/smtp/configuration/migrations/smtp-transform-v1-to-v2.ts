@@ -14,7 +14,7 @@ export const smtpTransformV1toV2 = ({ configV1, appConfigV1 }: SmtpTransformV1to
   };
 
   configV1.configurations.forEach((config) => {
-    const channels = getChannelsAssignedToConfigId(config.id, "mjml", appConfigV1);
+    const channels = getChannelsAssignedToConfigId(config.id, appConfigV1);
 
     migratedConfigurationRoot.configurations.push({
       id: config.id,

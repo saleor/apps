@@ -3,7 +3,6 @@ import { AppConfig } from "../app-config-schema";
 
 export const getChannelsAssignedToConfigId = (
   configId: string,
-  moduleName: "sendgrid" | "mjml",
   appConfig?: AppConfig,
 ): ChannelConfiguration => {
   if (!appConfig) {
@@ -16,19 +15,12 @@ export const getChannelsAssignedToConfigId = (
 
   const channels = [];
 
-  if (moduleName === "sendgrid") {
-    for (const key in appConfig.configurationsPerChannel) {
-      if (appConfig.configurationsPerChannel[key].sendgridConfigurationId === configId) {
-        channels.push(key);
-      }
-    }
-  } else {
-    for (const key in appConfig.configurationsPerChannel) {
-      if (appConfig.configurationsPerChannel[key].mjmlConfigurationId === configId) {
-        channels.push(key);
-      }
+  for (const key in appConfig.configurationsPerChannel) {
+    if (appConfig.configurationsPerChannel[key].mjmlConfigurationId === configId) {
+      channels.push(key);
     }
   }
+
   return {
     channels,
     mode: "restrict",

@@ -62,6 +62,4 @@ export const sendEventMessages = async ({
       logger.error(smtpStatus?.errors);
     }
   }
-
-  logger.debug("Channel has assigned Sendgrid configuration");
 };
