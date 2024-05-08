@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.1.0
+
+### Minor Changes
+
+- 827be8c8: Extracted webhook migration logic to new class: WebhookMigrationRunner. It should be used by apps to run webhook migrations.
+
 ## 0.0.7
 
 ### Patch Changes
