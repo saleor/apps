@@ -1,5 +1,17 @@
 # app-avatax
 
+## 1.4.6
+
+### Patch Changes
+
+- 44c9043b: Refactored order confirmed transformer. Now it will take value object SaleorOrderConfirmedEvent that should implement business logic.
+- 7fcadca6: Added Sentry & error logging for a case when we have an error on Saleor GraphQL subscription. It should help us in spotting issues.
+- 827be8c8: Updated avatax app to reflect changes from webhoook-utils. Now migration script will log its messages to OTEL.
+- Updated dependencies [eec25524]
+- Updated dependencies [827be8c8]
+  - @saleor/apps-logger@1.2.4
+  - @saleor/webhook-utils@0.1.0
+
 ## 1.4.5
 
 ### Patch Changes
