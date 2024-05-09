@@ -1,8 +1,8 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { EmailCompiler } from "../smtp/send-smtp";
+import { EmailCompiler } from "../smtp/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
-import { SmtpEmailSender } from "../smtp/send-email-with-smtp";
+import { ISMTPEmailSender, SendMailArgs } from "../smtp/smtp-email-sender";
 
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
@@ -11,7 +11,7 @@ export class SendEventMessagesUseCase {
     private deps: {
       smtpConfigurationService: SmtpConfigurationService;
       emailCompiler: EmailCompiler;
-      emailSender: SmtpEmailSender;
+      emailSender: ISMTPEmailSender;
     },
   ) {}
 
@@ -49,13 +49,26 @@ export class SendEventMessagesUseCase {
           return; // todo log
         }
 
-        const result = await this.deps.emailSender.sendEmailWithSmtp(preparedEmail);
+        const smtpSettings: SendMailArgs["smtpSettings"] = {
+          host: smtpConfiguration.smtpHost,
+          port: parseInt(smtpConfiguration.smtpPort, 10),
+          encryption: smtpConfiguration.encryption,
+        };
 
-        /**
-         * TODO: Implement modern-errors
-         */
-        if (result?.errors?.length) {
-          this.logger.error("SMTP returned errors", { error: result?.errors });
+        if (smtpConfiguration.smtpUser) {
+          smtpSettings.auth = {
+            user: smtpConfiguration.smtpUser,
+            pass: smtpConfiguration.smtpPassword,
+          };
+        }
+
+        try {
+          await this.deps.emailSender.sendEmailWithSmtp({
+            mailData: preparedEmail,
+            smtpSettings,
+          });
+        } catch (e) {
+          this.logger.error("SMTP returned errors", { error: e });
         }
       } catch (e) {
         this.logger.error("Error compiling");

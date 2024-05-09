@@ -1,8 +1,6 @@
 import nodemailer from "nodemailer";
 import { createLogger } from "../../logger";
-import { SmtpEncryptionType } from "./configuration/smtp-config-schema-v2";
-
-const logger = createLogger("sendEmailWithSmtp");
+import { SmtpEncryptionType } from "./configuration/smtp-config-schema";
 
 export interface SendMailArgs {
   smtpSettings: {
@@ -23,9 +21,15 @@ export interface SendMailArgs {
   };
 }
 
-export class SmtpEmailSender {
+export interface ISMTPEmailSender {
+  sendEmailWithSmtp({ smtpSettings, mailData }: SendMailArgs): Promise<{ response: any }>;
+}
+
+export class SmtpEmailSender implements ISMTPEmailSender {
+  private logger = createLogger("SmtpEmailSender");
+
   async sendEmailWithSmtp({ smtpSettings, mailData }: SendMailArgs) {
-    logger.debug("Sending an email with SMTP");
+    this.logger.debug("Sending an email with SMTP");
 
     let transporter: nodemailer.Transporter;
 
@@ -81,15 +85,19 @@ export class SmtpEmailSender {
         ...mailData,
       });
 
-      logger.debug("An email has been sent");
+      this.logger.debug("An email has been sent");
+
       return { response };
     } catch (error) {
-      logger.error("Error during sending the email");
+      this.logger.error("Error during sending the email");
+
       if (error instanceof Error) {
-        logger.error(error.message);
-        return { errors: [{ message: error.message }] };
+        this.logger.error(error.message);
+
+        throw error;
       }
-      return { errors: [{ message: "SMTP error" }] };
+
+      throw new Error("SMTP error");
     }
   }
 }

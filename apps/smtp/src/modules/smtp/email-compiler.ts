@@ -1,20 +1,30 @@
 import { compileMjml } from "./compile-mjml";
 import { compileHandlebarsTemplate } from "./compile-handlebars-template";
-import { SendMailArgs } from "./send-email-with-smtp";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
 import { SmtpConfiguration } from "./configuration/smtp-config-schema";
 import { createLogger } from "../../logger";
 
-interface SendSmtpArgs {
+interface CompileArgs {
   smtpConfiguration: SmtpConfiguration;
   recipientEmail: string;
   event: MessageEventTypes;
   payload: any;
 }
 
+export interface CompiledEmail {
+  from: string;
+  to: string;
+  text: string;
+  html: string;
+  subject: string;
+}
+
+export interface IEmailCompiler {
+  compile(): CompiledEmail;
+}
+
 /*
- * todo rename file
  * todo introduce modern-errors
  */
 export class EmailCompiler {
@@ -25,7 +35,7 @@ export class EmailCompiler {
     recipientEmail,
     event,
     smtpConfiguration,
-  }: SendSmtpArgs): SendMailArgs | undefined {
+  }: CompileArgs): CompiledEmail | undefined {
     const logger = createLogger("sendSmtp", {
       name: "sendSmtp",
       event,
@@ -111,28 +121,12 @@ export class EmailCompiler {
 
     logger.debug("Email body converted to plaintext");
 
-    const sendEmailSettings: SendMailArgs = {
-      mailData: {
-        text: emailBodyPlaintext,
-        html: emailBodyHtml,
-        from: `${smtpConfiguration.senderName} <${smtpConfiguration.senderEmail}>`,
-        to: recipientEmail,
-        subject: emailSubject,
-      },
-      smtpSettings: {
-        host: smtpConfiguration.smtpHost,
-        port: parseInt(smtpConfiguration.smtpPort, 10),
-        encryption: smtpConfiguration.encryption,
-      },
+    return {
+      text: emailBodyPlaintext,
+      html: emailBodyHtml,
+      from: `${smtpConfiguration.senderName} <${smtpConfiguration.senderEmail}>`,
+      to: recipientEmail,
+      subject: emailSubject,
     };
-
-    if (smtpConfiguration.smtpUser) {
-      sendEmailSettings.smtpSettings.auth = {
-        user: smtpConfiguration.smtpUser,
-        pass: smtpConfiguration.smtpPassword,
-      };
-    }
-
-    return sendEmailSettings;
   }
 }
