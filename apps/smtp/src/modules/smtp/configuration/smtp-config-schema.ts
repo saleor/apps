@@ -1,22 +1,22 @@
 import {
-  smtpConfigurationEventV2Schema,
-  SmtpConfigurationV2,
-  smtpConfigurationV2Schema,
-  SmtpConfigV2,
-  smtpConfigV2Schema,
+  smtpConfigurationEventSchema,
+  SmtpConfiguration,
+  smtpConfigurationSchema,
+  SmtpConfig,
+  smtpConfigSchema,
   SmtpEventConfigurationV2,
-} from "./migrations/smtp-config-schema-v2";
+} from "./smtp-config-schema-v2";
 
 export const smtpEncryptionTypes = ["NONE", "TLS", "SSL"] as const;
 
-export const smtpConfigurationEventSchema = smtpConfigurationEventV2Schema;
+export const smtpConfigurationEventSchema = smtpConfigurationEventSchema;
 
 export type SmtpEventConfiguration = SmtpEventConfigurationV2;
 
-export const smtpConfigurationSchema = smtpConfigurationV2Schema;
+export const smtpConfigurationSchema = smtpConfigurationSchema;
 
-export type SmtpConfiguration = SmtpConfigurationV2;
+export type SmtpConfiguration = SmtpConfiguration;
 
-export const smtpConfigSchema = smtpConfigV2Schema;
+export const smtpConfigSchema = smtpConfigSchema;
 
-export type SmtpConfig = SmtpConfigV2;
+export type SmtpConfig = SmtpConfig;

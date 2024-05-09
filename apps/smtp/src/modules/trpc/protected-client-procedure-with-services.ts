@@ -1,6 +1,6 @@
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
 import { protectedClientProcedure } from "./protected-client-procedure";
 import { WebhookManagementService } from "../webhook-management/webhook-management-service";
@@ -28,7 +28,7 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
     });
 
     const smtpConfigurationService = new SmtpConfigurationService({
-      metadataManager: new SmtpPrivateMetadataManager(
+      metadataManager: new SmtpMetadataManager(
         createSettingsManager(ctx.apiClient, ctx.appId!),
         ctx.saleorApiUrl,
       ),

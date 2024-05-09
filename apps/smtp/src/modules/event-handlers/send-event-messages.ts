@@ -3,7 +3,7 @@ import { Client } from "urql";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { sendSmtp } from "../smtp/send-smtp";
 import { MessageEventTypes } from "./message-event-types";
-import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { createLogger } from "../../logger";
@@ -34,7 +34,7 @@ export const sendEventMessages = async ({
   });
 
   const smtpConfigurationService = new SmtpConfigurationService({
-    metadataManager: new SmtpPrivateMetadataManager(
+    metadataManager: new SmtpMetadataManager(
       createSettingsManager(client, authData.appId),
       authData.saleorApiUrl,
     ),

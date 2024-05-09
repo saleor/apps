@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { SmtpEncryptionType } from "./configuration/migrations/mjml-config-schema-v1";
 import { createLogger } from "../../logger";
+import { SmtpEncryptionType } from "./configuration/smtp-config-schema-v2";
 
 const logger = createLogger("sendEmailWithSmtp");
 
