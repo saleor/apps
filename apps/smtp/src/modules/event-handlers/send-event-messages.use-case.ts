@@ -1,7 +1,8 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { sendSmtp } from "../smtp/send-smtp";
+import { EmailCompiler } from "../smtp/send-smtp";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
+import { SmtpEmailSender } from "../smtp/send-email-with-smtp";
 
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
@@ -9,6 +10,8 @@ export class SendEventMessagesUseCase {
   constructor(
     private deps: {
       smtpConfigurationService: SmtpConfigurationService;
+      emailCompiler: EmailCompiler;
+      emailSender: SmtpEmailSender;
     },
   ) {}
 
@@ -34,18 +37,30 @@ export class SendEventMessagesUseCase {
      * TODO: Why this is not in parallel?
      */
     for (const smtpConfiguration of availableSmtpConfigurations) {
-      const smtpStatus = await sendSmtp({
+      const preparedEmail = this.deps.emailCompiler.compile({
         event: event,
         payload: payload,
         recipientEmail: recipientEmail,
         smtpConfiguration,
       });
 
+      if (!preparedEmail) {
+        return; // todo log
+      }
+
+      if (preparedEmail.errors) {
+        this.logger.error("Error during the email compilation", { error: preparedEmail.errors });
+
+        return;
+      }
+
+      const result = await this.deps.emailSender.sendEmailWithSmtp(preparedEmail);
+
       /**
        * TODO: Implement modern-errors
        */
-      if (smtpStatus?.errors.length) {
-        this.logger.error("SMTP returned errors", { error: smtpStatus?.errors });
+      if (result?.errors.length) {
+        this.logger.error("SMTP returned errors", { error: result?.errors });
       }
     }
   }
