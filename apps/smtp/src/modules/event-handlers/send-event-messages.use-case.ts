@@ -1,10 +1,8 @@
-import { Client } from "urql";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { sendSmtp } from "../smtp/send-smtp";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 
-// todo rename file
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 

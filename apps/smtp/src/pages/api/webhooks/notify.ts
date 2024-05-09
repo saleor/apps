@@ -1,6 +1,6 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";

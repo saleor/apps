@@ -5,7 +5,7 @@ import {
   OrderConfirmedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
