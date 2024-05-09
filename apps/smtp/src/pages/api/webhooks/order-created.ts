@@ -11,6 +11,8 @@ import { SmtpConfigurationService } from "../../../modules/smtp/configuration/sm
 import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
 import { createSettingsManager } from "../../../lib/metadata-manager";
 import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
+import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
+import { EmailCompiler } from "../../../modules/smtp/email-compiler";
 
 const OrderCreatedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -71,6 +73,8 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   });
 
   const useCase = new SendEventMessagesUseCase({
+    emailSender: new SmtpEmailSender(),
+    emailCompiler: new EmailCompiler(),
     smtpConfigurationService: new SmtpConfigurationService({
       featureFlagService: new FeatureFlagService({ client }),
       metadataManager: new SmtpMetadataManager(

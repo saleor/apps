@@ -1,5 +1,5 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { EmailCompiler } from "../smtp/email-compiler";
+import { IEmailCompiler } from "../smtp/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/smtp-email-sender";
@@ -10,7 +10,7 @@ export class SendEventMessagesUseCase {
   constructor(
     private deps: {
       smtpConfigurationService: SmtpConfigurationService;
-      emailCompiler: EmailCompiler;
+      emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
   ) {}

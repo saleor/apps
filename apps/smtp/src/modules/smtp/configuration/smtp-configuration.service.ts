@@ -260,7 +260,7 @@ export class SmtpConfigurationService {
     eventType,
   }: {
     configurationId: string;
-    eventType: SmtpEventConfiguration["eventType"];
+    eventType: MessageEventTypes;
     eventConfiguration: Partial<Omit<SmtpEventConfiguration, "eventType">>;
   }) {
     logger.debug("Update event configuration");

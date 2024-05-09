@@ -21,13 +21,13 @@ export interface CompiledEmail {
 }
 
 export interface IEmailCompiler {
-  compile(): CompiledEmail;
+  compile(args: CompileArgs): CompiledEmail | undefined;
 }
 
 /*
  * todo introduce modern-errors
  */
-export class EmailCompiler {
+export class EmailCompiler implements IEmailCompiler {
   constructor() {}
 
   compile({

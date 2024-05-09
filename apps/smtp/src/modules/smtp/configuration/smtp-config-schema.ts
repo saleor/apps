@@ -12,7 +12,7 @@ export const smtpConfigurationEventSchema = z.object({
   subject: z.string(),
 });
 
-export type SmtpEventConfigurationV2 = z.infer<typeof smtpConfigurationEventSchema>;
+export type SmtpEventConfiguration = z.infer<typeof smtpConfigurationEventSchema>;
 
 export const smtpConfigurationSchema = z.object({
   id: z.string().min(1),
