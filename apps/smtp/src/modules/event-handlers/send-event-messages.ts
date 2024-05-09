@@ -1,65 +1,54 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { Client } from "urql";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { sendSmtp } from "../smtp/send-smtp";
 import { MessageEventTypes } from "./message-event-types";
-import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
-import { createSettingsManager } from "../../lib/metadata-manager";
-import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { createLogger } from "../../logger";
 
-interface SendEventMessagesArgs {
-  recipientEmail: string;
-  channel: string;
-  event: MessageEventTypes;
-  authData: AuthData;
-  payload: any;
-  client: Client;
-}
+// todo rename file
+export class SendEventMessagesUseCase {
+  private logger = createLogger("SendEventMessagesUseCase");
 
-export const sendEventMessages = async ({
-  recipientEmail,
-  channel,
-  event,
-  authData,
-  payload,
-  client,
-}: SendEventMessagesArgs) => {
-  const logger = createLogger("sendEventMessages");
+  constructor(
+    private deps: {
+      smtpConfigurationService: SmtpConfigurationService;
+    },
+  ) {}
 
-  logger.debug("Function called");
+  async sendEventMessages({
+    event,
+    payload,
+    recipientEmail,
+    channel,
+  }: {
+    channel: string; // todo: id or slug
+    payload: any; // todo can be narrowed?
+    recipientEmail: string;
+    event: MessageEventTypes;
+  }) {
+    this.logger.info("Calling sendEventMessages", { channel, event });
 
-  const featureFlagService = new FeatureFlagService({
-    client,
-  });
-
-  const smtpConfigurationService = new SmtpConfigurationService({
-    metadataManager: new SmtpMetadataManager(
-      createSettingsManager(client, authData.appId),
-      authData.saleorApiUrl,
-    ),
-    featureFlagService,
-  });
-
-  // Fetch configurations for all providers concurrently
-  const [availableSmtpConfigurations] = await Promise.all([
-    smtpConfigurationService.getConfigurations({
+    const availableSmtpConfigurations = await this.deps.smtpConfigurationService.getConfigurations({
       active: true,
       availableInChannel: channel,
-    }),
-  ]);
-
-  for (const smtpConfiguration of availableSmtpConfigurations) {
-    const smtpStatus = await sendSmtp({
-      event,
-      payload,
-      recipientEmail,
-      smtpConfiguration,
     });
 
-    if (smtpStatus?.errors.length) {
-      logger.error("SMTP errors");
-      logger.error(smtpStatus?.errors);
+    /**
+     * TODO: Why this is not in parallel?
+     */
+    for (const smtpConfiguration of availableSmtpConfigurations) {
+      const smtpStatus = await sendSmtp({
+        event: event,
+        payload: payload,
+        recipientEmail: recipientEmail,
+        smtpConfiguration,
+      });
+
+      /**
+       * TODO: Implement modern-errors
+       */
+      if (smtpStatus?.errors.length) {
+        this.logger.error("SMTP returned errors", { error: smtpStatus?.errors });
+      }
     }
   }
-};
+}

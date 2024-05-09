@@ -5,10 +5,14 @@ import {
   InvoiceSentWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
-import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
+import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
+import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
 
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -50,7 +54,7 @@ export const invoiceSentWebhook = new SaleorAsyncWebhook<InvoiceSentWebhookPaylo
   webhookPath: "api/webhooks/invoice-sent",
   asyncEvent: "INVOICE_SENT",
   apl: saleorApp.apl,
-  subscriptionQueryAst: InvoiceSentGraphqlSubscription,
+  query: InvoiceSentGraphqlSubscription,
 });
 
 const logger = createLogger(invoiceSentWebhook.name);
@@ -85,10 +89,18 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
     token: authData.token,
   });
 
-  await sendEventMessages({
-    authData,
+  const useCase = new SendEventMessagesUseCase({
+    smtpConfigurationService: new SmtpConfigurationService({
+      featureFlagService: new FeatureFlagService({ client }),
+      metadataManager: new SmtpMetadataManager(
+        createSettingsManager(client, authData.appId),
+        authData.saleorApiUrl,
+      ),
+    }),
+  });
+
+  await useCase.sendEventMessages({
     channel,
-    client,
     event: "INVOICE_SENT",
     payload: { order: payload.order },
     recipientEmail,
