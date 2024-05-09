@@ -37,30 +37,28 @@ export class SendEventMessagesUseCase {
      * TODO: Why this is not in parallel?
      */
     for (const smtpConfiguration of availableSmtpConfigurations) {
-      const preparedEmail = this.deps.emailCompiler.compile({
-        event: event,
-        payload: payload,
-        recipientEmail: recipientEmail,
-        smtpConfiguration,
-      });
+      try {
+        const preparedEmail = this.deps.emailCompiler.compile({
+          event: event,
+          payload: payload,
+          recipientEmail: recipientEmail,
+          smtpConfiguration,
+        });
 
-      if (!preparedEmail) {
-        return; // todo log
-      }
+        if (!preparedEmail) {
+          return; // todo log
+        }
 
-      if (preparedEmail.errors) {
-        this.logger.error("Error during the email compilation", { error: preparedEmail.errors });
+        const result = await this.deps.emailSender.sendEmailWithSmtp(preparedEmail);
 
-        return;
-      }
-
-      const result = await this.deps.emailSender.sendEmailWithSmtp(preparedEmail);
-
-      /**
-       * TODO: Implement modern-errors
-       */
-      if (result?.errors.length) {
-        this.logger.error("SMTP returned errors", { error: result?.errors });
+        /**
+         * TODO: Implement modern-errors
+         */
+        if (result?.errors?.length) {
+          this.logger.error("SMTP returned errors", { error: result?.errors });
+        }
+      } catch (e) {
+        this.logger.error("Error compiling");
       }
     }
   }

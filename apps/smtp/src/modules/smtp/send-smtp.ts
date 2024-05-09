@@ -13,7 +13,10 @@ interface SendSmtpArgs {
   payload: any;
 }
 
-// todo rename file
+/*
+ * todo rename file
+ * todo introduce modern-errors
+ */
 export class EmailCompiler {
   constructor() {}
 
@@ -22,7 +25,7 @@ export class EmailCompiler {
     recipientEmail,
     event,
     smtpConfiguration,
-  }: SendSmtpArgs): SendMailArgs | undefined | { errors: Array<{ message: string }> } {
+  }: SendSmtpArgs): SendMailArgs | undefined {
     const logger = createLogger("sendSmtp", {
       name: "sendSmtp",
       event,
@@ -51,16 +54,14 @@ export class EmailCompiler {
 
     if (handlebarsSubjectErrors?.length) {
       logger.error("Error during the handlebars subject template compilation");
-      return {
-        errors: [{ message: "Error during the handlebars subject template compilation" }],
-      };
+
+      throw new Error("Error during the handlebars subject template compilation");
     }
 
     if (!emailSubject || !emailSubject?.length) {
       logger.error("Mjml subject message is empty, skipping");
-      return {
-        errors: [{ message: "Mjml subject message is empty, skipping" }],
-      };
+
+      throw new Error("Mjml subject message is empty, skipping");
     }
 
     logger.debug({ emailSubject }, "Subject compiled");
@@ -72,16 +73,13 @@ export class EmailCompiler {
 
     if (handlebarsErrors?.length) {
       logger.error("Error during the handlebars template compilation");
-      return {
-        errors: [{ message: "Error during the handlebars template compilation" }],
-      };
+
+      throw new Error("Error during the handlebars template compilation");
     }
 
     if (!mjmlTemplate || !mjmlTemplate?.length) {
       logger.error("Mjml template message is empty, skipping");
-      return {
-        errors: [{ message: "Mjml template message is empty, skipping" }],
-      };
+      throw new Error("Mjml template message is empty, skipping");
     }
 
     logger.debug("Handlebars template compiled");
@@ -91,20 +89,14 @@ export class EmailCompiler {
     if (mjmlCompilationErrors.length) {
       logger.error("Error during the MJML compilation");
       logger.error(mjmlCompilationErrors);
-      return {
-        errors: [
-          {
-            message: "Error during the MJML compilation. Please Validate your MJML template",
-          },
-        ],
-      };
+
+      throw new Error("Error during the MJML compilation. Please Validate your MJML template");
     }
 
     if (!emailBodyHtml || !emailBodyHtml?.length) {
       logger.error("No MJML template returned after the compilation");
-      return {
-        errors: [{ message: "No MJML template returned after the compilation" }],
-      };
+
+      throw new Error("No MJML template returned after the compilation");
     }
 
     logger.debug("MJML template compiled");
@@ -113,9 +105,8 @@ export class EmailCompiler {
 
     if (!emailBodyPlaintext || !emailBodyPlaintext?.length) {
       logger.error("Email body could not be converted to plaintext");
-      return {
-        errors: [{ message: "Email body could not be converted to plaintext" }],
-      };
+
+      throw new Error("Email body could not be converted to plaintext");
     }
 
     logger.debug("Email body converted to plaintext");
