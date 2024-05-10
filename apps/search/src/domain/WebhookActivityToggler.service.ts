@@ -37,12 +37,9 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
 
   private handleOperationFailure(r: OperationResult) {
     if (r.error || !r.data) {
-      logger.error(
-        {
-          error: r.error,
-        },
-        "Error disabling webhook",
-      );
+      logger.error("Error disabling webhook", {
+        error: r.error,
+      });
       throw new Error("Error disabling webhook");
     }
   }
@@ -138,7 +135,7 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
     const webhooksIds =
       webhooksIdsParam ?? (await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId));
 
-    logger.info(webhooksIds, "Disabling own webhooks");
+    logger.info("Disabling own webhooks", { webhooksIds });
 
     if (!webhooksIds) {
       throw new Error("Failed fetching webhooks");
@@ -150,7 +147,7 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
   async enableOwnWebhooks() {
     const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
 
-    logger.info(webhooksIds, "Enabling own webhooks");
+    logger.info("Enabling own webhooks", { webhooksIds });
 
     if (!webhooksIds) {
       throw new Error("Failed fetching webhooks");
