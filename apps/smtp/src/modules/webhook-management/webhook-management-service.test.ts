@@ -1,4 +1,4 @@
-import { vi, expect, describe, it, afterEach } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { WebhookManagementService } from "./webhook-management-service";
 import { Client } from "urql";
 import * as operationExports from "./api-operations";

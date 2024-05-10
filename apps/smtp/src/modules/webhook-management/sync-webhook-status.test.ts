@@ -3,7 +3,7 @@ import { Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { SmtpPrivateMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
 import * as statusesExports from "./get-webhook-statuses-from-configurations";
 import { syncWebhookStatus } from "./sync-webhook-status";
 import { WebhookManagementService } from "./webhook-management-service";
@@ -28,7 +28,7 @@ describe("syncWebhookStatus", function () {
     .spyOn(webhookManagementService, "deleteWebhook")
     .mockImplementation((_) => Promise.resolve());
 
-  const smtpConfigurator = new SmtpPrivateMetadataManager(
+  const smtpConfigurator = new SmtpMetadataManager(
     null as unknown as SettingsManager,
     mockSaleorApiUrl,
   );

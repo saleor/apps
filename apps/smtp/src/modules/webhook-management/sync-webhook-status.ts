@@ -1,5 +1,5 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { WebhookManagementService, AppWebhook } from "./webhook-management-service";
+import { AppWebhook, WebhookManagementService } from "./webhook-management-service";
 import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
 import { createLogger } from "../../logger";
 

@@ -5,10 +5,16 @@ import {
   OrderCancelledWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
-import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
+import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
+import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
+import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
+import { EmailCompiler } from "../../../modules/smtp/email-compiler";
 
 const OrderCancelledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -33,7 +39,7 @@ export const orderCancelledWebhook = new SaleorAsyncWebhook<OrderCancelledWebhoo
   webhookPath: "api/webhooks/order-cancelled",
   asyncEvent: "ORDER_CANCELLED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: OrderCancelledGraphqlSubscription,
+  query: OrderCancelledGraphqlSubscription,
 });
 
 const logger = createLogger(orderCancelledWebhook.webhookPath);
@@ -68,10 +74,20 @@ const handler: NextWebhookApiHandler<OrderCancelledWebhookPayloadFragment> = asy
     token: authData.token,
   });
 
-  await sendEventMessages({
-    authData,
+  const useCase = new SendEventMessagesUseCase({
+    emailSender: new SmtpEmailSender(),
+    emailCompiler: new EmailCompiler(),
+    smtpConfigurationService: new SmtpConfigurationService({
+      featureFlagService: new FeatureFlagService({ client }),
+      metadataManager: new SmtpMetadataManager(
+        createSettingsManager(client, authData.appId),
+        authData.saleorApiUrl,
+      ),
+    }),
+  });
+
+  await useCase.sendEventMessages({
     channel,
-    client,
     event: "ORDER_CANCELLED",
     payload: { order: payload.order },
     recipientEmail,

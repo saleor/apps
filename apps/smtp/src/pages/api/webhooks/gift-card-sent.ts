@@ -2,10 +2,16 @@ import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handl
 import { gql } from "urql";
 import { saleorApp } from "../../../saleor-app";
 import { GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphql";
-import { sendEventMessages } from "../../../modules/event-handlers/send-event-messages";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
+import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
+import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
+import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
+import { EmailCompiler } from "../../../modules/smtp/email-compiler";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
@@ -64,7 +70,7 @@ export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPay
   webhookPath: "api/webhooks/gift-card-sent",
   asyncEvent: "GIFT_CARD_SENT",
   apl: saleorApp.apl,
-  subscriptionQueryAst: GiftCardSentGraphqlSubscription,
+  query: GiftCardSentGraphqlSubscription,
 });
 
 const logger = createLogger(giftCardSentWebhook.webhookPath);
@@ -105,10 +111,20 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
     token: authData.token,
   });
 
-  await sendEventMessages({
-    authData,
+  const useCase = new SendEventMessagesUseCase({
+    emailSender: new SmtpEmailSender(),
+    emailCompiler: new EmailCompiler(),
+    smtpConfigurationService: new SmtpConfigurationService({
+      featureFlagService: new FeatureFlagService({ client }),
+      metadataManager: new SmtpMetadataManager(
+        createSettingsManager(client, authData.appId),
+        authData.saleorApiUrl,
+      ),
+    }),
+  });
+
+  await useCase.sendEventMessages({
     channel,
-    client,
     event: "GIFT_CARD_SENT",
     payload,
     recipientEmail,

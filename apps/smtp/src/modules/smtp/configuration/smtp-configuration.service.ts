@@ -1,4 +1,4 @@
-import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
 import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { generateRandomId } from "../../../lib/generate-random-id";
@@ -40,11 +40,11 @@ export interface FilterConfigurationsArgs {
 
 export class SmtpConfigurationService {
   private configurationData?: SmtpConfig;
-  private metadataConfigurator: SmtpPrivateMetadataManager;
+  private metadataConfigurator: SmtpMetadataManager;
   private featureFlagService: FeatureFlagService;
 
   constructor(args: {
-    metadataManager: SmtpPrivateMetadataManager;
+    metadataManager: SmtpMetadataManager;
     initialData?: SmtpConfig;
     featureFlagService: FeatureFlagService;
   }) {
@@ -260,7 +260,7 @@ export class SmtpConfigurationService {
     eventType,
   }: {
     configurationId: string;
-    eventType: SmtpEventConfiguration["eventType"];
+    eventType: MessageEventTypes;
     eventConfiguration: Partial<Omit<SmtpEventConfiguration, "eventType">>;
   }) {
     logger.debug("Update event configuration");

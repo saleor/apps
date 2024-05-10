@@ -1,4 +1,4 @@
-import { expect, describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getEventFormStatus } from "./get-event-form-status";
 import { PermissionEnum } from "../../generated/graphql";
 

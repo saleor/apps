@@ -1,7 +1,7 @@
-import { vi, expect, describe, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpPrivateMetadataManager } from "./smtp-metadata-manager";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 import { SmtpConfig } from "./smtp-config-schema";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { Client } from "urql";
@@ -196,7 +196,7 @@ const validConfig: SmtpConfig = {
 describe("SmtpConfigurationService", function () {
   describe("constructor", () => {
     it("No API calls, when configuration is not requested", () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -217,7 +217,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("getConfigurationRoot", () => {
     it("The API should be called and response reused, when no initial data provided", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -243,7 +243,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("The API should not be called when initial data were provided", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -266,7 +266,7 @@ describe("SmtpConfigurationService", function () {
   });
   describe("setConfigurationRoot", () => {
     it("The API should be called and value cached, when saving the configuration", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -296,7 +296,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Operation should be rejected, when attempting to save event not available according to feature flag", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -320,7 +320,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("getConfiguration", () => {
     it("Returns configuration when existing ID is provided", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -340,7 +340,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Throws error when configuration with provided ID does not exist", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -362,7 +362,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("getConfigurations", () => {
     it("Returns empty list when no configurations", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -380,7 +380,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Returns relevant configurations, when filter is passed", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -403,7 +403,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("createConfiguration", () => {
     it("New configuration should be sent to API, when created", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -435,7 +435,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("updateConfiguration", () => {
     it("Configuration should be updated, when method is called", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -469,7 +469,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Error should be thrown, when configuration with given ID does not exist", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -497,7 +497,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("deleteConfiguration", () => {
     it("Configuration should be deleted, when method is called", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -530,7 +530,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("deleteConfiguration", () => {
     it("Error should be thrown, when given ID does not exist", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -559,7 +559,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("getEventConfiguration", () => {
     it("Event configuration should be returned, when valid query", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -582,7 +582,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Should throw error, when configuration does not exist", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -615,7 +615,7 @@ describe("SmtpConfigurationService", function () {
 
   describe("updateEventConfiguration", () => {
     it("Event configuration should be updated, when valid data passed", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );
@@ -651,7 +651,7 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Should throw error, when configuration does not exist", async () => {
-      const configurator = new SmtpPrivateMetadataManager(
+      const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
       );

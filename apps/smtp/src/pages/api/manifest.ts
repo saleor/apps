@@ -12,7 +12,7 @@ export default withOtel(
 
       const manifest: AppManifest = {
         about:
-          "Emails & Messages App is a multi-vendor Saleor app that integrates with notification services.",
+          "SMTP App is a Saleor integration that allows you to send emails using your own SMTP server.",
         appUrl: iframeBaseUrl,
         author: "Saleor Commerce",
         brand: {
@@ -28,8 +28,8 @@ export default withOtel(
            */
         ],
         homepageUrl: "https://github.com/saleor/apps",
-        id: "saleor.app.emails-and-messages",
-        name: "Emails & Messages",
+        id: "saleor.app.smtp",
+        name: "SMTP",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
         /**
          * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing

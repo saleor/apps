@@ -25,7 +25,7 @@ const IndexPage: NextPage = () => {
   return (
     <div>
       <h1>{appName}</h1>
-      <p>This is Saleor App that allows product feed generation</p>
+      <p>This is Saleor App that allows sending emails from Saleor events via SMTP</p>
       <p>Install app in your Saleor instance and open in with Dashboard</p>
     </div>
   );

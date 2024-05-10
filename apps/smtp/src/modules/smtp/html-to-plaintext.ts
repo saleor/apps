@@ -1,4 +1,5 @@
 import { convert } from "html-to-text";
+
 import { createLogger } from "../../logger";
 
 const logger = createLogger("htmlToPlaintext");
