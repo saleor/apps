@@ -1,6 +1,6 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpConfig } from "./smtp-config-schema";
-import { fromThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { fromAsyncThrowable, fromThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
 import { BaseError } from "../../../errors";
 
 export class SmtpMetadataManager {
@@ -9,22 +9,29 @@ export class SmtpMetadataManager {
   static SmtpMetadataManagerError = BaseError.subclass("SmtpMetadataManagerError");
   static ParseConfigError = this.SmtpMetadataManagerError.subclass("ParseConfigError");
   static SetConfigError = this.SmtpMetadataManagerError.subclass("SetConfigError");
+  static FetchConfigError = this.SmtpMetadataManagerError.subclass("FetchConfigError");
 
   constructor(
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
   ) {}
 
-  async getConfig(): Promise<
-    Result<SmtpConfig | undefined, InstanceType<typeof SmtpMetadataManager.ParseConfigError>>
+  getConfig(): ResultAsync<
+    SmtpConfig | undefined,
+    InstanceType<
+      typeof SmtpMetadataManager.ParseConfigError | typeof SmtpMetadataManager.FetchConfigError
+    >
   > {
-    const rawConfig = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
+    return fromAsyncThrowable(
+      this.metadataManager.get,
+      SmtpMetadataManager.FetchConfigError.normalize,
+    )(this.metadataKey, this.saleorApiUrl).andThen((config) => {
+      if (!config) {
+        return ok(undefined);
+      }
 
-    if (!rawConfig) {
-      return ok(undefined);
-    }
-
-    return fromThrowable(JSON.parse, SmtpMetadataManager.ParseConfigError.normalize)(rawConfig);
+      return fromThrowable(JSON.parse, SmtpMetadataManager.ParseConfigError.normalize)(config);
+    });
   }
 
   setConfig(
