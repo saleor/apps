@@ -38,7 +38,7 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
       res.status(200).end();
       return;
     } catch (e) {
-      logger.info("Algolia updateProduct failed.", { error: e });
+      logger.warn("Algolia updateProduct failed.", { error: e });
 
       if (AlgoliaErrorParser.isAuthError(e)) {
         logger.info("Detect Auth error from Algolia. Webhooks will be disabled", { error: e });

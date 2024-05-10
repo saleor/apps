@@ -231,10 +231,10 @@ const groupVariantByIndexName = (
       );
 
       if (!productChannelListing) {
-        logger.debug(
-          { var: channelListing, prod: productChannelListing },
-          "no product channel listing found - abort",
-        );
+        logger.debug("no product channel listing found - abort", {
+          var: channelListing,
+          prod: productChannelListing,
+        });
         return false;
       }
 
