@@ -62,7 +62,7 @@
     "modern-errors": "7.0.0",
     "modern-errors-serialize": "6.0.0",
     "neverthrow": "6.1.0",
-    "next": "14.1.0",
+    "next": "14.2.3",
     "pino": "^8.14.1",
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
