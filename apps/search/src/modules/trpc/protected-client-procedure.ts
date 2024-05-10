@@ -2,10 +2,12 @@ import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { middleware, procedure } from "./trpc-server";
 import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { logger } from "@saleor/apps-shared";
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
+import { createLogger } from "../../lib/logger";
+
+const logger = createLogger("protectedClientProcedure");
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -71,8 +73,9 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
 
   if (!ctx.ssr) {
     try {
-      logger.debug("trying to verify JWT token from frontend");
-      logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
+      logger.debug("trying to verify JWT token from frontend", {
+        token: ctx.token ? `${ctx.token[0]}...` : undefined,
+      });
 
       await verifyJWT({
         appId: ctx.appId,
