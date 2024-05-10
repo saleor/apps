@@ -7,13 +7,14 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CodeEditor } from "./code-editor";
 import { useDebounce } from "usehooks-ts";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { examplePayloads } from "../../event-handlers/default-payloads";
 import { MjmlPreview } from "./mjml-preview";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
+
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
 interface EventFormProps {

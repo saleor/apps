@@ -1,10 +1,10 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 
-import { defaultMjmlTemplates, defaultMjmlSubjectTemplates } from "../default-templates";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import {
   SmtpConfiguration,
-  smtpConfigurationSchema,
   smtpConfigurationEventSchema,
+  smtpConfigurationSchema,
 } from "./smtp-config-schema";
 
 const eventsConfiguration = (): SmtpConfiguration["events"] =>
