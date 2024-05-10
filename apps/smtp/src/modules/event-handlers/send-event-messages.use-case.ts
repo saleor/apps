@@ -33,10 +33,14 @@ export class SendEventMessagesUseCase {
       availableInChannel: channelSlug,
     });
 
+    if (availableSmtpConfigurations.isErr()) {
+      throw new Error(availableSmtpConfigurations.error.message); //todo add neverthrow
+    }
+
     /**
      * TODO: Why this is not in parallel?
      */
-    for (const smtpConfiguration of availableSmtpConfigurations) {
+    for (const smtpConfiguration of availableSmtpConfigurations.value) {
       try {
         const preparedEmail = this.deps.emailCompiler.compile({
           event: event,

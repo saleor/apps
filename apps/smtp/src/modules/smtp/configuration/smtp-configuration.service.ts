@@ -11,30 +11,8 @@ import { err, errAsync, fromAsyncThrowable, ok, okAsync, Result, ResultAsync } f
 
 const logger = createLogger("SmtpConfigurationService");
 
-export type SmtpConfigurationServiceErrorType =
-  | "OTHER"
-  | "CONFIGURATION_NOT_FOUND"
-  | "EVENT_CONFIGURATION_NOT_FOUND"
-  | "CANT_FETCH"
-  | "WRONG_SALEOR_VERSION";
-
 export interface ConfigurationPartial extends Partial<SmtpConfiguration> {
   id: SmtpConfiguration["id"];
-}
-
-/**
- * @deprecated
- */
-export class SmtpConfigurationServiceError extends Error {
-  errorType: SmtpConfigurationServiceErrorType = "OTHER";
-
-  constructor(message: string, errorType: SmtpConfigurationServiceErrorType) {
-    super(message);
-    if (errorType) {
-      this.errorType = errorType;
-    }
-    Object.setPrototypeOf(this, SmtpConfigurationServiceError.prototype);
-  }
 }
 
 export interface FilterConfigurationsArgs {
@@ -45,6 +23,10 @@ export interface FilterConfigurationsArgs {
 
 export class SmtpConfigurationService {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
+  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
+  static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
+  static CantFetchConfigError = BaseError.subclass("CantFetchConfigError");
+  static WrongSaleorVersionError = BaseError.subclass("WrongSaleorVersionError");
 
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
@@ -118,12 +100,9 @@ export class SmtpConfigurationService {
       })
       .orElse((error) => {
         return err(
-          new SmtpConfigurationService.SmtpConfigurationServiceError(
-            "API returned no configuration",
-            {
-              errors: [error],
-            },
-          ),
+          new SmtpConfigurationService.CantFetchConfigError("API returned no configuration", {
+            errors: [error],
+          }),
         );
       });
   }
@@ -155,7 +134,7 @@ export class SmtpConfigurationService {
         );
 
         return errAsync(
-          new SmtpConfigurationService.SmtpConfigurationServiceError(
+          new SmtpConfigurationService.WrongSaleorVersionError(
             "Gift card sent event is not supported for this Saleor version",
           ),
         );
@@ -175,28 +154,17 @@ export class SmtpConfigurationService {
   getConfiguration({ id }: { id: string }) {
     logger.debug("Get configuration");
 
-    return this.getConfigurationRoot()
-      .orElse((error) => {
-        return err(
-          new SmtpConfigurationService.SmtpConfigurationServiceError(
-            "Can't resolve app configuration",
-            {
-              errors: [error],
-            },
-          ),
+    return this.getConfigurationRoot().andThen((config) => {
+      const configuration = config.configurations.find((conf) => conf.id === id);
+
+      if (!configuration) {
+        return errAsync(
+          new SmtpConfigurationService.ConfigNotFoundError("Configuration not found"),
         );
-      })
-      .andThen((config) => {
-        const configuration = config.configurations.find((conf) => conf.id === id);
+      }
 
-        if (!configuration) {
-          return errAsync(
-            new SmtpConfigurationService.SmtpConfigurationServiceError("Configuration not found"),
-          );
-        }
-
-        return okAsync(configuration);
-      });
+      return okAsync(configuration);
+    });
   }
 
   /**
@@ -294,9 +262,7 @@ export class SmtpConfigurationService {
 
       if (!event) {
         return errAsync(
-          new SmtpConfigurationService.SmtpConfigurationServiceError(
-            "Event configuration not found",
-          ),
+          new SmtpConfigurationService.EventConfigNotFoundError("Event configuration not found"),
         );
       }
 
@@ -327,9 +293,7 @@ export class SmtpConfigurationService {
         logger.warn("Event configuration not found, throwing an error");
 
         return errAsync(
-          new SmtpConfigurationService.SmtpConfigurationServiceError(
-            "Event configuration not found",
-          ),
+          new SmtpConfigurationService.EventConfigNotFoundError("Event configuration not found"),
         );
       }
 
