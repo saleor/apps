@@ -1,30 +1,39 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpConfig } from "./smtp-config-schema";
+import { fromThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { BaseError } from "../../../errors";
 
 export class SmtpMetadataManager {
   private metadataKey = "smtp-config";
+
+  static SmtpMetadataManagerError = BaseError.subclass("SmtpMetadataManagerError");
+  static ParseConfigError = this.SmtpMetadataManagerError.subclass("ParseConfigError");
+  static SetConfigError = this.SmtpMetadataManagerError.subclass("SetConfigError");
 
   constructor(
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
   ) {}
 
-  getConfig(): Promise<SmtpConfig | undefined> {
-    return this.metadataManager.get(this.metadataKey, this.saleorApiUrl).then((data) => {
-      if (!data) {
-        return data;
-      }
+  async getConfig(): Promise<
+    Result<SmtpConfig | undefined, InstanceType<typeof SmtpMetadataManager.ParseConfigError>>
+  > {
+    const rawConfig = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
 
-      try {
-        return JSON.parse(data);
-      } catch (e) {
-        throw new Error("Invalid metadata value, can't be parsed");
-      }
-    });
+    if (!rawConfig) {
+      return ok(undefined);
+    }
+
+    return fromThrowable(JSON.parse, SmtpMetadataManager.ParseConfigError.normalize)(rawConfig);
   }
 
-  setConfig(config: SmtpConfig): Promise<void> {
-    return this.metadataManager.set({
+  setConfig(
+    config: SmtpConfig,
+  ): ResultAsync<void, InstanceType<typeof SmtpMetadataManager.SetConfigError>> {
+    return ResultAsync.fromThrowable(
+      this.metadataManager.set,
+      SmtpMetadataManager.SetConfigError.normalize,
+    )({
       key: this.metadataKey,
       value: JSON.stringify(config),
       domain: this.saleorApiUrl,

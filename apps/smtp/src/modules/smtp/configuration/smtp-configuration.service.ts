@@ -6,6 +6,8 @@ import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurati
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { createLogger } from "../../../logger";
+import { BaseError } from "../../../errors";
+import { err, ok, Result } from "neverthrow";
 
 const logger = createLogger("SmtpConfigurationService");
 
@@ -20,6 +22,9 @@ export interface ConfigurationPartial extends Partial<SmtpConfiguration> {
   id: SmtpConfiguration["id"];
 }
 
+/**
+ * @deprecated
+ */
 export class SmtpConfigurationServiceError extends Error {
   errorType: SmtpConfigurationServiceErrorType = "OTHER";
 
@@ -39,6 +44,8 @@ export interface FilterConfigurationsArgs {
 }
 
 export class SmtpConfigurationService {
+  static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
+
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
   private featureFlagService: FeatureFlagService;
@@ -62,11 +69,17 @@ export class SmtpConfigurationService {
    * If configuration is not found, create a new, empty one.
    */
   private async pullConfiguration() {
-    logger.debug("Fetch configuration from Saleor API");
+    logger.debug("Trying to fetch configuration from Saleor API");
 
-    const config = (await this.metadataConfigurator.getConfig()) || { configurations: [] };
+    return (await this.metadataConfigurator.getConfig())
+      .map((data) => data ?? { configurations: [] })
+      .map((config) => {
+        this.configurationData = config;
 
-    this.configurationData = config;
+        logger.debug("Set configuration data in memory");
+
+        return config;
+      });
   }
 
   /**
@@ -81,24 +94,29 @@ export class SmtpConfigurationService {
   /**
    * Returns configuration from cache or fetches it from Saleor API.
    */
-  async getConfigurationRoot() {
+  async getConfigurationRoot(): Promise<
+    Result<SmtpConfig, InstanceType<typeof SmtpConfigurationService.SmtpConfigurationServiceError>>
+  > {
     logger.debug("Get configuration root");
 
     if (this.configurationData) {
       logger.debug("Using cached configuration");
-      return this.configurationData;
+
+      return ok(this.configurationData);
     }
 
     // No cached data, fetch it from Saleor API
-    await this.pullConfiguration();
+    const pullResult = await this.pullConfiguration();
 
-    if (!this.configurationData) {
+    if (pullResult.isErr()) {
       logger.warn("No configuration found in Saleor API");
 
-      throw new SmtpConfigurationServiceError("API returned no configuration", "CANT_FETCH");
+      return err(
+        new SmtpConfigurationService.SmtpConfigurationServiceError("API returned no configuration"),
+      );
     }
 
-    return this.configurationData;
+    return ok(pullResult.value);
   }
 
   private containActiveGiftCardEvent(config: SmtpConfig) {
@@ -141,10 +159,23 @@ export class SmtpConfigurationService {
     logger.debug("Get configuration");
     const configurationRoot = await this.getConfigurationRoot();
 
-    const configuration = configurationRoot.configurations.find((conf) => conf.id === id);
+    if (configurationRoot.isErr()) {
+      return err(
+        new SmtpConfigurationService.SmtpConfigurationServiceError(
+          "Can't resolve app configuration",
+          {
+            errors: [configurationRoot.error],
+          },
+        ),
+      );
+    }
+
+    const configuration = configurationRoot.value.configurations.find((conf) => conf.id === id);
 
     if (!configuration) {
-      throw new SmtpConfigurationServiceError("Configuration not found", "CONFIGURATION_NOT_FOUND");
+      return err(
+        new SmtpConfigurationService.SmtpConfigurationServiceError("Configuration not found"),
+      );
     }
 
     return configuration;
