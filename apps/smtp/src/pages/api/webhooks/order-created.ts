@@ -85,7 +85,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "ORDER_CREATED",
     payload: { order: payload.order },
     recipientEmail,

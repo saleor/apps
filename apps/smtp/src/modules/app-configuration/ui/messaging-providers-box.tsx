@@ -23,10 +23,6 @@ const NoExistingConfigurations = () => {
 
 type ProviderType = "smtp";
 
-const providerLabels: Record<ProviderType, string> = {
-  smtp: "SMTP",
-};
-
 export type ConfigurationListItem = {
   id: string;
   name: string;

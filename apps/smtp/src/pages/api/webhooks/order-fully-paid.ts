@@ -88,7 +88,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "ORDER_FULLY_PAID",
     payload: { order: payload.order },
     recipientEmail,
