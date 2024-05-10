@@ -5,6 +5,7 @@ import { createLogger } from "../../../../lib/logger";
 import { webhookProductVariantDeleted } from "../../../../webhooks/definitions/product-variant-deleted";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 
 export const config = {
   api: {
@@ -37,19 +38,23 @@ export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req,
       res.status(200).end();
       return;
     } catch (e) {
-      logger.info(e, "Algolia deleteProductVariant failed. Webhooks will be disabled");
+      logger.info("Algolia deleteProductVariant failed.", { error: e });
 
-      const webhooksToggler = new WebhookActivityTogglerService(authData.appId, apiClient);
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        logger.info("Detect Auth error from Algolia. Webhooks will be disabled", { error: e });
 
-      logger.trace("Will disable webhooks");
+        const webhooksToggler = new WebhookActivityTogglerService(authData.appId, apiClient);
 
-      await webhooksToggler.disableOwnWebhooks(
-        context.payload.recipient?.webhooks?.map((w) => w.id),
-      );
+        logger.trace("Will disable webhooks");
 
-      logger.trace("Webhooks disabling operation finished");
+        await webhooksToggler.disableOwnWebhooks(
+          context.payload.recipient?.webhooks?.map((w) => w.id),
+        );
 
-      return res.status(500).send("Operation failed, webhooks are disabled");
+        logger.trace("Webhooks disabling operation finished");
+      }
+
+      return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
     return res.status(400).json({
