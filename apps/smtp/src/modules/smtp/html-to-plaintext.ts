@@ -1,22 +1,28 @@
 import { convert } from "html-to-text";
 
 import { createLogger } from "../../logger";
+import { fromThrowable, Result } from "neverthrow";
+import { BaseError } from "../../errors";
 
-const logger = createLogger("htmlToPlaintext");
+export interface IHtmlToTextCompiler {
+  compile(html: string): Result<string, InstanceType<typeof BaseError>>;
+}
 
-export const htmlToPlaintext = (html: string) => {
-  logger.debug("Converting HTML template to plaintext");
-  try {
-    const plaintext = convert(html);
+export class HtmlToTextCompiler implements IHtmlToTextCompiler {
+  static HtmlToTextCompilerError = BaseError.subclass("HtmlToTextCompilerError");
+  static FailedToConvertError = this.HtmlToTextCompilerError.subclass("FailedToConvertError");
 
-    logger.debug("Converted successfully");
-    return {
-      plaintext,
-    };
-  } catch (error) {
-    logger.error(error);
-    return {
-      errors: [{ message: "Could not convert html to plaintext" }],
-    };
+  private logger = createLogger("HtmlToTextCompiler");
+
+  compile(html: string): Result<string, InstanceType<typeof BaseError>> {
+    this.logger.debug("Trying to convert HTML to plaintext");
+
+    return fromThrowable(
+      convert,
+      (err) =>
+        new HtmlToTextCompiler.FailedToConvertError("Failed to compile HTML to plain text", {
+          errors: [err],
+        }),
+    )(html);
   }
-};
+}

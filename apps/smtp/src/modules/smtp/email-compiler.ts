@@ -1,8 +1,7 @@
 import { compileMjml } from "./compile-mjml";
 import { ITemplateCompiler } from "./template-compiler";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
-import { htmlToPlaintext } from "./html-to-plaintext";
-import { SmtpConfiguration } from "./configuration/smtp-config-schema";
+import { IHtmlToTextCompiler, HtmlToTextCompiler } from "./html-to-plaintext";
 import { createLogger } from "../../logger";
 import { BaseError } from "../../errors";
 import { err, ok, Result } from "neverthrow";
@@ -35,7 +34,10 @@ export class EmailCompiler implements IEmailCompiler {
   static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError");
   static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError");
 
-  constructor(private templateCompiler: ITemplateCompiler) {}
+  constructor(
+    private templateCompiler: ITemplateCompiler,
+    private htmlToTextCompiler: IHtmlToTextCompiler,
+  ) {}
 
   compile({
     payload,
@@ -114,18 +116,20 @@ export class EmailCompiler implements IEmailCompiler {
 
     logger.debug("MJML template compiled");
 
-    const { plaintext: emailBodyPlaintext } = htmlToPlaintext(emailBodyHtml);
+    const plainTextCompilationResult = this.htmlToTextCompiler.compile(emailBodyHtml);
 
-    if (!emailBodyPlaintext || !emailBodyPlaintext?.length) {
-      logger.error("Email body could not be converted to plaintext");
-
-      throw new Error("Email body could not be converted to plaintext");
+    if (plainTextCompilationResult.isErr()) {
+      return err(
+        new EmailCompiler.CompilationFailedError("Failed to compile body to plain text", {
+          errors: [plainTextCompilationResult.error],
+        }),
+      );
     }
 
     logger.debug("Email body converted to plaintext");
 
     return ok({
-      text: emailBodyPlaintext,
+      text: plainTextCompilationResult.value,
       html: emailBodyHtml,
       from: `${senderName} <${senderEmail}>`,
       to: recipientEmail,
