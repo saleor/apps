@@ -24,7 +24,6 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       {
         amount: order.lines[0].totalPrice.gross.amount,
         description: order.lines[0].productName,
-        discounted: false,
         itemCode: order.lines[0].productSku,
         quantity: order.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
@@ -32,7 +31,6 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       },
       {
         amount: order.shippingPrice.gross.amount,
-        discounted: false,
         itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,
         taxCode: avataxConfigMock.shippingTaxCode,
@@ -71,7 +69,6 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       {
         amount: order.lines[0].totalPrice.gross.amount,
         description: order.lines[0].productName,
-        discounted: false,
         itemCode: order.lines[0].productSku,
         quantity: order.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
