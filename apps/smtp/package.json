@@ -4,6 +4,7 @@
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
+    "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
@@ -82,6 +83,7 @@
     "@types/react-dom": "18.2.5",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,
