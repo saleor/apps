@@ -1,12 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
-import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
-import { err, ok, Result } from "neverthrow";
-import { AppConfig } from "../../../lib/app-config";
-import { BaseError } from "../../../error";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { Result, err, ok } from "neverthrow";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { BaseError } from "../../../error";
+import { AppConfig } from "../../../lib/app-config";
+import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AvataxWebhookServiceFactory } from "../../taxes/avatax-webhook-service-factory";
+import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
 
 const mockGetAppConfig = vi.fn<never, Result<AppConfig, (typeof BaseError)["prototype"]>>();
 
@@ -33,7 +33,6 @@ const getBasePayload = (): CalculateTaxesPayload => {
         slug: channelSlug,
       },
       currency: "PLN",
-      discounts: [],
       pricesEnteredWithTax: false,
       shippingPrice: { amount: 0 },
       address: {

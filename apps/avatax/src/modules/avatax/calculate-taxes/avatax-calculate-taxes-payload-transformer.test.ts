@@ -28,7 +28,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
   });
   it("when discounts, calculates the sum of discounts", async () => {
-    const taxBaseMock = mockGenerator.generateTaxBase({ discounts: [{ amount: { amount: 10 } }] });
+    const taxBaseMock = mockGenerator.generateTaxBase({});
     const matchesMock = mockGenerator.generateTaxCodeMatches();
     const payloadMock = {
       taxBase: taxBaseMock,

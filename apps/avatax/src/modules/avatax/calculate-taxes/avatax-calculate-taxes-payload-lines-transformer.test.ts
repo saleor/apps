@@ -83,9 +83,7 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const mockGenerator = new AvataxCalculateTaxesMockGenerator();
       const avataxConfigMock = mockGenerator.generateAvataxConfig();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
-      const taxBaseMock = mockGenerator.generateTaxBase({
-        discounts: [{ amount: { amount: 10 } }],
-      });
+      const taxBaseMock = mockGenerator.generateTaxBase({});
 
       const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
 

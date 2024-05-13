@@ -10,16 +10,7 @@ const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const saleorOrderConfirmedEventMock = SaleorOrderConfirmedEventMockFactory.create();
 
 const orderMock = mockGenerator.generateOrder();
-const discountedOrderMock = mockGenerator.generateOrder({
-  discounts: [
-    {
-      amount: {
-        amount: 10,
-      },
-      id: "RGlzY291bnREaXNjb3VudDox",
-    },
-  ],
-});
+const discountedOrderMock = mockGenerator.generateOrder({});
 
 /**
  * TODO: Dont export this, extract to shared code
@@ -63,14 +54,6 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
       ...mockedOrderConfirmedGraphQLPayload,
       order: {
         ...mockedOrderConfirmedGraphQLPayload.order,
-        discounts: [
-          {
-            amount: {
-              amount: 10,
-            },
-            id: "RGlzY291bnREaXNjb3VudDox",
-          },
-        ],
       },
     });
     const payload = await transformer.transform({

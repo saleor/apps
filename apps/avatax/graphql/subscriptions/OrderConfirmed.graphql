@@ -68,12 +68,6 @@ fragment OrderConfirmedSubscription on Order {
   lines {
     ...OrderLine
   }
-  discounts {
-    id
-    amount {
-      amount
-    }
-  }
   avataxEntityCode: metafield(key: "avataxEntityCode")
   avataxTaxCalculationDate: metafield(key: "avataxTaxCalculationDate")
   avataxDocumentCode: metafield(key: "avataxDocumentCode")
