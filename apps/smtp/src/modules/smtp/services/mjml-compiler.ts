@@ -1,7 +1,7 @@
 import mjml2html from "mjml";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../../logger";
 import { err, fromThrowable, ok, Result } from "neverthrow";
-import { BaseError } from "../../errors";
+import { BaseError } from "../../../errors";
 
 export interface IMjmlCompiler {
   compile(mjml: string): Result<string, InstanceType<typeof BaseError>>;

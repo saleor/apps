@@ -1,7 +1,7 @@
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { z } from "zod";
-import { MjmlCompiler } from "../compile-mjml";
+import { MjmlCompiler } from "../services/mjml-compiler";
 import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
 import {

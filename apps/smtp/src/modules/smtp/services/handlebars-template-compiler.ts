@@ -1,7 +1,7 @@
 import Handlebars from "handlebars";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../../logger";
 import { err, ok, Result } from "neverthrow";
-import { BaseError } from "../../errors";
+import { BaseError } from "../../../errors";
 
 const logger = createLogger("compileHandlebarsTemplate");
 

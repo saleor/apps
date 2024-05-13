@@ -13,11 +13,11 @@ import { SmtpConfigurationService } from "../../../modules/smtp/configuration/sm
 import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
 import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
-import { EmailCompiler } from "../../../modules/smtp/email-compiler";
-import { HandlebarsTemplateCompiler } from "../../../modules/smtp/template-compiler";
-import { HtmlToTextCompiler } from "../../../modules/smtp/html-to-plaintext";
-import { MjmlCompiler } from "../../../modules/smtp/compile-mjml";
+import { SmtpEmailSender } from "../../../modules/smtp/services/smtp-email-sender";
+import { EmailCompiler } from "../../../modules/smtp/services/email-compiler";
+import { HandlebarsTemplateCompiler } from "../../../modules/smtp/services/handlebars-template-compiler";
+import { HtmlToTextCompiler } from "../../../modules/smtp/services/html-to-text-compiler";
+import { MjmlCompiler } from "../../../modules/smtp/services/mjml-compiler";
 
 const OrderCancelledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}

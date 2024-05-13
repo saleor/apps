@@ -1,8 +1,8 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { IEmailCompiler } from "../smtp/email-compiler";
+import { IEmailCompiler } from "../smtp/services/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
-import { ISMTPEmailSender, SendMailArgs } from "../smtp/smtp-email-sender";
+import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
 
 // todo test
 export class SendEventMessagesUseCase {

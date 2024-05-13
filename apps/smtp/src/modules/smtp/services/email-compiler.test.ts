@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
 import { EmailCompiler } from "./email-compiler";
-import { HandlebarsTemplateCompiler, ITemplateCompiler } from "./template-compiler";
+import { HandlebarsTemplateCompiler, ITemplateCompiler } from "./handlebars-template-compiler";
 import { err, ok, Result } from "neverthrow";
-import { HtmlToTextCompiler } from "./html-to-plaintext";
-import { MjmlCompiler } from "./compile-mjml";
+import { HtmlToTextCompiler } from "./html-to-text-compiler";
+import { MjmlCompiler } from "./mjml-compiler";
 
 const getMjmlTemplate = (injectedValue: string | number) => `<mjml>
   <mj-body>

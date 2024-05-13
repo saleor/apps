@@ -1,9 +1,9 @@
-import { IMjmlCompiler } from "./compile-mjml";
-import { ITemplateCompiler } from "./template-compiler";
-import { MessageEventTypes } from "../event-handlers/message-event-types";
-import { IHtmlToTextCompiler } from "./html-to-plaintext";
-import { createLogger } from "../../logger";
-import { BaseError } from "../../errors";
+import { IMjmlCompiler } from "./mjml-compiler";
+import { ITemplateCompiler } from "./handlebars-template-compiler";
+import { MessageEventTypes } from "../../event-handlers/message-event-types";
+import { IHtmlToTextCompiler } from "./html-to-text-compiler";
+import { createLogger } from "../../../logger";
+import { BaseError } from "../../../errors";
 import { err, ok, Result } from "neverthrow";
 
 interface CompileArgs {
