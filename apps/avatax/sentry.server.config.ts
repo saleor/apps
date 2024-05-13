@@ -4,21 +4,18 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import * as Sentry from "@sentry/nextjs";
-import { CriticalError } from "./src/error";
+import * as Sentry from "@sentry/node";
+import { BaseError, CriticalError } from "./src/error";
 import { shouldExceptionLevelBeReported } from "./src/sentry-utils";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  // Adjust this value in production, or use tracesSampler for greater control
   enableTracing: false,
   environment: process.env.ENV,
   includeLocalVariables: true,
-  ignoreErrors: [
-    // Ignore user configuration errors
-  ],
+  ignoreErrors: [],
   beforeSend(errorEvent, hint) {
     const error = hint.originalException;
 
@@ -31,8 +28,7 @@ Sentry.init({
       }
     }
 
-    // Improve grouping of CriticalError into separate issues in Sentry
-    if (error instanceof CriticalError) {
+    if (error instanceof BaseError) {
       errorEvent.fingerprint = ["{{ default }}", error.message];
     }
 
@@ -42,5 +38,6 @@ Sentry.init({
     new Sentry.Integrations.LocalVariables({
       captureAllExceptions: true,
     }),
+    Sentry.extraErrorDataIntegration(),
   ],
 });
