@@ -14,12 +14,12 @@ export class SaleorOrderToAvataxLinesTransformer {
     matches: AvataxTaxCodeMatches;
     avataxConfig: AvataxConfig;
   }): LineItemModel[] {
+    // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = confirmedOrderEvent.getLines().map((line) => ({
       amount: line.getAmount({ isTaxIncluded: confirmedOrderEvent.getIsTaxIncluded() }),
       taxIncluded: confirmedOrderEvent.getIsTaxIncluded(),
       taxCode: line.getTaxCode(matches),
       quantity: line.getQuantity(),
-      discounted: confirmedOrderEvent.getIsDiscounted(),
       itemCode: line.getItemCode(),
       description: line.getDescription(),
     }));
@@ -30,7 +30,6 @@ export class SaleorOrderToAvataxLinesTransformer {
         taxIncluded: confirmedOrderEvent.getIsTaxIncluded(),
         taxCode: avataxConfig.shippingTaxCode,
         quantity: 1,
-        discounted: confirmedOrderEvent.getIsDiscounted(),
         itemCode: SHIPPING_ITEM_CODE,
       };
 

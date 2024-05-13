@@ -18,6 +18,5 @@ export const extractTransactionArgsProperites = (model: CreateTransactionModel) 
     description: line.description,
   })),
   date: model.date,
-  discount: model.discount,
   isTaxIncluded: model.lines[0]?.taxIncluded ?? false,
 });

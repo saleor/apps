@@ -10,16 +10,6 @@ const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const saleorOrderConfirmedEventMock = SaleorOrderConfirmedEventMockFactory.create();
 
 const orderMock = mockGenerator.generateOrder();
-const discountedOrderMock = mockGenerator.generateOrder({
-  discounts: [
-    {
-      amount: {
-        amount: 10,
-      },
-      id: "RGlzY291bnREaXNjb3VudDox",
-    },
-  ],
-});
 
 /**
  * TODO: Dont export this, extract to shared code
@@ -53,53 +43,5 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
     });
 
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
-  });
-
-  it("returns lines with discounted: true when there are discounts", async () => {
-    const mockedOrderConfirmedGraphQLPayload =
-      SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
-
-    const saleorOrderConfirmedEventMockWithDiscounts = SaleorOrderConfirmedEventMockFactory.create({
-      ...mockedOrderConfirmedGraphQLPayload,
-      order: {
-        ...mockedOrderConfirmedGraphQLPayload.order,
-        discounts: [
-          {
-            amount: {
-              amount: 10,
-            },
-            id: "RGlzY291bnREaXNjb3VudDox",
-          },
-        ],
-      },
-    });
-    const payload = await transformer.transform({
-      order: discountedOrderMock,
-      confirmedOrderEvent: saleorOrderConfirmedEventMockWithDiscounts,
-      avataxConfig: avataxConfigMock,
-      matches: [],
-    });
-
-    const linesWithoutShipping = payload.model.lines.slice(0, -1);
-    const check = linesWithoutShipping.every((line) => line.discounted === true);
-
-    expect(check).toBe(true);
-  });
-
-  it("returns lines with discounted: false when there are no discounts", async () => {
-    const transformer = new AvataxOrderConfirmedPayloadTransformer(
-      new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfigMock)),
-    );
-    const payload = await transformer.transform({
-      order: orderMock,
-      confirmedOrderEvent: saleorOrderConfirmedEventMock,
-      avataxConfig: avataxConfigMock,
-      matches: [],
-    });
-
-    const linesWithoutShipping = payload.model.lines.slice(0, -1);
-    const check = linesWithoutShipping.every((line) => line.discounted === false);
-
-    expect(check).toBe(true);
   });
 });

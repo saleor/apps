@@ -6,7 +6,6 @@ import {
   DeprecatedOrderConfirmedSubscriptionFragment,
   SaleorOrderConfirmedEvent,
 } from "../../saleor";
-import { discountUtils } from "../../taxes/discount-utils";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
@@ -107,9 +106,6 @@ export class AvataxOrderConfirmedPayloadTransformer {
           avataxConfig,
         }),
         date,
-        discount: discountUtils.sumDiscounts(
-          order.discounts.map((discount) => discount.amount.amount),
-        ),
       },
     };
   }
