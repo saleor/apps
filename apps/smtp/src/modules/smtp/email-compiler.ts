@@ -8,10 +8,10 @@ import { BaseError } from "../../errors";
 import { err, ok, Result } from "neverthrow";
 
 interface CompileArgs {
-  smtpConfiguration: SmtpConfiguration;
+  smtpConfiguration: Pick<SmtpConfiguration, "events" | "senderName" | "senderEmail">;
   recipientEmail: string;
   event: MessageEventTypes;
-  payload: any;
+  payload: unknown;
 }
 
 export interface CompiledEmail {
@@ -52,6 +52,9 @@ export class EmailCompiler implements IEmailCompiler {
       event,
     });
 
+    /**
+     * TODO: Move these checks higher, compile should only have necessary data
+     */
     const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
 
     if (!eventSettings) {
@@ -60,6 +63,9 @@ export class EmailCompiler implements IEmailCompiler {
       return err(new EmailCompiler.MissingEventSettingsError("No active settings for this event"));
     }
 
+    /**
+     * TODO: Move these checks higher, compile should only have necessary data
+     */
     if (!eventSettings.active) {
       logger.debug("Event settings are not active, skipping");
 

@@ -8,7 +8,7 @@ const logger = createLogger("compileHandlebarsTemplate");
 export interface ITemplateCompiler {
   compile(
     template: string,
-    variables: any,
+    variables: unknown,
   ): Result<
     { template: string },
     InstanceType<typeof HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError>
