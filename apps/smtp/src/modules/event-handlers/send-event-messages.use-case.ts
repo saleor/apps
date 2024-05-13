@@ -22,8 +22,8 @@ export class SendEventMessagesUseCase {
     recipientEmail,
     channelSlug,
   }: {
-    channelSlug: string; // todo: id or slug
-    payload: any; // todo can be narrowed?
+    channelSlug: string;
+    payload: unknown;
     recipientEmail: string;
     event: MessageEventTypes;
   }) {

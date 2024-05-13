@@ -7,9 +7,6 @@ export interface IMjmlCompiler {
   compile(mjml: string): Result<string, InstanceType<typeof BaseError>>;
 }
 
-/**
- * todo test
- */
 export class MjmlCompiler implements IMjmlCompiler {
   static MjmlCompilerError = BaseError.subclass("MjmlCompilerError");
   static FailedToCompileError = this.MjmlCompilerError.subclass("FailedToCompileError");
