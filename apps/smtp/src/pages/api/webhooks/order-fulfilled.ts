@@ -5,19 +5,9 @@ import {
   OrderDetailsFragmentDoc,
   OrderFulfilledWebhookPayloadFragment,
 } from "../../../../generated/graphql";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
-import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
-import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
-import { createSettingsManager } from "../../../lib/metadata-manager";
-import { SmtpEmailSender } from "../../../modules/smtp/services/smtp-email-sender";
-import { EmailCompiler } from "../../../modules/smtp/services/email-compiler";
-import { HandlebarsTemplateCompiler } from "../../../modules/smtp/services/handlebars-template-compiler";
-import { HtmlToTextCompiler } from "../../../modules/smtp/services/html-to-text-compiler";
-import { MjmlCompiler } from "../../../modules/smtp/services/mjml-compiler";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/send-event-messages.use-case.factory";
 
 const OrderFulfilledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -43,10 +33,12 @@ export const orderFulfilledWebhook = new SaleorAsyncWebhook<OrderFulfilledWebhoo
   webhookPath: "api/webhooks/order-fulfilled",
   asyncEvent: "ORDER_FULFILLED",
   apl: saleorApp.apl,
-  subscriptionQueryAst: OrderFulfilledGraphqlSubscription,
+  query: OrderFulfilledGraphqlSubscription,
 });
 
 const logger = createLogger(orderFulfilledWebhook.webhookPath);
+
+const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = async (
   req,
@@ -73,26 +65,8 @@ const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = asy
   }
 
   const channel = order.channel.slug;
-  const client = createInstrumentedGraphqlClient({
-    saleorApiUrl: authData.saleorApiUrl,
-    token: authData.token,
-  });
 
-  const useCase = new SendEventMessagesUseCase({
-    emailSender: new SmtpEmailSender(),
-    emailCompiler: new EmailCompiler(
-      new HandlebarsTemplateCompiler(),
-      new HtmlToTextCompiler(),
-      new MjmlCompiler(),
-    ),
-    smtpConfigurationService: new SmtpConfigurationService({
-      featureFlagService: new FeatureFlagService({ client }),
-      metadataManager: new SmtpMetadataManager(
-        createSettingsManager(client, authData.appId),
-        authData.saleorApiUrl,
-      ),
-    }),
-  });
+  const useCase = useCaseFactory.createFromAuthData(authData);
 
   await useCase.sendEventMessages({
     channelSlug: channel,
