@@ -17,8 +17,10 @@ export function resolveTrpcClientError(error: unknown) {
 export class SubscriptionPayloadErrorChecker {
   static SubscriptionPayloadError = BaseError.subclass("SubscriptionPayloadError");
 
+  private handledErrorPath = ["event", "taxBase", "sourceObject", "user"];
+
   constructor(
-    private injectedLogger: Pick<typeof logger, "error">,
+    private injectedLogger: Pick<typeof logger, "error" | "info">,
     private injectedErrorCapture: (
       exception: InstanceType<typeof SubscriptionPayloadErrorChecker.SubscriptionPayloadError>,
     ) => void,
@@ -43,7 +45,16 @@ export class SubscriptionPayloadErrorChecker {
           },
         );
 
-        this.injectedLogger.error(`Payload contains GraphQL error for ${subscription}`, {
+        if (this.handledErrorPath.every((path) => graphQLError.path?.includes(path))) {
+          // This is handled error - app don't have access to user object. We should migrate clients to use metadata on checkout/order objects instead.
+          this.injectedLogger.info(`Payload contains handled GraphQL error for ${subscription}`, {
+            error: graphQLError,
+            subscription,
+          });
+          return;
+        }
+
+        this.injectedLogger.error(`Payload contains unhandled GraphQL error for ${subscription}`, {
           error: graphQLError,
           subscription,
         });
