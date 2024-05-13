@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { EmailCompiler } from "./email-compiler";
-import { HandlebarsTemplateCompiler, ITemplateCompiler } from "./handlebars-template-compiler";
-import { err, ok, Result } from "neverthrow";
+import { HandlebarsTemplateCompiler } from "./handlebars-template-compiler";
+import { err, Result } from "neverthrow";
 import { HtmlToTextCompiler } from "./html-to-text-compiler";
 import { MjmlCompiler } from "./mjml-compiler";
 

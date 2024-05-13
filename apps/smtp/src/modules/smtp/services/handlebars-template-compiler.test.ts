@@ -1,4 +1,4 @@
-import { describe, it, vi, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { HandlebarsTemplateCompiler } from "./handlebars-template-compiler";
 
 describe("HandlebarsTemplateCompiler", () => {

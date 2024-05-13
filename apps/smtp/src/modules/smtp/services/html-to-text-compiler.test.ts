@@ -1,4 +1,4 @@
-import { it, vi, expect, describe } from "vitest";
+import { describe, expect, it } from "vitest";
 import { HtmlToTextCompiler } from "./html-to-text-compiler";
 
 describe("HtmlToTextCompiler", () => {

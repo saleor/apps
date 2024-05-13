@@ -12,7 +12,7 @@ import { createSettingsManager } from "../../lib/metadata-manager";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 
 export class SendEventMessagesUseCaseFactory {
-  createFromAuthData(authData: AuthData) {
+  createFromAuthData(authData: AuthData): SendEventMessagesUseCase {
     const client = createInstrumentedGraphqlClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,

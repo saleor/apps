@@ -7,7 +7,7 @@ import { filterConfigurations } from "../../app-configuration/filter-configurati
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { createLogger } from "../../../logger";
 import { BaseError } from "../../../errors";
-import { err, errAsync, fromAsyncThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { err, errAsync, fromAsyncThrowable, ok, okAsync, ResultAsync } from "neverthrow";
 
 const logger = createLogger("SmtpConfigurationService");
 

@@ -4,7 +4,10 @@ import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
 
-// todo test
+/*
+ * todo test
+ * todo: how this service should handle error for one config and success for another?
+ */
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 

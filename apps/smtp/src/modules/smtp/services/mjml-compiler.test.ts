@@ -1,4 +1,4 @@
-import { it, expect, vi, describe } from "vitest";
+import { describe, expect, it } from "vitest";
 import { MjmlCompiler } from "./mjml-compiler";
 
 describe("MjmlCompiler", () => {
