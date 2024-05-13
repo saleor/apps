@@ -3,6 +3,7 @@ import { SubscriptionPayloadErrorChecker } from "./error-utils";
 
 describe("SubscriptionPayloadErrorChecker", () => {
   const mockError = vi.fn();
+  const mockInfo = vi.fn();
   const mockErrorCapture = vi.fn();
 
   beforeEach(() => {
@@ -22,7 +23,10 @@ describe("SubscriptionPayloadErrorChecker", () => {
         ],
       } as any;
 
-      const checker = new SubscriptionPayloadErrorChecker({ error: mockError }, mockErrorCapture);
+      const checker = new SubscriptionPayloadErrorChecker(
+        { error: mockError, info: mockInfo },
+        mockErrorCapture,
+      );
 
       checker.checkPayload(payload);
 
@@ -33,6 +37,7 @@ describe("SubscriptionPayloadErrorChecker", () => {
       expect(mockErrorCapture).toHaveBeenCalledWith(
         expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
       );
+      expect(mockInfo).not.toHaveBeenCalled();
     },
   );
 
@@ -43,12 +48,47 @@ describe("SubscriptionPayloadErrorChecker", () => {
         __typename: typename,
       } as any;
 
-      const checker = new SubscriptionPayloadErrorChecker({ error: mockError }, mockErrorCapture);
+      const checker = new SubscriptionPayloadErrorChecker(
+        { error: mockError, info: mockInfo },
+        mockErrorCapture,
+      );
 
       checker.checkPayload(payload);
 
       expect(mockError).not.toHaveBeenCalled();
       expect(mockErrorCapture).not.toHaveBeenCalled();
+      expect(mockInfo).not.toHaveBeenCalled();
     },
   );
+
+  it("should not log error when payload contains handled error", () => {
+    const payload = {
+      __typename: "CalculateTaxes",
+      errors: [
+        {
+          message: "Error message",
+          source: "Error source",
+          path: ["event", "taxBase", "sourceObject", "user"],
+        },
+      ],
+    } as any;
+
+    const checker = new SubscriptionPayloadErrorChecker(
+      { error: mockError, info: mockInfo },
+      mockErrorCapture,
+    );
+
+    checker.checkPayload(payload);
+
+    expect(mockInfo).toHaveBeenCalledWith("Payload contains handled GraphQL error", {
+      error: {
+        message: "Error message",
+        path: ["event", "taxBase", "sourceObject", "user"],
+        source: "Error source",
+      },
+    });
+
+    expect(mockError).not.toHaveBeenCalled();
+    expect(mockErrorCapture).not.toHaveBeenCalled();
+  });
 });
