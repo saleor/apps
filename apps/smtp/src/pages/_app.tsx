@@ -8,7 +8,7 @@ import { AppProps } from "next/app";
 import { ThemeProvider } from "@saleor/macaw-ui";
 
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
-import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
+import { NoSSRWrapper } from "@saleor/apps-shared";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
 /**
