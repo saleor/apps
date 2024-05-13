@@ -1,8 +1,9 @@
 {
-  "extends": ["//"],
   "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "globalPassThroughEnv": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"],
   "pipeline": {
-    "build": {
+    "deploy": {
       "env": [
         "APL",
         "APP_DEBUG",
@@ -19,6 +20,10 @@
         "SENTRY_DSN",
         "SENTRY_AUTH_TOKEN",
         "NEXT_PUBLIC_SENTRY_DSN",
+        "VERCEL_GIT_COMMIT_SHA",
+        "ENV",
+        "VERCEL",
+        "GITHUB_SHA",
         "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL"
