@@ -23,12 +23,14 @@ export const syncWebhookStatus = async ({
   logger.debug("Generate expected webhook status based on current configurations");
 
   // API requests can be triggered if not cached yet
-  const [activeSmtpConfigurations] = await Promise.all([
-    smtpConfigurationService.getConfigurations(),
-  ]);
+  const activeSmtpConfigurations = await smtpConfigurationService.getConfigurations();
+
+  if (activeSmtpConfigurations.isErr()) {
+    throw activeSmtpConfigurations.error;
+  }
 
   const newStatuses = getWebhookStatusesFromConfigurations({
-    smtpConfigurations: activeSmtpConfigurations,
+    smtpConfigurations: activeSmtpConfigurations.value,
   });
 
   logger.debug("Update webhooks in the API if needed");

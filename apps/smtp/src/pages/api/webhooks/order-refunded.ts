@@ -87,7 +87,7 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "ORDER_REFUNDED",
     payload: { order: payload.order },
     recipientEmail,

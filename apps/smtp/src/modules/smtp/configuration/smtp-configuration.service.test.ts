@@ -5,6 +5,7 @@ import { SmtpMetadataManager } from "./smtp-metadata-manager";
 import { SmtpConfig } from "./smtp-config-schema";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { Client } from "urql";
+import { okAsync } from "neverthrow";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
@@ -201,7 +202,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
+      const getConfigMock = vi.spyOn(configurator, "getConfig").mockReturnValue(okAsync(undefined));
 
       new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -222,7 +223,9 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(validConfig);
+      const getConfigMock = vi
+        .spyOn(configurator, "getConfig")
+        .mockReturnValue(okAsync(validConfig));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -234,7 +237,7 @@ describe("SmtpConfigurationService", function () {
 
       const configuration = await service.getConfigurationRoot();
 
-      expect(configuration).toEqual(validConfig);
+      expect(configuration._unsafeUnwrap()).toEqual(validConfig);
       expect(getConfigMock).toBeCalledTimes(1);
 
       // Second call should not trigger API call
@@ -248,7 +251,9 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(emptyConfigRoot);
+      const getConfigMock = vi
+        .spyOn(configurator, "getConfig")
+        .mockReturnValue(okAsync(emptyConfigRoot));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -259,7 +264,7 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      expect(await service.getConfigurationRoot()).toEqual(validConfig);
+      expect((await service.getConfigurationRoot())._unsafeUnwrap()).toEqual(validConfig);
 
       expect(getConfigMock).toBeCalledTimes(0);
     });
@@ -271,8 +276,10 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(emptyConfigRoot);
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+      const getConfigMock = vi
+        .spyOn(configurator, "getConfig")
+        .mockReturnValue(okAsync(emptyConfigRoot));
 
       // Service initialized with empty configuration
       const service = new SmtpConfigurationService({
@@ -285,7 +292,7 @@ describe("SmtpConfigurationService", function () {
       });
 
       // Set configuration
-      await service.setConfigurationRoot(validConfig);
+      await service["setConfigurationRoot"](validConfig);
 
       expect(setConfigMock).toBeCalledTimes(1);
       expect(setConfigMock).toBeCalledWith(validConfig);
@@ -311,9 +318,13 @@ describe("SmtpConfigurationService", function () {
         initialData: emptyConfigRoot,
       });
 
-      // Set configuration
-      await expect(async () => await service.setConfigurationRoot(validConfig)).rejects.toThrow(
-        "Gift card sent event is not supported for this Saleor version",
+      /**
+       * Should not do this - testing private method - but let it be until we decide to refactor
+       */
+      const result = await service["setConfigurationRoot"](validConfig);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.WrongSaleorVersionError,
       );
     });
   });
@@ -334,9 +345,9 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      expect(await service.getConfiguration({ id: validConfig.configurations[0].id })).toEqual(
-        validConfig.configurations[0],
-      );
+      expect(
+        (await service.getConfiguration({ id: validConfig.configurations[0].id }))._unsafeUnwrap(),
+      ).toEqual(validConfig.configurations[0]);
     });
 
     it("Throws error when configuration with provided ID does not exist", async () => {
@@ -354,9 +365,11 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      await expect(
-        async () => await service.getConfiguration({ id: "does-not-exist" }),
-      ).rejects.toThrow("Configuration not found");
+      const result = await service.getConfiguration({ id: "does-not-exist" });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
     });
   });
 
@@ -376,7 +389,7 @@ describe("SmtpConfigurationService", function () {
         initialData: emptyConfigRoot,
       });
 
-      expect(await service.getConfigurations()).toEqual([]);
+      expect((await service.getConfigurations())._unsafeUnwrap()).toEqual([]);
     });
 
     it("Returns relevant configurations, when filter is passed", async () => {
@@ -395,7 +408,7 @@ describe("SmtpConfigurationService", function () {
       });
 
       // Only the first configuration is active, so only this one should be returned
-      expect(await service.getConfigurations({ active: true })).toEqual([
+      expect((await service.getConfigurations({ active: true }))._unsafeUnwrap()).toEqual([
         validConfig.configurations[0],
       ]);
     });
@@ -408,7 +421,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -419,14 +432,16 @@ describe("SmtpConfigurationService", function () {
         initialData: emptyConfigRoot,
       });
 
-      const newConfiguration = await service.createConfiguration({
-        active: true,
-        channels: { channels: [], mode: "exclude", override: false },
-        encryption: "NONE",
-        name: "New configuration",
-        smtpHost: "smtp.example.com",
-        smtpPort: "587",
-      });
+      const newConfiguration = (
+        await service.createConfiguration({
+          active: true,
+          channels: { channels: [], mode: "exclude", override: false },
+          encryption: "NONE",
+          name: "New configuration",
+          smtpHost: "smtp.example.com",
+          smtpPort: "587",
+        })
+      )._unsafeUnwrap();
 
       expect(newConfiguration.name).toEqual("New configuration");
       expect(setConfigMock).toBeCalledTimes(1);
@@ -440,8 +455,8 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+      const getConfigMock = vi.spyOn(configurator, "getConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -452,17 +467,21 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      const updatedConfiguration = await service.updateConfiguration({
-        id: validConfig.configurations[0].id,
-        name: "Updated configuration",
-      });
+      const updatedConfiguration = (
+        await service.updateConfiguration({
+          id: validConfig.configurations[0].id,
+          name: "Updated configuration",
+        })
+      )._unsafeUnwrap();
 
       expect(updatedConfiguration.name).toEqual("Updated configuration");
       expect(setConfigMock).toBeCalledTimes(1);
 
-      const configurationFromCache = await service.getConfiguration({
-        id: validConfig.configurations[0].id,
-      });
+      const configurationFromCache = (
+        await service.getConfiguration({
+          id: validConfig.configurations[0].id,
+        })
+      )._unsafeUnwrap();
 
       expect(getConfigMock).toBeCalledTimes(0);
       expect(configurationFromCache.name).toEqual("Updated configuration");
@@ -474,8 +493,8 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
-      const getConfigMock = vi.spyOn(configurator, "getConfig").mockResolvedValue(undefined);
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+      const getConfigMock = vi.spyOn(configurator, "getConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -486,12 +505,14 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      await expect(() =>
-        service.updateConfiguration({
-          id: "this-id-does-not-exist",
-          name: "Updated configuration",
-        }),
-      ).rejects.toThrow("Configuration not found");
+      const result = await service.updateConfiguration({
+        id: "this-id-does-not-exist",
+        name: "Updated configuration",
+      });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
     });
   });
 
@@ -502,7 +523,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -522,9 +543,11 @@ describe("SmtpConfigurationService", function () {
       // Change should be automatically pushed to the API
       expect(setConfigMock).toBeCalledTimes(1);
 
-      await expect(
-        async () => await service.getConfiguration({ id: idToBeDeleted }),
-      ).rejects.toThrow("Configuration not found");
+      const result = await service.getConfiguration({ id: idToBeDeleted });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
     });
   });
 
@@ -535,7 +558,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -546,11 +569,13 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      await expect(async () =>
-        service.deleteConfiguration({
-          id: "this-id-does-not-exist",
-        }),
-      ).rejects.toThrow("Configuration not found");
+      const result = await service.deleteConfiguration({
+        id: "this-id-does-not-exist",
+      });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
 
       // Since no changes were made, no API calls
       expect(setConfigMock).toBeCalledTimes(0);
@@ -574,10 +599,12 @@ describe("SmtpConfigurationService", function () {
       });
 
       await expect(
-        await service.getEventConfiguration({
-          configurationId: validConfig.configurations[0].id,
-          eventType: "ORDER_CREATED",
-        }),
+        (
+          await service.getEventConfiguration({
+            configurationId: validConfig.configurations[0].id,
+            eventType: "ORDER_CREATED",
+          })
+        )._unsafeUnwrap(),
       ).toEqual(validConfig.configurations[0].events[0]);
     });
 
@@ -596,20 +623,24 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      await expect(async () =>
-        service.getEventConfiguration({
-          configurationId: "this-id-does-not-exist",
-          eventType: "ORDER_CREATED",
-        }),
-      ).rejects.toThrow("Configuration not found");
+      const notFoundError = await service.getEventConfiguration({
+        configurationId: "this-id-does-not-exist",
+        eventType: "ORDER_CREATED",
+      });
 
-      await expect(async () =>
-        service.getEventConfiguration({
-          configurationId: validConfig.configurations[0].id,
-          // @ts-ignore: Testing invalid event type
-          eventType: "unsupported-event",
-        }),
-      ).rejects.toThrow("Event configuration not found");
+      expect(notFoundError._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
+
+      const resultUnsupported = await service.getEventConfiguration({
+        configurationId: validConfig.configurations[0].id,
+        // @ts-ignore: Testing invalid event type
+        eventType: "unsupported-event",
+      });
+
+      expect(resultUnsupported._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.EventConfigNotFoundError,
+      );
     });
   });
 
@@ -620,7 +651,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -642,10 +673,12 @@ describe("SmtpConfigurationService", function () {
 
       expect(setConfigMock).toBeCalledTimes(1);
 
-      const updatedEventConfiguration = await service.getEventConfiguration({
-        configurationId: validConfig.configurations[0].id,
-        eventType: "ORDER_CREATED",
-      });
+      const updatedEventConfiguration = (
+        await service.getEventConfiguration({
+          configurationId: validConfig.configurations[0].id,
+          eventType: "ORDER_CREATED",
+        })
+      )._unsafeUnwrap();
 
       expect(updatedEventConfiguration.subject).toEqual("Updated subject");
     });
@@ -656,7 +689,7 @@ describe("SmtpConfigurationService", function () {
         mockSaleorApiUrl,
       );
 
-      const setConfigMock = vi.spyOn(configurator, "setConfig").mockResolvedValue();
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
 
       const service = new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({
@@ -667,16 +700,18 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      await expect(async () =>
-        service.updateEventConfiguration({
-          configurationId: "this-id-does-not-exist",
-          eventType: validConfig.configurations[0].events[0].eventType,
-          eventConfiguration: {
-            ...validConfig.configurations[0].events[0],
-            subject: "Updated subject",
-          },
-        }),
-      ).rejects.toThrow("Configuration not found");
+      const result = await service.updateEventConfiguration({
+        configurationId: "this-id-does-not-exist",
+        eventType: validConfig.configurations[0].events[0].eventType,
+        eventConfiguration: {
+          ...validConfig.configurations[0].events[0],
+          subject: "Updated subject",
+        },
+      });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        SmtpConfigurationService.ConfigNotFoundError,
+      );
 
       expect(setConfigMock).toBeCalledTimes(0);
     });

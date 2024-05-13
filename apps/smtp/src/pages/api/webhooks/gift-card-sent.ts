@@ -124,7 +124,7 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "GIFT_CARD_SENT",
     payload,
     recipientEmail,

@@ -2249,6 +2249,15 @@ importers:
       mjml:
         specifier: ^4.13.0
         version: 4.13.0
+      modern-errors:
+        specifier: 7.0.0
+        version: 7.0.0
+      modern-errors-serialize:
+        specifier: 6.0.0
+        version: 6.0.0(modern-errors@7.0.0)
+      neverthrow:
+        specifier: 6.2.1
+        version: 6.2.1
       next:
         specifier: 14.1.0
         version: 14.1.0(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
@@ -20980,6 +20989,10 @@ packages:
 
   /neverthrow@6.1.0:
     resolution: {integrity: sha512-xNbNjp/6M5vUV+mststgneJN9eJeJCDSYSBTaf3vxgvcKooP+8L0ATFpM8DGfmH7UWKJeoa24Qi33tBP9Ya3zA==}
+    dev: false
+
+  /neverthrow@6.2.1:
+    resolution: {integrity: sha512-amlnNvPXmiUOmNsDfUngNWPdZYOmCUGExQy/kuPCmLbhrXVXIYhY4bnE4D3dWl7OMhSEr9NndUrl4aKGFhFIQg==}
     dev: false
 
   /next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):

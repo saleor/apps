@@ -104,7 +104,7 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "INVOICE_SENT",
     payload: { order: payload.order },
     recipientEmail,
