@@ -16,6 +16,8 @@ import { createSettingsManager } from "../../../lib/metadata-manager";
 import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
 import { EmailCompiler } from "../../../modules/smtp/email-compiler";
 import { HandlebarsTemplateCompiler } from "../../../modules/smtp/template-compiler";
+import { HtmlToTextCompiler } from "../../../modules/smtp/html-to-plaintext";
+import { MjmlCompiler } from "../../../modules/smtp/compile-mjml";
 
 const OrderRefundedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -77,7 +79,11 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
 
   const useCase = new SendEventMessagesUseCase({
     emailSender: new SmtpEmailSender(),
-    emailCompiler: new EmailCompiler(new HandlebarsTemplateCompiler()),
+    emailCompiler: new EmailCompiler(
+      new HandlebarsTemplateCompiler(),
+      new HtmlToTextCompiler(),
+      new MjmlCompiler(),
+    ),
     smtpConfigurationService: new SmtpConfigurationService({
       featureFlagService: new FeatureFlagService({ client }),
       metadataManager: new SmtpMetadataManager(

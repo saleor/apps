@@ -1,7 +1,7 @@
-import { compileMjml } from "./compile-mjml";
+import { IMjmlCompiler } from "./compile-mjml";
 import { ITemplateCompiler } from "./template-compiler";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
-import { IHtmlToTextCompiler, HtmlToTextCompiler } from "./html-to-plaintext";
+import { IHtmlToTextCompiler } from "./html-to-plaintext";
 import { createLogger } from "../../logger";
 import { BaseError } from "../../errors";
 import { err, ok, Result } from "neverthrow";
@@ -37,6 +37,7 @@ export class EmailCompiler implements IEmailCompiler {
   constructor(
     private templateCompiler: ITemplateCompiler,
     private htmlToTextCompiler: IHtmlToTextCompiler,
+    private mjmlCompiler: IMjmlCompiler,
   ) {}
 
   compile({
@@ -99,24 +100,19 @@ export class EmailCompiler implements IEmailCompiler {
 
     logger.debug("Handlebars template compiled");
 
-    const { html: emailBodyHtml, errors: mjmlCompilationErrors } = compileMjml(emailTemplate);
+    const mjmlCompilationResult = this.mjmlCompiler.compile(emailTemplate);
 
-    if (mjmlCompilationErrors.length) {
-      logger.error("Error during the MJML compilation");
-      logger.error(mjmlCompilationErrors);
-
-      throw new Error("Error during the MJML compilation. Please Validate your MJML template");
-    }
-
-    if (!emailBodyHtml || !emailBodyHtml?.length) {
-      logger.error("No MJML template returned after the compilation");
-
-      throw new Error("No MJML template returned after the compilation");
+    if (mjmlCompilationResult.isErr()) {
+      return err(
+        new EmailCompiler.CompilationFailedError("Failed to compile MJML", {
+          errors: [mjmlCompilationResult.error],
+        }),
+      );
     }
 
     logger.debug("MJML template compiled");
 
-    const plainTextCompilationResult = this.htmlToTextCompiler.compile(emailBodyHtml);
+    const plainTextCompilationResult = this.htmlToTextCompiler.compile(mjmlCompilationResult.value);
 
     if (plainTextCompilationResult.isErr()) {
       return err(
@@ -130,7 +126,7 @@ export class EmailCompiler implements IEmailCompiler {
 
     return ok({
       text: plainTextCompilationResult.value,
-      html: emailBodyHtml,
+      html: mjmlCompilationResult.value,
       from: `${senderName} <${senderEmail}>`,
       to: recipientEmail,
       subject: emailSubject,

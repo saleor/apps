@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi, Mock } from "vitest";
 import { EmailCompiler } from "./email-compiler";
 import { HandlebarsTemplateCompiler, ITemplateCompiler } from "./template-compiler";
 import { err, ok, Result } from "neverthrow";
+import { HtmlToTextCompiler } from "./html-to-plaintext";
+import { MjmlCompiler } from "./compile-mjml";
 
 const getMjmlTemplate = (injectedValue: string | number) => `<mjml>
   <mj-body>
@@ -15,13 +17,20 @@ const getMjmlTemplate = (injectedValue: string | number) => `<mjml>
 
 describe("EmailCompiler", () => {
   let templateCompiler = new HandlebarsTemplateCompiler();
-  let compiler = new EmailCompiler(new HandlebarsTemplateCompiler());
+  let compiler = new EmailCompiler(
+    new HandlebarsTemplateCompiler(),
+    new HtmlToTextCompiler(),
+    new MjmlCompiler(),
+  );
 
   beforeEach(() => {
     vi.resetAllMocks();
 
-    templateCompiler = new HandlebarsTemplateCompiler();
-    compiler = new EmailCompiler(templateCompiler);
+    compiler = new EmailCompiler(
+      new HandlebarsTemplateCompiler(),
+      new HtmlToTextCompiler(),
+      new MjmlCompiler(),
+    );
   });
 
   it("Returns EmptyEmailSubjectError error if subject is empty", () => {
@@ -39,18 +48,22 @@ describe("EmailCompiler", () => {
   });
 
   it("Returns CompilationFailedError if underlying template compiler fails to compile", () => {
-    const compiler = new EmailCompiler({
-      compile(): Result<
-        {
-          template: string;
+    const compiler = new EmailCompiler(
+      {
+        compile(): Result<
+          {
+            template: string;
+          },
+          InstanceType<typeof HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError>
+        > {
+          return err(
+            new HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError("Error to compile"),
+          );
         },
-        InstanceType<typeof HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError>
-      > {
-        return err(
-          new HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError("Error to compile"),
-        );
       },
-    });
+      new HtmlToTextCompiler(),
+      new MjmlCompiler(),
+    );
 
     const result = compiler.compile({
       payload: { foo: 1 },
@@ -84,10 +97,10 @@ describe("EmailCompiler", () => {
       payload: { foo: 2137 },
       recipientEmail: "recipien@test.com",
       event: "ACCOUNT_DELETE",
-      bodyTemplate: getMjmlTemplate("2137"),
+      subjectTemplate: "test subject",
       senderEmail: "sender@saleor.io",
       senderName: "John Doe from Saleor",
-      subjectTemplate: `<mjml>
+      bodyTemplate: `<mjml>
   <mj-body>
     <mj-section>
       <mj-column>
@@ -100,7 +113,7 @@ describe("EmailCompiler", () => {
 
     const resultValue = result._unsafeUnwrap();
 
-    expect(resultValue.from).toEqual("sender test <sender@test.com>");
+    expect(resultValue.from).toEqual("John Doe from Saleor <sender@saleor.io>");
     expect(resultValue.to).toEqual("recipien@test.com");
     expect(resultValue.subject).toEqual("test subject");
     expect(resultValue.text).toEqual("2137");

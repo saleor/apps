@@ -1,18 +1,42 @@
 import mjml2html from "mjml";
 import { createLogger } from "../../logger";
+import { err, fromThrowable, ok, Result } from "neverthrow";
+import { BaseError } from "../../errors";
 
-const logger = createLogger("compileMjml");
+export interface IMjmlCompiler {
+  compile(mjml: string): Result<string, InstanceType<typeof BaseError>>;
+}
 
-// todo clas
-export const compileMjml = (mjml: string) => {
-  logger.debug("Converting MJML template to HTML");
-  try {
-    return mjml2html(mjml);
-  } catch (error) {
-    logger.error(error);
-    return {
-      html: undefined,
-      errors: [{ message: "Critical error during the mjml to html compilation" }],
-    };
+/**
+ * todo test
+ */
+export class MjmlCompiler implements IMjmlCompiler {
+  static MjmlCompilerError = BaseError.subclass("MjmlCompilerError");
+  static FailedToCompileError = this.MjmlCompilerError.subclass("FailedToCompileError");
+
+  private logger = createLogger("MjmlCompiler");
+
+  compile(mjml: string): Result<string, InstanceType<typeof MjmlCompiler.FailedToCompileError>> {
+    this.logger.debug("Trying to compile MJML template");
+
+    const safeCompile = fromThrowable(
+      mjml2html,
+      (error) =>
+        new MjmlCompiler.FailedToCompileError("Failed to compile MJML", {
+          errors: [error],
+        }),
+    );
+
+    return safeCompile(mjml).andThen((value) => {
+      if (value.errors && value.errors.length > 0) {
+        return err(
+          new MjmlCompiler.FailedToCompileError("Failed to compile MJML", {
+            errors: value.errors,
+          }),
+        );
+      } else {
+        return ok(value.html);
+      }
+    });
   }
-};
+}
