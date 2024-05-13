@@ -6,30 +6,13 @@ import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurati
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { createLogger } from "../../../logger";
+import { BaseError } from "../../../errors";
+import { err, errAsync, fromAsyncThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
 
 const logger = createLogger("SmtpConfigurationService");
 
-export type SmtpConfigurationServiceErrorType =
-  | "OTHER"
-  | "CONFIGURATION_NOT_FOUND"
-  | "EVENT_CONFIGURATION_NOT_FOUND"
-  | "CANT_FETCH"
-  | "WRONG_SALEOR_VERSION";
-
 export interface ConfigurationPartial extends Partial<SmtpConfiguration> {
   id: SmtpConfiguration["id"];
-}
-
-export class SmtpConfigurationServiceError extends Error {
-  errorType: SmtpConfigurationServiceErrorType = "OTHER";
-
-  constructor(message: string, errorType: SmtpConfigurationServiceErrorType) {
-    super(message);
-    if (errorType) {
-      this.errorType = errorType;
-    }
-    Object.setPrototypeOf(this, SmtpConfigurationServiceError.prototype);
-  }
 }
 
 export interface FilterConfigurationsArgs {
@@ -39,6 +22,12 @@ export interface FilterConfigurationsArgs {
 }
 
 export class SmtpConfigurationService {
+  static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
+  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
+  static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
+  static CantFetchConfigError = BaseError.subclass("CantFetchConfigError");
+  static WrongSaleorVersionError = BaseError.subclass("WrongSaleorVersionError");
+
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
   private featureFlagService: FeatureFlagService;
@@ -61,44 +50,61 @@ export class SmtpConfigurationService {
    * Fetch configuration from Saleor API and cache it.
    * If configuration is not found, create a new, empty one.
    */
-  private async pullConfiguration() {
-    logger.debug("Fetch configuration from Saleor API");
+  private pullConfiguration(): ResultAsync<SmtpConfig, InstanceType<typeof BaseError>> {
+    logger.debug("Trying to fetch configuration from Saleor API");
 
-    const config = (await this.metadataConfigurator.getConfig()) || { configurations: [] };
+    return this.metadataConfigurator
+      .getConfig()
+      .andThen((data) => {
+        if (!data) {
+          logger.debug("No configuration found in Saleor API, creating a new one");
 
-    this.configurationData = config;
+          return okAsync({ configurations: [] });
+        }
+        return okAsync(data);
+      })
+      .andThen((data) => {
+        logger.debug("Set configuration data in memory");
+
+        this.configurationData = data;
+
+        return okAsync(data);
+      });
   }
 
   /**
    * Save configuration in the App private metadata using Saleor API.
    */
-  private async pushConfiguration() {
-    logger.debug("Push configuration to Saleor API");
+  private pushConfiguration() {
+    logger.debug("Pushing configuration to Saleor API");
 
-    await this.metadataConfigurator.setConfig(this.configurationData!);
+    return this.metadataConfigurator.setConfig(this.configurationData!);
   }
 
   /**
    * Returns configuration from cache or fetches it from Saleor API.
    */
-  async getConfigurationRoot() {
+  getConfigurationRoot(): ResultAsync<
+    SmtpConfig,
+    InstanceType<typeof SmtpConfigurationService.SmtpConfigurationServiceError>
+  > {
     logger.debug("Get configuration root");
 
-    if (this.configurationData) {
-      logger.debug("Using cached configuration");
-      return this.configurationData;
-    }
+    return okAsync(this.configurationData)
+      .andThen((data) => {
+        if (!data) {
+          return this.pullConfiguration();
+        }
 
-    // No cached data, fetch it from Saleor API
-    await this.pullConfiguration();
-
-    if (!this.configurationData) {
-      logger.warn("No configuration found in Saleor API");
-
-      throw new SmtpConfigurationServiceError("API returned no configuration", "CANT_FETCH");
-    }
-
-    return this.configurationData;
+        return ok(data);
+      })
+      .orElse((error) => {
+        return err(
+          new SmtpConfigurationService.CantFetchConfigError("API returned no configuration", {
+            errors: [error],
+          }),
+        );
+      });
   }
 
   private containActiveGiftCardEvent(config: SmtpConfig) {
@@ -115,119 +121,132 @@ export class SmtpConfigurationService {
   }
 
   // Saves configuration to Saleor API and cache it
-  async setConfigurationRoot(config: SmtpConfig) {
+  private setConfigurationRoot(config: SmtpConfig) {
     logger.debug("Validate configuration before sending it to the Saleor API");
-    const availableFeatures = await this.featureFlagService.getFeatureFlags();
 
-    if (!availableFeatures.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
-      logger.error(
-        "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update.",
-      );
-      throw new SmtpConfigurationServiceError(
-        "Gift card sent event is not supported for this Saleor version",
-        "WRONG_SALEOR_VERSION",
-      );
-    }
+    return fromAsyncThrowable(
+      this.featureFlagService.getFeatureFlags,
+      SmtpConfigurationService.SmtpConfigurationServiceError.normalize,
+    )().andThen((features) => {
+      if (!features.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
+        logger.error(
+          "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update.",
+        );
 
-    logger.debug("Set configuration root");
-    this.configurationData = config;
-    await this.pushConfiguration();
+        return errAsync(
+          new SmtpConfigurationService.WrongSaleorVersionError(
+            "Gift card sent event is not supported for this Saleor version",
+          ),
+        );
+      }
+
+      logger.debug("Set configuration root");
+
+      this.configurationData = config;
+
+      return this.pushConfiguration();
+    });
   }
 
   /**
    * Get configuration for given ID. Throws if not found.
    */
-  async getConfiguration({ id }: { id: string }) {
+  getConfiguration({ id }: { id: string }) {
     logger.debug("Get configuration");
-    const configurationRoot = await this.getConfigurationRoot();
 
-    const configuration = configurationRoot.configurations.find((conf) => conf.id === id);
+    return this.getConfigurationRoot().andThen((config) => {
+      const configuration = config.configurations.find((conf) => conf.id === id);
 
-    if (!configuration) {
-      throw new SmtpConfigurationServiceError("Configuration not found", "CONFIGURATION_NOT_FOUND");
-    }
+      if (!configuration) {
+        return errAsync(
+          new SmtpConfigurationService.ConfigNotFoundError("Configuration not found"),
+        );
+      }
 
-    return configuration;
+      return okAsync(configuration);
+    });
   }
 
   /**
    * Get list of configurations. Optionally filter them.
    */
-  async getConfigurations(filter?: FilterConfigurationsArgs) {
+  getConfigurations(filter?: FilterConfigurationsArgs) {
     logger.debug("Get configurations");
-    const configurationRoot = await this.getConfigurationRoot();
 
-    return filterConfigurations<SmtpConfiguration>({
-      configurations: configurationRoot.configurations,
-      filter,
+    return this.getConfigurationRoot().andThen((config) => {
+      return okAsync(
+        filterConfigurations<SmtpConfiguration>({
+          configurations: config.configurations,
+          filter,
+        }),
+      );
     });
   }
 
-  async createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
+  createConfiguration(config: Omit<SmtpConfiguration, "id" | "events">) {
     logger.debug("Create configuration");
-    const configurationRoot = await this.getConfigurationRoot();
 
-    const newConfiguration = {
-      ...config,
-      id: generateRandomId(),
-      events: smtpDefaultEmptyConfigurations.eventsConfiguration(),
-    };
+    return this.getConfigurationRoot().andThen((configurationRoot) => {
+      const newConfiguration = {
+        ...config,
+        id: generateRandomId(),
+        events: smtpDefaultEmptyConfigurations.eventsConfiguration(),
+      };
 
-    configurationRoot.configurations.push(newConfiguration);
+      configurationRoot.configurations.push(newConfiguration);
 
-    await this.setConfigurationRoot(configurationRoot);
-
-    return newConfiguration;
+      return this.setConfigurationRoot(configurationRoot).andThen((result) => {
+        return okAsync(newConfiguration);
+      });
+    });
   }
 
   /**
    * Update existing configuration. If not found, throws an error.
    */
-  async updateConfiguration(configuration: ConfigurationPartial) {
+  updateConfiguration(configuration: ConfigurationPartial) {
     logger.debug("Update configuration");
 
-    // Will trow error if configuration not found
-    const existingConfiguration = await this.getConfiguration({ id: configuration.id });
+    return this.getConfiguration({ id: configuration.id }).andThen((existingConfiguration) => {
+      const updatedConfiguration = { ...existingConfiguration, ...configuration };
 
-    const updatedConfiguration = { ...existingConfiguration, ...configuration };
+      return this.getConfigurationRoot().andThen((configurationRoot) => {
+        const configurationIndex = configurationRoot.configurations.findIndex(
+          (conf) => conf.id === configuration.id,
+        );
 
-    const configurationRoot = await this.getConfigurationRoot();
+        const updatedConfigRoot = structuredClone(configurationRoot);
 
-    const configurationIndex = configurationRoot.configurations.findIndex(
-      (conf) => conf.id === configuration.id,
-    );
+        updatedConfigRoot.configurations[configurationIndex] = updatedConfiguration;
 
-    const updatedConfigRoot = structuredClone(configurationRoot);
-
-    updatedConfigRoot.configurations[configurationIndex] = updatedConfiguration;
-
-    await this.setConfigurationRoot(updatedConfigRoot);
-
-    return updatedConfiguration;
+        return this.setConfigurationRoot(updatedConfigRoot).andThen(() =>
+          okAsync(updatedConfiguration),
+        );
+      });
+    });
   }
 
   /**
    * Delete existing configuration. If not found, throws an error.
    */
-  async deleteConfiguration({ id }: { id: string }) {
+  deleteConfiguration({ id }: { id: string }) {
     logger.debug("Delete configuration");
 
-    // Will trow error if configuration not found
-    await this.getConfiguration({ id });
+    return this.getConfiguration({ id }).andThen((config) => {
+      const updatedConfigRoot = structuredClone(this.configurationData!);
 
-    const updatedConfigRoot = structuredClone(this.configurationData!);
+      updatedConfigRoot.configurations = updatedConfigRoot.configurations.filter(
+        (configuration) => configuration.id !== id,
+      );
 
-    updatedConfigRoot.configurations = updatedConfigRoot.configurations.filter(
-      (configuration) => configuration.id !== id,
-    );
-
-    await this.setConfigurationRoot(updatedConfigRoot);
+      return this.setConfigurationRoot(updatedConfigRoot);
+    });
   }
 
   /**
    * Get event configuration for given configuration ID and event type. Throws if not found.
    */
-  async getEventConfiguration({
+  getEventConfiguration({
     configurationId,
     eventType,
   }: {
@@ -235,26 +254,26 @@ export class SmtpConfigurationService {
     eventType: MessageEventTypes;
   }) {
     logger.debug("Get event configuration");
-    const configuration = await this.getConfiguration({
+
+    return this.getConfiguration({
       id: configurationId,
+    }).andThen((config) => {
+      const event = config.events.find((e) => e.eventType === eventType);
+
+      if (!event) {
+        return errAsync(
+          new SmtpConfigurationService.EventConfigNotFoundError("Event configuration not found"),
+        );
+      }
+
+      return okAsync(event);
     });
-
-    const event = configuration.events.find((e) => e.eventType === eventType);
-
-    if (!event) {
-      throw new SmtpConfigurationServiceError(
-        "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND",
-      );
-    }
-
-    return event;
   }
 
   /**
    * Update event configuration for given configuration ID and event type. Throws if not found.
    */
-  async updateEventConfiguration({
+  updateEventConfiguration({
     configurationId,
     eventConfiguration,
     eventType,
@@ -264,28 +283,30 @@ export class SmtpConfigurationService {
     eventConfiguration: Partial<Omit<SmtpEventConfiguration, "eventType">>;
   }) {
     logger.debug("Update event configuration");
-    const configuration = await this.getConfiguration({
+
+    return this.getConfiguration({
       id: configurationId,
+    }).andThen((config) => {
+      const eventIndex = config.events.findIndex((e) => e.eventType === eventType);
+
+      if (eventIndex < 0) {
+        logger.warn("Event configuration not found, throwing an error");
+
+        return errAsync(
+          new SmtpConfigurationService.EventConfigNotFoundError("Event configuration not found"),
+        );
+      }
+
+      const updatedEventConfiguration = {
+        ...config.events[eventIndex],
+        ...eventConfiguration,
+      };
+
+      config.events[eventIndex] = updatedEventConfiguration;
+
+      return this.updateConfiguration(config).andThen(() => {
+        return okAsync(updatedEventConfiguration);
+      });
     });
-
-    const eventIndex = configuration.events.findIndex((e) => e.eventType === eventType);
-
-    if (eventIndex < 0) {
-      logger.warn("Event configuration not found, throwing an error");
-      throw new SmtpConfigurationServiceError(
-        "Event configuration not found",
-        "EVENT_CONFIGURATION_NOT_FOUND",
-      );
-    }
-
-    const updatedEventConfiguration = {
-      ...configuration.events[eventIndex],
-      ...eventConfiguration,
-    };
-
-    configuration.events[eventIndex] = updatedEventConfiguration;
-
-    await this.updateConfiguration(configuration);
-    return updatedEventConfiguration;
   }
 }

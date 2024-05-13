@@ -1,4 +1,4 @@
-import { SmtpConfigurationServiceError } from "./smtp-configuration.service";
+import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { z } from "zod";
 import { compileMjml } from "../compile-mjml";
@@ -21,32 +21,33 @@ import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurati
 import { createLogger } from "../../../logger";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
-  error: SmtpConfigurationServiceError | unknown,
+  error: typeof SmtpConfigurationService.SmtpConfigurationServiceError | unknown,
 ) => {
-  if (error instanceof SmtpConfigurationServiceError) {
-    switch (error.errorType) {
-      case "CONFIGURATION_NOT_FOUND":
+  if (error instanceof SmtpConfigurationService.SmtpConfigurationServiceError) {
+    switch (error["constructor"]) {
+      case SmtpConfigurationService.ConfigNotFoundError:
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Configuration not found.",
         });
-      case "EVENT_CONFIGURATION_NOT_FOUND":
+      case SmtpConfigurationService.EventConfigNotFoundError:
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Event configuration not found.",
         });
-      case "CANT_FETCH":
+      case SmtpConfigurationService.CantFetchConfigError:
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Can't fetch configuration.",
         });
-      case "WRONG_SALEOR_VERSION":
+      case SmtpConfigurationService.WrongSaleorVersionError:
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Feature you are trying to use is not supported in this version of Saleor.",
         });
     }
   }
+
   throw new TRPCError({
     code: "INTERNAL_SERVER_ERROR",
     message: "Internal server error",
@@ -67,11 +68,10 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.get called");
 
-      try {
-        return ctx.smtpConfigurationService.getConfiguration(input);
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      return ctx.smtpConfigurationService.getConfiguration(input).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
   getConfigurations: protectedWithConfigurationServices
     .input(smtpGetConfigurationsInputSchema)
@@ -79,11 +79,11 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.getConfigurations called");
-      try {
-        return ctx.smtpConfigurationService.getConfigurations(input);
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+
+      return ctx.smtpConfigurationService.getConfigurations(input).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
   createConfiguration: protectedWithConfigurationServices
     .input(smtpCreateConfigurationInputSchema)
@@ -96,11 +96,10 @@ export const smtpConfigurationRouter = router({
         ...input,
       };
 
-      try {
-        return await ctx.smtpConfigurationService.createConfiguration(newConfiguration);
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      return await ctx.smtpConfigurationService.createConfiguration(newConfiguration).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
   deleteConfiguration: protectedWithConfigurationServices
     .meta({ updateWebhooks: true })
@@ -110,11 +109,10 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.delete called");
 
-      try {
-        await ctx.smtpConfigurationService.deleteConfiguration(input);
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      await ctx.smtpConfigurationService.deleteConfiguration(input).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
   getEventConfiguration: protectedWithConfigurationServices
     .input(smtpGetEventConfigurationInputSchema)
@@ -123,14 +121,15 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.getEventConfiguration or create called");
 
-      try {
-        return await ctx.smtpConfigurationService.getEventConfiguration({
+      return await ctx.smtpConfigurationService
+        .getEventConfiguration({
           configurationId: input.id,
           eventType: input.eventType,
-        });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
 
   renderTemplate: protectedWithConfigurationServices
@@ -184,11 +183,10 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateBasicInformation called");
 
-      try {
-        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      return await ctx.smtpConfigurationService.updateConfiguration({ ...input }).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
 
   updateSmtp: protectedWithConfigurationServices
@@ -199,11 +197,10 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateSmtp called");
 
-      try {
-        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      return await ctx.smtpConfigurationService.updateConfiguration({ ...input }).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
 
   updateSender: protectedWithConfigurationServices
@@ -213,11 +210,10 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateSender called");
 
-      try {
-        return await ctx.smtpConfigurationService.updateConfiguration({ ...input });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+      return await ctx.smtpConfigurationService.updateConfiguration({ ...input }).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
     }),
 
   updateChannels: protectedWithConfigurationServices
@@ -227,18 +223,19 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateChannels called");
 
-      try {
-        return await ctx.smtpConfigurationService.updateConfiguration({
+      return await ctx.smtpConfigurationService
+        .updateConfiguration({
           id: input.id,
           channels: {
             override: input.override,
             channels: input.channels,
             mode: input.mode,
           },
-        });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
 
   updateEvent: protectedWithConfigurationServices
@@ -251,15 +248,16 @@ export const smtpConfigurationRouter = router({
 
       const { id: configurationId, eventType, ...eventConfiguration } = input;
 
-      try {
-        return await ctx.smtpConfigurationService.updateEventConfiguration({
+      return await ctx.smtpConfigurationService
+        .updateEventConfiguration({
           configurationId,
           eventType,
           eventConfiguration,
-        });
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
-      }
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
   updateEventArray: protectedWithConfigurationServices
     .meta({ updateWebhooks: true })
@@ -274,10 +272,21 @@ export const smtpConfigurationRouter = router({
           id: input.configurationId,
         });
 
-        await ctx.smtpConfigurationService.updateConfiguration({
-          ...configuration,
-          events: input.events,
-        });
+        if (configuration.isErr()) {
+          throwTrpcErrorFromConfigurationServiceError(configuration.error);
+
+          return;
+        }
+
+        await ctx.smtpConfigurationService
+          .updateConfiguration({
+            ...configuration.value,
+            events: input.events,
+          })
+          .match(
+            (v) => v,
+            (e) => throwTrpcErrorFromConfigurationServiceError(e),
+          );
       } catch (e) {
         return throwTrpcErrorFromConfigurationServiceError(e);
       }

@@ -5,7 +5,7 @@ import { createLogger } from "../../logger";
 
 const logger = createLogger("FeatureFlagService");
 
-/*
+/**
  * Manages state of feature flags, based on Saleor version.
  * If `saleorVersion` is not provided, it will be fetched from the API on first call.
  * `saleorVersion` is expected to be in Semver format, e.g. "3.13.0"

@@ -19,24 +19,28 @@ export class SendEventMessagesUseCase {
     event,
     payload,
     recipientEmail,
-    channel,
+    channelSlug,
   }: {
-    channel: string; // todo: id or slug
+    channelSlug: string; // todo: id or slug
     payload: any; // todo can be narrowed?
     recipientEmail: string;
     event: MessageEventTypes;
   }) {
-    this.logger.info("Calling sendEventMessages", { channel, event });
+    this.logger.info("Calling sendEventMessages", { channelSlug, event });
 
     const availableSmtpConfigurations = await this.deps.smtpConfigurationService.getConfigurations({
       active: true,
-      availableInChannel: channel,
+      availableInChannel: channelSlug,
     });
+
+    if (availableSmtpConfigurations.isErr()) {
+      throw new Error(availableSmtpConfigurations.error.message); //todo add neverthrow
+    }
 
     /**
      * TODO: Why this is not in parallel?
      */
-    for (const smtpConfiguration of availableSmtpConfigurations) {
+    for (const smtpConfiguration of availableSmtpConfigurations.value) {
       try {
         const preparedEmail = this.deps.emailCompiler.compile({
           event: event,
