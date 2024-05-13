@@ -54,7 +54,7 @@ export class SubscriptionPayloadErrorChecker {
           return;
         }
 
-        this.injectedLogger.error(`Payload contains GraphQL error for ${subscription}`, {
+        this.injectedLogger.error(`Payload contains unhandled GraphQL error for ${subscription}`, {
           error: graphQLError,
           subscription,
         });

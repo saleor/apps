@@ -11,7 +11,7 @@ describe("SubscriptionPayloadErrorChecker", () => {
   });
 
   it.each(["OrderCancelled", "OrderConfirmed", "CalculateTaxes"])(
-    "should log error when payload contains GraphQL error for %s",
+    "should log error when payload contains unhandled GraphQL error for %s",
     (typename) => {
       const payload = {
         __typename: typename,
@@ -30,10 +30,13 @@ describe("SubscriptionPayloadErrorChecker", () => {
 
       checker.checkPayload(payload);
 
-      expect(mockError).toHaveBeenCalledWith(`Payload contains GraphQL error for ${typename}`, {
-        error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
-        subscription: typename,
-      });
+      expect(mockError).toHaveBeenCalledWith(
+        `Payload contains unhandled GraphQL error for ${typename}`,
+        {
+          error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
+          subscription: typename,
+        },
+      );
       expect(mockErrorCapture).toHaveBeenCalledWith(
         expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
       );
