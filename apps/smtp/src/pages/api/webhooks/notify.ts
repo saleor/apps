@@ -69,7 +69,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event,
     payload: payload.payload,
     recipientEmail,

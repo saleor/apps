@@ -1,4 +1,4 @@
-import { useAppBridge, actions } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { PermissionEnum } from "../../generated/graphql";
 import { Text } from "@saleor/macaw-ui";

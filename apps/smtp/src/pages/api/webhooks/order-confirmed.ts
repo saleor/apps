@@ -88,7 +88,7 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
   });
 
   await useCase.sendEventMessages({
-    channel,
+    channelSlug: channel,
     event: "ORDER_CONFIRMED",
     payload: { order: payload.order },
     recipientEmail,
