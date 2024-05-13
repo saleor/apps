@@ -4,6 +4,7 @@ import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/smtp-email-sender";
 
+// todo test
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 
@@ -42,15 +43,43 @@ export class SendEventMessagesUseCase {
      */
     for (const smtpConfiguration of availableSmtpConfigurations.value) {
       try {
-        const preparedEmail = this.deps.emailCompiler.compile({
+        const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
+
+        if (!eventSettings) {
+          /*
+           * Config missing, ignore
+           * todo log
+           */
+          return;
+        }
+
+        if (!eventSettings.active) {
+          /**
+           * Config found, but set as disabled, ignore.
+           * todo: log
+           */
+          return;
+        }
+
+        if (!smtpConfiguration.senderName || !smtpConfiguration.senderEmail) {
+          /**
+           * TODO: check if this should be allowed
+           */
+          return;
+        }
+
+        const preparedEmailResult = this.deps.emailCompiler.compile({
           event: event,
           payload: payload,
           recipientEmail: recipientEmail,
-          smtpConfiguration,
+          bodyTemplate: eventSettings.template,
+          subjectTemplate: eventSettings.subject,
+          senderEmail: smtpConfiguration.senderEmail,
+          senderName: smtpConfiguration.senderName,
         });
 
-        if (!preparedEmail) {
-          return; // todo log
+        if (preparedEmailResult.isErr()) {
+          return; // todo log + what should we do?
         }
 
         const smtpSettings: SendMailArgs["smtpSettings"] = {
@@ -68,7 +97,7 @@ export class SendEventMessagesUseCase {
 
         try {
           await this.deps.emailSender.sendEmailWithSmtp({
-            mailData: preparedEmail,
+            mailData: preparedEmailResult.value,
             smtpSettings,
           });
         } catch (e) {

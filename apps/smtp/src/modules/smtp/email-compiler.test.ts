@@ -3,6 +3,16 @@ import { EmailCompiler } from "./email-compiler";
 import { HandlebarsTemplateCompiler, ITemplateCompiler } from "./template-compiler";
 import { err, ok, Result } from "neverthrow";
 
+const getMjmlTemplate = (injectedValue: string | number) => `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text >{{injectedValue}}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`;
+
 describe("EmailCompiler", () => {
   let templateCompiler = new HandlebarsTemplateCompiler();
   let compiler = new EmailCompiler(new HandlebarsTemplateCompiler());
@@ -19,18 +29,10 @@ describe("EmailCompiler", () => {
       event: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
       recipientEmail: "foo@bar.com",
       payload: {},
-      smtpConfiguration: {
-        senderEmail: "sender@saleor.io",
-        senderName: "John Doe from Saleor",
-        events: [
-          {
-            template: "template string",
-            subject: "",
-            eventType: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
-            active: true,
-          },
-        ],
-      },
+      bodyTemplate: getMjmlTemplate("2137"),
+      senderEmail: "sender@saleor.io",
+      senderName: "John Doe from Saleor",
+      subjectTemplate: "",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(EmailCompiler.EmptyEmailSubjectError);
@@ -54,18 +56,10 @@ describe("EmailCompiler", () => {
       payload: { foo: 1 },
       recipientEmail: "recipien@test.com",
       event: "ACCOUNT_DELETE",
-      smtpConfiguration: {
-        senderEmail: "sender@test.com",
-        senderName: "sender test",
-        events: [
-          {
-            template: "test {{foo}}",
-            active: true,
-            eventType: "ACCOUNT_DELETE",
-            subject: "test subject",
-          },
-        ],
-      },
+      bodyTemplate: getMjmlTemplate("2137"),
+      senderEmail: "sender@saleor.io",
+      senderName: "John Doe from Saleor",
+      subjectTemplate: "",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(EmailCompiler.CompilationFailedError);
@@ -76,18 +70,10 @@ describe("EmailCompiler", () => {
       payload: { foo: 1 },
       recipientEmail: "recipien@test.com",
       event: "ACCOUNT_DELETE",
-      smtpConfiguration: {
-        senderEmail: "sender@test.com",
-        senderName: "sender test",
-        events: [
-          {
-            template: "",
-            active: true,
-            eventType: "ACCOUNT_DELETE",
-            subject: "test subject",
-          },
-        ],
-      },
+      bodyTemplate: "",
+      senderEmail: "sender@saleor.io",
+      senderName: "John Doe from Saleor",
+      subjectTemplate: "subject",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(EmailCompiler.EmptyEmailBodyError);
@@ -98,12 +84,10 @@ describe("EmailCompiler", () => {
       payload: { foo: 2137 },
       recipientEmail: "recipien@test.com",
       event: "ACCOUNT_DELETE",
-      smtpConfiguration: {
-        senderEmail: "sender@test.com",
-        senderName: "sender test",
-        events: [
-          {
-            template: `<mjml>
+      bodyTemplate: getMjmlTemplate("2137"),
+      senderEmail: "sender@saleor.io",
+      senderName: "John Doe from Saleor",
+      subjectTemplate: `<mjml>
   <mj-body>
     <mj-section>
       <mj-column>
@@ -112,12 +96,6 @@ describe("EmailCompiler", () => {
     </mj-section>
   </mj-body>
 </mjml>`,
-            active: true,
-            eventType: "ACCOUNT_DELETE",
-            subject: "test subject",
-          },
-        ],
-      },
     });
 
     const resultValue = result._unsafeUnwrap();

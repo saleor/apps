@@ -8,10 +8,13 @@ import { BaseError } from "../../errors";
 import { err, ok, Result } from "neverthrow";
 
 interface CompileArgs {
-  smtpConfiguration: Pick<SmtpConfiguration, "events" | "senderName" | "senderEmail">;
   recipientEmail: string;
   event: MessageEventTypes;
   payload: unknown;
+  bodyTemplate: string;
+  subjectTemplate: string;
+  senderName: string;
+  senderEmail: string;
 }
 
 export interface CompiledEmail {
@@ -26,15 +29,8 @@ export interface IEmailCompiler {
   compile(args: CompileArgs): Result<CompiledEmail, InstanceType<typeof BaseError>>;
 }
 
-/*
- * todo introduce modern-errors
- */
 export class EmailCompiler implements IEmailCompiler {
   static EmailCompilerError = BaseError.subclass("EmailCompilerError");
-  static MissingEventSettingsError = this.EmailCompilerError.subclass("MissingEventSettingsError");
-  static EventNotEnabledInSettingsError = this.EmailCompilerError.subclass(
-    "EventNotEnabledInSettingsError",
-  );
   static CompilationFailedError = this.EmailCompilerError.subclass("CompilationFailedError");
   static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError");
   static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError");
@@ -45,38 +41,19 @@ export class EmailCompiler implements IEmailCompiler {
     payload,
     recipientEmail,
     event,
-    smtpConfiguration,
+    subjectTemplate,
+    bodyTemplate,
+    senderEmail,
+    senderName,
   }: CompileArgs): Result<CompiledEmail, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
     const logger = createLogger("sendSmtp", {
       name: "sendSmtp",
       event,
     });
 
-    /**
-     * TODO: Move these checks higher, compile should only have necessary data
-     */
-    const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
-
-    if (!eventSettings) {
-      logger.debug("No active settings for this event, skipping");
-
-      return err(new EmailCompiler.MissingEventSettingsError("No active settings for this event"));
-    }
-
-    /**
-     * TODO: Move these checks higher, compile should only have necessary data
-     */
-    if (!eventSettings.active) {
-      logger.debug("Event settings are not active, skipping");
-
-      return err(new EmailCompiler.EventNotEnabledInSettingsError("Event settings are not active"));
-    }
-
     logger.debug("Compiling an email using MJML");
 
-    const { template: rawTemplate, subject } = eventSettings;
-
-    const subjectCompilationResult = this.templateCompiler.compile(subject, payload);
+    const subjectCompilationResult = this.templateCompiler.compile(subjectTemplate, payload);
 
     if (subjectCompilationResult.isErr()) {
       return err(
@@ -102,7 +79,7 @@ export class EmailCompiler implements IEmailCompiler {
 
     logger.debug({ emailSubject }, "Subject compiled");
 
-    const bodyCompilationResult = this.templateCompiler.compile(rawTemplate, payload);
+    const bodyCompilationResult = this.templateCompiler.compile(bodyTemplate, payload);
 
     if (bodyCompilationResult.isErr()) {
       return err(
@@ -150,7 +127,7 @@ export class EmailCompiler implements IEmailCompiler {
     return ok({
       text: emailBodyPlaintext,
       html: emailBodyHtml,
-      from: `${smtpConfiguration.senderName} <${smtpConfiguration.senderEmail}>`,
+      from: `${senderName} <${senderEmail}>`,
       to: recipientEmail,
       subject: emailSubject,
     });
