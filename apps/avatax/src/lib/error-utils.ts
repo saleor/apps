@@ -17,25 +17,14 @@ export function resolveTrpcClientError(error: unknown) {
 export class SubscriptionPayloadErrorChecker {
   static SubscriptionPayloadError = BaseError.subclass("SubscriptionPayloadError");
 
+  private handledErrorPath = ["event", "taxBase", "sourceObject", "user"];
+
   constructor(
     private injectedLogger: Pick<typeof logger, "error" | "info">,
     private injectedErrorCapture: (
       exception: InstanceType<typeof SubscriptionPayloadErrorChecker.SubscriptionPayloadError>,
     ) => void,
   ) {}
-
-  private isGraphQLErrorHandled(error: GraphQLError) {
-    const handledErrorPath = ["event", "taxBase", "sourceObject", "user"];
-
-    if (handledErrorPath.every((path) => error.path?.includes(path))) {
-      // This is handled error - app don't have access to user object. We should migrate clients to use metadata on checkout/order objects instead.
-      this.injectedLogger.info(`Payload contains handled GraphQL error`, {
-        error,
-      });
-      return true;
-    }
-    return false;
-  }
 
   checkPayload(payload: CalculateTaxesPayload | OrderCancelledPayload | OrderConfirmedPayload) {
     // @ts-expect-error errors field is not yet typed on subscription payloads
@@ -45,10 +34,6 @@ export class SubscriptionPayloadErrorChecker {
 
     if (possibleErrors) {
       possibleErrors.forEach((error) => {
-        if (this.isGraphQLErrorHandled(error)) {
-          return;
-        }
-
         const graphQLError = new SubscriptionPayloadErrorChecker.SubscriptionPayloadError(
           error.message,
           {
@@ -59,6 +44,15 @@ export class SubscriptionPayloadErrorChecker {
             },
           },
         );
+
+        if (this.handledErrorPath.every((path) => graphQLError.path?.includes(path))) {
+          // This is handled error - app don't have access to user object. We should migrate clients to use metadata on checkout/order objects instead.
+          this.injectedLogger.info(`Payload contains handled GraphQL error for ${subscription}`, {
+            error: graphQLError,
+            subscription,
+          });
+          return;
+        }
 
         this.injectedLogger.error(`Payload contains GraphQL error for ${subscription}`, {
           error: graphQLError,

@@ -80,13 +80,13 @@ describe("SubscriptionPayloadErrorChecker", () => {
 
     checker.checkPayload(payload);
 
-    expect(mockInfo).toHaveBeenCalledWith("Payload contains handled GraphQL error", {
-      error: {
-        message: "Error message",
-        path: ["event", "taxBase", "sourceObject", "user"],
-        source: "Error source",
+    expect(mockInfo).toHaveBeenCalledWith(
+      "Payload contains handled GraphQL error for CalculateTaxes",
+      {
+        error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
+        subscription: "CalculateTaxes",
       },
-    });
+    );
 
     expect(mockError).not.toHaveBeenCalled();
     expect(mockErrorCapture).not.toHaveBeenCalled();
