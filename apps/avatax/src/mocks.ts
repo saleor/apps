@@ -1,8 +1,4 @@
-import {
-  OrderConfirmedSubscriptionFragment,
-  OrderStatus,
-  TaxCalculationStrategy,
-} from "../generated/graphql";
+import { OrderConfirmedSubscriptionFragment } from "../generated/graphql";
 
 export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
@@ -124,5 +120,4 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       },
     },
   ],
-  discounts: [],
 };

@@ -35,21 +35,11 @@ fragment TaxBaseLine on TaxableObjectLine {
   }
 }
 
-fragment TaxDiscount on TaxableObjectDiscount {
-  name
-  amount {
-    amount
-  }
-}
-
 fragment TaxBase on TaxableObject {
   pricesEnteredWithTax
   currency
   channel {
     slug
-  }
-  discounts {
-    ...TaxDiscount
   }
   address {
     ...Address
