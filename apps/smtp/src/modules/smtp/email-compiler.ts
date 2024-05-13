@@ -1,9 +1,11 @@
 import { compileMjml } from "./compile-mjml";
-import { compileHandlebarsTemplate } from "./compile-handlebars-template";
+import { ITemplateCompiler } from "./template-compiler";
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 import { htmlToPlaintext } from "./html-to-plaintext";
 import { SmtpConfiguration } from "./configuration/smtp-config-schema";
 import { createLogger } from "../../logger";
+import { BaseError } from "../../errors";
+import { err, ok, Result } from "neverthrow";
 
 interface CompileArgs {
   smtpConfiguration: SmtpConfiguration;
@@ -21,21 +23,30 @@ export interface CompiledEmail {
 }
 
 export interface IEmailCompiler {
-  compile(args: CompileArgs): CompiledEmail | undefined;
+  compile(args: CompileArgs): Result<CompiledEmail, InstanceType<typeof BaseError>>;
 }
 
 /*
  * todo introduce modern-errors
  */
 export class EmailCompiler implements IEmailCompiler {
-  constructor() {}
+  static EmailCompilerError = BaseError.subclass("EmailCompilerError");
+  static MissingEventSettingsError = this.EmailCompilerError.subclass("MissingEventSettingsError");
+  static EventNotEnabledInSettingsError = this.EmailCompilerError.subclass(
+    "EventNotEnabledInSettingsError",
+  );
+  static CompilationFailedError = this.EmailCompilerError.subclass("CompilationFailedError");
+  static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError");
+  static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError");
+
+  constructor(private templateCompiler: ITemplateCompiler) {}
 
   compile({
     payload,
     recipientEmail,
     event,
     smtpConfiguration,
-  }: CompileArgs): CompiledEmail | undefined {
+  }: CompileArgs): Result<CompiledEmail, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
     const logger = createLogger("sendSmtp", {
       name: "sendSmtp",
       event,
@@ -45,56 +56,65 @@ export class EmailCompiler implements IEmailCompiler {
 
     if (!eventSettings) {
       logger.debug("No active settings for this event, skipping");
-      return;
+
+      return err(new EmailCompiler.MissingEventSettingsError("No active settings for this event"));
     }
 
     if (!eventSettings.active) {
       logger.debug("Event settings are not active, skipping");
-      return;
+
+      return err(new EmailCompiler.EventNotEnabledInSettingsError("Event settings are not active"));
     }
 
-    logger.debug("Sending an email using MJML");
+    logger.debug("Compiling an email using MJML");
 
     const { template: rawTemplate, subject } = eventSettings;
 
-    const { template: emailSubject, errors: handlebarsSubjectErrors } = compileHandlebarsTemplate(
-      subject,
-      payload,
-    );
+    const subjectCompilationResult = this.templateCompiler.compile(subject, payload);
 
-    if (handlebarsSubjectErrors?.length) {
-      logger.error("Error during the handlebars subject template compilation");
-
-      throw new Error("Error during the handlebars subject template compilation");
+    if (subjectCompilationResult.isErr()) {
+      return err(
+        new EmailCompiler.CompilationFailedError("Failed to compile email subject template", {
+          errors: [subjectCompilationResult.error],
+        }),
+      );
     }
+
+    const { template: emailSubject } = subjectCompilationResult.value;
 
     if (!emailSubject || !emailSubject?.length) {
       logger.error("Mjml subject message is empty, skipping");
 
-      throw new Error("Mjml subject message is empty, skipping");
+      return err(
+        new EmailCompiler.EmptyEmailSubjectError("Mjml subject message is empty, skipping", {
+          props: {
+            subject: emailSubject,
+          },
+        }),
+      );
     }
 
     logger.debug({ emailSubject }, "Subject compiled");
 
-    const { template: mjmlTemplate, errors: handlebarsErrors } = compileHandlebarsTemplate(
-      rawTemplate,
-      payload,
-    );
+    const bodyCompilationResult = this.templateCompiler.compile(rawTemplate, payload);
 
-    if (handlebarsErrors?.length) {
-      logger.error("Error during the handlebars template compilation");
-
-      throw new Error("Error during the handlebars template compilation");
+    if (bodyCompilationResult.isErr()) {
+      return err(
+        new EmailCompiler.CompilationFailedError("Failed to compile email body template", {
+          errors: [bodyCompilationResult.error],
+        }),
+      );
     }
 
-    if (!mjmlTemplate || !mjmlTemplate?.length) {
-      logger.error("Mjml template message is empty, skipping");
-      throw new Error("Mjml template message is empty, skipping");
+    const { template: emailTemplate } = bodyCompilationResult.value;
+
+    if (!emailTemplate || !emailTemplate?.length) {
+      return err(new EmailCompiler.EmptyEmailBodyError("MJML template body is empty"));
     }
 
     logger.debug("Handlebars template compiled");
 
-    const { html: emailBodyHtml, errors: mjmlCompilationErrors } = compileMjml(mjmlTemplate);
+    const { html: emailBodyHtml, errors: mjmlCompilationErrors } = compileMjml(emailTemplate);
 
     if (mjmlCompilationErrors.length) {
       logger.error("Error during the MJML compilation");
@@ -121,12 +141,12 @@ export class EmailCompiler implements IEmailCompiler {
 
     logger.debug("Email body converted to plaintext");
 
-    return {
+    return ok({
       text: emailBodyPlaintext,
       html: emailBodyHtml,
       from: `${smtpConfiguration.senderName} <${smtpConfiguration.senderEmail}>`,
       to: recipientEmail,
       subject: emailSubject,
-    };
+    });
   }
 }
