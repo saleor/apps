@@ -5,6 +5,7 @@ import { IHtmlToTextCompiler } from "./html-to-text-compiler";
 import { createLogger } from "../../../logger";
 import { BaseError } from "../../../errors";
 import { err, ok, Result } from "neverthrow";
+import combine = Result.combine;
 
 interface CompileArgs {
   recipientEmail: string;
@@ -40,6 +41,72 @@ export class EmailCompiler implements IEmailCompiler {
     private mjmlCompiler: IMjmlCompiler,
   ) {}
 
+  private resolveEmailSubject = (subjectTemplate: string, payload: unknown) =>
+    this.templateCompiler
+      .compile(subjectTemplate, payload)
+      .orElse((error) =>
+        err(
+          new EmailCompiler.CompilationFailedError("Failed to compile email subject template", {
+            errors: [error],
+          }),
+        ),
+      )
+      .andThen((value) => {
+        if (!value.template || !value.template?.length) {
+          return err(
+            new EmailCompiler.EmptyEmailSubjectError("Mjml subject message is empty, skipping", {
+              props: {
+                subject: value.template,
+              },
+            }),
+          );
+        }
+
+        return ok(value);
+      });
+
+  private resolveBodyTemplate(
+    bodyTemplate: string,
+    payload: unknown,
+  ): Result<{ template: string }, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
+    return this.templateCompiler
+      .compile(bodyTemplate, payload)
+      .orElse((error) => {
+        return err(
+          new EmailCompiler.CompilationFailedError("Failed to compile email body template", {
+            errors: [error],
+          }),
+        );
+      })
+      .andThen((value) => {
+        if (!value.template || !value.template?.length) {
+          return err(new EmailCompiler.EmptyEmailBodyError("MJML template body is empty"));
+        }
+
+        return ok(value);
+      });
+  }
+
+  private resolveBodyMjml = (emailTemplate: string) =>
+    this.mjmlCompiler.compile(emailTemplate).orElse((error) => {
+      return err(
+        new EmailCompiler.CompilationFailedError("Failed to compile MJML", {
+          errors: [error],
+        }),
+      );
+    });
+
+  private resolveBodyPlainText = (
+    html: string,
+  ): Result<string, InstanceType<typeof EmailCompiler.CompilationFailedError>> =>
+    this.htmlToTextCompiler.compile(html).orElse((error) =>
+      err(
+        new EmailCompiler.CompilationFailedError("Failed to compile body to plain text", {
+          errors: [error],
+        }),
+      ),
+    );
+
   compile({
     payload,
     recipientEmail,
@@ -49,87 +116,31 @@ export class EmailCompiler implements IEmailCompiler {
     senderEmail,
     senderName,
   }: CompileArgs): Result<CompiledEmail, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
-    const logger = createLogger("sendSmtp", {
-      name: "sendSmtp",
+    const logger = createLogger("EmailCompiler", {
       event,
     });
 
-    logger.debug("Compiling an email using MJML");
+    const subjectCompilationResult = this.resolveEmailSubject(subjectTemplate, payload);
+    const bodyCompilationInHtmlResult = this.resolveBodyTemplate(bodyTemplate, payload).andThen(
+      (value) => {
+        return this.resolveBodyMjml(value.template);
+      },
+    );
 
-    const subjectCompilationResult = this.templateCompiler.compile(subjectTemplate, payload);
+    return combine([subjectCompilationResult, bodyCompilationInHtmlResult]).andThen(
+      ([subjectCompiled, bodyCompiledHtml]) => {
+        return this.resolveBodyPlainText(bodyCompiledHtml).andThen((bodyPlainText) => {
+          logger.debug("Resolved compiled email template");
 
-    if (subjectCompilationResult.isErr()) {
-      return err(
-        new EmailCompiler.CompilationFailedError("Failed to compile email subject template", {
-          errors: [subjectCompilationResult.error],
-        }),
-      );
-    }
-
-    const { template: emailSubject } = subjectCompilationResult.value;
-
-    if (!emailSubject || !emailSubject?.length) {
-      logger.error("Mjml subject message is empty, skipping");
-
-      return err(
-        new EmailCompiler.EmptyEmailSubjectError("Mjml subject message is empty, skipping", {
-          props: {
-            subject: emailSubject,
-          },
-        }),
-      );
-    }
-
-    logger.debug({ emailSubject }, "Subject compiled");
-
-    const bodyCompilationResult = this.templateCompiler.compile(bodyTemplate, payload);
-
-    if (bodyCompilationResult.isErr()) {
-      return err(
-        new EmailCompiler.CompilationFailedError("Failed to compile email body template", {
-          errors: [bodyCompilationResult.error],
-        }),
-      );
-    }
-
-    const { template: emailTemplate } = bodyCompilationResult.value;
-
-    if (!emailTemplate || !emailTemplate?.length) {
-      return err(new EmailCompiler.EmptyEmailBodyError("MJML template body is empty"));
-    }
-
-    logger.debug("Handlebars template compiled");
-
-    const mjmlCompilationResult = this.mjmlCompiler.compile(emailTemplate);
-
-    if (mjmlCompilationResult.isErr()) {
-      return err(
-        new EmailCompiler.CompilationFailedError("Failed to compile MJML", {
-          errors: [mjmlCompilationResult.error],
-        }),
-      );
-    }
-
-    logger.debug("MJML template compiled");
-
-    const plainTextCompilationResult = this.htmlToTextCompiler.compile(mjmlCompilationResult.value);
-
-    if (plainTextCompilationResult.isErr()) {
-      return err(
-        new EmailCompiler.CompilationFailedError("Failed to compile body to plain text", {
-          errors: [plainTextCompilationResult.error],
-        }),
-      );
-    }
-
-    logger.debug("Email body converted to plaintext");
-
-    return ok({
-      text: plainTextCompilationResult.value,
-      html: mjmlCompilationResult.value,
-      from: `${senderName} <${senderEmail}>`,
-      to: recipientEmail,
-      subject: emailSubject,
-    });
+          return ok({
+            text: bodyPlainText,
+            html: bodyCompiledHtml,
+            from: `${senderName} <${senderEmail}>`,
+            to: recipientEmail,
+            subject: subjectCompiled.template,
+          });
+        });
+      },
+    );
   }
 }
