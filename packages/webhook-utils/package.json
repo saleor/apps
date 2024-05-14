@@ -37,7 +37,7 @@
   },
   "main": "index.ts",
   "peerDependencies": {
-    "next": "14.1.0"
+    "next": "14.2.3"
   },
   "saleor": {
     "schemaVersion": "3.19"
