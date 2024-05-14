@@ -29,7 +29,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
-    "@sentry/nextjs": "7.93.0",
+    "@sentry/nextjs": "8.0.0",
     "@urql/exchange-auth": "^2.1.4",
     "@vitejs/plugin-react": "4.0.4",
     "dot-object": "^2.1.4",
