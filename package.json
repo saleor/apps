@@ -58,7 +58,7 @@
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
-  "packageManager": "pnpm@8.15.2",
+  "packageManager": "pnpm@9.1.1+sha256.9551e803dcb7a1839fdf5416153a844060c7bce013218ce823410532504ac10b",
   "pnpm": {
     "overrides": {
       "crypto-js@<4.2.0": ">=4.2.0"
