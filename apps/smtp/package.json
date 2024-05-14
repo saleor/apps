@@ -37,7 +37,6 @@
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@sentry/nextjs": "8.0.0",
-    "@sentry/node": "7.114.0",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",
