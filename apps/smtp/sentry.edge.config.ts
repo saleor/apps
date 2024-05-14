@@ -5,15 +5,27 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import * as Sentry from "@sentry/nextjs";
-import pkg from "./package.json";
+import * as Sentry from "@sentry/node";
+import { BaseError } from "./src/errors";
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   enableTracing: false,
+  environment: process.env.ENV,
+  includeLocalVariables: true,
+  beforeSend(errorEvent, hint) {
+    const error = hint.originalException;
 
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-  environment: process.env.SENTRY_ENVIRONMENT,
-  release: `saleor-app-${pkg.name}@${pkg.version}`,
+    if (error instanceof BaseError) {
+      errorEvent.fingerprint = ["{{ default }}", error.message];
+    }
+
+    return errorEvent;
+  },
+  integrations: [
+    new Sentry.Integrations.LocalVariables({
+      captureAllExceptions: true,
+    }),
+    Sentry.extraErrorDataIntegration(),
+  ],
 });
