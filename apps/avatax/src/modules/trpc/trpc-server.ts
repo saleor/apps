@@ -10,7 +10,7 @@ interface Meta {
 const t = initTRPC.context<TrpcContext>().meta<Meta>().create();
 
 const sentryMiddleware = t.middleware(
-  Sentry.Handlers.trpcMiddleware({
+  Sentry.trpcMiddleware({
     attachRpcInput: true,
   }),
 );
