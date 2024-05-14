@@ -3,11 +3,11 @@
   "version": "0.4.6",
   "devDependencies": {
     "eslint": "8.46.0",
-    "eslint-config-next": "13.4.8",
+    "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "8.8.0",
     "eslint-config-turbo": "1.10.3",
     "eslint-plugin-react": "7.33.2",
-    "next": "14.1.0",
+    "next": "14.2.3",
     "typescript": "5.1.6"
   },
   "license": "MIT",
