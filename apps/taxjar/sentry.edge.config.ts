@@ -40,7 +40,7 @@ Sentry.init({
     return errorEvent;
   },
   integrations: [
-    new Sentry.Integrations.LocalVariables({
+    Sentry.localVariablesIntegration({
       captureAllExceptions: true,
     }),
   ],
