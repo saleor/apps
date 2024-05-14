@@ -85,12 +85,24 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
 }
 
 describe("SendEventMessagesUseCase", () => {
-  const emailCompiler = new MockEmailCompiler();
-  const emailSender = new MockSmtpSender();
-  const smtpConfigurationService = new MockSmptConfigurationService();
+  let emailCompiler: MockEmailCompiler;
+  let emailSender: MockSmtpSender;
+  let smtpConfigurationService: MockSmptConfigurationService;
+
+  let useCaseInstance: SendEventMessagesUseCase;
 
   beforeEach(() => {
+    /**
+     * Just in case reset mocks if some reference is preserved
+     */
     vi.resetAllMocks();
+
+    /**
+     * Create direct dependencies
+     */
+    emailCompiler = new MockEmailCompiler();
+    emailSender = new MockSmtpSender();
+    smtpConfigurationService = new MockSmptConfigurationService();
 
     /**
      * Apply default return values, which can be partially overwritten in tests
@@ -102,6 +114,15 @@ describe("SendEventMessagesUseCase", () => {
     smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
       MockSmptConfigurationService.returnValidSingleConfiguration,
     );
+
+    /**
+     * Create service instance for testing
+     */
+    useCaseInstance = new SendEventMessagesUseCase({
+      emailCompiler,
+      emailSender,
+      smtpConfigurationService,
+    });
   });
 
   describe("Factory", () => {
@@ -117,20 +138,12 @@ describe("SendEventMessagesUseCase", () => {
   });
 
   describe("sendEventMessages method", () => {
-    it.todo("Returns error if failed to fetch configurations");
-
-    it("Returns error when no active configurations are available for selected channel", async () => {
-      const instance = new SendEventMessagesUseCase({
-        emailCompiler,
-        emailSender,
-        smtpConfigurationService,
-      });
-
+    it("Returns error if configurations list is empty", async () => {
       smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-        MockSmptConfigurationService.returnErrorFetchingConfigurations,
+        MockSmptConfigurationService.returnEmptyConfigurationsList,
       );
 
-      const result = await instance.sendEventMessages({
+      const result = await useCaseInstance.sendEventMessages({
         event: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
         payload: {},
         channelSlug: "channel-slug",
@@ -139,6 +152,23 @@ describe("SendEventMessagesUseCase", () => {
 
       expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
         SendEventMessagesUseCase.MissingAvailableConfigurationError,
+      );
+    });
+
+    it("Returns error if failed to fetch configurations", async () => {
+      smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
+        MockSmptConfigurationService.returnErrorFetchingConfigurations,
+      );
+
+      const result = await useCaseInstance.sendEventMessages({
+        event: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
+        payload: {},
+        channelSlug: "channel-slug",
+        recipientEmail: "recipient@test.com",
+      });
+
+      expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+        SendEventMessagesUseCase.FailedToFetchConfigurationError,
       );
 
       /**

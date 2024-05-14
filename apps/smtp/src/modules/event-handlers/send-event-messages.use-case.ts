@@ -17,6 +17,9 @@ export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 
   static SendEventMessagesUseCaseError = BaseError.subclass("SendEventMessagesUseCaseError");
+  static FailedToFetchConfigurationError = this.SendEventMessagesUseCaseError.subclass(
+    "FailedToFetchConfigurationError",
+  );
   static MissingAvailableConfigurationError = this.SendEventMessagesUseCaseError.subclass(
     "MissingAvailableConfigurationError",
   );
@@ -49,10 +52,25 @@ export class SendEventMessagesUseCase {
 
     if (availableSmtpConfigurations.isErr()) {
       return errAsync(
-        new SendEventMessagesUseCase.MissingAvailableConfigurationError(
-          "Missing active configuration for this channel",
+        new SendEventMessagesUseCase.FailedToFetchConfigurationError(
+          "Failed to fetch configuration",
           {
             errors: [availableSmtpConfigurations.error],
+            props: {
+              channelSlug,
+              event,
+            },
+          },
+        ),
+      );
+    }
+
+    if (availableSmtpConfigurations.value.length === 0) {
+      return errAsync(
+        new SendEventMessagesUseCase.MissingAvailableConfigurationError(
+          "Missing configuration for this channel that is active",
+          {
+            errors: [],
             props: {
               channelSlug,
               event,
