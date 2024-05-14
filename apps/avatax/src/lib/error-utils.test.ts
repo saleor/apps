@@ -3,6 +3,7 @@ import { SubscriptionPayloadErrorChecker } from "./error-utils";
 
 describe("SubscriptionPayloadErrorChecker", () => {
   const mockError = vi.fn();
+  const mockInfo = vi.fn();
   const mockErrorCapture = vi.fn();
 
   beforeEach(() => {
@@ -10,7 +11,7 @@ describe("SubscriptionPayloadErrorChecker", () => {
   });
 
   it.each(["OrderCancelled", "OrderConfirmed", "CalculateTaxes"])(
-    "should log error when payload contains GraphQL error for %s",
+    "should log error when payload contains unhandled GraphQL error for %s",
     (typename) => {
       const payload = {
         __typename: typename,
@@ -22,17 +23,24 @@ describe("SubscriptionPayloadErrorChecker", () => {
         ],
       } as any;
 
-      const checker = new SubscriptionPayloadErrorChecker({ error: mockError }, mockErrorCapture);
+      const checker = new SubscriptionPayloadErrorChecker(
+        { error: mockError, info: mockInfo },
+        mockErrorCapture,
+      );
 
       checker.checkPayload(payload);
 
-      expect(mockError).toHaveBeenCalledWith(`Payload contains GraphQL error for ${typename}`, {
-        error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
-        subscription: typename,
-      });
+      expect(mockError).toHaveBeenCalledWith(
+        `Payload contains unhandled GraphQL error for ${typename}`,
+        {
+          error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
+          subscription: typename,
+        },
+      );
       expect(mockErrorCapture).toHaveBeenCalledWith(
         expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
       );
+      expect(mockInfo).not.toHaveBeenCalled();
     },
   );
 
@@ -43,12 +51,47 @@ describe("SubscriptionPayloadErrorChecker", () => {
         __typename: typename,
       } as any;
 
-      const checker = new SubscriptionPayloadErrorChecker({ error: mockError }, mockErrorCapture);
+      const checker = new SubscriptionPayloadErrorChecker(
+        { error: mockError, info: mockInfo },
+        mockErrorCapture,
+      );
 
       checker.checkPayload(payload);
 
       expect(mockError).not.toHaveBeenCalled();
       expect(mockErrorCapture).not.toHaveBeenCalled();
+      expect(mockInfo).not.toHaveBeenCalled();
     },
   );
+
+  it("should not log error when payload contains handled error", () => {
+    const payload = {
+      __typename: "CalculateTaxes",
+      errors: [
+        {
+          message: "Error message",
+          source: "Error source",
+          path: ["event", "taxBase", "sourceObject", "user"],
+        },
+      ],
+    } as any;
+
+    const checker = new SubscriptionPayloadErrorChecker(
+      { error: mockError, info: mockInfo },
+      mockErrorCapture,
+    );
+
+    checker.checkPayload(payload);
+
+    expect(mockInfo).toHaveBeenCalledWith(
+      "Payload contains handled GraphQL error for CalculateTaxes",
+      {
+        error: expect.any(SubscriptionPayloadErrorChecker.SubscriptionPayloadError),
+        subscription: "CalculateTaxes",
+      },
+    );
+
+    expect(mockError).not.toHaveBeenCalled();
+    expect(mockErrorCapture).not.toHaveBeenCalled();
+  });
 });

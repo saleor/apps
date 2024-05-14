@@ -77,29 +77,6 @@ describe("SaleorOrderConfirmedEvent", () => {
     });
   });
 
-  describe("getIsDiscounted method", () => {
-    it("should return false if order don't have discounts", () => {
-      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
-
-      expect(event.getIsDiscounted()).toEqual(false);
-    });
-
-    it("should return true if order have discounts", () => {
-      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
-
-      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
-        ...payload,
-        order: {
-          ...payload.order,
-          discounts: [{ id: "discount-id", amount: { amount: 10 } }],
-        },
-      })._unsafeUnwrap();
-
-      expect(event.getIsDiscounted()).toEqual(true);
-    });
-  });
-
   describe("hasShipping method", () => {
     it("should return false if order has shippingPrice net set to 0", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();

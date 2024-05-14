@@ -12,12 +12,10 @@ export const avataxShippingLine = {
     amount,
     taxCode,
     taxIncluded,
-    discounted,
   }: {
     amount: number;
     taxCode: string | undefined;
     taxIncluded: boolean;
-    discounted: boolean;
   }): LineItemModel {
     return {
       amount,
@@ -25,7 +23,6 @@ export const avataxShippingLine = {
       taxCode,
       itemCode: SHIPPING_ITEM_CODE,
       quantity: 1,
-      discounted,
     };
   },
   getFromTransactionModel(transactionModel: TransactionModel) {

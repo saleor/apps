@@ -16,7 +16,6 @@ export class SaleorOrderConfirmedEvent {
       }),
       status: z.string(),
       id: z.string(),
-      discounts: z.array(z.object({})),
       shippingPrice: z.object({
         gross: z.object({
           amount: z.number(),
@@ -76,8 +75,6 @@ export class SaleorOrderConfirmedEvent {
     this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
 
   getIsTaxIncluded = () => this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
-
-  getIsDiscounted = () => this.data.order.discounts.length > 0;
 
   getLines = () => this.lines;
 

@@ -14,7 +14,6 @@ const getBasePayload = (): CalculateTaxesPayload => {
         slug: "test",
       },
       currency: "PLN",
-      discounts: [],
       pricesEnteredWithTax: false,
       shippingPrice: { amount: 0 },
       address: {
