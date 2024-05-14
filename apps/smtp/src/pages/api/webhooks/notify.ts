@@ -1,16 +1,9 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
-import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
-import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
-import { createSettingsManager } from "../../../lib/metadata-manager";
-import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
-import { EmailCompiler } from "../../../modules/smtp/email-compiler";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/send-event-messages.use-case.factory";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -26,6 +19,8 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
 });
 
 const logger = createLogger(notifyWebhook.webhookPath);
+
+const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.debug("Webhook received");
@@ -51,22 +46,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
 
-  const client = createInstrumentedGraphqlClient({
-    saleorApiUrl: authData.saleorApiUrl,
-    token: authData.token,
-  });
-
-  const useCase = new SendEventMessagesUseCase({
-    emailSender: new SmtpEmailSender(),
-    emailCompiler: new EmailCompiler(),
-    smtpConfigurationService: new SmtpConfigurationService({
-      featureFlagService: new FeatureFlagService({ client }),
-      metadataManager: new SmtpMetadataManager(
-        createSettingsManager(client, authData.appId),
-        authData.saleorApiUrl,
-      ),
-    }),
-  });
+  const useCase = useCaseFactory.createFromAuthData(authData);
 
   await useCase.sendEventMessages({
     channelSlug: channel,

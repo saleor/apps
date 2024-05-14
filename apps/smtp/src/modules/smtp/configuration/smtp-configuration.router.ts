@@ -1,7 +1,7 @@
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { router } from "../../trpc/trpc-server";
 import { z } from "zod";
-import { compileMjml } from "../compile-mjml";
+import { MjmlCompiler } from "../services/mjml-compiler";
 import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
 import {
@@ -162,10 +162,10 @@ export const smtpConfigurationRouter = router({
         const compiledSubjectTemplate = Handlebars.compile(input.template);
         const templatedEmail = compiledSubjectTemplate(payload);
 
-        const { html: rawHtml } = compileMjml(templatedEmail);
+        const compilationResult = new MjmlCompiler().compile(templatedEmail);
 
-        if (rawHtml) {
-          renderedEmail = rawHtml;
+        if (compilationResult.isOk()) {
+          renderedEmail = compilationResult.value;
         }
       }
 

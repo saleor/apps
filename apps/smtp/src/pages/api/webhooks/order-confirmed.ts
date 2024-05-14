@@ -5,16 +5,9 @@ import {
   OrderConfirmedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/send-event-messages.use-case";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { SmtpConfigurationService } from "../../../modules/smtp/configuration/smtp-configuration.service";
-import { FeatureFlagService } from "../../../modules/feature-flag-service/feature-flag-service";
-import { SmtpMetadataManager } from "../../../modules/smtp/configuration/smtp-metadata-manager";
-import { createSettingsManager } from "../../../lib/metadata-manager";
-import { SmtpEmailSender } from "../../../modules/smtp/smtp-email-sender";
-import { EmailCompiler } from "../../../modules/smtp/email-compiler";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/send-event-messages.use-case.factory";
 
 const OrderConfirmedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -45,6 +38,8 @@ export const orderConfirmedWebhook = new SaleorAsyncWebhook<OrderConfirmedWebhoo
 
 const logger = createLogger(orderConfirmedWebhook.webhookPath);
 
+const useCaseFactory = new SendEventMessagesUseCaseFactory();
+
 const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = async (
   req,
   res,
@@ -70,22 +65,8 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
   }
 
   const channel = order.channel.slug;
-  const client = createInstrumentedGraphqlClient({
-    saleorApiUrl: authData.saleorApiUrl,
-    token: authData.token,
-  });
 
-  const useCase = new SendEventMessagesUseCase({
-    emailSender: new SmtpEmailSender(),
-    emailCompiler: new EmailCompiler(),
-    smtpConfigurationService: new SmtpConfigurationService({
-      featureFlagService: new FeatureFlagService({ client }),
-      metadataManager: new SmtpMetadataManager(
-        createSettingsManager(client, authData.appId),
-        authData.saleorApiUrl,
-      ),
-    }),
-  });
+  const useCase = useCaseFactory.createFromAuthData(authData);
 
   await useCase.sendEventMessages({
     channelSlug: channel,
