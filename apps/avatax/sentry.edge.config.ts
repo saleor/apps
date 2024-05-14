@@ -15,7 +15,6 @@ Sentry.init({
   enableTracing: false,
   environment: process.env.ENV,
   includeLocalVariables: true,
-  ignoreErrors: [],
   beforeSend(errorEvent, hint) {
     const error = hint.originalException;
 
