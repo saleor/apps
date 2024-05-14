@@ -4,7 +4,7 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nextjs";
 import { BaseError } from "./src/errors";
 
 Sentry.init({
@@ -22,7 +22,7 @@ Sentry.init({
     return errorEvent;
   },
   integrations: [
-    new Sentry.Integrations.LocalVariables({
+    Sentry.localVariablesIntegration({
       captureAllExceptions: true,
     }),
     Sentry.extraErrorDataIntegration(),
