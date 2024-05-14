@@ -1,8 +1,13 @@
-import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
+import {
+  IGetSmtpConfiguration,
+  SmtpConfigurationService,
+} from "../smtp/configuration/smtp-configuration.service";
 import { IEmailCompiler } from "../smtp/services/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
+import { BaseError } from "../../errors";
+import { errAsync } from "neverthrow";
 
 /*
  * todo test
@@ -11,9 +16,14 @@ import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-send
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 
+  static SendEventMessagesUseCaseError = BaseError.subclass("SendEventMessagesUseCaseError");
+  static MissingAvailableConfigurationError = this.SendEventMessagesUseCaseError.subclass(
+    "MissingAvailableConfigurationError",
+  );
+
   constructor(
     private deps: {
-      smtpConfigurationService: SmtpConfigurationService;
+      smtpConfigurationService: IGetSmtpConfiguration;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
@@ -38,7 +48,18 @@ export class SendEventMessagesUseCase {
     });
 
     if (availableSmtpConfigurations.isErr()) {
-      throw new Error(availableSmtpConfigurations.error.message); //todo add neverthrow
+      return errAsync(
+        new SendEventMessagesUseCase.MissingAvailableConfigurationError(
+          "Missing active configuration for this channel",
+          {
+            errors: [availableSmtpConfigurations.error],
+            props: {
+              channelSlug,
+              event,
+            },
+          },
+        ),
+      );
     }
 
     /**
