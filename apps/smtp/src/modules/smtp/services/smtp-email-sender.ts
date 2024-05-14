@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
-import { createLogger } from "../../logger";
-import { SmtpEncryptionType } from "./configuration/smtp-config-schema";
+import { createLogger } from "../../../logger";
+import { SmtpEncryptionType } from "../configuration/smtp-config-schema";
 
 export interface SendMailArgs {
   smtpSettings: {

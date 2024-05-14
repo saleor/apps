@@ -1,9 +1,13 @@
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { IEmailCompiler } from "../smtp/email-compiler";
+import { IEmailCompiler } from "../smtp/services/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
-import { ISMTPEmailSender, SendMailArgs } from "../smtp/smtp-email-sender";
+import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
 
+/*
+ * todo test
+ * todo: how this service should handle error for one config and success for another?
+ */
 export class SendEventMessagesUseCase {
   private logger = createLogger("SendEventMessagesUseCase");
 
@@ -21,8 +25,8 @@ export class SendEventMessagesUseCase {
     recipientEmail,
     channelSlug,
   }: {
-    channelSlug: string; // todo: id or slug
-    payload: any; // todo can be narrowed?
+    channelSlug: string;
+    payload: unknown;
     recipientEmail: string;
     event: MessageEventTypes;
   }) {
@@ -42,15 +46,43 @@ export class SendEventMessagesUseCase {
      */
     for (const smtpConfiguration of availableSmtpConfigurations.value) {
       try {
-        const preparedEmail = this.deps.emailCompiler.compile({
+        const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
+
+        if (!eventSettings) {
+          /*
+           * Config missing, ignore
+           * todo log
+           */
+          return;
+        }
+
+        if (!eventSettings.active) {
+          /**
+           * Config found, but set as disabled, ignore.
+           * todo: log
+           */
+          return;
+        }
+
+        if (!smtpConfiguration.senderName || !smtpConfiguration.senderEmail) {
+          /**
+           * TODO: check if this should be allowed
+           */
+          return;
+        }
+
+        const preparedEmailResult = this.deps.emailCompiler.compile({
           event: event,
           payload: payload,
           recipientEmail: recipientEmail,
-          smtpConfiguration,
+          bodyTemplate: eventSettings.template,
+          subjectTemplate: eventSettings.subject,
+          senderEmail: smtpConfiguration.senderEmail,
+          senderName: smtpConfiguration.senderName,
         });
 
-        if (!preparedEmail) {
-          return; // todo log
+        if (preparedEmailResult.isErr()) {
+          return; // todo log + what should we do?
         }
 
         const smtpSettings: SendMailArgs["smtpSettings"] = {
@@ -68,7 +100,7 @@ export class SendEventMessagesUseCase {
 
         try {
           await this.deps.emailSender.sendEmailWithSmtp({
-            mailData: preparedEmail,
+            mailData: preparedEmailResult.value,
             smtpSettings,
           });
         } catch (e) {

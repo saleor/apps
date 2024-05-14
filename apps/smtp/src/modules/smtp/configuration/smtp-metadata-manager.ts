@@ -1,6 +1,6 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { SmtpConfig } from "./smtp-config-schema";
-import { fromAsyncThrowable, fromThrowable, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { fromAsyncThrowable, fromThrowable, ok, ResultAsync } from "neverthrow";
 import { BaseError } from "../../../errors";
 
 export class SmtpMetadataManager {
