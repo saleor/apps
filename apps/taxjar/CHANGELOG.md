@@ -1,5 +1,19 @@
 # app-taxjar
 
+## 1.1.5
+
+### Patch Changes
+
+- 4ffef6be: Update `@sentry/nextjs` to 8.0.0 version. It should help us with attaching additional data to Sentry errors.
+- 2604ce1e: Updated Next.js to 14.2.3
+- Updated dependencies [4ffef6be]
+- Updated dependencies [2604ce1e]
+  - @saleor/apps-logger@1.2.5
+  - @saleor/apps-shared@1.10.2
+  - @saleor/apps-ui@1.2.4
+  - @saleor/apps-otel@1.1.0
+  - @saleor/react-hook-form-macaw@0.2.6
+
 ## 1.1.4
 
 ### Patch Changes

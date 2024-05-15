@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.2.4
+
+### Patch Changes
+
+- 2604ce1e: Updated Next.js to 14.2.3
+
 ## 1.2.3
 
 ### Patch Changes
