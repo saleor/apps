@@ -166,7 +166,7 @@ describe("SendEventMessagesUseCase", () => {
         recipientEmail: "recipient@test.com",
       });
 
-      expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+      expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
         SendEventMessagesUseCase.MissingAvailableConfigurationError,
       );
     });
@@ -183,14 +183,14 @@ describe("SendEventMessagesUseCase", () => {
         recipientEmail: "recipient@test.com",
       });
 
-      expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+      expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
         SendEventMessagesUseCase.FailedToFetchConfigurationError,
       );
 
       /**
        * Additionally check if outer error contains inner error cause
        */
-      expect(result?._unsafeUnwrapErr().errors).toStrictEqual(
+      expect(result?._unsafeUnwrapErr()[0].errors).toStrictEqual(
         expect.arrayContaining([expect.any(BaseError)]),
       );
     });
@@ -230,7 +230,7 @@ describe("SendEventMessagesUseCase", () => {
         });
 
         expect(result?.isErr()).toBe(true);
-        expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
           SendEventMessagesUseCase.EventConfigNotActiveError,
         );
       });
@@ -254,7 +254,7 @@ describe("SendEventMessagesUseCase", () => {
           });
 
           expect(result?.isErr()).toBe(true);
-          expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+          expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
             SendEventMessagesUseCase.InvalidSenderConfigError,
           );
         },
@@ -273,7 +273,7 @@ describe("SendEventMessagesUseCase", () => {
         });
 
         expect(result?.isErr()).toBe(true);
-        expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
           SendEventMessagesUseCase.EmailCompilationError,
         );
       });
