@@ -22,7 +22,7 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
 
   const SHIPPING_NET_PRICE = 69.31;
   const SHIPPING_TAX_PRICE = 6.14;
-  const SHIPPING_GROSS_PRICE = 73.45;
+  const SHIPPING_GROSS_PRICE = 75.45;
 
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 7.48;
