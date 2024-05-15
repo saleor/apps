@@ -33,9 +33,10 @@ describe("App should calculate taxes for checkout with all products voucher appl
   const PRODUCT_NET_PRICE_AFTER_VOUCHER = 15;
   const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.34;
   const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 16.34;
-  const TOTAL_NET_PRICE_AFTER_VOUCHER = 82.06;
-  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.28;
-  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 89.34;
+
+  const TOTAL_NET_PRICE_AFTER_VOUCHER = 84.31;
+  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.48;
+  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 91.79;
 
   const getMoney = (amount: number): MoneyFragment => {
     return {
