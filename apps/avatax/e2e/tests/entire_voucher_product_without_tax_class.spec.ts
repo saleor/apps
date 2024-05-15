@@ -9,9 +9,9 @@ import {
   MoneyFragment,
 } from "../generated/graphql";
 
-describe("App should calculate taxes for checkout with entire voucher applied [pricesEnteredWithTax: False]", () => {
+describe("App should calculate taxes for checkout with all products voucher applied [pricesEnteredWithTax: False]", () => {
   const testCase = e2e(
-    "Product without tax claass [pricesEnteredWithTax: False], entire voucher applied",
+    "Product without tax claass [pricesEnteredWithTax: False], all products voucher applied",
   );
 
   const CURRENCY = "USD";
@@ -30,9 +30,6 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
 
   const VOUCHER_AMOUNT = 2.25;
 
-  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 67.46;
-  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 6.14;
-  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 73.45;
   const PRODUCT_NET_PRICE_AFTER_VOUCHER = 15;
   const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.34;
   const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 16.34;
@@ -144,9 +141,9 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
       .expectJson(
         "data.checkoutAddPromoCode.checkout.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
-          net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
-          tax: SHIPPING_TAX_PRICE_AFTER_VOUCHER,
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
         }),
       )
       .expectJson(
