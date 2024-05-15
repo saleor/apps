@@ -1,4 +1,5 @@
 import { e2e } from "pactum";
+import { string } from "pactum-matchers";
 import { describe, it } from "vitest";
 import {
   CheckoutAddVoucher,
@@ -7,11 +8,10 @@ import {
   CreateCheckout,
   MoneyFragment,
 } from "../generated/graphql";
-import { string } from "pactum-matchers";
 
-describe("App should calculate taxes for checkout with entire voucher applied [pricesEnteredWithTax: False]", () => {
+describe("App should calculate taxes for checkout with all products voucher applied [pricesEnteredWithTax: False]", () => {
   const testCase = e2e(
-    "Product without tax claass [pricesEnteredWithTax: False], entire voucher applied",
+    "Product without tax class [pricesEnteredWithTax: False], voucher [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
   );
 
   const CURRENCY = "USD";
@@ -30,15 +30,13 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
 
   const VOUCHER_AMOUNT = 2.25;
 
-  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 67.46;
-  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 5.99;
-  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 73.45;
-  const PRODUCT_NET_PRICE_AFTER_VOUCHER = 14.6;
-  const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.29;
-  const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 15.89;
-  const TOTAL_NET_PRICE_AFTER_VOUCHER = 82.06;
-  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.28;
-  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 89.34;
+  const PRODUCT_NET_PRICE_AFTER_VOUCHER = 15;
+  const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.34;
+  const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 16.34;
+
+  const TOTAL_NET_PRICE_AFTER_VOUCHER = 84.31;
+  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.48;
+  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 91.79;
 
   const getMoney = (amount: number): MoneyFragment => {
     return {
@@ -144,9 +142,9 @@ describe("App should calculate taxes for checkout with entire voucher applied [p
       .expectJson(
         "data.checkoutAddPromoCode.checkout.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
-          net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
-          tax: SHIPPING_TAX_PRICE_AFTER_VOUCHER,
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
         }),
       )
       .expectJson(
