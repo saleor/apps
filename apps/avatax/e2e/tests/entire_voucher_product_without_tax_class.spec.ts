@@ -11,7 +11,7 @@ import {
 
 describe("App should calculate taxes for checkout with all products voucher applied [pricesEnteredWithTax: False]", () => {
   const testCase = e2e(
-    "Product without tax claass [pricesEnteredWithTax: False], all products voucher applied",
+    "Product without tax class [pricesEnteredWithTax: False], voucher [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
   );
 
   const CURRENCY = "USD";
