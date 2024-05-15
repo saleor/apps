@@ -1,34 +1,49 @@
-import {
-  IGetSmtpConfiguration,
-  SmtpConfigurationService,
-} from "../smtp/configuration/smtp-configuration.service";
+import { IGetSmtpConfiguration } from "../smtp/configuration/smtp-configuration.service";
 import { IEmailCompiler } from "../smtp/services/email-compiler";
 import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
 import { BaseError } from "../../errors";
-import { err, errAsync, okAsync, Result } from "neverthrow";
+import { err, errAsync, Result, ResultAsync } from "neverthrow";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import combineWithAllErrors = Result.combineWithAllErrors;
 
-/*
- * todo test
- * todo: how this service should handle error for one config and success for another?
- */
 export class SendEventMessagesUseCase {
-  private logger = createLogger("SendEventMessagesUseCase");
-
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
-  static FailedToFetchConfigurationError = this.BaseError.subclass(
+
+  /**
+   * Errors thrown when something goes wrong and Saleor should retry
+   */
+  static ServerError = BaseError.subclass("SendEventMessagesUseCaseServerError");
+
+  static FailedToFetchConfigurationError = this.ServerError.subclass(
     "FailedToFetchConfigurationError",
   );
-  static MissingAvailableConfigurationError = this.BaseError.subclass(
+
+  /**
+   * Errors related to broken configuration
+   */
+  static ClientError = BaseError.subclass("SendEventMessagesUseCaseServerError");
+
+  static MissingAvailableConfigurationError = this.ClientError.subclass(
     "MissingAvailableConfigurationError",
   );
-  static EmailCompilationError = this.BaseError.subclass("EmailCompilationError");
-  static InvalidSenderConfigError = this.BaseError.subclass("InvalidSenderConfigError");
-  static EventConfigNotActiveError = this.BaseError.subclass("EventConfigNotActiveError");
-  static EventSettingsMissingError = this.BaseError.subclass("EventSettingsMissingError");
+
+  static EmailCompilationError = this.ClientError.subclass("EmailCompilationError");
+
+  static InvalidSenderConfigError = this.ClientError.subclass("InvalidSenderConfigError");
+
+  /**
+   * Errors that externally can be translated to no-op operations due to design of the app.
+   * In some cases app should just ignore the event, e.g. when it's disabled.
+   */
+  static NoOpError = BaseError.subclass("SendEventMessagesUseCaseServerError");
+
+  static EventConfigNotActiveError = this.NoOpError.subclass("EventConfigNotActiveError");
+
+  static EventSettingsMissingError = this.NoOpError.subclass("EventSettingsMissingError");
+
+  private logger = createLogger("SendEventMessagesUseCase");
 
   constructor(
     private deps: {
@@ -38,7 +53,7 @@ export class SendEventMessagesUseCase {
     },
   ) {}
 
-  private async processSingleConfiguration({
+  private processSingleConfiguration({
     config,
     event,
     payload,
@@ -133,19 +148,17 @@ export class SendEventMessagesUseCase {
       };
     }
 
-    try {
-      // todo get errors from smtp and map to proper response
-      await this.deps.emailSender.sendEmailWithSmtp({
+    return ResultAsync.fromPromise(
+      this.deps.emailSender.sendEmailWithSmtp({
         mailData: preparedEmailResult.value,
         smtpSettings,
-      });
-
-      return okAsync(null); // todo result
-    } catch (e) {
-      this.logger.error("SMTP returned errors", { error: e });
-
-      return errAsync(new SendEventMessagesUseCase.BaseError("Unhandled error"));
-    }
+      }),
+      (err) => {
+        return new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
+          errors: [err],
+        });
+      },
+    );
   }
 
   async sendEventMessages({
