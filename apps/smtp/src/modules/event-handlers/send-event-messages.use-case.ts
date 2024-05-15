@@ -7,7 +7,7 @@ import { MessageEventTypes } from "./message-event-types";
 import { createLogger } from "../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
 import { BaseError } from "../../errors";
-import { errAsync } from "neverthrow";
+import { err, errAsync, okAsync } from "neverthrow";
 
 /*
  * todo test
@@ -22,6 +22,14 @@ export class SendEventMessagesUseCase {
   );
   static MissingAvailableConfigurationError = this.SendEventMessagesUseCaseError.subclass(
     "MissingAvailableConfigurationError",
+  );
+  static EmailCompilationError =
+    this.SendEventMessagesUseCaseError.subclass("EmailCompilationError");
+  static InvalidSenderConfigError = this.SendEventMessagesUseCaseError.subclass(
+    "InvalidSenderConfigError",
+  );
+  static EventConfigNotActiveError = this.SendEventMessagesUseCaseError.subclass(
+    "EventConfigNotActiveError",
   );
 
   constructor(
@@ -51,7 +59,9 @@ export class SendEventMessagesUseCase {
     });
 
     if (availableSmtpConfigurations.isErr()) {
-      return errAsync(
+      this.logger.warn("Failed to fetch configuration");
+
+      return err(
         new SendEventMessagesUseCase.FailedToFetchConfigurationError(
           "Failed to fetch configuration",
           {
@@ -66,7 +76,9 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      return errAsync(
+      this.logger.warn("Configuration list is empty, app is not configured");
+
+      return err(
         new SendEventMessagesUseCase.MissingAvailableConfigurationError(
           "Missing configuration for this channel that is active",
           {
@@ -84,30 +96,47 @@ export class SendEventMessagesUseCase {
      * TODO: Why this is not in parallel?
      */
     for (const smtpConfiguration of availableSmtpConfigurations.value) {
+      this.logger.info("Detected configuration, will attempt to send email");
+
       try {
         const eventSettings = smtpConfiguration.events.find((e) => e.eventType === event);
 
         if (!eventSettings) {
+          this.logger.info("Configuration found but settings for this event are missing");
           /*
            * Config missing, ignore
            * todo log
+           *  todo this probalby should be for / continue instead, or Promise.all
            */
           return;
         }
 
         if (!eventSettings.active) {
-          /**
-           * Config found, but set as disabled, ignore.
-           * todo: log
-           */
-          return;
+          this.logger.info("Configuration found, but setting for this event are not active");
+
+          return errAsync(
+            new SendEventMessagesUseCase.EventConfigNotActiveError("Event config is disabled", {
+              props: {
+                event: eventSettings.eventType,
+              },
+            }),
+          );
         }
 
         if (!smtpConfiguration.senderName || !smtpConfiguration.senderEmail) {
-          /**
-           * TODO: check if this should be allowed
-           */
-          return;
+          this.logger.warn("Configuration is invalid: missing sender data", {
+            senderName: smtpConfiguration.senderName,
+            senderEmail: smtpConfiguration.senderEmail,
+          });
+
+          return errAsync(
+            new SendEventMessagesUseCase.InvalidSenderConfigError("Missing sender name or email", {
+              props: {
+                senderName: smtpConfiguration.senderName,
+                senderEmail: smtpConfiguration.senderEmail,
+              },
+            }),
+          );
         }
 
         const preparedEmailResult = this.deps.emailCompiler.compile({
@@ -121,7 +150,17 @@ export class SendEventMessagesUseCase {
         });
 
         if (preparedEmailResult.isErr()) {
-          return; // todo log + what should we do?
+          this.logger.warn("Failed to compile email template");
+
+          return errAsync(
+            new SendEventMessagesUseCase.EmailCompilationError("Failed to compile error", {
+              errors: [preparedEmailResult.error],
+              props: {
+                channelSlug,
+                event,
+              },
+            }),
+          );
         }
 
         const smtpSettings: SendMailArgs["smtpSettings"] = {
@@ -138,10 +177,13 @@ export class SendEventMessagesUseCase {
         }
 
         try {
+          // todo get errors from smtp and map to proper response
           await this.deps.emailSender.sendEmailWithSmtp({
             mailData: preparedEmailResult.value,
             smtpSettings,
           });
+
+          return okAsync(null); // todo result
         } catch (e) {
           this.logger.error("SMTP returned errors", { error: e });
         }

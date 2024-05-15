@@ -1,15 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
-import { errAsync, ok, okAsync, Result } from "neverthrow";
+import { err, errAsync, ok, okAsync, Result } from "neverthrow";
 import { CompiledEmail, IEmailCompiler } from "../smtp/services/email-compiler";
 import { BaseError } from "../../errors";
 import { ISMTPEmailSender } from "../smtp/services/smtp-email-sender";
 import { IGetSmtpConfiguration } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
+import { MessageEventTypes } from "./message-event-types";
+
+const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 
 class MockEmailCompiler implements IEmailCompiler {
-  static returnSuccessCompiledEmail = (): Result<CompiledEmail, never> =>
+  static returnSuccessCompiledEmail: IEmailCompiler["compile"] = () =>
     ok({
       text: "html text",
       from: "email from",
@@ -17,6 +20,10 @@ class MockEmailCompiler implements IEmailCompiler {
       html: "<html>html text</html>",
       to: "email to",
     });
+
+  static returnErrorCompiling: IEmailCompiler["compile"] = () => {
+    return err(new BaseError("Error compiling"));
+  };
 
   mockEmailCompileMethod = vi.fn<
     Parameters<IEmailCompiler["compile"]>,
@@ -49,7 +56,7 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
       events: [
         {
           active: true,
-          eventType: "ACCOUNT_DELETE",
+          eventType: EVENT_TYPE,
           subject: "Subject",
           template: "html text",
         },
@@ -74,6 +81,15 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
 
   static returnErrorFetchingConfigurations: IGetSmtpConfiguration["getConfigurations"] = () => {
     return errAsync(new BaseError("Mock fail to fetch"));
+  };
+
+  static returnValidTwoConfigurations: IGetSmtpConfiguration["getConfigurations"] = () => {
+    const c1 = this.getSimpleConfigurationValue();
+    const c2 = this.getSimpleConfigurationValue();
+
+    c2.id = "2";
+
+    return okAsync([c1, c2]);
   };
 
   mockGetConfigurationsMethod = vi.fn<
@@ -144,7 +160,7 @@ describe("SendEventMessagesUseCase", () => {
       );
 
       const result = await useCaseInstance.sendEventMessages({
-        event: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
+        event: EVENT_TYPE,
         payload: {},
         channelSlug: "channel-slug",
         recipientEmail: "recipient@test.com",
@@ -161,7 +177,7 @@ describe("SendEventMessagesUseCase", () => {
       );
 
       const result = await useCaseInstance.sendEventMessages({
-        event: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
+        event: EVENT_TYPE,
         payload: {},
         channelSlug: "channel-slug",
         recipientEmail: "recipient@test.com",
@@ -180,21 +196,98 @@ describe("SendEventMessagesUseCase", () => {
     });
 
     describe("Multiple configurations assigned for the same event", () => {
-      it.todo("Calls SMTP service to send email for each configuration");
+      it("Calls SMTP service to send email for each configuration", async () => {
+        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
+          MockSmptConfigurationService.returnValidTwoConfigurations,
+        );
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledTimes(2);
+      });
+
+      it.todo("Returns error if at least one configuration fails, even if second one works");
     });
 
     describe("Single configuration assigned for the event", () => {
-      it.todo("Does nothing (?) if config is missing for this event");
+      it("Returns error if event is set to not active", async () => {
+        const smtpConfig = MockSmptConfigurationService.getSimpleConfigurationValue();
 
-      it.todo("Does nothing (?) if event is set to not active");
+        smtpConfig.events[0].active = false;
 
-      it.todo("Does nothing (?) if configuration sender name is missing");
+        smtpConfigurationService.mockGetConfigurationsMethod.mockReturnValue(okAsync([smtpConfig]));
 
-      it.todo("Does nothing (?) if configuration sender email is missing");
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
 
-      it.todo("Does nothing (?) if email compilation fails");
+        expect(result?.isErr()).toBe(true);
+        expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+          SendEventMessagesUseCase.EventConfigNotActiveError,
+        );
+      });
 
-      it.todo("Calls SMTP service to send email");
+      it.each(["senderName", "senderEmail"] as const)(
+        "Returns error if configuration '%s' is missing in configuration",
+        async (field) => {
+          const smtpConfig = MockSmptConfigurationService.getSimpleConfigurationValue();
+
+          smtpConfig[field] = undefined;
+
+          smtpConfigurationService.mockGetConfigurationsMethod.mockReturnValue(
+            okAsync([smtpConfig]),
+          );
+
+          const result = await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "recipient@test.com",
+          });
+
+          expect(result?.isErr()).toBe(true);
+          expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+            SendEventMessagesUseCase.InvalidSenderConfigError,
+          );
+        },
+      );
+
+      it("Returns error if email compilation fails", async () => {
+        emailCompiler.mockEmailCompileMethod.mockImplementation(
+          MockEmailCompiler.returnErrorCompiling,
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result?.isErr()).toBe(true);
+        expect(result?._unsafeUnwrapErr()).toBeInstanceOf(
+          SendEventMessagesUseCase.EmailCompilationError,
+        );
+      });
+
+      it("Calls SMTP service to send email", async () => {
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
     });
   });
 });
