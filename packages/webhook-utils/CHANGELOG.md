@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.1.1
+
+### Patch Changes
+
+- 2604ce1e: Updated Next.js to 14.2.3
+
 ## 0.1.0
 
 ### Minor Changes

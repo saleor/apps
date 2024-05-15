@@ -1,5 +1,22 @@
 # saleor-app-search
 
+## 1.21.5
+
+### Patch Changes
+
+- 4ffef6be: Update `@sentry/nextjs` to 8.0.0 version. It should help us with attaching additional data to Sentry errors.
+- 2792a025: Fixed problem when webhooks were disabled if _any_ error from Algolia was received. Now only 401 and 403 errors (invalid auth/credentials) will cause webhooks disabling, until app is configured again.
+- 2792a025: Fixed logger execution to properly attach attributes
+- 2604ce1e: Updated Next.js to 14.2.3
+- Updated dependencies [4ffef6be]
+- Updated dependencies [2604ce1e]
+  - @saleor/apps-logger@1.2.5
+  - @saleor/webhook-utils@0.1.1
+  - @saleor/apps-shared@1.10.2
+  - @saleor/apps-ui@1.2.4
+  - @saleor/apps-otel@1.1.0
+  - @saleor/react-hook-form-macaw@0.2.6
+
 ## 1.21.4
 
 ### Patch Changes
