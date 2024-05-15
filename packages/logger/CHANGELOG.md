@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.5
+
+### Patch Changes
+
+- 4ffef6be: Update `@sentry/nextjs` to 8.0.0 version. It should help us with attaching additional data to Sentry errors.
+
 ## 1.2.4
 
 ### Patch Changes

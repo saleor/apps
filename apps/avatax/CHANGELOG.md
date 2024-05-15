@@ -1,5 +1,26 @@
 # app-avatax
 
+## 1.5.0
+
+### Minor Changes
+
+- 282d6d9d: Change discounts flow to price reduction. It means that Saleor is responsible for calculating discounted prices and Avatax will receive totalPrice (discounted or not) to calculate taxes.
+
+### Patch Changes
+
+- 4ffef6be: Update `@sentry/nextjs` to 8.0.0 version. It should help us with attaching additional data to Sentry errors.
+- 2604ce1e: Updated Next.js to 14.2.3
+- 705a6812: Send additional properties from captured errors into Sentry. This should help us with debugging issues.
+- d34de22a: Don't send handled error for `checkoutCalculateTaxes` event into Sentry. It will be logged instead.
+- Updated dependencies [4ffef6be]
+- Updated dependencies [2604ce1e]
+  - @saleor/apps-logger@1.2.5
+  - @saleor/webhook-utils@0.1.1
+  - @saleor/apps-shared@1.10.2
+  - @saleor/apps-ui@1.2.4
+  - @saleor/apps-otel@1.1.0
+  - @saleor/react-hook-form-macaw@0.2.6
+
 ## 1.4.6
 
 ### Patch Changes
