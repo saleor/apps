@@ -88,7 +88,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
         ...mailData,
       });
 
-      this.logger.debug("An email has been sent");
+      this.logger.debug("An email has been sent", { response });
 
       return { response };
     } catch (error) {

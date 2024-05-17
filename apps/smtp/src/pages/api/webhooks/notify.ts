@@ -65,29 +65,26 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
           return res.status(200).json({ message: "The event has been handled" });
         },
         (err) => {
-          switch (err[0].constructor) {
-            case SendEventMessagesUseCase.ServerError: {
-              logger.error("Failed to send email(s) [server error]", { error: err });
+          const errorInstance = err[0];
 
-              return res.status(500).json({ message: "Failed to send email" });
-            }
-            case SendEventMessagesUseCase.ClientError: {
-              logger.info("Failed to send email(s) [client error]", { error: err });
+          if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
+            logger.error("Failed to send email(s) [server error]", { error: err });
 
-              return res.status(400).json({ message: "Failed to send email" });
-            }
-            case SendEventMessagesUseCase.NoOpError: {
-              logger.error("Sending emails aborted [no op]", { error: err });
+            return res.status(500).json({ message: "Failed to send email" });
+          } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
+            logger.info("Failed to send email(s) [client error]", { error: err });
 
-              return res.status(200).json({ message: "The event has been handled [no op]" });
-            }
-            default: {
-              logger.error("Failed to send email(s) [server error]", { error: err });
-              captureException(new Error("Unhandled useCase error", { cause: err }));
+            return res.status(400).json({ message: "Failed to send email" });
+          } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
+            logger.error("Sending emails aborted [no op]", { error: err });
 
-              return res.status(500).json({ message: "Failed to send email [unhandled]" });
-            }
+            return res.status(200).json({ message: "The event has been handled [no op]" });
           }
+
+          logger.error("Failed to send email(s) [unhandled error]", { error: err });
+          captureException(new Error("Unhandled useCase error", { cause: err }));
+
+          return res.status(500).json({ message: "Failed to send email [unhandled]" });
         },
       ),
     );
