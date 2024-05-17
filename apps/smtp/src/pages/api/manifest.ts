@@ -31,10 +31,7 @@ export default withOtel(
         id: "saleor.app.smtp",
         name: "SMTP",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
-        /**
-         * Requires 3.10 due to invoices event payload - in previous versions, order reference was missing
-         */
-        requiredSaleorVersion: ">=3.10 <4",
+        requiredSaleorVersion: ">=3.19 <4",
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
