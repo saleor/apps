@@ -1,11 +1,11 @@
-import { IGetSmtpConfiguration } from "../smtp/configuration/smtp-configuration.service";
-import { IEmailCompiler } from "../smtp/services/email-compiler";
-import { MessageEventTypes } from "./message-event-types";
-import { createLogger } from "../../logger";
-import { ISMTPEmailSender, SendMailArgs } from "../smtp/services/smtp-email-sender";
-import { BaseError } from "../../errors";
+import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
+import { IEmailCompiler } from "../../smtp/services/email-compiler";
+import { MessageEventTypes } from "../message-event-types";
+import { createLogger } from "../../../logger";
+import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
+import { BaseError } from "../../../errors";
 import { err, errAsync, Result, ResultAsync } from "neverthrow";
-import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 import combineWithAllErrors = Result.combineWithAllErrors;
 
 export class SendEventMessagesUseCase {

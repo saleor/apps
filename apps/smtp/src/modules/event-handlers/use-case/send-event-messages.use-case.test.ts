@@ -2,12 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
 import { err, errAsync, ok, okAsync, Result } from "neverthrow";
-import { CompiledEmail, IEmailCompiler } from "../smtp/services/email-compiler";
-import { BaseError } from "../../errors";
-import { ISMTPEmailSender } from "../smtp/services/smtp-email-sender";
-import { IGetSmtpConfiguration } from "../smtp/configuration/smtp-configuration.service";
-import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
-import { MessageEventTypes } from "./message-event-types";
+import { CompiledEmail, IEmailCompiler } from "../../smtp/services/email-compiler";
+import { BaseError } from "../../../errors";
+import { ISMTPEmailSender } from "../../smtp/services/smtp-email-sender";
+import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { MessageEventTypes } from "../message-event-types";
 
 const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 

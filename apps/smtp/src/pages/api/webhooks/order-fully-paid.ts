@@ -7,7 +7,7 @@ import {
 } from "../../../../generated/graphql";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/send-event-messages.use-case.factory";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 
 const OrderFullyPaidWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
