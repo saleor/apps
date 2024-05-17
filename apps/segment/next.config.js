@@ -18,7 +18,22 @@ const nextConfig = () => {
   return {
     reactStrictMode: true,
     // TODO Infer names dynamically from disk
-    transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw", "@saleor/trpc"],
+    transpilePackages: [
+      "@saleor/apps-shared",
+      "@saleor/apps-ui",
+      "@saleor/react-hook-form-macaw",
+      "@saleor/trpc",
+    ],
+    /*
+     * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
+     * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
+     */
+    webpack: (config, { isServer }) => {
+      if (isServer) {
+        config.ignoreWarnings = [{ module: /opentelemetry/ }];
+      }
+      return config;
+    },
   };
 };
 
@@ -38,7 +53,7 @@ const configWithSentry = withSentryConfig(
     tunnelRoute: "/monitoring",
     hideSourceMaps: true,
     disableLogger: true,
-  }
+  },
 );
 
 module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;

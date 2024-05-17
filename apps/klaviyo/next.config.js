@@ -7,6 +7,16 @@ const isSentryPropertiesInEnvironment =
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
+  /*
+   * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
+   * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
+   */
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.ignoreWarnings = [{ module: /opentelemetry/ }];
+    }
+    return config;
+  },
 };
 
 const configWithSentry = withSentryConfig(
@@ -22,7 +32,7 @@ const configWithSentry = withSentryConfig(
     tunnelRoute: "/monitoring",
     hideSourceMaps: true,
     disableLogger: true,
-  }
+  },
 );
 
 module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
