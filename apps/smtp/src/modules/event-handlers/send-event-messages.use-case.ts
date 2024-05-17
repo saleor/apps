@@ -135,6 +135,8 @@ export class SendEventMessagesUseCase {
       );
     }
 
+    this.logger.info("Successfully compiled email template");
+
     const smtpSettings: SendMailArgs["smtpSettings"] = {
       host: config.smtpHost,
       port: parseInt(config.smtpPort, 10),
@@ -142,6 +144,8 @@ export class SendEventMessagesUseCase {
     };
 
     if (config.smtpUser) {
+      this.logger.debug("Detected SMTP user config. Applying to configuration.");
+
       smtpSettings.auth = {
         user: config.smtpUser,
         pass: config.smtpPassword,
@@ -154,6 +158,8 @@ export class SendEventMessagesUseCase {
         smtpSettings,
       }),
       (err) => {
+        this.logger.debug("Error sending email with SMTP", { error: err });
+
         return new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
           errors: [err],
         });

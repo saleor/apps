@@ -38,6 +38,10 @@ class MockSmtpSender implements ISMTPEmailSender {
     return { response: {} };
   };
 
+  static throwInvalidResponse: ISMTPEmailSender["sendEmailWithSmtp"] = async () => {
+    throw new BaseError("Some error");
+  };
+
   mockSendEmailMethod = vi.fn<
     Parameters<ISMTPEmailSender["sendEmailWithSmtp"]>,
     ReturnType<ISMTPEmailSender["sendEmailWithSmtp"]>
@@ -211,7 +215,28 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledTimes(2);
       });
 
-      it.todo("Returns error if at least one configuration fails, even if second one works");
+      it("Returns error if at least one configuration fails, even if second one works", async () => {
+        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
+          MockSmptConfigurationService.returnValidTwoConfigurations,
+        );
+
+        emailSender.mockSendEmailMethod.mockImplementationOnce(MockSmtpSender.returnEmptyResponse);
+
+        emailSender.mockSendEmailMethod.mockImplementationOnce(MockSmtpSender.throwInvalidResponse);
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "email@example.com",
+        });
+
+        expect(result.isErr()).toBe(true);
+
+        const errors = result._unsafeUnwrapErr();
+
+        expect(errors[0]).toBeInstanceOf(SendEventMessagesUseCase.ServerError);
+      });
     });
 
     describe("Single configuration assigned for the event", () => {
