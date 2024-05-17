@@ -108,3 +108,17 @@ To start the migration run command:
 ```bash
 pnpm migrate
 ```
+
+### Running the app in docker
+
+To run the app in docker, you need to build the image first (run this command in the root directory of the monorepo):
+
+```shell
+docker build --tag saleor-app-avatax-docker --file Dockerfile.dev .
+```
+
+Then you can run the image (run this command in the root directory of the monorepo):
+
+```shell
+docker run -p 3000:3000 --env-file apps/avatax/.env saleor-app-avatax-docker
+```
