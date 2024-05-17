@@ -8,6 +8,7 @@
 /apps/avatax  @saleor/shopex-js
 /apps/search @saleor/shopex-js
 /apps/klaviyo @saleor/shopex-js
+/apps/smtp @saleor/shopex-js
 
 /apps/cms-v2 @saleor/merchant-js
 /apps/crm @saleor/merchant-js
