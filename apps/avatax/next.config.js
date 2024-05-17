@@ -27,7 +27,7 @@ const nextConfig = {
   },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
-   * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is merged
+   * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
    */
   webpack: (config, { isServer }) => {
     if (isServer) {
