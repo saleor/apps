@@ -95,7 +95,7 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
 
             return res.status(400).json({ message: "Failed to send email" });
           } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
-            logger.error("Sending emails aborted [no op]", { error: err });
+            logger.info("Sending emails aborted [no op]", { error: err });
 
             return res.status(200).json({ message: "The event has been handled [no op]" });
           }
