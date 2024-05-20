@@ -23,6 +23,8 @@ import { createLogger } from "../../../logger";
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: typeof SmtpConfigurationService.SmtpConfigurationServiceError | unknown,
 ) => {
+  createLogger("trpcError").debug("Error from TRPC", { error });
+
   if (error instanceof SmtpConfigurationService.SmtpConfigurationServiceError) {
     switch (error["constructor"]) {
       case SmtpConfigurationService.ConfigNotFoundError:
