@@ -21,7 +21,13 @@ export interface FilterConfigurationsArgs {
   active?: boolean;
 }
 
-export class SmtpConfigurationService {
+export interface IGetSmtpConfiguration {
+  getConfigurations(
+    filter?: FilterConfigurationsArgs,
+  ): ResultAsync<SmtpConfiguration[], InstanceType<typeof BaseError>>;
+}
+
+export class SmtpConfigurationService implements IGetSmtpConfiguration {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
   static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
   static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");

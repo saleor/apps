@@ -22,9 +22,12 @@ export interface SendMailArgs {
 }
 
 export interface ISMTPEmailSender {
-  sendEmailWithSmtp({ smtpSettings, mailData }: SendMailArgs): Promise<{ response: any }>;
+  sendEmailWithSmtp({ smtpSettings, mailData }: SendMailArgs): Promise<{ response: unknown }>;
 }
 
+/**
+ * TODO: Implement errors mapping and neverthrow
+ */
 export class SmtpEmailSender implements ISMTPEmailSender {
   private logger = createLogger("SmtpEmailSender");
 
@@ -85,7 +88,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
         ...mailData,
       });
 
-      this.logger.debug("An email has been sent");
+      this.logger.debug("An email has been sent", { response });
 
       return { response };
     } catch (error) {
