@@ -18,6 +18,12 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
 
   const cursors: Array<string> = [];
 
+  const fistCusror = result.data?.productVariants?.pageInfo.endCursor;
+
+  if (fistCusror) {
+    cursors.push(fistCusror);
+  }
+
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
     result = await client
       .query(FetchProductCursorsDocument, {
