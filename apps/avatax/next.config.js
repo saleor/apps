@@ -1,5 +1,8 @@
-const isSentryPropertiesInEnvironment =
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
+// @ts-check
+/* eslint-disable import/no-default-export */
+
+import withBundleAnalyzerConfig from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,28 +40,23 @@ const nextConfig = {
   },
 };
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const configWithSentry = withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  hideSourceMaps: true,
+  widenClientFileUpload: true,
+  disableLogger: true,
+  tunnelRoute: "/monitoring",
+});
 
-const configWithSentry = withSentryConfig(
-  nextConfig,
-  {
-    silent: true,
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-  },
-  {
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-    disableLogger: true,
-    transpileClientSDK: true,
-    tunnelRoute: "/monitoring",
-  },
-);
-
-const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
-
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+const withBundleAnalyzer = withBundleAnalyzerConfig({
   enabled: process.env.ANALYZE_BUNDLE === "true",
 });
 
-module.exports = withBundleAnalyzer(config);
+const isSentryPropertiesInEnvironment =
+  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
+
+const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+
+export default withBundleAnalyzer(config);
