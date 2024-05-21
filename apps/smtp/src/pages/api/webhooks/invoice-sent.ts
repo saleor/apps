@@ -66,7 +66,7 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { order } = payload;

@@ -80,7 +80,7 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { giftCard } = payload;
