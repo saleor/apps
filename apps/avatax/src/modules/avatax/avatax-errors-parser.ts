@@ -5,6 +5,7 @@ import {
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
 } from "../taxes/tax-error";
+import { assertUnreachable } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {

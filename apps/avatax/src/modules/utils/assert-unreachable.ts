@@ -1,3 +1,7 @@
-function assertUnreachable(_value: never): never {
-  throw new Error("Statement should be unreachable");
-}
+import { BaseError } from "../../error";
+
+const UnreachableCaseReachedError = BaseError.subclass("UnreachableCaseReachedError");
+
+export const assertUnreachable = (_value: never): never => {
+  throw new UnreachableCaseReachedError("Statement should be unreachable");
+};
