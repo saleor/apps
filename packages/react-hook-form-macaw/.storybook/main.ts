@@ -24,6 +24,7 @@ export default {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
+      // TODO: migrate this require?
       plugins: [require("@vanilla-extract/vite-plugin").vanillaExtractPlugin()],
     });
   },
