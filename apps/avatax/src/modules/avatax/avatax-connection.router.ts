@@ -1,15 +1,17 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createLogger } from "../../logger";
+import { AvataxInvalidCredentialsError } from "../taxes/tax-error";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AvataxClient } from "./avatax-client";
 import { avataxConfigSchema, baseAvataxConfigSchema } from "./avatax-connection-schema";
+import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 import { AvataxAddressValidationService } from "./configuration/avatax-address-validation.service";
 import { AvataxAuthValidationService } from "./configuration/avatax-auth-validation.service";
 import { AvataxEditAddressValidationService } from "./configuration/avatax-edit-address-validation.service";
 import { AvataxEditAuthValidationService } from "./configuration/avatax-edit-auth-validation.service";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
-import { createLogger } from "../../logger";
-import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -180,18 +182,21 @@ export const avataxConnectionRouter = router({
   createValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema }))
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger("avataxConnectionRouter.createValidateAuth", {
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
-
       const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input.value));
 
-      const authValidation = new AvataxAuthValidationService(avataxClient);
+      const authValidationService = new AvataxAuthValidationService(avataxClient);
 
-      const result = await authValidation.validate();
-
-      logger.info(`AvaTax client was successfully validated`);
-
-      return result;
+      return authValidationService.testConnection().then((result) =>
+        result.mapErr((err) => {
+          switch (err.constructor) {
+            case AvataxInvalidCredentialsError:
+              throw new TRPCError({
+                message: "Invalid AvaTax credentials",
+                code: "UNAUTHORIZED",
+                cause: err,
+              });
+          }
+        }),
+      );
     }),
 });

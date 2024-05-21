@@ -9,7 +9,7 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
+import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
@@ -132,7 +132,7 @@ export default wrapWithLoggerContext(
             }
           }
         } catch (error) {
-          if (error instanceof InvalidAppAddressError) {
+          if (error instanceof AvataxInvalidAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
               { error },

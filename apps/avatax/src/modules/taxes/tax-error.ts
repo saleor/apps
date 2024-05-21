@@ -22,12 +22,15 @@ export const TaxBadProviderResponseError = CriticalError.subclass("TaxBadProvide
   } as CommonErrorProps,
 });
 
-// Error thrown by external service.
-export const TaxExternalError = CriticalError.subclass("TaxExternalError", {
+// Error thrown by Avatax service.
+export const AvataxTaxCalculationError = CriticalError.subclass("AvataxTaxCalculationError", {
   props: {
     expected: false,
     sentrySeverity: "error",
   } as CommonErrorProps,
 });
-
-export const InvalidAppAddressError = ExpectedError.subclass("InvalidAppAddressError");
+export const AvataxInvalidAddressError = ExpectedError.subclass("AvataxInvalidAppAddressError");
+export const AvataxGetTaxError = ExpectedError.subclass("AvataxGetTaxError");
+export const AvataxInvalidCredentialsError = ExpectedError.subclass(
+  "AvataxInvalidCredentialsError",
+);

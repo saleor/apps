@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { InvalidAppAddressError, TaxExternalError } from "../taxes/tax-error";
+import { AvataxInvalidAddressError, AvataxTaxCalculationError } from "../taxes/tax-error";
 import { AvataxErrorsParser } from "./avatax-errors-parser";
 
 describe("AvataxErrorsParser", () => {
@@ -24,7 +24,7 @@ describe("AvataxErrorsParser", () => {
 
     const result = parser.parse(error);
 
-    expect(result).toBeInstanceOf(InvalidAppAddressError);
+    expect(result).toBeInstanceOf(AvataxInvalidAddressError);
     expect(mockErrorCapture).not.toHaveBeenCalled();
   });
 
@@ -37,7 +37,7 @@ describe("AvataxErrorsParser", () => {
 
     const result = parser.parse(error);
 
-    expect(result).toBeInstanceOf(TaxExternalError);
+    expect(result).toBeInstanceOf(AvataxTaxCalculationError);
     expect(mockErrorCapture).toHaveBeenCalledWith(
       expect.any(AvataxErrorsParser.UnhandledErrorShapeError),
     );

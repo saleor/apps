@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { BaseError } from "../../error";
-import { InvalidAppAddressError } from "../taxes/tax-error";
+import { AvataxGetTaxError, AvataxInvalidAddressError } from "../taxes/tax-error";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {
@@ -14,7 +14,7 @@ export class AvataxErrorsParser {
 
   private static schema = z.object({
     // https://developer.avalara.com/avatax/errors/
-    code: z.enum(["InvalidAddress"]),
+    code: z.enum(["InvalidAddress", "GetTaxError"]),
     details: z.array(
       z.object({
         faultSubCode: z.string().optional(),
@@ -43,7 +43,10 @@ export class AvataxErrorsParser {
 
     switch (parsedError.data.code) {
       case "InvalidAddress": {
-        return InvalidAppAddressError.normalize(parsedError);
+        return AvataxInvalidAddressError.normalize(parsedError);
+      }
+      case "GetTaxError": {
+        return AvataxGetTaxError.normalize(parsedError);
       }
       default:
         return normalizeAvaTaxError(parsedError);
