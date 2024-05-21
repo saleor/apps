@@ -1,3 +1,3 @@
-export function assertUnreachableButNotThrow(_: never) {
-  return null as never;
+function assertUnreachable(_value: never): never {
+  throw new Error("Statement should be unreachable");
 }

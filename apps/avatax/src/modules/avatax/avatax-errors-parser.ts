@@ -5,7 +5,6 @@ import {
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
 } from "../taxes/tax-error";
-import { assertUnreachableButNotThrow } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {
@@ -57,8 +56,7 @@ export class AvataxErrorsParser {
         return AvataxInvalidCredentialsError.normalize(parsedError);
       }
       default: {
-        assertUnreachableButNotThrow(parsedError.data.code);
-        return normalizeAvaTaxError(parsedError);
+        assertUnreachable(parsedError.data.code);
       }
     }
   }
