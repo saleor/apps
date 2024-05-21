@@ -1,9 +1,17 @@
-import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
+import { BaseError } from "../../error";
 import { InvalidAppAddressError } from "../taxes/tax-error";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {
+  static UnhandledErrorShapeError = BaseError.subclass("UnhandledErrorShapeError");
+
+  constructor(
+    private injectedErrorCapture: (
+      exception: InstanceType<typeof AvataxErrorsParser.UnhandledErrorShapeError>,
+    ) => void,
+  ) {}
+
   private static schema = z.object({
     // https://developer.avalara.com/avatax/errors/
     code: z.enum(["InvalidAddress"]),
@@ -21,11 +29,14 @@ export class AvataxErrorsParser {
     const parsedError = AvataxErrorsParser.schema.safeParse(err);
 
     if (!parsedError.success) {
-      Sentry.addBreadcrumb({
-        level: "error",
-        data: err as Error,
-      });
-      Sentry.captureException("Avatax returned error with unknown shape");
+      this.injectedErrorCapture(
+        new AvataxErrorsParser.UnhandledErrorShapeError(
+          "Avatax returned error with unknown shape",
+          {
+            errors: [parsedError.error],
+          },
+        ),
+      );
 
       return normalizeAvaTaxError(err);
     }

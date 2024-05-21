@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -14,6 +15,8 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
+
+const errorParser = new AvataxErrorsParser(Sentry.captureException);
 
 export class AvataxCalculateTaxesAdapter
   implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
@@ -55,7 +58,6 @@ export class AvataxCalculateTaxesAdapter
 
       return transformedResponse;
     } catch (e) {
-      const errorParser = new AvataxErrorsParser();
       const error = errorParser.parse(e);
 
       /**
