@@ -58,7 +58,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: error.flatten().fieldErrors });
   }
 
-  logger.debug("Checking if app is installed in the given env");
+  logger.info("Checking if app is installed in the given env");
   const authData = await apl.get(url as string);
 
   if (!authData) {
@@ -66,7 +66,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "The given instance has not been registered" });
   }
 
-  logger.debug("The app is registered for the given URL, checking the configuration");
+  logger.info("The app is registered for the given URL, checking the configuration");
 
   /**
    * use unauthorized client to eliminate possibility of spilling the non-public data
@@ -122,7 +122,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (bucketConfiguration) {
-    logger.debug("Bucket configuration found, checking if the feed has been generated recently");
+    logger.info("Bucket configuration found, checking if the feed has been generated recently");
 
     const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
@@ -138,7 +138,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       .then((data) => data.LastModified)
       // If the file does not exist, error is thrown and we can ignore it
       .catch(() => {
-        logger.debug("Feed file not found in S3", {
+        logger.info("Feed file not found in S3", {
           bucketName: bucketConfiguration!.bucketName,
           fileName,
         });
@@ -146,12 +146,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
     if (feedLastModificationDate) {
-      logger.debug("Feed has been generated previously, checking the last modification date");
+      logger.info("Feed has been generated previously, checking the last modification date");
 
       const secondsSinceLastModification = (Date.now() - feedLastModificationDate.getTime()) / 1000;
 
       if (secondsSinceLastModification < FEED_CACHE_MAX_AGE) {
-        logger.debug("Feed has been generated recently, returning the last version");
+        logger.info("Feed has been generated recently, returning the last version");
 
         const downloadUrl = getDownloadUrl({
           s3BucketConfiguration: bucketConfiguration,
@@ -162,11 +162,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.redirect(downloadUrl);
       }
 
-      logger.debug("Feed is outdated, generating a new one");
+      logger.info("Feed is outdated, generating a new one");
     }
   }
 
-  logger.debug("Generating a new feed");
+  logger.info("Generating a new feed");
 
   let productVariants: GoogleFeedProductVariantFragment[] = [];
 
@@ -177,7 +177,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).end();
   }
 
-  logger.debug("Product data fetched. Generating the output");
+  logger.info("Product data fetched. Generating the output");
 
   const xmlContent = generateGoogleXmlFeed({
     shopDescription,
@@ -189,10 +189,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate,
   });
 
-  logger.debug("Feed generated. Returning formatted XML");
+  logger.info("Feed generated. Returning formatted XML");
 
   if (!bucketConfiguration) {
-    logger.debug("Bucket configuration not found, returning feed directly");
+    logger.info("Bucket configuration not found, returning feed directly");
 
     res.setHeader("Content-Type", "text/xml");
     res.setHeader("Cache-Control", `s-maxage=${FEED_CACHE_MAX_AGE}`);
@@ -201,7 +201,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  logger.debug("Bucket configuration found, uploading the feed to S3");
+  logger.info("Bucket configuration found, uploading the feed to S3");
   const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,
@@ -226,7 +226,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         channel,
       });
 
-      logger.debug("Feed uploaded to S3, redirecting the download URL", {
+      logger.info("Feed uploaded to S3, redirecting the download URL", {
         downloadUrl,
       });
 
