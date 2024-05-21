@@ -1,11 +1,13 @@
-import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
-import { middleware, procedure } from "./trpc-server";
-import { saleorApp } from "../../../saleor-app";
-import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { createLogger } from "../../logger";
-import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
+import { TRPCError } from "@trpc/server";
+import { saleorApp } from "../../../saleor-app";
+import { BaseError } from "../../error";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../logger";
+import { AvataxErrorToTrpcErrorMapper } from "../avatax/avatax-error-mapper";
+import { middleware, procedure } from "./trpc-server";
 
 const logger = createLogger("protectedClientProcedure");
 

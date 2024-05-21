@@ -20,7 +20,7 @@ const avataxErrorSchema = z.object({
 export class AvataxValidationErrorResolver {
   private logger = createLogger("AvataxValidationErrorResolver");
 
-  resolve(error: unknown): Error {
+  private resolve(error: unknown): Error {
     const parseResult = avataxErrorSchema.safeParse(error);
     const isErrorParsed = parseResult.success;
 

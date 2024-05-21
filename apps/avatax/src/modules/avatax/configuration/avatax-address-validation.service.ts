@@ -1,23 +1,25 @@
+import * as Sentry from "@sentry/nextjs";
+import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+import { Result, fromPromise } from "neverthrow";
+import { BaseError } from "../../../error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxValidationErrorResolver } from "./avatax-validation-error-resolver";
-import { createLogger } from "../../../logger";
+import { AvataxErrorsParser } from "../avatax-errors-parser";
+
+const errorParser = new AvataxErrorsParser(Sentry.captureException);
 
 export class AvataxAddressValidationService {
-  private logger = createLogger("AvataxAddressValidationService");
-
   constructor(private avataxClient: AvataxClient) {}
 
-  async validate(address: AvataxConfig["address"]) {
+  async validate(
+    address: AvataxConfig["address"],
+  ): Promise<Result<AddressResolutionModel, InstanceType<typeof BaseError>>> {
     const formattedAddress = avataxAddressFactory.fromChannelAddress(address);
 
-    try {
-      return this.avataxClient.validateAddress({ address: formattedAddress });
-    } catch (error) {
-      const errorResolver = new AvataxValidationErrorResolver();
-
-      throw errorResolver.resolve(error);
-    }
+    return fromPromise(
+      this.avataxClient.validateAddress({ address: formattedAddress }),
+      errorParser.parse,
+    );
   }
 }

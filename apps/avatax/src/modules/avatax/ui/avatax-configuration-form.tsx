@@ -18,13 +18,19 @@ import { AvataxConfigurationSettingsFragment } from "./avatax-configuration-sett
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 
+// readonly generic
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+};
+type ReadonlyDupa = Readonly<AddressResolutionModel>;
+
 type AvataxConfigurationFormProps = {
   submit: {
     handleFn: (data: AvataxConfig) => void;
     isLoading: boolean;
   };
   validateAddress: {
-    handleFn: (config: AvataxConfig) => Promise<AddressResolutionModel>;
+    handleFn: (config: AvataxConfig) => Promise<ReadonlyDupa>;
     isLoading: boolean;
   };
   validateCredentials: {

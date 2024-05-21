@@ -1,11 +1,10 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createLogger } from "../../logger";
-import { AvataxInvalidCredentialsError } from "../taxes/tax-error";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AvataxClient } from "./avatax-client";
 import { avataxConfigSchema, baseAvataxConfigSchema } from "./avatax-connection-schema";
+import { AvataxErrorToTrpcErrorMapper } from "./avatax-error-mapper";
 import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 import { AvataxAddressValidationService } from "./configuration/avatax-address-validation.service";
 import { AvataxAuthValidationService } from "./configuration/avatax-auth-validation.service";
@@ -29,6 +28,8 @@ const patchInputSchema = z.object({
 const postInputSchema = z.object({
   value: avataxConfigSchema,
 });
+
+const avataxErrorsToTrpcErrorsMapper = new AvataxErrorToTrpcErrorMapper();
 
 const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
@@ -132,9 +133,12 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidationService.validate(input.id, input.value);
 
-      logger.info(`AvaTax address was successfully validated`);
-
-      return result;
+      return result.match(
+        (value) => value,
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
+      );
     }),
   createValidateAddress: protectedWithConnectionService
     .input(postInputSchema)
@@ -151,9 +155,12 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidation.validate(input.value.address);
 
-      logger.info(`AvaTax address was successfully validated`);
-
-      return result;
+      return result.match(
+        (value) => value,
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
+      );
     }),
   /*
    * There are separate methods for credentials validation for edit and create
@@ -186,17 +193,13 @@ export const avataxConnectionRouter = router({
 
       const authValidationService = new AvataxAuthValidationService(avataxClient);
 
-      return authValidationService.testConnection().then((result) =>
-        result.mapErr((err) => {
-          switch (err.constructor) {
-            case AvataxInvalidCredentialsError:
-              throw new TRPCError({
-                message: "Invalid AvaTax credentials",
-                code: "UNAUTHORIZED",
-                cause: err,
-              });
-          }
-        }),
+      const result = await authValidationService.testConnection();
+
+      return result.match(
+        (value) => value,
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
       );
     }),
 });
