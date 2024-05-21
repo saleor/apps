@@ -6,7 +6,7 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
 
 /*
