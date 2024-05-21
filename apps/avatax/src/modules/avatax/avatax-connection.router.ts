@@ -134,7 +134,10 @@ export const avataxConnectionRouter = router({
       const result = await addressValidationService.validate(input.id, input.value);
 
       return result.match(
-        (value) => value,
+        (value) => {
+          logger.debug(`AvaTax address was successfully validated`);
+          return value;
+        },
         (error) => {
           throw avataxErrorsToTrpcErrorsMapper.mapError(error);
         },
@@ -156,7 +159,10 @@ export const avataxConnectionRouter = router({
       const result = await addressValidation.validate(input.value.address);
 
       return result.match(
-        (value) => value,
+        (value) => {
+          logger.debug(`AvaTax address was successfully validated`);
+          return value;
+        },
         (error) => {
           throw avataxErrorsToTrpcErrorsMapper.mapError(error);
         },
@@ -189,6 +195,9 @@ export const avataxConnectionRouter = router({
   createValidateCredentials: protectedClientProcedure
     .input(z.object({ value: baseAvataxConfigSchema }))
     .mutation(async ({ ctx, input }) => {
+      const logger = createLogger("avataxConnectionRouter.createValidateAuth", {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
       const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input.value));
 
       const authValidationService = new AvataxAuthValidationService(avataxClient);
@@ -196,7 +205,10 @@ export const avataxConnectionRouter = router({
       const result = await authValidationService.testConnection();
 
       return result.match(
-        (value) => value,
+        (value) => {
+          logger.debug(`AvaTax client was successfully validated`);
+          return value;
+        },
         (error) => {
           throw avataxErrorsToTrpcErrorsMapper.mapError(error);
         },
