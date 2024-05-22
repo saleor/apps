@@ -6,6 +6,8 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -25,7 +27,7 @@ const logger = createLogger(notifyWebhook.webhookPath);
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
 
@@ -33,6 +35,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 
   if (!recipientEmail?.length) {
     logger.error(`The email recipient has not been specified in the event payload.`);
+
     return res
       .status(200)
       .json({ error: "Email recipient has not been specified in the event payload." });
@@ -45,6 +48,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 
   if (!event) {
     logger.debug(`The type of received notify event (${payload.notify_event}) is not supported.`);
+
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
 
@@ -90,7 +94,10 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
     );
 };
 
-export default withOtel(notifyWebhook.createHandler(handler), "api/webhooks/notify");
+export default wrapWithLoggerContext(
+  withOtel(notifyWebhook.createHandler(handler), "api/webhooks/notify"),
+  loggerContext,
+);
 
 export const config = {
   api: {

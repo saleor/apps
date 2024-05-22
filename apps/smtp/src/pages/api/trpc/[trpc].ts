@@ -13,6 +13,7 @@ export default withOtel(
     onError: ({ path, error }) => {
       if (error.code === "INTERNAL_SERVER_ERROR") {
         logger.error(error, `${path} returned error:`);
+
         return;
       }
       logger.debug(error, `${path} returned error:`);
