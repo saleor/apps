@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.5.1
+
+### Patch Changes
+
+- d1dcbcc0: Improve handling of errors from AvaTax API. Right now there is `AvataxErrorsParser` responsible for parsing errors from AvaTax into our internal ones. We also have `AvataxErrorToTrpcErrorMapper` which maps internal Avatax error into TRPC one.
+
 ## 1.5.0
 
 ### Minor Changes

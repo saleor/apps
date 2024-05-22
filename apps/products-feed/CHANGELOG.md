@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.17.6
+
+### Patch Changes
+
+- 3eaa4521: Respect the cursor for the first page
+
 ## 1.17.5
 
 ### Patch Changes
