@@ -8,8 +8,8 @@ import { AppCard } from "../../ui/app-card";
 import { ProviderLabel } from "../../ui/provider-label";
 import {
   AvataxConfig,
-  avataxConfigSchema,
   BaseAvataxConfig,
+  avataxConfigSchema,
   defaultAvataxConfig,
 } from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";
@@ -28,7 +28,7 @@ type AvataxConfigurationFormProps = {
     isLoading: boolean;
   };
   validateCredentials: {
-    handleFn: (config: BaseAvataxConfig) => Promise<void>;
+    handleFn: (config: BaseAvataxConfig) => Promise<{}>;
     isLoading: boolean;
   };
   defaultValues: AvataxConfig;

@@ -1,6 +1,6 @@
-import { TaxExternalError } from "../taxes/tax-error";
-import { describe, expect, it } from "vitest";
 import { AvalaraError } from "avatax/lib/AvaTaxClient";
+import { describe, expect, it } from "vitest";
+import { AvataxTaxCalculationError } from "../taxes/tax-error";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 describe("normalizeAvaTaxError", () => {
@@ -10,7 +10,7 @@ describe("normalizeAvaTaxError", () => {
 
     const result = normalizeAvaTaxError(error);
 
-    expect(result).toBeInstanceOf(TaxExternalError);
+    expect(result).toBeInstanceOf(AvataxTaxCalculationError);
     expect(result.message).toBe(errorMessage);
   });
 
@@ -19,7 +19,7 @@ describe("normalizeAvaTaxError", () => {
 
     const result = normalizeAvaTaxError(error);
 
-    expect(result).toBeInstanceOf(TaxExternalError);
+    expect(result).toBeInstanceOf(AvataxTaxCalculationError);
     expect(result.message).toBe("Invalid API key");
   });
 });

@@ -1,5 +1,5 @@
-import { TaxExternalError } from "../taxes/tax-error";
+import { AvataxTaxCalculationError } from "../taxes/tax-error";
 
 export function normalizeAvaTaxError(error: unknown) {
-  return TaxExternalError.normalize(error);
+  return AvataxTaxCalculationError.normalize(error);
 }

@@ -1,13 +1,14 @@
-import { DeepPartial } from "@trpc/server";
+import { DeepPartial, TRPCError } from "@trpc/server";
 import { Client } from "urql";
-import { createSettingsManager } from "../../app/metadata-manager";
-import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
-import { AvataxConnectionRepository } from "./avatax-connection-repository";
-import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
-import { AvataxClient } from "../avatax-client";
-import { createLogger } from "../../../logger";
 import { metadataCache } from "../../../lib/app-metadata-cache";
+import { createLogger } from "../../../logger";
+import { createSettingsManager } from "../../app/metadata-manager";
+import { AvataxInvalidCredentialsError } from "../../taxes/tax-error";
+import { AvataxClient } from "../avatax-client";
+import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
+import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
+import { AvataxConnectionRepository } from "./avatax-connection-repository";
 
 export class AvataxConnectionService {
   private logger = createLogger("AvataxConnectionService");
@@ -31,7 +32,18 @@ export class AvataxConnectionService {
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input));
     const authValidationService = new AvataxAuthValidationService(avataxClient);
 
-    await authValidationService.validate();
+    return authValidationService.testConnection().then((result) =>
+      result.mapErr((err) => {
+        switch (err.constructor) {
+          case AvataxInvalidCredentialsError:
+            throw new TRPCError({
+              message: "Invalid AvaTax credentials",
+              code: "UNAUTHORIZED",
+              cause: err,
+            });
+        }
+      }),
+    );
   }
 
   getAll(): Promise<AvataxConnection[]> {

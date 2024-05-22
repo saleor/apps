@@ -11,7 +11,7 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { loggerContext } from "../../../logger-context";
 import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { InvalidAppAddressError } from "../../../modules/taxes/tax-error";
+import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 
 export const config = {
@@ -116,7 +116,7 @@ export default wrapWithLoggerContext(
           });
         } catch (error) {
           // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
-          if (error instanceof InvalidAppAddressError) {
+          if (error instanceof AvataxInvalidAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
               { error },
