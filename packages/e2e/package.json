@@ -3,6 +3,7 @@
   "description": "",
   "version": "1.0.2",
   "author": "",
+  "type": "module",
   "scripts": {
     "check-types": "tsc --noEmit",
     "e2e": "playwright test",
