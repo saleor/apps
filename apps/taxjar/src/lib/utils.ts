@@ -1,3 +1,3 @@
-const { randomUUID } = require("crypto"); // Added in: node v14.17.0
+import { randomUUID } from "crypto";
 
 export const createId = (): string => randomUUID();

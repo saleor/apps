@@ -1,5 +1,4 @@
 // @ts-check
-/* eslint-disable import/no-default-export */
 
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";

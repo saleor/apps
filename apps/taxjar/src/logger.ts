@@ -1,4 +1,5 @@
-import { logger, createLogger, attachLoggerConsoleTransport } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+import packageJson from "../package.json";
 
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
@@ -10,9 +11,9 @@ if (typeof window === "undefined") {
   import("@saleor/apps-logger/node").then(
     ({ attachLoggerOtelTransport, attachLoggerSentryTransport }) => {
       attachLoggerSentryTransport(logger);
-      attachLoggerOtelTransport(logger, require("../package.json").version);
+      attachLoggerOtelTransport(logger, packageJson.version);
     },
   );
 }
 
-export { logger, createLogger };
+export { createLogger, logger };
