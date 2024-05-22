@@ -89,5 +89,6 @@
   "private": true,
   "saleor": {
     "schemaVersion": "3.14"
-  }
+  },
+  "type": "module"
 }
