@@ -1,15 +1,16 @@
 import { z } from "zod";
+import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AvataxClient } from "./avatax-client";
 import { avataxConfigSchema, baseAvataxConfigSchema } from "./avatax-connection-schema";
+import { AvataxErrorToTrpcErrorMapper } from "./avatax-error-mapper";
+import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 import { AvataxAddressValidationService } from "./configuration/avatax-address-validation.service";
 import { AvataxAuthValidationService } from "./configuration/avatax-auth-validation.service";
 import { AvataxEditAddressValidationService } from "./configuration/avatax-edit-address-validation.service";
 import { AvataxEditAuthValidationService } from "./configuration/avatax-edit-auth-validation.service";
 import { PublicAvataxConnectionService } from "./configuration/public-avatax-connection.service";
-import { createLogger } from "../../logger";
-import { AvataxSdkClientFactory } from "./avatax-sdk-client-factory";
 
 const getInputSchema = z.object({
   id: z.string(),
@@ -27,6 +28,8 @@ const patchInputSchema = z.object({
 const postInputSchema = z.object({
   value: avataxConfigSchema,
 });
+
+const avataxErrorsToTrpcErrorsMapper = new AvataxErrorToTrpcErrorMapper();
 
 const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
@@ -130,9 +133,15 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidationService.validate(input.id, input.value);
 
-      logger.info(`AvaTax address was successfully validated`);
-
-      return result;
+      return result.match(
+        (value) => {
+          logger.debug(`AvaTax address was successfully validated`);
+          return value;
+        },
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
+      );
     }),
   createValidateAddress: protectedWithConnectionService
     .input(postInputSchema)
@@ -149,9 +158,15 @@ export const avataxConnectionRouter = router({
 
       const result = await addressValidation.validate(input.value.address);
 
-      logger.info(`AvaTax address was successfully validated`);
-
-      return result;
+      return result.match(
+        (value) => {
+          logger.debug(`AvaTax address was successfully validated`);
+          return value;
+        },
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
+      );
     }),
   /*
    * There are separate methods for credentials validation for edit and create
@@ -183,15 +198,20 @@ export const avataxConnectionRouter = router({
       const logger = createLogger("avataxConnectionRouter.createValidateAuth", {
         saleorApiUrl: ctx.saleorApiUrl,
       });
-
       const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input.value));
 
-      const authValidation = new AvataxAuthValidationService(avataxClient);
+      const authValidationService = new AvataxAuthValidationService(avataxClient);
 
-      const result = await authValidation.validate();
+      const result = await authValidationService.testConnection();
 
-      logger.info(`AvaTax client was successfully validated`);
-
-      return result;
+      return result.match(
+        (value) => {
+          logger.debug(`AvaTax client was successfully validated`);
+          return value;
+        },
+        (error) => {
+          throw avataxErrorsToTrpcErrorsMapper.mapError(error);
+        },
+      );
     }),
 });

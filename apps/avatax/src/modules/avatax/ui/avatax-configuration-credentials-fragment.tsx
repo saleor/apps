@@ -12,7 +12,7 @@ import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";
 
 type AvataxConfigurationCredentialsFragmentProps = {
-  onValidateCredentials: (input: BaseAvataxConfig) => Promise<void>;
+  onValidateCredentials: (input: BaseAvataxConfig) => Promise<{}>;
   isLoading: boolean;
 };
 

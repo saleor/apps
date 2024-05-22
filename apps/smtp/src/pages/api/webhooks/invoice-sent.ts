@@ -10,6 +10,9 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -63,26 +66,30 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { order } = payload;
 
   if (!order) {
     logger.error("No order data payload");
+
     return res.status(200).end();
   }
 
   const recipientEmail = order.userEmail || order.user?.email;
 
   if (!recipientEmail?.length) {
-    logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
+    logger.error(`The order had no email recipient set. Aborting.`, { orderNumber: order.number });
+
     return res
       .status(200)
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 
   const channel = order.channel.slug;
+
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 
@@ -126,7 +133,10 @@ const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async 
     );
 };
 
-export default withOtel(invoiceSentWebhook.createHandler(handler), "api/webhooks/invoice-sent");
+export default wrapWithLoggerContext(
+  withOtel(invoiceSentWebhook.createHandler(handler), "api/webhooks/invoice-sent"),
+  loggerContext,
+);
 
 export const config = {
   api: {

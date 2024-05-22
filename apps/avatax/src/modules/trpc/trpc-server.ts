@@ -1,5 +1,4 @@
 import { Permission } from "@saleor/app-sdk/types";
-import * as Sentry from "@sentry/nextjs";
 import { initTRPC } from "@trpc/server";
 import { TrpcContext } from "./trpc-context";
 
@@ -9,12 +8,6 @@ interface Meta {
 
 const t = initTRPC.context<TrpcContext>().meta<Meta>().create();
 
-const sentryMiddleware = t.middleware(
-  Sentry.trpcMiddleware({
-    attachRpcInput: true,
-  }),
-);
-
 export const router = t.router;
-export const procedure = t.procedure.use(sentryMiddleware);
+export const procedure = t.procedure;
 export const middleware = t.middleware;

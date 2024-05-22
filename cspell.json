@@ -99,6 +99,7 @@
     "apps/*/e2e/data/**",
     "**/*.bru",
     "**/.eslintrc",
-    ".github/**"
+    ".github/**",
+    "Dockerfile*"
   ]
 }

@@ -10,6 +10,9 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 const OrderFullyPaidWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -47,7 +50,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { order } = payload;
@@ -67,6 +70,8 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   }
 
   const channel = order.channel.slug;
+
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 
@@ -110,9 +115,9 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
     );
 };
 
-export default withOtel(
-  orderFullyPaidWebhook.createHandler(handler),
-  "api/webhooks/order-fully-paid",
+export default wrapWithLoggerContext(
+  withOtel(orderFullyPaidWebhook.createHandler(handler), "api/webhooks/order-fully-paid"),
+  loggerContext,
 );
 
 export const config = {

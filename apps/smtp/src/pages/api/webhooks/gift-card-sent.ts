@@ -7,6 +7,9 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
@@ -77,20 +80,24 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { giftCard } = payload;
 
   if (!giftCard) {
     logger.error("No gift card data payload");
+
     return res.status(200).end();
   }
 
   const recipientEmail = payload.sentToEmail;
 
   if (!recipientEmail?.length) {
-    logger.error(`The gift card ${giftCard.id} had no email recipient set. Aborting.`);
+    logger.error(`The gift card had no email recipient set. Aborting.`, {
+      giftCardId: giftCard.id,
+    });
+
     return res
       .status(200)
       .json({ error: "Email recipient has not been specified in the event payload." });
@@ -99,9 +106,12 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
   const channel = payload.channel;
 
   if (!channel) {
-    logger.error("No channel specified in payload");
+    logger.error("No channel specified in payload", { channel });
+
     return res.status(200).end();
   }
+
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 
@@ -145,7 +155,10 @@ const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async
     );
 };
 
-export default withOtel(giftCardSentWebhook.createHandler(handler), "/api/webhooks/gift-card-sent");
+export default wrapWithLoggerContext(
+  withOtel(giftCardSentWebhook.createHandler(handler), "/api/webhooks/gift-card-sent"),
+  loggerContext,
+);
 
 export const config = {
   api: {
