@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import { createLogger } from "../../../logger";
 import { SmtpEncryptionType } from "../configuration/smtp-config-schema";
+import { racePromise } from "../../../lib/race-promise";
+import { BaseError } from "../../../errors";
 
 export interface SendMailArgs {
   smtpSettings: {
@@ -29,7 +31,14 @@ export interface ISMTPEmailSender {
  * TODO: Implement errors mapping and neverthrow
  */
 export class SmtpEmailSender implements ISMTPEmailSender {
+  private TIMEOUT = 4000;
+
   private logger = createLogger("SmtpEmailSender");
+
+  static SmtpEmailSenderError = BaseError.subclass("SmtpEmailSenderError");
+  static SmtpEmailSenderTimeoutError = this.SmtpEmailSenderError.subclass(
+    "SmtpEmailSenderTimeoutError",
+  );
 
   async sendEmailWithSmtp({ smtpSettings, mailData }: SendMailArgs) {
     this.logger.debug("Sending an email with SMTP");
@@ -84,8 +93,12 @@ export class SmtpEmailSender implements ISMTPEmailSender {
     }
 
     try {
-      const response = await transporter.sendMail({
-        ...mailData,
+      const response = await racePromise({
+        promise: transporter.sendMail({
+          ...mailData,
+        }),
+        error: new SmtpEmailSender.SmtpEmailSenderTimeoutError("Sending email timeout"),
+        timeout: this.TIMEOUT,
       });
 
       this.logger.debug("An email has been sent", { response });

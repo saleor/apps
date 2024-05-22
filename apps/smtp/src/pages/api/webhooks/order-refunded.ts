@@ -10,6 +10,9 @@ import { createLogger } from "../../../logger";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { captureException } from "@sentry/nextjs";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 const OrderRefundedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -46,7 +49,7 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
   res,
   context,
 ) => {
-  logger.debug("Webhook received");
+  logger.info("Webhook received");
 
   const { payload, authData } = context;
   const { order } = payload;
@@ -66,6 +69,8 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
   }
 
   const channel = order.channel.slug;
+
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 
@@ -109,7 +114,10 @@ const handler: NextWebhookApiHandler<OrderRefundedWebhookPayloadFragment> = asyn
     );
 };
 
-export default withOtel(orderRefundedWebhook.createHandler(handler), "api/webhooks/order-refunded");
+export default wrapWithLoggerContext(
+  withOtel(orderRefundedWebhook.createHandler(handler), "api/webhooks/order-refunded"),
+  loggerContext,
+);
 
 export const config = {
   api: {

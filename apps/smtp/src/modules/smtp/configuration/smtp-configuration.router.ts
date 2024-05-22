@@ -154,7 +154,6 @@ export const smtpConfigurationRouter = router({
       if (input.subject) {
         const compiledSubjectTemplate = Handlebars.compile(input.subject);
 
-        logger.warn("subject part");
         renderedSubject = compiledSubjectTemplate(payload);
       }
 
