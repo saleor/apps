@@ -31,5 +31,6 @@
   "main": "index.ts",
   "peerDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk"
-  }
+  },
+  "type": "module"
 }

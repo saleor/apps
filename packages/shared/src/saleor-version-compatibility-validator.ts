@@ -1,4 +1,4 @@
-const semver = require("semver");
+import semver from "semver";
 
 export class SaleorVersionCompatibilityValidator {
   constructor(private appRequiredVersion: string) {}
@@ -12,7 +12,7 @@ export class SaleorVersionCompatibilityValidator {
   validateOrThrow(saleorVersion: string) {
     if (!this.isValid(saleorVersion)) {
       throw new Error(
-        `Your Saleor version (${saleorVersion}) doesn't match App's required version (semver: ${this.appRequiredVersion})`
+        `Your Saleor version (${saleorVersion}) doesn't match App's required version (semver: ${this.appRequiredVersion})`,
       );
     }
   }

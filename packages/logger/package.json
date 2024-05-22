@@ -31,5 +31,6 @@
   "peerDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@sentry/nextjs": ">=8"
-  }
+  },
+  "type": "module"
 }

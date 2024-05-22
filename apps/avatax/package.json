@@ -103,5 +103,6 @@
   "private": true,
   "saleor": {
     "schemaVersion": "3.18"
-  }
+  },
+  "type": "module"
 }

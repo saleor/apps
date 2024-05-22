@@ -19,6 +19,12 @@ module.exports = {
         "import/no-default-export": "off",
       },
     },
+    {
+      files: ["next.config.js"],
+      rules: {
+        "import/no-default-export": "off",
+      },
+    },
   ],
   ignorePatterns: ["next-env.d.ts"],
 };

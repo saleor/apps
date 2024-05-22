@@ -1,4 +1,6 @@
-const { withSentryConfig } = require("@sentry/nextjs");
+// @ts-check
+
+import { withSentryConfig } from "@sentry/nextjs";
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
@@ -15,20 +17,14 @@ const nextConfig = {
   ],
 };
 
-const configWithSentry = withSentryConfig(
-  nextConfig,
-  {
-    silent: true,
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-  },
-  {
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-    disableLogger: true,
-    transpileClientSDK: true,
-    tunnelRoute: "/monitoring",
-  },
-);
+const configWithSentry = withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  hideSourceMaps: true,
+  widenClientFileUpload: true,
+  disableLogger: true,
+  tunnelRoute: "/monitoring",
+});
 
-module.exports = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
