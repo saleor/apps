@@ -70,7 +70,8 @@ describe("CUSTOMER_CREATED webhook", () => {
         },
         event: "CUSTOMER_CREATED",
         baseUrl: "localhost:3000",
-      }
+        schemaVersion: 3.1,
+      },
     );
 
     return expect(mailchimp_marketing.lists.addListMember).toHaveBeenCalledWith("saleor", {
