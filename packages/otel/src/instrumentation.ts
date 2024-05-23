@@ -4,8 +4,11 @@ import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { Resource } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import {
-  SemanticAttributes,
-  SemanticResourceAttributes,
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
+  SEMATTRS_HTTP_ROUTE,
+  SEMATTRS_HTTP_STATUS_CODE,
+  SEMATTRS_HTTP_HOST,
 } from "@opentelemetry/semantic-conventions";
 import { type ClientRequest } from "node:http";
 import { otelLogsProcessor } from "./otel-logs-setup";
@@ -18,14 +21,14 @@ if (process.env.ENABLE_DEBUG_OTEL_DIAG === "true") {
 export const otelSdk = new NodeSDK({
   resource: new Resource({
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
+    [SEMRESATTRS_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
     // [SemanticResourceAttributes.SERVICE_VERSION]: pkg.version, TODO
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
+    [SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
   }),
-  spanProcessor: batchSpanProcessor,
+  spanProcessors: [batchSpanProcessor],
   logRecordProcessor: otelLogsProcessor,
   textMapPropagator: new W3CTraceContextPropagator(),
   instrumentations: [
@@ -37,11 +40,11 @@ export const otelSdk = new NodeSDK({
        * TODO Fix this.
        */
       applyCustomAttributesOnSpan: (span, req, response) => {
-        span.setAttribute(SemanticAttributes.HTTP_ROUTE, (req as ClientRequest)?.path);
-        span.setAttribute(SemanticAttributes.HTTP_HOST, (req as ClientRequest)?.host);
+        span.setAttribute(SEMATTRS_HTTP_ROUTE, (req as ClientRequest)?.path);
+        span.setAttribute(SEMATTRS_HTTP_HOST, (req as ClientRequest)?.host);
 
         if (response.statusCode) {
-          span.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, response.statusCode);
+          span.setAttribute(SEMATTRS_HTTP_STATUS_CODE, response.statusCode);
         }
 
         if (response.statusCode && response.statusCode >= 400) {

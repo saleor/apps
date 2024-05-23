@@ -3,7 +3,7 @@ import { type CombinedError, type Operation, makeOperation, mapExchange } from "
 import { getOtelTracer } from "./otel-tracer";
 import { GraphQLAttributeNames, ObservabilityAttributes } from "./lib/observability-attributes";
 import { addInputVariableAttributes, addRequestHeaderAttributes } from "./otel-graphql-utils";
-import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import { SEMATTRS_HTTP_URL } from "@opentelemetry/semantic-conventions";
 
 type Definition = {
   name: {
@@ -50,7 +50,7 @@ export const otelExchange = mapExchange({
 
     span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, operation.context.url);
 
-    span.setAttribute(SemanticAttributes.HTTP_URL, operation.context.url);
+    span.setAttribute(SEMATTRS_HTTP_URL, operation.context.url);
 
     addRequestHeaderAttributes(span, operation.context.fetchOptions?.headers);
     if (operation.variables) {

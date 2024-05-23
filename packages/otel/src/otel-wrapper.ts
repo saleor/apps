@@ -1,5 +1,9 @@
 import { SpanKind, SpanStatusCode, type Span } from "@opentelemetry/api";
-import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import {
+  SEMATTRS_HTTP_METHOD,
+  SEMATTRS_HTTP_ROUTE,
+  SEMATTRS_HTTP_STATUS_CODE,
+} from "@opentelemetry/semantic-conventions";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
 import { otelSdk } from "./instrumentation";
 
@@ -63,13 +67,13 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
       const attributesFromRequest = getAttributesFromRequest(req);
 
       return tracer.startActiveSpan(
-        `${attributesFromRequest[SemanticAttributes.HTTP_METHOD]} ${staticRouteName}`,
+        `${attributesFromRequest[SEMATTRS_HTTP_METHOD]} ${staticRouteName}`,
         {
           kind: SpanKind.SERVER,
           attributes: attributesFromRequest,
         },
         async (span) => {
-          span.setAttribute(SemanticAttributes.HTTP_ROUTE, staticRouteName);
+          span.setAttribute(SEMATTRS_HTTP_ROUTE, staticRouteName);
 
           const originalResEnd = res.end;
 
@@ -78,7 +82,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
            */
           // @ts-expect-error - this is a hack to get around Vercel freezing lambda's
           res.end = async function (this: unknown, ...args: unknown[]) {
-            span.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, res.statusCode);
+            span.setAttribute(SEMATTRS_HTTP_STATUS_CODE, res.statusCode);
             span.end();
 
             try {
@@ -97,7 +101,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
 
             wrappingTarget.apply(thisArg, [req, res]);
           } catch (error) {
-            span.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, 500);
+            span.setAttribute(SEMATTRS_HTTP_STATUS_CODE, 500);
 
             setErrorOnSpan(error, span);
 
