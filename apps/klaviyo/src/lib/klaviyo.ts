@@ -1,3 +1,7 @@
+import { createLogger } from "../logger";
+
+const logger = createLogger("Klaviyo client");
+
 interface EmailServiceProvider {
   send: (event: string, recipient: string, context: any) => Promise<Response>;
 }
@@ -13,17 +17,17 @@ export const Klaviyo = (token: string): EmailServiceProvider => ({
         event,
         customer_properties: { $email: recipient },
         properties: context,
-      })
+      }),
     );
 
-    console.debug("Klaviyo request: https://a.klaviyo.com/api/track, ", formParams);
+    logger.info("Klaviyo request: https://a.klaviyo.com/api/track, ", formParams);
 
     const response = await fetch("https://a.klaviyo.com/api/track", {
       method: "POST",
       body: formParams,
     });
 
-    console.debug("Klaviyo response: ", response.status, ", ", await response.text());
+    logger.info("Klaviyo response: ", response.status, ", ", await response.text());
 
     return response;
   },

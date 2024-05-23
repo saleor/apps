@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === "production" && forbiddenProductionLevels.includes(
 }
 
 /**
- * @deprecated
+ * @deprecated - use your app defined logger instead
  */
 export const logger = pino({
   level: logLevel,
