@@ -6,7 +6,6 @@ module.exports = {
     "import/no-default-export": "error",
     "newline-after-var": "warn",
     "multiline-comment-style": ["warn", "starred-block"],
-    "no-console": "error",
   },
   parserOptions: {
     babelOptions: {
@@ -24,12 +23,6 @@ module.exports = {
       files: ["next.config.js"],
       rules: {
         "import/no-default-export": "off",
-      },
-    },
-    {
-      files: ["tests/**/*", "src/release-utils.ts"],
-      rules: {
-        "no-console": "off",
       },
     },
   ],
