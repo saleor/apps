@@ -28,6 +28,8 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/apps-logger": "workspace:*",
+    "@saleor/apps-otel": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@sentry/nextjs": "8.0.0",
     "@urql/exchange-auth": "^2.1.4",
