@@ -51,8 +51,8 @@ importers:
         specifier: 1.18.1
         version: 1.18.1
       '@saleor/app-sdk':
-        specifier: 0.47.2
-        version: 0.47.2(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.50.1
+        version: 0.50.1(graphql@16.8.0)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -2677,7 +2677,7 @@ importers:
         version: 5.1.6
       urql:
         specifier: ^4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+        version: 4.0.4(graphql@16.8.0)(react@18.2.0)
     devDependencies:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
@@ -2760,7 +2760,7 @@ importers:
     dependencies:
       '@urql/exchange-auth':
         specifier: ^2.1.4
-        version: 2.1.4(graphql@16.7.1)
+        version: 2.1.4(graphql@16.8.0)
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -2806,7 +2806,7 @@ importers:
         version: 5.1.6
       urql:
         specifier: ^4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+        version: 4.0.4(graphql@16.8.0)(react@18.2.0)
       vite:
         specifier: 4.4.8
         version: 4.4.8(@types/node@20.12.3)
@@ -2996,6 +2996,17 @@ packages:
         optional: true
     dependencies:
       graphql: 16.7.1
+    dev: false
+
+  /@0no-co/graphql.web@1.0.4(graphql@16.8.0):
+    resolution: {integrity: sha512-W3ezhHGfO0MS1PtGloaTpg0PbaT8aZSmmaerL7idtU5F7oCI+uu25k+MsMS31BVFlp4aMkHSrNRxiD72IlK8TA==}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    peerDependenciesMeta:
+      graphql:
+        optional: true
+    dependencies:
+      graphql: 16.8.0
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
@@ -11953,11 +11964,11 @@ packages:
     resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
     dev: true
 
-  /@saleor/app-sdk@0.47.2(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ctGbL9R5dmAYEMQHr+ir2OcvPCEmM3SDZX6isKBYLiO6CqKB7P8SNPjxlPBSiafC17ZcoKjim0oMhfqqcz3Srg==}
+  /@saleor/app-sdk@0.50.1(graphql@16.8.0)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0+0lu5FBHLhB6NskcaL+7jX6eDXk3EKmARGhF9/OalOiCrKYWSPY6UssT56y3FFE2xXg1PQNm4Hc3XmWgOW+gw==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
-      graphql: '>=16.6.0'
+      graphql: 16.8.0
       next: '>=12'
       react: '>=17'
       react-dom: '>=17'
@@ -11968,7 +11979,7 @@ packages:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.18.1
       debug: 4.3.4
-      graphql: 16.7.1
+      graphql: 16.8.0
       jose: 4.14.4
       next: 14.2.3(@opentelemetry/api@1.7.0)(react-dom@18.2.0)(react@18.2.0)
       raw-body: 2.5.2
@@ -14239,11 +14250,29 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
+    dev: false
+
+  /@urql/core@4.0.10(graphql@16.8.0):
+    resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
+    dependencies:
+      '@0no-co/graphql.web': 1.0.4(graphql@16.8.0)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
 
   /@urql/exchange-auth@2.1.4(graphql@16.7.1):
     resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
     dependencies:
       '@urql/core': 4.0.10(graphql@16.7.1)
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
+    dev: false
+
+  /@urql/exchange-auth@2.1.4(graphql@16.8.0):
+    resolution: {integrity: sha512-ijAKSgswusrProxrusX8TcYntCgMptQiirdNHwgy0EcWucxQ+1zgxiRNFKpkaRMpGk5WCFeCpsXTEYtlvuFmDg==}
+    dependencies:
+      '@urql/core': 4.0.10(graphql@16.8.0)
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
@@ -19231,6 +19260,10 @@ packages:
 
   /graphql@16.7.1:
     resolution: {integrity: sha512-DRYR9tf+UGU0KOsMcKAlXeFfX89UiiIZ0dRU3mR0yJfu6OjZqUcp68NnFLnqQU5RexygFoDy1EW+ccOYcPfmHg==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
+  /graphql@16.8.0:
+    resolution: {integrity: sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   /gtin@1.0.2:
@@ -26149,6 +26182,18 @@ packages:
       wonka: 6.3.2
     transitivePeerDependencies:
       - graphql
+    dev: false
+
+  /urql@4.0.4(graphql@16.8.0)(react@18.2.0):
+    resolution: {integrity: sha512-C5P4BMnAsk+rbytCWglit5ijXbIKXsa9wofSGPbuMyJKsDdL+9GfipS362Nff/Caag+eYOK5W+sox8fwEILT6Q==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      '@urql/core': 4.0.10(graphql@16.8.0)
+      react: 18.2.0
+      wonka: 6.3.2
+    transitivePeerDependencies:
+      - graphql
 
   /use-callback-ref@1.3.0(@types/react@18.2.5)(react@18.2.0):
     resolution: {integrity: sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==}
@@ -26228,14 +26273,18 @@ packages:
 
   /uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
+    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    hasBin: true
     dev: false
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
     dev: false
 
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
 
   /v8-to-istanbul@9.1.0:
     resolution: {integrity: sha512-6z3GW9x8G1gd+JIIgQQQxXuiJtCXeAjp6RaPEPLv62mH3iPHPxV6W3robxtCzNErRo6ZwTmzWhsbNvjyEBKzKA==}
