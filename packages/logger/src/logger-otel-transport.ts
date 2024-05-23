@@ -1,8 +1,13 @@
 import { context } from "@opentelemetry/api";
-import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import { logs } from "@opentelemetry/api-logs";
+import {
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_SERVICE_VERSION,
+  SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
+} from "@opentelemetry/semantic-conventions";
 import { ILogObj, Logger } from "tslog";
 import { LoggerContext } from "./logger-context";
+import { LogAttributes } from "@opentelemetry/api-logs/build/src/types/LogRecord";
 
 export const attachLoggerOtelTransport = (
   logger: Logger<ILogObj>,
@@ -27,19 +32,16 @@ export const attachLoggerOtelTransport = (
     const serializedAttributes = Object.entries({
       ...(loggerContext?.getRawContext() ?? {}),
       ...attributes,
-    }).reduce(
-      (acc, [key, value]) => {
-        if (Array.isArray(value)) {
-          acc[key] = JSON.stringify(value);
-        } else {
-          // @ts-expect-error - Logger maps attribute as IMeta, but in the runtime Meta is only in log._meta field which is filtered out first
-          acc[key] = value;
-        }
+    }).reduce((acc, [key, value]) => {
+      if (Array.isArray(value)) {
+        acc[key] = JSON.stringify(value);
+      } else {
+        // @ts-expect-error - Logger maps attribute as IMeta, but in the runtime Meta is only in log._meta field which is filtered out first
+        acc[key] = value;
+      }
 
-        return acc;
-      },
-      {} as Record<string, LogAttributeValue>,
-    );
+      return acc;
+    }, {} as LogAttributes);
 
     /**
      * Try to serialize Error. Modern-errors has plugin to serialize
@@ -52,7 +54,7 @@ export const attachLoggerOtelTransport = (
      */
     try {
       const errorAttribute = serializedAttributes.error;
-      const ErrorConstructor = errorAttribute["constructor"];
+      const ErrorConstructor = errorAttribute!["constructor"];
 
       // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
       serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error);
@@ -60,19 +62,18 @@ export const attachLoggerOtelTransport = (
       serializedAttributes.error.type = serializedAttributes.error.name;
     } catch (e) {}
 
-    logs.getLogger("app-logger-otel").emit({
+    return logs.getLogger("app-logger-otel").emit({
       body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
       context: context.active(),
       severityText: log._meta.logLevelName,
       attributes: {
         ...serializedAttributes,
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
-        [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
-        [SemanticResourceAttributes.SERVICE_VERSION]: appVersion,
+        [SEMRESATTRS_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
+        [SEMRESATTRS_SERVICE_VERSION]: appVersion,
         // eslint-disable-next-line turbo/no-undeclared-env-vars
         ["commit-sha"]: process.env.VERCEL_GIT_COMMIT_SHA,
         // eslint-disable-next-line turbo/no-undeclared-env-vars
-        [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
+        [SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
       },
     });
   });
