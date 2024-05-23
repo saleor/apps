@@ -96,6 +96,7 @@
     "**/schema.graphql",
     "**/*-generator.ts",
     "apps/*/src/**",
+    "packages/*/src/**",
     "apps/*/e2e/data/**",
     "**/*.bru",
     "**/.eslintrc",
