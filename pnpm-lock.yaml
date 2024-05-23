@@ -51,8 +51,8 @@ importers:
         specifier: 1.18.1
         version: 1.18.1
       '@saleor/app-sdk':
-        specifier: 0.47.2
-        version: 0.47.2(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.50.1
+        version: 0.50.1(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@changesets/cli':
         specifier: ^2.26.2
@@ -11953,8 +11953,8 @@ packages:
     resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
     dev: true
 
-  /@saleor/app-sdk@0.47.2(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ctGbL9R5dmAYEMQHr+ir2OcvPCEmM3SDZX6isKBYLiO6CqKB7P8SNPjxlPBSiafC17ZcoKjim0oMhfqqcz3Srg==}
+  /@saleor/app-sdk@0.50.1(graphql@16.7.1)(next@14.2.3)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0+0lu5FBHLhB6NskcaL+7jX6eDXk3EKmARGhF9/OalOiCrKYWSPY6UssT56y3FFE2xXg1PQNm4Hc3XmWgOW+gw==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
       graphql: '>=16.6.0'
@@ -26228,14 +26228,18 @@ packages:
 
   /uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
+    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    hasBin: true
     dev: false
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
     dev: false
 
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
 
   /v8-to-istanbul@9.1.0:
     resolution: {integrity: sha512-6z3GW9x8G1gd+JIIgQQQxXuiJtCXeAjp6RaPEPLv62mH3iPHPxV6W3robxtCzNErRo6ZwTmzWhsbNvjyEBKzKA==}
