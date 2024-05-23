@@ -20,14 +20,14 @@ export const Klaviyo = (token: string): EmailServiceProvider => ({
       }),
     );
 
-    logger.info("Klaviyo request: https://a.klaviyo.com/api/track, ", formParams);
+    logger.info("Seding Klaviyo request", { url: "https://a.klaviyo.com/api/track" });
 
     const response = await fetch("https://a.klaviyo.com/api/track", {
       method: "POST",
       body: formParams,
     });
 
-    logger.info("Klaviyo response: ", response.status, ", ", await response.text());
+    logger.info("Klaviyo responded with status", { status: response.status });
 
     return response;
   },

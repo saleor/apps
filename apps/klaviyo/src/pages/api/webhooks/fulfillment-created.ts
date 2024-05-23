@@ -94,7 +94,7 @@ const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> =
   const klaviyoMetric = await settings.get("FULFILLMENT_CREATED_METRIC");
 
   if (!klaviyoToken || !klaviyoMetric) {
-    logger.error("Request rejected - app not configured");
+    logger.warn("Request rejected - app not configured");
 
     return res.status(400).json({ success: false, message: "App not configured." });
   }
@@ -102,7 +102,7 @@ const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> =
   const { userEmail } = payload.order || {};
 
   if (!userEmail) {
-    logger.error("Request rejected - missing user email");
+    logger.warn("Request rejected - missing user email");
     return res.status(400).json({ success: false, message: "No user email." });
   }
 

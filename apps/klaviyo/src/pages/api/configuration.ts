@@ -48,13 +48,13 @@ const getAppSettings = async (settingsManager: EncryptedMetadataManager) => [
 ];
 
 const handler: NextProtectedApiHandler = async (request, res, ctx) => {
-  logger.info("Configuration handler called");
-
   const {
     authData: { token, saleorApiUrl, appId },
   } = ctx;
 
   loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+
+  logger.info("Configuration handler called");
 
   const client = createGraphQLClient({
     saleorApiUrl,
