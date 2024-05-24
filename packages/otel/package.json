@@ -20,6 +20,7 @@
     "@opentelemetry/sdk-trace-base": "../../node_modules/@opentelemetry/sdk-trace-base",
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
+    "@vercel/functions": "1.0.2",
     "eslint": "8.46.0",
     "typescript": "5.1.6",
     "urql": "^4.0.4"
