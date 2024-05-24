@@ -1,9 +1,16 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
-import { createSettingsManager } from "../../lib/metadata";
-import { saleorApp } from "../../../saleor-app";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { saleorApp } from "../../../saleor-app";
+import { createSettingsManager } from "../../lib/metadata";
+import { createLogger } from "../../logger";
+import { loggerContext } from "../../logger-context";
+
+const logger = createLogger("configurationHandler");
 
 type ConfigurationKeysType =
   | "PUBLIC_TOKEN"
@@ -41,11 +48,13 @@ const getAppSettings = async (settingsManager: EncryptedMetadataManager) => [
 ];
 
 const handler: NextProtectedApiHandler = async (request, res, ctx) => {
-  console.debug("Configuration handler called");
-
   const {
     authData: { token, saleorApiUrl, appId },
   } = ctx;
+
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+
+  logger.info("Configuration handler called");
 
   const client = createGraphQLClient({
     saleorApiUrl,
@@ -56,6 +65,8 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
 
   switch (request.method!) {
     case "GET":
+      logger.info("Returing app configuration");
+
       return res.json({
         success: true,
         data: await getAppSettings(settings),
@@ -69,7 +80,7 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
           data: await getAppSettings(settings),
         });
       } catch (e) {
-        console.error(e);
+        logger.error("Error updating app configuration", { error: e });
 
         return res.json({
           success: false,
@@ -81,4 +92,7 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
   }
 };
 
-export default createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]);
+export default wrapWithLoggerContext(
+  withOtel(createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"]), "/api/configuration"),
+  loggerContext,
+);

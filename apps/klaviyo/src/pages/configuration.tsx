@@ -1,5 +1,4 @@
 import { useAppBridge, useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
-import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
@@ -125,7 +124,6 @@ function Configuration() {
   }
 
   if (error) {
-    console.error("Can't establish connection with the App API: ", error);
     return (
       <div>
         <h1>⚠️ Can&apos;t connect with the App API</h1>

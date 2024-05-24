@@ -1,14 +1,21 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   FulfillmentCreatedWebhookPayloadFragment,
   UntypedFulfillmentCreatedDocument,
 } from "../../../../generated/graphql";
+import { saleorApp } from "../../../../saleor-app";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
-import { saleorApp } from "../../../../saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+
+const logger = createLogger("fulfillmentCreatedAsyncWebhookHandler");
 
 const FulfillmentCreatedWebhookPayload = gql`
   fragment FulfillmentCreatedWebhookPayload on FulfillmentCreated {
@@ -68,12 +75,15 @@ export const fulfillmentCreatedWebhook =
 const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
-  console.debug("fulfillmentCreatedWebhook handler called");
-
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
+
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+
+  logger.info("fulfillmentCreatedWebhook handler called");
+
   const client = createGraphQLClient({
     saleorApiUrl,
     token,
@@ -84,13 +94,15 @@ const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> =
   const klaviyoMetric = await settings.get("FULFILLMENT_CREATED_METRIC");
 
   if (!klaviyoToken || !klaviyoMetric) {
+    logger.warn("Request rejected - app not configured");
+
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
   const { userEmail } = payload.order || {};
 
   if (!userEmail) {
-    console.debug("Request rejected - missing user email");
+    logger.warn("Request rejected - missing user email");
     return res.status(400).json({ success: false, message: "No user email." });
   }
 
@@ -100,7 +112,10 @@ const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> =
   if (klaviyoResponse.status !== 200) {
     const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
 
-    console.debug("Klaviyo returned error: ", klaviyoMessage);
+    logger.error("Klaviyo returned error: ", {
+      error: klaviyoMessage,
+      status: klaviyoResponse.status,
+    });
 
     return res.status(500).json({
       success: false,
@@ -108,11 +123,14 @@ const handler: NextWebhookApiHandler<FulfillmentCreatedWebhookPayloadFragment> =
     });
   }
 
-  console.debug("Webhook processed successfully");
+  logger.info("Webhook processed successfully");
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 
-export default fulfillmentCreatedWebhook.createHandler(handler);
+export default wrapWithLoggerContext(
+  withOtel(fulfillmentCreatedWebhook.createHandler(handler), "/api/webhooks/fulfillment-created"),
+  loggerContext,
+);
 
 export const config = {
   api: {
