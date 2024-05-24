@@ -1,5 +1,12 @@
 # eslint-config-saleor
 
+## 0.4.8
+
+### Patch Changes
+
+- 64d88b24: Update packages to ESM. See node [docs](https://nodejs.org/api/esm.html) for more info.
+- 5cbd3b63: Updated @saleor/app-sdk package to 0.50.1
+
 ## 0.4.7
 
 ### Patch Changes
