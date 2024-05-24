@@ -1,14 +1,21 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { gql } from "urql";
 
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   OrderFullyPaidWebhookPayloadFragment,
   UntypedOrderFullyPaidDocument,
 } from "../../../../generated/graphql";
+import { saleorApp } from "../../../../saleor-app";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
-import { saleorApp } from "../../../../saleor-app";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+
+const logger = createLogger("orderFullyPaidAsyncWebhookHandler");
 
 const OrderFullyPaidWebhookPayload = gql`
   fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
@@ -38,12 +45,15 @@ export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhoo
 const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
-  console.debug("orderFullyPaidWebhook handler called");
-
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
+
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+
+  logger.info("orderFullyPaidWebhook handler called");
+
   const client = createGraphQLClient({
     saleorApiUrl,
     token,
@@ -55,14 +65,14 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   const klaviyoMetric = await settings.get("ORDER_FULLY_PAID_METRIC");
 
   if (!klaviyoToken || !klaviyoMetric) {
-    console.debug("Request rejected - app not configured");
+    logger.warn("Request rejected - app not configured");
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
   const { userEmail } = payload.order || {};
 
   if (!userEmail) {
-    console.debug("Request rejected - missing user email");
+    logger.warn("Request rejected - missing user email");
     return res.status(400).json({ success: false, message: "No user email." });
   }
 
@@ -72,7 +82,10 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
   if (klaviyoResponse.status !== 200) {
     const klaviyoMessage = ` Message: ${(await klaviyoResponse.json())?.message}.` || "";
 
-    console.debug("Klaviyo returned error: ", klaviyoMessage);
+    logger.error("Klaviyo returned error: ", {
+      error: klaviyoMessage,
+      status: klaviyoResponse.status,
+    });
 
     return res.status(500).json({
       success: false,
@@ -80,11 +93,15 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
     });
   }
 
-  console.debug("Webhook processed successfully");
+  logger.info("Webhook processed successfully");
+
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 
-export default orderFullyPaidWebhook.createHandler(handler);
+export default wrapWithLoggerContext(
+  withOtel(orderFullyPaidWebhook.createHandler(handler), "/api/webhooks/order-fully-paid"),
+  loggerContext,
+);
 
 export const config = {
   api: {

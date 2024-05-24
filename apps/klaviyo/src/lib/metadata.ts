@@ -7,6 +7,9 @@ import {
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
 import { settingsManagerSecretKey } from "../../saleor-app";
+import { createLogger } from "../logger";
+
+const logger = createLogger("MetadataManager");
 
 /*
  * Function is using urql graphql client to fetch all available metadata.
@@ -20,7 +23,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
     .toPromise();
 
   if (error) {
-    console.debug("Error during fetching the metadata: ", error);
+    logger.error("Error during fetching the metadata: ", { error });
     return [];
   }
 
@@ -41,7 +44,7 @@ export async function mutateMetadata(client: Client, appId: string, metadata: Me
     .toPromise();
 
   if (mutationError) {
-    console.debug("Mutation error: ", mutationError);
+    logger.error("Mutation error: ", { error: mutationError });
     throw new Error(`Mutation error: ${mutationError.message}`);
   }
 
