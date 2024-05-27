@@ -5,6 +5,7 @@ import { createLogger } from "../../../logger";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { BaseError } from "../../../error";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -29,6 +30,8 @@ const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
 });
 
+const TestInstrumentationError = BaseError.subclass("TestInstrumentationError");
+
 /**
  * TODO: Add tests to handler
  */
@@ -36,6 +39,8 @@ export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+        captureException(new TestInstrumentationError("Test instrumentation error"));
+
         try {
           const { payload, authData } = ctx;
 
