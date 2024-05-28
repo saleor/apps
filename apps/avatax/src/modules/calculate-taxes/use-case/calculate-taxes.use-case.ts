@@ -11,11 +11,9 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { MetadataItem } from "../../../../generated/graphql";
-import {
-  LogDrainOtelTransporter,
-  PublicLogDrain,
-  TaxesCalculatedLog,
-} from "../../public-log-drain/public-log-drain.service";
+import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
+import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
+import { TaxesCalculatedLog } from "../../public-log-drain/public-events";
 
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
