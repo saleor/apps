@@ -165,11 +165,13 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
         },
       };
 
+      const attributes = this._filterAndTruncateAttributes(log.attributes);
+
       return this.otelExporter.export(
         [
           {
             body: log.message,
-            attributes: this._filterAndTruncateAttributes(log.attributes),
+            attributes,
             severityText: log.level,
             /*
              * TODO: Map severity to OTEL levels
@@ -183,7 +185,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
              * spanContext: ...
              */
             resource,
-            droppedAttributesCount: 0,
+            droppedAttributesCount:
+              Object.keys(log.attributes).length - Object.keys(attributes).length,
             instrumentationScope: { name: "LogDrainOtelTransporter" },
           },
         ],
