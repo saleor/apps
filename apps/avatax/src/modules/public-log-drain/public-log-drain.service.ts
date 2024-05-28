@@ -8,11 +8,22 @@ import {
   SEMRESATTRS_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
 
+export const LogSeverityLevel = {
+  TRACE: "TRACE",
+  DEBUG: "DEBUG",
+  INFO: "INFO",
+  WARN: "WARN",
+  ERROR: "ERROR",
+  FATAL: "FATAL",
+} as const;
+
+export type LogSeverityLevelType = keyof typeof LogSeverityLevel;
+
 export interface PublicLog<T extends Record<string, unknown> = {}> {
   message: string;
   eventType: string; // enum
   timestamp: Date;
-  level: string; // todo enum, maybe otel level
+  level: LogSeverityLevelType;
   attributes: T;
 }
 
@@ -20,7 +31,7 @@ export class TaxesCalculatedLog implements PublicLog {
   message = "Taxes calculated";
   eventType = "TAXES_CALCULATED" as const;
   timestamp = new Date();
-  level = "info";
+  level = LogSeverityLevel.INFO;
   attributes = {};
 }
 
@@ -91,6 +102,27 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
     attributeValueLengthLimit: Infinity,
     attributeCountLimit: 128,
   };
+
+  /*
+   * Maps seveity level to a matching number in OTEL specification range
+   * https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-severitynumber
+   */
+  private _mapSeverityToOtelNumber(severityLevel: LogSeverityLevelType) {
+    switch (severityLevel) {
+      case "TRACE":
+        return 1;
+      case "DEBUG":
+        return 5;
+      case "INFO":
+        return 9;
+      case "WARN":
+        return 13;
+      case "ERROR":
+        return 17;
+      case "FATAL":
+        return 21;
+    }
+  }
 
   private _truncateSize(value: unknown) {
     const limit = this.logRecordLimit.attributeValueLengthLimit;
@@ -201,11 +233,7 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
             body: log.message,
             attributes,
             severityText: log.level,
-            /*
-             * TODO: Map severity to OTEL levels
-             * severityNumber: "",
-             */
-            severityNumber: 0, // todo
+            severityNumber: this._mapSeverityToOtelNumber(log.level),
             hrTimeObserved: timeInputToHrTime(log.timestamp),
             hrTime: timeInputToHrTime(log.timestamp),
             /*
