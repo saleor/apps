@@ -25,7 +25,9 @@ export class TaxesCalculatedLog implements PublicLog {
 }
 
 export interface PublicLogDrain {
-  emitLog(log: PublicLog): Promise<void>;
+  emitLog(log: PublicLog): Promise<void[]>;
+  getTransporters(): LogDrainTransporter[];
+  addTransporter(transporter: LogDrainTransporter): void;
 }
 
 export interface LogDrainTransporter {
@@ -33,14 +35,18 @@ export interface LogDrainTransporter {
 }
 
 export class PublicLogDrainService implements PublicLogDrain {
-  constructor(private transporter: LogDrainTransporter) {}
+  constructor(private transporters: [LogDrainTransporter]) {}
 
-  emitLog(log: PublicLog): Promise<void> {
-    return this.transporter.emit(log);
+  addTransporter(transporter: LogDrainTransporter) {
+    this.transporters.push(transporter);
   }
 
-  getTransport() {
-    return this.transporter;
+  emitLog(log: PublicLog): Promise<void[]> {
+    return Promise.all(this.transporters.map((t) => t.emit(log)));
+  }
+
+  getTransporters() {
+    return this.transporters;
   }
 }
 

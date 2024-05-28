@@ -11,6 +11,11 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { MetadataItem } from "../../../../generated/graphql";
+import {
+  LogDrainOtelTransporter,
+  PublicLogDrain,
+  TaxesCalculatedLog,
+} from "../../public-log-drain/public-log-drain.service";
 
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
@@ -28,6 +33,7 @@ export class CalculateTaxesUseCase {
   constructor(
     private deps: {
       configExtractor: IAppConfigExtractor;
+      publicLogDrain: PublicLogDrain;
     },
   ) {}
 
@@ -162,6 +168,16 @@ export class CalculateTaxesUseCase {
       );
     }
 
+    this.deps.publicLogDrain
+      .getTransporters()
+      .filter((t) => t instanceof LogDrainOtelTransporter)
+      .forEach((t) => {
+        (t as LogDrainOtelTransporter).setSettings({
+          headers: {},
+          url: "", // TODO Krzysiek
+        });
+      });
+
     return fromPromise(
       taxProvider.calculateTaxes(payload, providerConfig.value.avataxConfig.config, authData),
       (err) =>
@@ -170,6 +186,8 @@ export class CalculateTaxesUseCase {
         }),
     ).map((results) => {
       this.logger.info("Taxes calculated", { calculatedTaxes: results });
+
+      this.deps.publicLogDrain.emitLog(new TaxesCalculatedLog());
 
       return results;
     });

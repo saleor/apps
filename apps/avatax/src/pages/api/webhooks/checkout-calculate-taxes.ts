@@ -13,6 +13,10 @@ import { loggerContext } from "../../../logger-context";
 import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
+import {
+  LogDrainOtelTransporter,
+  PublicLogDrainService,
+} from "../../../modules/public-log-drain/public-log-drain.service";
 
 export const config = {
   api: {
@@ -27,6 +31,8 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
+  // TODO: Use addTransporter dynamically once we resolve config
+  publicLogDrain: new PublicLogDrainService([new LogDrainOtelTransporter()]),
 });
 
 /**
