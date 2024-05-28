@@ -1,5 +1,9 @@
 import { logs } from "@opentelemetry/api-logs";
-import { BatchLogRecordProcessor, LoggerProvider } from "@opentelemetry/sdk-logs";
+import {
+  BatchLogRecordProcessor,
+  LoggerProvider,
+  SimpleLogRecordProcessor,
+} from "@opentelemetry/sdk-logs";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import {
   detectResourcesSync,
