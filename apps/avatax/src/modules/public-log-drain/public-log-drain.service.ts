@@ -1,9 +1,12 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
-import { sharedOtelConfig } from "@saleor/apps-otel/src/shared-config";
 import { IResource } from "@opentelemetry/resources";
 import { timeInputToHrTime, isAttributeValue } from "@opentelemetry/core";
 import { Attributes } from "@opentelemetry/api";
 import * as packageJson from "../../../package.json";
+import {
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_SERVICE_VERSION,
+} from "@opentelemetry/semantic-conventions";
 
 export interface PublicLog<T extends Record<string, unknown> = {}> {
   message: string;
@@ -153,6 +156,18 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
       }, {});
   }
 
+  constructor(settings?: { url: string; headers: Record<string, string> }) {
+    if (!settings) {
+      return;
+    }
+
+    this.otelExporter = new OTLPLogExporter({
+      url: settings.url,
+      timeoutMillis: 2000,
+      headers: settings.headers,
+    });
+  }
+
   async emit(log: PublicLog): Promise<void> {
     return new Promise((res, rej) => {
       if (!this.otelExporter) {
@@ -160,8 +175,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
       }
 
       const resourceAttributes: Attributes = {
-        "service.name": "saleor-app-avatax",
-        "service.version": packageJson.version,
+        [SEMRESATTRS_SERVICE_NAME]: "saleor-app-avatax",
+        [SEMRESATTRS_SERVICE_VERSION]: packageJson.version,
       };
 
       const resource: IResource = {
@@ -208,13 +223,17 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
     });
   }
 
-  setSettings(settings: { url: string; logRecordLimit: Required<LogRecordLimits> }) {
+  setSettings(settings: {
+    url: string;
+    headers: Record<string, string>;
+    logRecordLimit?: Required<LogRecordLimits>;
+  }) {
     this.otelExporter = new OTLPLogExporter({
-      headers: sharedOtelConfig.exporterHeaders,
       url: settings.url,
       timeoutMillis: 2000,
+      headers: settings.headers,
     });
-    if (this.logRecordLimit) {
+    if (settings.logRecordLimit) {
       if (this.logRecordLimit.attributeValueLengthLimit <= 0) {
         throw new Error("attributeValueLengthLimit cannot be less than 0");
       }

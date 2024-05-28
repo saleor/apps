@@ -32,10 +32,6 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 
 const otelLogDrainTransporter = new LogDrainOtelTransporter();
 
-otelLogDrainTransporter.setSettings({
-  url: "http://192.168.1.108:4318/v1/logs",
-});
-
 const publicLoggerOtel = new PublicLogDrainService(otelLogDrainTransporter);
 
 export default wrapWithLoggerContext(
@@ -123,6 +119,11 @@ export default wrapWithLoggerContext(
             );
 
             logger.info("Taxes calculated", { calculatedTaxes });
+
+            otelLogDrainTransporter.setSettings({
+              headers: {},
+              url: "TODO",
+            });
 
             await publicLoggerOtel.emitLog(new TaxesCalculatedLog());
 
