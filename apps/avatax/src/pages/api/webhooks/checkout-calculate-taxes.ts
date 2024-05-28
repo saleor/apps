@@ -13,10 +13,8 @@ import { loggerContext } from "../../../logger-context";
 import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
-import {
-  LogDrainOtelTransporter,
-  PublicLogDrainService,
-} from "../../../modules/public-log-drain/public-log-drain.service";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
 
 export const config = {
   api: {
