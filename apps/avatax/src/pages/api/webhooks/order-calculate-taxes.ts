@@ -125,7 +125,13 @@ export default wrapWithLoggerContext(
               url: "TODO",
             });
 
-            waitUntil(publicLoggerOtel.emitLog(new TaxesCalculatedLog()));
+            waitUntil(
+              publicLoggerOtel.emitLog(
+                new TaxesCalculatedLog({
+                  orderOrCheckoutId: payload.taxBase?.sourceObject.id,
+                }),
+              ),
+            );
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {

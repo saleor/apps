@@ -186,7 +186,13 @@ export class CalculateTaxesUseCase {
     ).map((results) => {
       this.logger.info("Taxes calculated", { calculatedTaxes: results });
 
-      waitUntil(this.deps.publicLogDrain.emitLog(new TaxesCalculatedLog()));
+      waitUntil(
+        this.deps.publicLogDrain.emitLog(
+          new TaxesCalculatedLog({
+            orderOrCheckoutId: payload.taxBase.sourceObject.id,
+          }),
+        ),
+      );
 
       return results;
     });

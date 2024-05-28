@@ -17,10 +17,14 @@ export interface PublicLog<T extends Record<string, unknown> = {}> {
   attributes: T;
 }
 
-export class TaxesCalculatedLog implements PublicLog {
+export class TaxesCalculatedLog implements PublicLog<{ orderOrCheckoutId: string }> {
   message = "Taxes calculated";
   eventType = "TAXES_CALCULATED" as const;
   timestamp = new Date();
   level = LogSeverityLevel.INFO;
-  attributes = {};
+  attributes = { orderOrCheckoutId: "" };
+
+  constructor(params: { orderOrCheckoutId: string }) {
+    this.attributes.orderOrCheckoutId = params.orderOrCheckoutId;
+  }
 }
