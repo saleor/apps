@@ -190,6 +190,7 @@ export class CalculateTaxesUseCase {
         this.deps.publicLogDrain.emitLog(
           new TaxesCalculatedLog({
             orderOrCheckoutId: payload.taxBase.sourceObject.id,
+            saleorApiUrl: authData.saleorApiUrl,
           }),
         ),
       );

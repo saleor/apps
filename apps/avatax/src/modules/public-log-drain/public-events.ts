@@ -11,20 +11,23 @@ export type LogSeverityLevelType = keyof typeof LogSeverityLevel;
 
 export interface PublicLog<T extends Record<string, unknown> = {}> {
   message: string;
-  eventType: string; // enum
+
   timestamp: Date;
   level: LogSeverityLevelType;
-  attributes: T;
+  attributes: T & {
+    saleorApiUrl: string;
+    eventType: string;
+  };
 }
 
 export class TaxesCalculatedLog implements PublicLog<{ orderOrCheckoutId: string }> {
   message = "Taxes calculated";
-  eventType = "TAXES_CALCULATED" as const;
   timestamp = new Date();
   level = LogSeverityLevel.INFO;
-  attributes = { orderOrCheckoutId: "" };
+  attributes = { orderOrCheckoutId: "", saleorApiUrl: "", eventType: "TAXES_CALCULATED" };
 
-  constructor(params: { orderOrCheckoutId: string }) {
+  constructor(params: { orderOrCheckoutId: string; saleorApiUrl: string }) {
     this.attributes.orderOrCheckoutId = params.orderOrCheckoutId;
+    this.attributes.saleorApiUrl = params.saleorApiUrl;
   }
 }

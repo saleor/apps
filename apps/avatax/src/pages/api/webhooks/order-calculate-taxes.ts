@@ -129,6 +129,7 @@ export default wrapWithLoggerContext(
               publicLoggerOtel.emitLog(
                 new TaxesCalculatedLog({
                   orderOrCheckoutId: payload.taxBase?.sourceObject.id,
+                  saleorApiUrl: ctx.authData.saleorApiUrl,
                 }),
               ),
             );
