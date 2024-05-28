@@ -52,6 +52,7 @@
     "@trpc/react-query": "10.43.1",
     "@trpc/server": "10.43.1",
     "@urql/exchange-auth": "^2.1.4",
+    "@vercel/functions": "1.0.2",
     "avatax": "^23.7.0",
     "dotenv": "^16.3.1",
     "graphql": "16.7.1",

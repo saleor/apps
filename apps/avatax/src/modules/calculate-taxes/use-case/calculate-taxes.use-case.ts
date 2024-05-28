@@ -14,6 +14,7 @@ import { MetadataItem } from "../../../../generated/graphql";
 import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
 import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
 import { TaxesCalculatedLog } from "../../public-log-drain/public-events";
+import { waitUntil } from "@vercel/functions";
 
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
@@ -185,7 +186,7 @@ export class CalculateTaxesUseCase {
     ).map((results) => {
       this.logger.info("Taxes calculated", { calculatedTaxes: results });
 
-      this.deps.publicLogDrain.emitLog(new TaxesCalculatedLog());
+      waitUntil(this.deps.publicLogDrain.emitLog(new TaxesCalculatedLog()));
 
       return results;
     });
