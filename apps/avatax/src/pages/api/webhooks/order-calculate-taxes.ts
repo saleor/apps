@@ -3,19 +3,19 @@ import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+import { waitUntil } from "@vercel/functions";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { TaxesCalculatedLog } from "../../../modules/public-log-drain/public-events";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
-import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
-import { TaxesCalculatedLog } from "../../../modules/public-log-drain/public-events";
-import { waitUntil } from "@vercel/functions";
 
 export const config = {
   api: {
@@ -119,11 +119,15 @@ export default wrapWithLoggerContext(
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
-            // TODO: Krzysiek add metadata fetching here
-            otelLogDrainTransporter.setSettings({
-              headers: {},
-              url: "http://192.168.1.108:4318/v1/logs",
-            });
+            if (providerConfig.value.avataxConfig.config.logsSettings?.otel.url) {
+              const headers =
+                providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+
+              otelLogDrainTransporter.setSettings({
+                headers: JSON.parse(headers),
+                url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
+              });
+            }
 
             waitUntil(
               publicLoggerOtel.emitLog(

@@ -1,20 +1,20 @@
-import { createLogger } from "@saleor/apps-logger";
-import { BaseError } from "../../../error";
-import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
-import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
-import { err, fromPromise, Result } from "neverthrow";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { createLogger } from "@saleor/apps-logger";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
-import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { MetadataItem } from "../../../../generated/graphql";
-import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
-import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
-import { TaxesCalculatedLog } from "../../public-log-drain/public-events";
 import { waitUntil } from "@vercel/functions";
+import { Result, err, fromPromise } from "neverthrow";
+import { MetadataItem } from "../../../../generated/graphql";
+import { BaseError } from "../../../error";
+import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { TaxesCalculatedLog } from "../../public-log-drain/public-events";
+import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
+import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
+import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
+import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
@@ -171,10 +171,19 @@ export class CalculateTaxesUseCase {
       .getTransporters()
       .filter((t) => t instanceof LogDrainOtelTransporter)
       .forEach((t) => {
-        (t as LogDrainOtelTransporter).setSettings({
-          headers: {},
-          url: "", // TODO Krzysiek
-        });
+        if (providerConfig.value.avataxConfig.config.logsSettings?.otel.url) {
+          const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+
+          this.logger.info(
+            "headers to otel",
+            providerConfig.value.avataxConfig.config.logsSettings.otel.headers,
+          );
+
+          (t as LogDrainOtelTransporter).setSettings({
+            headers: JSON.parse(headers),
+            url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
+          });
+        }
       });
 
     return fromPromise(

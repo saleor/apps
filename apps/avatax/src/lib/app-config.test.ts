@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { AppConfig } from "./app-config";
 
 describe("AppConfig", () => {
@@ -50,6 +50,9 @@ describe("AppConfig", () => {
               isAutocommit: false,
               isDocumentRecordingEnabled: false,
               shippingTaxCode: "123",
+              logsSettings: {
+                otel: {},
+              },
             },
           },
         ],
@@ -118,6 +121,9 @@ describe("AppConfig", () => {
               isAutocommit: false,
               isDocumentRecordingEnabled: false,
               shippingTaxCode: "123",
+              logsSettings: {
+                otel: {},
+              },
             },
           },
         ],

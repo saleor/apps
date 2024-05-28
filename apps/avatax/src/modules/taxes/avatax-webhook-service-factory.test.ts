@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { AppConfig } from "../../lib/app-config";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
 import { AvataxWebhookServiceFactory } from "./avatax-webhook-service-factory";
-import { AppConfig } from "../../lib/app-config";
 
 const mockedProviders: ProviderConnections = [
   {
@@ -25,6 +25,12 @@ const mockedProviders: ProviderConnections = [
         state: "NY",
         street: "123 Main St",
         zip: "10001",
+      },
+      logsSettings: {
+        otel: {
+          url: "https://otel.example.com",
+          headers: "Authorization",
+        },
       },
     },
   },

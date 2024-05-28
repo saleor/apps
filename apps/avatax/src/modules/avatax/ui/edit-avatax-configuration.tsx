@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
+import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 
@@ -140,6 +140,8 @@ export const EditAvataxConfiguration = () => {
       </Box>
     );
   }
+
+  console.log("config", data.config);
 
   return (
     <AvataxConfigurationForm
