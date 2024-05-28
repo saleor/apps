@@ -4,6 +4,7 @@ import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-shipping-line";
+import { extractRateFromTaxDetails } from "./extract-rate-from-tax-details";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
   transform(transaction: TransactionModel): CalculateTaxesResponse["lines"] {
@@ -11,6 +12,8 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
 
     return (
       productLines?.map((line) => {
+        const rate = extractRateFromTaxDetails(line.details ?? []);
+
         if (!line.isItemTaxable) {
           return {
             total_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
@@ -21,7 +24,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
               line.lineAmount,
               new TaxBadPayloadError("line.lineAmount is undefined"),
             ),
-            tax_rate: 0,
+            tax_rate: rate,
           };
         }
 
@@ -40,10 +43,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
         return {
           total_gross_amount: lineTotalGrossAmount,
           total_net_amount: lineTotalNetAmount,
-          /*
-           * avatax doesn't return combined tax rate
-           * // todo: calculate percentage tax rate
-           */ tax_rate: 0,
+          tax_rate: rate,
         };
       }) ?? []
     );
