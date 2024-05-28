@@ -12,11 +12,9 @@ import { loggerContext } from "../../../logger-context";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
-import {
-  LogDrainOtelTransporter,
-  PublicLogDrainService,
-  TaxesCalculatedLog,
-} from "../../../modules/public-log-drain/public-log-drain.service";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
+import { TaxesCalculatedLog } from "../../../modules/public-log-drain/public-events";
 
 export const config = {
   api: {

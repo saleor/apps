@@ -1,10 +1,7 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { isAttributeValue, timeInputToHrTime } from "@opentelemetry/core";
 import { Attributes } from "@opentelemetry/api";
-import {
-  SEMRESATTRS_SERVICE_NAME,
-  SEMRESATTRS_SERVICE_VERSION,
-} from "@opentelemetry/semantic-conventions";
+import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import * as packageJson from "../../../../package.json";
 import { IResource } from "@opentelemetry/resources";
 import { LogSeverityLevelType, PublicLog } from "../public-events";
@@ -139,8 +136,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
       }
 
       const resourceAttributes: Attributes = {
-        [SEMRESATTRS_SERVICE_NAME]: "saleor-app-avatax",
-        [SEMRESATTRS_SERVICE_VERSION]: packageJson.version,
+        [SemanticResourceAttributes.SERVICE_NAME]: "saleor-app-avatax",
+        [SemanticResourceAttributes.SERVICE_VERSION]: packageJson.version,
       };
 
       const resource: IResource = {
