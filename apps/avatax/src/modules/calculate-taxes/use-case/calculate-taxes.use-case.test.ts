@@ -7,6 +7,8 @@ import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config
 import { AvataxWebhookServiceFactory } from "../../taxes/avatax-webhook-service-factory";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
+import { PublicLogDrainService } from "../../public-log-drain/public-log-drain.service";
+import { PublicLog } from "../../public-log-drain/public-events";
 
 const mockGetAppConfig = vi.fn<never, Result<AppConfig, (typeof BaseError)["prototype"]>>();
 
@@ -127,6 +129,11 @@ describe("CalculateTaxesUseCase", () => {
 
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
+      publicLogDrain: new PublicLogDrainService([
+        {
+          async emit(log: PublicLog): Promise<void> {},
+        },
+      ]),
     });
   });
 
