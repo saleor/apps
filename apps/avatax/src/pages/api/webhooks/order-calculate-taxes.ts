@@ -12,6 +12,11 @@ import { loggerContext } from "../../../logger-context";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import {
+  LogDrainOtelTransporter,
+  PublicLogDrainService,
+  TaxesCalculatedLog,
+} from "../../../modules/public-log-drain/public-log-drain.service";
 
 export const config = {
   api: {
@@ -24,6 +29,14 @@ const logger = createLogger("orderCalculateTaxesSyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+
+const otelLogDrainTransporter = new LogDrainOtelTransporter();
+
+otelLogDrainTransporter.setSettings({
+  url: "http://192.168.1.108:4318/v1/logs",
+});
+
+const publicLoggerOtel = new PublicLogDrainService(otelLogDrainTransporter);
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -110,6 +123,8 @@ export default wrapWithLoggerContext(
             );
 
             logger.info("Taxes calculated", { calculatedTaxes });
+
+            await publicLoggerOtel.emitLog(new TaxesCalculatedLog());
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
