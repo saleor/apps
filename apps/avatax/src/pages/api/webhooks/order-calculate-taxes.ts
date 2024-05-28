@@ -15,6 +15,7 @@ import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-
 import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
 import { TaxesCalculatedLog } from "../../../modules/public-log-drain/public-events";
+import { waitUntil } from "@vercel/functions";
 
 export const config = {
   api: {
@@ -124,7 +125,7 @@ export default wrapWithLoggerContext(
               url: "TODO",
             });
 
-            await publicLoggerOtel.emitLog(new TaxesCalculatedLog());
+            waitUntil(publicLoggerOtel.emitLog(new TaxesCalculatedLog()));
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
