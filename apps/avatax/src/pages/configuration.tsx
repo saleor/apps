@@ -1,10 +1,11 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Text } from "@saleor/macaw-ui";
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppPageLayout } from "../modules/ui/app-page-layout";
 import { Section } from "../modules/ui/app-section";
 import { MatcherSection } from "../modules/ui/matcher-section";
-import { Text } from "@saleor/macaw-ui";
+import { OTELSection } from "../modules/ui/otel-section";
 
 const Header = () => {
   return (
@@ -38,6 +39,7 @@ const ConfigurationPage = () => {
       <ProvidersSection />
       <ChannelSection />
       <MatcherSection />
+      <OTELSection />
     </AppPageLayout>
   );
 };
