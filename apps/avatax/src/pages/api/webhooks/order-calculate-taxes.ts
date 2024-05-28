@@ -122,7 +122,7 @@ export default wrapWithLoggerContext(
             // TODO: Krzysiek add metadata fetching here
             otelLogDrainTransporter.setSettings({
               headers: {},
-              url: "TODO",
+              url: "http://192.168.1.108:4318/v1/logs",
             });
 
             waitUntil(

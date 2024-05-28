@@ -94,6 +94,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
       if (typeof value === "number" && !Number.isFinite(value)) {
         return false;
       }
+
+      return true;
     });
 
     return filteredAttributesEntries
