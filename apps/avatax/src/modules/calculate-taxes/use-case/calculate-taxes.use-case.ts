@@ -174,11 +174,6 @@ export class CalculateTaxesUseCase {
         if (providerConfig.value.avataxConfig.config.logsSettings?.otel.url) {
           const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
 
-          this.logger.info(
-            "headers to otel",
-            providerConfig.value.avataxConfig.config.logsSettings.otel.headers,
-          );
-
           (t as LogDrainOtelTransporter).setSettings({
             headers: JSON.parse(headers),
             url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
