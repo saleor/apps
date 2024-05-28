@@ -1,6 +1,6 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { isAttributeValue, timeInputToHrTime } from "@opentelemetry/core";
-import { Attributes } from "@opentelemetry/api";
+import { Attributes, trace } from "@opentelemetry/api";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import * as packageJson from "../../../../package.json";
 import { IResource } from "@opentelemetry/resources";
@@ -135,6 +135,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
         throw new Error("Call setSettings first");
       }
 
+      const spanContext = trace.getActiveSpan()?.spanContext();
+
       const resourceAttributes: Attributes = {
         [SemanticResourceAttributes.SERVICE_NAME]: "saleor-app-avatax",
         [SemanticResourceAttributes.SERVICE_VERSION]: packageJson.version,
@@ -159,10 +161,7 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
             severityNumber: this._mapSeverityToOtelNumber(log.level),
             hrTimeObserved: timeInputToHrTime(log.timestamp),
             hrTime: timeInputToHrTime(log.timestamp),
-            /*
-             * TODO: Pass traceId to logs
-             * spanContext: ...
-             */
+            spanContext,
             resource,
             droppedAttributesCount:
               Object.keys(log.attributes).length - Object.keys(attributes).length,
