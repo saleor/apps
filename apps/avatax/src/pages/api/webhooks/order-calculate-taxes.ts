@@ -32,7 +32,7 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 
 const otelLogDrainTransporter = new LogDrainOtelTransporter();
 
-const publicLoggerOtel = new PublicLogDrainService(otelLogDrainTransporter);
+const publicLoggerOtel = new PublicLogDrainService([otelLogDrainTransporter]);
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -120,6 +120,7 @@ export default wrapWithLoggerContext(
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
+            // TODO: Krzysiek add metadata fetching here
             otelLogDrainTransporter.setSettings({
               headers: {},
               url: "TODO",
