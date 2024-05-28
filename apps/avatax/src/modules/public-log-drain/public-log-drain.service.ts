@@ -1,6 +1,10 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { sharedOtelConfig } from "@saleor/apps-otel/src/shared-config";
 import { IResource } from "@opentelemetry/resources";
+import { timeInputToHrTime, isAttributeValue, InstrumentationScope } from "@opentelemetry/core";
+import { LogAttributes } from "@opentelemetry/api-logs";
+import { Attributes } from "@opentelemetry/api";
+import * as packageJson from "../../../package.json";
 
 export interface PublicLog<T extends Record<string, unknown> = {}> {
   message: string;
@@ -70,20 +74,54 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
         throw new Error("Call setSettings first");
       }
 
+      const isValidAttribute = (value: unknown) => {
+        return (
+          value === null ||
+          value === undefined ||
+          (typeof value === "number" ? !Number.isFinite(value) : true)
+        );
+      };
+
+      /*
+       * We must filter out non-serializable values
+       * https://opentelemetry.io/docs/specs/otel/common/#attribute
+       */
+      const filteredAttributes = Object.fromEntries(
+        Object.entries(log.attributes).filter((_, value) => {
+          if (Array.isArray(value)) {
+            return value.every((item) =>
+              typeof value === "number" ? !Number.isFinite(value) : true,
+            );
+          }
+          return isValidAttribute(value);
+        }),
+      );
+
+      const resourceAttributes: Attributes = {
+        "service.name": "saleor-app-avatax",
+        "service.version": packageJson.version,
+      };
+
+      const resource: IResource = {
+        attributes: resourceAttributes,
+        merge(other: IResource | null): IResource {
+          return this;
+        },
+      };
+
       return this.otelExporter.export(
         [
           {
             body: log.message,
-            attributes: log.attributes,
+            attributes: filteredAttributes as LogAttributes,
             severityText: log.level,
-            hrTimeObserved: [0, 0],
-            hrTime: [0, 0],
-            resource: {
-              attributes: {},
-              merge(other: IResource | null): IResource {
-                return other as IResource; // todo
-              },
-            },
+            hrTimeObserved: timeInputToHrTime(log.timestamp),
+            hrTime: timeInputToHrTime(log.timestamp),
+            /*
+             * TODO: Pass traceId to logs
+             * spanContext: ...
+             */
+            resource,
             droppedAttributesCount: 0,
             instrumentationScope: { name: "LogDrainOtelTransporter" },
           },
