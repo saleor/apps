@@ -1,8 +1,7 @@
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { sharedOtelConfig } from "@saleor/apps-otel/src/shared-config";
 import { IResource } from "@opentelemetry/resources";
-import { timeInputToHrTime, isAttributeValue, InstrumentationScope } from "@opentelemetry/core";
-import { LogAttributes } from "@opentelemetry/api-logs";
+import { timeInputToHrTime, isAttributeValue } from "@opentelemetry/core";
 import { Attributes } from "@opentelemetry/api";
 import * as packageJson from "../../../package.json";
 
@@ -65,37 +64,93 @@ export class LogDrainJsonTransporter implements LogDrainTransporter {
   setSettings() {}
 }
 
+export interface LogRecordLimits {
+  /** attributeValueLengthLimit is maximum allowed attribute value size */
+  attributeValueLengthLimit?: number;
+
+  /** attributeCountLimit is number of attributes per LogRecord */
+  attributeCountLimit?: number;
+}
+
 export class LogDrainOtelTransporter implements LogDrainTransporter {
   private otelExporter: OTLPLogExporter | null = null;
+  private logRecordLimit: Required<LogRecordLimits> = {
+    /*
+     * Default values used by OTEL spec
+     * https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/#attribute-limits
+     */
+    attributeValueLengthLimit: Infinity,
+    attributeCountLimit: 128,
+  };
+
+  private _truncateSize(value: unknown) {
+    const limit = this.logRecordLimit.attributeValueLengthLimit;
+
+    const truncateToLimit = (value: string) => {
+      if (value.length <= limit) {
+        return value;
+      }
+      return value.substring(0, limit);
+    };
+
+    if (typeof value === "string") {
+      return truncateToLimit(value);
+    }
+
+    if (Array.isArray(value)) {
+      return (value as []).map((val) => (typeof val === "string" ? truncateToLimit(val) : val));
+    }
+
+    // If value is of another type, we can safely return it as is
+    return value;
+  }
+
+  private _filterAndTruncateAttributes(attributes: Record<string, unknown>) {
+    /*
+     * We must filter out non-serializable values and truncate ones that exceed limits
+     * https://opentelemetry.io/docs/specs/otel/common/#attribute
+     */
+    const filteredAttributesEntries = Object.entries(attributes).filter(([key, value]) => {
+      if (value === null) {
+        return false;
+      }
+      if (key.length === 0) {
+        return false;
+      }
+      if (
+        !isAttributeValue(value) &&
+        !(typeof value === "object" && !Array.isArray(value) && Object.keys(value).length > 0)
+      ) {
+        return false;
+      }
+    });
+
+    return filteredAttributesEntries
+      .slice(0, this.logRecordLimit.attributeCountLimit)
+      .reduce((acc, [key, value]) => {
+        if (Object.keys(acc).length >= this.logRecordLimit.attributeCountLimit) {
+          return acc;
+        }
+
+        if (isAttributeValue(value)) {
+          return {
+            ...acc,
+            [key]: this._truncateSize(value),
+          };
+        } else {
+          return {
+            ...acc,
+            [key]: value,
+          };
+        }
+      }, {});
+  }
 
   async emit(log: PublicLog): Promise<void> {
     return new Promise((res, rej) => {
       if (!this.otelExporter) {
         throw new Error("Call setSettings first");
       }
-
-      const isValidAttribute = (value: unknown) => {
-        return (
-          value === null ||
-          value === undefined ||
-          (typeof value === "number" ? !Number.isFinite(value) : true)
-        );
-      };
-
-      /*
-       * We must filter out non-serializable values
-       * https://opentelemetry.io/docs/specs/otel/common/#attribute
-       */
-      const filteredAttributes = Object.fromEntries(
-        Object.entries(log.attributes).filter((_, value) => {
-          if (Array.isArray(value)) {
-            return value.every((item) =>
-              typeof value === "number" ? !Number.isFinite(value) : true,
-            );
-          }
-          return isValidAttribute(value);
-        }),
-      );
 
       const resourceAttributes: Attributes = {
         "service.name": "saleor-app-avatax",
@@ -104,7 +159,8 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
 
       const resource: IResource = {
         attributes: resourceAttributes,
-        merge(other: IResource | null): IResource {
+        // This is a workaround to support OTEL SDK types
+        merge(): IResource {
           return this;
         },
       };
@@ -113,8 +169,13 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
         [
           {
             body: log.message,
-            attributes: filteredAttributes as LogAttributes,
+            attributes: this._filterAndTruncateAttributes(log.attributes),
             severityText: log.level,
+            /*
+             * TODO: Map severity to OTEL levels
+             * severityNumber: "",
+             */
+            severityNumber: 0, // todo
             hrTimeObserved: timeInputToHrTime(log.timestamp),
             hrTime: timeInputToHrTime(log.timestamp),
             /*
@@ -137,11 +198,20 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
     });
   }
 
-  setSettings(settings: { url: string }) {
+  setSettings(settings: { url: string; logRecordLimit: Required<LogRecordLimits> }) {
     this.otelExporter = new OTLPLogExporter({
       headers: sharedOtelConfig.exporterHeaders,
       url: settings.url,
       timeoutMillis: 2000,
     });
+    if (this.logRecordLimit) {
+      if (this.logRecordLimit.attributeValueLengthLimit <= 0) {
+        throw new Error("attributeValueLengthLimit cannot be less than 0");
+      }
+      if (this.logRecordLimit.attributeCountLimit <= 0) {
+        throw new Error("attributeCountLimit cannot be less than 0");
+      }
+      this.logRecordLimit = settings.logRecordLimit;
+    }
   }
 }
