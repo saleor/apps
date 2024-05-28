@@ -17,6 +17,7 @@ import { AvataxConfigurationCredentialsFragment } from "./avatax-configuration-c
 import { AvataxConfigurationSettingsFragment } from "./avatax-configuration-settings-fragment";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
+import { LogsSettingsFragment } from "./logs-settings-fragment";
 
 type AvataxConfigurationFormProps = {
   submit: {
@@ -82,6 +83,8 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
             onValidateAddress={props.validateAddress.handleFn}
             isLoading={props.validateAddress.isLoading}
           />
+          <Divider marginY={8} />
+          <LogsSettingsFragment />
           <Divider marginY={8} />
 
           <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>

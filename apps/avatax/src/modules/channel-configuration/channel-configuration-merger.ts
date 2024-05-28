@@ -13,6 +13,7 @@ export class ChannelConfigurationMerger {
           config: {
             providerConnectionId: null,
             slug: channel.slug,
+            orderSettings: null,
           },
         };
       }
@@ -22,6 +23,7 @@ export class ChannelConfigurationMerger {
         config: {
           providerConnectionId: channelConfig.config.providerConnectionId,
           slug: channel.slug,
+          orderSettings: null,
         },
       };
     });
