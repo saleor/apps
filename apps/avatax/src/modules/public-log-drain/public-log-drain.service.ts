@@ -123,6 +123,13 @@ export class LogDrainOtelTransporter implements LogDrainTransporter {
       ) {
         return false;
       }
+      /*
+       * Additional validation that is missing in OTEL SDK, but causes crashes on otel-collector
+       * when sending non-finite numbers (e.g. NaN, Infinity)
+       */
+      if (typeof value === "number" && !Number.isFinite(value)) {
+        return false;
+      }
     });
 
     return filteredAttributesEntries
