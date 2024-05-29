@@ -38,7 +38,7 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const otelLogDrainTransporter = new LogDrainOtelTransporter();
 const jsonLogDrainTransporter = new LogDrainJsonTransporter();
 
-const publicLoggerOtel = new PublicLogDrainService([otelLogDrainTransporter]);
+const publicLoggerOtel = new PublicLogDrainService([]);
 
 export default wrapWithLoggerContext(
   withOtel(
