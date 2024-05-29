@@ -31,6 +31,7 @@ export const avataxConfigSchema = z
     address: addressSchema,
     logsSettings: z.object({
       otel: z.object({
+        enabled: z.boolean().optional(),
         url: z.string().optional(),
         headers: z.string().optional(),
       }),
@@ -60,6 +61,7 @@ export const defaultAvataxConfig: AvataxConfig = {
   },
   logsSettings: {
     otel: {
+      enabled: false,
       url: "",
       headers: "",
     },

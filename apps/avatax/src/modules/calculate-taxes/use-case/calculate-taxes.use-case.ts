@@ -179,12 +179,13 @@ class PrivateCalculateTaxesUseCase {
       .getTransporters()
       .filter((t) => t instanceof LogDrainOtelTransporter)
       .forEach((t) => {
-        if (providerConfig.value.avataxConfig.config.logsSettings?.otel.url) {
+        if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
           const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+          const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
           (t as LogDrainOtelTransporter).setSettings({
             headers: JSON.parse(headers),
-            url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
+            url,
           });
         }
       });

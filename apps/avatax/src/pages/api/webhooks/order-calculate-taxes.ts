@@ -154,13 +154,14 @@ export default wrapWithLoggerContext(
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
-            if (providerConfig.value.avataxConfig.config.logsSettings?.otel.url) {
+            if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
               const headers =
                 providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+              const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
               otelLogDrainTransporter.setSettings({
                 headers: JSON.parse(headers),
-                url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
+                url,
               });
             }
 
