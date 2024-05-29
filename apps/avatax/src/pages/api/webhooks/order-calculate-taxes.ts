@@ -10,12 +10,17 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { TaxesCalculatedLog } from "../../../modules/public-log-drain/public-events";
 import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
 import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+import {
+  TaxesCalculatedInOrderLog,
+  TaxesCalculationFailedConfigErrorLog,
+  TaxesCalculationFailedInvalidPayloadLog,
+  TaxesCalculationFailedUnhandledErrorLog,
+} from "../../../modules/public-log-drain/public-events";
 
 export const config = {
   api: {
@@ -59,6 +64,15 @@ export default wrapWithLoggerContext(
               error: payloadVerificationResult.error,
             });
 
+            waitUntil(
+              publicLoggerOtel.emitLog(
+                new TaxesCalculationFailedInvalidPayloadLog({
+                  orderId: payload.taxBase?.sourceObject.id,
+                  saleorApiUrl: ctx.authData.saleorApiUrl,
+                }),
+              ),
+            );
+
             return res.status(400).send(payloadVerificationResult.error.message);
           }
 
@@ -89,6 +103,15 @@ export default wrapWithLoggerContext(
           if (config.isErr()) {
             logger.warn("Failed to extract app config from metadata", { error: config.error });
 
+            waitUntil(
+              publicLoggerOtel.emitLog(
+                new TaxesCalculationFailedConfigErrorLog({
+                  orderId: payload.taxBase?.sourceObject.id,
+                  saleorApiUrl: ctx.authData.saleorApiUrl,
+                }),
+              ),
+            );
+
             return res.status(400).send("App configuration is broken");
           }
 
@@ -108,6 +131,15 @@ export default wrapWithLoggerContext(
             const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
             if (providerConfig.isErr()) {
+              waitUntil(
+                publicLoggerOtel.emitLog(
+                  new TaxesCalculationFailedConfigErrorLog({
+                    orderId: payload.taxBase?.sourceObject.id,
+                    saleorApiUrl: ctx.authData.saleorApiUrl,
+                  }),
+                ),
+              );
+
               return res.status(400).send("App is not configured properly.");
             }
 
@@ -131,8 +163,8 @@ export default wrapWithLoggerContext(
 
             waitUntil(
               publicLoggerOtel.emitLog(
-                new TaxesCalculatedLog({
-                  orderOrCheckoutId: payload.taxBase?.sourceObject.id,
+                new TaxesCalculatedInOrderLog({
+                  orderId: payload.taxBase?.sourceObject.id,
                   saleorApiUrl: ctx.authData.saleorApiUrl,
                 }),
               ),
@@ -148,11 +180,27 @@ export default wrapWithLoggerContext(
 
             switch (err["constructor"]) {
               case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+                waitUntil(
+                  publicLoggerOtel.emitLog(
+                    new TaxesCalculationFailedConfigErrorLog({
+                      orderId: payload.taxBase?.sourceObject.id,
+                      saleorApiUrl: ctx.authData.saleorApiUrl,
+                    }),
+                  ),
+                );
                 return res.status(400).send("App is not configured properly.");
               }
               default: {
                 Sentry.captureException(avataxWebhookServiceResult.error);
                 logger.fatal("Unhandled error", { error: err });
+                waitUntil(
+                  publicLoggerOtel.emitLog(
+                    new TaxesCalculationFailedUnhandledErrorLog({
+                      orderId: payload.taxBase?.sourceObject.id,
+                      saleorApiUrl: ctx.authData.saleorApiUrl,
+                    }),
+                  ),
+                );
 
                 return res.status(500).send("Unhandled error");
               }
@@ -165,12 +213,29 @@ export default wrapWithLoggerContext(
               { error },
             );
 
+            waitUntil(
+              publicLoggerOtel.emitLog(
+                new TaxesCalculationFailedConfigErrorLog({
+                  orderId: ctx.payload.taxBase?.sourceObject.id,
+                  saleorApiUrl: ctx.authData.saleorApiUrl,
+                }),
+              ),
+            );
+
             return res.status(400).json({
               message: "InvalidAppAddressError: Check address in app configuration",
             });
           }
 
           Sentry.captureException(error);
+          waitUntil(
+            publicLoggerOtel.emitLog(
+              new TaxesCalculationFailedUnhandledErrorLog({
+                orderId: ctx.payload.taxBase?.sourceObject.id,
+                saleorApiUrl: ctx.authData.saleorApiUrl,
+              }),
+            ),
+          );
 
           return res.status(500).send("Unhandled error");
         }

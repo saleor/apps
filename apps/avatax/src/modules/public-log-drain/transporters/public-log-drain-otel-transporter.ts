@@ -2,7 +2,7 @@ import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { isAttributeValue, timeInputToHrTime } from "@opentelemetry/core";
 import { Attributes, trace } from "@opentelemetry/api";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import * as packageJson from "../../../../package.json";
+import packageJson from "../../../../package.json";
 import { IResource } from "@opentelemetry/resources";
 import { LogSeverityLevelType, PublicLog } from "../public-events";
 import { LogDrainTransporter } from "../public-log-drain";
