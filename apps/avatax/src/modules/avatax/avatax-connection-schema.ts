@@ -35,6 +35,11 @@ export const avataxConfigSchema = z
         url: z.string().optional(),
         headers: z.string().optional(),
       }),
+      http: z.object({
+        enabled: z.boolean().optional(),
+        url: z.string().optional(),
+        headers: z.string().optional(),
+      }),
     }),
   })
   .merge(baseAvataxConfigSchema);
@@ -61,6 +66,11 @@ export const defaultAvataxConfig: AvataxConfig = {
   },
   logsSettings: {
     otel: {
+      enabled: false,
+      url: "",
+      headers: "",
+    },
+    http: {
       enabled: false,
       url: "",
       headers: "",

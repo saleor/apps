@@ -31,6 +31,10 @@ const mockedProviders: ProviderConnections = [
           url: "https://otel.example.com",
           headers: "Authorization",
         },
+        http: {
+          url: "https://http.example.com",
+          headers: "Authorization",
+        },
       },
     },
   },

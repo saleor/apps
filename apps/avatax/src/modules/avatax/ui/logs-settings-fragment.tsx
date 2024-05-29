@@ -7,9 +7,13 @@ import { HelperText } from "./form-helper-text";
 
 export const LogsSettingsFragment = () => {
   const { control, formState } = useFormContext<AvataxConfig>();
-  const isOtelToogleEnabled = useWatch({
+  const isOtelTogleEnabled = useWatch({
     control,
     name: "logsSettings.otel.enabled",
+  });
+  const isHttpTogleEnabled = useWatch({
+    control,
+    name: "logsSettings.http.enabled",
   });
 
   return (
@@ -35,7 +39,7 @@ export const LogsSettingsFragment = () => {
               name="logsSettings.otel.url"
               label="URL to send logs to"
               helperText={formState.errors.logsSettings?.otel?.url?.message}
-              disabled={!isOtelToogleEnabled}
+              disabled={!isOtelTogleEnabled}
             />
             <Controller
               name="logsSettings.otel.headers"
@@ -46,7 +50,36 @@ export const LogsSettingsFragment = () => {
                   error={!!error}
                   helperText={formState.errors.logsSettings?.otel?.headers?.message}
                   label="Request headers in JSON format"
-                  disabled={!isOtelToogleEnabled}
+                  disabled={!isOtelTogleEnabled}
+                />
+              )}
+            />
+          </Box>
+
+          <AppToggle
+            name="logsSettings.http.enabled"
+            control={control}
+            label="HTTP transport"
+            helperText={<HelperText>Enable sending logs using HTTP protocol.</HelperText>}
+          />
+          <Box display="grid" gap={2}>
+            <Input
+              control={control}
+              name="logsSettings.http.url"
+              label="URL to send logs to"
+              helperText={formState.errors.logsSettings?.http?.url?.message}
+              disabled={!isHttpTogleEnabled}
+            />
+            <Controller
+              name="logsSettings.http.headers"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Textarea
+                  {...field}
+                  error={!!error}
+                  helperText={formState.errors.logsSettings?.http?.headers?.message}
+                  label="Request headers in JSON format"
+                  disabled={!isHttpTogleEnabled}
                 />
               )}
             />
