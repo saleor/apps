@@ -15,6 +15,7 @@ import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
 import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
+import { LogDrainJsonTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-json-transporter";
 
 export const config = {
   api: {
@@ -30,7 +31,10 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
   // TODO: Use addTransporter dynamically once we resolve config
-  publicLogDrain: new PublicLogDrainService([new LogDrainOtelTransporter()]),
+  publicLogDrain: new PublicLogDrainService([
+    new LogDrainOtelTransporter(),
+    new LogDrainJsonTransporter(),
+  ]),
 });
 
 /**

@@ -12,6 +12,7 @@ export class LogDrainJsonTransporter implements LogDrainTransporter {
   static FetchError = this.TransporterError.subclass("TransporterFetchError");
 
   private endpoint: string | null = null;
+  private headers: Record<string, string> = {};
 
   async emit(log: PublicLog): Promise<void> {
     const logger = createLogger("LogDrainJsonTransporter.emit");
@@ -36,6 +37,7 @@ export class LogDrainJsonTransporter implements LogDrainTransporter {
       fetch(this.endpoint, {
         method: "POST",
         body: JSON.stringify(payload),
+        headers: this.headers,
       }),
       (err) =>
         new LogDrainJsonTransporter.FetchError("Failed to make request to log drain", {
@@ -53,7 +55,8 @@ export class LogDrainJsonTransporter implements LogDrainTransporter {
     }
   }
 
-  setSettings({ endpoint }: { endpoint: string }) {
+  setSettings({ endpoint, headers }: { endpoint: string; headers: Record<string, string> }) {
     this.endpoint = endpoint;
+    this.headers = headers;
   }
 }

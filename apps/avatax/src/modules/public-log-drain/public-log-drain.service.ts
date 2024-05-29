@@ -2,7 +2,7 @@ import { LogDrainTransporter, PublicLogDrain } from "./public-log-drain";
 import { PublicLog } from "./public-events";
 
 export class PublicLogDrainService implements PublicLogDrain {
-  constructor(private transporters: [LogDrainTransporter]) {}
+  constructor(private transporters: LogDrainTransporter[]) {}
 
   addTransporter(transporter: LogDrainTransporter) {
     this.transporters.push(transporter);
