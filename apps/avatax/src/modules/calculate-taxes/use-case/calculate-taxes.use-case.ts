@@ -177,12 +177,20 @@ class PrivateCalculateTaxesUseCase {
 
     if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
       const otelLogDrainTransporter = new LogDrainOtelTransporter();
-      const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+      let headers: Record<string, string>;
+
+      try {
+        headers = JSON.parse(
+          providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "",
+        );
+      } catch {
+        headers = {};
+      }
       const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
       otelLogDrainTransporter.setSettings({
         url,
-        headers: JSON.parse(headers),
+        headers,
       });
 
       this.deps.publicLogDrain.addTransporter(otelLogDrainTransporter);
@@ -190,12 +198,20 @@ class PrivateCalculateTaxesUseCase {
 
     if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
       const jsonLogDrainTransporter = new LogDrainJsonTransporter();
-      const headers = providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
+      let headers: Record<string, string>;
+
+      try {
+        headers = JSON.parse(
+          providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "",
+        );
+      } catch {
+        headers = {};
+      }
       const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
 
       jsonLogDrainTransporter.setSettings({
         endpoint: url,
-        headers: JSON.parse(headers),
+        headers,
       });
 
       this.deps.publicLogDrain.addTransporter(jsonLogDrainTransporter);

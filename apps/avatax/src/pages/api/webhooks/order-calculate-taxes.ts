@@ -147,12 +147,20 @@ export default wrapWithLoggerContext(
             }
 
             if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
-              const headers =
-                providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
               const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
+              let headers: Record<string, string>;
+
+              try {
+                headers = JSON.parse(
+                  providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "",
+                );
+              } catch {
+                headers = {};
+              }
+
               otelLogDrainTransporter.setSettings({
-                headers: JSON.parse(headers),
+                headers,
                 url,
               });
 
@@ -160,13 +168,21 @@ export default wrapWithLoggerContext(
             }
 
             if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
-              const headers =
-                providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
               const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
+
+              let headers: Record<string, string>;
+
+              try {
+                headers = JSON.parse(
+                  providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "",
+                );
+              } catch {
+                headers = {};
+              }
 
               jsonLogDrainTransporter.setSettings({
                 endpoint: url,
-                headers: JSON.parse(headers),
+                headers,
               });
               publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
             }
@@ -189,40 +205,7 @@ export default wrapWithLoggerContext(
             );
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
-          } else if (avataxWebhookServiceResult.isErr()) {
-            const err = avataxWebhookServiceResult.error;
-
-            logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-              error: err,
-            });
-
-            switch (err["constructor"]) {
-              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                waitUntil(
-                  publicLoggerOtel.emitLog(
-                    new TaxesCalculationFailedConfigErrorLog({
-                      orderId: payload.taxBase?.sourceObject.id,
-                      saleorApiUrl: ctx.authData.saleorApiUrl,
-                    }),
-                  ),
-                );
-                return res.status(400).send("App is not configured properly.");
-              }
-              default: {
-                Sentry.captureException(avataxWebhookServiceResult.error);
-                logger.fatal("Unhandled error", { error: err });
-                waitUntil(
-                  publicLoggerOtel.emitLog(
-                    new TaxesCalculationFailedUnhandledErrorLog({
-                      orderId: payload.taxBase?.sourceObject.id,
-                      saleorApiUrl: ctx.authData.saleorApiUrl,
-                    }),
-                  ),
-                );
-
-                return res.status(500).send("Unhandled error");
-              }
-            }
+          } else {
           }
         } catch (error) {
           if (error instanceof AvataxInvalidAddressError) {

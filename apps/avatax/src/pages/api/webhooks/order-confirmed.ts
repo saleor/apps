@@ -3,6 +3,7 @@ import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+import { waitUntil } from "@vercel/functions";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -11,19 +12,18 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
-import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
-import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
-import { waitUntil } from "@vercel/functions";
-import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
-import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import {
   AvataxTransactionCreateFailedBadPayload,
   AvataxTransactionCreateFailedUnhandledError,
   AvataxTransactionCreatedLog,
   SaleorOrderConfirmedLog,
 } from "../../../modules/public-log-drain/public-events";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import { LogDrainJsonTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-json-transporter";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
+import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
+import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
+import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
@@ -141,12 +141,19 @@ export default wrapWithLoggerContext(
               }
 
               if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
-                const headers =
-                  providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+                let headers: Record<string, string>;
+
+                try {
+                  headers = JSON.parse(
+                    providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "",
+                  );
+                } catch {
+                  headers = {};
+                }
                 const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
                 otelLogDrainTransporter.setSettings({
-                  headers: JSON.parse(headers),
+                  headers,
                   url,
                 });
 
@@ -154,13 +161,20 @@ export default wrapWithLoggerContext(
               }
 
               if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
-                const headers =
-                  providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
+                let headers: Record<string, string>;
+
+                try {
+                  headers = JSON.parse(
+                    providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "",
+                  );
+                } catch {
+                  headers = {};
+                }
                 const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
 
                 jsonLogDrainTransporter.setSettings({
                   endpoint: url,
-                  headers: JSON.parse(headers),
+                  headers,
                 });
                 publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
               }
@@ -236,24 +250,6 @@ export default wrapWithLoggerContext(
                 );
 
                 return res.status(500).send("Unhandled error");
-              }
-            }
-
-            if (webhookServiceResult.isErr()) {
-              const error = webhookServiceResult.error;
-
-              logger.debug("Error confirming order", { error });
-
-              switch (error["constructor"]) {
-                case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                  return res.status(400).send("App is not configured properly.");
-                }
-                default: {
-                  Sentry.captureException(webhookServiceResult.error);
-                  logger.fatal("Unhandled error", { error });
-
-                  return res.status(500).send("Unhandled error");
-                }
               }
             }
           } catch (error) {
