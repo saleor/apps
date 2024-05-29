@@ -52,7 +52,7 @@ describe("AppConfig", () => {
               shippingTaxCode: "123",
               logsSettings: {
                 otel: {},
-                http: {},
+                json: {},
               },
             },
           },
@@ -124,7 +124,7 @@ describe("AppConfig", () => {
               shippingTaxCode: "123",
               logsSettings: {
                 otel: {},
-                http: {},
+                json: {},
               },
             },
           },

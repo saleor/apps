@@ -10,18 +10,18 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
-import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
-import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
-import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 import {
   TaxesCalculatedInOrderLog,
   TaxesCalculationFailedConfigErrorLog,
   TaxesCalculationFailedInvalidPayloadLog,
   TaxesCalculationFailedUnhandledErrorLog,
 } from "../../../modules/public-log-drain/public-events";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
 import { LogDrainJsonTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-json-transporter";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
+import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
+import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
+import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -163,16 +163,18 @@ export default wrapWithLoggerContext(
                 headers: JSON.parse(headers),
                 url,
               });
+
+              publicLoggerOtel.addTransporter(otelLogDrainTransporter);
             }
 
-            // TODO Krzysiek add config
-            if (true) {
+            if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
+              const headers =
+                providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
+              const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
+
               jsonLogDrainTransporter.setSettings({
-                endpoint:
-                  "https://d358-2a00-f41-b07a-9fdf-a9b3-7455-2750-cf1a.ngrok-free.app/api/ingest",
-                headers: {
-                  Authorization: "Bearer 1234",
-                },
+                endpoint: url,
+                headers: JSON.parse(headers),
               });
               publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
             }

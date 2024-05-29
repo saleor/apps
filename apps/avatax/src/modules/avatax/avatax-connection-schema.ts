@@ -35,7 +35,7 @@ export const avataxConfigSchema = z
         url: z.string().optional(),
         headers: z.string().optional(),
       }),
-      http: z.object({
+      json: z.object({
         enabled: z.boolean().optional(),
         url: z.string().optional(),
         headers: z.string().optional(),
@@ -70,7 +70,7 @@ export const defaultAvataxConfig: AvataxConfig = {
       url: "",
       headers: "",
     },
-    http: {
+    json: {
       enabled: false,
       url: "",
       headers: "",

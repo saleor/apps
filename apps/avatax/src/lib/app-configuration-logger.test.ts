@@ -74,7 +74,7 @@ describe("AppConfigurationLogger", () => {
               shippingTaxCode: "123",
               logsSettings: {
                 otel: {},
-                http: {},
+                json: {},
               },
             },
           },

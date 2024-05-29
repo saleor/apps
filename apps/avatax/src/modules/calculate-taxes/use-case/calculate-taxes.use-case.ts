@@ -2,10 +2,13 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "@saleor/apps-logger";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
-import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { waitUntil } from "@vercel/functions";
+import { Result, err, fromPromise } from "neverthrow";
 import { MetadataItem } from "../../../../generated/graphql";
-import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
-import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
+import { BaseError } from "../../../error";
+import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import {
   TaxesCalculatedInCheckoutLog,
   TaxesCalculatedInOrderLog,
@@ -14,15 +17,12 @@ import {
   TaxesCalculationFailedUnhandledErrorLog,
   TaxesCalculationProviderErrorLog,
 } from "../../public-log-drain/public-events";
-import { waitUntil } from "@vercel/functions";
-import { Result, err, fromPromise } from "neverthrow";
-import { BaseError } from "../../../error";
-import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
+import { LogDrainJsonTransporter } from "../../public-log-drain/transporters/public-log-drain-json-transporter";
+import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
 import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
-import { LogDrainJsonTransporter } from "../../public-log-drain/transporters/public-log-drain-json-transporter";
 
 class PrivateCalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
@@ -175,30 +175,27 @@ class PrivateCalculateTaxesUseCase {
       );
     }
 
-    this.deps.publicLogDrain
-      .getTransporters()
-      .filter((t) => t instanceof LogDrainOtelTransporter)
-      .forEach((t) => {
-        if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
-          const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
-          const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
+    if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
+      const otelLogDrainTransporter = new LogDrainOtelTransporter();
+      const headers = providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+      const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
 
-          (t as LogDrainOtelTransporter).setSettings({
-            headers: JSON.parse(headers),
-            url,
-          });
-        }
+      otelLogDrainTransporter.setSettings({
+        url,
+        headers: JSON.parse(headers),
       });
 
-    // TODO Krzysiek add config
-    if (true) {
+      this.deps.publicLogDrain.addTransporter(otelLogDrainTransporter);
+    }
+
+    if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
       const jsonLogDrainTransporter = new LogDrainJsonTransporter();
+      const headers = providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
+      const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
 
       jsonLogDrainTransporter.setSettings({
-        endpoint: "https://d358-2a00-f41-b07a-9fdf-a9b3-7455-2750-cf1a.ngrok-free.app/api/ingest",
-        headers: {
-          Authorization: "Bearer 1234",
-        },
+        endpoint: url,
+        headers: JSON.parse(headers),
       });
 
       this.deps.publicLogDrain.addTransporter(jsonLogDrainTransporter);

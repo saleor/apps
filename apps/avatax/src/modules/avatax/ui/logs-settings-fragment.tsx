@@ -11,9 +11,9 @@ export const LogsSettingsFragment = () => {
     control,
     name: "logsSettings.otel.enabled",
   });
-  const isHttpTogleEnabled = useWatch({
+  const isJSONTogleEnabled = useWatch({
     control,
-    name: "logsSettings.http.enabled",
+    name: "logsSettings.json.enabled",
   });
 
   return (
@@ -57,29 +57,29 @@ export const LogsSettingsFragment = () => {
           </Box>
 
           <AppToggle
-            name="logsSettings.http.enabled"
+            name="logsSettings.json.enabled"
             control={control}
-            label="HTTP transport"
-            helperText={<HelperText>Enable sending logs using HTTP protocol.</HelperText>}
+            label="JSON transport"
+            helperText={<HelperText>Enable sending logs using json protocol.</HelperText>}
           />
           <Box display="grid" gap={2}>
             <Input
               control={control}
-              name="logsSettings.http.url"
+              name="logsSettings.json.url"
               label="URL to send logs to"
-              helperText={formState.errors.logsSettings?.http?.url?.message}
-              disabled={!isHttpTogleEnabled}
+              helperText={formState.errors.logsSettings?.json?.url?.message}
+              disabled={!isJSONTogleEnabled}
             />
             <Controller
-              name="logsSettings.http.headers"
+              name="logsSettings.json.headers"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Textarea
                   {...field}
                   error={!!error}
-                  helperText={formState.errors.logsSettings?.http?.headers?.message}
+                  helperText={formState.errors.logsSettings?.json?.headers?.message}
                   label="Request headers in JSON format"
-                  disabled={!isHttpTogleEnabled}
+                  disabled={!isJSONTogleEnabled}
                 />
               )}
             />
