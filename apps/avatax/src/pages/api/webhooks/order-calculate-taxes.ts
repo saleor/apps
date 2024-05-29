@@ -21,6 +21,7 @@ import {
   TaxesCalculationFailedInvalidPayloadLog,
   TaxesCalculationFailedUnhandledErrorLog,
 } from "../../../modules/public-log-drain/public-events";
+import { LogDrainJsonTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-json-transporter";
 
 export const config = {
   api: {
@@ -35,6 +36,7 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 const otelLogDrainTransporter = new LogDrainOtelTransporter();
+const jsonLogDrainTransporter = new LogDrainJsonTransporter();
 
 const publicLoggerOtel = new PublicLogDrainService([otelLogDrainTransporter]);
 
@@ -160,6 +162,18 @@ export default wrapWithLoggerContext(
                 headers: JSON.parse(headers),
                 url: providerConfig.value.avataxConfig.config.logsSettings.otel.url,
               });
+            }
+
+            // TODO Krzysiek add config
+            if (true) {
+              jsonLogDrainTransporter.setSettings({
+                endpoint:
+                  "https://d358-2a00-f41-b07a-9fdf-a9b3-7455-2750-cf1a.ngrok-free.app/api/ingest",
+                headers: {
+                  Authorization: "Bearer 1234",
+                },
+              });
+              publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
             }
 
             waitUntil(

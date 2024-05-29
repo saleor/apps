@@ -22,6 +22,7 @@ import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
+import { LogDrainJsonTransporter } from "../../public-log-drain/transporters/public-log-drain-json-transporter";
 
 class PrivateCalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
@@ -187,6 +188,20 @@ class PrivateCalculateTaxesUseCase {
           });
         }
       });
+
+    // TODO Krzysiek add config
+    if (true) {
+      const jsonLogDrainTransporter = new LogDrainJsonTransporter();
+
+      jsonLogDrainTransporter.setSettings({
+        endpoint: "https://d358-2a00-f41-b07a-9fdf-a9b3-7455-2750-cf1a.ngrok-free.app/api/ingest",
+        headers: {
+          Authorization: "Bearer 1234",
+        },
+      });
+
+      this.deps.publicLogDrain.addTransporter(jsonLogDrainTransporter);
+    }
 
     return fromPromise(
       taxProvider.calculateTaxes(payload, providerConfig.value.avataxConfig.config, authData),
