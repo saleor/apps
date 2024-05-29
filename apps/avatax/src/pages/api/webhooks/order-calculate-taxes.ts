@@ -216,6 +216,7 @@ export default wrapWithLoggerContext(
             waitUntil(
               publicLoggerOtel.emitLog(
                 new TaxesCalculationFailedConfigErrorLog({
+                  message: "Taxes calculation failed due to wrong address configuration",
                   orderId: ctx.payload.taxBase?.sourceObject.id,
                   saleorApiUrl: ctx.authData.saleorApiUrl,
                 }),
