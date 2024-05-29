@@ -146,14 +146,6 @@ export default wrapWithLoggerContext(
               return res.status(400).send("App is not configured properly.");
             }
 
-            const calculatedTaxes = await taxProvider.calculateTaxes(
-              payload,
-              providerConfig.value.avataxConfig.config,
-              ctx.authData,
-            );
-
-            logger.info("Taxes calculated", { calculatedTaxes });
-
             if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
               const headers =
                 providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
@@ -178,6 +170,14 @@ export default wrapWithLoggerContext(
               });
               publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
             }
+
+            const calculatedTaxes = await taxProvider.calculateTaxes(
+              payload,
+              providerConfig.value.avataxConfig.config,
+              ctx.authData,
+            );
+
+            logger.info("Taxes calculated", { calculatedTaxes });
 
             waitUntil(
               publicLoggerOtel.emitLog(

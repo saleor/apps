@@ -14,6 +14,16 @@ import { OrderMetadataManager } from "../../../modules/app/order-metadata-manage
 import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
 import { TaxBadPayloadError } from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
+import { waitUntil } from "@vercel/functions";
+import { LogDrainOtelTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-otel-transporter";
+import { PublicLogDrainService } from "../../../modules/public-log-drain/public-log-drain.service";
+import {
+  AvataxTransactionCreateFailedBadPayload,
+  AvataxTransactionCreateFailedUnhandledError,
+  AvataxTransactionCreatedLog,
+  SaleorOrderConfirmedLog,
+} from "../../../modules/public-log-drain/public-events";
+import { LogDrainJsonTransporter } from "../../../modules/public-log-drain/transporters/public-log-drain-json-transporter";
 
 export const config = {
   api: {
@@ -25,6 +35,11 @@ const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+
+const otelLogDrainTransporter = new LogDrainOtelTransporter();
+const jsonLogDrainTransporter = new LogDrainJsonTransporter();
+
+const publicLoggerOtel = new PublicLogDrainService([]);
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -125,6 +140,31 @@ export default wrapWithLoggerContext(
                 return res.status(400).send("App is not configured properly.");
               }
 
+              if (providerConfig.value.avataxConfig.config.logsSettings?.otel.enabled) {
+                const headers =
+                  providerConfig.value.avataxConfig.config.logsSettings.otel.headers ?? "";
+                const url = providerConfig.value.avataxConfig.config.logsSettings.otel.url ?? "";
+
+                otelLogDrainTransporter.setSettings({
+                  headers: JSON.parse(headers),
+                  url,
+                });
+
+                publicLoggerOtel.addTransporter(otelLogDrainTransporter);
+              }
+
+              if (providerConfig.value.avataxConfig.config.logsSettings?.json.enabled) {
+                const headers =
+                  providerConfig.value.avataxConfig.config.logsSettings.json.headers ?? "";
+                const url = providerConfig.value.avataxConfig.config.logsSettings.json.url ?? "";
+
+                jsonLogDrainTransporter.setSettings({
+                  endpoint: url,
+                  headers: JSON.parse(headers),
+                });
+                publicLoggerOtel.addTransporter(jsonLogDrainTransporter);
+              }
+
               try {
                 const confirmedOrder = await taxProvider.confirmOrder(
                   // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
@@ -135,6 +175,16 @@ export default wrapWithLoggerContext(
                 );
 
                 logger.info("Order confirmed", { orderId: confirmedOrder.id });
+                waitUntil(
+                  publicLoggerOtel.emitLog(
+                    new AvataxTransactionCreatedLog({
+                      orderId: confirmedOrderEvent.getOrderId(),
+                      avataxTransactionId: confirmedOrder.id,
+                      saleorApiUrl,
+                    }),
+                  ),
+                );
+
                 const client = createInstrumentedGraphqlClient({
                   saleorApiUrl,
                   token,
@@ -147,6 +197,14 @@ export default wrapWithLoggerContext(
                   confirmedOrder.id,
                 );
                 logger.info("Updated order metadata with externalId");
+                waitUntil(
+                  publicLoggerOtel.emitLog(
+                    new SaleorOrderConfirmedLog({
+                      orderId: confirmedOrderEvent.getOrderId(),
+                      saleorApiUrl,
+                    }),
+                  ),
+                );
 
                 return res.status(200).end();
               } catch (error) {
@@ -154,11 +212,28 @@ export default wrapWithLoggerContext(
 
                 switch (true) {
                   case error instanceof TaxBadPayloadError: {
+                    waitUntil(
+                      publicLoggerOtel.emitLog(
+                        new AvataxTransactionCreateFailedBadPayload({
+                          orderId: confirmedOrderEvent.getOrderId(),
+                          saleorApiUrl,
+                        }),
+                      ),
+                    );
                     return res.status(400).send("Order data is not valid.");
                   }
                 }
                 Sentry.captureException(error);
                 logger.error("Unhandled error executing webhook", { error });
+
+                waitUntil(
+                  publicLoggerOtel.emitLog(
+                    new AvataxTransactionCreateFailedUnhandledError({
+                      orderId: confirmedOrderEvent.getOrderId(),
+                      saleorApiUrl,
+                    }),
+                  ),
+                );
 
                 return res.status(500).send("Unhandled error");
               }
