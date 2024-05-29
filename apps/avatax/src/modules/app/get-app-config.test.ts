@@ -30,6 +30,7 @@ const mockedProviders: ProviderConnections = [
       },
       logsSettings: {
         otel: {},
+        http: {},
       },
     },
   },
