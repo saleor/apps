@@ -2,21 +2,28 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { createLogger } from "@saleor/apps-logger";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { MetadataItem } from "../../../../generated/graphql";
+import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
+import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
+import {
+  TaxesCalculatedInCheckoutLog,
+  TaxesCalculatedInOrderLog,
+  TaxesCalculationFailedConfigErrorLog,
+  TaxesCalculationFailedInvalidPayloadLog,
+  TaxesCalculationFailedUnhandledErrorLog,
+  TaxesCalculationProviderErrorLog,
+} from "../../public-log-drain/public-events";
 import { waitUntil } from "@vercel/functions";
 import { Result, err, fromPromise } from "neverthrow";
-import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { TaxesCalculatedLog } from "../../public-log-drain/public-events";
-import { PublicLogDrain } from "../../public-log-drain/public-log-drain";
-import { LogDrainOtelTransporter } from "../../public-log-drain/transporters/public-log-drain-otel-transporter";
 import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 
-export class CalculateTaxesUseCase {
+class PrivateCalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
   static CalculateTaxesUseCaseError = BaseError.subclass("CalculateTaxesUseCaseError");
@@ -30,7 +37,7 @@ export class CalculateTaxesUseCase {
   );
 
   constructor(
-    private deps: {
+    protected deps: {
       configExtractor: IAppConfigExtractor;
       publicLogDrain: PublicLogDrain;
     },
@@ -190,16 +197,86 @@ export class CalculateTaxesUseCase {
     ).map((results) => {
       this.logger.info("Taxes calculated", { calculatedTaxes: results });
 
-      waitUntil(
-        this.deps.publicLogDrain.emitLog(
-          new TaxesCalculatedLog({
-            orderOrCheckoutId: payload.taxBase.sourceObject.id,
-            saleorApiUrl: authData.saleorApiUrl,
-          }),
-        ),
-      );
-
       return results;
     });
+  }
+}
+
+export class CalculateTaxesUseCase extends PrivateCalculateTaxesUseCase {
+  constructor(deps: { configExtractor: IAppConfigExtractor; publicLogDrain: PublicLogDrain }) {
+    super(deps);
+  }
+
+  async calculateTaxes(
+    payload: CalculateTaxesPayload,
+    authData: AuthData,
+  ): Promise<
+    Result<
+      AvataxCalculateTaxesResponse,
+      (typeof CalculateTaxesUseCase.CalculateTaxesUseCaseError)["prototype"]
+    >
+  > {
+    const sourceObjectType = payload.taxBase.sourceObject.__typename;
+    const sourceObjectId = payload.taxBase.sourceObject.id;
+    const orderOrCheckoutId =
+      payload.taxBase.sourceObject.__typename === "Checkout"
+        ? { checkoutId: sourceObjectId }
+        : { orderId: sourceObjectId };
+    const saleorApiUrl = authData.saleorApiUrl;
+
+    const result = await super.calculateTaxes(payload, authData);
+
+    return result
+      .map((output) => {
+        const log =
+          sourceObjectType === "Checkout"
+            ? new TaxesCalculatedInCheckoutLog({ checkoutId: sourceObjectId, saleorApiUrl })
+            : new TaxesCalculatedInOrderLog({ orderId: sourceObjectId, saleorApiUrl });
+
+        waitUntil(this.deps.publicLogDrain.emitLog(log));
+
+        return output;
+      })
+      .mapErr((err) => {
+        let log;
+
+        if (err instanceof CalculateTaxesUseCase.ConfigBrokenError) {
+          log = new TaxesCalculationFailedConfigErrorLog({
+            ...orderOrCheckoutId,
+            saleorApiUrl,
+          });
+        }
+
+        if (err instanceof CalculateTaxesUseCase.ExpectedIncompletePayloadError) {
+          log = new TaxesCalculationFailedInvalidPayloadLog({
+            ...orderOrCheckoutId,
+            saleorApiUrl,
+          });
+        }
+
+        if (err instanceof CalculateTaxesUseCase.FailedCalculatingTaxesError) {
+          log = new TaxesCalculationProviderErrorLog({
+            ...orderOrCheckoutId,
+            saleorApiUrl,
+          });
+        }
+
+        if (err instanceof CalculateTaxesUseCase.UnhandledError) {
+          log = new TaxesCalculationFailedUnhandledErrorLog({
+            ...orderOrCheckoutId,
+            saleorApiUrl,
+          });
+        }
+        if (!log) {
+          log = new TaxesCalculationFailedUnhandledErrorLog({
+            ...orderOrCheckoutId,
+            saleorApiUrl,
+          });
+        }
+
+        waitUntil(this.deps.publicLogDrain.emitLog(log));
+
+        return err;
+      });
   }
 }
