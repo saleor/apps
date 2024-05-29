@@ -20,7 +20,7 @@ const defaultAvataxConfig: AvataxConfig = {
   },
   logsSettings: {
     otel: {},
-    http: {},
+    json: {},
   },
 };
 

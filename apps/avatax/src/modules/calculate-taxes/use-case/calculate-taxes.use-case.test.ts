@@ -120,7 +120,7 @@ const getMockedAppConfig = (): AppConfig => {
               url: "https://otel.example.com",
               headers: "Authorization",
             },
-            http: {
+            json: {
               url: "https://http.example.com",
               headers: "Authorization",
             },
