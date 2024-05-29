@@ -82,7 +82,7 @@ class TaxesCalculationFailedLog implements PublicLog<CheckoutOrOrderId> {
 export class TaxesCalculationFailedConfigErrorLog extends TaxesCalculationFailedLog {
   message = "Taxes calculation failed due to wrong configuration";
 
-  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string }) {
+  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string; message?: string }) {
     super(params);
   }
 }
