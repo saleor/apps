@@ -56,8 +56,6 @@ export const AvataxConfigurationForm = (props: AvataxConfigurationFormProps) => 
     [props],
   );
 
-  console.log(formState);
-
   return (
     <AppCard>
       <Box marginBottom={8}>
