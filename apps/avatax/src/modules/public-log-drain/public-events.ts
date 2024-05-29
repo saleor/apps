@@ -82,16 +82,22 @@ class TaxesCalculationFailedLog implements PublicLog<CheckoutOrOrderId> {
 export class TaxesCalculationFailedConfigErrorLog extends TaxesCalculationFailedLog {
   message = "Taxes calculation failed due to wrong configuration";
 
-  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string; message?: string }) {
+  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string; additionalMessage?: string }) {
     super(params);
+    if (params.additionalMessage) {
+      this.message += `: ${params.additionalMessage}`;
+    }
   }
 }
 
 export class TaxesCalculationFailedInvalidPayloadLog extends TaxesCalculationFailedLog {
-  message = "Taxes calculation failed due to invalid payload received from Saleor";
+  message = "Taxes calculation failed due to invalid payload";
 
-  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string }) {
+  constructor(params: CheckoutOrOrderId & { saleorApiUrl: string; additionalMessage?: string }) {
     super(params);
+    if (params.additionalMessage) {
+      this.message += `: ${params.additionalMessage}`;
+    }
   }
 }
 
