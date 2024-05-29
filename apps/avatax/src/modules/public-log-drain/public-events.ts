@@ -12,6 +12,10 @@ export type LogSeverityLevelType = keyof typeof LogSeverityLevel;
 const EventTypes = {
   TAXES_CALCULATED: "TAXES_CALCULATED",
   TAXES_CALCULATION_FAILED: "TAXES_CALCULATION_FAILED",
+  AVATAX_TRANSACTION_CREATED: "AVATAX_TRANSACTION_CREATED",
+  AVATAX_TRANSACTION_CREATION_FAILED: "AVATAX_TRANSACTION_CREATION_FAILED",
+  SALEOR_ORDER_CONFIRMED: "SALEOR_ORDER_CONFIRMED",
+  SALEOR_ORDER_CONFIRMATION_FAILED: "SALEOR_ORDER_CONFIRMATION_FAILED",
 } as const;
 
 export interface PublicLog<T extends Record<string, unknown> = {}> {
@@ -115,5 +119,73 @@ export class TaxesCalculationFailedUnhandledErrorLog extends TaxesCalculationFai
 
   constructor(params: CheckoutOrOrderId & { saleorApiUrl: string }) {
     super(params);
+  }
+}
+
+export class AvataxTransactionCreatedLog
+  implements PublicLog<{ orderId: string; avataxTransactionId: string }>
+{
+  message = "Avatax transaction created";
+  timestamp = new Date();
+  level = LogSeverityLevel.INFO;
+  attributes = {
+    orderId: "",
+    avataxTransactionId: "",
+    saleorApiUrl: "",
+    eventType: EventTypes.AVATAX_TRANSACTION_CREATED,
+  };
+
+  constructor(params: { orderId: string; avataxTransactionId: string; saleorApiUrl: string }) {
+    this.attributes.orderId = params.orderId;
+    this.attributes.avataxTransactionId = params.avataxTransactionId;
+    this.attributes.saleorApiUrl = params.saleorApiUrl;
+  }
+}
+
+class AvataxTransactionCreationError
+  implements PublicLog<{ orderId: string; avataxTransactionId?: string }>
+{
+  message = "Avatax transaction creation failed";
+  timestamp = new Date();
+  level = LogSeverityLevel.ERROR as LogSeverityLevelType;
+  attributes = {
+    orderId: "",
+    saleorApiUrl: "",
+    avataxTransactionId: undefined,
+    eventType: EventTypes.AVATAX_TRANSACTION_CREATION_FAILED,
+  } as PublicLog<{ orderId: string; avataxTransactionId?: string }>["attributes"];
+
+  constructor(params: { orderId: string; avataxTransactionId?: string; saleorApiUrl: string }) {
+    this.attributes.orderId = params.orderId;
+    this.attributes.saleorApiUrl = params.saleorApiUrl;
+
+    if (params.avataxTransactionId) {
+      this.attributes.avataxTransactionId = params.avataxTransactionId;
+    }
+  }
+}
+
+export class AvataxTransactionCreateFailedBadPayload extends AvataxTransactionCreationError {
+  message = "Avatax transaction creation failed due to bad payload";
+}
+
+export class AvataxTransactionCreateFailedUnhandledError extends AvataxTransactionCreationError {
+  message = "Avatax transaction creation failed due to unhandled error";
+  level = LogSeverityLevel.FATAL;
+}
+
+export class SaleorOrderConfirmedLog implements PublicLog<{ orderId: string }> {
+  message = "Saleor order was confirmed";
+  timestamp = new Date();
+  level = LogSeverityLevel.INFO;
+  attributes = {
+    orderId: "",
+    saleorApiUrl: "",
+    eventType: EventTypes.SALEOR_ORDER_CONFIRMED,
+  };
+
+  constructor(params: { orderId: string; saleorApiUrl: string }) {
+    this.attributes.orderId = params.orderId;
+    this.attributes.saleorApiUrl = params.saleorApiUrl;
   }
 }
