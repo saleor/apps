@@ -6,6 +6,6 @@ describe("extractRateFromTaxDetails", () => {
   it("Sums rate from list of tax details (percentages)", () => {
     const mocks = new AvataxCalculateTaxesMockGenerator().generateResponse();
 
-    expect(extractRateFromTaxDetails(mocks.lines[0].details)).toEqual(0.086);
+    expect(extractRateFromTaxDetails(mocks.lines![0]!.details!)).toEqual(0.086);
   });
 });
