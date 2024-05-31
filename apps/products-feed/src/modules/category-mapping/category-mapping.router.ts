@@ -4,33 +4,40 @@ import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
 import { UpdateCategoryMappingDocument } from "../../../generated/graphql";
 import { TRPCError } from "@trpc/server";
 import { CategoriesFetcher } from "./categories-fetcher";
+import { createLogger } from "../../logger";
 
 export const categoryMappingRouter = router({
   /**
    * Get all the category mappings to Google categories from its public metadata
    */
-  getCategoryMappings: protectedClientProcedure.query(
-    async ({ ctx: { logger, apiClient }, input }) => {
-      const categoriesFetcher = new CategoriesFetcher(apiClient);
+  getCategoryMappings: protectedClientProcedure.query(async ({ ctx: { apiClient } }) => {
+    const logger = createLogger("categoryMappingRouter.getCategoryMappings");
 
-      const result = await categoriesFetcher.fetchAllCategories().catch((e) => {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Can't fetch the categories",
-        });
+    const categoriesFetcher = new CategoriesFetcher(apiClient);
+
+    const result = await categoriesFetcher.fetchAllCategories().catch((e) => {
+      logger.error(e, "Can't fetch the categories");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Can't fetch the categories",
       });
+    });
 
-      logger.debug("Returning categories");
+    logger.info("Returning categories", { categoriesLength: result.length });
 
-      return result;
-    },
-  ),
+    return result;
+  }),
   /**
    * Sets the Google category mapping for a given category in its public metadata
    */
   setCategoryMapping: protectedClientProcedure
     .input(SetCategoryMappingInputSchema)
-    .mutation(async ({ ctx: { logger, apiClient }, input }) => {
+    .mutation(async ({ ctx: { apiClient }, input }) => {
+      const logger = createLogger("categoryMappingRouter.setCategoryMapping", {
+        categoryId: input.categoryId,
+        googleCategoryId: input.googleCategoryId,
+      });
+
       const { error } = await apiClient
         .mutation(UpdateCategoryMappingDocument, {
           id: input.categoryId,
@@ -54,6 +61,7 @@ export const categoryMappingRouter = router({
         });
       }
 
+      logger.info("Category mapping updated");
       return;
     }),
 });
