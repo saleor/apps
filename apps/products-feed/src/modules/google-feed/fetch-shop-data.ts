@@ -15,6 +15,8 @@ export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
     route: "Google Product Feed",
   });
 
+  logger.debug("Fetching shop details");
+
   const result = await client.query(ShopDetailsDocument, {}).toPromise();
   const shopDetails = result.data?.shop;
 
@@ -27,6 +29,8 @@ export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
     logger.error("Shop details query returned no data");
     throw new Error("Shop details query returned no data");
   }
+
+  logger.info("Shop details fetched successfully", { shopDetails });
 
   return {
     shopName: shopDetails?.name,

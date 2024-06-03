@@ -98,37 +98,43 @@ export class AppConfig {
 
   setS3(s3Config: z.infer<typeof s3ConfigSchema>) {
     try {
+      logger.debug("Setting S3 config", { s3Config });
       this.rootData.s3 = s3ConfigSchema.parse(s3Config);
 
+      logger.info("S3 config saved");
       return this;
     } catch (e) {
-      logger.info(e, "Invalid S3 config provided");
+      logger.error(e, "Invalid S3 config provided");
       throw new Error("Invalid S3 config provided");
     }
   }
 
   setAttributeMapping(attributeMapping: z.infer<typeof attributeMappingSchema>) {
     try {
+      logger.debug("Setting attribute mapping", { attributeMapping });
       this.rootData.attributeMapping = attributeMappingSchema.parse(attributeMapping);
 
+      logger.info("Attribute mapping saved");
       return this;
     } catch (e) {
-      logger.info(e, "Invalid mapping config provided");
+      logger.error(e, "Invalid mapping config provided");
       throw new Error("Invalid mapping config provided");
     }
   }
 
   setChannelUrls(channelSlug: string, urlsConfig: z.infer<typeof urlConfigurationSchema>) {
     try {
+      logger.debug("Setting channel urls", { channelSlug, urlsConfig });
       const parsedConfig = urlConfigurationSchema.parse(urlsConfig);
 
       this.rootData.channelConfig[channelSlug] = {
         storefrontUrls: parsedConfig,
       };
 
+      logger.info("Channel urls saved");
       return this;
     } catch (e) {
-      logger.info(e, "Invalid channels config provided");
+      logger.error(e, "Invalid channels config provided");
       throw new Error("Invalid channels config provided");
     }
   }
