@@ -2,6 +2,7 @@ import { url } from "inspector";
 import { Client } from "urql";
 import { ShopDetailsDocument } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
+import { error } from "console";
 
 interface FetchShopDataArgs {
   client: Client;
@@ -21,7 +22,9 @@ export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
   const shopDetails = result.data?.shop;
 
   if (result.error) {
-    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`);
+    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`, {
+      error: result.error,
+    });
     throw new Error("Error during the GraphQL API call");
   }
 

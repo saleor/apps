@@ -16,7 +16,7 @@ export const categoryMappingRouter = router({
     const categoriesFetcher = new CategoriesFetcher(apiClient);
 
     const result = await categoriesFetcher.fetchAllCategories().catch((e) => {
-      logger.error(e, "Can't fetch the categories");
+      logger.error("Can't fetch the categories", { error: e });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Can't fetch the categories",
@@ -45,12 +45,9 @@ export const categoryMappingRouter = router({
         })
         .toPromise();
 
-      logger.debug(
-        {
-          input,
-        },
-        "Updated category mapping",
-      );
+      logger.debug("Updated category mapping", {
+        input,
+      });
 
       if (error) {
         logger.error(`Error during the GraphqlAPI call: ${error.message}`);

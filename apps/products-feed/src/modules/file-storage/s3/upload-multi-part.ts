@@ -85,7 +85,7 @@ export const UploadMultiPart = async ({
 
     return completeCommand;
   } catch (err) {
-    logger.error(err, "Error during the S3 upload");
+    logger.error("Error during the S3 upload", { error: err });
 
     if (uploadId) {
       const abortCommand = new AbortMultipartUploadCommand({
