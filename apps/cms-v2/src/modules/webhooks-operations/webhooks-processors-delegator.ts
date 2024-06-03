@@ -33,7 +33,7 @@ export class WebhooksProcessorsDelegator {
       const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId);
 
       if (!providerConfig) {
-        this.logger.error({ connection: conn }, "Cant resolve provider from connection");
+        this.logger.error("Cant resolve provider from connection", { connection: conn });
 
         throw new Error("Cant resolve provider from connection");
       }
@@ -132,14 +132,13 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateProductUpdatedOperations(product: WebhookProductFragment) {
-    this.logger.trace("delegateProductUpdatedOperations called");
+    this.logger.debug("delegateProductUpdatedOperations called");
 
     const { connections } = this.opts.context;
 
-    this.logger.trace(
-      { connections: connections.length },
-      "Resolved a number of connections to include",
-    );
+    this.logger.debug("Resolved a number of connections to include", {
+      connections: connections.length,
+    });
 
     const processors = this.mapConnectionsToProcessors(connections);
 

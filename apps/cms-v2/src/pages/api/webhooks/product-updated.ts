@@ -58,14 +58,19 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   const { authData, payload } = context;
 
   if (!payload.product) {
+    logger.error("Product not found in payload");
     Sentry.captureException("Product not found in payload");
 
     return res.status(500).end();
   }
 
-  logger.info("Webhook called");
+  logger.info("Webhook called", { productId: payload.product.id });
+
+  logger.debug("Get webhook config context");
 
   const configContext = await createWebhookConfigContext({ authData });
+
+  logger.debug("Webhook config context fetched", { configContext });
 
   await new WebhooksProcessorsDelegator({
     context: configContext,
