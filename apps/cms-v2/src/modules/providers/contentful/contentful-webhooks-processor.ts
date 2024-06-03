@@ -32,28 +32,43 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantUpdated called");
+    this.logger.debug("onProductVariantUpdated called", {
+      variantId: productVariant.id,
+      productId: productVariant.product.id,
+    });
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantCreated called");
+    this.logger.debug("onProductVariantCreated called", {
+      variantId: productVariant.id,
+      productId: productVariant.product.id,
+    });
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantDeleted called");
+    this.logger.debug("onProductVariantDeleted called", {
+      variantId: productVariant.id,
+      productId: productVariant.product.id,
+    });
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant deleted");
   }
 
   /**
@@ -62,7 +77,10 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
    * Context of process must include channel-config mapping.
    */
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.trace("onProductUpdated called");
+    this.logger.debug("onProductUpdated called", {
+      productId: product.id,
+      variantsLength: product.variants?.length,
+    });
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -80,5 +98,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
         });
       }),
     );
+
+    this.logger.info("Product updated");
   }
 }
