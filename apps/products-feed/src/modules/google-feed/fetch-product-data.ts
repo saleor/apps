@@ -10,7 +10,7 @@ import { createLogger } from "../../logger";
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
 
-  logger.debug(`Fetching cursors for channel ${channel}`);
+  logger.debug(`Fetching product cursors for channel ${channel}`);
 
   let result = await client
     .query(FetchProductCursorsDocument, { channel: channel, first: 100 })
@@ -39,6 +39,12 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
       cursors.push(endCursor);
     }
   }
+
+  logger.debug("Product cursors fetched successfully", {
+    first: cursors[0],
+    totalLength: cursors.length,
+  });
+
   return cursors;
 };
 
@@ -71,7 +77,14 @@ const fetchVariants = async ({
     return [];
   }
 
-  return result.data?.productVariants?.edges.map((e) => e.node) || [];
+  const productVariants = result.data?.productVariants?.edges.map((e) => e.node) || [];
+
+  logger.info("Product variants fetched successfully", {
+    first: productVariants[0],
+    totalLength: productVariants.length,
+  });
+
+  return productVariants;
 };
 
 interface FetchProductDataArgs {
@@ -93,6 +106,8 @@ export const fetchProductData = async ({
     route: "Google Product Feed",
   });
 
+  logger.debug(`Fetching product data for channel ${channel}`);
+
   const cachedCursors = cursors || (await getCursors({ client, channel }));
 
   const pageCursors = [undefined, ...cachedCursors];
@@ -103,7 +118,12 @@ export const fetchProductData = async ({
     fetchVariants({ client, after: cursor, channel, imageSize }),
   );
 
-  const results = await Promise.all(promises);
+  const results = (await Promise.all(promises)).flat();
 
-  return results.flat();
+  logger.info("Product data fetched successfully", {
+    first: results[0],
+    totalLength: results.length,
+  });
+
+  return results;
 };

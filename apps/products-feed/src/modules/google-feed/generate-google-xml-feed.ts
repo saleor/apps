@@ -10,6 +10,7 @@ import { transformTemplateFormat } from "../handlebarsTemplates/transform-templa
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 import { getWeightAttributeValue } from "./get-weight-attribute-value";
+import { createLogger } from "../../logger";
 
 interface GenerateGoogleXmlFeedArgs {
   productVariants: GoogleFeedProductVariantFragment[];
@@ -21,6 +22,8 @@ interface GenerateGoogleXmlFeedArgs {
   shopDescription?: string;
 }
 
+const logger = createLogger("generateGoogleXmlFeed");
+
 export const generateGoogleXmlFeed = ({
   attributeMapping,
   productVariants,
@@ -30,6 +33,8 @@ export const generateGoogleXmlFeed = ({
   shopName,
   shopDescription,
 }: GenerateGoogleXmlFeedArgs) => {
+  logger.debug("Generating Google XML feed");
+
   const items = productVariants.map((variant) => {
     const attributes = getMappedAttributes({
       attributeMapping: attributeMapping,
@@ -98,6 +103,13 @@ export const generateGoogleXmlFeed = ({
     });
   });
 
+  logger.debug("Product data mapped to proxy format", {
+    first: productVariants[0],
+    totalLength: productVariants.length,
+  });
+
+  logger.debug("Creating XMLBuilder");
+
   const builder = new XMLBuilder({
     attributeNamePrefix: "@_",
     attributesGroupName: "@",
@@ -109,11 +121,15 @@ export const generateGoogleXmlFeed = ({
     preserveOrder: true,
   });
 
+  logger.debug("XMLBuilder created");
+
   const channelData = shopDetailsToProxy({
     title: shopName,
     description: shopDescription,
     storefrontUrl,
   });
+
+  logger.debug("Coverted shop details to proxy format", { channelData });
 
   const data = [
     {
@@ -141,6 +157,8 @@ export const generateGoogleXmlFeed = ({
       },
     },
   ];
+
+  logger.info("Feed generated. Returning formatted XML");
 
   return builder.build(data);
 };

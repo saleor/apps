@@ -3,6 +3,9 @@ import { AppConfigMetadataManager } from "../app-configuration/app-config-metada
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { AppConfig } from "../app-configuration/app-config";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../logger";
+
+const logger = createLogger("GoogleFeedSettingsFetcher");
 
 export class GoogleFeedSettingsFetcher {
   static createFromAuthData(authData: AuthData) {
@@ -23,9 +26,12 @@ export class GoogleFeedSettingsFetcher {
   }
 
   async fetch(channelSlug: string) {
+    logger.debug("Fetching Google Feed settings");
+
     const configString = await this.settingsManager.get();
 
     if (!configString) {
+      logger.error("The application has not been configured");
       throw new Error("App is not configured");
     }
 
@@ -33,6 +39,7 @@ export class GoogleFeedSettingsFetcher {
     const channelConfig = appConfig.getUrlsForChannel(channelSlug);
 
     if (!channelConfig) {
+      logger.error("Channel is not configured");
       throw new Error("App is not configured");
     }
 
@@ -40,10 +47,11 @@ export class GoogleFeedSettingsFetcher {
     const productStorefrontUrl = channelConfig.productStorefrontUrl;
 
     if (!storefrontUrl.length || !productStorefrontUrl.length) {
+      logger.error("Storefront URLs are not configured");
       throw new Error("The application has not been configured");
     }
 
-    return {
+    const settings = {
       storefrontUrl,
       productStorefrontUrl,
       s3BucketConfiguration: appConfig.getS3Config(),
@@ -51,5 +59,9 @@ export class GoogleFeedSettingsFetcher {
       titleTemplate: appConfig.getTitleTemplate(),
       imageSize: appConfig.getImageSize(),
     };
+
+    logger.info("Google Feed settings fetched successfully", { settings });
+
+    return settings;
   }
 }
