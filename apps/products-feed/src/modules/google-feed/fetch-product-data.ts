@@ -73,7 +73,9 @@ const fetchVariants = async ({
     .toPromise();
 
   if (result.error) {
-    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`);
+    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`, {
+      error: result.error,
+    });
     return [];
   }
 

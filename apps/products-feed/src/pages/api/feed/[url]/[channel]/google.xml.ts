@@ -175,7 +175,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     productVariants = await fetchProductData({ client, channel, imageSize });
   } catch (error) {
-    logger.error(error);
+    logger.error("Error during the product data fetch", { error });
     return res.status(400).end();
   }
 
@@ -230,7 +230,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res.redirect(downloadUrl);
     } catch (error) {
-      logger.error("Could not upload the feed to S3");
+      logger.error("Could not upload the feed to S3", { error });
       span.setStatus({ code: SpanStatusCode.ERROR });
       return res.status(500).json({ error: "Could not upload the feed to S3" });
     } finally {
