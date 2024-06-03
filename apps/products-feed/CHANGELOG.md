@@ -1,5 +1,21 @@
 # saleor-app-products-feed
 
+## 1.17.7
+
+### Patch Changes
+
+- 64d88b24: Update packages to ESM. See node [docs](https://nodejs.org/api/esm.html) for more info.
+- 5cbd3b63: Updated @saleor/app-sdk package to 0.50.1
+- Updated dependencies [64d88b24]
+- Updated dependencies [5cbd3b63]
+- Updated dependencies [e1ea31be]
+  - @saleor/react-hook-form-macaw@0.2.7
+  - @saleor/webhook-utils@0.1.2
+  - @saleor/apps-logger@1.2.6
+  - @saleor/apps-shared@1.10.3
+  - @saleor/apps-otel@1.2.0
+  - @saleor/apps-ui@1.2.5
+
 ## 1.17.6
 
 ### Patch Changes
