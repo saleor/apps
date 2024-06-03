@@ -29,12 +29,13 @@ const defaultSdkClientFactory: SdkClientFactory = (opts) =>
 export class ContentfulClient {
   private client: ContentfulApiClientChunk;
   private space: string;
-
-  private logger = createLogger("ContentfulClient");
+  private logger;
 
   constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
-
+    this.logger = createLogger("ContentfulClient", {
+      space: this.space,
+    });
     this.client = clientFactory(opts);
   }
 
@@ -95,8 +96,6 @@ export class ContentfulClient {
     };
 
   async getContentTypes(env: string) {
-    this.logger.trace("Attempting to get content types");
-
     try {
       const space = await this.client.getSpace(this.space);
       const environment = await space.getEnvironment(env);
@@ -104,15 +103,11 @@ export class ContentfulClient {
 
       return contentTypes;
     } catch (err) {
-      this.logger.error("Failed to fetch content types", { error: err });
-
       throw err;
     }
   }
 
   async getEnvironments() {
-    this.logger.trace("Attempting to get environments");
-
     return (await this.client.getSpace(this.space)).getEnvironments();
   }
 
