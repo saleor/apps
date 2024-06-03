@@ -5,10 +5,10 @@ import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { createLogger } from "@saleor/apps-logger";
 import { avataxShippingLine } from "./avatax-shipping-line";
+import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
 
 const logger = createLogger("transformAvataxTransactionModelIntoShipping");
 
-// why is tax rate 0?
 export function transformAvataxTransactionModelIntoShipping(
   transaction: TransactionModel,
 ): Pick<
@@ -29,6 +29,8 @@ export function transformAvataxTransactionModelIntoShipping(
     };
   }
 
+  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
+
   if (!shippingLine.isItemTaxable) {
     return {
       shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
@@ -39,11 +41,8 @@ export function transformAvataxTransactionModelIntoShipping(
         shippingLine.lineAmount,
         new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
       ),
-      /*
-       * avatax doesn't return combined tax rate
-       * // todo: calculate percentage tax rate
-       */
-      shipping_tax_rate: 0,
+
+      shipping_tax_rate: rate,
     };
   }
 
@@ -62,6 +61,6 @@ export function transformAvataxTransactionModelIntoShipping(
   return {
     shipping_price_gross_amount: shippingGrossAmount,
     shipping_price_net_amount: shippingTaxableAmount,
-    shipping_tax_rate: 0,
+    shipping_tax_rate: rate,
   };
 }
