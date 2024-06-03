@@ -16,7 +16,6 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
     ctx: {
       settingsManager,
       appConfigService: new AppConfigMetadataManager(settingsManager),
-      logger: createLogger("contentfulRouter"),
     },
   });
 });
@@ -34,17 +33,29 @@ export const contentfulRouter = router({
         contentfulSpace: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ input }) => {
+      const logger = createLogger("contentfulRouter.fetchEnvironmentsFromApi");
+
+      logger.debug("Fetching environments from API");
+
       const client = new ContentfulClient({
         accessToken: input.contentfulToken,
         space: input.contentfulSpace,
       });
 
-      return client.getEnvironments().catch((e) => {
-        ctx.logger.error("Failed to fetch environments");
+      try {
+        const environments = await client.getEnvironments();
 
-        throw new TRPCError({ code: "BAD_REQUEST" });
-      });
+        logger.info("Environments fetched successfully", { environments });
+
+        return environments;
+      } catch (e) {
+        logger.error("Failed to fetch environments", { error: e });
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      }
     }),
   fetchContentTypesFromApi: procedure
     .input(
@@ -54,16 +65,26 @@ export const contentfulRouter = router({
         contentfulEnv: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ input }) => {
+      const logger = createLogger("contentfulRouter.fetchContentTypesFromApi");
+
+      logger.debug("Fetching content types from API");
+
       const client = new ContentfulClient({
         accessToken: input.contentfulToken,
         space: input.contentfulSpace,
       });
 
-      return client.getContentTypes(input.contentfulEnv).catch((e) => {
-        ctx.logger.error("Failed to fetch content types");
+      try {
+        const contentTypes = await client.getContentTypes(input.contentfulEnv);
+
+        logger.info("Content types fetched successfully", { contentTypes });
+
+        return contentTypes;
+      } catch (e) {
+        logger.error("Failed to fetch content types", { error: e });
 
         throw new TRPCError({ code: "BAD_REQUEST" });
-      });
+      }
     }),
 });

@@ -24,14 +24,10 @@ export class DatoCMSClient {
   }
 
   getContentTypes() {
-    this.logger.trace("Trying to get content types");
-
     return this.client.itemTypes.list();
   }
 
   getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
-    this.logger.trace("Trying to get fields for a content type");
-
     return this.client.fields.list({ type: "item_type", id: itemTypeID });
   }
 
