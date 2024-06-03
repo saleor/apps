@@ -4,7 +4,7 @@ import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { SHIPPING_ITEM_CODE } from "./avatax-shipping-line";
-import { extractRateFromTaxDetails } from "./extract-rate-from-tax-details";
+import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
   transform(transaction: TransactionModel): CalculateTaxesResponse["lines"] {
@@ -12,7 +12,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
 
     return (
       productLines?.map((line) => {
-        const rate = extractRateFromTaxDetails(line.details ?? []);
+        const rate = extractIntegerRateFromTaxDetails(line.details ?? []);
 
         if (!line.isItemTaxable) {
           return {

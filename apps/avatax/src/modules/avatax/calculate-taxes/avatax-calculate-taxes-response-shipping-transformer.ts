@@ -5,7 +5,7 @@ import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { createLogger } from "@saleor/apps-logger";
 import { avataxShippingLine } from "./avatax-shipping-line";
-import { extractRateFromTaxDetails } from "./extract-rate-from-tax-details";
+import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
 
 const logger = createLogger("transformAvataxTransactionModelIntoShipping");
 
@@ -29,7 +29,7 @@ export function transformAvataxTransactionModelIntoShipping(
     };
   }
 
-  const rate = extractRateFromTaxDetails(shippingLine.details ?? []);
+  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
 
   if (!shippingLine.isItemTaxable) {
     return {

@@ -42,7 +42,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
     expect(taxableShippingLine).toEqual({
       shipping_price_gross_amount: 77.51,
       shipping_price_net_amount: 70.78,
-      shipping_tax_rate: 0.095,
+      shipping_tax_rate: 9.5,
     });
   });
 
@@ -54,7 +54,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
     expect(taxableShippingLine).toEqual({
       shipping_price_gross_amount: 84.87,
       shipping_price_net_amount: 77.51,
-      shipping_tax_rate: 0.095,
+      shipping_tax_rate: 9.5,
     });
   });
 });
