@@ -40,7 +40,7 @@ export class DatoCMSClient {
     variantID: string;
     contentType: string;
   }) {
-    this.logger.trace("Trying to fetch item by Saleor variant ID", { variantID: variantID });
+    this.logger.debug("Trying to fetch item by Saleor variant ID", { variantID: variantID });
 
     return this.client.items.list({
       filter: {
