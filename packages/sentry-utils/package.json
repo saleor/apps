@@ -8,7 +8,9 @@
   },
   "devDependencies": {
     "eslint-config-saleor": "workspace:*",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "@sentry/cli": "../../node_modules/@sentry/cli",
+    "@sentry/nextjs": "../../node_modules/@sentry/nextjs"
   },
   "main": "index.ts",
   "type": "module"
