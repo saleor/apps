@@ -145,7 +145,7 @@ export class BuilderIoClient {
    * Can return more than 1. Builder doesn't have unique fields.
    */
   private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
-    this.logger.trace("Trying to fetch variant from Builder.io", {
+    this.logger.debug("Trying to fetch variant from Builder.io", {
       modelName: this.config.modelName,
       variantId,
       variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
