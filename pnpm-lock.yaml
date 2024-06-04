@@ -1259,13 +1259,13 @@ importers:
     dependencies:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.8.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
       '@opentelemetry/core':
         specifier: ../../node_modules/@opentelemetry/core
-        version: link:../../node_modules/@opentelemetry/core
+        version: 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/exporter-logs-otlp-http':
         specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
         version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
@@ -1289,13 +1289,13 @@ importers:
         version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-base':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-base
-        version: link:../../node_modules/@opentelemetry/sdk-trace-base
+        version: 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
       '@opentelemetry/semantic-conventions':
         specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        version: 1.24.1
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
@@ -1316,10 +1316,13 @@ importers:
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0)(react@18.2.0)
       '@sentry/nextjs':
         specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        version: 8.0.0(@opentelemetry/api@1.8.0)(@opentelemetry/core@1.24.1)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@1.24.1)(@opentelemetry/semantic-conventions@1.24.1)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1328,7 +1331,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0)(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
@@ -9510,7 +9513,7 @@ packages:
       '@whatwg-node/fetch': 0.9.16
       chalk: 4.1.2
       debug: 4.3.4
-      dotenv: 16.4.5
+      dotenv: 16.3.1
       graphql: 16.7.1
       graphql-request: 6.1.0(graphql@16.7.1)
       http-proxy-agent: 7.0.2
@@ -12125,7 +12128,7 @@ packages:
       '@babel/core': 7.24.3
       '@sentry/babel-plugin-component-annotate': 2.16.0
       '@sentry/cli': 2.31.2
-      dotenv: 16.4.5
+      dotenv: 16.3.1
       find-up: 5.0.0
       glob: 9.3.5
       magic-string: 0.27.0
@@ -12255,7 +12258,6 @@ packages:
       - '@opentelemetry/semantic-conventions'
       - encoding
       - supports-color
-    dev: true
 
   /@sentry/nextjs@8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1):
     resolution: {integrity: sha512-FJEW0w1WJHMV9NWHZHOXNQPOSg9pxjAq5y7XcP88rCqa08bmVUNVyg5UbHKBMXG1BjZukVr/8in/4sbxBOv3VQ==}
@@ -17190,6 +17192,7 @@ packages:
   /dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
+    dev: false
 
   /dotenv@8.6.0:
     resolution: {integrity: sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==}
@@ -20637,7 +20640,7 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       app-root-dir: 1.0.2
-      dotenv: 16.4.5
+      dotenv: 16.3.1
       dotenv-expand: 10.0.0
     dev: true
 
@@ -21978,7 +21981,6 @@ packages:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-    dev: true
 
   /next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}

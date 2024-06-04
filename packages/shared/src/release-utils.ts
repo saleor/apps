@@ -1,7 +1,4 @@
 import { execSync } from "child_process";
-import packageJson from "../package.json";
-
-// todo: move to shared
 
 const getCommitHash = () => {
   if (process.env.VERCEL) {
@@ -20,9 +17,7 @@ const getCommitHash = () => {
   }
 };
 
-export const getReleaseTag = () => {
-  const version = packageJson.version;
-
+export const getReleaseTag = (version: string) => {
   if (process.env.NODE_ENV === "production" && process.env.ENV === "production") {
     return version;
   }
