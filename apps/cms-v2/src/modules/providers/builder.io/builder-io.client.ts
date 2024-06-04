@@ -2,6 +2,7 @@ import { BuilderIoProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { createLogger } from "@/logger";
 import { FieldsMapper } from "../fields-mapper";
+import { channel } from "diagnostics_channel";
 
 // https://www.builder.io/c/docs/write-api
 export class BuilderIoClient {
@@ -20,7 +21,11 @@ export class BuilderIoClient {
   }
 
   async uploadProductVariant(variant: WebhookProductVariantFragment) {
-    this.logger.debug("uploadProductVariant called", { variantId: variant.id });
+    this.logger.debug("uploadProductVariant called", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      channela: variant.channelListings?.length,
+    });
 
     try {
       const response = await fetch(this.endpoint, {
@@ -34,6 +39,8 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
+
+      this.logger.debug("Upload product variant response", { response });
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -45,6 +52,10 @@ export class BuilderIoClient {
     builderIoEntryId: string,
     variant: WebhookProductVariantFragment,
   ) {
+    this.logger.debug("Update product variant called", {
+      builderIoEntryId,
+    });
+
     try {
       const response = await fetch(this.endpoint + `/${builderIoEntryId}`, {
         method: "PUT",
@@ -57,6 +68,8 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
+
+      this.logger.debug("Update product variant response", { response });
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -65,6 +78,12 @@ export class BuilderIoClient {
   }
 
   async updateProductVariant(variant: WebhookProductVariantFragment) {
+    this.logger.debug("Update product variant called", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      channela: variant.channelListings?.length,
+    });
+
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
     this.logger.debug("Trying to update variants in builder.io with following IDs", {
@@ -79,6 +98,12 @@ export class BuilderIoClient {
   }
 
   async upsertProductVariant(variant: WebhookProductVariantFragment) {
+    this.logger.debug("Upsert product variant called", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      channela: variant.channelListings?.length,
+    });
+
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
     if (entriesToUpdate.length === 0) {
@@ -97,6 +122,8 @@ export class BuilderIoClient {
   }
 
   async deleteProductVariant(variantId: string) {
+    this.logger.debug("Delete product variant called", { variantId });
+
     const idsToDelete = await this.fetchBuilderIoEntryIds(variantId);
 
     this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
@@ -120,7 +147,7 @@ export class BuilderIoClient {
   private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
     this.logger.trace("Trying to fetch variant from Builder.io", {
       modelName: this.config.modelName,
-      variantID: variantId,
+      variantId,
       variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
     });
 
@@ -129,7 +156,10 @@ export class BuilderIoClient {
     )
       .then((res) => res.json())
       .then((data) => {
-        return data.results.map((result: any) => result.id) as string[];
+        const results = data.results.map((result: any) => result.id) as string[];
+
+        this.logger.debug("Fetched builder.io entries", { results });
+        return results;
       })
       .catch((err) => {
         this.logger.error("Failed to fetch builder.io entry id", { error: err });

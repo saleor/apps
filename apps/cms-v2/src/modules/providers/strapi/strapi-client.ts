@@ -57,11 +57,19 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
+    this.logger.debug("Trying to delete product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
+
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    this.logger.trace({ strapiProducts }, "Fetched products from strapi that will be deleted");
+    this.logger.debug("Fetched products from strapi that will be deleted", { strapiProducts });
 
     if (!strapiProducts) {
+      this.logger.info("No product found in Strapi, skipping deletion");
       return;
     }
 
@@ -79,12 +87,19 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.trace({ variantId: variant.id }, "Will upload product variant");
+    this.logger.debug("Trying to upload product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
       configMapping: configuration.productVariantFieldsMapping,
     });
+
+    this.logger.debug("Mapped fields", { mappedFields });
 
     return this.client.create(configuration.itemType, mappedFields);
   }
@@ -98,24 +113,36 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
+    this.logger.debug("Trying to update product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+      strapiProductId,
+    });
+
     let strapiProductIdsToUpdate = strapiProductId ? [strapiProductId] : null;
 
     if (!strapiProductIdsToUpdate) {
+      this.logger.debug("No product id was provided, will try to fetch products from Strapi");
       const strapiProducts = await this.getProducts(configuration, variant.id);
 
       if (!strapiProducts) {
+        this.logger.info("No product found in Strapi, skipping update");
         return;
       }
 
       strapiProductIdsToUpdate = strapiProducts.map((strapiProduct) => strapiProduct.id);
     }
 
-    this.logger.trace({ strapiProductIdsToUpdate }, "Will try to update strapi products");
+    this.logger.debug("Found products to update", { strapiProductIdsToUpdate });
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
       configMapping: configuration.productVariantFieldsMapping,
     });
+
+    this.logger.debug("Mapped fields", { mappedFields });
 
     return Promise.all(
       strapiProductIdsToUpdate.map((strapiProductId) => {
@@ -131,17 +158,29 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
+    this.logger.debug("Will try to upsert product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
+
+    this.logger.debug("Fetched products from strapi...");
+
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    this.logger.trace({ strapiProducts }, "Will try to upsert strapi products");
-
     if (strapiProducts) {
+      this.logger.debug("Found products to upsert", {
+        strapiProducts: strapiProducts.map((p) => p.id),
+      });
+
       return Promise.all(
         strapiProducts.map((strapiProduct) => {
           return this.updateProduct({ configuration, variant, strapiProductId: strapiProduct.id });
         }),
       );
     } else {
+      this.logger.debug("No products found, will try to upload");
       return this.uploadProduct({ configuration, variant });
     }
   }
