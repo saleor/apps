@@ -77,7 +77,12 @@ export class DatoCMSClient {
   }
 
   async deleteProductVariant({ configuration, variant }: Context) {
-    this.logger.debug("Trying to delete product variant");
+    this.logger.debug("Trying to delete product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
 
     const remoteProducts = await this.getItemBySaleorVariantId({
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
@@ -86,13 +91,16 @@ export class DatoCMSClient {
     });
 
     if (remoteProducts.length > 1) {
-      this.logger.warn(
+      this.logger.debug(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
+        {
+          remoteProducts: remoteProducts.map((p) => p.id),
+        },
       );
     }
 
     if (remoteProducts.length === 0) {
-      this.logger.trace("No product found in Datocms, skipping deletion");
+      this.logger.info("No product found in Datocms, skipping deletion");
 
       return;
     }
@@ -105,12 +113,24 @@ export class DatoCMSClient {
   }
 
   uploadProductVariant(context: Context) {
-    this.logger.debug("Trying to upload product variant");
+    this.logger.debug("Trying to upload product variant", {
+      variantId: context.variant.id,
+      productId: context.variant.product.id,
+      fieldMappping: context.configuration.productVariantFieldsMapping,
+      configId: context.configuration.id,
+    });
 
     return this.client.items.create(this.mapVariantToDatoCMSFields(context));
   }
 
   async updateProductVariant({ configuration, variant }: Context) {
+    this.logger.debug("Trying to update product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
+
     const products = await this.getItemBySaleorVariantId({
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       variantID: variant.id,
@@ -121,6 +141,7 @@ export class DatoCMSClient {
       this.logger.warn(
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
+          productsIds: products.map((p) => p.id),
           variantID: variant.id,
         },
       );
@@ -128,7 +149,7 @@ export class DatoCMSClient {
 
     return Promise.all(
       products.map((product) => {
-        this.logger.trace("Trying to update variant", { datoID: product.id });
+        this.logger.debug("Trying to update variant", { datoID: product.id });
 
         return this.client.items.update(
           product.id,
@@ -142,7 +163,12 @@ export class DatoCMSClient {
   }
 
   upsertProduct({ configuration, variant }: Context) {
-    this.logger.debug("Trying to upsert product variant");
+    this.logger.debug("Trying to upsert product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      fieldMappping: configuration.productVariantFieldsMapping,
+      configId: configuration.id,
+    });
 
     const DatoErrorBody = z.object({
       data: z.array(
@@ -167,11 +193,16 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
+          this.logger.debug("Found unique id error, will update the product", {
+            error: isUniqueIdError,
+            variantId: variant.product.id,
+          });
           return this.updateProductVariant({ configuration, variant });
         } else {
           throw new Error(JSON.stringify(err.cause));
         }
       } catch (e) {
+        this.logger.error("Invalid error shape from DatoCMS", { error: err });
         Sentry.captureException("Invalid error shape from DatoCMS", (c) => {
           return c.setExtra("error", err);
         });

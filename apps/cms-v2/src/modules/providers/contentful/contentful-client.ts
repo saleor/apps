@@ -118,16 +118,28 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to update product variant");
+    this.logger.debug("Attempting to update product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      contentId: configuration.contentId,
+      environment: configuration.environment,
+    });
 
     const space = await this.client.getSpace(this.space);
+
+    this.logger.debug("Space fetched successfully");
+
     const env = await space.getEnvironment(configuration.environment);
+
+    this.logger.debug("Environment fetched successfully");
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: configuration.contentId,
       env,
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
+
+    this.logger.debug("Found entries to update", { contentEntries });
 
     return Promise.all(
       contentEntries.items.map((item) => {
@@ -145,17 +157,27 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    this.logger.debug("Attempting to delete product variant", { variantId: opts.variant.id });
+    this.logger.debug("Attempting to delete product variant", {
+      variantId: opts.variant.id,
+      contentId: opts.configuration.contentId,
+      environment: opts.configuration.environment,
+    });
 
     const space = await this.client.getSpace(this.space);
+
+    this.logger.debug("Space fetched successfully");
+
     const env = await space.getEnvironment(opts.configuration.environment);
+
+    this.logger.debug("Environment fetched successfully");
+
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: opts.configuration.contentId,
       env,
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
 
-    this.logger.trace("Found entries to delete", { contentEntries });
+    this.logger.debug("Found entries to delete", { contentEntries });
 
     /**
      * In general it should be only one item, but in case of duplication run through everything
@@ -174,11 +196,20 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to upload product variant");
+    this.logger.debug("Attempting to upload product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      contentId: configuration.contentId,
+      environment: configuration.environment,
+    });
 
     const space = await this.client.getSpace(this.space);
+
+    this.logger.debug("Space fetched successfully");
+
     const env = await space.getEnvironment(configuration.environment);
 
+    this.logger.debug("Environment fetched successfully");
     /*
      * TODO: add translations
      * TODO: - should it create published? is draft
@@ -195,11 +226,21 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to upsert product variant");
+    this.logger.debug("Attempting to upsert product variant", {
+      variantId: variant.id,
+      productId: variant.product.id,
+      contentId: configuration.contentId,
+      environment: configuration.environment,
+    });
 
     try {
       const space = await this.client.getSpace(this.space);
+
+      this.logger.debug("Space fetched successfully");
+
       const env = await space.getEnvironment(configuration.environment);
+
+      this.logger.debug("Environment fetched successfully");
 
       const entries = await this.getEntriesBySaleorId({
         contentId: configuration.contentId,
@@ -207,7 +248,7 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      this.logger.trace(entries, "Found entries");
+      this.logger.debug("Found entries", { entries });
 
       if (entries.items.length > 0) {
         this.logger.debug("Found existing entry, will update");
@@ -227,6 +268,7 @@ export class ContentfulClient {
         return this.uploadProductVariant({ configuration, variant });
       }
     } catch (err) {
+      this.logger.error("Error during the upsert", { error: err });
       Sentry.captureException(err);
 
       throw err;
