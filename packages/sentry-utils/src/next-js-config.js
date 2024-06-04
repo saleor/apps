@@ -1,14 +1,6 @@
 import { withSentryConfig } from "@sentry/nextjs";
 
-export const getNextJsConfigWithSentry = <C>({
-  org,
-  project,
-  nextConfig,
-}: {
-  org: string | undefined;
-  project: string | undefined;
-  nextConfig: C;
-}) =>
+export const getNextJsConfigWithSentry = ({ org, project, nextConfig }) =>
   withSentryConfig(nextConfig, {
     org,
     project,
