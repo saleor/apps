@@ -1,7 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
-  "globalPassThroughEnv": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"],
   "pipeline": {
     "deploy": {
       "env": [
@@ -23,10 +22,8 @@
         "SENTRY_PROJECT",
         "OTEL_ENABLED",
         "OTEL_SERVICE_NAME",
-        "VERCEL_GIT_COMMIT_SHA",
         "APP_LOG_LEVEL",
         "AVATAX_CLIENT_TIMEOUT",
-        "ENV",
         "ANALYZE_BUNDLE",
         "DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER"
       ]

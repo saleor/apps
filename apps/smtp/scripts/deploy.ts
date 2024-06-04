@@ -1,7 +1,9 @@
-import { execSync } from "child_process";
-import { getReleaseTag } from "../src/release-utils";
+import { getReleaseTag } from "@saleor/sentry-utils";
+import { execSync } from "node:child_process";
 
-const release = getReleaseTag();
+import packageJson from "../package.json";
+
+const release = getReleaseTag(packageJson.version);
 
 console.log("Using release tag:", release);
 

@@ -5,18 +5,13 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import pkg from "./package.json";
+const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-
+  dsn: SENTRY_DSN,
   enableTracing: false,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-
-  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
+  environment: process.env.ENV,
+  includeLocalVariables: true,
+  ignoreErrors: ["TRPCClientError"],
   integrations: [],
-  environment: process.env.SENTRY_ENVIRONMENT,
-  release: `saleor-app-${pkg.name}@${pkg.version}`,
 });
