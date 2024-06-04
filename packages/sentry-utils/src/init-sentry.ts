@@ -1,17 +1,17 @@
-import * as Sentry from "@sentry/nextjs";
+import { extraErrorDataIntegration, init, localVariablesIntegration } from "@sentry/nextjs";
 
 export const initSentry = (dsn: string | undefined) => {
-  Sentry.init({
+  init({
     dsn,
     enableTracing: false,
     environment: process.env.ENV,
     includeLocalVariables: true,
     ignoreErrors: ["TRPCClientError"],
     integrations: [
-      Sentry.localVariablesIntegration({
+      localVariablesIntegration({
         captureAllExceptions: true,
       }),
-      Sentry.extraErrorDataIntegration(),
+      extraErrorDataIntegration(),
     ],
   });
 };
