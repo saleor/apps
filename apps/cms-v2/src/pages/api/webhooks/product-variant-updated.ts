@@ -64,17 +64,22 @@ const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadFragment
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
+    logger.error("Product variant not found in payload");
     Sentry.captureException("Product variant not found in payload");
 
     return res.status(500).end();
   }
+  logger.info("Webhook called");
+
   const configContext = await createWebhookConfigContext({ authData });
 
-  logger.info("Webhook called");
+  logger.debug("Webhook config context fetched", { configContext });
 
   await new WebhooksProcessorsDelegator({
     context: configContext,
   }).delegateVariantUpdatedOperations(payload.productVariant);
+
+  logger.info("Webhook processed successfully");
 
   return res.status(200).end();
 };
