@@ -30,6 +30,7 @@
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
+    "@saleor/release-utils": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@sentry/nextjs": "8.0.0",

@@ -1,0 +1,15 @@
+{
+  "name": "@saleor/release-utils",
+  "version": "0.0.0",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "devDependencies": {
+    "eslint-config-saleor": "workspace:*",
+    "typescript": "5.1.6"
+  },
+  "main": "index.ts",
+  "type": "module"
+}

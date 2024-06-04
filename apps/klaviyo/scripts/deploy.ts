@@ -1,5 +1,6 @@
-import { getReleaseTag } from "@saleor/apps-shared";
-import { execSync } from "child_process";
+import { getReleaseTag } from "@saleor/release-utils";
+import { execSync } from "node:child_process";
+
 import packageJson from "../package.json";
 
 const release = getReleaseTag(packageJson.version);

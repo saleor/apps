@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 
-const getCommitHash = () => {
+export const getCommitHash = () => {
   if (process.env.VERCEL) {
     return process.env.VERCEL_GIT_COMMIT_SHA;
   }
@@ -15,12 +15,4 @@ const getCommitHash = () => {
     console.warn("Cannot fetch commit hash", e);
     return null;
   }
-};
-
-export const getReleaseTag = (version: string) => {
-  if (process.env.NODE_ENV === "production" && process.env.ENV === "production") {
-    return version;
-  }
-
-  return `${version}-${getCommitHash() ?? "<unknown_commit_hash>"}`;
 };
