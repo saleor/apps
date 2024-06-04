@@ -96,6 +96,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3)
+      '@next/env':
+        specifier: ^13.5.4
+        version: 13.5.4
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
         version: link:../../node_modules/@opentelemetry/api
