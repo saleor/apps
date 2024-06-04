@@ -7,7 +7,7 @@ envUtils.loadEnvConfig(".");
 
 async function setReleaseTag() {
   // Must use dynamic import for env variables to load properly
-  const { getReleaseTag } = await import("@saleor/release-utils");
+  const { getReleaseTag } = await import("@saleor/sentry-utils");
   const release = getReleaseTag(packageJson.version);
 
   console.log("Using release tag:", release);

@@ -32,7 +32,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
-    "@saleor/release-utils": "workspace:*",
+    "@saleor/sentry-utils": "workspace:*",
     "@sentry/nextjs": "8.0.0",
     "@urql/exchange-auth": "^2.1.4",
     "dotenv": "16.3.1",
@@ -65,8 +65,8 @@
     "eslint-config-saleor": "workspace:*",
     "postcss": "^8.4.14",
     "pretty-quick": "^3.1.3",
-    "typescript": "5.1.6",
-    "tsx": "4.7.1"
+    "tsx": "4.7.1",
+    "typescript": "5.1.6"
   },
   "private": true,
   "saleor": {

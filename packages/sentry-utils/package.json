@@ -1,5 +1,5 @@
 {
-  "name": "@saleor/release-utils",
+  "name": "@saleor/sentry-utils",
   "version": "0.0.0",
   "scripts": {
     "check-types": "tsc --noEmit",

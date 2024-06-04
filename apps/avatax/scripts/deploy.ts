@@ -1,4 +1,4 @@
-import { getReleaseTag } from "@saleor/release-utils";
+import { getReleaseTag } from "@saleor/sentry-utils";
 import { execSync } from "node:child_process";
 
 import packageJson from "../package.json";

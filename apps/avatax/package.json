@@ -42,7 +42,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
-    "@saleor/release-utils": "workspace:*",
+    "@saleor/sentry-utils": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
     "@sentry/cli": "2.31.2",
     "@sentry/nextjs": "8.0.0",

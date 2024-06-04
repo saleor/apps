@@ -156,9 +156,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
-      '@saleor/release-utils':
+      '@saleor/sentry-utils':
         specifier: workspace:*
-        version: link:../../packages/release-utils
+        version: link:../../packages/sentry-utils
       '@saleor/webhook-utils':
         specifier: workspace:*
         version: link:../../packages/webhook-utils
@@ -1314,9 +1314,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0)(react@18.2.0)
-      '@saleor/release-utils':
+      '@saleor/sentry-utils':
         specifier: workspace:*
-        version: link:../../packages/release-utils
+        version: link:../../packages/sentry-utils
       '@sentry/nextjs':
         specifier: 8.0.0
         version: 8.0.0(@opentelemetry/api@1.8.0)(@opentelemetry/core@1.24.1)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@1.24.1)(@opentelemetry/semantic-conventions@1.24.1)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
@@ -2213,9 +2213,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
-      '@saleor/release-utils':
+      '@saleor/sentry-utils':
         specifier: workspace:*
-        version: link:../../packages/release-utils
+        version: link:../../packages/sentry-utils
       '@sentry/nextjs':
         specifier: 8.0.0
         version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
@@ -2436,9 +2436,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
-      '@saleor/release-utils':
+      '@saleor/sentry-utils':
         specifier: workspace:*
-        version: link:../../packages/release-utils
+        version: link:../../packages/sentry-utils
       '@sentry/cli':
         specifier: 2.31.2
         version: 2.31.2
@@ -2774,7 +2774,7 @@ importers:
         specifier: ^5.82.1
         version: 5.82.1(esbuild@0.17.19)
 
-  packages/release-utils:
+  packages/sentry-utils:
     devDependencies:
       eslint-config-saleor:
         specifier: workspace:*
