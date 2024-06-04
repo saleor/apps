@@ -7,7 +7,6 @@ export * from "./src/logger";
 export * from "./src/metadata-manager";
 export * from "./src/no-ssr-wrapper";
 export * from "./src/permissions";
-export * from "./src/release-utils";
 export * from "./src/saleor-version-compatibility-validator";
 export * from "./src/theme-synchronizer";
 export * from "./src/use-dashboard-notification";
