@@ -5,6 +5,7 @@ import { createLogger } from "../../../logger";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { BaseError } from "../../../error";
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -29,6 +30,8 @@ const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
 });
 
+const TestNewSentryConfigError = BaseError.subclass("TestNewSentryConfigError");
+
 /**
  * TODO: Add tests to handler
  */
@@ -38,6 +41,8 @@ export default wrapWithLoggerContext(
       checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
         try {
           const { payload, authData } = ctx;
+
+          captureException(new TestNewSentryConfigError("Test new sentry config - ignore me"));
 
           subscriptionErrorChecker.checkPayload(payload);
 
