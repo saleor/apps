@@ -66,8 +66,6 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
 
   logger.info("Webhook called", { productId: payload.product.id });
 
-  logger.debug("Get webhook config context");
-
   const configContext = await createWebhookConfigContext({ authData });
 
   logger.debug("Webhook config context fetched", { configContext });
@@ -75,6 +73,8 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   await new WebhooksProcessorsDelegator({
     context: configContext,
   }).delegateProductUpdatedOperations(payload.product);
+
+  logger.info("Webhook processed successfully");
 
   return res.status(200).end();
 };
