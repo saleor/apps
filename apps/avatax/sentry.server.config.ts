@@ -4,8 +4,8 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import { initSentry } from "@saleor/sentry-utils";
+import { initSentryServer } from "@saleor/sentry-utils";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-initSentry(SENTRY_DSN);
+initSentryServer(SENTRY_DSN);
