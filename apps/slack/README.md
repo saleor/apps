@@ -4,6 +4,11 @@ Saleor application to send Slack messages based on `order_created` events.
 
 ![](docs/images/readme.jpg)
 
+## Maintenance note
+
+This app is an example - you can fork it as a template and self-host it.
+Saleor doesn't actively maintain this app.
+
 ### What's included?
 
 - Connection between Saleor and Slack using webhook

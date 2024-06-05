@@ -5,3 +5,8 @@
 </div>
 
 Visit [CRM App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/crm) to learn how to configure and develop the app locally.
+
+## Maintenance note
+
+This app is an example - you can fork it as a template and self-host it.
+Saleor doesn't actively maintain this app.

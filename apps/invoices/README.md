@@ -1,8 +1,13 @@
 # Invoice app
 
+## Maintenance note
+
+This app is an example - you can fork it as a template and self-host it.
+Saleor doesn't actively maintain this app.
+
 ## Requirements
 
-- Saleor API 3.10 ❗️
+- Saleor API 3.10
 
 ## About Saleor Invoices app
 
@@ -85,7 +90,7 @@ pnpm dev
 3. Expose local environment using tunnel:
    Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
 
-4. Install aplication at your dashboard:
+4. Install application at your dashboard:
 
 If you use Saleor Cloud or your local server is exposed, you can install your app by following this link:
 
