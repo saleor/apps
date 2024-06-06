@@ -37,7 +37,8 @@ export const recreateWebhooksHandlerFactory =
       return res.status(405).end();
     }
 
-    logger.debug("Fetching settings");
+    logger.info("Fetching settings");
+
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
     const settingsManager = settingsManagerFactory(client, authData.appId);
@@ -46,7 +47,7 @@ export const recreateWebhooksHandlerFactory =
 
     const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
-    logger.debug("fetched settings");
+    logger.info("fetched settings");
 
     const baseUrl = getAppBaseUrl(req.headers);
     const enableWebhooks = isConfigured({
@@ -57,12 +58,12 @@ export const recreateWebhooksHandlerFactory =
     });
 
     try {
-      logger.debug("Running webhooks recreation");
+      logger.info("Running webhooks recreation");
       await webhooksToggler.recreateOwnWebhooks({ baseUrl: baseUrl, enableWebhooks });
-      logger.debug("Webhooks recreated");
+      logger.info("Webhooks recreated");
       return res.status(200).end();
     } catch (e) {
-      logger.error(e);
+      logger.error("Failed to recreate webhooks", { error: e });
       return res.status(500).end();
     }
   };

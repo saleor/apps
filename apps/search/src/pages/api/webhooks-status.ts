@@ -58,7 +58,7 @@ export const webhooksStatusHandlerFactory =
 
     const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
-    logger.debug("fetched settings");
+    logger.info("Fetched settings");
 
     /**
      * If settings are incomplete, disable webhooks
@@ -66,7 +66,7 @@ export const webhooksStatusHandlerFactory =
      * TODO Extract config operations to domain/
      */
     if (!config.appConfig) {
-      logger.debug("Settings not set, will disable webhooks");
+      logger.info("Settings not set, will disable webhooks");
 
       await webhooksToggler.disableOwnWebhooks();
     } else {
@@ -79,11 +79,11 @@ export const webhooksStatusHandlerFactory =
       );
 
       try {
-        logger.debug("Settings set, will ping Algolia");
+        logger.info("Settings set, will ping Algolia");
 
         await algoliaService.ping();
       } catch (e) {
-        logger.debug("Algolia ping failed, will disable webhooks");
+        logger.warn("Algolia ping failed, will disable webhooks");
         /**
          * If credentials are invalid, also disable webhooks
          */
@@ -92,7 +92,7 @@ export const webhooksStatusHandlerFactory =
     }
 
     try {
-      logger.debug("Settings and Algolia are correct, will fetch Webhooks from Saleor");
+      logger.info("Settings and Algolia are correct, will fetch Webhooks from Saleor");
 
       const webhooks = await client
         .query(FetchOwnWebhooksDocument, { id: authData.appId })
@@ -100,6 +100,8 @@ export const webhooksStatusHandlerFactory =
         .then((r) => r.data?.app?.webhooks);
 
       if (!webhooks) {
+        logger.error("Failed to fetch webhooks from Saleor - webhooks missing");
+
         return res.status(500).end();
       }
 
@@ -112,7 +114,8 @@ export const webhooksStatusHandlerFactory =
         isUpdateNeeded,
       });
     } catch (e) {
-      console.error(e);
+      logger.error("Failed to fetch webhooks from Saleor - unhandled", { error: e });
+
       return res.status(500).end();
     }
   };
