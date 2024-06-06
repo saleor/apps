@@ -94,7 +94,7 @@ export const webhooksStatusHandlerFactory =
     }
 
     try {
-      logger.info("Settings and Algolia are correct, will fetch Webhooks from Saleor");
+      logger.info("Will fetch Webhooks from Saleor");
 
       const webhooks = await client
         .query(FetchOwnWebhooksDocument, { id: authData.appId })

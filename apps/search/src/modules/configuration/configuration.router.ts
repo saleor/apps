@@ -79,8 +79,13 @@ export const configurationRouter = router({
 
         logger.info("Webhooks enabled");
       } catch (e) {
+        logger.warn("Failed to check Algolia credentials", {
+          error: e,
+        });
+
         throw new TRPCError({
           code: "BAD_REQUEST",
+          message: "Can't save Algolia config, check credentials",
         });
       }
 
