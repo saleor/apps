@@ -6,6 +6,8 @@ import { webhookProductVariantOutOfStock } from "../../../../webhooks/definition
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
 import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
   api: {
@@ -71,7 +73,10 @@ export const handler: NextWebhookApiHandler<ProductVariantOutOfStock> = async (
   }
 };
 
-export default withOtel(
-  webhookProductVariantOutOfStock.createHandler(handler),
-  "api/webhooks/saleor/product_variant_out_of_stock",
+export default wrapWithLoggerContext(
+  withOtel(
+    webhookProductVariantOutOfStock.createHandler(handler),
+    "api/webhooks/saleor/product_variant_out_of_stock",
+  ),
+  loggerContext,
 );

@@ -6,6 +6,8 @@ import { webhookProductCreated } from "../../../../webhooks/definitions/product-
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
 import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
   api: {
@@ -69,7 +71,7 @@ export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, c
   }
 };
 
-export default withOtel(
-  webhookProductCreated.createHandler(handler),
-  "api/webhooks/saleor/product_created",
+export default wrapWithLoggerContext(
+  withOtel(webhookProductCreated.createHandler(handler), "api/webhooks/saleor/product_created"),
+  loggerContext,
 );

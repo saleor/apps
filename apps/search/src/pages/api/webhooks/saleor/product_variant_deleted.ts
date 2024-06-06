@@ -6,6 +6,8 @@ import { webhookProductVariantDeleted } from "../../../../webhooks/definitions/p
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
 import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
   api: {
@@ -67,7 +69,10 @@ export const handler: NextWebhookApiHandler<ProductVariantDeleted> = async (req,
   }
 };
 
-export default withOtel(
-  webhookProductVariantDeleted.createHandler(handler),
-  "api/webhooks/saleor/product_variant_deleted",
+export default wrapWithLoggerContext(
+  withOtel(
+    webhookProductVariantDeleted.createHandler(handler),
+    "api/webhooks/saleor/product_variant_deleted",
+  ),
+  loggerContext,
 );

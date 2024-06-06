@@ -6,6 +6,8 @@ import { webhookProductVariantUpdated } from "../../../../webhooks/definitions/p
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
 import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
   api: {
@@ -67,7 +69,10 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdated> = async (req,
   }
 };
 
-export default withOtel(
-  webhookProductVariantUpdated.createHandler(handler),
-  "api/webhooks/saleor/product_variant_updated",
+export default wrapWithLoggerContext(
+  withOtel(
+    webhookProductVariantUpdated.createHandler(handler),
+    "api/webhooks/saleor/product_variant_updated",
+  ),
+  loggerContext,
 );
