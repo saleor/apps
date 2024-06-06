@@ -1,5 +1,12 @@
 # app-taxjar
 
+## 1.1.7
+
+### Patch Changes
+
+- Updated dependencies [e7b909ed]
+  - @saleor/sentry-utils@0.1.0
+
 ## 1.1.6
 
 ### Patch Changes
