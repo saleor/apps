@@ -179,6 +179,6 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
         });
       }),
     );
-    logger.debug("Done creating new webhooks");
+    logger.info("Done creating new webhooks");
   }
 }
