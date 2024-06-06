@@ -4,8 +4,20 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import { initSentryServer } from "@saleor/sentry-utils";
+import * as Sentry from "@sentry/nextjs";
 
 const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 
-initSentryServer(SENTRY_DSN);
+Sentry.init({
+  dsn: SENTRY_DSN,
+  enableTracing: false,
+  environment: process.env.ENV,
+  includeLocalVariables: true,
+  ignoreErrors: [],
+  integrations: [
+    Sentry.localVariablesIntegration({
+      captureAllExceptions: true,
+    }),
+    Sentry.extraErrorDataIntegration(),
+  ],
+});
