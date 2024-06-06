@@ -1,27 +1,13 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { saleorApp } from "../../../saleor-app";
 import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { createSettingsManager } from "../../lib/metadata";
-import {
-  IWebhookActivityTogglerService,
-  WebhookActivityTogglerService,
-} from "../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../lib/logger";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SearchProvider } from "../../lib/searchProvider";
 import { Client } from "urql";
 import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
-import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { loggerContext } from "../../lib/logger-context";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import {
-  algoliaCredentialsVerifier,
-  AlgoliaCredentialsVerifier,
-  IAlgoliaCredentialsVerifier,
-} from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("webhooksStatusHandler");
 
@@ -29,16 +15,7 @@ const logger = createLogger("webhooksStatusHandler");
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
  */
 type FactoryProps = {
-  settingsManagerFactory: (
-    client: Pick<Client, "query" | "mutation">,
-    appId: string,
-  ) => SettingsManager;
-  webhookActivityTogglerFactory: (
-    appId: string,
-    client: Pick<Client, "query" | "mutation">,
-  ) => IWebhookActivityTogglerService;
   graphqlClientFactory: (saleorApiUrl: string, token: string) => Pick<Client, "query" | "mutation">;
-  algoliaCredentialsVerifier: IAlgoliaCredentialsVerifier;
 };
 
 export type WebhooksStatusResponse = {
@@ -47,54 +24,14 @@ export type WebhooksStatusResponse = {
 };
 
 export const webhooksStatusHandlerFactory =
-  ({
-    settingsManagerFactory,
-    webhookActivityTogglerFactory,
-    graphqlClientFactory,
-  }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
+  ({ graphqlClientFactory }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
   async (req, res, { authData }) => {
     /**
      * Initialize services
      */
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
-    const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
-    const settingsManager = settingsManagerFactory(client, authData.appId);
-
-    const configManager = new AppConfigMetadataManager(settingsManager);
-
-    const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
     logger.info("Fetched settings");
-
-    /**
-     * If settings are incomplete, disable webhooks
-     *
-     * TODO Extract config operations to domain/
-     */
-    if (!config.appConfig) {
-      logger.info("Settings not set, will disable webhooks");
-
-      await webhooksToggler.disableOwnWebhooks();
-    } else {
-      /**
-       * Otherwise, if settings are set, check in Algolia if tokens are valid
-       */
-
-      try {
-        logger.info("Settings set, will ping Algolia");
-
-        await algoliaCredentialsVerifier.verifyCredentials({
-          appId: config.appConfig.appId,
-          apiKey: config.appConfig.secretKey,
-        });
-      } catch (e) {
-        logger.warn("Algolia ping failed, will disable webhooks");
-        /**
-         * If credentials are invalid, also disable webhooks
-         */
-        await webhooksToggler.disableOwnWebhooks();
-      }
-    }
 
     try {
       logger.info("Will fetch Webhooks from Saleor");
@@ -129,11 +66,6 @@ export default wrapWithLoggerContext(
   withOtel(
     createProtectedHandler(
       webhooksStatusHandlerFactory({
-        settingsManagerFactory: createSettingsManager,
-        webhookActivityTogglerFactory: function (appId, client) {
-          return new WebhookActivityTogglerService(appId, client);
-        },
-        algoliaCredentialsVerifier: algoliaCredentialsVerifier,
         graphqlClientFactory(saleorApiUrl: string, token: string) {
           return createInstrumentedGraphqlClient({
             saleorApiUrl,

@@ -1,12 +1,10 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { ProductVariantCreated } from "../../../../../generated/graphql";
-import { WebhookActivityTogglerService } from "../../../../domain/WebhookActivityToggler.service";
 import { createLogger } from "../../../../lib/logger";
 import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { withOtel } from "@saleor/apps-otel";
-import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
@@ -40,22 +38,6 @@ export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req,
       res.status(200).end();
       return;
     } catch (e) {
-      logger.error("Algolia createProductVariant failed.", { error: e });
-
-      if (AlgoliaErrorParser.isAuthError(e)) {
-        logger.warn("Detect Auth error from Algolia. Webhooks will be disabled", { error: e });
-
-        const webhooksToggler = new WebhookActivityTogglerService(authData.appId, apiClient);
-
-        logger.info("Will disable webhooks");
-
-        await webhooksToggler.disableOwnWebhooks(
-          context.payload.recipient?.webhooks?.map((w) => w.id),
-        );
-
-        logger.info("Webhooks disabling operation finished");
-      }
-
       logger.error("Failed to execute product_variant_created webhook", { error: e });
 
       return res.status(500).send("Operation failed due to error");

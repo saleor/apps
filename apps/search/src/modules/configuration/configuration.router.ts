@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { ChannelsDocument } from "../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";

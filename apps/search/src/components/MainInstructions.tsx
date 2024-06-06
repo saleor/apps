@@ -1,4 +1,3 @@
-import { TextLink } from "@saleor/apps-ui";
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
 
 const SALEOR_EVENTS_DOCS_URL =
