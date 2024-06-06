@@ -1,14 +1,12 @@
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 
-export const extractTransactionArgsProperites = (model: CreateTransactionModel) => ({
+export const extractTransactionRedactedLogProperties = (model: CreateTransactionModel) => ({
   code: model.code,
   type: model.type,
   entityUseCode: model.entityUseCode,
   customerCode: model.customerCode,
   companyCode: model.companyCode,
   isAutocommit: model.commit,
-  shipFromAddress: model.addresses?.shipFrom,
-  shipToAddress: model.addresses?.shipTo,
   currencyCode: model.currencyCode,
   lines: model.lines.map((line) => ({
     amount: line.amount,
