@@ -4,6 +4,7 @@ import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { Layout } from "@saleor/apps-ui";
+import { algoliaCredentialsVerifier } from "../lib/algolia/algolia-credentials-verifier";
 
 const BATCH_SIZE = 100;
 
@@ -38,13 +39,16 @@ export const ImportProductsToAlgolia = () => {
   }, []);
 
   useEffect(() => {
-    if (searchProvider) {
-      searchProvider
-        .ping()
+    if (searchProvider && algoliaConfiguration?.appConfig) {
+      algoliaCredentialsVerifier
+        .verifyCredentials({
+          appId: algoliaConfiguration.appConfig.appId,
+          apiKey: algoliaConfiguration.appConfig.secretKey,
+        })
         .then(() => setAlgoliaConfigured(true))
         .catch(() => setAlgoliaConfigured(false));
     }
-  }, [searchProvider]);
+  }, [searchProvider, algoliaConfiguration?.appConfig]);
 
   useEffect(() => {
     if (!searchProvider || isAlgoliaImporting || products.length <= currentProductIndex) {

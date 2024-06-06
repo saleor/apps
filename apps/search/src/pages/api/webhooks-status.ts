@@ -17,6 +17,11 @@ import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { loggerContext } from "../../lib/logger-context";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import {
+  algoliaCredentialsVerifier,
+  AlgoliaCredentialsVerifier,
+  IAlgoliaCredentialsVerifier,
+} from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("webhooksStatusHandler");
 
@@ -32,8 +37,8 @@ type FactoryProps = {
     appId: string,
     client: Pick<Client, "query" | "mutation">,
   ) => IWebhookActivityTogglerService;
-  algoliaSearchProviderFactory: (appId: string, apiKey: string) => Pick<SearchProvider, "ping">;
   graphqlClientFactory: (saleorApiUrl: string, token: string) => Pick<Client, "query" | "mutation">;
+  algoliaCredentialsVerifier: IAlgoliaCredentialsVerifier;
 };
 
 export type WebhooksStatusResponse = {
@@ -45,7 +50,6 @@ export const webhooksStatusHandlerFactory =
   ({
     settingsManagerFactory,
     webhookActivityTogglerFactory,
-    algoliaSearchProviderFactory,
     graphqlClientFactory,
   }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
   async (req, res, { authData }) => {
@@ -75,15 +79,14 @@ export const webhooksStatusHandlerFactory =
       /**
        * Otherwise, if settings are set, check in Algolia if tokens are valid
        */
-      const algoliaService = algoliaSearchProviderFactory(
-        config.appConfig.appId,
-        config.appConfig.secretKey,
-      );
 
       try {
         logger.info("Settings set, will ping Algolia");
 
-        await algoliaService.ping();
+        await algoliaCredentialsVerifier.verifyCredentials({
+          appId: config.appConfig.appId,
+          apiKey: config.appConfig.secretKey,
+        });
       } catch (e) {
         logger.warn("Algolia ping failed, will disable webhooks");
         /**
@@ -130,9 +133,7 @@ export default wrapWithLoggerContext(
         webhookActivityTogglerFactory: function (appId, client) {
           return new WebhookActivityTogglerService(appId, client);
         },
-        algoliaSearchProviderFactory(appId, apiKey) {
-          return new AlgoliaSearchProvider({ appId, apiKey, enabledKeys: [] });
-        },
+        algoliaCredentialsVerifier: algoliaCredentialsVerifier,
         graphqlClientFactory(saleorApiUrl: string, token: string) {
           return createInstrumentedGraphqlClient({
             saleorApiUrl,

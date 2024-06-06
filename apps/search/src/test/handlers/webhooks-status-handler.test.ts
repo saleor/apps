@@ -8,6 +8,7 @@ import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityTogg
 import { SearchProvider } from "../../lib/searchProvider";
 import { AppConfig } from "../../modules/configuration/configuration";
 import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 /**
  * Context provided from ProtectedApiHandler to handler body
@@ -56,10 +57,6 @@ describe("webhooksStatusHandler", () => {
     recreateOwnWebhooks: vi.fn(),
   };
 
-  const algoliaSearchProviderMock: Pick<SearchProvider, "ping"> = {
-    ping: vi.fn(),
-  };
-
   const settingsManagerMock: SettingsManager = {
     get: vi.fn(),
     set: vi.fn(),
@@ -74,7 +71,9 @@ describe("webhooksStatusHandler", () => {
     handler = webhooksStatusHandlerFactory({
       graphqlClientFactory: () => client,
       webhookActivityTogglerFactory: () => webhooksTogglerServiceMock,
-      algoliaSearchProviderFactory: () => algoliaSearchProviderMock,
+      algoliaCredentialsVerifier: {
+        verifyCredentials: vi.fn(),
+      },
       settingsManagerFactory: () => settingsManagerMock,
     });
 
@@ -94,7 +93,7 @@ describe("webhooksStatusHandler", () => {
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
-    expect(algoliaSearchProviderMock.ping).not.toHaveBeenCalled();
+    expect(algoliaCredentialsVerifier.verifyCredentials).not.toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
   });
 
@@ -108,7 +107,7 @@ describe("webhooksStatusHandler", () => {
     });
 
     (settingsManagerMock.get as Mock).mockReturnValueOnce(invalidConfig.serialize());
-    (algoliaSearchProviderMock.ping as Mock).mockImplementationOnce(async () => {
+    (algoliaCredentialsVerifier.verifyCredentials as Mock).mockImplementationOnce(async () => {
       throw new Error();
     });
 
@@ -118,7 +117,7 @@ describe("webhooksStatusHandler", () => {
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).toHaveBeenCalled();
-    expect(algoliaSearchProviderMock.ping).toHaveBeenCalled();
+    expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
   });
 
@@ -132,7 +131,9 @@ describe("webhooksStatusHandler", () => {
     });
 
     (settingsManagerMock.get as Mock).mockReturnValueOnce(validConfig.serialize());
-    (algoliaSearchProviderMock.ping as Mock).mockImplementationOnce(async () => Promise.resolve());
+    (algoliaCredentialsVerifier.verifyCredentials as Mock).mockImplementationOnce(async () =>
+      Promise.resolve(),
+    );
 
     const { req, res } = createMocks({});
 
@@ -140,7 +141,7 @@ describe("webhooksStatusHandler", () => {
     await handler(req, res, mockWebhookContext);
 
     expect(webhooksTogglerServiceMock.disableOwnWebhooks).not.toHaveBeenCalled();
-    expect(algoliaSearchProviderMock.ping).toHaveBeenCalled();
+    expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
   });
 });

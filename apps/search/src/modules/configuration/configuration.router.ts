@@ -9,6 +9,7 @@ import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
 import { createLogger } from "../../lib/logger";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("configuration.router");
 
@@ -44,17 +45,6 @@ export const configurationRouter = router({
   setConnectionConfig: protectedClientProcedure
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
-      const { data: channelsData } = await ctx.apiClient.query(ChannelsDocument, {}).toPromise();
-      const channels = channelsData?.channels || [];
-
-      const algoliaClient = new AlgoliaSearchProvider({
-        appId: ctx.appId,
-        apiKey: input.secretKey,
-        indexNamePrefix: input.indexNamePrefix,
-        channels,
-        enabledKeys: [], // not required to ping algolia, but should be refactored
-      });
-
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
       const configManager = new AppConfigMetadataManager(settingsManager);
@@ -63,7 +53,11 @@ export const configurationRouter = router({
 
       try {
         logger.info("Will ping Algolia");
-        await algoliaClient.ping();
+
+        await algoliaCredentialsVerifier.verifyCredentials({
+          apiKey: input.secretKey,
+          appId: input.appId,
+        });
 
         logger.info("Algolia connection is ok. Will save settings");
 

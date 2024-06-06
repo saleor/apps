@@ -28,7 +28,6 @@ export class AlgoliaSearchProvider implements SearchProvider {
   #indexNamePrefix?: string | undefined;
   #indexNames: Array<string>;
   #enabledKeys: string[];
-  #apiKey: string;
 
   constructor({
     appId,
@@ -43,7 +42,6 @@ export class AlgoliaSearchProvider implements SearchProvider {
       channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.#indexNamePrefix)) ||
       [];
     this.#enabledKeys = enabledKeys;
-    this.#apiKey = apiKey;
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
@@ -190,17 +188,6 @@ export class AlgoliaSearchProvider implements SearchProvider {
         this.#indexNames.map((index) => [index, [productAndVariantToObjectID(productVariant)]]),
       ),
     );
-  }
-
-  async ping() {
-    return this.#algolia
-      .getApiKey(this.#apiKey)
-      .then((r) => {})
-      .catch((r) => {
-        throw new Error("Algolia responded with invalid credentials", {
-          cause: new Error(r.message),
-        });
-      });
   }
 }
 
