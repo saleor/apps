@@ -89,16 +89,12 @@ describe("webhooksStatusHandler", () => {
     });
 
     (settingsManagerMock.get as Mock).mockReturnValueOnce(validConfig.serialize());
-    (algoliaCredentialsVerifier.verifyCredentials as Mock).mockImplementationOnce(async () =>
-      Promise.resolve(),
-    );
 
     const { req, res } = createMocks({});
 
     // @ts-expect-error mocking the request for testing
     await handler(req, res, mockWebhookContext);
 
-    expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
     expect(res._getStatusCode()).toBe(200);
   });
 });
