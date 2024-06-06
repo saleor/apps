@@ -1,5 +1,15 @@
 # app-avatax
 
+## 1.5.3
+
+### Patch Changes
+
+- 424d2ea7: App now properly extracts tax rate amount (float number, like 0.23) from Avatax response and attaches it to webhook response. If field doesn't exist in Avatax, it falls back to 0 (like it was before)
+- cdae73a9: Removed addresses data (from & to) from logger messages
+- e7b909ed: Update Avatax app Sentry configuration
+- Updated dependencies [e7b909ed]
+  - @saleor/sentry-utils@0.1.0
+
 ## 1.5.2
 
 ### Patch Changes

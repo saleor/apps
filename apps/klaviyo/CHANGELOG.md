@@ -1,5 +1,13 @@
 # saleor-app-klaviyo
 
+## 1.11.4
+
+### Patch Changes
+
+- e7b909ed: Setup Sentry for Klaviyo app.
+- Updated dependencies [e7b909ed]
+  - @saleor/sentry-utils@0.1.0
+
 ## 1.11.3
 
 ### Patch Changes
