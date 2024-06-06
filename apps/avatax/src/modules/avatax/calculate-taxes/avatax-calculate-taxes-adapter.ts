@@ -7,7 +7,7 @@ import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-p
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxErrorsParser } from "../avatax-errors-parser";
-import { extractTransactionArgsProperites } from "../create-transaction-args-properties";
+import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
@@ -42,7 +42,7 @@ export class AvataxCalculateTaxesAdapter
     this.logger.info(
       "Calling AvaTax createTransaction with transformed payload for calculate taxes event",
       {
-        ...extractTransactionArgsProperites(target.model),
+        ...extractTransactionRedactedLogProperties(target.model),
       },
     );
 
