@@ -9,7 +9,7 @@ import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
-import { extractTransactionArgsProperites } from "../create-transaction-args-properties";
+import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
@@ -47,7 +47,7 @@ export class AvataxOrderConfirmedAdapter
     this.logger.info(
       "Calling AvaTax createTransaction with transformed payload for order confirmed event",
       {
-        ...extractTransactionArgsProperites(target.model),
+        ...extractTransactionRedactedLogProperties(target.model),
       },
     );
 
