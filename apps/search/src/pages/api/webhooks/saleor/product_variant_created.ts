@@ -18,9 +18,9 @@ const logger = createLogger("webhookProductVariantCreatedWebhookHandler");
 export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req, res, context) => {
   const { event, authData } = context;
 
-  logger.debug(
-    `New event ${event} (${context.payload?.__typename}) from the ${authData.domain} domain has been received!`,
-  );
+  logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
+    saleorApiUrl: authData.saleorApiUrl,
+  });
 
   const { productVariant } = context.payload;
 
@@ -38,25 +38,29 @@ export const handler: NextWebhookApiHandler<ProductVariantCreated> = async (req,
       res.status(200).end();
       return;
     } catch (e) {
-      logger.info("Algolia createProductVariant failed.", { error: e });
+      logger.error("Algolia createProductVariant failed.", { error: e });
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        logger.info("Detect Auth error from Algolia. Webhooks will be disabled", { error: e });
+        logger.warn("Detect Auth error from Algolia. Webhooks will be disabled", { error: e });
 
         const webhooksToggler = new WebhookActivityTogglerService(authData.appId, apiClient);
 
-        logger.trace("Will disable webhooks");
+        logger.info("Will disable webhooks");
 
         await webhooksToggler.disableOwnWebhooks(
           context.payload.recipient?.webhooks?.map((w) => w.id),
         );
 
-        logger.trace("Webhooks disabling operation finished");
+        logger.info("Webhooks disabling operation finished");
       }
+
+      logger.error("Failed to execute product_variant_created webhook", { error: e });
 
       return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
+    logger.error("Failed to execute product_variant_created webhook", { error: e });
+
     return res.status(400).json({
       message: (e as Error).message,
     });
