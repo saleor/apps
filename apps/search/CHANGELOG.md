@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.21.7
+
+### Patch Changes
+
+- e8c9d7c7: Added bunch of logs at level INFO. Now app will log much more operations. Previously majority of logs were TRACE or DEBUG level
+
 ## 1.21.6
 
 ### Patch Changes
