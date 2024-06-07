@@ -1,7 +1,7 @@
 // @ts-check
 
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
-import { getNextJsConfigWithSentry } from "@saleor/sentry-utils/nextjs/config";
+import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -42,9 +42,14 @@ const nextConfig = {
   },
 };
 
-const configWithSentry = getNextJsConfigWithSentry({
+const configWithSentry = withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  nextConfig,
+  silent: true,
+  hideSourceMaps: true,
+  widenClientFileUpload: true,
+  disableLogger: true,
+  tunnelRoute: "/monitoring",
 });
 
 const withBundleAnalyzer = withBundleAnalyzerConfig({
