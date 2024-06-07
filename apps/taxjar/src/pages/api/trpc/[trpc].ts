@@ -1,10 +1,10 @@
+import { withOtel } from "@saleor/apps-otel";
 import * as trpcNext from "@trpc/server/adapters/next";
+import { createLogger } from "../../../logger";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createTrpcContext } from "../../../modules/trpc/trpc-context";
-import { createLogger } from "@saleor/apps-shared";
-import { withOtel } from "@saleor/apps-otel";
 
-const logger = createLogger({ name: "tRPC error" });
+const logger = createLogger("trpcError");
 
 export default withOtel(
   trpcNext.createNextApiHandler({

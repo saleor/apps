@@ -219,12 +219,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -436,12 +430,6 @@ importers:
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       qs:
         specifier: 6.11.2
         version: 6.11.2
@@ -623,12 +611,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -786,12 +768,6 @@ importers:
       nuvo-react:
         specifier: ^1.22.1
         version: 1.22.1(@babel/core@7.24.3)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -988,12 +964,6 @@ importers:
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1124,6 +1094,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1175,12 +1148,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1537,12 +1504,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1730,12 +1691,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1857,6 +1812,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1911,12 +1869,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2068,12 +2020,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2282,12 +2228,6 @@ importers:
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2493,12 +2433,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2797,12 +2731,6 @@ importers:
       eslint:
         specifier: 8.46.0
         version: 8.46.0
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       semver:
         specifier: ^7.5.1
         version: 7.5.2
@@ -2870,12 +2798,6 @@ importers:
       '@trpc/server':
         specifier: 10.34.0
         version: 10.34.0
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -15285,11 +15207,6 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  /atomic-sleep@1.0.0:
-    resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
-    engines: {node: '>=8.0.0'}
-    dev: false
-
   /attr-accept@2.2.2:
     resolution: {integrity: sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==}
     engines: {node: '>=4'}
@@ -16247,6 +16164,7 @@ packages:
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+    dev: true
 
   /combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -16838,10 +16756,6 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.2
-    dev: false
-
-  /dateformat@4.6.3:
-    resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
     dev: false
 
   /dayjs@1.11.8:
@@ -18459,15 +18373,6 @@ packages:
       fast-decode-uri-component: 1.0.1
     dev: true
 
-  /fast-redact@3.2.0:
-    resolution: {integrity: sha512-zaTadChr+NekyzallAMXATXLOR8MNx3zqpZ0MUF2aGf4EathnG0f32VLODNlY8IuGY3HoRO2L6/6fSzNsLaHIw==}
-    engines: {node: '>=6'}
-    dev: false
-
-  /fast-safe-stringify@2.1.1:
-    resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
-    dev: false
-
   /fast-shallow-equal@1.0.0:
     resolution: {integrity: sha512-HPtaa38cPgWvaCFmRNhlc6NG7pv6NUHqjPgVAkWGoB9mQMwYB27/K0CvOM5Czy+qpT3e8XJ6Q4aPAnzpNpzNaw==}
     dev: false
@@ -19415,13 +19320,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /help-me@4.2.0:
-    resolution: {integrity: sha512-TAOnTB8Tz5Dw8penUuzHVrKNKlCIbwwbHnXraNJxPwf8LRtE2HlM84RYuezMFcwOJmoYOCWVDyJ8TQGxn9PgxA==}
-    dependencies:
-      glob: 8.1.0
-      readable-stream: 3.6.2
-    dev: false
-
   /hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
@@ -20359,11 +20257,6 @@ packages:
     dependencies:
       '@types/react': 18.2.5
       react: 18.2.0
-    dev: false
-
-  /joycon@3.1.1:
-    resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
-    engines: {node: '>=10'}
     dev: false
 
   /js-beautify@1.14.8:
@@ -22455,10 +22348,6 @@ packages:
       es-object-atoms: 1.0.0
     dev: true
 
-  /on-exit-leak-free@2.1.0:
-    resolution: {integrity: sha512-VuCaZZAjReZ3vUwgOB8LxAosIurDiAW0s13rI1YwmaP++jvcxP77AWoQvenZebpCA2m8WC1/EosPYPMjnRAp/w==}
-    dev: false
-
   /on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
     engines: {node: '>= 0.8'}
@@ -22933,54 +22822,6 @@ packages:
     resolution: {integrity: sha512-TNtsE+34BIax3WtkB/qqu5uepV1McKYEgvL3kWzU7aqPCpMEN6rBF3AOwu4WCwAealWlBGobXny/9kJb49C1ew==}
     dev: false
 
-  /pino-abstract-transport@1.0.0:
-    resolution: {integrity: sha512-c7vo5OpW4wIS42hUVcT5REsL8ZljsUfBjqV/e2sFxmFEFZiq1XLUp5EYLtuDH6PEHq9W1egWqRbnLUP5FuZmOA==}
-    dependencies:
-      readable-stream: 4.4.0
-      split2: 4.2.0
-    dev: false
-
-  /pino-pretty@10.0.0:
-    resolution: {integrity: sha512-zKFjYXBzLaLTEAN1ayKpHXtL5UeRQC7R3lvhKe7fWs7hIVEjKGG/qIXwQt9HmeUp71ogUd/YcW+LmMwRp4KT6Q==}
-    hasBin: true
-    dependencies:
-      colorette: 2.0.20
-      dateformat: 4.6.3
-      fast-copy: 3.0.1
-      fast-safe-stringify: 2.1.1
-      help-me: 4.2.0
-      joycon: 3.1.1
-      minimist: 1.2.8
-      on-exit-leak-free: 2.1.0
-      pino-abstract-transport: 1.0.0
-      pump: 3.0.0
-      readable-stream: 4.4.0
-      secure-json-parse: 2.7.0
-      sonic-boom: 3.3.0
-      strip-json-comments: 3.1.1
-    dev: false
-
-  /pino-std-serializers@6.2.1:
-    resolution: {integrity: sha512-wHuWB+CvSVb2XqXM0W/WOYUkVSPbiJb9S5fNB7TBhd8s892Xq910bRxwHtC4l71hgztObTjXL6ZheZXFjhDrDQ==}
-    dev: false
-
-  /pino@8.14.1:
-    resolution: {integrity: sha512-8LYNv7BKWXSfS+k6oEc6occy5La+q2sPwU3q2ljTX5AZk7v+5kND2o5W794FyRaqha6DJajmkNRsWtPpFyMUdw==}
-    hasBin: true
-    dependencies:
-      atomic-sleep: 1.0.0
-      fast-redact: 3.2.0
-      on-exit-leak-free: 2.1.0
-      pino-abstract-transport: 1.0.0
-      pino-std-serializers: 6.2.1
-      process-warning: 2.2.0
-      quick-format-unescaped: 4.0.4
-      real-require: 0.2.0
-      safe-stable-stringify: 2.4.3
-      sonic-boom: 3.3.0
-      thread-stream: 2.3.0
-    dev: false
-
   /pirates@4.0.5:
     resolution: {integrity: sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==}
     engines: {node: '>= 6'}
@@ -23207,13 +23048,10 @@ packages:
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
-  /process-warning@2.2.0:
-    resolution: {integrity: sha512-/1WZ8+VQjR6avWOgHeEPd7SDQmFQ1B5mC1eRXsCm5TarlNmx/wCsa5GEaxGm05BORRtyG/Ex/3xq3TuRvq57qg==}
-    dev: false
-
   /process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
+    dev: true
 
   /progress@2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
@@ -23296,6 +23134,7 @@ packages:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
+    dev: true
 
   /pumpify@1.5.1:
     resolution: {integrity: sha512-oClZI37HvuUJJxSKKrC17bZ9Cu0ZYhEAGPsPUy9KlMUmv9dKX2o77RUmq7f3XjIxbwyGwYzbzQ1L2Ks8sIradQ==}
@@ -23375,10 +23214,6 @@ packages:
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
-
-  /quick-format-unescaped@4.0.4:
-    resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
-    dev: false
 
   /quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
@@ -23879,16 +23714,6 @@ packages:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
 
-  /readable-stream@4.4.0:
-    resolution: {integrity: sha512-kDMOq0qLtxV9f/SQv522h8cxZBqNZXuXNyjyezmfAAuribMyVXziljpQ/uQhfE1XLg2/TLTW2DsnoE4VAi/krg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dependencies:
-      abort-controller: 3.0.0
-      buffer: 6.0.3
-      events: 3.3.0
-      process: 0.11.10
-    dev: false
-
   /readdir-glob@1.1.3:
     resolution: {integrity: sha512-v05I2k7xN8zXvPD9N+z/uhXPaj0sUFCe2rcWZIpBsqxfP7xXFQ0tipAd/wjj1YxWyWtUS5IDJpOG82JKt2EAVA==}
     dependencies:
@@ -23900,11 +23725,6 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
-
-  /real-require@0.2.0:
-    resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
-    engines: {node: '>= 12.13.0'}
-    dev: false
 
   /recast@0.21.5:
     resolution: {integrity: sha512-hjMmLaUXAm1hIuTqOdeYObMslq/q+Xff6QE3Y2P+uoHAg2nmVlLBps2hzh1UJDdMtDTMXOFewK6ky51JQIeECg==}
@@ -24375,11 +24195,6 @@ packages:
       is-regex: 1.1.4
     dev: true
 
-  /safe-stable-stringify@2.4.3:
-    resolution: {integrity: sha512-e2bDA2WJT0wxseVd4lsDP4+3ONX6HpMXQa1ZhFQ7SU+GjvORCmShbCMltrtIDfkYhVHrOcPtj+KhmDBdPdZD1g==}
-    engines: {node: '>=10'}
-    dev: false
-
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
@@ -24417,10 +24232,6 @@ packages:
   /scuid@1.1.0:
     resolution: {integrity: sha512-MuCAyrGZcTLfQoH2XoBlQ8C6bzwN88XT/0slOGz0pn8+gIP85BOAfYa44ZXQUTOwRwPU0QvgU+V+OSajl/59Xg==}
     dev: true
-
-  /secure-json-parse@2.7.0:
-    resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
-    dev: false
 
   /selderee@0.10.0:
     resolution: {integrity: sha512-DEL/RW/f4qLw/NrVg97xKaEBC8IpzIG2fvxnzCp3Z4yk4jQ3MXom+Imav9wApjxX2dfS3eW7x0DXafJr85i39A==}
@@ -24795,12 +24606,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /sonic-boom@3.3.0:
-    resolution: {integrity: sha512-LYxp34KlZ1a2Jb8ZQgFCK3niIHzibdwtwNUWKg0qQRzsDoJ3Gfgkf8KdBTFU3SkejDEIlWwnSnpVdOZIhFMl/g==}
-    dependencies:
-      atomic-sleep: 1.0.0
-    dev: false
-
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -24861,11 +24666,6 @@ packages:
   /spdx-license-ids@3.0.13:
     resolution: {integrity: sha512-XkD+zwiqXHikFZm4AX/7JSCXA98U5Db4AFd5XUg/+9UNtnH75+Z9KxtpYiJZx36mUDVOwH83pl7yvCer6ewM3w==}
     dev: true
-
-  /split2@4.2.0:
-    resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
-    engines: {node: '>= 10.x'}
-    dev: false
 
   /sponge-case@1.0.1:
     resolution: {integrity: sha512-dblb9Et4DAtiZ5YSUZHLl4XhH4uK80GhAZrVXdN4O2P4gQ40Wa5UIOPUHlA/nFd2PLblBZWUioLMMAVrgpoYcA==}
@@ -25418,12 +25218,6 @@ packages:
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
-
-  /thread-stream@2.3.0:
-    resolution: {integrity: sha512-kaDqm1DET9pp3NXwR8382WHbnpXnRkN9xGN9dQt3B2+dmXiW8X1SOwmFOxAErEQ47ObhZ96J6yhZNXuyCOL7KA==}
-    dependencies:
-      real-require: 0.2.0
-    dev: false
 
   /throttle-debounce@3.0.1:
     resolution: {integrity: sha512-dTEWWNu6JmeVXY0ZYoPuH5cRIwc0MeGbJwah9KUNYSJwommQpCzTySTpEe8Gs1J23aeWEuAobe4Ag7EHVt/LOg==}
