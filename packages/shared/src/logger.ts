@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "production" && forbiddenProductionLevels.includes(
 /**
  * @deprecated - use your app defined logger instead
  */
-export const logger = pino({
+const logger = pino({
   level: logLevel,
   redact: ["token", "apiKey"],
   transport:
@@ -30,9 +30,9 @@ export const logger = pino({
 /**
  * @deprecated
  */
-export const createLogger = logger.child.bind(logger);
+const createLogger = logger.child.bind(logger);
 
 /**
  * @deprecated
  */
-export type Logger = typeof logger;
+type Logger = typeof logger;
