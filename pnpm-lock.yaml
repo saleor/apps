@@ -1344,6 +1344,12 @@ importers:
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
