@@ -1,1 +1,1 @@
-export * from "./src/get-release-tag";
+export * from "./src/export-release-env-var";
