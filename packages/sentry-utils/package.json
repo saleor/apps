@@ -13,10 +13,19 @@
     "typescript": "5.1.6"
   },
   "exports": {
-    ".": "./index.ts",
-    "./node/instrumentation": "./src/node/instrumentation.node.ts",
-    "./browser/instrumentation": "./src/browser/instrumentation.browser.ts",
-    "./nextjs/config": "./src/nextjs/config.js"
+    ".": {
+      "default": "./index.ts"
+    },
+    "./node/instrumentation": {
+      "default": "./src/node/instrumentation.node.ts"
+    },
+    "./browser/instrumentation": {
+      "default": "./src/browser/instrumentation.browser.ts"
+    },
+    "./nextjs/config": {
+      "default": "./src/nextjs/config.js",
+      "types": "./src/nextjs/config.d.ts"
+    }
   },
   "main": "index.ts",
   "type": "module"
