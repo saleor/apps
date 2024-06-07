@@ -11,13 +11,6 @@
         "ALLOWED_DOMAIN_PATTERN",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "SENTRY_DSN",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "SENTRY_ORG",
-        "SENTRY_PROJECT",
-        "SENTRY_AUTH_TOKEN",
-        "SENTRY_ENVIRONMENT",
         "NEXT_PUBLIC_VERCEL_ENV",
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL"
