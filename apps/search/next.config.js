@@ -1,6 +1,6 @@
 // @ts-check
 
-import { withSentryConfig } from "@sentry/nextjs";
+import { getNextJsConfigWithSentry } from "@saleor/sentry-utils/nextjs/config";
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
@@ -15,6 +15,7 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/webhook-utils",
     "@saleor/react-hook-form-macaw",
+    "@saleor/sentry-utils",
   ],
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
@@ -28,14 +29,9 @@ const nextConfig = {
   },
 };
 
-const configWithSentry = withSentryConfig(nextConfig, {
-  silent: true,
-  org: process.env.SENTRY_ORG,
+const configWithSentry = getNextJsConfigWithSentry({
   project: process.env.SENTRY_PROJECT,
-  widenClientFileUpload: true,
-  tunnelRoute: "/monitoring",
-  hideSourceMaps: true,
-  disableLogger: true,
+  nextConfig,
 });
 
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
