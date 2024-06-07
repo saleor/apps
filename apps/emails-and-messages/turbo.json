@@ -15,11 +15,6 @@
         "VERCEL_URL",
         "PORT",
         "SENTRY_ORG",
-        "SENTRY_PROJECT",
-        "SENTRY_DSN",
-        "SENTRY_AUTH_TOKEN",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL"
       ]

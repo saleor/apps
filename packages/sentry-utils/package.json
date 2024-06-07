@@ -7,8 +7,21 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
+    "@sentry/cli": "../../node_modules/@sentry/cli",
+    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.1.6"
+  },
+  "exports": {
+    ".": {
+      "default": "./index.ts"
+    },
+    "./node/instrumentation": {
+      "default": "./src/node/instrumentation.node.ts"
+    },
+    "./browser/instrumentation": {
+      "default": "./src/browser/instrumentation.browser.ts"
+    }
   },
   "main": "index.ts",
   "type": "module"

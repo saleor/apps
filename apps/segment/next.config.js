@@ -25,11 +25,16 @@ const nextConfig = () => {
       "@saleor/apps-ui",
       "@saleor/react-hook-form-macaw",
       "@saleor/trpc",
+      "@saleor/sentry-utils",
     ],
+    experimental: {
+      instrumentationHook: true,
+    },
     /*
      * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
      * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
      */
+    /** @param { import("webpack").Configuration } config */
     webpack: (config, { isServer }) => {
       if (isServer) {
         config.ignoreWarnings = [{ module: /opentelemetry/ }];
@@ -43,13 +48,13 @@ const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
 const configWithSentry = withSentryConfig(nextConfig, {
-  silent: true,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  widenClientFileUpload: true,
-  tunnelRoute: "/monitoring",
+  silent: true,
   hideSourceMaps: true,
+  widenClientFileUpload: true,
   disableLogger: true,
+  tunnelRoute: "/monitoring",
 });
 
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
