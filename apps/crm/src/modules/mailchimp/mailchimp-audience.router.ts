@@ -1,9 +1,9 @@
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 
-import { createLogger } from "@saleor/apps-logger";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createLogger } from "../../logger";
 import { MailchimpClientOAuth } from "./mailchimp-client";
 import { MailchimpConfigSettingsManager } from "./mailchimp-config-settings-manager";
 

@@ -1,6 +1,6 @@
-import { createLogger } from "@saleor/apps-logger";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { createLogger } from "../../../logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
 
