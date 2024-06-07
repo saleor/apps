@@ -26,7 +26,7 @@ const BulkAddContactsSchema = z.object({
   listId: z.string().min(1),
 });
 
-const logger = createLogger("mailchimpAudiecneRouter");
+const logger = createLogger("mailchimpAudienceRouter");
 
 const mailchimpAudienceRouter = router({
   getLists: protectedClientProcedure.query(async ({ ctx }) => {
