@@ -1,1 +1,1 @@
-export * from "./src/wrap-with-sentry-release";
+export * from "./src/export-release-env-var";

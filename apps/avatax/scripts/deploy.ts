@@ -1,11 +1,9 @@
-import { wrapWithSentryRelease } from "@saleor/sentry-utils";
+import { exportSentryReleaseEnvironmentVariable } from "@saleor/sentry-utils";
 import { execSync } from "node:child_process";
 
 import packageJson from "../package.json";
 
-wrapWithSentryRelease({
-  cmd: "pnpm run build",
-  packageVersion: packageJson.version,
-});
+exportSentryReleaseEnvironmentVariable(packageJson.version);
 
+execSync("pnpm run build", { stdio: "inherit" });
 execSync("pnpm run migrate", { stdio: "inherit" });

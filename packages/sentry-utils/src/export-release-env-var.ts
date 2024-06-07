@@ -1,26 +1,11 @@
 import { execSync } from "node:child_process";
 
-/**
- * Wraps command with Sentry release tag. Wrapped command is executed using node `execSync` function.
- *
- * @param {string} params.cmd - The command to be executed.
- * @param {string} params.packageVersion - The version of the package.
- *
- * @example
- * wrapWithSentryRelease({ cmd: 'npm run build', packageVersion: '1.0.0' });
- */
-export const wrapWithSentryRelease = ({
-  cmd,
-  packageVersion,
-}: {
-  cmd: string;
-  packageVersion: string;
-}) => {
-  const release = getReleaseTag(packageVersion);
+export const exportSentryReleaseEnvironmentVariable = (packageVersion: string) => {
+  const releaseTag = getReleaseTag(packageVersion);
 
-  console.log("Using release tag:", release);
+  console.log("Using release tag:", releaseTag);
 
-  execSync(`SENTRY_RELEASE='${release}' ${cmd}`, { stdio: "inherit" });
+  process.env.SENTRY_RELEASE = releaseTag;
 };
 
 const getReleaseTag = (version: string) => {
