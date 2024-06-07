@@ -1,6 +1,6 @@
 // @ts-check
 
-import { withSentryConfig } from "@sentry/nextjs";
+import { getNextJsConfigWithSentry } from "@saleor/sentry-utils/nextjs/config";
 
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
@@ -14,17 +14,13 @@ const nextConfig = {
     "@saleor/apps-shared",
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
+    "@saleor/sentry-utils",
   ],
 };
 
-const configWithSentry = withSentryConfig(nextConfig, {
-  silent: true,
-  org: process.env.SENTRY_ORG,
+const configWithSentry = getNextJsConfigWithSentry({
   project: process.env.SENTRY_PROJECT,
-  hideSourceMaps: true,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  tunnelRoute: "/monitoring",
+  nextConfig,
 });
 
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
