@@ -13,6 +13,8 @@ import { isConfigured } from "../../lib/algolia/is-configured";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { loggerContext } from "../../lib/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const logger = createLogger("recreateWebhooksHandler");
 
@@ -68,22 +70,25 @@ export const recreateWebhooksHandlerFactory =
     }
   };
 
-export default withOtel(
-  createProtectedHandler(
-    recreateWebhooksHandlerFactory({
-      settingsManagerFactory: createSettingsManager,
-      webhookActivityTogglerFactory: function (appId, client) {
-        return new WebhookActivityTogglerService(appId, client);
-      },
-      graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createInstrumentedGraphqlClient({
-          saleorApiUrl,
-          token,
-        });
-      },
-    }),
-    saleorApp.apl,
-    ["MANAGE_APPS"],
+export default wrapWithLoggerContext(
+  withOtel(
+    createProtectedHandler(
+      recreateWebhooksHandlerFactory({
+        settingsManagerFactory: createSettingsManager,
+        webhookActivityTogglerFactory: function (appId, client) {
+          return new WebhookActivityTogglerService(appId, client);
+        },
+        graphqlClientFactory(saleorApiUrl: string, token: string) {
+          return createInstrumentedGraphqlClient({
+            saleorApiUrl,
+            token,
+          });
+        },
+      }),
+      saleorApp.apl,
+      ["MANAGE_APPS"],
+    ),
+    "/api/recreate-webhooks",
   ),
-  "/api/recreate-webhooks",
+  loggerContext,
 );

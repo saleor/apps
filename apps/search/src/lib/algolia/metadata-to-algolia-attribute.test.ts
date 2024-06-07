@@ -1,6 +1,5 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
-import { map } from "zod";
 
 describe("metadataToAlgoliaAttribute", () => {
   it("Maps string attribute", () => {
@@ -14,7 +13,7 @@ describe("metadataToAlgoliaAttribute", () => {
           key: "foobar",
           value: "baz",
         },
-      ])
+      ]),
     ).toEqual({
       foo: "bar",
       foobar: "baz",
@@ -32,7 +31,7 @@ describe("metadataToAlgoliaAttribute", () => {
           key: "foobar",
           value: `["a", "b", "c"]`,
         },
-      ])
+      ]),
     ).toEqual({
       foo: {
         bar: "baz",
@@ -56,7 +55,7 @@ describe("metadataToAlgoliaAttribute", () => {
           key: "foo",
           value: "",
         },
-      ])
+      ]),
     ).toEqual({
       foo: null,
     });
