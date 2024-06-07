@@ -16,7 +16,6 @@
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
         "SENTRY_PROJECT",
-        "SENTRY_DSN",
         "SENTRY_ORG",
         "SENTRY_AUTH_TOKEN",
         "NEXT_PUBLIC_SENTRY_DSN",

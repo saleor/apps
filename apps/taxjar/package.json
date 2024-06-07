@@ -4,6 +4,7 @@
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
+    "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
@@ -11,7 +12,6 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "test": "vitest"
   },
   "dependencies": {
@@ -82,6 +82,7 @@
     "@vitejs/plugin-react": "4.0.4",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,

@@ -4,14 +4,14 @@
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
+    "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "next lint",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest",
-    "deploy": "tsx --require dotenv/config ./scripts/deploy.ts"
+    "test": "vitest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.332.0",
@@ -34,9 +34,9 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
-    "@saleor/sentry-utils": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
+    "@saleor/sentry-utils": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
     "@sentry/cli": "../../node_modules/@sentry/cli",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
@@ -81,6 +81,7 @@
     "@types/react-dom": "18.2.5",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,

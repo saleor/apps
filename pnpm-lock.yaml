@@ -397,9 +397,15 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -424,6 +430,9 @@ importers:
       contentful-management:
         specifier: 10.46.4
         version: 10.46.4
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -435,7 +444,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -584,9 +593,15 @@ importers:
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -611,6 +626,9 @@ importers:
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -622,7 +640,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -756,9 +774,15 @@ importers:
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -768,6 +792,9 @@ importers:
       dot-object:
         specifier: ^2.1.4
         version: 2.1.4
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -782,10 +809,10 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       nuvo-react:
         specifier: ^1.22.1
-        version: 1.22.1(@babel/core@7.24.3)(react-dom@18.2.0)(react@18.2.0)
+        version: 1.22.1(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -931,15 +958,21 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@sendgrid/client':
         specifier: ^7.7.0
         version: 7.7.0
       '@sendgrid/mail':
         specifier: ^7.7.0
         version: 7.7.0
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -962,7 +995,7 @@ importers:
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       graphql:
         specifier: 16.7.1
@@ -984,7 +1017,7 @@ importers:
         version: 4.13.0
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -1133,12 +1166,18 @@ importers:
       '@saleor/macaw-ui':
         specifier: 1.0.0-pre.7
         version: 1.0.0-pre.7(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0)(react@18.2.0)
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@saleor/trpc':
         specifier: workspace:*
         version: link:../../packages/trpc
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -1160,6 +1199,9 @@ importers:
       '@web-std/file':
         specifier: ^3.0.2
         version: 3.0.2
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -1174,7 +1216,7 @@ importers:
         version: 1.0.6
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -1239,9 +1281,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -1323,9 +1362,12 @@ importers:
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@1.8.0)(@opentelemetry/core@1.24.1)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@1.24.1)(@opentelemetry/semantic-conventions@1.24.1)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -1344,6 +1386,12 @@ importers:
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
+      pino:
+        specifier: ^8.14.1
+        version: 8.14.1
+      pino-pretty:
+        specifier: ^10.0.0
+        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1489,12 +1537,18 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@saleor/webhook-utils':
         specifier: workspace:*
         version: link:../../packages/webhook-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -1517,7 +1571,7 @@ importers:
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       fast-xml-parser:
         specifier: ^4.0.15
@@ -1536,7 +1590,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -1682,12 +1736,18 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@saleor/webhook-utils':
         specifier: workspace:*
         version: link:../../packages/webhook-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -1719,7 +1779,7 @@ importers:
         specifier: ^4.3.4
         version: 4.3.4
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       graphql:
         specifier: 16.7.1
@@ -1729,7 +1789,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -1869,15 +1929,21 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@saleor/trpc':
         specifier: workspace:*
         version: link:../../packages/trpc
       '@segment/analytics-node':
         specifier: ^1.1.0
         version: 1.1.0
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -1899,6 +1965,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.0.4
         version: 4.0.4(vite@4.4.8)
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1910,7 +1979,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -2047,12 +2116,21 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
+      dotenv:
+        specifier: 16.3.1
+        version: 16.3.1
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -2222,9 +2300,12 @@ importers:
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
+      '@sentry/cli':
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -2278,7 +2359,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -2446,11 +2527,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sentry-utils
       '@sentry/cli':
-        specifier: 2.31.2
-        version: 2.31.2
+        specifier: ../../node_modules/@sentry/cli
+        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: 8.0.0
-        version: 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1)
+        specifier: ../../node_modules/@sentry/nextjs
+        version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0)(react@18.2.0)
@@ -2470,7 +2551,7 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       graphql:
         specifier: 16.7.1
@@ -2492,7 +2573,7 @@ importers:
         version: 5.0.0(modern-errors@6.0.0)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
       pino:
         specifier: ^8.14.1
         version: 8.14.1
@@ -7993,7 +8074,7 @@ packages:
       stylis: 4.2.0
     dev: false
 
-  /@emotion/css@11.10.0(@babel/core@7.24.3):
+  /@emotion/css@11.10.0(@babel/core@7.23.3):
     resolution: {integrity: sha512-dH9f+kSCucc8ilMg0MUA1AemabcyzYpe5EKX24F528PJjD7HyIY/VBNJHxfUdc8l400h2ncAjR6yEDu+DBj2cg==}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -8001,7 +8082,7 @@ packages:
       '@babel/core':
         optional: true
     dependencies:
-      '@babel/core': 7.24.3
+      '@babel/core': 7.23.3
       '@emotion/babel-plugin': 11.11.0
       '@emotion/cache': 11.11.0
       '@emotion/serialize': 1.1.2
@@ -10231,16 +10312,6 @@ packages:
       '@opentelemetry/api': 1.8.0
       '@opentelemetry/semantic-conventions': 1.24.1
 
-  /@opentelemetry/core@1.24.1(@opentelemetry/api@node_modules+@opentelemetry+api):
-    resolution: {integrity: sha512-wMSGfsdmibI88K9wB498zXY04yThPexo8jvwNNlm542HZB7XrrMRBbAyKJqG8qDRJwIBdBrPMi4V9ZPW/sqrcg==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
-    dependencies:
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-      '@opentelemetry/semantic-conventions': 1.24.1
-    dev: false
-
   /@opentelemetry/exporter-logs-otlp-http@0.46.0(@opentelemetry/api@1.7.0):
     resolution: {integrity: sha512-XkVppqn4aArfaF7nE2fMou0pzrGLPKo7gjuYvQw39VD9GMtC8RSOt7aUUjaLdw/gFP5ZW4obZrclNttKdCUhwg==}
     engines: {node: '>=14'}
@@ -10433,21 +10504,6 @@ packages:
       semver: 7.5.4
     transitivePeerDependencies:
       - supports-color
-
-  /@opentelemetry/instrumentation-http@0.51.1(@opentelemetry/api@node_modules+@opentelemetry+api):
-    resolution: {integrity: sha512-6b3nZnFFEz/3xZ6w8bVxctPUWIPWiXuPQ725530JgxnN1cvYFd8CJ75PrHZNjynmzSSnqBkN3ef4R9N+RpMh8Q==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': ^1.3.0
-    dependencies:
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-      '@opentelemetry/core': 1.24.1(@opentelemetry/api@node_modules+@opentelemetry+api)
-      '@opentelemetry/instrumentation': 0.51.1(@opentelemetry/api@node_modules+@opentelemetry+api)
-      '@opentelemetry/semantic-conventions': 1.24.1
-      semver: 7.5.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /@opentelemetry/instrumentation-ioredis@0.40.0(@opentelemetry/api@1.8.0):
     resolution: {integrity: sha512-Jv/fH7KhpWe4KBirsiqeUJIYrsdR2iu2l4nWhfOlRvaZ+zYIiLEzTQR6QhBbyRoAbU4OuYJzjWusOmmpGBnwng==}
@@ -10680,23 +10736,6 @@ packages:
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
-
-  /@opentelemetry/instrumentation@0.51.1(@opentelemetry/api@node_modules+@opentelemetry+api):
-    resolution: {integrity: sha512-JIrvhpgqY6437QIqToyozrUG1h5UhwHkaGK/WAX+fkrpyPtc+RO5FkRtUd9BH0MibabHHvqsnBGKfKVijbmp8w==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': ^1.3.0
-    dependencies:
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-      '@opentelemetry/api-logs': 0.51.1
-      '@types/shimmer': 1.0.5
-      import-in-the-middle: 1.7.4
-      require-in-the-middle: 7.2.0
-      semver: 7.5.4
-      shimmer: 1.2.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /@opentelemetry/otlp-exporter-base@0.45.1(@opentelemetry/api@1.7.0):
     resolution: {integrity: sha512-Jvd6x8EwWGKEPWF4tkP4LpTPXiIkkafMNMvMJUfJd5DyNAftL1vAz+48jmi3URL2LMPkGryrvWPz8Tdu917gQw==}
@@ -12369,44 +12408,7 @@ packages:
       - '@opentelemetry/semantic-conventions'
       - encoding
       - supports-color
-
-  /@sentry/nextjs@8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)(next@14.2.3)(react@18.2.0)(webpack@5.82.1):
-    resolution: {integrity: sha512-FJEW0w1WJHMV9NWHZHOXNQPOSg9pxjAq5y7XcP88rCqa08bmVUNVyg5UbHKBMXG1BjZukVr/8in/4sbxBOv3VQ==}
-    engines: {node: '>=14.18'}
-    peerDependencies:
-      next: ^13.2.0 || ^14.0
-      react: 16.x || 17.x || 18.x
-      webpack: '>= 5.0.0'
-    peerDependenciesMeta:
-      webpack:
-        optional: true
-    dependencies:
-      '@opentelemetry/instrumentation-http': 0.51.1(@opentelemetry/api@node_modules+@opentelemetry+api)
-      '@rollup/plugin-commonjs': 24.0.0(rollup@3.29.4)
-      '@sentry/core': 8.0.0
-      '@sentry/node': 8.0.0
-      '@sentry/opentelemetry': 8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions)
-      '@sentry/react': 8.0.0(react@18.2.0)
-      '@sentry/types': 8.0.0
-      '@sentry/utils': 8.0.0
-      '@sentry/vercel-edge': 8.0.0
-      '@sentry/webpack-plugin': 2.16.0(webpack@5.82.1)
-      chalk: 3.0.0
-      next: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      resolve: 1.22.8
-      rollup: 3.29.4
-      stacktrace-parser: 0.1.10
-      webpack: 5.82.1
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-      - '@opentelemetry/core'
-      - '@opentelemetry/instrumentation'
-      - '@opentelemetry/sdk-trace-base'
-      - '@opentelemetry/semantic-conventions'
-      - encoding
-      - supports-color
-    dev: false
+    dev: true
 
   /@sentry/node@8.0.0:
     resolution: {integrity: sha512-yOmJV0gyRA5KMw4lUAuB2LytUwcwSByjFn2KO5Xy9Oc8XpgJ91CIU/v1Udv3GsrYo2HpdQn/dyZLwqqhbyM55Q==}
@@ -12481,26 +12483,6 @@ packages:
       '@sentry/core': 8.0.0
       '@sentry/types': 8.0.0
       '@sentry/utils': 8.0.0
-
-  /@sentry/opentelemetry@8.0.0(@opentelemetry/api@node_modules+@opentelemetry+api)(@opentelemetry/core@node_modules+@opentelemetry+core)(@opentelemetry/instrumentation@0.51.1)(@opentelemetry/sdk-trace-base@node_modules+@opentelemetry+sdk-trace-base)(@opentelemetry/semantic-conventions@node_modules+@opentelemetry+semantic-conventions):
-    resolution: {integrity: sha512-AvUUZpiJTq3H69Hd9k0tiOqGTA87uq0wZN+WaV4iT6sItG2MVaqYup5wSmqNKD6iVErfx7djzZ5C3LWsFQX3KQ==}
-    engines: {node: '>=14.18'}
-    peerDependencies:
-      '@opentelemetry/api': ^1.8.0
-      '@opentelemetry/core': ^1.24.1
-      '@opentelemetry/instrumentation': ^0.51.1
-      '@opentelemetry/sdk-trace-base': ^1.23.0
-      '@opentelemetry/semantic-conventions': ^1.23.0
-    dependencies:
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-      '@opentelemetry/core': link:node_modules/@opentelemetry/core
-      '@opentelemetry/instrumentation': 0.51.1(@opentelemetry/api@node_modules+@opentelemetry+api)
-      '@opentelemetry/sdk-trace-base': link:node_modules/@opentelemetry/sdk-trace-base
-      '@opentelemetry/semantic-conventions': link:node_modules/@opentelemetry/semantic-conventions
-      '@sentry/core': 8.0.0
-      '@sentry/types': 8.0.0
-      '@sentry/utils': 8.0.0
-    dev: false
 
   /@sentry/react@8.0.0(react@18.2.0):
     resolution: {integrity: sha512-TbAtOAKY2QKqpuy0uoO/ujL0J5djZjQ2K8iE3/j3+EX/3DaZ3ydUGNdJ0rDQQoJgRUsPidBM+SBco2dI38sCdQ==}
@@ -22029,6 +22011,49 @@ packages:
     resolution: {integrity: sha512-amlnNvPXmiUOmNsDfUngNWPdZYOmCUGExQy/kuPCmLbhrXVXIYhY4bnE4D3dWl7OMhSEr9NndUrl4aKGFhFIQg==}
     dev: false
 
+  /next@14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}
+    engines: {node: '>=18.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      '@playwright/test': ^1.41.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@playwright/test':
+        optional: true
+      sass:
+        optional: true
+    dependencies:
+      '@next/env': 14.2.3
+      '@opentelemetry/api': link:node_modules/@opentelemetry/api
+      '@swc/helpers': 0.5.5
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.2.3
+      '@next/swc-darwin-x64': 14.2.3
+      '@next/swc-linux-arm64-gnu': 14.2.3
+      '@next/swc-linux-arm64-musl': 14.2.3
+      '@next/swc-linux-x64-gnu': 14.2.3
+      '@next/swc-linux-x64-musl': 14.2.3
+      '@next/swc-win32-arm64-msvc': 14.2.3
+      '@next/swc-win32-ia32-msvc': 14.2.3
+      '@next/swc-win32-x64-msvc': 14.2.3
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+    dev: false
+
   /next@14.2.3(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-dowFkFTR8v79NPJO4QsBUtxv0g9BrS/phluVpMAt2ku7H+cbcBJlopXjkWlwxrk/xGqMemr7JkGPGemPrLLX7A==}
     engines: {node: '>=18.17.0'}
@@ -22391,14 +22416,14 @@ packages:
     resolution: {integrity: sha512-qaKRmtYPZ5qdw4jWJD6bxEf1FJEqllJrwxCLIm0sQU/A7v2/czigzOb+C2uSiFsa9lBUzeH7M1oK+Q+OLxL3kA==}
     dev: false
 
-  /nuvo-react@1.22.1(@babel/core@7.24.3)(react-dom@18.2.0)(react@18.2.0):
+  /nuvo-react@1.22.1(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-osN6dCQupiqBr3W8qDUDnkV2noKWVGEb3fTShLFzOaXMFrSm1ocQfBrgyuSmDDmsldUoT18i+I4nTb67oXPMEQ==}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0
     dependencies:
       20-exceljs: 4.5.17
-      '@emotion/css': 11.10.0(@babel/core@7.24.3)
+      '@emotion/css': 11.10.0(@babel/core@7.23.3)
       '@handsontable/react': 12.1.2(handsontable@12.1.2)
       '@headlessui/react': 1.7.15(react-dom@18.2.0)(react@18.2.0)
       '@heroicons/react': 1.0.6(react@18.2.0)
@@ -25269,6 +25294,24 @@ packages:
 
   /strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
+    dev: false
+
+  /styled-jsx@5.1.1(@babel/core@7.23.3)(react@18.2.0):
+    resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
+    engines: {node: '>= 12.0.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      babel-plugin-macros: '*'
+      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+    dependencies:
+      '@babel/core': 7.23.3
+      client-only: 0.0.1
+      react: 18.2.0
     dev: false
 
   /styled-jsx@5.1.1(@babel/core@7.23.9)(react@18.2.0):
