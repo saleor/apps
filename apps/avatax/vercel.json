@@ -3,19 +3,19 @@
   "functions": {
     "src/pages/api/webhooks/checkout-calculate-taxes.ts": {
       "memory": 320,
-      "maxDuration": 22
+      "maxDuration": 25
     },
     "src/pages/api/webhooks/order-calculate-taxes.ts": {
       "memory": 320,
-      "maxDuration": 22
+      "maxDuration": 25
     },
     "src/pages/api/webhooks/order-cancelled.ts": {
       "memory": 320,
-      "maxDuration": 22
+      "maxDuration": 25
     },
     "src/pages/api/webhooks/order-confirmed.ts": {
       "memory": 320,
-      "maxDuration": 22
+      "maxDuration": 25
     }
   }
 }
