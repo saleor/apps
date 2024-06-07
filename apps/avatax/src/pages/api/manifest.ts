@@ -1,5 +1,6 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
+import * as Sentry from "@sentry/nextjs";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
@@ -14,6 +15,8 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
+        Sentry.captureException(new Error("This is a test error - ignore me!"));
 
         const manifest: AppManifest = {
           about: "App connects with Avatax to dynamically calculate taxes",

@@ -26,7 +26,6 @@ const nextConfig = {
       "@trpc/next",
       "jotai",
       "@saleor/apps-shared",
-      "@saleor/sentry-utils",
     ],
   },
   /*

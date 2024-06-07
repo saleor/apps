@@ -12,6 +12,11 @@
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.1.6"
   },
+  "exports": {
+    ".": "./index.ts",
+    "./node/instrumentation": "./node/instrumentation.node.ts",
+    "./browser/instrumentation": "./browser/instrumentation.node.ts"
+  },
   "main": "index.ts",
   "type": "module"
 }

@@ -12,7 +12,10 @@
     "GITHUB_SHA",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL"
+    "VERCEL",
+    "SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_RUNTIME"
   ],
   "pipeline": {
     "build": {
