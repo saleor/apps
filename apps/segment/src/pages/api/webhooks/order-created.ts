@@ -1,14 +1,16 @@
+import { SegmentNotConfiguredError } from "@/errors";
+import { loggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
 import { saleorApp } from "@/saleor-app";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { createLogger } from "@saleor/apps-logger";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import * as Sentry from "@sentry/nextjs";
 import {
   OrderCreatedDocument,
   OrderCreatedSubscriptionPayloadFragment,
 } from "../../../../generated/graphql";
-import { SegmentNotConfiguredError } from "@/errors";
-import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -24,7 +26,7 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedSubscripti
   query: OrderCreatedDocument,
 });
 
-const logger = createLogger({ name: "orderCreatedWebhook" });
+const logger = createLogger("orderCreatedSyncWebhook");
 
 const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = async (
   req,
@@ -62,4 +64,4 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
   }
 };
 
-export default orderCreatedWebhook.createHandler(handler);
+export default wrapWithLoggerContext(orderCreatedWebhook.createHandler(handler), loggerContext);

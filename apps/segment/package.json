@@ -32,6 +32,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
+    "@saleor/apps-logger": "workspace:*",
     "@saleor/trpc": "workspace:*",
     "@segment/analytics-node": "^1.1.0",
     "@sentry/nextjs": "8.0.0",
