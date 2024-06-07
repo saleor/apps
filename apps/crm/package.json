@@ -72,11 +72,11 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/mailchimp__mailchimp_marketing": "^3.0.7",
     "@types/react": "18.2.5",
-    "tsx": "4.7.1",
     "@types/react-dom": "18.2.5",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,

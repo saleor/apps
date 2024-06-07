@@ -76,8 +76,8 @@
     "@types/react-dom": "18.2.5",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
-    "tsx": "4.7.1",
     "node-mocks-http": "^1.12.2",
+    "tsx": "4.7.1",
     "typescript": "5.1.6"
   },
   "private": true,
