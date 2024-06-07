@@ -1,6 +1,6 @@
 // @ts-check
 
-import { withSentryConfig } from "@sentry/nextjs";
+import { getNextJsConfigWithSentry } from "@saleor/sentry-utils/nextjs/config";
 import { z } from "zod";
 
 const RequiredEnvs = z.object({
@@ -20,7 +20,7 @@ const nextConfig = () => {
 
   return {
     reactStrictMode: true,
-    transpilePackages: ["@saleor/apps-shared"],
+    transpilePackages: ["@saleor/apps-shared", "@saleor/sentry-utils"],
     /*
      * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
      * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
@@ -37,14 +37,9 @@ const nextConfig = () => {
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
-const configWithSentry = withSentryConfig(nextConfig, {
-  silent: true,
-  org: process.env.SENTRY_ORG,
+const configWithSentry = getNextJsConfigWithSentry({
   project: process.env.SENTRY_PROJECT,
-  widenClientFileUpload: true,
-  tunnelRoute: "/monitoring",
-  hideSourceMaps: true,
-  disableLogger: true,
+  nextConfig,
 });
 
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
