@@ -1,11 +1,10 @@
 import { Box, Text } from "@saleor/macaw-ui";
-import { Layout } from "@saleor/apps-ui";
+import { Layout, TextLink } from "@saleor/apps-ui";
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { MainInstructions } from "../../components/MainInstructions";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
-import { TextLink } from "@saleor/apps-ui";
 import { IndicesSettings } from "../../components/IndicesSettings";
 import { AlgoliaFieldsSelectionForm } from "../../components/AlgoliaFieldsSelectionForm";
 

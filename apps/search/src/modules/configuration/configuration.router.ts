@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { ChannelsDocument } from "../../../generated/graphql";
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -9,6 +7,7 @@ import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
 import { createLogger } from "../../lib/logger";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("configuration.router");
 
@@ -44,17 +43,6 @@ export const configurationRouter = router({
   setConnectionConfig: protectedClientProcedure
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
-      const { data: channelsData } = await ctx.apiClient.query(ChannelsDocument, {}).toPromise();
-      const channels = channelsData?.channels || [];
-
-      const algoliaClient = new AlgoliaSearchProvider({
-        appId: ctx.appId,
-        apiKey: input.secretKey,
-        indexNamePrefix: input.indexNamePrefix,
-        channels,
-        enabledKeys: [], // not required to ping algolia, but should be refactored
-      });
-
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
       const configManager = new AppConfigMetadataManager(settingsManager);
@@ -63,7 +51,11 @@ export const configurationRouter = router({
 
       try {
         logger.info("Will ping Algolia");
-        await algoliaClient.ping();
+
+        await algoliaCredentialsVerifier.verifyCredentials({
+          apiKey: input.secretKey,
+          appId: input.appId,
+        });
 
         logger.info("Algolia connection is ok. Will save settings");
 
@@ -79,8 +71,13 @@ export const configurationRouter = router({
 
         logger.info("Webhooks enabled");
       } catch (e) {
+        logger.warn("Failed to check Algolia credentials", {
+          error: e,
+        });
+
         throw new TRPCError({
           code: "BAD_REQUEST",
+          message: "Can't save Algolia config, check credentials",
         });
       }
 
