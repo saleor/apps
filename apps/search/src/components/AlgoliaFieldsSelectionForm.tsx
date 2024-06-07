@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, Skeleton, Button } from "@saleor/macaw-ui";
+import { Box, Button, Checkbox, Skeleton } from "@saleor/macaw-ui";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import {
   AlgoliaRootFields,
