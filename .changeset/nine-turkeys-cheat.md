@@ -15,4 +15,4 @@
 "crm": minor
 ---
 
-Setup Sentry inside Next.js instrumentation file. It ensures that Sentry works properly.
+Setup Sentry inside Next.js instrumentation file. It ensures that Sentry works properly for serverless environment.

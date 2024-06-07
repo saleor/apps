@@ -15,6 +15,7 @@ const nextConfig = {
     "@saleor/sentry-utils",
   ],
   experimental: {
+    instrumentationHook: true,
     optimizePackageImports: [
       "@sentry/nextjs",
       "@sentry/node",
@@ -32,6 +33,7 @@ const nextConfig = {
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
    * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
    */
+  /** @param { import("webpack").Configuration } config */
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.ignoreWarnings = [{ module: /opentelemetry/ }];
