@@ -3,12 +3,16 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withOtel } from "@saleor/apps-otel";
 
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import * as Sentry from "@sentry/nextjs";
 import pkg from "../../../package.json";
+import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
 import { customerCreatedWebhook } from "./webhooks/customer-created";
 import { fulfillmentCreatedWebhook } from "./webhooks/fulfillment-created";
 import { orderCreatedWebhook } from "./webhooks/order-created";
 import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
+
+const logger = createLogger("orderCreatedAsyncWebhookHandler");
 
 const handler = wrapWithLoggerContext(
   withOtel(
@@ -16,6 +20,9 @@ const handler = wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }): Promise<AppManifest> {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+
+        logger.info(`manifestFactory called from ${process.env.NEXT_RUNTIME} runtime.`);
+        Sentry.captureException(new Error("This is a test error - ignore me!"));
 
         return {
           about: "Klaviyo integration allows sending Klaviyo notifications on Saleor events.",

@@ -14,4 +14,5 @@ Sentry.init({
   includeLocalVariables: true,
   ignoreErrors: ["TRPCClientError"],
   integrations: [],
+  debug: true,
 });

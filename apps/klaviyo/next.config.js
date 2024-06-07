@@ -22,6 +22,7 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.ignoreWarnings = [{ module: /opentelemetry/ }];
+      config.externals.push({ "thread-stream": "commonjs thread-stream" });
     }
     return config;
   },
