@@ -1,9 +1,9 @@
-import { NextPage } from "next";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { isInIframe } from "@saleor/apps-shared";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
-import { useRouter } from "next/router";
-import { isInIframe } from "@saleor/apps-shared";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -25,6 +25,13 @@ const IndexPage: NextPage = () => {
       <h1>Saleor Klaviyo</h1>
       <p>This is Saleor App that allows to use external service to handle taxes.</p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
+      <button
+        onClick={() => {
+          throw new Error("Client sentry errror - ignore");
+        }}
+      >
+        Throw error
+      </button>
     </div>
   );
 };
