@@ -1,23 +1,22 @@
-import { createLogger } from "@saleor/apps-shared";
 import { z } from "zod";
+import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { createSettingsManager } from "./metadata-manager";
+import { AppConfigV2 } from "./schema-v2/app-config";
+import { AddressV2Schema } from "./schema-v2/app-config-schema.v2";
 import { AppConfigV2MetadataManager } from "./schema-v2/app-config-v2-metadata-manager";
 import { GetAppConfigurationV2Service } from "./schema-v2/get-app-configuration.v2.service";
-import { ConfigV1ToV2MigrationService } from "./schema-v2/config-v1-to-v2-migration.service";
-import { AddressV2Schema } from "./schema-v2/app-config-schema.v2";
-import { AppConfigV2 } from "./schema-v2/app-config";
 
 const UpsertAddressSchema = z.object({
   address: AddressV2Schema,
   channelSlug: z.string(),
 });
 
+const logger = createLogger("appConfigurationRouter");
+
 export const appConfigurationRouter = router({
   fetchChannelsOverrides: protectedClientProcedure.query(async ({ ctx, input }) => {
-    const logger = createLogger({ saleorApiUrl: ctx.saleorApiUrl });
-
     logger.debug("appConfigurationRouterV2.fetch called");
 
     const appConfigV2 =

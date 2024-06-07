@@ -1,7 +1,7 @@
-import { createLogger } from "@saleor/apps-logger";
 import * as Sentry from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
+import { createLogger } from "../../../logger";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
   SaleorOrderConfirmedEvent,

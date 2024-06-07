@@ -1,10 +1,10 @@
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "@/logger";
 import { z } from "zod";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 
-const logger = createLogger({ name: "configuration.router" });
+const logger = createLogger("configurationRouter");
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {

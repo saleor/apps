@@ -1,18 +1,18 @@
 import * as trpcNext from "@trpc/server/adapters/next";
-import { createTrpcContext } from "../../../modules/trpc/trpc-context";
+import { createLogger } from "../../../logger";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
-import { createLogger } from "@saleor/apps-shared";
+import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 
-const logger = createLogger({ name: "tRPC error" });
+const logger = createLogger("trpcError");
 
 export default trpcNext.createNextApiHandler({
   router: appRouter,
   createContext: createTrpcContext,
   onError: ({ path, error }) => {
     if (error.code === "INTERNAL_SERVER_ERROR") {
-      logger.error(error, `${path} returned error:`);
+      logger.error(`${path} returned error:`, { error });
       return;
     }
-    logger.debug(error, `${path} returned error:`);
+    logger.debug(`${path} returned error:`, { error });
   },
 });

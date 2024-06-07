@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-logger";
+import { createLogger } from "../../../logger";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 

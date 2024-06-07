@@ -1,8 +1,8 @@
-import { Client } from "urql";
-import { createSettingsManager } from "../../lib/metadata-manager";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { Client } from "urql";
 import { z } from "zod";
-import { createLogger } from "@saleor/apps-shared";
+import { createSettingsManager } from "../../lib/metadata-manager";
+import { createLogger } from "../../logger";
 
 export const CustomerCreatedEventConfig = z
   .object({
@@ -12,7 +12,7 @@ export const CustomerCreatedEventConfig = z
   .or(
     z.object({
       enabled: z.literal(false),
-    })
+    }),
   );
 
 const ConfigV1 = z.object({
@@ -38,14 +38,12 @@ export interface IMailchimpConfigSettingsManagerV1 {
 export class MailchimpConfigSettingsManagerV1 implements IMailchimpConfigSettingsManagerV1 {
   private settingsManager: SettingsManager;
   private readonly metadataKey = "mailchimp_config_v1";
-  private logger = createLogger({
-    context: "MailchimpConfigSettingsManagerV1",
-  });
+  private logger = createLogger("MailchimpConfigSettingsManagerV1");
 
   constructor(
     private apiClient: Pick<Client, "query" | "mutation">,
     private appId: string,
-    metadataManagerFactory = createSettingsManager
+    metadataManagerFactory = createSettingsManager,
   ) {
     this.settingsManager = metadataManagerFactory(apiClient, appId);
   }

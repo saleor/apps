@@ -1,7 +1,7 @@
-import { NextApiHandler } from "next";
-import { MailchimpClientOAuth } from "../../../../modules/mailchimp/mailchimp-client";
-import { createLogger } from "@saleor/apps-shared";
 import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
+import { NextApiHandler } from "next";
+import { createLogger } from "../../../../logger";
+import { MailchimpClientOAuth } from "../../../../modules/mailchimp/mailchimp-client";
 import { saleorApp } from "../../../../saleor-app";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
@@ -13,11 +13,11 @@ export const getBaseUrl = (headers: { [name: string]: string | string[] | undefi
 const handler: NextApiHandler = async (req, res) => {
   const baseUrl = getBaseUrl(req.headers);
 
-  const logger = createLogger({ url: req.url });
+  const logger = createLogger(`Mailchimp handler for: ${req.url}`);
 
   const code = req.query.code as string;
 
-  logger.debug({ baseUrl, code }, "auth/mailchimp/callback called");
+  logger.debug("auth/mailchimp/callback called", { baseUrl, code });
 
   const tokenResponse = await fetch("https://login.mailchimp.com/oauth2/token", {
     method: "POST",
@@ -32,7 +32,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const { access_token } = await tokenResponse.json();
 
-  logger.debug({ access_token }, "Received mailchimp access_token");
+  logger.debug("Received mailchimp access_token", { access_token });
 
   const metadataResponse = await fetch("https://login.mailchimp.com/oauth2/metadata", {
     headers: {

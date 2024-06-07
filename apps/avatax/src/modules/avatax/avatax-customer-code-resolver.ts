@@ -1,4 +1,4 @@
-import { createLogger } from "@saleor/apps-logger";
+import { createLogger } from "../../logger";
 
 const logger = createLogger("avataxCustomerCode");
 

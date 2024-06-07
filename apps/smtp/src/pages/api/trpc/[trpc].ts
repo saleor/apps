@@ -1,8 +1,8 @@
-import * as trpcNext from "@trpc/server/adapters/next";
-import { createTrpcContext } from "../../../modules/trpc/trpc-context";
-import { appRouter } from "../../../modules/trpc/trpc-app-router";
-import { createLogger } from "@saleor/apps-logger";
 import { withOtel } from "@saleor/apps-otel";
+import * as trpcNext from "@trpc/server/adapters/next";
+import { createLogger } from "../../../logger";
+import { appRouter } from "../../../modules/trpc/trpc-app-router";
+import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 
 const logger = createLogger("tRPC wrapper");
 

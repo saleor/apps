@@ -1,11 +1,11 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
-import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
-import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
-import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "@saleor/apps-logger";
+import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../logger";
+import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
+import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
