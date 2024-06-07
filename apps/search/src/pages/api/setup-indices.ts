@@ -9,6 +9,8 @@ import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { loggerContext } from "../../lib/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const logger = createLogger("setupIndicesHandler");
 
@@ -73,19 +75,22 @@ export const setupIndicesHandlerFactory =
     }
   };
 
-export default withOtel(
-  createProtectedHandler(
-    setupIndicesHandlerFactory({
-      settingsManagerFactory: createSettingsManager,
-      graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createInstrumentedGraphqlClient({
-          saleorApiUrl,
-          token,
-        });
-      },
-    }),
-    saleorApp.apl,
-    ["MANAGE_APPS"],
+export default wrapWithLoggerContext(
+  withOtel(
+    createProtectedHandler(
+      setupIndicesHandlerFactory({
+        settingsManagerFactory: createSettingsManager,
+        graphqlClientFactory(saleorApiUrl: string, token: string) {
+          return createInstrumentedGraphqlClient({
+            saleorApiUrl,
+            token,
+          });
+        },
+      }),
+      saleorApp.apl,
+      ["MANAGE_APPS"],
+    ),
+    "api/setup-indices",
   ),
-  "api/setup-indices",
+  loggerContext,
 );

@@ -1,4 +1,4 @@
-import { CreateGraphQLClientArgs, createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient, CreateGraphQLClientArgs } from "@saleor/apps-shared";
 import { otelExchange } from "@saleor/apps-otel";
 
 type CreateGraphQLClientProps = Omit<CreateGraphQLClientArgs, "opts">;
