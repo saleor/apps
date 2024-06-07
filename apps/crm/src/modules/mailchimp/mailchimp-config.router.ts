@@ -1,15 +1,15 @@
-import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../trpc/trpc-server";
 
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { createLogger } from "../../logger";
 import { MailchimpClientOAuth } from "./mailchimp-client";
 import {
   CustomerCreatedEventConfig,
   MailchimpConfig,
   MailchimpConfigSettingsManager,
 } from "./mailchimp-config-settings-manager";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { createLogger } from "@saleor/apps-shared";
 
 const setTokenInput = MailchimpConfig;
 
@@ -24,27 +24,23 @@ type ConfiguredResponse =
       customerCreateEvent: z.infer<typeof MailchimpConfig>["customerCreateEvent"];
     };
 
+const logger = createLogger("mailchimpConfigRouter");
+
 // todo extract settings manager
 const mailchimpConfigRouter = router({
   setToken: protectedClientProcedure.input(setTokenInput).mutation(({ ctx, input }) => {
-    const logger = createLogger({
-      context: "mailchimpConfigRouter",
+    logger.info("Saving Mailchimp token", {
       saleorApiUrl: ctx.saleorApiUrl,
     });
-
-    logger.info("Saving Mailchimp token");
 
     return new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!).setConfig(input);
   }),
   setWebhookConfig: protectedClientProcedure
     .input(CustomerCreatedEventConfig)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
-        context: "mailchimpConfigRouter",
+      logger.info("Saving Mailchimp token", {
         saleorApiUrl: ctx.saleorApiUrl,
       });
-
-      logger.info("Saving Mailchimp token");
 
       const mm = new MailchimpConfigSettingsManager(ctx.apiClient, ctx.appId!);
 
@@ -60,11 +56,6 @@ const mailchimpConfigRouter = router({
     }),
   getMailchimpConfigured: protectedClientProcedure.query(
     async ({ ctx }): Promise<ConfiguredResponse> => {
-      const logger = createLogger({
-        context: "mailchimpConfigRouter",
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
-
       const config = await new MailchimpConfigSettingsManager(
         ctx.apiClient,
         ctx.appId!,

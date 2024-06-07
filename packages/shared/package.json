@@ -10,8 +10,6 @@
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",
     "eslint": "8.46.0",
-    "pino": "^8.14.1",
-    "pino-pretty": "^10.0.0",
     "semver": "^7.5.1"
   },
   "devDependencies": {
@@ -34,8 +32,6 @@
   "peerDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "next": "14.2.3",
-    "pino": "^8.14.1",
-    "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "urql": "^4.0.4",

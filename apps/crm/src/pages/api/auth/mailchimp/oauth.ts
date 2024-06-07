@@ -1,8 +1,8 @@
 import { NextApiHandler } from "next";
 
 import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
+import { createLogger } from "../../../../logger";
 import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "@saleor/apps-shared";
 
 export const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }): string => {
   const { host, "x-forwarded-proto": protocol = "http" } = headers;
@@ -10,7 +10,7 @@ export const getBaseUrl = (headers: { [name: string]: string | string[] | undefi
   return `${protocol}://${host}`;
 };
 
-const logger = createLogger({});
+const logger = createLogger("MailchimpOAuth");
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
@@ -25,7 +25,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const redirectUri = `${getBaseUrl(req.headers)}/api/auth/mailchimp/callback`;
 
-  logger.debug({ redirectUri }, "Resolved redirect uri");
+  logger.debug("Resolved redirect uri", { redirectUri });
 
   const qs = new URLSearchParams({
     response_type: "code",

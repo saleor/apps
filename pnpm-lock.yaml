@@ -222,12 +222,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -448,12 +442,6 @@ importers:
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       qs:
         specifier: 6.11.2
         version: 6.11.2
@@ -587,6 +575,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -644,12 +635,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -819,12 +804,6 @@ importers:
       nuvo-react:
         specifier: ^1.22.1
         version: 1.22.1(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1030,12 +1009,6 @@ importers:
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1169,6 +1142,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1229,12 +1205,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1606,12 +1576,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1808,12 +1772,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1935,6 +1893,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1998,12 +1959,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2167,12 +2122,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2387,12 +2336,6 @@ importers:
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2598,12 +2541,6 @@ importers:
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0)(react@18.2.0)
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2911,12 +2848,6 @@ importers:
       eslint:
         specifier: 8.46.0
         version: 8.46.0
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       semver:
         specifier: ^7.5.1
         version: 7.5.2
@@ -2984,12 +2915,6 @@ importers:
       '@trpc/server':
         specifier: 10.34.0
         version: 10.34.0
-      pino:
-        specifier: ^8.14.1
-        version: 8.14.1
-      pino-pretty:
-        specifier: ^10.0.0
-        version: 10.0.0
       react:
         specifier: 18.2.0
         version: 18.2.0

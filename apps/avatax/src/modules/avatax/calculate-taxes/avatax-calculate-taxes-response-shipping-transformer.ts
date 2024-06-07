@@ -1,9 +1,9 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { createLogger } from "../../../logger";
 import { numbers } from "../../taxes/numbers";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { createLogger } from "@saleor/apps-logger";
 import { avataxShippingLine } from "./avatax-shipping-line";
 import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
 

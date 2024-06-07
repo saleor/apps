@@ -1,11 +1,11 @@
-import { router } from "../trpc/trpc-server";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../trpc/trpc-server";
 
-import { MailchimpClientOAuth } from "./mailchimp-client";
-import { MailchimpConfigSettingsManager } from "./mailchimp-config-settings-manager";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createLogger } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
+import { MailchimpClientOAuth } from "./mailchimp-client";
+import { MailchimpConfigSettingsManager } from "./mailchimp-config-settings-manager";
 
 const AddContactSchema = z.object({
   listId: z.string().min(1),
@@ -21,10 +21,12 @@ const BulkAddContactsSchema = z.object({
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       tags: z.array(z.string()).optional(),
-    })
+    }),
   ),
   listId: z.string().min(1),
 });
+
+const logger = createLogger("mailchimpAudienceRouter");
 
 const mailchimpAudienceRouter = router({
   getLists: protectedClientProcedure.query(async ({ ctx }) => {
@@ -41,16 +43,11 @@ const mailchimpAudienceRouter = router({
       });
     }
 
-    const logger = createLogger({
-      context: "mailchimpConfigRouter",
-      saleorApiUrl: ctx.saleorApiUrl,
-    });
-
     const mailchimpClient = new MailchimpClientOAuth(config.dc, config.token);
 
     const listsResponseOrError = await mailchimpClient.fetchLists();
 
-    logger.trace(listsResponseOrError, "Fetched lists");
+    logger.debug(listsResponseOrError, "Fetched lists");
 
     if ("lists" in listsResponseOrError) {
       return listsResponseOrError.lists.map((l) => ({
@@ -65,14 +62,9 @@ const mailchimpAudienceRouter = router({
   bulkAddContacts: protectedClientProcedure
     .input(BulkAddContactsSchema)
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger({
-        context: "mailchimpConfigRouter.bulkAddContacts",
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
-
       const config = await new MailchimpConfigSettingsManager(
         ctx.apiClient,
-        ctx.appId!
+        ctx.appId!,
       ).getConfig();
 
       logger.debug("Fetched config from metadata");

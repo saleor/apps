@@ -1,6 +1,6 @@
 import { Client, gql } from "urql";
 import { InvoiceCreateDocument } from "../../../../generated/graphql";
-import { logger } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
 gql`
   mutation InvoiceCreate($orderId: ID!, $invoiceInput: InvoiceCreateInput!) {
@@ -16,12 +16,13 @@ gql`
 `;
 
 export class InvoiceCreateNotifier {
+  private logger = createLogger("InvoiceCreateNotifier");
   constructor(private client: Client) {}
 
   notifyInvoiceCreated(orderId: string, invoiceNumber: string, invoiceUrl: string) {
-    logger.info(
+    this.logger.info(
       { orderId, invoiceNumber, invoiceUrl },
-      "Will notify Saleor with invoiceCreate mutation"
+      "Will notify Saleor with invoiceCreate mutation",
     );
 
     return this.client
@@ -34,7 +35,7 @@ export class InvoiceCreateNotifier {
       })
       .toPromise()
       .then((result) => {
-        logger.info(result.data, "invoiceCreate finished");
+        this.logger.info(result.data, "invoiceCreate finished");
 
         if (result.error) {
           throw new Error(result.error.message);

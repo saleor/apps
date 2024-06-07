@@ -8,8 +8,10 @@ import {
 } from "../../../../generated/graphql";
 
 import { SegmentNotConfiguredError } from "@/errors";
+import { createLogger } from "@/logger";
+import { loggerContext } from "@/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@saleor/apps-shared";
 
 export const config = {
   api: {
@@ -26,7 +28,7 @@ export const orderRefundedWebhook =
     query: OrderRefundedDocument,
   });
 
-const logger = createLogger({ name: "orderRefundedWebhook" });
+const logger = createLogger("orderRefundedAsyncWebhook");
 
 const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> = async (
   req,
@@ -64,4 +66,4 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
   }
 };
 
-export default orderRefundedWebhook.createHandler(handler);
+export default wrapWithLoggerContext(orderRefundedWebhook.createHandler(handler), loggerContext);

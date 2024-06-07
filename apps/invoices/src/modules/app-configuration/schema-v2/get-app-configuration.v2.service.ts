@@ -1,35 +1,31 @@
-import { createLogger } from "@saleor/apps-shared";
-import { AppConfigV2MetadataManager } from "./app-config-v2-metadata-manager";
+import { createLogger } from "../../../logger";
 import { createSettingsManager, SimpleGraphqlClient } from "../metadata-manager";
 import { AppConfigV2 } from "./app-config";
+import { AppConfigV2MetadataManager } from "./app-config-v2-metadata-manager";
 
 export class GetAppConfigurationV2Service {
+  private logger = createLogger("GetAppConfigurationV2Service");
   appConfigMetadataManager: AppConfigV2MetadataManager;
 
   constructor(
     private settings: {
       apiClient: SimpleGraphqlClient;
       saleorApiUrl: string;
-    }
+    },
   ) {
     this.appConfigMetadataManager = new AppConfigV2MetadataManager(
-      createSettingsManager(settings.apiClient)
+      createSettingsManager(settings.apiClient),
     );
   }
 
   async getConfiguration() {
-    const logger = createLogger({
-      service: "GetAppConfigurationV2Service",
-      saleorApiUrl: this.settings.saleorApiUrl,
-    });
-
     const stringMetadata = await this.appConfigMetadataManager.get();
 
     if (stringMetadata) {
-      logger.debug("Found app configuration v2 metadata");
+      this.logger.debug("Found app configuration v2 metadata");
       return AppConfigV2.parse(stringMetadata);
     } else {
-      logger.debug("v2 metadata not found");
+      this.logger.debug("v2 metadata not found");
       return null;
     }
   }

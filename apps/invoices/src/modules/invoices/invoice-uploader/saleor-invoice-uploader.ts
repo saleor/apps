@@ -1,7 +1,7 @@
-import { InvoiceUploader } from "./invoice-uploader";
-import { Client, gql } from "urql";
 import { readFile } from "fs/promises";
+import { Client, gql } from "urql";
 import { FileUploadMutation } from "../../../../generated/graphql";
+import { InvoiceUploader } from "./invoice-uploader";
 /**
  * Polyfill file because Node doesn't have it yet
  * https://github.com/nodejs/node/commit/916af4ef2d63fe936a369bcf87ee4f69ec7c67ce
@@ -9,7 +9,7 @@ import { FileUploadMutation } from "../../../../generated/graphql";
  * Use File instead of Blob so Saleor can understand name
  */
 import { File } from "@web-std/file";
-import { logger } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
 const fileUpload = gql`
   mutation FileUpload($file: Upload!) {
@@ -25,10 +25,12 @@ const fileUpload = gql`
 `;
 
 export class SaleorInvoiceUploader implements InvoiceUploader {
+  private logger = createLogger("SaleorInvoiceUploader");
+
   constructor(private client: Client) {}
 
   upload(filePath: string, asName: string): Promise<string> {
-    logger.debug({ filePath, asName }, "Will upload blob to Saleor");
+    this.logger.debug({ filePath, asName }, "Will upload blob to Saleor");
 
     return readFile(filePath).then((file) => {
       const blob = new File([file], asName, { type: "application/pdf" });
@@ -40,11 +42,11 @@ export class SaleorInvoiceUploader implements InvoiceUploader {
         .toPromise()
         .then((r) => {
           if (r.data?.fileUpload?.uploadedFile?.url) {
-            logger.debug({ data: r.data }, "Saleor returned response after uploading blob");
+            this.logger.debug({ data: r.data }, "Saleor returned response after uploading blob");
 
             return r.data.fileUpload.uploadedFile.url;
           } else {
-            logger.error({ data: r }, "Uploading blob failed");
+            this.logger.error({ data: r }, "Uploading blob failed");
 
             throw new Error(r.error?.message);
           }

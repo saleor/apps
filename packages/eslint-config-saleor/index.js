@@ -6,6 +6,10 @@ module.exports = {
     "import/no-default-export": "error",
     "newline-after-var": "warn",
     "multiline-comment-style": ["warn", "starred-block"],
+    "no-restricted-imports": [
+      "error",
+      { name: "@saleor/apps-logger", message: "Use your app logger directly" },
+    ],
   },
   parserOptions: {
     babelOptions: {
@@ -17,6 +21,12 @@ module.exports = {
       files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts", "generated/graphql.ts"],
       rules: {
         "import/no-default-export": "off",
+      },
+    },
+    {
+      files: ["src/logger.ts"],
+      rules: {
+        "no-restricted-imports": "off",
       },
     },
     {
