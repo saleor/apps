@@ -62,22 +62,22 @@ export const configurationRouter = router({
       const config = await configManager.get(ctx.saleorApiUrl);
 
       try {
-        logger.trace("Will ping Algolia");
+        logger.info("Will ping Algolia");
         await algoliaClient.ping();
 
-        logger.trace("Algolia connection is ok. Will save settings");
+        logger.info("Algolia connection is ok. Will save settings");
 
         config.setAlgoliaSettings(input);
 
         await configManager.set(config, ctx.saleorApiUrl);
 
-        logger.debug("Settings set successfully");
+        logger.info("Settings set successfully");
 
         const webhooksToggler = new WebhookActivityTogglerService(ctx.appId, ctx.apiClient);
 
         await webhooksToggler.enableOwnWebhooks();
 
-        logger.debug("Webhooks enabled");
+        logger.info("Webhooks enabled");
       } catch (e) {
         throw new TRPCError({
           code: "BAD_REQUEST",
