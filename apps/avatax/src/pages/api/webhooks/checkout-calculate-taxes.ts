@@ -42,9 +42,6 @@ export default wrapWithLoggerContext(
         try {
           const { payload, authData } = ctx;
 
-          logger.info("Capturing test error");
-          captureException(new TestNewSentryConfigError("Test new sentry config - ignore me"));
-
           subscriptionErrorChecker.checkPayload(payload);
 
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);

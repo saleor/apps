@@ -14,7 +14,10 @@
     "VERCEL_URL",
     "VERCEL",
     "NEXT_PUBLIC_SENTRY_DSN",
-    "NEXT_RUNTIME"
+    "NEXT_RUNTIME",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
+    "SENTRY_AUTH_TOKEN"
   ],
   "pipeline": {
     "build": {

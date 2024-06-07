@@ -25,13 +25,6 @@ const IndexPage: NextPage = () => {
       <h1>Saleor Avatax App</h1>
       <p>This is Saleor App that allows to use external service to handle taxes.</p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
-      <button
-        onClick={() => {
-          throw new Error("Client sentry errror - ignore");
-        }}
-      >
-        Throw error
-      </button>
     </div>
   );
 };
