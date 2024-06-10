@@ -71,7 +71,7 @@ export class StrapiClient {
     });
 
     if (!strapiProducts) {
-      logger.info("No product found in Strapi, skipping deletion");
+      logger.debug("No product found in Strapi, skipping deletion");
       return;
     }
 
@@ -133,7 +133,7 @@ export class StrapiClient {
       const strapiProducts = await this.getProducts(configuration, variant.id);
 
       if (!strapiProducts) {
-        logger.info("No product found in Strapi, skipping update");
+        logger.debug("No product found in Strapi, skipping update");
         return;
       }
 
