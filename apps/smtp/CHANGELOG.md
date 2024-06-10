@@ -1,5 +1,16 @@
 # smtp
 
+## 1.0.0
+
+### Major Changes
+
+- 02bb4277: SMTP app has been released as stable 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [e7b909ed]
+  - @saleor/sentry-utils@0.1.0
+
 ## 0.0.3
 
 ### Patch Changes

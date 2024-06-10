@@ -13,6 +13,8 @@ import { isConfigured } from "../../lib/algolia/is-configured";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { loggerContext } from "../../lib/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const logger = createLogger("recreateWebhooksHandler");
 
@@ -37,7 +39,8 @@ export const recreateWebhooksHandlerFactory =
       return res.status(405).end();
     }
 
-    logger.debug("Fetching settings");
+    logger.info("Fetching settings");
+
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const webhooksToggler = webhookActivityTogglerFactory(authData.appId, client);
     const settingsManager = settingsManagerFactory(client, authData.appId);
@@ -46,7 +49,7 @@ export const recreateWebhooksHandlerFactory =
 
     const config = (await configManager.get(authData.saleorApiUrl)).getConfig();
 
-    logger.debug("fetched settings");
+    logger.info("fetched settings");
 
     const baseUrl = getAppBaseUrl(req.headers);
     const enableWebhooks = isConfigured({
@@ -57,32 +60,35 @@ export const recreateWebhooksHandlerFactory =
     });
 
     try {
-      logger.debug("Running webhooks recreation");
+      logger.info("Running webhooks recreation");
       await webhooksToggler.recreateOwnWebhooks({ baseUrl: baseUrl, enableWebhooks });
-      logger.debug("Webhooks recreated");
+      logger.info("Webhooks recreated");
       return res.status(200).end();
     } catch (e) {
-      logger.error(e);
+      logger.error("Failed to recreate webhooks", { error: e });
       return res.status(500).end();
     }
   };
 
-export default withOtel(
-  createProtectedHandler(
-    recreateWebhooksHandlerFactory({
-      settingsManagerFactory: createSettingsManager,
-      webhookActivityTogglerFactory: function (appId, client) {
-        return new WebhookActivityTogglerService(appId, client);
-      },
-      graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createInstrumentedGraphqlClient({
-          saleorApiUrl,
-          token,
-        });
-      },
-    }),
-    saleorApp.apl,
-    ["MANAGE_APPS"],
+export default wrapWithLoggerContext(
+  withOtel(
+    createProtectedHandler(
+      recreateWebhooksHandlerFactory({
+        settingsManagerFactory: createSettingsManager,
+        webhookActivityTogglerFactory: function (appId, client) {
+          return new WebhookActivityTogglerService(appId, client);
+        },
+        graphqlClientFactory(saleorApiUrl: string, token: string) {
+          return createInstrumentedGraphqlClient({
+            saleorApiUrl,
+            token,
+          });
+        },
+      }),
+      saleorApp.apl,
+      ["MANAGE_APPS"],
+    ),
+    "/api/recreate-webhooks",
   ),
-  "/api/recreate-webhooks",
+  loggerContext,
 );

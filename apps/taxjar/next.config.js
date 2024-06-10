@@ -14,13 +14,17 @@ const nextConfig = {
     "@saleor/apps-shared",
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
+    "@saleor/sentry-utils",
   ],
+  experimental: {
+    instrumentationHook: true,
+  },
 };
 
 const configWithSentry = withSentryConfig(nextConfig, {
-  silent: true,
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
+  silent: true,
   hideSourceMaps: true,
   widenClientFileUpload: true,
   disableLogger: true,

@@ -189,17 +189,6 @@ export class AlgoliaSearchProvider implements SearchProvider {
       ),
     );
   }
-
-  async ping() {
-    return this.#algolia
-      .listIndices()
-      .then(() => undefined)
-      .catch((r) => {
-        if (r.status === 403) {
-          throw new Error("Algolia responded with invalid credentials");
-        }
-      });
-  }
 }
 
 type GroupedByIndex = Record<string, AlgoliaObject[]>;

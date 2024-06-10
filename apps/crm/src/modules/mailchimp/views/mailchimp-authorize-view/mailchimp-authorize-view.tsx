@@ -1,9 +1,9 @@
-import { MailchimpAuthFrame } from "../../auth/mailchimp-auth-frame/mailchimp-auth-frame";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { createLogger } from "../../../../logger";
 import { trpcClient } from "../../../trpc/trpc-client";
-import { createLogger } from "@saleor/apps-shared";
+import { MailchimpAuthFrame } from "../../auth/mailchimp-auth-frame/mailchimp-auth-frame";
 
-const logger = createLogger({});
+const logger = createLogger("MailchimpAuthorizeView");
 
 export const MailchimpAuthorizeView = (props: { onSuccess(): void }) => {
   const { mutateAsync } = trpcClient.mailchimp.config.setToken.useMutation();

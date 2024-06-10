@@ -1,13 +1,16 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   CustomerCreatedDocument,
   CustomerCreatedPayloadFragment,
 } from "../../../../generated/graphql";
-import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
 import { MailchimpClientOAuth } from "../../../modules/mailchimp/mailchimp-client";
+import { MailchimpConfigSettingsManager } from "../../../modules/mailchimp/mailchimp-config-settings-manager";
 import { metadataToMailchimpTags } from "../../../modules/saleor-customers-sync/metadata-to-mailchimp-tags";
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
+import { saleorApp } from "../../../saleor-app";
 
 export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayloadFragment>({
   name: "Customer Created in Saleor",
@@ -17,16 +20,14 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedPayl
   query: CustomerCreatedDocument,
 });
 
+const logger = createLogger("CustomerCreatedAsyncWebhook");
+
 // todo - fetch metadata with event
 export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloadFragment> = async (
   req,
   res,
-  context
+  context,
 ) => {
-  const logger = createLogger({
-    webhook: customerCreatedWebhook.name,
-  });
-
   logger.debug("Webhook received");
 
   const { payload, authData } = context;
@@ -34,7 +35,7 @@ export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloa
   const { user } = payload;
 
   if (!user) {
-    logger.error("Invalid payload from webhook");
+    logger.error("Invalid payload from webhook - missing user");
 
     return res.status(200).end();
   }
@@ -63,7 +64,10 @@ export const customerCreatedHandler: NextWebhookApiHandler<CustomerCreatedPayloa
   return res.status(200).json({ message: "The event has been handled" });
 };
 
-export default customerCreatedWebhook.createHandler(customerCreatedHandler);
+export default wrapWithLoggerContext(
+  customerCreatedWebhook.createHandler(customerCreatedHandler),
+  loggerContext,
+);
 
 export const config = {
   api: {

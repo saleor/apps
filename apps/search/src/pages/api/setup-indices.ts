@@ -9,6 +9,8 @@ import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { withOtel } from "@saleor/apps-otel";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { loggerContext } from "../../lib/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const logger = createLogger("setupIndicesHandler");
 
@@ -25,10 +27,12 @@ export const setupIndicesHandlerFactory =
   async (req, res, { authData }) => {
     if (req.method !== "POST") {
       logger.debug("Request method is different than POST, returning 405");
+
       return res.status(405).end();
     }
 
-    logger.debug("Fetching settings");
+    logger.info("Fetching settings");
+
     const client = graphqlClientFactory(authData.saleorApiUrl, authData.token);
     const settingsManager = settingsManagerFactory(client, authData.appId);
     const configManager = new AppConfigMetadataManager(settingsManager);
@@ -41,7 +45,8 @@ export const setupIndicesHandlerFactory =
     const configData = config.getConfig();
 
     if (!configData.appConfig) {
-      logger.debug("Missing config, returning 400");
+      logger.info("Missing config, returning 400");
+
       return res.status(400).end();
     }
 
@@ -56,29 +61,36 @@ export const setupIndicesHandlerFactory =
     });
 
     try {
-      logger.debug("Running indices update");
+      logger.info("Running indices update");
+
       await algoliaClient.updateIndicesSettings();
-      logger.debug("Indices updated");
+
+      logger.info("Indices updated");
+
       return res.status(200).end();
     } catch (e) {
-      logger.error(e);
+      logger.error("Failed to update Algolia indicies", { error: e });
+
       return res.status(500).end();
     }
   };
 
-export default withOtel(
-  createProtectedHandler(
-    setupIndicesHandlerFactory({
-      settingsManagerFactory: createSettingsManager,
-      graphqlClientFactory(saleorApiUrl: string, token: string) {
-        return createInstrumentedGraphqlClient({
-          saleorApiUrl,
-          token,
-        });
-      },
-    }),
-    saleorApp.apl,
-    ["MANAGE_APPS"],
+export default wrapWithLoggerContext(
+  withOtel(
+    createProtectedHandler(
+      setupIndicesHandlerFactory({
+        settingsManagerFactory: createSettingsManager,
+        graphqlClientFactory(saleorApiUrl: string, token: string) {
+          return createInstrumentedGraphqlClient({
+            saleorApiUrl,
+            token,
+          });
+        },
+      }),
+      saleorApp.apl,
+      ["MANAGE_APPS"],
+    ),
+    "api/setup-indices",
   ),
-  "api/setup-indices",
+  loggerContext,
 );

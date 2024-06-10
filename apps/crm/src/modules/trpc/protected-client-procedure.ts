@@ -1,13 +1,14 @@
-import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
-import { middleware, procedure } from "./trpc-server";
-import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../saleor-app";
+import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
+import { TRPCError } from "@trpc/server";
+import { saleorApp } from "../../saleor-app";
+import { middleware, procedure } from "./trpc-server";
 
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
+import { createLogger } from "../../logger";
 
-const logger = createLogger({ service: "protected-client-procedure" });
+const logger = createLogger("ProtectedClientProcedure");
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");

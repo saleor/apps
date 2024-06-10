@@ -27,7 +27,6 @@ interface IRecreateWebhooksArgs {
 }
 
 export interface IWebhookActivityTogglerService {
-  disableOwnWebhooks(webhooksIdsParam?: string[]): Promise<void>;
   enableOwnWebhooks(): Promise<void>;
   recreateOwnWebhooks(args: IRecreateWebhooksArgs): Promise<void>;
 }
@@ -128,22 +127,6 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
     this.webhooksClient = options?.WebhooksClient ?? new WebhooksActivityClient(this.client);
   }
 
-  /**
-   * Disable webhooks with provided IDs. If not provided, it will fetch them from Saleor
-   */
-  async disableOwnWebhooks(webhooksIdsParam?: string[]) {
-    const webhooksIds =
-      webhooksIdsParam ?? (await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId));
-
-    logger.info("Disabling own webhooks", { webhooksIds });
-
-    if (!webhooksIds) {
-      throw new Error("Failed fetching webhooks");
-    }
-
-    await Promise.all(webhooksIds.map((id) => this.webhooksClient.disableSingleWebhook(id)));
-  }
-
   async enableOwnWebhooks() {
     const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
 
@@ -179,6 +162,6 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
         });
       }),
     );
-    logger.debug("Done creating new webhooks");
+    logger.info("Done creating new webhooks");
   }
 }

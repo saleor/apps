@@ -1,7 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
-  "globalPassThroughEnv": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"],
   "pipeline": {
     "deploy": {
       "env": [
@@ -10,23 +9,15 @@
         "APP_API_BASE_URL",
         "APP_DEBUG",
         "APP_IFRAME_BASE_URL",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "NEXT_PUBLIC_SENTRY_REPORT_LEVEL",
         "NODE_ENV",
         "PORT",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
         "SECRET_KEY",
-        "SENTRY_AUTH_TOKEN",
-        "SENTRY_DSN",
-        "SENTRY_ORG",
-        "SENTRY_PROJECT",
         "OTEL_ENABLED",
         "OTEL_SERVICE_NAME",
-        "VERCEL_GIT_COMMIT_SHA",
         "APP_LOG_LEVEL",
         "AVATAX_CLIENT_TIMEOUT",
-        "ENV",
         "ANALYZE_BUNDLE",
         "DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER"
       ]

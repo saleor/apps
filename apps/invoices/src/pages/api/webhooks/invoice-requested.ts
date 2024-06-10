@@ -1,6 +1,6 @@
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { createGraphQLClient, createLogger } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { gql } from "urql";
 import {
   InvoiceRequestedPayloadFragment,
@@ -21,7 +21,10 @@ import { ShopInfoFetcher } from "../../../modules/shop-info/shop-info-fetcher";
 import { shopInfoQueryToAddressShape } from "../../../modules/shop-info/shop-info-query-to-address-shape";
 import { saleorApp } from "../../../saleor-app";
 
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import * as Sentry from "@sentry/nextjs";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
 import { AppConfigV2 } from "../../../modules/app-configuration/schema-v2/app-config";
 
 const OrderPayload = gql`
@@ -124,6 +127,8 @@ const InvoiceRequestedSubscription = gql`
   }
 `;
 
+const logger = createLogger("InvoiceRequestedAsyncWebhook");
+
 export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPayloadFragment>({
   name: "Invoice requested",
   webhookPath: "api/webhooks/invoice-requested",
@@ -133,9 +138,7 @@ export const invoiceRequestedWebhook = new SaleorAsyncWebhook<InvoiceRequestedPa
   onError(error, req, res) {
     const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
 
-    const logger = createLogger({ domain: saleorApiUrl });
-
-    logger.error(error);
+    logger.error("Error during webhook handling", { error, saleorApiUrl });
   },
 });
 
@@ -154,8 +157,8 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
   context,
 ) => {
   const { authData, payload, baseUrl } = context;
-  const logger = createLogger({ domain: authData.saleorApiUrl, url: baseUrl });
 
+  loggerContext.set("saleorApiUrl", authData.saleorApiUrl);
   Sentry.getCurrentScope().setTag("saleorApiUrl", authData.saleorApiUrl);
 
   const order = payload.order;
@@ -289,7 +292,7 @@ export const handler: NextWebhookApiHandler<InvoiceRequestedPayloadFragment> = a
   return res.status(200).end();
 };
 
-export default invoiceRequestedWebhook.createHandler(handler);
+export default wrapWithLoggerContext(invoiceRequestedWebhook.createHandler(handler), loggerContext);
 
 export const config = {
   api: {

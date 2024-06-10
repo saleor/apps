@@ -1,7 +1,7 @@
+import { access, constants, mkdir } from "fs/promises";
 import { join } from "path";
 import invariant from "tiny-invariant";
-import { mkdir, access, constants } from "fs/promises";
-import { logger } from "@saleor/apps-shared";
+import { createLogger } from "../../../logger";
 
 /**
  * Path will be relative to built file, in dev its inside .next/server
@@ -11,6 +11,8 @@ const DEFAULT_TEMP_FILES_LOCATION = join(__dirname, "_temp");
 const getTempPdfStorageDir = () => {
   return process.env.TEMP_PDF_STORAGE_DIR ?? DEFAULT_TEMP_FILES_LOCATION;
 };
+
+const logger = createLogger("resolveTempPdfFileLocation");
 
 export const resolveTempPdfFileLocation = async (fileName: string) => {
   invariant(fileName.includes(".pdf"), `fileName should include pdf extension`);
@@ -23,7 +25,7 @@ export const resolveTempPdfFileLocation = async (fileName: string) => {
     return mkdir(dirToWrite).catch((e) => {
       logger.error(
         { dir: dirToWrite },
-        "Cant create a directory. Ensure its writable and check TEMP_PDF_STORAGE_DIR env"
+        "Cant create a directory. Ensure its writable and check TEMP_PDF_STORAGE_DIR env",
       );
     });
   });

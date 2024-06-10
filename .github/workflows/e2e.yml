@@ -28,7 +28,7 @@ jobs:
              --arg token "Token $ACCESS_TOKEN" \
              '{"token":$token,"telemetry":"false","saleor_env":"production","cloud_api_url":"https://cloud.saleor.io/platform/api","organization_slug":"shopex","organization_name":"Shopex"}' > ~/.config/saleor.json
       - name: Setup PNPM
-        uses: pnpm/action-setup@a3252b78c470c02df07e9d59298aecedc3ccdd6d # v3.0.0
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: |
             - args: [--frozen-lockfile, --filter=app-avatax]

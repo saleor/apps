@@ -1,18 +1,9 @@
-import { execSync } from "child_process";
-import * as dotenv from "dotenv";
+import { exportSentryReleaseEnvironmentVariable } from "@saleor/sentry-utils";
+import { execSync } from "node:child_process";
 
-dotenv.config();
+import packageJson from "../package.json";
 
-const runDeployment = async () => {
-  // Must use dynamic import for env variables to load properly
-  const { getReleaseTag } = await import("../src/release-utils");
+exportSentryReleaseEnvironmentVariable(packageJson.version);
 
-  const release = getReleaseTag();
-
-  console.log("Using release tag:", release);
-
-  execSync(`SENTRY_RELEASE='${release}' pnpm run build`, { stdio: "inherit" });
-  execSync("pnpm run migrate", { stdio: "inherit" });
-};
-
-runDeployment();
+execSync("pnpm run build", { stdio: "inherit" });
+execSync("pnpm run migrate", { stdio: "inherit" });

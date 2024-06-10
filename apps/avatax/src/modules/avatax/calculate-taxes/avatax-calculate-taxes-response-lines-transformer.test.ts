@@ -30,12 +30,12 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
       {
         total_gross_amount: 40,
         total_net_amount: 36.53,
-        tax_rate: 0,
+        tax_rate: 9.5,
       },
       {
         total_gross_amount: 40,
         total_net_amount: 36.53,
-        tax_rate: 0,
+        tax_rate: 9.5,
       },
     ]);
   });
@@ -47,12 +47,12 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
       {
         total_gross_amount: 43.8,
         total_net_amount: 40,
-        tax_rate: 0,
+        tax_rate: 9.5,
       },
       {
         total_gross_amount: 43.8,
         total_net_amount: 40,
-        tax_rate: 0,
+        tax_rate: 9.5,
       },
     ]);
   });

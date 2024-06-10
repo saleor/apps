@@ -1,6 +1,6 @@
 {
   "name": "smtp",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -36,7 +36,9 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "1.0.0-pre.7",
     "@saleor/react-hook-form-macaw": "workspace:*",
-    "@sentry/nextjs": "8.0.0",
+    "@saleor/sentry-utils": "workspace:*",
+    "@sentry/cli": "../../node_modules/@sentry/cli",
+    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",
@@ -56,8 +58,6 @@
     "neverthrow": "6.2.1",
     "next": "14.2.3",
     "nodemailer": "^6.9.1",
-    "pino": "^8.14.1",
-    "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
