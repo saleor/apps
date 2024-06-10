@@ -61,15 +61,11 @@ export const channelProviderConnectionRouter = router({
 
       logger.debug("Adding connection", { input });
 
-      logger.debug("Fetching app config");
-
       const config = await ctx.appConfigService.get();
 
-      logger.debug("App config fetched successfully", { config });
+      logger.debug("App config fetched successfully");
 
       try {
-        logger.debug("Adding connection to app config");
-
         config.connections.addConnection(input);
 
         logger.info("Connection added successfully");
@@ -102,13 +98,11 @@ export const channelProviderConnectionRouter = router({
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("channelProviderConnectionRouter.removeConnection");
 
-      logger.debug("Removing connection", { id: input.id });
-
-      logger.debug("Fetching app config");
+      logger.debug("Removing connection", { input });
 
       const config = await ctx.appConfigService.get();
 
-      logger.debug("App config fetched successfully", { config });
+      logger.debug("App config fetched successfully");
 
       config.connections.deleteConnection(input.id);
 

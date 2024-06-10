@@ -14,55 +14,62 @@ import { PayloadCMSClient } from "./payloadcms-client";
 export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client = new PayloadCMSClient();
 
-  private logger = createLogger("PayloadCmsWebhooksProcessor");
-
-  constructor(private providerConfig: PayloadCmsProviderConfig.FullShape) {
-    this.logger.debug("Created PayloadCmsWebhooksProcessor");
-  }
+  constructor(private providerConfig: PayloadCmsProviderConfig.FullShape) {}
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantUpdated called");
+    const logger = createLogger("PayloadCmsWebhooksProcessor.onProductVariantUpdated", {
+      productVariantId: productVariant.id,
+      productId: productVariant.product.id,
+    });
+
+    logger.debug("Calling product variant updated");
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant updated");
+    logger.info("Product variant updated");
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantCreated called", {
-      variantId: productVariant.id,
+    const logger = createLogger("PayloadCmsWebhooksProcessor.onProductVariantCreated", {
+      productVariantId: productVariant.id,
       productId: productVariant.product.id,
     });
+
+    logger.debug("Calling product variant created");
 
     await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant created");
+    logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantDeleted called", {
+    const logger = createLogger("PayloadCmsWebhooksProcessor.onProductVariantDeleted", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
+
+    logger.debug("Calling product variant deleted");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant deleted");
+    logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("onProductUpdated called", {
+    const logger = createLogger("PayloadCmsWebhooksProcessor.onProductUpdated", {
       productId: product.id,
       variantsLength: product.variants?.length,
     });
+
+    logger.debug("Calling product updated");
 
     const client = new PayloadCMSClient();
 
@@ -83,6 +90,6 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    this.logger.info("Product updated");
+    logger.info("Product updated");
   }
 }

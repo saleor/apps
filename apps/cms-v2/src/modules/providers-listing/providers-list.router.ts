@@ -27,30 +27,41 @@ export const providersListRouter = router({
     const config = await appConfigService.get();
     const providers = config.providers.getProviders();
 
-    logger.info("Providers fetched", { providers });
+    logger.info("Providers fetched", {
+      providers: providers.map((p) => ({ id: p.id })),
+    });
 
     return providers;
   }),
   getOne: procedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx: { appConfigService }, input }) => {
-      const logger = createLogger("providersListRouter.getOne");
+      const logger = createLogger("providersListRouter.getOne", {
+        providerId: input.id,
+      });
 
-      logger.debug("Fetching provider", { id: input.id });
+      logger.debug("Fetching provider");
 
       const config = await appConfigService.get();
       const provider = (await config.providers.getProviderById(input.id)) ?? null;
 
-      logger.info("Provider fetched", { provider });
+      if (!provider) {
+        logger.info("Provider not found");
+      } else {
+        logger.info("Provider fetched");
+      }
 
       return provider;
     }),
   addOne: procedure
     .input(ProvidersConfig.Schema.AnyInput)
     .mutation(async ({ ctx: { appConfigService }, input }) => {
-      const logger = createLogger("providersListRouter.addOne");
+      const logger = createLogger("providersListRouter.addOne", {
+        configName: input.configName,
+        type: input.type,
+      });
 
-      logger.debug("Adding provider", { input });
+      logger.debug("Adding provider...");
 
       const config = await appConfigService.get();
 
@@ -63,9 +74,9 @@ export const providersListRouter = router({
   updateOne: procedure
     .input(ProvidersConfig.Schema.AnyFull)
     .mutation(async ({ input, ctx: { appConfigService } }) => {
-      const logger = createLogger("providersListRouter.updateOne");
+      const logger = createLogger("providersListRouter.updateOne", { providerId: input.id });
 
-      logger.debug("Updating provider", { input });
+      logger.debug("Updating provider...");
 
       const config = await appConfigService.get();
 
@@ -80,9 +91,11 @@ export const providersListRouter = router({
   deleteOne: procedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx: { appConfigService } }) => {
-      const logger = createLogger("providersListRouter.deleteOne");
+      const logger = createLogger("providersListRouter.deleteOne", {
+        providerId: input.id,
+      });
 
-      logger.debug("Deleting provider", { input });
+      logger.debug("Deleting provider");
 
       const config = await appConfigService.get();
 

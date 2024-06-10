@@ -9,48 +9,58 @@ import { StrapiClient } from "./strapi-client";
 
 export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   private client: StrapiClient;
-  private logger = createLogger("StrapiWebhooksProcessor");
 
   constructor(private config: StrapiProviderConfig.FullShape) {
     this.client = new StrapiClient({ url: config.url, token: config.authToken });
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantUpdated called", {
+    const logger = createLogger("StrapiWebhooksProcessor.onProductVariantUpdated", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
 
-    this.client.updateProduct({ configuration: this.config, variant: productVariant });
+    logger.debug("Calling product variant update");
 
-    this.logger.info("Product variant updated");
+    await this.client.updateProduct({ configuration: this.config, variant: productVariant });
+
+    logger.info("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantCreated called", {
+    const logger = createLogger("StrapiWebhooksProcessor.onProductVariantCreated", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
 
-    this.client.uploadProduct({ configuration: this.config, variant: productVariant });
+    logger.debug("Calling product variant create");
 
-    this.logger.info("Product variant created");
+    await this.client.uploadProduct({ configuration: this.config, variant: productVariant });
+
+    logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantDeleted called", {
+    const logger = createLogger("StrapiWebhooksProcessor.onProductVariantDeleted", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
 
-    this.client.deleteProduct({ configuration: this.config, variant: productVariant });
+    logger.debug("onProductVariantDeleted called", {
+      variantId: productVariant.id,
+      productId: productVariant.product.id,
+    });
 
-    this.logger.info("Product variant deleted");
+    await this.client.deleteProduct({ configuration: this.config, variant: productVariant });
+
+    logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("onProductUpdated called", {
+    const logger = createLogger("StrapiWebhooksProcessor.onProductVariantDeleted", {
       productId: product.id,
       variantsLength: product.variants?.length,
     });
+
+    logger.debug("Calling product update");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -69,6 +79,6 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    this.logger.info("Product updated");
+    logger.info("Product updated");
   }
 }
