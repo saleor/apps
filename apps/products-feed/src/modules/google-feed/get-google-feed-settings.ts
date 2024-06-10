@@ -60,7 +60,7 @@ export class GoogleFeedSettingsFetcher {
       imageSize: appConfig.getImageSize(),
     };
 
-    logger.info("Google Feed settings fetched successfully", { settings });
+    logger.debug("Google Feed settings fetched successfully", { settings });
 
     return settings;
   }

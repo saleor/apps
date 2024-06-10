@@ -23,12 +23,30 @@ export class DatoCMSClient {
     this.client = buildClient({ apiToken: opts.apiToken });
   }
 
-  getContentTypes() {
-    return this.client.itemTypes.list();
+  async getContentTypes() {
+    const logger = createLogger("DatoCMSClient.getContentTypes");
+
+    logger.debug("Calling get content types");
+
+    const contentTypes = await this.client.itemTypes.list();
+
+    logger.debug("Got content types", { contentTypes });
+
+    return contentTypes;
   }
 
-  getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
-    return this.client.fields.list({ type: "item_type", id: itemTypeID });
+  async getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
+    const logger = createLogger("DatoCMSClient.getFieldsForContentType", {
+      itemTypeID,
+    });
+
+    logger.debug("Calling get fields for content type");
+
+    const fields = await this.client.fields.list({ type: "item_type", id: itemTypeID });
+
+    logger.debug("Got fields for content type", { itemTypeID, fieldsIds: fields.map((f) => f.id) });
+
+    return fields;
   }
 
   private getItemBySaleorVariantId({

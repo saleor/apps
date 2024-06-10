@@ -104,6 +104,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate = settings.titleTemplate;
     imageSize = settings.imageSize;
   } catch (error) {
+    logger.warn("The application has not been configured");
+
     return res
       .status(400)
       .json({ error: "Please configure the Google Feed settings at the dashboard" });
@@ -118,6 +120,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     shopName = shopDetails.shopName;
     shopDescription = shopDetails.shopDescription;
   } catch (error) {
+    logger.error("Could not fetch the shop details");
     return res.status(500).json({ error: "Could not fetch the shop details" });
   }
 
@@ -170,6 +173,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
+  logger.debug("Generating a new feed");
+
   let productVariants: GoogleFeedProductVariantFragment[] = [];
 
   try {
@@ -178,6 +183,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     logger.error("Error during the product data fetch", { error });
     return res.status(400).end();
   }
+
+  logger.debug("Product data fetched. Generating the output");
 
   const xmlContent = generateGoogleXmlFeed({
     shopDescription,
@@ -199,7 +206,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  logger.info("Bucket configuration found, uploading the feed to S3");
+  logger.debug("Bucket configuration found, uploading the feed to S3");
   const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,

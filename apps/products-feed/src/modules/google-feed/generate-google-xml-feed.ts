@@ -158,7 +158,7 @@ export const generateGoogleXmlFeed = ({
     },
   ];
 
-  logger.info("Feed generated. Returning formatted XML");
+  logger.debug("Feed generated. Returning formatted XML");
 
   return builder.build(data);
 };
