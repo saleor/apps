@@ -2,7 +2,6 @@ import { url } from "inspector";
 import { Client } from "urql";
 import { ShopDetailsDocument } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
-import { error } from "console";
 
 interface FetchShopDataArgs {
   client: Client;
@@ -33,7 +32,7 @@ export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
     throw new Error("Shop details query returned no data");
   }
 
-  logger.info("Shop details fetched successfully", { shopDetails });
+  logger.debug("Shop details fetched successfully", { shopDetails });
 
   return {
     shopName: shopDetails?.name,

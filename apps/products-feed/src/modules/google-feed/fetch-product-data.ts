@@ -81,7 +81,7 @@ const fetchVariants = async ({
 
   const productVariants = result.data?.productVariants?.edges.map((e) => e.node) || [];
 
-  logger.info("Product variants fetched successfully", {
+  logger.debug("Product variants fetched successfully", {
     first: productVariants[0],
     totalLength: productVariants.length,
   });
@@ -122,7 +122,7 @@ export const fetchProductData = async ({
 
   const results = (await Promise.all(promises)).flat();
 
-  logger.info("Product data fetched successfully", {
+  logger.debug("Product data fetched successfully", {
     first: results[0],
     totalLength: results.length,
   });

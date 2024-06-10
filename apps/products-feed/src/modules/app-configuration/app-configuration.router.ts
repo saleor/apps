@@ -78,7 +78,7 @@ export const appConfigurationRouter = router({
           s3Client,
         });
 
-        logger.debug("Bucket access check succeeded");
+        logger.info("Bucket access check succeeded");
       } catch (e) {
         logger.error("Bucket access check failed", { error: e });
         throw new TRPCError({
