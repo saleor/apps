@@ -4,6 +4,14 @@
   <h1>Emails and messages</h1>
 </div>
 
+# Maintenance note
+
+If you use SMTP protocol, you should use [SMTP App](../smtp).
+
+Emails & Messages app is not actively maintained by Saleor.
+
+You can fork this app and self-host it to use Sendgrid module
+
 ### What's included?
 
 - sending emails via SMTP
