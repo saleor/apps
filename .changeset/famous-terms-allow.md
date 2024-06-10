@@ -24,4 +24,4 @@
 "@saleor/webhook-utils": patch
 ---
 
-Update pnpm to 9.2.0 version. It means that we also dropped support for node less than 16.
+Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
