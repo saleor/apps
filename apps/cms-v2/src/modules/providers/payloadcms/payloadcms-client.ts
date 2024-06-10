@@ -195,7 +195,7 @@ export class PayloadCMSClient {
     try {
       await this.uploadProductVariant(context);
     } catch (e) {
-      logger.info("Failed to upload, will try to update", { error: e });
+      logger.error("Failed to upload, will try to update", { error: e });
 
       await this.updateProductVariant(context);
     }

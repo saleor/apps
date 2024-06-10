@@ -55,6 +55,10 @@ export class WebhooksProcessorsDelegator {
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
+    logger.debug("Extracted a related channels", {
+      relatedVariantChannels,
+    });
+
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
       logger.info("No related channels found for variant, skipping");
 
@@ -66,11 +70,10 @@ export class WebhooksProcessorsDelegator {
     );
 
     logger.debug("Resolved a number of connections to include", {
-      relatedVariantChannels,
       connectionsLength: connectionsToInclude.length,
     });
 
-    const processors = this.mapConnectionsToProcessors(connections, logger);
+    const processors = this.mapConnectionsToProcessors(connectionsToInclude, logger);
 
     logger.debug("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
@@ -91,6 +94,10 @@ export class WebhooksProcessorsDelegator {
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
+    logger.debug("Extracted a related channels", {
+      relatedVariantChannels,
+    });
+
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
       logger.info("No related channels found for variant, skipping");
       return;
@@ -101,11 +108,10 @@ export class WebhooksProcessorsDelegator {
     );
 
     logger.debug("Resolved a number of connections to include", {
-      relatedVariantChannels,
       connectionsLength: connectionsToInclude.length,
     });
 
-    const processors = this.mapConnectionsToProcessors(connections, logger);
+    const processors = this.mapConnectionsToProcessors(connectionsToInclude, logger);
 
     logger.debug("Resolved a number of processor to delegate to", {
       processors: processors.length,

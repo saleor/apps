@@ -41,7 +41,7 @@ export class BuilderIoClient {
         }),
       });
 
-      logger.info("Product variant uploaded");
+      logger.debug("Product variant uploaded");
     } catch (err) {
       logger.error("Failed to upload product variant", { error: err });
 
@@ -115,11 +115,11 @@ export class BuilderIoClient {
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
     if (entriesToUpdate.length === 0) {
-      logger.info("Didn't find any entries to update, will upload new variant");
+      logger.debug("Didn't find any entries to update, will upload new variant");
 
       return this.uploadProductVariant(variant);
     } else {
-      logger.info("Found entries in builder.io, will update them", { entriesToUpdate });
+      logger.debug("Found entries in builder.io, will update them", { entriesToUpdate });
 
       return Promise.all(
         entriesToUpdate.map((id) => {

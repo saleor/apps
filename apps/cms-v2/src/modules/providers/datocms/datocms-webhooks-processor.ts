@@ -13,6 +13,7 @@ import { createLogger } from "@/logger";
  */
 export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   private client: DatoCMSClient;
+  private logger = createLogger("DatocmsWebhooksProcessor");
 
   constructor(private providerConfig: DatocmsProviderConfig.FullShape) {
     this.client = new DatoCMSClient({
@@ -21,59 +22,48 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    const logger = createLogger("DatocmsWebhooksProcessor.onProductVariantUpdated", {
+    this.logger.debug("onProductVariantUpdated called", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
-
-    logger.debug("Calling update product variant");
 
     await this.client.updateProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    logger.info("Product variant updated");
+    this.logger.debug("Product variant updated");
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    const logger = createLogger("DatocmsWebhooksProcessor.onProductVariantCreated", {
+    this.logger.debug("onProductVariantCreated called", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
-
-    logger.debug("Calling upsert product variant");
 
     await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    logger.info("Product variant created");
+    this.logger.debug("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    const logger = createLogger("DatocmsWebhooksProcessor.onProductVariantDeleted", {
+    this.logger.debug("onProductVariantDeleted called", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
-
-    logger.debug("Calling delete product variant");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    logger.info("Product variant deleted");
+    this.logger.debug("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    const logger = createLogger("DatocmsWebhooksProcessor.onProductUpdated", {
-      productId: product.id,
-      variantsLength: product.variants?.length,
-    });
-
-    logger.debug("onProductUpdated called", {
+    this.logger.debug("onProductUpdated called", {
       productId: product.id,
       variantsLength: product.variants?.length,
     });
@@ -95,6 +85,6 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    logger.info("Product updated");
+    this.logger.debug("Product updated");
   }
 }

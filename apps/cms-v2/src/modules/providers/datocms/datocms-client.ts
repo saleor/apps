@@ -99,7 +99,7 @@ export class DatoCMSClient {
     }
 
     if (remoteProducts.length === 0) {
-      logger.info("No product found in Datocms, skipping deletion");
+      logger.debug("No product found in Datocms, skipping deletion");
 
       return;
     }
@@ -125,7 +125,7 @@ export class DatoCMSClient {
 
     const result = await this.client.items.create(this.mapVariantToDatoCMSFields(context));
 
-    logger.info("Uploaded product variant", { datoID: result.id });
+    logger.debug("Uploaded product variant", { datoID: result.id });
 
     return result;
   }
@@ -200,7 +200,7 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
-          logger.info("Found unique id error, will update the product", {
+          logger.debug("Found unique id error, will update the product", {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });

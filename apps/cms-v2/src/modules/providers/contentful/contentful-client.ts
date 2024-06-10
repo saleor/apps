@@ -104,7 +104,7 @@ export class ContentfulClient {
       const environment = await space.getEnvironment(env);
       const contentTypes = await environment.getContentTypes();
 
-      logger.info("Content types fetched successfully", {
+      logger.debug("Content types fetched successfully", {
         contentTypesLength: contentTypes.items.length,
       });
 
@@ -125,7 +125,7 @@ export class ContentfulClient {
     const space = await this.client.getSpace(this.space);
     const environments = await space.getEnvironments();
 
-    logger.info("Environments fetched successfully", {
+    logger.debug("Environments fetched successfully", {
       environmentsLength: environments.items.length,
     });
 
