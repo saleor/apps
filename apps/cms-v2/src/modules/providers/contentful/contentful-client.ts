@@ -29,13 +29,9 @@ const defaultSdkClientFactory: SdkClientFactory = (opts) =>
 export class ContentfulClient {
   private client: ContentfulApiClientChunk;
   private space: string;
-  private logger;
 
   constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
-    this.logger = createLogger("ContentfulClient", {
-      space: this.space,
-    });
     this.client = clientFactory(opts);
   }
 
@@ -96,19 +92,44 @@ export class ContentfulClient {
     };
 
   async getContentTypes(env: string) {
+    const logger = createLogger("ContentfulClient.getContentTypes", {
+      space: this.space,
+      env,
+    });
+
+    logger.debug("Fetching content types");
+
     try {
       const space = await this.client.getSpace(this.space);
       const environment = await space.getEnvironment(env);
       const contentTypes = await environment.getContentTypes();
 
+      logger.info("Content types fetched successfully", {
+        contentTypesLength: contentTypes.items.length,
+      });
+
       return contentTypes;
     } catch (err) {
+      logger.error("Error during the fetching", { error: err });
       throw err;
     }
   }
 
   async getEnvironments() {
-    return (await this.client.getSpace(this.space)).getEnvironments();
+    const logger = createLogger("ContentfulClient.getEnvironments", {
+      space: this.space,
+    });
+
+    logger.debug("Fetching environments");
+
+    const space = await this.client.getSpace(this.space);
+    const environments = await space.getEnvironments();
+
+    logger.info("Environments fetched successfully", {
+      environmentsLength: environments.items.length,
+    });
+
+    return environments;
   }
 
   async updateProductVariant({
@@ -118,20 +139,23 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to update product variant", {
+    const logger = createLogger("ContentfulClient.updateProductVariant", {
+      space: this.space,
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
+    logger.debug("Attempting to update product variant");
+
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully");
+    logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    this.logger.debug("Environment fetched successfully");
+    logger.debug("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: configuration.contentId,
@@ -139,7 +163,9 @@ export class ContentfulClient {
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
 
-    this.logger.debug("Found entries to update", { contentEntries });
+    logger.debug("Found entries to update", {
+      contentEntriesLength: contentEntries.items.length,
+    });
 
     return Promise.all(
       contentEntries.items.map((item) => {
@@ -157,19 +183,22 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    this.logger.debug("Attempting to delete product variant", {
+    const logger = createLogger("ContentfulClient.deleteProductVariant", {
+      space: this.space,
       variantId: opts.variant.id,
       contentId: opts.configuration.contentId,
       environment: opts.configuration.environment,
     });
 
+    logger.debug("Attempting to delete product variant");
+
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully");
+    logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(opts.configuration.environment);
 
-    this.logger.debug("Environment fetched successfully");
+    logger.debug("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: opts.configuration.contentId,
@@ -177,7 +206,9 @@ export class ContentfulClient {
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
 
-    this.logger.debug("Found entries to delete", { contentEntries });
+    logger.debug("Found entries to delete", {
+      contentEntriesLength: contentEntries.items.length,
+    });
 
     /**
      * In general it should be only one item, but in case of duplication run through everything
@@ -196,20 +227,23 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to upload product variant", {
+    const logger = createLogger("ContentfulClient.deleteProductVariant", {
+      space: this.space,
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
+    logger.debug("Attempting to upload product variant");
+
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully");
+    logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    this.logger.debug("Environment fetched successfully");
+    logger.debug("Environment fetched successfully", { envName: env.name });
     /*
      * TODO: add translations
      * TODO: - should it create published? is draft
@@ -226,21 +260,24 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("Attempting to upsert product variant", {
+    const logger = createLogger("ContentfulClient.deleteProductVariant", {
+      space: this.space,
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
+    logger.debug("Attempting to upsert product variant");
+
     try {
       const space = await this.client.getSpace(this.space);
 
-      this.logger.debug("Space fetched successfully");
+      logger.debug("Space fetched successfully", { spaceName: space.name });
 
       const env = await space.getEnvironment(configuration.environment);
 
-      this.logger.debug("Environment fetched successfully");
+      logger.debug("Environment fetched successfully", { envName: env.name });
 
       const entries = await this.getEntriesBySaleorId({
         contentId: configuration.contentId,
@@ -248,10 +285,10 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      this.logger.debug("Found entries", { entries });
+      logger.debug("Found entries", { entries });
 
       if (entries.items.length > 0) {
-        this.logger.debug("Found existing entry, will update");
+        logger.debug("Found existing entry, will update");
         Sentry.addBreadcrumb({
           message: "Found entry for variant",
           level: "debug",
@@ -259,7 +296,7 @@ export class ContentfulClient {
 
         return this.updateProductVariant({ configuration, variant });
       } else {
-        this.logger.debug("No existing entry found, will create");
+        logger.debug("No existing entry found, will create");
         Sentry.addBreadcrumb({
           message: "Did not found entry for variant",
           level: "debug",
@@ -268,7 +305,7 @@ export class ContentfulClient {
         return this.uploadProductVariant({ configuration, variant });
       }
     } catch (err) {
-      this.logger.error("Error during the upsert", { error: err });
+      logger.error("Error during the upsert", { error: err });
       Sentry.captureException(err);
 
       throw err;

@@ -22,7 +22,7 @@ export const datocmsRouter = router({
     .mutation(async ({ input }) => {
       const logger = createLogger("datocmsRouter.fetchContentTypes");
 
-      logger.debug("Fetching content types");
+      logger.debug("Calling fetch content types");
 
       const client = new DatoCMSClient({
         apiToken: input.apiToken,
@@ -31,7 +31,9 @@ export const datocmsRouter = router({
       try {
         const contentTypes = await client.getContentTypes();
 
-        logger.info("Content types fetched successfully", { contentTypes });
+        logger.info("Content types fetched successfully", {
+          contentTypes: contentTypes.map((c) => c.name),
+        });
 
         return contentTypes;
       } catch (e) {
@@ -51,9 +53,11 @@ export const datocmsRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      const logger = createLogger("datocmsRouter.fetchContentTypeFields");
+      const logger = createLogger("datocmsRouter.fetchContentTypeFields", {
+        contentTypeID: input.contentTypeID,
+      });
 
-      logger.debug("Fetching content type fields", { contentTypeID: input.contentTypeID });
+      logger.debug("Calling fetch content type fields");
 
       const client = new DatoCMSClient({
         apiToken: input.apiToken,
@@ -64,7 +68,9 @@ export const datocmsRouter = router({
           itemTypeID: input.contentTypeID,
         });
 
-        logger.info("Content type fields fetched successfully", { fields });
+        logger.info("Content type fields fetched successfully", {
+          contentTypesIds: fields.map((f) => f.id),
+        });
         return fields;
       } catch (e) {
         logger.error("Can't fetch content type fields", { error: e });

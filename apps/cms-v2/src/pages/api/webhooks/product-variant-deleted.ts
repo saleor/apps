@@ -76,7 +76,10 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
 
   const configContext = await createWebhookConfigContext({ authData });
 
-  logger.debug("Webhook config context fetched", { configContext });
+  logger.debug("Webhook config context fetched", {
+    connectionsIds: configContext.connections.map((c) => c.id),
+    providersIds: configContext.providers.map((p) => p.id),
+  });
 
   await new WebhooksProcessorsDelegator({
     context: configContext,

@@ -18,7 +18,6 @@ export type ContentfulClientFactory = (
 
 export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   private client: ContentfulClientStrip;
-  private logger = createLogger("ContentfulWebhooksProcessor");
 
   constructor(
     private providerConfig: ContentfulProviderConfig.FullShape,
@@ -32,43 +31,49 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantUpdated called", {
+    const logger = createLogger("ContentfulWebhooksProcessor.onProductVariantUpdated", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
+
+    logger.debug("Calling product variant updated");
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant updated");
+    logger.info("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantCreated called", {
+    const logger = createLogger("ContentfulWebhooksProcessor.onProductVariantCreated", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
+
+    logger.debug("Calling product variant created");
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant created");
+    logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantDeleted called", {
+    const logger = createLogger("ContentfulWebhooksProcessor.onProductVariantDeleted", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
     });
+
+    logger.debug("Calling product variant deleted");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
 
-    this.logger.info("Product variant deleted");
+    logger.info("Product variant deleted");
   }
 
   /**
@@ -77,10 +82,12 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
    * Context of process must include channel-config mapping.
    */
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("onProductUpdated called", {
+    const logger = createLogger("ContentfulWebhooksProcessor.onProductUpdated", {
       productId: product.id,
       variantsLength: product.variants?.length,
     });
+
+    logger.debug("Calling product updated");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -99,6 +106,6 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    this.logger.info("Product updated");
+    logger.info("Product updated");
   }
 }
