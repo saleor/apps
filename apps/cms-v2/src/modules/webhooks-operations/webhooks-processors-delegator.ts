@@ -1,11 +1,9 @@
-import { createLogger } from "@/logger";
+import { createLogger, logger } from "@/logger";
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { WebhookContext } from "./create-webhook-config-context";
 import { ProductWebhooksProcessor } from "./product-webhooks-processor";
-
-import { ILogObj, Logger } from "tslog";
 
 type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhooksProcessor;
 
@@ -29,13 +27,13 @@ export class WebhooksProcessorsDelegator {
 
   private mapConnectionsToProcessors(
     connections: WebhookContext["connections"],
-    logger: Logger<ILogObj>,
+    injectedLogger: Pick<typeof logger, "error">,
   ) {
     return connections.map((conn) => {
       const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId);
 
       if (!providerConfig) {
-        logger.error("Cant resolve provider from connection", { connection: conn });
+        injectedLogger.error("Cant resolve provider from connection", { connection: conn });
 
         throw new Error("Cant resolve provider from connection");
       }
@@ -80,8 +78,6 @@ export class WebhooksProcessorsDelegator {
 
     return Promise.all(
       processors.map((processor) => {
-        logger.debug("Calling processor.onProductVariantCreated");
-
         return processor.onProductVariantCreated(productVariant);
       }),
     );
