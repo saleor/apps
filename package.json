@@ -52,14 +52,14 @@
   },
   "engines": {
     "node": ">=18.17.0 <=20",
-    "pnpm": ">=8"
+    "pnpm": ">=9"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
-  "packageManager": "pnpm@8.15.2",
+  "packageManager": "pnpm@9.2.0",
   "pnpm": {
     "overrides": {
       "crypto-js@<4.2.0": ">=4.2.0"
