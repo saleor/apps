@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.8
+
+### Patch Changes
+
+- 37ecb246: Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
+
 ## 0.2.7
 
 ### Patch Changes
