@@ -1,7 +1,6 @@
 import { SpanKind, SpanStatusCode, type Span } from "@opentelemetry/api";
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
-import { otelSdk } from "./instrumentation";
 
 import { race } from "./lib/race";
 import { getOtelTracer } from "./otel-tracer";
@@ -17,7 +16,6 @@ const tracer = getOtelTracer();
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
-  otelSdk.start();
 }
 
 const OTEL_FLUSH_TIMEOUT = sharedOtelConfig.flushTimeout;
