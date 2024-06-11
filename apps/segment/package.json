@@ -32,7 +32,7 @@
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
-    "@saleor/macaw-ui": "1.0.0-pre.7",
+    "@saleor/macaw-ui": "1.1.5",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
     "@saleor/trpc": "workspace:*",
