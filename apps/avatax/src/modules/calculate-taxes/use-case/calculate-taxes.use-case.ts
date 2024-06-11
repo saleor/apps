@@ -1,3 +1,4 @@
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AuthData } from "@saleor/app-sdk/APL";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
@@ -28,6 +29,7 @@ export class CalculateTaxesUseCase {
   constructor(
     private deps: {
       configExtractor: IAppConfigExtractor;
+      discountsStrategy: AutomaticallyDistributedDiscountsStrategy;
     },
   ) {}
 
@@ -163,7 +165,12 @@ export class CalculateTaxesUseCase {
     }
 
     return fromPromise(
-      taxProvider.calculateTaxes(payload, providerConfig.value.avataxConfig.config, authData),
+      taxProvider.calculateTaxes(
+        payload,
+        providerConfig.value.avataxConfig.config,
+        authData,
+        this.deps.discountsStrategy,
+      ),
       (err) =>
         new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
           errors: [err],

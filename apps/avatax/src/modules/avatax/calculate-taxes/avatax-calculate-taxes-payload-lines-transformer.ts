@@ -1,6 +1,7 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { avataxProductLine } from "./avatax-product-line";
@@ -11,7 +12,12 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
+    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): LineItemModel[] {
+    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(
+      taxBase.discounts.map((discount) => discount.amount.amount),
+    );
+
     // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
@@ -22,6 +28,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
         quantity: line.quantity,
+        discounted: areLinesDiscounted,
       });
     });
 
@@ -30,6 +37,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         amount: taxBase.shippingPrice.amount,
         taxCode: config.shippingTaxCode,
         taxIncluded: taxBase.pricesEnteredWithTax,
+        discounted: areLinesDiscounted,
       });
 
       return [...productLines, shippingLine];

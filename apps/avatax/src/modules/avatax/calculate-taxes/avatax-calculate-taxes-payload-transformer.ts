@@ -6,6 +6,7 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
+import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
@@ -24,6 +25,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
+    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
@@ -46,6 +48,9 @@ export class AvataxCalculateTaxesPayloadTransformer {
         entityUseCode,
         customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
+        discount: discountsStrategy.getDiscountAmount(
+          payload.taxBase.discounts.map((discount) => discount.amount.amount),
+        ),
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {
@@ -53,7 +58,12 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: payloadLinesTransformer.transform(payload.taxBase, avataxConfig, matches),
+        lines: payloadLinesTransformer.transform(
+          payload.taxBase,
+          avataxConfig,
+          matches,
+          discountsStrategy,
+        ),
         date: new Date(),
       },
     };

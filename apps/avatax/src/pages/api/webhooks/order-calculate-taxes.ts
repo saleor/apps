@@ -1,3 +1,4 @@
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -24,6 +25,7 @@ const logger = createLogger("orderCalculateTaxesSyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+const discountStrategy = new AutomaticallyDistributedDiscountsStrategy();
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -107,6 +109,7 @@ export default wrapWithLoggerContext(
               payload,
               providerConfig.value.avataxConfig.config,
               ctx.authData,
+              discountStrategy,
             );
 
             logger.info("Taxes calculated", { calculatedTaxes });

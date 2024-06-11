@@ -116,6 +116,11 @@ const defaultTaxBase: TaxBase = {
   },
 };
 
+const taxBaseWithDiscounts: TaxBase = {
+  ...defaultTaxBase,
+  discounts: [{ amount: { amount: 21 } }, { amount: { amount: 0.37 } }],
+};
+
 const defaultTransactionModel: TransactionModel = {
   id: 0,
   code: "aec372bb-f3b3-40fb-9d84-2b46cd67e516",
@@ -951,6 +956,11 @@ const defaultTaxCodeMatches: AvataxTaxCodeMatches = [
 const testingScenariosMap = {
   default: {
     taxBase: defaultTaxBase,
+    response: defaultTransactionModel,
+    matches: defaultTaxCodeMatches,
+  },
+  withDiscounts: {
+    taxBase: taxBaseWithDiscounts,
     response: defaultTransactionModel,
     matches: defaultTaxCodeMatches,
   },

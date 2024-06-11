@@ -1,18 +1,19 @@
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
-import { createLogger } from "../../../logger";
 
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
-import { loggerContext } from "../../../logger-context";
-import { CalculateTaxesUseCase } from "../../../modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
-import { checkoutCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/checkout-calculate-taxes";
+import { AppConfigExtractor } from "@/lib/app-config-extractor";
+import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
+import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { createLogger } from "@/logger";
+import { loggerContext } from "@/logger-context";
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
+import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
+import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
 export const config = {
   api: {
@@ -27,6 +28,7 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
+  discountsStrategy: new AutomaticallyDistributedDiscountsStrategy(),
 });
 
 /**

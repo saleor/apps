@@ -9,6 +9,7 @@ import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { normalizeAvaTaxError } from "../avatax-error-normalizer";
+import { PriceReductionDiscountsStrategy } from "../discounts";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
@@ -33,6 +34,7 @@ export class AvataxOrderConfirmedAdapter
     payload: AvataxOrderConfirmedPayload,
     config: AvataxConfig,
     authData: AuthData,
+    discountsStrategy: PriceReductionDiscountsStrategy,
   ): Promise<AvataxOrderConfirmedResponse> {
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
@@ -42,6 +44,7 @@ export class AvataxOrderConfirmedAdapter
       payload.confirmedOrderEvent,
       config,
       authData,
+      discountsStrategy,
     );
 
     this.logger.info(

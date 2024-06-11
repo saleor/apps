@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
+import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 const transformer = new AvataxCalculateTaxesPayloadLinesTransformer();
+
+const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
 
 describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
   describe("transform", () => {
@@ -13,7 +16,12 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const taxBaseMock = mockGenerator.generateTaxBase();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-      const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
+      const lines = transformer.transform(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+        discountsStrategy,
+      );
 
       expect(lines).toEqual([
         {
@@ -21,18 +29,21 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
           quantity: 3,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
         },
         {
           amount: 20,
           quantity: 1,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
         },
         {
           amount: 100,
           quantity: 2,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
         },
         {
           amount: 48.33,
@@ -40,6 +51,7 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
           quantity: 1,
           taxCode: "FR000000",
           taxIncluded: true,
+          discounted: false,
         },
       ]);
     });
@@ -49,7 +61,12 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const matchesMock = mockGenerator.generateTaxCodeMatches();
       const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 
-      const lines = transformer.transform(taxBaseMock, avataxConfigMock, matchesMock);
+      const lines = transformer.transform(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+        discountsStrategy,
+      );
 
       expect(lines).toEqual([
         {
@@ -57,18 +74,66 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
           quantity: 3,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
         },
         {
           amount: 20,
           quantity: 1,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
         },
         {
           amount: 100,
           quantity: 2,
           taxCode: DEFAULT_TAX_CLASS_ID,
           taxIncluded: true,
+          discounted: false,
+        },
+      ]);
+    });
+
+    it("should add discounted flag to lines when discounts are applied", () => {
+      const mockGenerator = new AvataxCalculateTaxesMockGenerator("withDiscounts");
+      const avataxConfigMock = mockGenerator.generateAvataxConfig();
+      const taxBaseMock = mockGenerator.generateTaxBase();
+      const matchesMock = mockGenerator.generateTaxCodeMatches();
+      const lines = transformer.transform(
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+        discountsStrategy,
+      );
+
+      expect(lines).toEqual([
+        {
+          amount: 60,
+          quantity: 3,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          amount: 20,
+          quantity: 1,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          amount: 100,
+          quantity: 2,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          amount: 48.33,
+          itemCode: "Shipping",
+          quantity: 1,
+          taxCode: "FR000000",
+          taxIncluded: true,
+          discounted: true,
         },
       ]);
     });

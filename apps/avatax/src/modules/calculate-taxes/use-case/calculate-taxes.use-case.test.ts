@@ -1,3 +1,4 @@
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Result, err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -13,6 +14,8 @@ const mockGetAppConfig = vi.fn<never, Result<AppConfig, (typeof BaseError)["prot
 const MockConfigExtractor: IAppConfigExtractor = {
   extractAppConfigFromPrivateMetadata: mockGetAppConfig,
 };
+
+const MockDiscountStrategy = new AutomaticallyDistributedDiscountsStrategy();
 
 const getMockAuthData = (): AuthData => ({
   appId: "avatax",
@@ -128,6 +131,7 @@ describe("CalculateTaxesUseCase", () => {
 
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
+      discountsStrategy: MockDiscountStrategy,
     });
   });
 
