@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AvataxClient } from "../../avatax/avatax-client";
+import { AvataxSdkClientFactory } from "../../avatax/avatax-sdk-client-factory";
 import { AvataxWebhookServiceFactory } from "../../taxes/avatax-webhook-service-factory";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
@@ -132,6 +134,26 @@ const getMockedAppConfig = (): AppConfig => {
 
 describe("CalculateTaxesUseCase", () => {
   let instance: CalculateTaxesUseCase;
+  let mockedAvataxClient: any;
+
+  vi.mock("../../../modules/avatax/avatax-client", () => {
+    const AvataxClient = vi.fn();
+
+    AvataxClient.prototype.createTransaction = vi.fn();
+
+    return {
+      AvataxClient,
+    };
+  });
+
+  beforeEach(() => {
+    mockedAvataxClient = new AvataxClient(
+      new AvataxSdkClientFactory().createClient({
+        isSandbox: true,
+        credentials: { username: "mock", password: "mock" },
+      }),
+    );
+  });
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -187,9 +209,56 @@ describe("CalculateTaxesUseCase", () => {
     expect(error.errors![0]).toBeInstanceOf(Error);
   });
 
-  // implement this test after we allow AvaTax client to be injected into usecase
-  it.todo(
-    "Uses AutomaticallyDistributedDiscountsStrategy to calculate discounts if present",
-    async () => {},
-  );
+  it("Uses AutomaticallyDistributedDiscountsStrategy to calculate discounts if present", async () => {
+    mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
+
+    const payload = getPayloadWithDiscounts();
+
+    await instance.calculateTaxes(payload, getMockAuthData());
+
+    expect(mockedAvataxClient.createTransaction).toHaveBeenCalledOnce();
+
+    expect(mockedAvataxClient.createTransaction).toHaveBeenCalledWith({
+      model: {
+        addresses: {
+          shipFrom: {
+            city: "test",
+            country: "test",
+            line1: "test",
+            postalCode: "10111",
+            region: "NY",
+          },
+          shipTo: {
+            city: "",
+            country: "PL",
+            line1: "",
+            line2: "",
+            postalCode: "",
+            region: "",
+          },
+        },
+        commit: false,
+        companyCode: "test",
+        currencyCode: "PLN",
+        customerCode: "0",
+        date: expect.any(Date),
+        discount: 10.1,
+        entityUseCode: "",
+        lines: [
+          {
+            amount: 100,
+            description: undefined,
+            discounted: true,
+            itemCode: undefined,
+            quantity: 1,
+            taxCode: "P0000000",
+            taxIncluded: false,
+          },
+        ],
+        type: 0,
+      },
+    });
+  });
 });
