@@ -6,7 +6,6 @@ import { z } from "zod";
 import * as Sentry from "@sentry/nextjs";
 import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 import { FieldsMapper } from "../fields-mapper";
-import { log } from "console";
 
 type Context = {
   configuration: DatocmsProviderConfig.FullShape;
@@ -18,33 +17,31 @@ type Context = {
  */
 export class DatoCMSClient {
   private client: Client;
+  private logger = createLogger("DatoCMSClient");
 
   constructor(opts: { apiToken: string }) {
     this.client = buildClient({ apiToken: opts.apiToken });
   }
 
   async getContentTypes() {
-    const logger = createLogger("DatoCMSClient.getContentTypes");
-
-    logger.debug("Calling get content types");
+    this.logger.debug("getContentTypes called");
 
     const contentTypes = await this.client.itemTypes.list();
 
-    logger.debug("Got content types", { contentTypes });
+    this.logger.debug("Got content types", { contentTypes });
 
     return contentTypes;
   }
 
   async getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
-    const logger = createLogger("DatoCMSClient.getFieldsForContentType", {
-      itemTypeID,
-    });
-
-    logger.debug("Calling get fields for content type");
+    this.logger.debug("getFieldsForContentType called", { itemTypeID });
 
     const fields = await this.client.fields.list({ type: "item_type", id: itemTypeID });
 
-    logger.debug("Got fields for content type", { itemTypeID, fieldsIds: fields.map((f) => f.id) });
+    this.logger.debug("Got fields for content type", {
+      itemTypeID,
+      fieldsIds: fields.map((f) => f.id),
+    });
 
     return fields;
   }
@@ -93,13 +90,11 @@ export class DatoCMSClient {
   }
 
   async deleteProductVariant({ configuration, variant }: Context) {
-    const logger = createLogger("DatoCMSClient.deleteProductVariant", {
+    this.logger.debug("deleteProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       configId: configuration.id,
     });
-
-    logger.debug("Calling delete product variant");
 
     const remoteProducts = await this.getItemBySaleorVariantId({
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
@@ -108,7 +103,7 @@ export class DatoCMSClient {
     });
 
     if (remoteProducts.length > 1) {
-      logger.debug(
+      this.logger.debug(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
         {
           remoteProducts: remoteProducts.map((p) => p.id),
@@ -117,12 +112,14 @@ export class DatoCMSClient {
     }
 
     if (remoteProducts.length === 0) {
-      logger.debug("No product found in Datocms, skipping deletion");
+      this.logger.debug("No product found in Datocms, skipping deletion");
 
       return;
     }
 
-    logger.debug("Deleting product variant", { remoteProducts: remoteProducts.map((p) => p.id) });
+    this.logger.debug("Deleting product variant", {
+      remoteProducts: remoteProducts.map((p) => p.id),
+    });
 
     return Promise.all(
       remoteProducts.map((p) => {
@@ -132,30 +129,26 @@ export class DatoCMSClient {
   }
 
   async uploadProductVariant(context: Context) {
-    const logger = createLogger("DatoCMSClient.uploadProductVariant", {
+    this.logger.debug("uploadProductVariant called", {
       variantId: context.variant.id,
       productId: context.variant.product.id,
       fieldMappping: context.configuration.productVariantFieldsMapping,
       configId: context.configuration.id,
     });
 
-    logger.debug("Calling upload product variant");
-
     const result = await this.client.items.create(this.mapVariantToDatoCMSFields(context));
 
-    logger.debug("Uploaded product variant", { datoID: result.id });
+    this.logger.debug("Uploaded product variant", { datoID: result.id });
 
     return result;
   }
 
   async updateProductVariant({ configuration, variant }: Context) {
-    const logger = createLogger("DatoCMSClient.updateProductVariant", {
+    this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       configId: configuration.id,
     });
-
-    logger.debug("Calling update product variant");
 
     const products = await this.getItemBySaleorVariantId({
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
@@ -164,7 +157,7 @@ export class DatoCMSClient {
     });
 
     if (products.length > 1) {
-      logger.warn(
+      this.logger.warn(
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
           productsIds: products.map((p) => p.id),
@@ -187,13 +180,11 @@ export class DatoCMSClient {
   }
 
   upsertProduct({ configuration, variant }: Context) {
-    const logger = createLogger("DatoCMSClient.upsertProduct", {
+    this.logger.debug("upsertProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
       configId: configuration.id,
     });
-
-    logger.debug("Calling upsert product variant");
 
     const DatoErrorBody = z.object({
       data: z.array(
@@ -218,7 +209,7 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
-          logger.debug("Found unique id error, will update the product", {
+          this.logger.debug("Found unique id error, will update the product", {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });
@@ -227,7 +218,7 @@ export class DatoCMSClient {
           throw new Error(JSON.stringify(err.cause));
         }
       } catch (e) {
-        logger.error("Invalid error shape from DatoCMS", { error: err });
+        this.logger.error("Invalid error shape from DatoCMS", { error: err });
         Sentry.captureException("Invalid error shape from DatoCMS", (c) => {
           return c.setExtra("error", err);
         });

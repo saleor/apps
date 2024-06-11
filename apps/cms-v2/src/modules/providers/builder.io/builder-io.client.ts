@@ -2,10 +2,10 @@ import { BuilderIoProviderConfig } from "@/modules/configuration";
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { createLogger } from "@/logger";
 import { FieldsMapper } from "../fields-mapper";
-import { channel } from "diagnostics_channel";
 
 // https://www.builder.io/c/docs/write-api
 export class BuilderIoClient {
+  private logger = createLogger("BuilderIoClient");
   private endpoint: string;
 
   constructor(private config: BuilderIoProviderConfig.FullShape) {
@@ -20,13 +20,11 @@ export class BuilderIoClient {
   }
 
   async uploadProductVariant(variant: WebhookProductVariantFragment) {
-    const logger = createLogger("BuilderIoClient.uploadProductVariant", {
+    this.logger.debug("uploadProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
     });
-
-    logger.debug("uploadProductVariant called");
 
     try {
       await fetch(this.endpoint, {
@@ -41,9 +39,9 @@ export class BuilderIoClient {
         }),
       });
 
-      logger.debug("Product variant uploaded");
+      this.logger.debug("Product variant uploaded");
     } catch (err) {
-      logger.error("Failed to upload product variant", { error: err });
+      this.logger.error("Failed to upload product variant", { error: err });
 
       throw err;
     }
@@ -53,12 +51,10 @@ export class BuilderIoClient {
     builderIoEntryId: string,
     variant: WebhookProductVariantFragment,
   ) {
-    const logger = createLogger("BuilderIoClient.updateProductVariantCall", {
+    this.logger.debug("updateProductVariantCall called", {
       variantId: variant.id,
       builderIoEntryId,
     });
-
-    logger.debug("Update single product variant called");
 
     try {
       await fetch(this.endpoint + `/${builderIoEntryId}`, {
@@ -73,26 +69,24 @@ export class BuilderIoClient {
         }),
       });
 
-      logger.debug("Product variant updated");
+      this.logger.debug("Product variant updated");
     } catch (err) {
-      logger.error("Failed to upload product variant", { error: err });
+      this.logger.error("Failed to upload product variant", { error: err });
 
       throw err;
     }
   }
 
   async updateProductVariant(variant: WebhookProductVariantFragment) {
-    const logger = createLogger("BuilderIoClient.updateProductVariant", {
+    this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
     });
 
-    logger.debug("Update product variant called");
-
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
-    logger.debug("Trying to update variants in builder.io with following IDs", {
+    this.logger.debug("Trying to update variants in builder.io with following IDs", {
       entriesToUpdate,
     });
 
@@ -104,22 +98,20 @@ export class BuilderIoClient {
   }
 
   async upsertProductVariant(variant: WebhookProductVariantFragment) {
-    const logger = createLogger("BuilderIoClient.upsertProductVariant", {
+    this.logger.debug("upsertProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
     });
 
-    logger.debug("Upsert product variant called");
-
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
     if (entriesToUpdate.length === 0) {
-      logger.debug("Didn't find any entries to update, will upload new variant");
+      this.logger.debug("Didn't find any entries to update, will upload new variant");
 
       return this.uploadProductVariant(variant);
     } else {
-      logger.debug("Found entries in builder.io, will update them", { entriesToUpdate });
+      this.logger.debug("Found entries in builder.io, will update them", { entriesToUpdate });
 
       return Promise.all(
         entriesToUpdate.map((id) => {
@@ -130,15 +122,13 @@ export class BuilderIoClient {
   }
 
   async deleteProductVariant(variantId: string) {
-    const logger = createLogger("BuilderIoClient.deleteProductVariant", {
+    this.logger.debug("deleteProductVariant called", {
       variantId,
     });
 
-    logger.debug("Delete product variant called");
-
     const idsToDelete = await this.fetchBuilderIoEntryIds(variantId);
 
-    logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
+    this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
 
     return Promise.all(
       idsToDelete.map((id) =>
@@ -157,13 +147,11 @@ export class BuilderIoClient {
    * Can return more than 1. Builder doesn't have unique fields.
    */
   private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
-    const logger = createLogger("BuilderIoClient.deleteProductVariant", {
+    this.logger.debug("deleteProductVariant called", {
       modelName: this.config.modelName,
       variantId,
       variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
     });
-
-    logger.debug("Trying to fetch variant from Builder.io");
 
     return fetch(
       `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=false&cacheSeconds=0`,
@@ -172,11 +160,11 @@ export class BuilderIoClient {
       .then((data) => {
         const results = data.results.map((result: any) => result.id) as string[];
 
-        logger.debug("Fetched builder.io entries", { entriesIds: results });
+        this.logger.debug("Fetched builder.io entries", { entriesIds: results });
         return results;
       })
       .catch((err) => {
-        logger.error("Failed to fetch builder.io entry id", { error: err });
+        this.logger.error("Failed to fetch builder.io entry id", { error: err });
         throw err;
       });
   }

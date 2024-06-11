@@ -5,9 +5,9 @@ import {
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 
-const logger = createLogger("CategoriesFetcher");
-
 export class CategoriesFetcher {
+  private logger = createLogger("CategoriesFetcher");
+
   constructor(private apiClient: Pick<Client, "query">) {}
 
   private async fetchRecursivePage(
@@ -47,11 +47,11 @@ export class CategoriesFetcher {
   async fetchAllCategories(): Promise<CategoryWithMappingFragmentFragment[]> {
     let categories: CategoryWithMappingFragmentFragment[] = [];
 
-    logger.debug("Fetching attributes");
+    this.logger.debug("fetchAllCategories called");
 
     const result = await this.fetchRecursivePage(categories, undefined);
 
-    logger.info("Categories fetched successfully", {
+    this.logger.info("Categories fetched successfully", {
       first: result[0],
       totalLength: result.length,
     });

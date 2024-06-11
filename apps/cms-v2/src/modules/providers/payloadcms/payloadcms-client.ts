@@ -5,7 +5,6 @@ import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloa
 import { FieldsMapper } from "../fields-mapper";
 
 import qs from "qs";
-import { z } from "zod";
 
 type Context = {
   configuration: PayloadCmsProviderConfig.FullShape;
@@ -17,6 +16,8 @@ type Context = {
  * https://payloadcms.com/docs/queries/overview#rest-queries
  */
 export class PayloadCMSClient {
+  private logger = createLogger("PayloadCMSClient");
+
   private mapVariantToPayloadFields({ configuration, variant }: Context) {
     const fields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
@@ -50,13 +51,11 @@ export class PayloadCMSClient {
   }
 
   async deleteProductVariant(context: Context) {
-    const logger = createLogger("PayloadCMSClient.deleteProductVariant", {
+    this.logger.debug("deleteProductVariant called", {
       variantId: context.variant.id,
       productId: context.variant.product.id,
       configId: context.configuration.id,
     });
-
-    logger.debug("Calling delete product variant");
 
     const queryString = qs.stringify(
       {
@@ -71,7 +70,7 @@ export class PayloadCMSClient {
       },
     );
 
-    logger.debug("Deleting product variant", { queryString });
+    this.logger.debug("Deleting product variant", { queryString });
 
     try {
       const response = await fetch(
@@ -83,11 +82,11 @@ export class PayloadCMSClient {
       );
 
       if (response.status >= 400) {
-        logger.error("Error while deleting product variant");
+        this.logger.error("Error while deleting product variant");
         throw new Error("Error while deleting product variant");
       }
     } catch (e) {
-      logger.error("Failed to delete variant", { error: e });
+      this.logger.error("Failed to delete variant", { error: e });
 
       throw e;
     }
@@ -115,13 +114,11 @@ export class PayloadCMSClient {
   }
 
   uploadProductVariant(context: Context) {
-    const logger = createLogger("PayloadCMSClient.uploadProductVariant", {
+    this.logger.debug("uploadProductVariant called", {
       variantId: context.variant.id,
       productId: context.variant.product.id,
       configId: context.configuration.id,
     });
-
-    logger.debug("Calling upload product variant");
 
     return fetch(this.constructCollectionUrl(context.configuration), {
       method: "POST",
@@ -130,12 +127,12 @@ export class PayloadCMSClient {
     })
       .then((r) => {
         if (r.status >= 400) {
-          logger.error("Error while uploading product variant");
+          this.logger.error("Error while uploading product variant");
           throw new Error(`Error while uploading product variant: ${r.statusText}`);
         }
       })
       .catch((e) => {
-        logger.error("Failed to upload product variant", { error: e });
+        this.logger.error("Failed to upload product variant", { error: e });
 
         throw e;
       });
@@ -148,7 +145,7 @@ export class PayloadCMSClient {
       configId: configuration.id,
     });
 
-    logger.debug("Calling update product variant");
+    this.logger.debug("Calling update product variant");
 
     const queryString = qs.stringify(
       {
@@ -163,7 +160,7 @@ export class PayloadCMSClient {
       },
     );
 
-    logger.debug("Updating product variant", { queryString });
+    this.logger.debug("Updating product variant", { queryString });
 
     try {
       const response = await fetch(this.constructCollectionUrl(configuration) + queryString, {
@@ -173,29 +170,27 @@ export class PayloadCMSClient {
       });
 
       if (response.status >= 400) {
-        logger.error("Error while updating product variant");
+        this.logger.error("Error while updating product variant");
         throw new Error("Error while updating product variant");
       }
     } catch (e) {
-      logger.error("Failed to update product variant", { error: e });
+      this.logger.error("Failed to update product variant", { error: e });
 
       throw e;
     }
   }
 
   async upsertProductVariant(context: Context) {
-    const logger = createLogger("PayloadCMSClient.updateProductVariant", {
+    this.logger.debug("updateProductVariant called", {
       variantId: context.variant.id,
       productId: context.variant.product.id,
       configId: context.configuration.id,
     });
 
-    logger.debug("Calling upsert product variant");
-
     try {
       await this.uploadProductVariant(context);
     } catch (e) {
-      logger.error("Failed to upload, will try to update", { error: e });
+      this.logger.error("Failed to upload, will try to update", { error: e });
 
       await this.updateProductVariant(context);
     }
