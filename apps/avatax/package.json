@@ -29,7 +29,6 @@
     "@opentelemetry/exporter-logs-otlp-http": "../../node_modules/@opentelemetry/exporter-logs-otlp-http",
     "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
     "@opentelemetry/instrumentation-http": "../../node_modules/@opentelemetry/instrumentation-http",
-    "@opentelemetry/instrumentation-winston": "../../node_modules/@opentelemetry/instrumentation-winston",
     "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
     "@opentelemetry/sdk-logs": "../../node_modules/@opentelemetry/sdk-logs",
     "@opentelemetry/sdk-node": "../../node_modules/@opentelemetry/sdk-node",
