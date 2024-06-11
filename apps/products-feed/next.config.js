@@ -17,9 +17,7 @@ const nextConfig = {
     "@saleor/webhook-utils",
     "@saleor/sentry-utils",
   ],
-  experimental: {
-    instrumentationHook: true,
-  },
+  experimental: {},
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
    * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released

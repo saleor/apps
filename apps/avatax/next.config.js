@@ -15,7 +15,6 @@ const nextConfig = {
     "@saleor/sentry-utils",
   ],
   experimental: {
-    instrumentationHook: true,
     optimizePackageImports: [
       "@sentry/nextjs",
       "@sentry/node",

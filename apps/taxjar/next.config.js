@@ -16,9 +16,7 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
     "@saleor/sentry-utils",
   ],
-  experimental: {
-    instrumentationHook: true,
-  },
+  experimental: {},
 };
 
 const configWithSentry = withSentryConfig(nextConfig, {
