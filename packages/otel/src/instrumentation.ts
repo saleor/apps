@@ -11,9 +11,9 @@ import { type ClientRequest } from "node:http";
 import { otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 
-if (process.env.ENABLE_DEBUG_OTEL_DIAG === "true") {
-  diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
-}
+// if (process.env.ENABLE_DEBUG_OTEL_DIAG === "true") {
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
+// }
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({
