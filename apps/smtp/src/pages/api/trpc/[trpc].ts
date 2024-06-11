@@ -3,21 +3,26 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { createLogger } from "../../../logger";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createTrpcContext } from "../../../modules/trpc/trpc-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { loggerContext } from "../../../logger-context";
 
 const logger = createLogger("tRPC wrapper");
 
-export default withOtel(
-  trpcNext.createNextApiHandler({
-    router: appRouter,
-    createContext: createTrpcContext,
-    onError: ({ path, error }) => {
-      if (error.code === "INTERNAL_SERVER_ERROR") {
-        logger.error(error, `${path} returned error:`);
+export default wrapWithLoggerContext(
+  withOtel(
+    trpcNext.createNextApiHandler({
+      router: appRouter,
+      createContext: createTrpcContext,
+      onError: ({ path, error }) => {
+        if (error.code === "INTERNAL_SERVER_ERROR") {
+          logger.error(`${path} returned error:`, { error });
 
-        return;
-      }
-      logger.debug(error, `${path} returned error:`);
-    },
-  }),
-  "/api/trpc",
+          return;
+        }
+        logger.debug(`${path} returned error:`, { error });
+      },
+    }),
+    "/api/trpc",
+  ),
+  loggerContext,
 );

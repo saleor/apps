@@ -24,7 +24,7 @@ export async function fetchAppPermissions(client: Client): Promise<PermissionEnu
     .toPromise();
 
   if (error) {
-    logger.error(error, "Error fetching app permissions");
+    logger.error("Error fetching app permissions", { error });
     throw new Error("Could not fetch the app permissions");
   }
 
