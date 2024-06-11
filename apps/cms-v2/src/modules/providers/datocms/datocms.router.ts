@@ -31,7 +31,7 @@ export const datocmsRouter = router({
       try {
         const contentTypes = await client.getContentTypes();
 
-        logger.info("Content types fetched successfully", {
+        logger.debug("Content types fetched successfully", {
           contentTypes: contentTypes.map((c) => c.name),
         });
 
@@ -68,7 +68,7 @@ export const datocmsRouter = router({
           itemTypeID: input.contentTypeID,
         });
 
-        logger.info("Content type fields fetched successfully", {
+        logger.debug("Content type fields fetched successfully", {
           contentTypesIds: fields.map((f) => f.id),
         });
         return fields;

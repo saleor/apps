@@ -46,7 +46,7 @@ export const contentfulRouter = router({
       try {
         const environments = await client.getEnvironments();
 
-        logger.info("Environments fetched successfully", {
+        logger.debug("Environments fetched successfully", {
           environmentsLength: environments.items.length,
         });
 
@@ -80,7 +80,7 @@ export const contentfulRouter = router({
       try {
         const contentTypes = await client.getContentTypes(input.contentfulEnv);
 
-        logger.info("Content types fetched successfully", {
+        logger.debug("Content types fetched successfully", {
           contentTypesLength: contentTypes.items.length,
         });
 

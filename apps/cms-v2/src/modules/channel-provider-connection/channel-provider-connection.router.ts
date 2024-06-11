@@ -27,7 +27,7 @@ export const channelProviderConnectionRouter = router({
     const channels = await ctx.apiClient.query(FetchChannelsDocument, {});
     const channelData = channels.data?.channels ?? [];
 
-    logger.info("Channels fetched successfully", { channelsLength: channelData.length });
+    logger.debug("Channels fetched successfully", { channelsLength: channelData.length });
 
     return channelData;
   }),
@@ -38,7 +38,7 @@ export const channelProviderConnectionRouter = router({
 
     const connections = await (await ctx.appConfigService.get()).connections.getConnections();
 
-    logger.info("Connections fetched successfully", { connectionsLength: connections.length });
+    logger.debug("Connections fetched successfully", { connectionsLength: connections.length });
 
     return connections;
   }),
@@ -50,7 +50,7 @@ export const channelProviderConnectionRouter = router({
     const connection =
       (await ctx.appConfigService.get()).connections.getConnectionById(input.id) ?? null;
 
-    logger.info("Connection fetched successfully", { connection });
+    logger.debug("Connection fetched successfully", { connection });
 
     return connection;
   }),
@@ -68,7 +68,7 @@ export const channelProviderConnectionRouter = router({
       try {
         config.connections.addConnection(input);
 
-        logger.info("Connection added successfully");
+        logger.debug("Connection added successfully");
       } catch (e) {
         logger.error("Connection add failed", { error: e });
         switch ((e as { cause: string }).cause) {
@@ -106,7 +106,7 @@ export const channelProviderConnectionRouter = router({
 
       config.connections.deleteConnection(input.id);
 
-      logger.info("Connection removed successfully");
+      logger.debug("Connection removed successfully");
 
       ctx.appConfigService.set(config);
     }),

@@ -23,7 +23,7 @@ export const categoryMappingRouter = router({
       });
     });
 
-    logger.info("Returning categories", { categoriesLength: result.length });
+    logger.debug("Returning categories", { categoriesLength: result.length });
 
     return result;
   }),
@@ -58,7 +58,7 @@ export const categoryMappingRouter = router({
         });
       }
 
-      logger.info("Category mapping updated");
+      logger.debug("Category mapping updated");
       return;
     }),
 });
