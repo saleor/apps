@@ -49,13 +49,13 @@ export class CategoriesFetcher {
 
     logger.debug("Fetching attributes");
 
-    await this.fetchRecursivePage(categories, undefined);
+    const result = await this.fetchRecursivePage(categories, undefined);
 
     logger.info("Categories fetched successfully", {
-      first: categories[0],
-      totalLength: categories.length,
+      first: result[0],
+      totalLength: result.length,
     });
 
-    return categories;
+    return result;
   }
 }
