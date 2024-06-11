@@ -23,7 +23,7 @@ export const appConfigurationRouter = router({
     try {
       const configuration = await getConfig();
 
-      logger.info("Configuration fetched");
+      logger.debug("Configuration fetched");
       return configuration.getRootConfig();
     } catch (e) {
       logger.error("Can't fetch the configuration", { error: e });
@@ -49,7 +49,7 @@ export const appConfigurationRouter = router({
           bucketName: input.bucketName,
           s3Client,
         });
-        logger.info("Verification succeeded");
+        logger.debug("Verification succeeded");
       } catch {
         logger.error("Validation failed");
         throw new TRPCError({
@@ -78,7 +78,7 @@ export const appConfigurationRouter = router({
           s3Client,
         });
 
-        logger.info("Bucket access check succeeded");
+        logger.debug("Bucket access check succeeded");
       } catch (e) {
         logger.error("Bucket access check failed", { error: e });
         throw new TRPCError({
@@ -95,7 +95,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.info("Config saved");
+      logger.debug("Config saved");
 
       return null;
     }),
@@ -119,7 +119,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.info("Saved config");
+      logger.debug("Saved config");
 
       return null;
     }),
@@ -134,7 +134,7 @@ export const appConfigurationRouter = router({
       config.setAttributeMapping(input);
 
       await appConfigMetadataManager.set(config.serialize());
-      logger.info("Attribute map set");
+      logger.debug("Attribute map set");
       return null;
     }),
   getAttributes: protectedClientProcedure.query(async ({ ctx: { apiClient } }) => {
@@ -150,7 +150,7 @@ export const appConfigurationRouter = router({
       });
     });
 
-    logger.info("Returning attributes", { attributesLength: result.length });
+    logger.debug("Returning attributes", { attributesLength: result.length });
 
     return result;
   }),
@@ -166,7 +166,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.info("image size set");
+      logger.debug("image size set");
       return null;
     }),
 
@@ -196,7 +196,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.info("Template title set");
+      logger.debug("Template title set");
       return null;
     }),
 
@@ -216,7 +216,7 @@ export const appConfigurationRouter = router({
           template: input.titleTemplate,
         });
 
-        logger.info("Title rendered succeeded");
+        logger.debug("Title rendered succeeded");
 
         return { title };
       } catch (err) {

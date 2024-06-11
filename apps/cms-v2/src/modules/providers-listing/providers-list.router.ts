@@ -27,7 +27,7 @@ export const providersListRouter = router({
     const config = await appConfigService.get();
     const providers = config.providers.getProviders();
 
-    logger.info("Providers fetched", {
+    logger.debug("Providers fetched", {
       providersIds: providers.map((p) => ({ id: p.id })),
     });
 
@@ -46,9 +46,9 @@ export const providersListRouter = router({
       const provider = (await config.providers.getProviderById(input.id)) ?? null;
 
       if (!provider) {
-        logger.info("Provider not found");
+        logger.debug("Provider not found");
       } else {
-        logger.info("Provider fetched");
+        logger.debug("Provider fetched");
       }
 
       return provider;
@@ -69,7 +69,7 @@ export const providersListRouter = router({
 
       await appConfigService.set(config);
 
-      logger.info("Provider added");
+      logger.debug("Provider added");
     }),
   updateOne: procedure
     .input(ProvidersConfig.Schema.AnyFull)
@@ -84,7 +84,7 @@ export const providersListRouter = router({
 
       const result = await appConfigService.set(config);
 
-      logger.info("Provider updated");
+      logger.debug("Provider updated");
 
       return result;
     }),
@@ -103,7 +103,7 @@ export const providersListRouter = router({
 
       const result = await appConfigService.set(config);
 
-      logger.info("Provider deleted");
+      logger.debug("Provider deleted");
 
       return result;
     }),
