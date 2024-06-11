@@ -1,5 +1,18 @@
 # @saleor/trpc
 
+## 3.0.0
+
+### Minor Changes
+
+- c4dcb863: Remove Pino logger library. It was already deprecated but for non migrated apps it was causing build errors. Right now we have one logger - @saleor/app-logger pkg.
+
+### Patch Changes
+
+- 37ecb246: Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
+- Updated dependencies [37ecb246]
+- Updated dependencies [c4dcb863]
+  - @saleor/apps-shared@1.11.0
+
 ## 2.0.3
 
 ### Patch Changes
