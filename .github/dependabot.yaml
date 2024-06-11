@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     commit-message:
-      prefix: "[skip ci]"
+      prefix: "[skip ci] [vercel only ]"
     groups:
       trpc:
         patterns:
