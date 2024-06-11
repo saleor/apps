@@ -108,7 +108,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
       this.logger.error("Error during sending the email");
 
       if (error instanceof Error) {
-        this.logger.error(error.message);
+        this.logger.error(error.message, { error });
 
         throw error;
       }
