@@ -5,6 +5,8 @@ Sentry.init({
   enableTracing: false,
   environment: process.env.ENV,
   includeLocalVariables: true,
+  skipOpenTelemetrySetup: true,
+  onFatalError: onFatalErrorHandler,
   integrations: [
     Sentry.localVariablesIntegration({
       captureAllExceptions: true,
@@ -12,3 +14,7 @@ Sentry.init({
     Sentry.extraErrorDataIntegration(),
   ],
 });
+
+function onFatalErrorHandler(this: void, error: Error) {
+  console.log("OnFatalError:", error);
+}

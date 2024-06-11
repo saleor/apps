@@ -14,6 +14,7 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
     "@saleor/sentry-utils",
   ],
+
   experimental: {
     instrumentationHook: true,
     optimizePackageImports: [
@@ -47,9 +48,10 @@ const configWithSentry = withSentryConfig(nextConfig, {
   project: process.env.SENTRY_PROJECT,
   silent: true,
   hideSourceMaps: true,
-  widenClientFileUpload: true,
   disableLogger: true,
-  tunnelRoute: "/monitoring",
+  autoInstrumentServerFunctions: false,
+  autoInstrumentMiddleware: false,
+  autoInstrumentAppDirectory: false,
 });
 
 const withBundleAnalyzer = withBundleAnalyzerConfig({
