@@ -3,7 +3,7 @@ import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { ContentfulProviderConfig } from "@/modules/configuration";
 
 import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@/logger";
+import { createLogger, logger } from "@/logger";
 
 type ConstructorOptions = {
   space: string;
@@ -30,9 +30,15 @@ export class ContentfulClient {
   private client: ContentfulApiClientChunk;
   private space: string;
 
+  private logger: typeof logger;
+
   constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
     this.client = clientFactory(opts);
+
+    this.logger = createLogger("ContentfulClient", {
+      space: this.space,
+    });
   }
 
   /**
@@ -92,40 +98,33 @@ export class ContentfulClient {
     };
 
   async getContentTypes(env: string) {
-    const logger = createLogger("ContentfulClient.getContentTypes", {
-      space: this.space,
+    this.logger.debug("getContentTypes called", {
       env,
     });
-
-    logger.debug("Fetching content types");
 
     try {
       const space = await this.client.getSpace(this.space);
       const environment = await space.getEnvironment(env);
       const contentTypes = await environment.getContentTypes();
 
-      logger.debug("Content types fetched successfully", {
+      this.logger.debug("Content types fetched successfully", {
         contentTypesLength: contentTypes.items.length,
       });
 
       return contentTypes;
     } catch (err) {
-      logger.error("Error during the fetching", { error: err });
+      this.logger.error("Error during the fetching", { error: err });
       throw err;
     }
   }
 
   async getEnvironments() {
-    const logger = createLogger("ContentfulClient.getEnvironments", {
-      space: this.space,
-    });
-
-    logger.debug("Fetching environments");
+    this.logger.debug("getEnvironments called");
 
     const space = await this.client.getSpace(this.space);
     const environments = await space.getEnvironments();
 
-    logger.debug("Environments fetched successfully", {
+    this.logger.debug("Environments fetched successfully", {
       environments: environments?.items?.map((e) => e.name) ?? [],
     });
 
@@ -139,23 +138,20 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const logger = createLogger("ContentfulClient.updateProductVariant", {
-      space: this.space,
+    this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
-    logger.debug("Attempting to update product variant");
-
     const space = await this.client.getSpace(this.space);
 
-    logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.debug("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: configuration.contentId,
@@ -163,7 +159,7 @@ export class ContentfulClient {
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
 
-    logger.debug("Found entries to update", {
+    this.logger.debug("Found entries to update", {
       contentEntriesLength: contentEntries.items.length,
     });
 
@@ -183,22 +179,19 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
-    const logger = createLogger("ContentfulClient.deleteProductVariant", {
-      space: this.space,
+    this.logger.debug("deleteProductVariant called", {
       variantId: opts.variant.id,
       contentId: opts.configuration.contentId,
       environment: opts.configuration.environment,
     });
 
-    logger.debug("Attempting to delete product variant");
-
     const space = await this.client.getSpace(this.space);
 
-    logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(opts.configuration.environment);
 
-    logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.debug("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: opts.configuration.contentId,
@@ -206,7 +199,7 @@ export class ContentfulClient {
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
 
-    logger.debug("Found entries to delete", {
+    this.logger.debug("Found entries to delete", {
       contentEntriesLength: contentEntries.items.length,
     });
 
@@ -227,23 +220,20 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const logger = createLogger("ContentfulClient.deleteProductVariant", {
-      space: this.space,
+    this.logger.debug("deleteProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
-    logger.debug("Attempting to upload product variant");
-
     const space = await this.client.getSpace(this.space);
 
-    logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.debug("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.debug("Environment fetched successfully", { envName: env.name });
     /*
      * TODO: add translations
      * TODO: - should it create published? is draft
@@ -260,24 +250,21 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    const logger = createLogger("ContentfulClient.deleteProductVariant", {
-      space: this.space,
+    this.logger.debug("deleteProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
 
-    logger.debug("Attempting to upsert product variant");
-
     try {
       const space = await this.client.getSpace(this.space);
 
-      logger.debug("Space fetched successfully", { spaceName: space.name });
+      this.logger.debug("Space fetched successfully", { spaceName: space.name });
 
       const env = await space.getEnvironment(configuration.environment);
 
-      logger.debug("Environment fetched successfully", { envName: env.name });
+      this.logger.debug("Environment fetched successfully", { envName: env.name });
 
       const entries = await this.getEntriesBySaleorId({
         contentId: configuration.contentId,
@@ -285,10 +272,10 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      logger.debug("Found entries", { entries });
+      this.logger.debug("Found entries", { entries });
 
       if (entries.items.length > 0) {
-        logger.debug("Found existing entry, will update");
+        this.logger.debug("Found existing entry, will update");
         Sentry.addBreadcrumb({
           message: "Found entry for variant",
           level: "debug",
@@ -296,7 +283,7 @@ export class ContentfulClient {
 
         return this.updateProductVariant({ configuration, variant });
       } else {
-        logger.debug("No existing entry found, will create");
+        this.logger.debug("No existing entry found, will create");
         Sentry.addBreadcrumb({
           message: "Did not found entry for variant",
           level: "debug",
