@@ -126,7 +126,7 @@ export class ContentfulClient {
     const environments = await space.getEnvironments();
 
     logger.debug("Environments fetched successfully", {
-      environmentsLength: environments.items.length,
+      environments: environments?.items?.map((e) => e.name) ?? [],
     });
 
     return environments;
