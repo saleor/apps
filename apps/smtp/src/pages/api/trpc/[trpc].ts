@@ -12,11 +12,11 @@ export default withOtel(
     createContext: createTrpcContext,
     onError: ({ path, error }) => {
       if (error.code === "INTERNAL_SERVER_ERROR") {
-        logger.error(error, `${path} returned error:`);
+        logger.error(`${path} returned error:`, { error });
 
         return;
       }
-      logger.debug(error, `${path} returned error:`);
+      logger.debug(`${path} returned error:`, { error });
     },
   }),
   "/api/trpc",
