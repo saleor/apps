@@ -267,7 +267,7 @@ const defaultAccountPasswordResetMjmlTemplate = `<mjml>
         <mj-text>
           Password reset has been requested. Please follow the link to proceed: 
         </mj-text>
-        <mj-button href="{{confirm_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
+        <mj-button href="{{reset_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
             Reset the password 
         </mj-button>
       </mj-column>
