@@ -111,6 +111,10 @@ export default wrapWithLoggerContext(
 
             logger.info("Taxes calculated", { calculatedTaxes });
 
+            if (payload.taxBase?.lines[0].quantity === 10) {
+              Sentry.captureException(new Error("TEST ERROR"));
+            }
+
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
             const err = avataxWebhookServiceResult.error;
