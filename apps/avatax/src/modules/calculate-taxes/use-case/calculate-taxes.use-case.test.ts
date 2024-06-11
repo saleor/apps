@@ -1,4 +1,3 @@
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Result, err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -14,8 +13,6 @@ const mockGetAppConfig = vi.fn<never, Result<AppConfig, (typeof BaseError)["prot
 const MockConfigExtractor: IAppConfigExtractor = {
   extractAppConfigFromPrivateMetadata: mockGetAppConfig,
 };
-
-const MockDiscountStrategy = new AutomaticallyDistributedDiscountsStrategy();
 
 const getMockAuthData = (): AuthData => ({
   appId: "avatax",
@@ -82,6 +79,16 @@ const getBasePayload = (): CalculateTaxesPayload => {
   };
 };
 
+const getPayloadWithDiscounts = (): CalculateTaxesPayload => {
+  return {
+    ...getBasePayload(),
+    taxBase: {
+      ...getBasePayload().taxBase,
+      discounts: [{ amount: { amount: 10 } }, { amount: { amount: 0.1 } }],
+    },
+  };
+};
+
 const getMockedAppConfig = (): AppConfig => {
   const connId = "pci-1";
 
@@ -131,7 +138,6 @@ describe("CalculateTaxesUseCase", () => {
 
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
-      discountsStrategy: MockDiscountStrategy,
     });
   });
 
@@ -180,4 +186,10 @@ describe("CalculateTaxesUseCase", () => {
     // Expect any error to be attached. We dont yet specify errors so these tests will be added later
     expect(error.errors![0]).toBeInstanceOf(Error);
   });
+
+  // implement this test after we allow AvaTax client to be injected into usecase
+  it.todo(
+    "Uses AutomaticallyDistributedDiscountsStrategy to calculate discounts if present",
+    async () => {},
+  );
 });

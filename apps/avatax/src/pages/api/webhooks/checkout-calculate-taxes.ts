@@ -10,7 +10,6 @@ import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
@@ -28,7 +27,6 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
-  discountsStrategy: new AutomaticallyDistributedDiscountsStrategy(),
 });
 
 /**

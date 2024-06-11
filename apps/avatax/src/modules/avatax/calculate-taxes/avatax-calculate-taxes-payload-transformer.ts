@@ -48,9 +48,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
         entityUseCode,
         customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
-        discount: discountsStrategy.getDiscountAmount(
-          payload.taxBase.discounts.map((discount) => discount.amount.amount),
-        ),
+        discount: discountsStrategy.getDiscountAmount(payload.taxBase.discounts),
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {

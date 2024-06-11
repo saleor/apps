@@ -14,9 +14,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): LineItemModel[] {
-    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(
-      taxBase.discounts.map((discount) => discount.amount.amount),
-    );
+    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 
     // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {

@@ -29,7 +29,6 @@ export class CalculateTaxesUseCase {
   constructor(
     private deps: {
       configExtractor: IAppConfigExtractor;
-      discountsStrategy: AutomaticallyDistributedDiscountsStrategy;
     },
   ) {}
 
@@ -164,12 +163,14 @@ export class CalculateTaxesUseCase {
       );
     }
 
+    const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+
     return fromPromise(
       taxProvider.calculateTaxes(
         payload,
         providerConfig.value.avataxConfig.config,
         authData,
-        this.deps.discountsStrategy,
+        discountsStrategy,
       ),
       (err) =>
         new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {

@@ -20,9 +20,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
         },
       ];
 
-      const totalDiscount = strategy.getDiscountAmount(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const totalDiscount = strategy.getDiscountAmount(discountsPayload);
 
       expect(totalDiscount).toBe(21.37);
     });
@@ -30,9 +28,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     it("should return 0 if no discounts", () => {
       const discountsPayload: TaxBaseFragment["discounts"] = [];
 
-      const totalDiscount = strategy.getDiscountAmount(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const totalDiscount = strategy.getDiscountAmount(discountsPayload);
 
       expect(totalDiscount).toBe(0);
     });
@@ -46,9 +42,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
         },
       ];
 
-      const totalDiscount = strategy.getDiscountAmount(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const totalDiscount = strategy.getDiscountAmount(discountsPayload);
 
       expect(totalDiscount).toBe(0);
     });
@@ -69,9 +63,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
         },
       ];
 
-      const areLinesDiscounted = strategy.areLinesDiscounted(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const areLinesDiscounted = strategy.areLinesDiscounted(discountsPayload);
 
       expect(areLinesDiscounted).toBe(true);
     });
@@ -79,9 +71,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     it("should return false if there are no discounts", () => {
       const discountsPayload: TaxBaseFragment["discounts"] = [];
 
-      const areLinesDiscounted = strategy.areLinesDiscounted(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const areLinesDiscounted = strategy.areLinesDiscounted(discountsPayload);
 
       expect(areLinesDiscounted).toBe(false);
     });
@@ -95,9 +85,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
         },
       ];
 
-      const areLinesDiscounted = strategy.areLinesDiscounted(
-        discountsPayload.map((discount) => discount.amount.amount),
-      );
+      const areLinesDiscounted = strategy.areLinesDiscounted(discountsPayload);
 
       expect(areLinesDiscounted).toBe(false);
     });

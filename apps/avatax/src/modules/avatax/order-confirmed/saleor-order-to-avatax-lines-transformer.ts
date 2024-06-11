@@ -17,7 +17,7 @@ export class SaleorOrderToAvataxLinesTransformer {
     avataxConfig: AvataxConfig;
     discountsStrategy: PriceReductionDiscountsStrategy;
   }): LineItemModel[] {
-    const areLinesDiscounted = discountsStrategy.areLinesDiscounted();
+    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(confirmedOrderEvent);
 
     const productLines: LineItemModel[] = confirmedOrderEvent.getLines().map((line) => ({
       amount: line.getAmount({ isTaxIncluded: confirmedOrderEvent.getIsTaxIncluded() }),
