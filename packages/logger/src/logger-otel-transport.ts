@@ -1,5 +1,7 @@
 import { context } from "@opentelemetry/api";
-import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
+import { logs } from "@opentelemetry/api-logs";
+
+import { LogAttributes } from "@opentelemetry/api-logs/build/src/types/LogRecord";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { ILogObj, Logger } from "tslog";
 import { LoggerContext } from "./logger-context";
@@ -27,19 +29,16 @@ export const attachLoggerOtelTransport = (
     const serializedAttributes = Object.entries({
       ...(loggerContext?.getRawContext() ?? {}),
       ...attributes,
-    }).reduce(
-      (acc, [key, value]) => {
-        if (Array.isArray(value)) {
-          acc[key] = JSON.stringify(value);
-        } else {
-          // @ts-expect-error - Logger maps attribute as IMeta, but in the runtime Meta is only in log._meta field which is filtered out first
-          acc[key] = value;
-        }
+    }).reduce((acc, [key, value]) => {
+      if (Array.isArray(value)) {
+        acc[key] = JSON.stringify(value);
+      } else {
+        // @ts-expect-error - Logger maps attribute as IMeta, but in the runtime Meta is only in log._meta field which is filtered out first
+        acc[key] = value;
+      }
 
-        return acc;
-      },
-      {} as Record<string, LogAttributeValue>,
-    );
+      return acc;
+    }, {} as LogAttributes);
 
     /**
      * Try to serialize Error. Modern-errors has plugin to serialize
@@ -52,7 +51,7 @@ export const attachLoggerOtelTransport = (
      */
     try {
       const errorAttribute = serializedAttributes.error;
-      const ErrorConstructor = errorAttribute["constructor"];
+      const ErrorConstructor = errorAttribute!["constructor"];
 
       // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
       serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error);
