@@ -13,4 +13,5 @@ Sentry.init({
   includeLocalVariables: true,
   ignoreErrors: ["TRPCClientError"],
   integrations: [],
+  skipOpenTelemetrySetup: true,
 });
