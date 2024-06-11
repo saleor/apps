@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.4
+
+### Patch Changes
+
+- 37ecb246: Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
+
 ## 1.0.3
 
 ### Patch Changes
