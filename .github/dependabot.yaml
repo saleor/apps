@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "[skip ci] [vercel only]"
+      prefix: "[skip ci]"
     groups:
       trpc:
         patterns:
@@ -16,4 +16,3 @@ updates:
       rtl:
         patterns:
           - "@testing-library/*"
-
