@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.2.1
+
+### Patch Changes
+
+- 37ecb246: Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
+
 ## 1.2.0
 
 ### Minor Changes

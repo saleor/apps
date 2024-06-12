@@ -1,5 +1,27 @@
 # saleor-app-products-feed
 
+## 1.18.0
+
+### Minor Changes
+
+- c4dcb863: Remove Pino logger library. It was already deprecated but for non migrated apps it was causing build errors. Right now we have one logger - @saleor/app-logger pkg.
+- 1a9912f5: Setup Sentry inside Next.js instrumentation file. It ensures that Sentry works properly for serverless environment.
+
+### Patch Changes
+
+- 37ecb246: Update pnpm to 9.2.0 version. It means that we also dropped support for Node.js less than 16.
+- cc047b1d: Downgraded Sentry package to v7. Previous upgrade to 8.x cause Sentry to conflict with Open Telemetry setup and Sentry was not working
+- Updated dependencies [37ecb246]
+- Updated dependencies [c4dcb863]
+- Updated dependencies [1a9912f5]
+  - @saleor/apps-logger@1.2.7
+  - @saleor/apps-otel@1.2.1
+  - @saleor/react-hook-form-macaw@0.2.8
+  - @saleor/sentry-utils@0.2.0
+  - @saleor/apps-shared@1.11.0
+  - @saleor/apps-ui@1.2.6
+  - @saleor/webhook-utils@0.1.3
+
 ## 1.17.7
 
 ### Patch Changes
