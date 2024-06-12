@@ -112,7 +112,7 @@ export class DatoCMSClient {
     }
 
     if (remoteProducts.length === 0) {
-      this.logger.debug("No product found in Datocms, skipping deletion");
+      this.logger.info("No product found in Datocms, skipping deletion");
 
       return;
     }
@@ -121,11 +121,15 @@ export class DatoCMSClient {
       remoteProducts: remoteProducts.map((p) => p.id),
     });
 
-    return Promise.all(
+    const result = await Promise.all(
       remoteProducts.map((p) => {
         return this.client.items.rawDestroy(p.id);
       }),
     );
+
+    this.logger.info("Products variants have been deleted");
+
+    return result;
   }
 
   async uploadProductVariant(context: Context) {
@@ -138,7 +142,7 @@ export class DatoCMSClient {
 
     const result = await this.client.items.create(this.mapVariantToDatoCMSFields(context));
 
-    this.logger.debug("Uploaded product variant", { datoID: result.id });
+    this.logger.info("Products variants have been uploaded", { datoID: result.id });
 
     return result;
   }
@@ -166,7 +170,7 @@ export class DatoCMSClient {
       );
     }
 
-    return Promise.all(
+    const result = await Promise.all(
       products.map((product) => {
         return this.client.items.update(
           product.id,
@@ -177,6 +181,10 @@ export class DatoCMSClient {
         );
       }),
     );
+
+    this.logger.info("Products variants have been updated", { datoID: result.map((r) => r.id) });
+
+    return result;
   }
 
   upsertProduct({ configuration, variant }: Context) {
@@ -209,7 +217,7 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
-          this.logger.debug("Found unique id error, will update the product", {
+          this.logger.info("Found unique id error, will update the product", {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });

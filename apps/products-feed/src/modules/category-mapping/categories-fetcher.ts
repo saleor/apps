@@ -51,7 +51,7 @@ export class CategoriesFetcher {
 
     const result = await this.fetchRecursivePage(categories, undefined);
 
-    this.logger.info("Categories fetched successfully", {
+    this.logger.debug("Categories fetched successfully", {
       first: result[0],
       totalLength: result.length,
     });

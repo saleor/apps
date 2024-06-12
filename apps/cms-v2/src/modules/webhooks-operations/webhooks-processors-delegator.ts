@@ -56,7 +56,7 @@ export class WebhooksProcessorsDelegator {
     });
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
-      this.logger.debug("No related channels found for variant, skipping");
+      this.logger.info("No related channels found for variant, skipping");
 
       return;
     }
@@ -93,7 +93,7 @@ export class WebhooksProcessorsDelegator {
     });
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
-      this.logger.debug("No related channels found for variant, skipping");
+      this.logger.info("No related channels found for variant, skipping");
       return;
     }
 
