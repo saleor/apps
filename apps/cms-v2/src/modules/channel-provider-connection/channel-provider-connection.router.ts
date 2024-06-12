@@ -70,21 +70,24 @@ export const channelProviderConnectionRouter = router({
 
         logger.debug("Connection added successfully");
       } catch (e) {
-        logger.error("Connection add failed", { error: e });
         switch ((e as { cause: string }).cause) {
           case "PROVIDER_DOESNT_EXIST":
+            logger.warn("Provider doesnt exist");
             throw new TRPCError({
               code: "BAD_REQUEST",
               cause: "PROVIDER_DOESNT_EXIST",
               message: "Provider doesnt exist",
             });
           case "CONNECTION_ALREADY_EXISTS":
+            logger.warn("Connection already exists");
             throw new TRPCError({
               code: "CONFLICT",
               cause: "CONNECTION_EXISTS",
               message: "Connection already exists",
             });
         }
+
+        logger.warn("Error adding connection", { error: e });
       }
 
       ctx.appConfigService.set(config);

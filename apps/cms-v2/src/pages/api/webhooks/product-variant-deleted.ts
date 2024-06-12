@@ -63,7 +63,7 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
-    logger.error("Product variant not found in payload");
+    logger.warn("Product variant not found in payload");
     Sentry.captureException("Product variant not found in payload");
 
     return res.status(500).end();

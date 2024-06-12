@@ -52,7 +52,7 @@ export const contentfulRouter = router({
 
         return environments;
       } catch (e) {
-        logger.error("Failed to fetch environments", { error: e });
+        logger.warn("Failed to fetch environments", { error: e });
 
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -86,7 +86,7 @@ export const contentfulRouter = router({
 
         return contentTypes;
       } catch (e) {
-        logger.error("Failed to fetch content types", { error: e });
+        logger.warn("Failed to fetch content types", { error: e });
 
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
