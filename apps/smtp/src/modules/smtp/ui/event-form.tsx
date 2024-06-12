@@ -52,17 +52,21 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     },
   });
 
-  const { mutate: fetchTemplatePreview, isLoading: isFetchingTemplatePreview } =
-    trpcClient.smtpConfiguration.renderTemplate.useMutation({
-      onSuccess: (data) => {
-        if (data.renderedEmailBody) {
-          setLastValidRenderedTemplate(data.renderedEmailBody);
-        }
-        if (data.renderedSubject) {
-          setLastValidRenderedSubject(data.renderedSubject);
-        }
-      },
-    });
+  const {
+    mutate: fetchTemplatePreview,
+    isLoading: isFetchingTemplatePreview,
+    error,
+    isError,
+  } = trpcClient.smtpConfiguration.renderTemplate.useMutation({
+    onSuccess: (data) => {
+      if (data.renderedEmailBody) {
+        setLastValidRenderedTemplate(data.renderedEmailBody);
+      }
+      if (data.renderedSubject) {
+        setLastValidRenderedSubject(data.renderedSubject);
+      }
+    },
+  });
 
   const [lastValidRenderedTemplate, setLastValidRenderedTemplate] = useState("");
 
@@ -105,6 +109,11 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
           <Text variant="hero">Edit template</Text>
           <Button type="submit">Save</Button>
         </Box>
+        {isError && (
+          <Box>
+            <Text color={"textCriticalDefault"}>Template compilation failed: {error.message}</Text>
+          </Box>
+        )}
         <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
           <Input control={control} name="subject" label="Subject" />
         </Box>
