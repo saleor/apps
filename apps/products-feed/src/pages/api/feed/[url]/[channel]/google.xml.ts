@@ -56,7 +56,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const error = e as ZodError;
     const fieldErrors = error.flatten().fieldErrors;
 
-    logger.error("Invalid request params", { error: fieldErrors });
+    logger.warn("Invalid request params", { error: fieldErrors });
     return res.status(400).json({ error: fieldErrors });
   }
 
@@ -64,7 +64,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const authData = await apl.get(url as string);
 
   if (!authData) {
-    logger.error(`The app has not been configured with the ${url}`);
+    logger.warn(`The app has not been configured with the ${url}`);
     return res.status(400).json({ error: "The given instance has not been registered" });
   }
 

@@ -82,7 +82,6 @@ export class PayloadCMSClient {
       );
 
       if (response.status >= 400) {
-        this.logger.error("Error while deleting product variant");
         throw new Error("Error while deleting product variant");
       }
     } catch (e) {
@@ -127,7 +126,6 @@ export class PayloadCMSClient {
     })
       .then((r) => {
         if (r.status >= 400) {
-          this.logger.error("Error while uploading product variant");
           throw new Error(`Error while uploading product variant: ${r.statusText}`);
         }
       })
@@ -170,7 +168,6 @@ export class PayloadCMSClient {
       });
 
       if (response.status >= 400) {
-        this.logger.error("Error while updating product variant");
         throw new Error("Error while updating product variant");
       }
     } catch (e) {

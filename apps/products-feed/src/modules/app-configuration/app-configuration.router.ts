@@ -26,7 +26,7 @@ export const appConfigurationRouter = router({
       logger.debug("Configuration fetched");
       return configuration.getRootConfig();
     } catch (e) {
-      logger.error("Can't fetch the configuration", { error: e });
+      logger.warn("Can't fetch the configuration", { error: e });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Can't fetch the configuration",
@@ -51,7 +51,7 @@ export const appConfigurationRouter = router({
         });
         logger.debug("Verification succeeded");
       } catch {
-        logger.error("Validation failed");
+        logger.warn("Validation failed");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not access the S3 bucket using the provided credentials",
@@ -80,7 +80,7 @@ export const appConfigurationRouter = router({
 
         logger.debug("Bucket access check succeeded");
       } catch (e) {
-        logger.error("Bucket access check failed", { error: e });
+        logger.warn("Bucket access check failed", { error: e });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not access the S3 bucket using the provided credentials",
@@ -143,7 +143,7 @@ export const appConfigurationRouter = router({
     const fetcher = new AttributeFetcher(apiClient);
 
     const result = await fetcher.fetchAllAttributes().catch((e) => {
-      logger.error("Can't fetch the attributes", { error: e });
+      logger.warn("Can't fetch the attributes", { error: e });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Can't fetch the attributes",
@@ -185,7 +185,7 @@ export const appConfigurationRouter = router({
           template: input.titleTemplate,
         });
       } catch (err) {
-        logger.error("Template render failed", { error: err });
+        logger.warn("Template render failed", { error: err });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Submitted template is invalid",
@@ -220,7 +220,7 @@ export const appConfigurationRouter = router({
 
         return { title };
       } catch (err) {
-        logger.error("Template render failed", { error: err });
+        logger.warn("Template render failed", { error: err });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Submitted template is invalid",

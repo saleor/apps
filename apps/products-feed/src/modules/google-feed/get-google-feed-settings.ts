@@ -31,7 +31,7 @@ export class GoogleFeedSettingsFetcher {
     const configString = await this.settingsManager.get();
 
     if (!configString) {
-      this.logger.error("The application has not been configured");
+      this.logger.warn("The application has not been configured");
       throw new Error("App is not configured");
     }
 
@@ -39,7 +39,7 @@ export class GoogleFeedSettingsFetcher {
     const channelConfig = appConfig.getUrlsForChannel(channelSlug);
 
     if (!channelConfig) {
-      this.logger.error("Channel is not configured");
+      this.logger.warn("Channel is not configured");
       throw new Error("App is not configured");
     }
 
@@ -47,7 +47,7 @@ export class GoogleFeedSettingsFetcher {
     const productStorefrontUrl = channelConfig.productStorefrontUrl;
 
     if (!storefrontUrl.length || !productStorefrontUrl.length) {
-      this.logger.error("Storefront URLs are not configured");
+      this.logger.warn("Storefront URLs are not configured");
       throw new Error("The application has not been configured");
     }
 

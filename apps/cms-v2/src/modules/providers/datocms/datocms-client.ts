@@ -103,7 +103,7 @@ export class DatoCMSClient {
     });
 
     if (remoteProducts.length > 1) {
-      this.logger.debug(
+      this.logger.warn(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
         {
           remoteProducts: remoteProducts.map((p) => p.id),

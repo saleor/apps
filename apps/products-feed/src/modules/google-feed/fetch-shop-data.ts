@@ -21,14 +21,10 @@ export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
   const shopDetails = result.data?.shop;
 
   if (result.error) {
-    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`, {
-      error: result.error,
-    });
     throw new Error("Error during the GraphQL API call");
   }
 
   if (!shopDetails) {
-    logger.error("Shop details query returned no data");
     throw new Error("Shop details query returned no data");
   }
 

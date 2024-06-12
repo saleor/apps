@@ -58,7 +58,7 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
   const { authData, payload } = context;
 
   if (!payload.product) {
-    logger.error("Product not found in payload");
+    logger.warn("Product not found in payload");
     Sentry.captureException("Product not found in payload");
 
     return res.status(500).end();
