@@ -162,9 +162,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           channel,
         });
 
-        logger.info("Feed has been generated recently, returning the last version", {
-          downloadUrl,
-        });
+        logger.info("Feed has been generated recently, returning the last version");
 
         return res.redirect(downloadUrl);
       }

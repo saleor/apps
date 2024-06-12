@@ -39,7 +39,7 @@ export class BuilderIoClient {
         }),
       });
 
-      this.logger.debug("Product variant uploaded");
+      this.logger.info("Product variant uploaded");
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -69,7 +69,7 @@ export class BuilderIoClient {
         }),
       });
 
-      this.logger.debug("Product variant updated");
+      this.logger.info("Product variant updated");
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -107,7 +107,7 @@ export class BuilderIoClient {
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
     if (entriesToUpdate.length === 0) {
-      this.logger.debug("Didn't find any entries to update, will upload new variant");
+      this.logger.info("Didn't find any entries to update, will upload new variant");
 
       return this.uploadProductVariant(variant);
     } else {
@@ -130,7 +130,7 @@ export class BuilderIoClient {
 
     this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
 
-    return Promise.all(
+    const result = await Promise.all(
       idsToDelete.map((id) =>
         fetch(this.endpoint + `/${id}`, {
           method: "DELETE",
@@ -141,6 +141,10 @@ export class BuilderIoClient {
         }),
       ),
     );
+
+    this.logger.info("Product has been deleted");
+
+    return result;
   }
 
   /**

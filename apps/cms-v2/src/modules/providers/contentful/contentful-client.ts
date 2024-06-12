@@ -159,11 +159,11 @@ export class ContentfulClient {
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
 
-    this.logger.debug("Found entries to update", {
+    this.logger.debug("Found products to update", {
       contentEntriesLength: contentEntries.items.length,
     });
 
-    return Promise.all(
+    const results = await Promise.all(
       contentEntries.items.map((item) => {
         item.fields = this.mapVariantToConfiguredFields(
           variant,
@@ -173,6 +173,10 @@ export class ContentfulClient {
         return item.update();
       }),
     );
+
+    this.logger.info("Products variants have been updated");
+
+    return results;
   }
 
   async deleteProductVariant(opts: {
@@ -206,11 +210,15 @@ export class ContentfulClient {
     /**
      * In general it should be only one item, but in case of duplication run through everything
      */
-    return Promise.all(
+    const results = await Promise.all(
       contentEntries.items.map(async (item) => {
         return item.delete();
       }),
     );
+
+    this.logger.info("Products variants have been deleted");
+
+    return results;
   }
 
   async uploadProductVariant({
@@ -238,9 +246,13 @@ export class ContentfulClient {
      * TODO: add translations
      * TODO: - should it create published? is draft
      */
-    return env.createEntry(configuration.contentId, {
+    const result = await env.createEntry(configuration.contentId, {
       fields: this.mapVariantToConfiguredFields(variant, configuration.productVariantFieldsMapping),
     });
+
+    this.logger.info("Product variant has been uploaded");
+
+    return result;
   }
 
   async upsertProductVariant({
@@ -275,7 +287,7 @@ export class ContentfulClient {
       this.logger.debug("Found entries", { entries });
 
       if (entries.items.length > 0) {
-        this.logger.debug("Found existing entry, will update");
+        this.logger.info("Found existing entry, will update");
         Sentry.addBreadcrumb({
           message: "Found entry for variant",
           level: "debug",
@@ -283,7 +295,7 @@ export class ContentfulClient {
 
         return this.updateProductVariant({ configuration, variant });
       } else {
-        this.logger.debug("No existing entry found, will create");
+        this.logger.info("No existing entry found, will create");
         Sentry.addBreadcrumb({
           message: "Did not found entry for variant",
           level: "debug",

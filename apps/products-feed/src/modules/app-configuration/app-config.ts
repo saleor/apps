@@ -78,7 +78,7 @@ export class AppConfig {
       try {
         this.rootData = rootAppConfigSchema.parse(initialData);
       } catch (e) {
-        logger.warn("Could not parse initial data", { error: e });
+        logger.error("Could not parse initial data", { error: e });
         throw new Error("Can't load the configuration");
       }
     }
@@ -101,7 +101,7 @@ export class AppConfig {
       logger.debug("Setting S3 config", { s3Config });
       this.rootData.s3 = s3ConfigSchema.parse(s3Config);
 
-      logger.info("S3 config saved");
+      logger.debug("S3 config saved");
       return this;
     } catch (e) {
       logger.warn("Invalid S3 config provided", { error: e });
@@ -114,7 +114,7 @@ export class AppConfig {
       logger.debug("Setting attribute mapping", { attributeMapping });
       this.rootData.attributeMapping = attributeMappingSchema.parse(attributeMapping);
 
-      logger.info("Attribute mapping saved");
+      logger.debug("Attribute mapping saved");
       return this;
     } catch (e) {
       logger.warn("Invalid mapping config provided", { error: e });
@@ -131,7 +131,7 @@ export class AppConfig {
         storefrontUrls: parsedConfig,
       };
 
-      logger.info("Channel urls saved");
+      logger.debug("Channel urls saved");
       return this;
     } catch (e) {
       logger.warn("Invalid channels config provided", { error: e });
