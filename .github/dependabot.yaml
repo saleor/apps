@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     commit-message:
       prefix: "[skip ci]"
     groups:
@@ -16,4 +16,3 @@ updates:
       rtl:
         patterns:
           - "@testing-library/*"
-
