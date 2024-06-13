@@ -5,7 +5,7 @@ export const exportSentryReleaseEnvironmentVariable = (packageVersion: string) =
 
   console.log("Using release tag:", releaseTag);
 
-  process.env.SENTRY_RELEASE = releaseTag;
+  return releaseTag;
 };
 
 const getReleaseTag = (version: string) => {
