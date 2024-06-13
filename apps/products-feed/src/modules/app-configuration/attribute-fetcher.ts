@@ -48,13 +48,13 @@ export class AttributeFetcher {
 
     this.logger.debug("fetchAllAttributes called");
 
-    await this.fetchRecursivePage(attributes, undefined);
+    const result = await this.fetchRecursivePage(attributes, undefined);
 
     this.logger.debug("Attributes fetched successfully", {
-      first: attributes[0],
-      totalLength: attributes.length,
+      first: result[0],
+      totalLength: result.length,
     });
 
-    return attributes;
+    return result;
   }
 }
