@@ -5,6 +5,7 @@ Sentry.init({
   enableTracing: false,
   environment: process.env.ENV,
   includeLocalVariables: true,
+  release: process.env.SENTRY_RELEASE,
   integrations: [
     Sentry.localVariablesIntegration({
       captureAllExceptions: true,
