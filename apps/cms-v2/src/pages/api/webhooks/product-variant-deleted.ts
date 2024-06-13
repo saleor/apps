@@ -11,6 +11,9 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
 
+import { loggerContext } from "../../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@/logger";
 
@@ -85,7 +88,10 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default withOtel(
-  productVariantDeletedWebhook.createHandler(handler),
-  "api/webhooks/product-variant-deleted",
+export default wrapWithLoggerContext(
+  withOtel(
+    productVariantDeletedWebhook.createHandler(handler),
+    "api/webhooks/product-variant-deleted",
+  ),
+  loggerContext,
 );

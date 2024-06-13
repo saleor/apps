@@ -10,6 +10,8 @@ import {
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
+import { loggerContext } from "../../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@/logger";
@@ -82,7 +84,10 @@ const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadFragment
   return res.status(200).end();
 };
 
-export default withOtel(
-  productVariantUpdatedWebhook.createHandler(handler),
-  "api/webhooks/product-variant-updated",
+export default wrapWithLoggerContext(
+  withOtel(
+    productVariantUpdatedWebhook.createHandler(handler),
+    "api/webhooks/product-variant-updated",
+  ),
+  loggerContext,
 );
