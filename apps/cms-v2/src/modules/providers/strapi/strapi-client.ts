@@ -123,7 +123,7 @@ export class StrapiClient {
     configuration: StrapiProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("uploadProduct called", {
+    this.logger.debug("updateProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
       configId: configuration.id,
