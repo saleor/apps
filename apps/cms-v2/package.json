@@ -9,7 +9,7 @@
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest"

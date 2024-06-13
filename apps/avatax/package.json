@@ -13,7 +13,7 @@
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen --config .graphqlrc.ts",
     "generate:e2e": "graphql-codegen --config .graphqlrc.ts --project e2e",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
