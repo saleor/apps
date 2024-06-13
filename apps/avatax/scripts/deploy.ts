@@ -5,5 +5,13 @@ import packageJson from "../package.json";
 
 const release = exportSentryReleaseEnvironmentVariable(packageJson.version);
 
-execSync(`SENTRY_RELEASE='${release}' pnpm run build`, { stdio: "inherit" });
+console.log(`Inferred release: ${release}`);
+
+execSync(`pnpm run build`, {
+  stdio: "inherit",
+  env: {
+    ...process.env,
+    SENTRY_RELEASE: release,
+  },
+});
 execSync("pnpm run migrate", { stdio: "inherit" });
