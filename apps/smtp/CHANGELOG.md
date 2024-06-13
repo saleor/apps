@@ -1,5 +1,16 @@
 # smtp
 
+## 1.1.1
+
+### Patch Changes
+
+- 0c4ba39f: Update next.js config after Sentry rollback.
+- Updated dependencies [0c4ba39f]
+- Updated dependencies [0c4ba39f]
+- Updated dependencies [5c851a6c]
+  - @saleor/apps-otel@1.2.2
+  - @saleor/apps-logger@1.2.8
+
 ## 1.1.0
 
 ### Minor Changes
