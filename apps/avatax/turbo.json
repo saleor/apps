@@ -19,7 +19,10 @@
         "APP_LOG_LEVEL",
         "AVATAX_CLIENT_TIMEOUT",
         "ANALYZE_BUNDLE",
-        "DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER"
+        "DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN"
       ]
     },
     "test": {

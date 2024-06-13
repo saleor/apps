@@ -14,14 +14,16 @@
         "NEXT_PUBLIC_VERCEL_ENV",
         "VERCEL_URL",
         "PORT",
-        "SENTRY_ENVIRONMENT",
         "APP_IFRAME_BASE_URL",
         "OTEL_ENABLED",
         "VERCEL_GIT_COMMIT_SHA",
         "APP_LOG_LEVEL",
         "ENV",
         "OTEL_SERVICE_NAME",
-        "APP_API_BASE_URL"
+        "APP_API_BASE_URL",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG"
       ]
     }
   }
