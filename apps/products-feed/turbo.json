@@ -16,7 +16,10 @@
         "PORT",
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL",
-        "OTEL_SERVICE_NAME"
+        "OTEL_SERVICE_NAME",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT"
       ]
     }
   }

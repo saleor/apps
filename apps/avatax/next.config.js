@@ -41,15 +41,21 @@ const nextConfig = {
   },
 };
 
-const configWithSentry = withSentryConfig(nextConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  silent: true,
-  hideSourceMaps: true,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  tunnelRoute: "/monitoring",
-});
+const configWithSentry = withSentryConfig(
+  nextConfig,
+  {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    silent: true,
+  },
+  {
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+    disableLogger: true,
+    transpileClientSDK: true,
+    tunnelRoute: "/monitoring",
+  },
+);
 
 const withBundleAnalyzer = withBundleAnalyzerConfig({
   enabled: process.env.ANALYZE_BUNDLE === "true",
@@ -60,4 +66,5 @@ const isSentryPropertiesInEnvironment =
 
 const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
 
+// @ts-expect-error bundle analyzer requires NextConfig when Sentry is returning NextConfigFunction | NextConfigObject
 export default withBundleAnalyzer(config);

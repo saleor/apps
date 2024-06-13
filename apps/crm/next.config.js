@@ -39,14 +39,19 @@ const nextConfig = () => {
 const isSentryPropertiesInEnvironment =
   process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
-const configWithSentry = withSentryConfig(nextConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
-  silent: true,
-  hideSourceMaps: true,
-  widenClientFileUpload: true,
-  disableLogger: true,
-  tunnelRoute: "/monitoring",
-});
+const configWithSentry = withSentryConfig(
+  nextConfig,
+  {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    silent: true,
+  },
+  {
+    hideSourceMaps: true,
+    widenClientFileUpload: true,
+    disableLogger: true,
+    tunnelRoute: "/monitoring",
+  },
+);
 
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
