@@ -18,6 +18,8 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantUpdated called", {
       variantId: productVariant.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
       productId: productVariant.product.id,
     });
 
@@ -28,6 +30,8 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantCreated called", {
       variantId: productVariant.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
       productId: productVariant.product.id,
     });
 
@@ -38,6 +42,8 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantDeleted called", {
       variantId: productVariant.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
       productId: productVariant.product.id,
     });
 
@@ -49,6 +55,8 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
     this.logger.debug("onProductUpdated called", {
       productId: product.id,
+      productName: product.name,
+      channelsIds: product.channelListings?.map((c) => c.channel.id) ?? [],
       variantsLength: product.variants?.length,
     });
 

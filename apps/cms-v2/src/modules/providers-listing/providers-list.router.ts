@@ -28,7 +28,7 @@ export const providersListRouter = router({
     const providers = config.providers.getProviders();
 
     logger.debug("Providers fetched", {
-      providersIds: providers.map((p) => ({ id: p.id })),
+      providersIds: providers.map((p) => ({ id: p.id, configName: p.configName })),
     });
 
     return providers;

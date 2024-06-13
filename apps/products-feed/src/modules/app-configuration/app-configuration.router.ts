@@ -38,6 +38,8 @@ export const appConfigurationRouter = router({
     .mutation(async ({ ctx: { saleorApiUrl }, input }) => {
       const logger = createLogger("appConfigurationRouter.testS3BucketConfiguration", {
         saleorApiUrl: saleorApiUrl,
+        buckeName: input.bucketName,
+        bucketRegion: input.region,
       });
 
       logger.debug("Validate the credentials");
@@ -150,7 +152,7 @@ export const appConfigurationRouter = router({
       });
     });
 
-    logger.debug("Returning attributes", { attributesLength: result.length });
+    logger.debug("Returning attributes", { attributes: result });
 
     return result;
   }),

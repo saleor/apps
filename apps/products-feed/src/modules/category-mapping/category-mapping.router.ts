@@ -23,7 +23,7 @@ export const categoryMappingRouter = router({
       });
     });
 
-    logger.debug("Returning categories", { categoriesLength: result.length });
+    logger.debug("Returning categories", { first: result[0], totaLength: result.length });
 
     return result;
   }),
@@ -50,7 +50,7 @@ export const categoryMappingRouter = router({
       });
 
       if (error) {
-        logger.warn(`Error during the GraphqlAPI call: ${error.message}`);
+        logger.error(`Error during the GraphqlAPI call: ${error.message}`);
 
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

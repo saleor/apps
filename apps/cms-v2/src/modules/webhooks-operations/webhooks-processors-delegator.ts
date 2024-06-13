@@ -65,9 +65,7 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
-    this.logger.debug("Resolved a number of connections to include", {
-      connectionsLength: connectionsToInclude.length,
-    });
+    this.logger.debug("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
@@ -101,9 +99,7 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
-    this.logger.debug("Resolved a number of connections to include", {
-      connectionsLength: connectionsToInclude.length,
-    });
+    this.logger.debug("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
@@ -123,9 +119,7 @@ export class WebhooksProcessorsDelegator {
 
     const { connections } = this.opts.context;
 
-    this.logger.debug("Resolved a number of connections to include", {
-      connectionsLength: connections.length,
-    });
+    this.logger.debug("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
 
@@ -145,9 +139,7 @@ export class WebhooksProcessorsDelegator {
 
     const { connections } = this.opts.context;
 
-    this.logger.debug("Resolved a number of connections to include", {
-      connectionsLength: connections.length,
-    });
+    this.logger.debug("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
 
