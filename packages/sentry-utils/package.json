@@ -15,12 +15,6 @@
   "exports": {
     ".": {
       "default": "./index.ts"
-    },
-    "./node/instrumentation": {
-      "default": "./src/node/instrumentation.node.ts"
-    },
-    "./browser/instrumentation": {
-      "default": "./src/browser/instrumentation.browser.ts"
     }
   },
   "main": "index.ts",
