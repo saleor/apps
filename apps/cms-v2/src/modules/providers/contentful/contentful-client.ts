@@ -228,7 +228,7 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("deleteProductVariant called", {
+    this.logger.debug("uploadProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
@@ -262,7 +262,7 @@ export class ContentfulClient {
     configuration: ContentfulProviderConfig.FullShape;
     variant: WebhookProductVariantFragment;
   }) {
-    this.logger.debug("deleteProductVariant called", {
+    this.logger.debug("upsertProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,

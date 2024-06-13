@@ -151,7 +151,7 @@ export class BuilderIoClient {
    * Can return more than 1. Builder doesn't have unique fields.
    */
   private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
-    this.logger.debug("deleteProductVariant called", {
+    this.logger.debug("fetchBuilderIoEntryIds called", {
       modelName: this.config.modelName,
       variantId,
       variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
