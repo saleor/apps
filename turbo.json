@@ -13,12 +13,7 @@
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
     "VERCEL",
-    "NEXT_PUBLIC_SENTRY_DSN",
-    "NEXT_RUNTIME",
-    "SENTRY_ORG",
-    "SENTRY_PROJECT",
-    "SENTRY_AUTH_TOKEN",
-    "SENTRY_RELEASE"
+    "NEXT_RUNTIME"
   ],
   "pipeline": {
     "build": {

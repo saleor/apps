@@ -19,7 +19,10 @@
         "OTEL_SERVICE_NAME",
         "VERCEL_GIT_COMMIT_SHA",
         "APP_LOG_LEVEL",
-        "ENV"
+        "ENV",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG"
       ]
     }
   }

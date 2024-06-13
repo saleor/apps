@@ -1,5 +1,13 @@
 # saleor-app-invoices
 
+## 1.19.1
+
+### Patch Changes
+
+- 0c4ba39f: Update next.js config after Sentry rollback.
+- Updated dependencies [5c851a6c]
+  - @saleor/apps-logger@1.2.8
+
 ## 1.19.0
 
 ### Minor Changes
