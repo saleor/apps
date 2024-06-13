@@ -99,7 +99,7 @@ export class ContentfulClient {
 
   async getContentTypes(env: string) {
     this.logger.debug("getContentTypes called", {
-      env,
+      envirment: env,
     });
 
     try {
@@ -108,7 +108,10 @@ export class ContentfulClient {
       const contentTypes = await environment.getContentTypes();
 
       this.logger.debug("Content types fetched successfully", {
-        contentTypesLength: contentTypes.items.length,
+        limit: contentTypes.items,
+        total: contentTypes.total,
+        skip: contentTypes.skip,
+        names: contentTypes.items.map((item) => item.name),
       });
 
       return contentTypes;
@@ -141,6 +144,8 @@ export class ContentfulClient {
     this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((channel) => channel.channel.id) ?? [],
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
@@ -160,7 +165,7 @@ export class ContentfulClient {
     })(variant.id);
 
     this.logger.debug("Found products to update", {
-      contentEntriesLength: contentEntries.items.length,
+      contentEntriesIds: contentEntries.items.map((item) => item.sys.id),
     });
 
     const results = await Promise.all(
@@ -204,7 +209,7 @@ export class ContentfulClient {
     })(opts.variant.id);
 
     this.logger.debug("Found entries to delete", {
-      contentEntriesLength: contentEntries.items.length,
+      contentEntriesIds: contentEntries.items.map((item) => item.sys.id),
     });
 
     /**
@@ -230,6 +235,8 @@ export class ContentfulClient {
   }) {
     this.logger.debug("uploadProductVariant called", {
       variantId: variant.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
@@ -266,6 +273,7 @@ export class ContentfulClient {
       variantId: variant.id,
       productId: variant.product.id,
       contentId: configuration.contentId,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       environment: configuration.environment,
     });
 
@@ -284,7 +292,12 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      this.logger.debug("Found entries", { entries });
+      this.logger.debug("Found entries", {
+        limit: entries.limit,
+        skip: entries.skip,
+        total: entries.total,
+        entriesIds: entries.items.map((item) => item.sys.id),
+      });
 
       if (entries.items.length > 0) {
         this.logger.info("Found existing entry, will update");

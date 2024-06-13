@@ -60,6 +60,8 @@ export class StrapiClient {
     this.logger.debug("deleteProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       configId: configuration.id,
     });
 
@@ -95,6 +97,8 @@ export class StrapiClient {
     this.logger.debug("uploadProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       configId: configuration.id,
     });
 
@@ -126,6 +130,8 @@ export class StrapiClient {
     this.logger.debug("updateProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       configId: configuration.id,
     });
 
@@ -171,6 +177,8 @@ export class StrapiClient {
     this.logger.debug("upsertProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       configId: configuration.id,
     });
 

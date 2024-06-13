@@ -36,7 +36,9 @@ export const contentfulRouter = router({
     .mutation(async ({ input }) => {
       const logger = createLogger("contentfulRouter.fetchEnvironmentsFromApi");
 
-      logger.debug("Fetching environments from API");
+      logger.debug("Fetching environments from API", {
+        space: input.contentfulSpace,
+      });
 
       const client = new ContentfulClient({
         accessToken: input.contentfulToken,
@@ -47,7 +49,10 @@ export const contentfulRouter = router({
         const environments = await client.getEnvironments();
 
         logger.debug("Environments fetched successfully", {
-          environmentsLength: environments.items.length,
+          limit: environments.limit,
+          skip: environments.skip,
+          total: environments.total,
+          environmentsIds: environments.items.map((item) => item.sys.id),
         });
 
         return environments;
@@ -70,7 +75,10 @@ export const contentfulRouter = router({
     .mutation(async ({ input }) => {
       const logger = createLogger("contentfulRouter.fetchContentTypesFromApi");
 
-      logger.debug("Fetching content types from API");
+      logger.debug("Fetching content types from API", {
+        space: input.contentfulSpace,
+        env: input.contentfulEnv,
+      });
 
       const client = new ContentfulClient({
         accessToken: input.contentfulToken,
@@ -81,7 +89,10 @@ export const contentfulRouter = router({
         const contentTypes = await client.getContentTypes(input.contentfulEnv);
 
         logger.debug("Content types fetched successfully", {
-          contentTypesLength: contentTypes.items.length,
+          limit: contentTypes.limit,
+          skip: contentTypes.skip,
+          total: contentTypes.total,
+          contentTypesIs: contentTypes.items.map((item) => item.sys.id),
         });
 
         return contentTypes;

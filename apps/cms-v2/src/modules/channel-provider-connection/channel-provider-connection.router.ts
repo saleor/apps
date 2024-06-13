@@ -27,7 +27,7 @@ export const channelProviderConnectionRouter = router({
     const channels = await ctx.apiClient.query(FetchChannelsDocument, {});
     const channelData = channels.data?.channels ?? [];
 
-    logger.debug("Channels fetched successfully", { channelsLength: channelData.length });
+    logger.debug("Channels fetched successfully", { channelsIds: channelData.map((c) => c.id) });
 
     return channelData;
   }),
@@ -38,14 +38,16 @@ export const channelProviderConnectionRouter = router({
 
     const connections = await (await ctx.appConfigService.get()).connections.getConnections();
 
-    logger.debug("Connections fetched successfully", { connectionsLength: connections.length });
+    logger.debug("Connections fetched successfully", {
+      connectionsIds: connections.map((c) => c.id),
+    });
 
     return connections;
   }),
   fetchConnection: procedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const logger = createLogger("channelProviderConnectionRouter.fetchConnection");
 
-    logger.debug("Fetching connection", { id: input.id });
+    logger.debug("Fetching connection", { connectionId: input.id });
 
     const connection =
       (await ctx.appConfigService.get()).connections.getConnectionById(input.id) ?? null;
@@ -59,7 +61,11 @@ export const channelProviderConnectionRouter = router({
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("channelProviderConnectionRouter.addConnection");
 
-      logger.debug("Adding connection", { input });
+      logger.debug("Adding connection", {
+        providerId: input.providerId,
+        channelSlug: input.channelSlug,
+        providerType: input.providerType,
+      });
 
       const config = await ctx.appConfigService.get();
 
@@ -101,7 +107,7 @@ export const channelProviderConnectionRouter = router({
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("channelProviderConnectionRouter.removeConnection");
 
-      logger.debug("Removing connection", { input });
+      logger.debug("Removing connection", { connectionId: input.id });
 
       const config = await ctx.appConfigService.get();
 

@@ -121,6 +121,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     shopDescription = shopDetails.shopDescription;
   } catch (error) {
     logger.error("Could not fetch the shop details");
+
     return res.status(500).json({ error: "Could not fetch the shop details" });
   }
 
@@ -156,13 +157,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const secondsSinceLastModification = (Date.now() - feedLastModificationDate.getTime()) / 1000;
 
       if (secondsSinceLastModification < FEED_CACHE_MAX_AGE) {
+        logger.info("Feed has been generated recently, returning the last version");
+
         const downloadUrl = getDownloadUrl({
           s3BucketConfiguration: bucketConfiguration,
           saleorApiUrl: authData.saleorApiUrl,
           channel,
         });
-
-        logger.info("Feed has been generated recently, returning the last version");
 
         return res.redirect(downloadUrl);
       }

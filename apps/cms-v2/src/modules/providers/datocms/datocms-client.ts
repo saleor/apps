@@ -28,7 +28,9 @@ export class DatoCMSClient {
 
     const contentTypes = await this.client.itemTypes.list();
 
-    this.logger.debug("Got content types", { contentTypes });
+    this.logger.debug("Got content types", {
+      contentTypes: contentTypes.map((c) => ({ id: c.id, naame: c.name })),
+    });
 
     return contentTypes;
   }
@@ -39,7 +41,6 @@ export class DatoCMSClient {
     const fields = await this.client.fields.list({ type: "item_type", id: itemTypeID });
 
     this.logger.debug("Got fields for content type", {
-      itemTypeID,
       fieldsIds: fields.map((f) => f.id),
     });
 
@@ -92,6 +93,8 @@ export class DatoCMSClient {
   async deleteProductVariant({ configuration, variant }: Context) {
     this.logger.debug("deleteProductVariant called", {
       variantId: variant.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       productId: variant.product.id,
       configId: configuration.id,
     });
@@ -106,7 +109,7 @@ export class DatoCMSClient {
       this.logger.warn(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
         {
-          remoteProducts: remoteProducts.map((p) => p.id),
+          remoteProductsIds: remoteProducts.map((p) => p.id),
         },
       );
     }
@@ -118,7 +121,7 @@ export class DatoCMSClient {
     }
 
     this.logger.debug("Deleting product variant", {
-      remoteProducts: remoteProducts.map((p) => p.id),
+      remoteProductsIds: remoteProducts.map((p) => p.id),
     });
 
     const result = await Promise.all(
@@ -136,6 +139,8 @@ export class DatoCMSClient {
     this.logger.debug("uploadProductVariant called", {
       variantId: context.variant.id,
       productId: context.variant.product.id,
+      variantName: context.variant.name,
+      channelsIds: context.variant.channelListings?.map((c) => c.channel.id) ?? [],
       fieldMappping: context.configuration.productVariantFieldsMapping,
       configId: context.configuration.id,
     });
@@ -151,6 +156,8 @@ export class DatoCMSClient {
     this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: configuration.id,
     });
 
@@ -165,7 +172,6 @@ export class DatoCMSClient {
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
           productsIds: products.map((p) => p.id),
-          variantID: variant.id,
         },
       );
     }
@@ -191,6 +197,8 @@ export class DatoCMSClient {
     this.logger.debug("upsertProduct called", {
       variantId: variant.id,
       productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: configuration.id,
     });
 

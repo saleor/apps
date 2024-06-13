@@ -52,9 +52,12 @@ export class PayloadCMSClient {
 
   async deleteProductVariant(context: Context) {
     this.logger.debug("deleteProductVariant called", {
-      variantId: context.variant.id,
-      productId: context.variant.product.id,
       configId: context.configuration.id,
+      variantId: context.variant.id,
+      variantName: context.variant.name,
+      productId: context.variant.product.id,
+      channelsIds: context.variant.channelListings?.map((c) => c.channel.id) ?? [],
+      contentId: context.configuration.id,
     });
 
     const queryString = qs.stringify(
@@ -117,7 +120,9 @@ export class PayloadCMSClient {
   uploadProductVariant(context: Context) {
     this.logger.debug("uploadProductVariant called", {
       variantId: context.variant.id,
+      variantName: context.variant.name,
       productId: context.variant.product.id,
+      channelsIds: context.variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: context.configuration.id,
     });
 
@@ -141,13 +146,13 @@ export class PayloadCMSClient {
   }
 
   async updateProductVariant({ configuration, variant }: Context) {
-    const logger = createLogger("PayloadCMSClient.updateProductVariant", {
+    this.logger.debug("Calling update product variant", {
       variantId: variant.id,
+      variantName: variant.name,
       productId: variant.product.id,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: configuration.id,
     });
-
-    this.logger.debug("Calling update product variant");
 
     const queryString = qs.stringify(
       {
@@ -186,8 +191,9 @@ export class PayloadCMSClient {
   async upsertProductVariant(context: Context) {
     this.logger.debug("updateProductVariant called", {
       variantId: context.variant.id,
+      variantName: context.variant.name,
       productId: context.variant.product.id,
-      configId: context.configuration.id,
+      channelsIds: context.variant.channelListings?.map((c) => c.channel.id) ?? [],
     });
 
     try {

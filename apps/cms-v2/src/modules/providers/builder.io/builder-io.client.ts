@@ -23,7 +23,8 @@ export class BuilderIoClient {
     this.logger.debug("uploadProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
-      channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
     });
 
     try {
@@ -53,6 +54,9 @@ export class BuilderIoClient {
   ) {
     this.logger.debug("updateProductVariantCall called", {
       variantId: variant.id,
+      productId: variant.product.id,
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       builderIoEntryId,
     });
 
@@ -81,7 +85,8 @@ export class BuilderIoClient {
     this.logger.debug("updateProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
-      channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
     });
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
@@ -101,7 +106,8 @@ export class BuilderIoClient {
     this.logger.debug("upsertProductVariant called", {
       variantId: variant.id,
       productId: variant.product.id,
-      channelsIds: variant.channelListings?.map((channel) => channel.channel.id) || [],
+      variantName: variant.name,
+      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
     });
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);

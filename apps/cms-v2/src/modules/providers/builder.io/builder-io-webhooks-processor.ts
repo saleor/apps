@@ -32,6 +32,8 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("Called onProductVariantUpdated", {
       variantId: productVariant.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
       productId: productVariant.product.id,
     });
 
@@ -44,6 +46,8 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Called onProductVariantCreated", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
     });
 
     await this.client.upsertProductVariant(productVariant);
@@ -55,6 +59,8 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Called onProductVariantDeleted", {
       variantId: productVariant.id,
       productId: productVariant.product.id,
+      variantName: productVariant.name,
+      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
     });
 
     await this.client.deleteProductVariant(productVariant.id);
@@ -66,6 +72,8 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Called onProductUpdated", {
       productId: product.id,
       variantsLength: product.variants?.length,
+      productName: product.name,
+      channelsIds: product.channelListings?.map((c) => c.channel.id) || [],
     });
 
     await Promise.all(
