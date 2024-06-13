@@ -15,7 +15,10 @@
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL",
         "VERCEL_URL",
-        "PORT"
+        "PORT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "SENTRY_ORG"
       ]
     }
   }

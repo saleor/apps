@@ -13,7 +13,10 @@
         "REST_APL_TOKEN",
         "NEXT_PUBLIC_VERCEL_ENV",
         "APP_IFRAME_BASE_URL",
-        "APP_API_BASE_URL"
+        "APP_API_BASE_URL",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN"
       ]
     }
   }

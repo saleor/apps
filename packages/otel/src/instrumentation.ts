@@ -11,8 +11,28 @@ import { type ClientRequest } from "node:http";
 import { otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 
-if (process.env.ENABLE_DEBUG_OTEL_DIAG === "true") {
-  diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+if (process.env.ENABLE_OTEL_RUNTIME_LOGS === "true") {
+  const getLogLevel = () => {
+    switch (process.env.OTEL_LOG_LEVEL) {
+      case "debug":
+        return DiagLogLevel.DEBUG;
+      case "error":
+        return DiagLogLevel.ERROR;
+      case "warn":
+        return DiagLogLevel.WARN;
+      case "verbose":
+        return DiagLogLevel.VERBOSE;
+      case "all":
+        return DiagLogLevel.ALL;
+      case "none":
+        return DiagLogLevel.NONE;
+      case "info":
+      default:
+        return DiagLogLevel.INFO;
+    }
+  };
+
+  diag.setLogger(new DiagConsoleLogger(), getLogLevel());
 }
 
 export const otelSdk = new NodeSDK({
