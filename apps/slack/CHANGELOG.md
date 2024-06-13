@@ -1,5 +1,11 @@
 # saleor-app-slack
 
+## 1.12.1
+
+### Patch Changes
+
+- 0c4ba39f: Update next.js config after Sentry rollback.
+
 ## 1.12.0
 
 ### Minor Changes

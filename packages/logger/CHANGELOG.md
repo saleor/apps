@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.8
+
+### Patch Changes
+
+- 5c851a6c: Link to proper sentry/nextjs version
+
 ## 1.2.7
 
 ### Patch Changes
