@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 1.3.1
+
+### Patch Changes
+
+- 0c4ba39f: Update next.js config after Sentry rollback.
+- Updated dependencies [5c851a6c]
+  - @saleor/apps-logger@1.2.8
+
 ## 1.3.0
 
 ### Minor Changes

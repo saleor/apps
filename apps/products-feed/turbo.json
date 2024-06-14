@@ -19,7 +19,8 @@
         "OTEL_SERVICE_NAME",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_ORG",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "NEXT_PUBLIC_SENTRY_DSN"
       ]
     }
   }

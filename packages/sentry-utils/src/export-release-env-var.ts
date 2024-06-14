@@ -5,6 +5,8 @@ export const exportSentryReleaseEnvironmentVariable = (packageVersion: string) =
 
   console.log("Using release tag:", releaseTag);
 
+  // We don't need it, its dynamically set after turbo
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
   process.env.SENTRY_RELEASE = releaseTag;
 };
 

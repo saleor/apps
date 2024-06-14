@@ -1,5 +1,12 @@
 # @saleor/apps-otel
 
+## 1.2.2
+
+### Patch Changes
+
+- 0c4ba39f: Enable OTEL diagnostic logging. You can use ENABLE_OTEL_RUNTIME_LOGS env variable to enable logging. Use OTEL_LOG_LEVEL (one of error, warn, info, debug, verbose, all or none) to set enabled logging level.
+- 0c4ba39f: Update next.js config after Sentry rollback.
+
 ## 1.2.1
 
 ### Patch Changes
