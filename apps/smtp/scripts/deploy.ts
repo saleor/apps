@@ -27,8 +27,6 @@ const getReleaseTag = (version: string) => {
   return `${version}-${getCommitHash() ?? "<unknown_commit_hash>"}`;
 };
 
-execSync("pnpm run build", { stdio: "inherit" });
-
 const release = getReleaseTag(packageJson.version);
 
 console.log("Using release tag:", release);
