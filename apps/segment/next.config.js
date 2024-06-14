@@ -9,11 +9,11 @@ const RequiredEnvs = z.object({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = () => {
-  try {
-    RequiredEnvs.parse(process.env);
-  } catch (e) {
+  const parsedEnvs = RequiredEnvs.safeParse(process.env);
+
+  if (!parsedEnvs.success) {
     console.error("🚫 Missing required env variables, see message below");
-    console.error(e.issues);
+    console.error(parsedEnvs.error.issues);
     process.exit(1);
   }
 
@@ -32,7 +32,7 @@ const nextConfig = () => {
      * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
      * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
      */
-    /** @param { import("webpack").Configuration } config */
+    /** @type {import('next').NextConfig['webpack']} */
     webpack: (config, { isServer }) => {
       if (isServer) {
         config.ignoreWarnings = [{ module: /opentelemetry/ }];
