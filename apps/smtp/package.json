@@ -39,6 +39,7 @@
     "@saleor/sentry-utils": "workspace:*",
     "@sentry/cli": "../../node_modules/@sentry/cli",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
+    "@sentry/node": "../../node_modules/@sentry/node",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",

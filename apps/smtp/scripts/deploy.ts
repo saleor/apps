@@ -1,34 +1,8 @@
-import packageJson from "../package.json";
-
+import { exportSentryReleaseEnvironmentVariable } from "@saleor/sentry-utils";
 import { execSync } from "node:child_process";
 
-const getCommitHash = () => {
-  if (process.env.VERCEL) {
-    return process.env.VERCEL_GIT_COMMIT_SHA;
-  }
-  if (process.env.GITHUB_SHA) {
-    return process.env.GITHUB_SHA;
-  }
-  try {
-    const result = execSync("git rev-parse HEAD");
+import packageJson from "../package.json";
 
-    return result.toString().trim();
-  } catch (e) {
-    console.warn("Cannot fetch commit hash", e);
-    return null;
-  }
-};
+exportSentryReleaseEnvironmentVariable(packageJson.version);
 
-const getReleaseTag = (version: string) => {
-  if (process.env.NODE_ENV === "production" && process.env.ENV === "production") {
-    return version;
-  }
-
-  return `${version}-${getCommitHash() ?? "<unknown_commit_hash>"}`;
-};
-
-const release = getReleaseTag(packageJson.version);
-
-console.log("Using release tag:", release);
-
-execSync(`SENTRY_RELEASE='${release}' pnpm run build`, { stdio: "inherit" });
+execSync("pnpm run build", { stdio: "inherit" });
