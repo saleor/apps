@@ -230,9 +230,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         channel,
       });
 
-      logger.info("Feed uploaded to S3, redirecting the download URL", {
-        downloadUrl,
-      });
+      logger.info("Feed uploaded to S3, redirecting the download URL");
 
       return res.redirect(downloadUrl);
     } catch (error) {
