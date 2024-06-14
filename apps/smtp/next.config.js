@@ -45,4 +45,6 @@ const configWithSentry = withSentryConfig(
   },
 );
 
+// todo roll back sentry more
+
 export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
