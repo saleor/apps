@@ -1,16 +1,12 @@
 import { BufferConfig } from "@opentelemetry/sdk-logs";
 
-const FLUSH_TIMEOUT = 1_000;
+const FLUSH_TIMEOUT = 5_000;
 
 const batchProcessorConfig: BufferConfig = {
   exportTimeoutMillis: FLUSH_TIMEOUT,
   maxExportBatchSize: 1024,
   maxQueueSize: 1024,
-  /**
-   * Long delay that will be for sure longer than the lambda timeout.
-   * Avoid mid-execution flushes, because we flush them manually in the end.
-   */
-  scheduledDelayMillis: 2 * 5 * 60 * 1000,
+  scheduledDelayMillis: 2 * 1_000,
 };
 
 export const sharedOtelConfig = {
