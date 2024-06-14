@@ -108,10 +108,7 @@ export class ContentfulClient {
       const contentTypes = await environment.getContentTypes();
 
       this.logger.debug("Content types fetched successfully", {
-        limit: contentTypes.items,
-        total: contentTypes.total,
-        skip: contentTypes.skip,
-        names: contentTypes.items.map((item) => item.name),
+        contentTypesLength: contentTypes.items.length,
       });
 
       return contentTypes;
@@ -161,7 +158,7 @@ export class ContentfulClient {
     })(variant.id);
 
     this.logger.debug("Found products to update", {
-      contentEntriesIds: contentEntries.items.map((item) => item.sys.id),
+      contentEntriesLength: contentEntries.items.length,
     });
 
     const results = await Promise.all(
@@ -204,7 +201,7 @@ export class ContentfulClient {
     })(opts.variant.id);
 
     this.logger.debug("Found entries to delete", {
-      contentEntriesIds: contentEntries.items.map((item) => item.sys.id),
+      contentEntriesLength: contentEntries.items.length,
     });
 
     /**
@@ -280,12 +277,7 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      this.logger.debug("Found entries", {
-        limit: entries.limit,
-        skip: entries.skip,
-        total: entries.total,
-        entriesIds: entries.items.map((item) => item.sys.id),
-      });
+      this.logger.debug("Found entries", { entiesLength: entries.items.length });
 
       if (entries.items.length > 0) {
         this.logger.info("Found existing entry, will update");

@@ -49,10 +49,7 @@ export const contentfulRouter = router({
         const environments = await client.getEnvironments();
 
         logger.debug("Environments fetched successfully", {
-          limit: environments.limit,
-          skip: environments.skip,
-          total: environments.total,
-          environmentsIds: environments.items.map((item) => item.sys.id),
+          environmentsLength: environments.items.length,
         });
 
         return environments;
@@ -89,10 +86,7 @@ export const contentfulRouter = router({
         const contentTypes = await client.getContentTypes(input.contentfulEnv);
 
         logger.debug("Content types fetched successfully", {
-          limit: contentTypes.limit,
-          skip: contentTypes.skip,
-          total: contentTypes.total,
-          contentTypesIs: contentTypes.items.map((item) => item.sys.id),
+          contentTypesLength: contentTypes.items.length,
         });
 
         return contentTypes;
