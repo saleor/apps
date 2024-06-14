@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.22.2
+
+### Patch Changes
+
+- 00cdf64b: Added packages optimization, via Next.js configuration. This should decrease cold starts due to smaller bundle size
+- 2f59041c: Reverted shared Sentry configuration (init() part). It was not working properly - source maps were not properly assigned. Now configuration is not shared, but repeated in every app separately
+- Updated dependencies [2f59041c]
+  - @saleor/sentry-utils@0.2.1
+
 ## 1.22.1
 
 ### Patch Changes
