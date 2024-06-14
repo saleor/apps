@@ -17,7 +17,18 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
     "@saleor/sentry-utils",
   ],
-  experimental: {},
+  experimental: {
+    optimizePackageImports: [
+      "@sentry/nextjs",
+      "@sentry/node",
+      "@saleor/app-sdk",
+      "@trpc/server",
+      "@trpc/client",
+      "@trpc/react-query",
+      "@trpc/next",
+      "@saleor/apps-shared",
+    ],
+  },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
    * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
