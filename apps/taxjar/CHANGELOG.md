@@ -1,5 +1,13 @@
 # app-taxjar
 
+## 1.2.2
+
+### Patch Changes
+
+- 2f59041c: Reverted shared Sentry configuration (init() part). It was not working properly - source maps were not properly assigned. Now configuration is not shared, but repeated in every app separately
+- Updated dependencies [2f59041c]
+  - @saleor/sentry-utils@0.2.1
+
 ## 1.2.1
 
 ### Patch Changes
