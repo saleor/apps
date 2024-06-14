@@ -1,9 +1,4 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "extends": ["//"],
-  "pipeline": {
-    "lint": {
-      "env": ["NEXT_PUBLIC_SENTRY_DSN", "SENTRY_RELEASE"]
-    }
-  }
+  "extends": ["//"]
 }

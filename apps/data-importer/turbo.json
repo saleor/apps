@@ -21,7 +21,8 @@
         "APP_IFRAME_BASE_URL",
         "APP_API_BASE_URL",
         "SENTRY_ORG",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "NEXT_PUBLIC_SENTRY_DSN"
       ]
     }
   }
