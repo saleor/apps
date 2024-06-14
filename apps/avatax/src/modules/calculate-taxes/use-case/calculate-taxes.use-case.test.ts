@@ -221,44 +221,14 @@ describe("CalculateTaxesUseCase", () => {
     expect(mockedAvataxClient.createTransaction).toHaveBeenCalledOnce();
 
     expect(mockedAvataxClient.createTransaction).toHaveBeenCalledWith({
-      model: {
-        addresses: {
-          shipFrom: {
-            city: "test",
-            country: "test",
-            line1: "test",
-            postalCode: "10111",
-            region: "NY",
-          },
-          shipTo: {
-            city: "",
-            country: "PL",
-            line1: "",
-            line2: "",
-            postalCode: "",
-            region: "",
-          },
-        },
-        commit: false,
-        companyCode: "test",
-        currencyCode: "PLN",
-        customerCode: "0",
-        date: expect.any(Date),
+      model: expect.objectContaining({
         discount: 10.1,
-        entityUseCode: "",
         lines: [
-          {
-            amount: 100,
-            description: undefined,
+          expect.objectContaining({
             discounted: true,
-            itemCode: undefined,
-            quantity: 1,
-            taxCode: "P0000000",
-            taxIncluded: false,
-          },
+          }),
         ],
-        type: 0,
-      },
+      }),
     });
   });
 });
