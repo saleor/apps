@@ -159,6 +159,7 @@ export class DatoCMSClient {
       this.logger.warn(
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
+          variantId: variant.id,
           productsIds: products.map((p) => p.id),
         },
       );
@@ -176,7 +177,7 @@ export class DatoCMSClient {
       }),
     );
 
-    this.logger.info("Products variants have been updated", { datoID: result.map((r) => r.id) });
+    this.logger.info("Products variants have been updated", { datoIds: result.map((r) => r.id) });
 
     return result;
   }

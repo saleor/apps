@@ -122,7 +122,7 @@ export const fetchProductData = async ({
 
   const results = (await Promise.all(promises)).flat();
 
-  logger.info("Product data fetched successfully", {
+  logger.debug("Product data fetched successfully", {
     first: results[0],
     totalLength: results.length,
   });

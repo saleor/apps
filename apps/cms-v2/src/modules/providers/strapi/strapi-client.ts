@@ -126,7 +126,7 @@ export class StrapiClient {
     let strapiProductIdsToUpdate = strapiProductId ? [strapiProductId] : null;
 
     if (!strapiProductIdsToUpdate) {
-      this.logger.warn("No product id was provided, will try to fetch products from Strapi");
+      this.logger.info("No product id was provided, will try to fetch products from Strapi");
       const strapiProducts = await this.getProducts(configuration, variant.id);
 
       if (!strapiProducts) {

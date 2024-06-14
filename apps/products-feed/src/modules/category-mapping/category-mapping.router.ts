@@ -16,7 +16,7 @@ export const categoryMappingRouter = router({
     const categoriesFetcher = new CategoriesFetcher(apiClient);
 
     const result = await categoriesFetcher.fetchAllCategories().catch((e) => {
-      logger.warn("Can't fetch the categories", { error: e });
+      logger.debug("Can't fetch the categories", { error: e });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Can't fetch the categories",

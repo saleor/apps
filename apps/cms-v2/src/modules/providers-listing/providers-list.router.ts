@@ -43,7 +43,7 @@ export const providersListRouter = router({
       logger.debug("Fetching provider");
 
       const config = await appConfigService.get();
-      const provider = (await config.providers.getProviderById(input.id)) ?? null;
+      const provider = config.providers.getProviderById(input.id) ?? null;
 
       if (!provider) {
         logger.debug("Provider not found");

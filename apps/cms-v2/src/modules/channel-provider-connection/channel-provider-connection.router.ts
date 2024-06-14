@@ -36,7 +36,7 @@ export const channelProviderConnectionRouter = router({
 
     logger.debug("Fetching connections");
 
-    const connections = await (await ctx.appConfigService.get()).connections.getConnections();
+    const connections = (await ctx.appConfigService.get()).connections.getConnections();
 
     logger.debug("Connections fetched successfully", {
       connectionsIds: connections.map((c) => c.id),
@@ -78,14 +78,14 @@ export const channelProviderConnectionRouter = router({
       } catch (e) {
         switch ((e as { cause: string }).cause) {
           case "PROVIDER_DOESNT_EXIST":
-            logger.warn("Provider doesnt exist");
+            logger.debug("Provider doesnt exist");
             throw new TRPCError({
               code: "BAD_REQUEST",
               cause: "PROVIDER_DOESNT_EXIST",
               message: "Provider doesnt exist",
             });
           case "CONNECTION_ALREADY_EXISTS":
-            logger.warn("Connection already exists");
+            logger.debug("Connection already exists");
             throw new TRPCError({
               code: "CONFLICT",
               cause: "CONNECTION_EXISTS",
@@ -93,7 +93,7 @@ export const channelProviderConnectionRouter = router({
             });
         }
 
-        logger.warn("Error adding connection", { error: e });
+        logger.debug("Error adding connection", { error: e });
       }
 
       ctx.appConfigService.set(config);

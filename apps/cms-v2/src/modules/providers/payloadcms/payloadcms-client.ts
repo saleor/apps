@@ -53,7 +53,6 @@ export class PayloadCMSClient {
   async deleteProductVariant(context: Context) {
     this.logger.debug("deleteProductVariant called", {
       configId: context.configuration.id,
-      contentId: context.configuration.id,
     });
 
     const queryString = qs.stringify(
@@ -182,7 +181,7 @@ export class PayloadCMSClient {
     try {
       await this.uploadProductVariant(context);
     } catch (e) {
-      this.logger.warn("Failed to upload, will try to update", { error: e });
+      this.logger.info("Failed to upload, will try to update", { error: e });
 
       await this.updateProductVariant(context);
     }

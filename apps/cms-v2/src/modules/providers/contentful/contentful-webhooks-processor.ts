@@ -42,12 +42,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantCreated called", {
-      variantId: productVariant.id,
-      productId: productVariant.product.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-    });
+    this.logger.debug("onProductVariantCreated called");
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
