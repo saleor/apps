@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
 import { attachLoggerOtelTransport } from "@saleor/apps-logger/node";
 import packageJson from "../package.json";
