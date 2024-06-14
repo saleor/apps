@@ -92,10 +92,6 @@ export class DatoCMSClient {
 
   async deleteProductVariant({ configuration, variant }: Context) {
     this.logger.debug("deleteProductVariant called", {
-      variantId: variant.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: variant.product.id,
       configId: configuration.id,
     });
 
@@ -137,10 +133,6 @@ export class DatoCMSClient {
 
   async uploadProductVariant(context: Context) {
     this.logger.debug("uploadProductVariant called", {
-      variantId: context.variant.id,
-      productId: context.variant.product.id,
-      variantName: context.variant.name,
-      channelsIds: context.variant.channelListings?.map((c) => c.channel.id) ?? [],
       fieldMappping: context.configuration.productVariantFieldsMapping,
       configId: context.configuration.id,
     });
@@ -154,10 +146,6 @@ export class DatoCMSClient {
 
   async updateProductVariant({ configuration, variant }: Context) {
     this.logger.debug("updateProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: configuration.id,
     });
 
@@ -195,10 +183,6 @@ export class DatoCMSClient {
 
   upsertProduct({ configuration, variant }: Context) {
     this.logger.debug("upsertProduct called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       configId: configuration.id,
     });
 

@@ -142,10 +142,6 @@ export class ContentfulClient {
     variant: WebhookProductVariantFragment;
   }) {
     this.logger.debug("updateProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((channel) => channel.channel.id) ?? [],
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
@@ -189,7 +185,6 @@ export class ContentfulClient {
     variant: Pick<WebhookProductVariantFragment, "id">;
   }) {
     this.logger.debug("deleteProductVariant called", {
-      variantId: opts.variant.id,
       contentId: opts.configuration.contentId,
       environment: opts.configuration.environment,
     });
@@ -234,10 +229,6 @@ export class ContentfulClient {
     variant: WebhookProductVariantFragment;
   }) {
     this.logger.debug("uploadProductVariant called", {
-      variantId: variant.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: variant.product.id,
       contentId: configuration.contentId,
       environment: configuration.environment,
     });
@@ -270,10 +261,7 @@ export class ContentfulClient {
     variant: WebhookProductVariantFragment;
   }) {
     this.logger.debug("upsertProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
       contentId: configuration.contentId,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) ?? [],
       environment: configuration.environment,
     });
 

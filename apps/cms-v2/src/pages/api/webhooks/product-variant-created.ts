@@ -76,7 +76,9 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   }
 
   logger.info("Webhook called", {
-    productVariantId: payload.productVariant.id,
+    variantId: payload.productVariant.id,
+    variantName: payload.productVariant.name,
+    channelsIds: payload.productVariant.channelListings?.map((c) => c.channel.id) || [],
     productId: payload.productVariant.product.id,
   });
 

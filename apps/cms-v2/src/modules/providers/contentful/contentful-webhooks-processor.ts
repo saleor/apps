@@ -32,12 +32,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantUpdated called", {
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: productVariant.product.id,
-    });
+    this.logger.debug("onProductVariantUpdated called");
 
     await this.client.upsertProductVariant({
       configuration: this.providerConfig,
@@ -62,12 +57,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantDeleted called", {
-      productId: productVariant.product.id,
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-    });
+    this.logger.debug("onProductVariantDeleted called");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
@@ -83,12 +73,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
    * Context of process must include channel-config mapping.
    */
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("onProductUpdated called", {
-      productId: product.id,
-      productName: product.name,
-      channelsIds: product.channelListings?.map((c) => c.channel.id) ?? [],
-      variantsLength: product.variants?.length,
-    });
+    this.logger.debug("onProductUpdated called");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {

@@ -30,12 +30,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("Called onProductVariantUpdated", {
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
-      productId: productVariant.product.id,
-    });
+    this.logger.debug("Called onProductVariantUpdated");
 
     await this.client.upsertProductVariant(productVariant);
 
@@ -43,12 +38,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("Called onProductVariantCreated", {
-      variantId: productVariant.id,
-      productId: productVariant.product.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("Called onProductVariantCreated");
 
     await this.client.upsertProductVariant(productVariant);
 
@@ -56,12 +46,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("Called onProductVariantDeleted", {
-      variantId: productVariant.id,
-      productId: productVariant.product.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("Called onProductVariantDeleted");
 
     await this.client.deleteProductVariant(productVariant.id);
 
@@ -69,12 +54,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("Called onProductUpdated", {
-      productId: product.id,
-      variantsLength: product.variants?.length,
-      productName: product.name,
-      channelsIds: product.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("Called onProductUpdated");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {

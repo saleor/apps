@@ -20,12 +20,7 @@ export class BuilderIoClient {
   }
 
   async uploadProductVariant(variant: WebhookProductVariantFragment) {
-    this.logger.debug("uploadProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("uploadProductVariant called");
 
     try {
       await fetch(this.endpoint, {
@@ -53,10 +48,6 @@ export class BuilderIoClient {
     variant: WebhookProductVariantFragment,
   ) {
     this.logger.debug("updateProductVariantCall called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
       builderIoEntryId,
     });
 
@@ -82,12 +73,7 @@ export class BuilderIoClient {
   }
 
   async updateProductVariant(variant: WebhookProductVariantFragment) {
-    this.logger.debug("updateProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("updateProductVariant called");
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
@@ -103,12 +89,7 @@ export class BuilderIoClient {
   }
 
   async upsertProductVariant(variant: WebhookProductVariantFragment) {
-    this.logger.debug("upsertProductVariant called", {
-      variantId: variant.id,
-      productId: variant.product.id,
-      variantName: variant.name,
-      channelsIds: variant.channelListings?.map((c) => c.channel.id) || [],
-    });
+    this.logger.debug("upsertProductVariant called");
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 

@@ -22,12 +22,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantUpdated called", {
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: productVariant.product.id,
-    });
+    this.logger.debug("onProductVariantUpdated called");
 
     await this.client.updateProductVariant({
       configuration: this.providerConfig,
@@ -38,12 +33,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantCreated called", {
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: productVariant.product.id,
-    });
+    this.logger.debug("onProductVariantCreated called");
 
     await this.client.uploadProductVariant({
       configuration: this.providerConfig,
@@ -53,12 +43,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.debug("onProductVariantDeleted called", {
-      variantId: productVariant.id,
-      variantName: productVariant.name,
-      channelsIds: productVariant.channelListings?.map((c) => c.channel.id) ?? [],
-      productId: productVariant.product.id,
-    });
+    this.logger.debug("onProductVariantDeleted called");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
@@ -69,12 +54,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.debug("onProductUpdated called", {
-      productId: product.id,
-      productName: product.name,
-      channelsIds: product.channelListings?.map((c) => c.channel.id) ?? [],
-      variantsLength: product.variants?.length,
-    });
+    this.logger.debug("onProductUpdated called");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {

@@ -66,7 +66,12 @@ const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = asy
     return res.status(500).end();
   }
 
-  logger.info("Webhook called", { productId: payload.product.id });
+  logger.info("Webhook called", {
+    productId: payload.product.id,
+    variantsLength: payload.product.variants?.length,
+    productName: payload.product.name,
+    channelsIds: payload.product.channelListings?.map((c) => c.channel.id) || [],
+  });
 
   const configContext = await createWebhookConfigContext({ authData });
 
