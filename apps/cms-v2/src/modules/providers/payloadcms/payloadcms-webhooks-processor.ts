@@ -26,7 +26,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant updated");
+    this.logger.info("Product variant updated");
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
@@ -37,7 +37,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant created");
+    this.logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantDeleted called");
@@ -47,7 +47,7 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant deleted");
+    this.logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
@@ -72,6 +72,6 @@ export class PayloadCmsWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    this.logger.debug("Product updated");
+    this.logger.info("Product updated");
   }
 }

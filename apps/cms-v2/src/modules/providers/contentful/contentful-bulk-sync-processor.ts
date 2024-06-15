@@ -50,6 +50,8 @@ export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
               }
             })
             .catch((e) => {
+              this.logger.trace("Error while uploading product to Contentful", { error: e });
+
               if (hooks.onUploadError) {
                 hooks.onUploadError({ variantId: variant.id, error: e });
               }

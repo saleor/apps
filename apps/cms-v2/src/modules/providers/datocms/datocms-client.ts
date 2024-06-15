@@ -23,28 +23,16 @@ export class DatoCMSClient {
     this.client = buildClient({ apiToken: opts.apiToken });
   }
 
-  async getContentTypes() {
-    this.logger.debug("getContentTypes called");
+  getContentTypes() {
+    this.logger.trace("Trying to get content types");
 
-    const contentTypes = await this.client.itemTypes.list();
-
-    this.logger.debug("Got content types", {
-      contentTypes: contentTypes.map((c) => ({ id: c.id, naame: c.name })),
-    });
-
-    return contentTypes;
+    return this.client.itemTypes.list();
   }
 
-  async getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
-    this.logger.debug("getFieldsForContentType called", { itemTypeID });
+  getFieldsForContentType({ itemTypeID }: { itemTypeID: string }) {
+    this.logger.trace("Trying to get fields for a content type");
 
-    const fields = await this.client.fields.list({ type: "item_type", id: itemTypeID });
-
-    this.logger.debug("Got fields for content type", {
-      fieldsIds: fields.map((f) => f.id),
-    });
-
-    return fields;
+    return this.client.fields.list({ type: "item_type", id: itemTypeID });
   }
 
   private getItemBySaleorVariantId({
@@ -102,7 +90,7 @@ export class DatoCMSClient {
     });
 
     if (remoteProducts.length > 1) {
-      this.logger.warn(
+      this.logger.info(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
         {
           remoteProductsIds: remoteProducts.map((p) => p.id),
@@ -116,32 +104,24 @@ export class DatoCMSClient {
       return;
     }
 
-    this.logger.debug("Deleting product variant", {
+    this.logger.trace("Deleting product variant", {
       remoteProductsIds: remoteProducts.map((p) => p.id),
     });
 
-    const result = await Promise.all(
+    return Promise.all(
       remoteProducts.map((p) => {
         return this.client.items.rawDestroy(p.id);
       }),
     );
-
-    this.logger.info("Products variants have been deleted");
-
-    return result;
   }
 
-  async uploadProductVariant(context: Context) {
+  uploadProductVariant(context: Context) {
     this.logger.debug("uploadProductVariant called", {
       fieldMappping: context.configuration.productVariantFieldsMapping,
       configId: context.configuration.id,
     });
 
-    const result = await this.client.items.create(this.mapVariantToDatoCMSFields(context));
-
-    this.logger.info("Products variants have been uploaded", { datoID: result.id });
-
-    return result;
+    return this.client.items.create(this.mapVariantToDatoCMSFields(context));
   }
 
   async updateProductVariant({ configuration, variant }: Context) {
@@ -156,7 +136,7 @@ export class DatoCMSClient {
     });
 
     if (products.length > 1) {
-      this.logger.warn(
+      this.logger.info(
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
           variantId: variant.id,
@@ -165,8 +145,10 @@ export class DatoCMSClient {
       );
     }
 
-    const result = await Promise.all(
+    return Promise.all(
       products.map((product) => {
+        this.logger.trace("Trying to update variant", { datoID: product.id });
+
         return this.client.items.update(
           product.id,
           this.mapVariantToDatoCMSFields({
@@ -176,10 +158,6 @@ export class DatoCMSClient {
         );
       }),
     );
-
-    this.logger.info("Products variants have been updated", { datoIds: result.map((r) => r.id) });
-
-    return result;
   }
 
   upsertProduct({ configuration, variant }: Context) {

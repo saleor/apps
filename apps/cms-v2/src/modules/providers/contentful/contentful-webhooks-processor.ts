@@ -39,7 +39,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant updated");
+    this.logger.info("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantCreated called");
@@ -49,7 +49,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant created");
+    this.logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("onProductVariantDeleted called");
@@ -59,7 +59,7 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       variant: productVariant,
     });
 
-    this.logger.debug("Product variant deleted");
+    this.logger.info("Product variant deleted");
   }
 
   /**
@@ -87,6 +87,6 @@ export class ContentfulWebhooksProcessor implements ProductWebhooksProcessor {
       }),
     );
 
-    this.logger.debug("Product updated");
+    this.logger.info("Product updated");
   }
 }

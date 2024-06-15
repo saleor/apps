@@ -5,8 +5,8 @@ import { FieldsMapper } from "../fields-mapper";
 
 // https://www.builder.io/c/docs/write-api
 export class BuilderIoClient {
-  private logger = createLogger("BuilderIoClient");
   private endpoint: string;
+  private logger = createLogger("BuilderIoClient");
 
   constructor(private config: BuilderIoProviderConfig.FullShape) {
     this.endpoint = `https://builder.io/api/v1/write/${config.modelName}`;
@@ -20,7 +20,7 @@ export class BuilderIoClient {
   }
 
   async uploadProductVariant(variant: WebhookProductVariantFragment) {
-    this.logger.debug("uploadProductVariant called");
+    this.logger.debug("uploadProductVariant called", { variantId: variant.id });
 
     try {
       await fetch(this.endpoint, {
@@ -34,8 +34,6 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
-
-      this.logger.info("Product variant uploaded");
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -63,8 +61,6 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
-
-      this.logger.info("Product variant updated");
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -77,7 +73,7 @@ export class BuilderIoClient {
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
-    this.logger.debug("Trying to update variants in builder.io with following IDs", {
+    this.logger.trace("Trying to update variants in builder.io with following IDs", {
       entriesToUpdate,
     });
 
@@ -115,9 +111,9 @@ export class BuilderIoClient {
 
     const idsToDelete = await this.fetchBuilderIoEntryIds(variantId);
 
-    this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
+    this.logger.trace("Will try to delete items in Builder.io", { ids: idsToDelete });
 
-    const result = await Promise.all(
+    return Promise.all(
       idsToDelete.map((id) =>
         fetch(this.endpoint + `/${id}`, {
           method: "DELETE",
@@ -128,17 +124,13 @@ export class BuilderIoClient {
         }),
       ),
     );
-
-    this.logger.info("Product has been deleted");
-
-    return result;
   }
 
   /**
    * Can return more than 1. Builder doesn't have unique fields.
    */
   private fetchBuilderIoEntryIds(variantId: string): Promise<string[]> {
-    this.logger.debug("fetchBuilderIoEntryIds called", {
+    this.logger.trace("Trying to fetch variant from Builder.io", {
       modelName: this.config.modelName,
       variantId,
       variantFieldMapping: this.config.productVariantFieldsMapping.variantId,
@@ -151,7 +143,7 @@ export class BuilderIoClient {
       .then((data) => {
         const results = data.results.map((result: any) => result.id) as string[];
 
-        this.logger.debug("Fetched builder.io entries", { entriesIds: results });
+        this.logger.trace("Fetched builder.io entries", { entriesIds: results });
         return results;
       })
       .catch((err) => {

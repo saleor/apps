@@ -28,7 +28,7 @@ export const providersListRouter = router({
     const providers = config.providers.getProviders();
 
     logger.debug("Providers fetched", {
-      providersIds: providers.map((p) => ({ id: p.id, configName: p.configName })),
+      providers: providers.map((p) => ({ id: p.id, configName: p.configName })),
     });
 
     return providers;
@@ -45,11 +45,11 @@ export const providersListRouter = router({
       const config = await appConfigService.get();
       const provider = config.providers.getProviderById(input.id) ?? null;
 
-      if (!provider) {
-        logger.debug("Provider not found");
-      } else {
-        logger.debug("Provider fetched");
-      }
+      logger.debug("Provider fetched", {
+        providerType: provider?.type,
+        fieldMapping: provider?.productVariantFieldsMapping,
+        configNamec: provider?.configName,
+      });
 
       return provider;
     }),

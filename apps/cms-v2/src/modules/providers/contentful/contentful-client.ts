@@ -98,7 +98,7 @@ export class ContentfulClient {
     };
 
   async getContentTypes(env: string) {
-    this.logger.debug("getContentTypes called", {
+    this.logger.trace("getContentTypes called", {
       envirment: env,
     });
 
@@ -107,28 +107,16 @@ export class ContentfulClient {
       const environment = await space.getEnvironment(env);
       const contentTypes = await environment.getContentTypes();
 
-      this.logger.debug("Content types fetched successfully", {
-        contentTypesLength: contentTypes.items.length,
-      });
-
       return contentTypes;
     } catch (err) {
-      this.logger.error("Error during the fetching", { error: err });
       throw err;
     }
   }
 
   async getEnvironments() {
-    this.logger.debug("getEnvironments called");
+    this.logger.trace("Attempting to get environments");
 
-    const space = await this.client.getSpace(this.space);
-    const environments = await space.getEnvironments();
-
-    this.logger.debug("Environments fetched successfully", {
-      environments: environments?.items?.map((e) => e.name) ?? [],
-    });
-
-    return environments;
+    return (await this.client.getSpace(this.space)).getEnvironments();
   }
 
   async updateProductVariant({
@@ -145,11 +133,11 @@ export class ContentfulClient {
 
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.trace("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    this.logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.trace("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: configuration.contentId,
@@ -157,11 +145,11 @@ export class ContentfulClient {
       variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
     })(variant.id);
 
-    this.logger.debug("Found products to update", {
+    this.logger.trace("Found products to update", {
       contentEntriesLength: contentEntries.items.length,
     });
 
-    const results = await Promise.all(
+    return Promise.all(
       contentEntries.items.map((item) => {
         item.fields = this.mapVariantToConfiguredFields(
           variant,
@@ -171,10 +159,6 @@ export class ContentfulClient {
         return item.update();
       }),
     );
-
-    this.logger.info("Products variants have been updated");
-
-    return results;
   }
 
   async deleteProductVariant(opts: {
@@ -188,11 +172,11 @@ export class ContentfulClient {
 
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.trace("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(opts.configuration.environment);
 
-    this.logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.trace("Environment fetched successfully", { envName: env.name });
 
     const contentEntries = await this.getEntriesBySaleorId({
       contentId: opts.configuration.contentId,
@@ -200,22 +184,18 @@ export class ContentfulClient {
       variantIdFieldName: opts.configuration.productVariantFieldsMapping.variantId,
     })(opts.variant.id);
 
-    this.logger.debug("Found entries to delete", {
+    this.logger.trace("Found entries to delete", {
       contentEntriesLength: contentEntries.items.length,
     });
 
     /**
      * In general it should be only one item, but in case of duplication run through everything
      */
-    const results = await Promise.all(
+    return Promise.all(
       contentEntries.items.map(async (item) => {
         return item.delete();
       }),
     );
-
-    this.logger.info("Products variants have been deleted");
-
-    return results;
   }
 
   async uploadProductVariant({
@@ -232,22 +212,19 @@ export class ContentfulClient {
 
     const space = await this.client.getSpace(this.space);
 
-    this.logger.debug("Space fetched successfully", { spaceName: space.name });
+    this.logger.trace("Space fetched successfully", { spaceName: space.name });
 
     const env = await space.getEnvironment(configuration.environment);
 
-    this.logger.debug("Environment fetched successfully", { envName: env.name });
+    this.logger.trace("Environment fetched successfully", { envName: env.name });
+
     /*
      * TODO: add translations
      * TODO: - should it create published? is draft
      */
-    const result = await env.createEntry(configuration.contentId, {
+    return env.createEntry(configuration.contentId, {
       fields: this.mapVariantToConfiguredFields(variant, configuration.productVariantFieldsMapping),
     });
-
-    this.logger.info("Product variant has been uploaded");
-
-    return result;
   }
 
   async upsertProductVariant({
@@ -265,11 +242,11 @@ export class ContentfulClient {
     try {
       const space = await this.client.getSpace(this.space);
 
-      this.logger.debug("Space fetched successfully", { spaceName: space.name });
+      this.logger.trace("Space fetched successfully", { spaceName: space.name });
 
       const env = await space.getEnvironment(configuration.environment);
 
-      this.logger.debug("Environment fetched successfully", { envName: env.name });
+      this.logger.trace("Environment fetched successfully", { envName: env.name });
 
       const entries = await this.getEntriesBySaleorId({
         contentId: configuration.contentId,
@@ -277,7 +254,7 @@ export class ContentfulClient {
         variantIdFieldName: configuration.productVariantFieldsMapping.variantId,
       })(variant.id);
 
-      this.logger.debug("Found entries", { entiesLength: entries.items.length });
+      this.logger.trace("Found entries", { entiesLength: entries.items.length });
 
       if (entries.items.length > 0) {
         this.logger.info("Found existing entry, will update");
@@ -297,7 +274,7 @@ export class ContentfulClient {
         return this.uploadProductVariant({ configuration, variant });
       }
     } catch (err) {
-      logger.error("Error during the upsert", { error: err });
+      logger.warn("Error during the upsert", { error: err });
       Sentry.captureException(err);
 
       throw err;

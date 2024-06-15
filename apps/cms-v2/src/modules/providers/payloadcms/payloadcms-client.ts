@@ -68,7 +68,7 @@ export class PayloadCMSClient {
       },
     );
 
-    this.logger.debug("Deleting product variant", { queryString });
+    this.logger.trace("Deleting product variant", { queryString });
 
     try {
       const response = await fetch(
@@ -82,8 +82,6 @@ export class PayloadCMSClient {
       if (response.status >= 400) {
         throw new Error("Error while deleting product variant");
       }
-
-      this.logger.info("Product variant deleted");
     } catch (e) {
       this.logger.error("Failed to delete variant", { error: e });
 
@@ -126,8 +124,6 @@ export class PayloadCMSClient {
         if (r.status >= 400) {
           throw new Error(`Error while uploading product variant: ${r.statusText}`);
         }
-
-        this.logger.info("Product variant uploaded");
       })
       .catch((e) => {
         this.logger.error("Failed to upload product variant", { error: e });
@@ -154,7 +150,7 @@ export class PayloadCMSClient {
       },
     );
 
-    this.logger.debug("Updating product variant", { queryString });
+    this.logger.trace("Updating product variant", { queryString });
 
     try {
       const response = await fetch(this.constructCollectionUrl(configuration) + queryString, {
@@ -166,8 +162,6 @@ export class PayloadCMSClient {
       if (response.status >= 400) {
         throw new Error("Error while updating product variant");
       }
-
-      this.logger.info("Product variant uploaded");
     } catch (e) {
       this.logger.error("Failed to update product variant", { error: e });
 

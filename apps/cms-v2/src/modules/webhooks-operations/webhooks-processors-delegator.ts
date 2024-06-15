@@ -46,17 +46,17 @@ export class WebhooksProcessorsDelegator {
    * https://github.com/saleor/saleor/issues/14579
    */
   async delegateVariantCreatedOperations(productVariant: WebhookProductVariantFragment) {
-    this.logger.debug("delegateVariantCreatedOperations called");
+    this.logger.trace("delegateVariantCreatedOperations called");
 
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
-    this.logger.debug("Extracted a related channels", {
+    this.logger.trace("Extracted a related channels", {
       relatedVariantChannels,
     });
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
-      this.logger.info("No related channels found for variant, skipping");
+      this.logger.debug("No related channels found for variant, skipping");
 
       return;
     }
@@ -65,11 +65,11 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
-    this.logger.debug("Resolved a number of connections to include", connections);
+    this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
-    this.logger.debug("Resolved a number of processor to delegate to", {
+    this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
     });
 
@@ -81,17 +81,17 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantUpdatedOperations(productVariant: WebhookProductVariantFragment) {
-    this.logger.debug("delegateVariantUpdatedOperations called");
+    this.logger.trace("delegateVariantUpdatedOperations called");
 
     const { connections } = this.opts.context;
     const relatedVariantChannels = this.extractChannelSlugsFromProductVariant(productVariant);
 
-    this.logger.debug("Extracted a related channels", {
+    this.logger.trace("Extracted a related channels", {
       relatedVariantChannels,
     });
 
     if (!relatedVariantChannels || relatedVariantChannels.length === 0) {
-      this.logger.info("No related channels found for variant, skipping");
+      this.logger.debug("No related channels found for variant, skipping");
       return;
     }
 
@@ -99,11 +99,11 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
-    this.logger.debug("Resolved a number of connections to include", connections);
+    this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
 
-    this.logger.debug("Resolved a number of processor to delegate to", {
+    this.logger.trace("Resolved a number of processor to delegate to", {
       processors: processors.length,
     });
 
@@ -115,15 +115,15 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateVariantDeletedOperations(productVariant: WebhookProductVariantFragment) {
-    this.logger.debug("delegateVariantDeletedOperations called");
+    this.logger.trace("delegateVariantDeletedOperations called");
 
     const { connections } = this.opts.context;
 
-    this.logger.debug("Resolved a number of connections to include", connections);
+    this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
 
-    this.logger.debug("Resolved a number of processor to delegate to", {
+    this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
     });
 
@@ -135,15 +135,15 @@ export class WebhooksProcessorsDelegator {
   }
 
   async delegateProductUpdatedOperations(product: WebhookProductFragment) {
-    this.logger.debug("delegateProductUpdatedOperations called");
+    this.logger.trace("delegateProductUpdatedOperations called");
 
     const { connections } = this.opts.context;
 
-    this.logger.debug("Resolved a number of connections to include", connections);
+    this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
 
-    this.logger.debug("Resolved a number of processor to delegate to", {
+    this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
     });
 
