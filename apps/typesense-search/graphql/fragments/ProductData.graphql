@@ -1,0 +1,87 @@
+fragment ProductData on Product {
+  variants {
+    id
+  }
+  id
+  name
+  description
+  slug
+  category {
+    name
+    parent {
+      name
+      parent {
+        name
+        parent {
+          name
+          parent {
+            name
+          }
+        }
+      }
+    }
+  }
+  thumbnail {
+    url
+  }
+  media {
+    url
+    type
+  }
+  attributes {
+    ...ProductAttributesData
+  }
+  channelListings {
+    pricing {
+      priceRangeUndiscounted {
+        start {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+      }
+      priceRange {
+        start {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+        stop {
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+      }
+    }
+    id
+    visibleInListings
+    channel {
+      slug
+      currencyCode
+    }
+  }
+  collections {
+    name
+  }
+  metadata {
+    key
+    value
+  }
+}
