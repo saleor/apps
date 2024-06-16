@@ -12,8 +12,7 @@ export default withOtel(
       const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
       const manifest: AppManifest = {
-        about:
-          "Search App is a multi-integration app that connects your Saleor store with typesense search engine.",
+        about: "Search app using Typesense search engine.",
         appUrl: iframeBaseUrl,
         brand: {
           logo: {
@@ -29,7 +28,7 @@ export default withOtel(
         ],
         homepageUrl: "https://github.com/saleor/apps",
         id: "saleor.app.typesense-search",
-        name: "Search",
+        name: "Typesense",
         permissions: [
           /**
            * Set permissions for app if needed

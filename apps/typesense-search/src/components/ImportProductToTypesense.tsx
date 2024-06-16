@@ -72,7 +72,7 @@ export const ImportProductsToTypesense = () => {
       footer={
         searchProvider &&
         typesenseConfigured && (
-          <Box display={"flex"} justifyContent={"flex-end"}>
+          <Box display={"flex"} justifyContent={"flex-end"} gap={4}>
             {started && !isTypesenseImporting && (
               <Button disabled={true} onClick={importProducts}>
                 Importing complete

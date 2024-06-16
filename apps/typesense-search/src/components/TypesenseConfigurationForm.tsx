@@ -18,9 +18,14 @@ export const TypesenseConfigurationForm = () => {
 
   const [credentialsValidationError, setCredentialsValidationError] = useState(false);
 
-  const { handleSubmit, trigger, setValue, control } = useForm<AppConfigurationFields>({
-    defaultValues: { host: "", protocol: "", apiKey: "", port: 0, connectionTimeoutSeconds: 0 },
-    // @ts-ignore - todo - some strange TS error happens here
+  const { handleSubmit, trigger, setValue, control, watch } = useForm<AppConfigurationFields>({
+    defaultValues: {
+      host: "",
+      protocol: "",
+      apiKey: "",
+      port: undefined,
+      connectionTimeoutSeconds: undefined,
+    },
     resolver: zodResolver(AppConfigurationSchema),
   });
 
@@ -32,8 +37,11 @@ export const TypesenseConfigurationForm = () => {
         setValue("host", data?.appConfig?.host || "");
         setValue("protocol", data?.appConfig?.protocol || "");
         setValue("apiKey", data?.appConfig?.apiKey || "");
-        setValue("port", data?.appConfig?.port || 0);
-        setValue("connectionTimeoutSeconds", data?.appConfig?.connectionTimeoutSeconds || 0);
+        setValue("port", data?.appConfig?.port || undefined);
+        setValue(
+          "connectionTimeoutSeconds",
+          data?.appConfig?.connectionTimeoutSeconds || undefined,
+        );
       },
     });
 
@@ -42,7 +50,6 @@ export const TypesenseConfigurationForm = () => {
       onSuccess: async () => {
         await Promise.all([
           refetchConfig(),
-          // todo migrate to trpc
           reactQueryClient.refetchQueries({
             queryKey: ["webhooks-status"],
           }),
@@ -61,7 +68,7 @@ export const TypesenseConfigurationForm = () => {
       protocol: conf.protocol,
       port: conf.port,
       connectionTimeoutSeconds: conf.connectionTimeoutSeconds,
-      enabledKeys: [], // not required for ping but should be refactored
+      enabledKeys: [],
     });
 
     try {
@@ -113,6 +120,8 @@ export const TypesenseConfigurationForm = () => {
           disabled={isFormDisabled}
           label="Port"
           helperText="For example: 8108"
+          type="number"
+          value={watch("port") || ""}
         />
         <Input
           control={control}
@@ -127,6 +136,8 @@ export const TypesenseConfigurationForm = () => {
           disabled={isFormDisabled}
           label="Connection Timeout Seconds"
           helperText="For example: 2"
+          type="number"
+          value={watch("connectionTimeoutSeconds") || ""}
         />
         {credentialsValidationError && (
           <Box marginTop={5}>
