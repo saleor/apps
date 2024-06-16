@@ -154,8 +154,6 @@ export class StrapiClient {
       configId: configuration.id,
     });
 
-    this.logger.trace("Fetched products from strapi...");
-
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
     if (strapiProducts) {

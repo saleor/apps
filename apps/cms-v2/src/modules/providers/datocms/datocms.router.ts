@@ -37,7 +37,7 @@ export const datocmsRouter = router({
 
         return contentTypes;
       } catch (e) {
-        logger.debug("Can't fetch content types", { error: e });
+        logger.warn("Can't fetch content types", { error: e });
 
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -73,7 +73,7 @@ export const datocmsRouter = router({
         });
         return fields;
       } catch (e) {
-        logger.debug("Can't fetch content type fields", { error: e });
+        logger.warn("Can't fetch content type fields", { error: e });
 
         throw new TRPCError({
           code: "BAD_REQUEST",

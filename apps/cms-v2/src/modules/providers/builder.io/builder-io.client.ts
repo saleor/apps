@@ -73,7 +73,7 @@ export class BuilderIoClient {
 
     const entriesToUpdate = await this.fetchBuilderIoEntryIds(variant.id);
 
-    this.logger.trace("Trying to update variants in builder.io with following IDs", {
+    this.logger.debug("Trying to update variants in builder.io with following IDs", {
       entriesToUpdate,
     });
 
@@ -111,7 +111,7 @@ export class BuilderIoClient {
 
     const idsToDelete = await this.fetchBuilderIoEntryIds(variantId);
 
-    this.logger.trace("Will try to delete items in Builder.io", { ids: idsToDelete });
+    this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
 
     return Promise.all(
       idsToDelete.map((id) =>

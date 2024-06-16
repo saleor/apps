@@ -11,14 +11,14 @@ export const createWebhookConfigContext = async ({
 }: {
   authData: AuthData;
 }): Promise<WebhookContext> => {
-  logger.debug("Creating webhook config context");
+  logger.trace("Creating webhook config context");
   const configManager = AppConfigMetadataManager.createFromAuthData(authData);
   const appConfig = await configManager.get();
 
   const providers = appConfig.providers.getProviders();
   const connections = appConfig.connections.getConnections();
 
-  logger.debug("Webhook config context created", {
+  logger.trace("Webhook config context created", {
     providersIds: providers.map((p) => p.id),
     connectionsIds: connections.map((c) => c.id),
   });

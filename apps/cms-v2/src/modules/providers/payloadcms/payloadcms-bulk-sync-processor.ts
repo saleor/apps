@@ -9,7 +9,7 @@ import { createLogger, logger } from "@/logger";
 export class PayloadCmsBulkSyncProcessor implements BulkSyncProcessor {
   private logger = createLogger("PayloadCmsBulkSyncProcessor");
   constructor(private config: PayloadCmsProviderConfig.FullShape) {
-    this.logger.debug("ContentfulBulkSyncProcessor created");
+    this.logger.trace("ContentfulBulkSyncProcessor created");
   }
 
   async uploadProducts(

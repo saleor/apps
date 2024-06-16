@@ -20,6 +20,8 @@ export class WebhooksProcessorsDelegator {
     if (opts.injectProcessorFactory) {
       this.processorFactory = opts.injectProcessorFactory;
     }
+
+    this.logger.trace("WebhooksProcessorsDelegator created");
   }
 
   private extractChannelSlugsFromProductVariant(productVariant: WebhookProductVariantFragment) {
@@ -75,6 +77,8 @@ export class WebhooksProcessorsDelegator {
 
     return Promise.all(
       processors.map((processor) => {
+        this.logger.trace("Calling processor.onProductVariantCreated");
+
         return processor.onProductVariantCreated(productVariant);
       }),
     );

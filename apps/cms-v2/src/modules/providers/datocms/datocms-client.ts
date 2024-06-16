@@ -44,6 +44,8 @@ export class DatoCMSClient {
     variantID: string;
     contentType: string;
   }) {
+    this.logger.trace("Trying to fetch item by Saleor variant ID", { variantID: variantID });
+
     return this.client.items.list({
       filter: {
         type: contentType,
@@ -90,7 +92,7 @@ export class DatoCMSClient {
     });
 
     if (remoteProducts.length > 1) {
-      this.logger.info(
+      this.logger.warn(
         "More than 1 variant with the same ID found in the CMS. Will remove all of them, but this should not happen if unique field was set",
         {
           remoteProductsIds: remoteProducts.map((p) => p.id),
@@ -104,7 +106,7 @@ export class DatoCMSClient {
       return;
     }
 
-    this.logger.trace("Deleting product variant", {
+    this.logger.debug("Deleting product variant", {
       remoteProductsIds: remoteProducts.map((p) => p.id),
     });
 
@@ -136,7 +138,7 @@ export class DatoCMSClient {
     });
 
     if (products.length > 1) {
-      this.logger.info(
+      this.logger.warn(
         "Found more than one product variant with the same ID. Will update all of them, but this should not happen if unique field was set",
         {
           variantId: variant.id,
@@ -188,7 +190,7 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
-          this.logger.info("Found unique id error, will update the product", {
+          this.logger.warn("Found unique id error, will update the product", {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });

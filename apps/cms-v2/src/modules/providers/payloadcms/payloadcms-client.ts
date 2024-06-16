@@ -68,7 +68,7 @@ export class PayloadCMSClient {
       },
     );
 
-    this.logger.trace("Deleting product variant", { queryString });
+    this.logger.debug("Deleting product variant", { queryString });
 
     try {
       const response = await fetch(
@@ -150,7 +150,7 @@ export class PayloadCMSClient {
       },
     );
 
-    this.logger.trace("Updating product variant", { queryString });
+    this.logger.debug("Updating product variant", { queryString });
 
     try {
       const response = await fetch(this.constructCollectionUrl(configuration) + queryString, {
@@ -175,7 +175,7 @@ export class PayloadCMSClient {
     try {
       await this.uploadProductVariant(context);
     } catch (e) {
-      this.logger.info("Failed to upload, will try to update", { error: e });
+      this.logger.warn("Failed to upload, will try to update", { error: e });
 
       await this.updateProductVariant(context);
     }

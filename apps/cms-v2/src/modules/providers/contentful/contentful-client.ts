@@ -109,6 +109,8 @@ export class ContentfulClient {
 
       return contentTypes;
     } catch (err) {
+      this.logger.error("Failed to fetch content types", { error: err });
+
       throw err;
     }
   }
@@ -274,7 +276,7 @@ export class ContentfulClient {
         return this.uploadProductVariant({ configuration, variant });
       }
     } catch (err) {
-      logger.warn("Error during the upsert", { error: err });
+      logger.error("Error during the upsert", { error: err });
       Sentry.captureException(err);
 
       throw err;
