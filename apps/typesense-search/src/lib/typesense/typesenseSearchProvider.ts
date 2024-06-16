@@ -137,7 +137,6 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
-    console.log(this.#enabledKeys);
     logger.debug("saveGroupedByIndex called", { groupedByIndex });
     return Promise.all(
       Object.entries(groupedByIndex).map(async ([indexName, objects]) => {
@@ -226,38 +225,65 @@ export class TypesenseSearchProvider implements SearchProvider {
   async deleteProduct(product: ProductWebhookPayloadFragment) {
     logger.debug(`deleteProduct called`, { product });
 
-    const productIds = product.variants?.map((variant) => variant.product.id);
-
-    if (!productIds || productIds.length === 0) {
-      logger.debug("No product IDs found for deletion");
-      return;
-    }
-
     await Promise.all(
       this.#indexNames.map(async (indexName) => {
-        logger.debug("Deleting product variants from index:", { indexName, productIds });
+        try {
+          const allProductsString = await this.#typesense
+            .collections(indexName)
+            .documents()
+            .export();
 
-        for (const productId of productIds) {
-          try {
-            const result = await this.deleteDocument(indexName, productId);
+          let validJson = "[" + allProductsString.replace(/\n/g, ",") + "]";
+          let products = JSON.parse(validJson);
+          let productIds = products.map((product) => product.id);
 
-            logger.debug("Delete result:", { indexName, productId, result });
-          } catch (error: any) {
-            if (error.httpStatus === 404) {
-              logger.warn(`Document not found for deletion with productId: ${productId}`, {
-                error,
-              });
-            } else {
-              logger.error(
-                `Failed to delete variants with productId: ${productId}: ${error.message}`,
-                { error },
-              );
-              throw error; // Re-throw the error if it's not a 404
+          for (const productId of productIds) {
+            try {
+              const result = await this.deleteDocument(indexName, productId);
+
+              logger.debug("Delete result:", { indexName, productId, result });
+            } catch (error: any) {
+              if (error.httpStatus === 404) {
+                logger.warn(`Document not found for deletion with productId: ${productId}`, {
+                  error,
+                });
+              } else {
+                logger.error(
+                  `Failed to delete variants with productId: ${productId}: ${error.message}`,
+                  { error },
+                );
+                throw error; // Re-throw the error if it's not a 404
+              }
             }
           }
+        } catch (error) {
+          console.error(`Error processing products from Typesense index ${indexName}:`, error);
         }
       }),
     );
+    /*
+     * 
+     *   for (const productId of productIds) {
+     *     try {
+     *       const result = await this.deleteDocument(indexName, productId);
+     * 
+     *       logger.debug("Delete result:", { indexName, productId, result });
+     *     } catch (error: any) {
+     *       if (error.httpStatus === 404) {
+     *         logger.warn(`Document not found for deletion with productId: ${productId}`, {
+     *           error,
+     *         });
+     *       } else {
+     *         logger.error(
+     *           `Failed to delete variants with productId: ${productId}: ${error.message}`,
+     *           { error },
+     *         );
+     *         throw error; // Re-throw the error if it's not a 404
+     *       }
+     *     }
+     *   }
+     * }),
+     */
   }
 
   async createProduct(product: ProductWebhookPayloadFragment) {
