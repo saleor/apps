@@ -4,6 +4,7 @@ import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { Layout } from "@saleor/apps-ui";
 import { TypesenseSearchProvider } from "../lib/typesense/typesenseSearchProvider";
+import { typesenseCredentialsVerifier } from "../lib/typesense/typesense-credentials-verifier";
 
 const BATCH_SIZE = 100;
 
@@ -12,7 +13,6 @@ export const ImportProductsToTypesense = () => {
   const [started, setStarted] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isTypesenseImporting, setIsTypesenseImporting] = useState(false);
-  const [allImported, setAllImported] = useState(false);
   const products = useQueryAllProducts(!started);
 
   const { data: typesenseConfiguration } = trpcClient.configuration.getConfig.useQuery();
@@ -43,64 +43,46 @@ export const ImportProductsToTypesense = () => {
   }, []);
 
   useEffect(() => {
-    if (searchProvider) {
-      searchProvider
-        .ping()
+    if (searchProvider && typesenseConfiguration?.appConfig) {
+      typesenseCredentialsVerifier 
+        .verifyCredentials({
+          host: typesenseConfiguration.appConfig.host,
+          apiKey: typesenseConfiguration.appConfig.apiKey,
+          protocol: typesenseConfiguration.appConfig.protocol,
+          port: typesenseConfiguration.appConfig.port,
+          connectionTimeoutSeconds: typesenseConfiguration.appConfig.connectionTimeoutSeconds,
+        })
         .then(() => setTypesenseConfigured(true))
         .catch(() => setTypesenseConfigured(false));
     }
-  }, [searchProvider]);
+  }, [searchProvider, typesenseConfiguration?.appConfig]);
 
   useEffect(() => {
-    const importBatch = async () => {
-      if (!searchProvider || products.length <= currentProductIndex) {
-        setIsTypesenseImporting(false);
-        return;
-      }
-
-      const productsBatch = products.slice(currentProductIndex, currentProductIndex + BATCH_SIZE);
+    if (!searchProvider || isTypesenseImporting || products.length <= currentProductIndex) {
+      return;
+    }
+    (async () => {
+      setIsTypesenseImporting(true);
+      const productsBatchStartIndex = currentProductIndex;
+      const productsBatchEndIndex = Math.min(currentProductIndex + BATCH_SIZE, products.length);
+      const productsBatch = products.slice(productsBatchStartIndex, productsBatchEndIndex);
 
       await searchProvider.updatedBatchProducts(productsBatch);
-      setCurrentProductIndex((prevIndex) => prevIndex + BATCH_SIZE);
+
       setIsTypesenseImporting(false);
-
-      if (currentProductIndex + BATCH_SIZE >= products.length) {
-        setAllImported(true);
-      }
-    };
-
-    if (started && !isTypesenseImporting) {
-      setIsTypesenseImporting(true);
-      importBatch();
-    }
-  }, [searchProvider, currentProductIndex, isTypesenseImporting, products, started]);
-
-  const productCount = products.length;
-  const variantCount = useMemo(
-    () => countVariants(products, currentProductIndex),
-    [products, currentProductIndex],
-  );
-  const totalVariantCount = useMemo(
-    () => countVariants(products, productCount),
-    [products, productCount],
-  );
+      setCurrentProductIndex(productsBatchEndIndex);
+    })();
+  }, [searchProvider, currentProductIndex, isTypesenseImporting, products]);
 
   return (
     <Layout.AppSectionCard
       footer={
         searchProvider &&
         typesenseConfigured && (
-          <Box display={"flex"} justifyContent={"flex-end"} gap={4}>
-            {started && allImported && !isTypesenseImporting && (
-              <Button disabled={true} onClick={importProducts}>
-                Importing complete, refresh the page
-              </Button>
-            )}
-            {!started && !isTypesenseImporting && (
-              <Button disabled={!searchProvider} onClick={importProducts}>
-                Start importing
-              </Button>
-            )}
+          <Box display={"flex"} justifyContent={"flex-end"}>
+            <Button disabled={started || !searchProvider} onClick={importProducts}>
+              Start importing
+            </Button>
           </Box>
         )
       }
@@ -135,7 +117,8 @@ export const ImportProductsToTypesense = () => {
             alignItems: "center",
           }}
         >
-          {variantCount} / {totalVariantCount}
+          {countVariants(products, currentProductIndex)} /{" "}
+          {countVariants(products, products.length)}
           <progress
             value={currentProductIndex}
             max={products.length}

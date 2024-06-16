@@ -201,10 +201,8 @@ export class TypesenseSearchProvider implements SearchProvider {
     logger.debug(`updateIndicesSettings called`);
     await Promise.all(
       this.#indexNames.map(async (indexName) => {
-        const fields = requiredFields as any;
         // "grossPrice" might be a configurable field in the future
-
-        return this.updateCollection(indexName, fields, "grossPrice");
+        return this.updateCollection(indexName, requiredFields as any, "grossPrice");
       }),
     );
   }

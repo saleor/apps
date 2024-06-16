@@ -9,7 +9,11 @@ export const IndicesSettings = () => {
   const updateWebhooksMutation = useIndicesSetupMutation();
 
   const isConfigured =
-    !!typesenseConfiguration?.appConfig?.host && !!typesenseConfiguration.appConfig?.apiKey;
+    !!typesenseConfiguration?.appConfig?.host &&
+    !!typesenseConfiguration.appConfig?.apiKey &&
+    !!typesenseConfiguration.appConfig?.protocol &&
+    !!typesenseConfiguration.appConfig?.port &&
+    !!typesenseConfiguration.appConfig?.connectionTimeoutSeconds;
 
   return (
     <Layout.AppSectionCard
