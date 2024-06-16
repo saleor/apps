@@ -71,10 +71,12 @@ export class TypesenseSearchProvider implements SearchProvider {
     this.#enabledKeys = enabledKeys;
   }
 
+  // Method to check if the collection exists in Typesense
   private async collectionExists(collectionName: string) {
     return this.#typesense.collections(collectionName).exists();
   }
 
+  // Method to create a collection in Typesense
   private async createCollection(collectionName: string) {
     return this.#typesense.collections().create({
       name: collectionName,
@@ -83,6 +85,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     });
   }
 
+  // Method to update a collection in Typesense
   private async updateCollection(
     collectionName: string,
     fields: Field[],
@@ -94,11 +97,13 @@ export class TypesenseSearchProvider implements SearchProvider {
     });
   }
 
+  // Method to delete a document from a collection in Typesense
   private async deleteDocument(collectionName: string, documentId: string) {
     logger.debug(`Deleting document with ID: ${documentId} from collection: ${collectionName}`);
     return this.#typesense.collections(collectionName).documents(documentId).delete();
   }
 
+  // Method to filter out keys that are not enabled in the configuration
   private async filterEnabledKeys(objects: any[]) {
     return objects.map((object) => {
       return Object.fromEntries(
@@ -119,6 +124,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     });
   }
 
+  // Method to import documents to a collection in Typesense from an array of objects
   private async importDocuments(collectionName: string, documents: any[]) {
     logger.debug(`Importing ${documents.length} documents to collection: ${collectionName}`);
     const filteredDocuments = documents.map((doc) => {
@@ -136,6 +142,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     });
   }
 
+  // Method to save documents grouped by index name
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
     logger.debug("saveGroupedByIndex called", { groupedByIndex });
     return Promise.all(
@@ -164,6 +171,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     );
   }
 
+  // Method to delete documents grouped by index name
   private async deleteGroupedByIndex(groupedByIndex: IdsGroupedByIndex) {
     logger.debug("deleteGroupedByIndex called", { groupedByIndex });
 
@@ -188,6 +196,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     );
   }
 
+  // Method to set indices settings to the default values
   async updateIndicesSettings() {
     logger.debug(`updateIndicesSettings called`);
     await Promise.all(
@@ -212,6 +221,13 @@ export class TypesenseSearchProvider implements SearchProvider {
     await this.saveGroupedByIndex(groupedByIndex);
   }
 
+  // Method to create a product in Typesense
+  async createProduct(product: ProductWebhookPayloadFragment) {
+    logger.debug(`createProduct called`, { product });
+    await this.updateProduct(product);
+  }
+
+  // Method to update a product in Typesense
   async updateProduct(product: ProductWebhookPayloadFragment) {
     logger.debug(`updateProduct called`);
 
@@ -222,20 +238,27 @@ export class TypesenseSearchProvider implements SearchProvider {
     await Promise.all(product.variants.map((variant) => this.updateProductVariant(variant)));
   }
 
+  // Method to delete a product from Typesense
   async deleteProduct(product: ProductWebhookPayloadFragment) {
     logger.debug(`deleteProduct called`, { product });
 
     await Promise.all(
       this.#indexNames.map(async (indexName) => {
         try {
+          /*
+           * This approach is not optimal, but only way that Typesense supports deleting products is
+           * by id and product id is in form of "productId_variantId" because of duplications.
+           * So we need to get all products from index, find all products and delete the ones that match the product id.
+           */
           const allProductsString = await this.#typesense
             .collections(indexName)
             .documents()
             .export();
 
+          // Typesense export returns a string with each document on a new line
           let validJson = "[" + allProductsString.replace(/\n/g, ",") + "]";
           let products = JSON.parse(validJson);
-          let productIds = products.map((product) => product.id);
+          let productIds = products.map((product: any) => product.id);
 
           for (const productId of productIds) {
             try {
@@ -261,41 +284,15 @@ export class TypesenseSearchProvider implements SearchProvider {
         }
       }),
     );
-    /*
-     * 
-     *   for (const productId of productIds) {
-     *     try {
-     *       const result = await this.deleteDocument(indexName, productId);
-     * 
-     *       logger.debug("Delete result:", { indexName, productId, result });
-     *     } catch (error: any) {
-     *       if (error.httpStatus === 404) {
-     *         logger.warn(`Document not found for deletion with productId: ${productId}`, {
-     *           error,
-     *         });
-     *       } else {
-     *         logger.error(
-     *           `Failed to delete variants with productId: ${productId}: ${error.message}`,
-     *           { error },
-     *         );
-     *         throw error; // Re-throw the error if it's not a 404
-     *       }
-     *     }
-     *   }
-     * }),
-     */
   }
 
-  async createProduct(product: ProductWebhookPayloadFragment) {
-    logger.debug(`createProduct called`, { product });
-    await this.updateProduct(product);
-  }
-
+  // Method to create a product variant in Typesense
   async createProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     logger.debug(`createProductVariant called`, { productVariant });
     await this.updateProductVariant(productVariant);
   }
 
+  // Method to update a product variant in Typesense
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     logger.debug(`updateProductVariant called`, { productVariant });
 
@@ -329,6 +326,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     }
   }
 
+  // Method to delete a product variant from Typesense
   async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     logger.debug(`deleteProductVariant called`, { productVariant });
     const compositeId = `${productVariant.product.id}_${productVariant.id}`;
@@ -352,6 +350,7 @@ export class TypesenseSearchProvider implements SearchProvider {
     );
   }
 
+  // Method to ping Typesense to check if it's up and running
   async ping() {
     return this.#typesense.health
       .retrieve()
@@ -367,6 +366,7 @@ export class TypesenseSearchProvider implements SearchProvider {
 type GroupedByIndex = Record<string, TypesenseObject[]>;
 type IdsGroupedByIndex = Record<string, Array<string>>;
 
+// Method to group variants by index name
 const groupVariantByIndexName = (
   productVariant: ProductVariantWebhookPayloadFragment,
   {
@@ -425,6 +425,7 @@ const groupVariantByIndexName = (
   return objectsToSaveByIndexName;
 };
 
+// Method to group products by index name
 const groupProductsByIndexName = (
   productsBatch: ProductWebhookPayloadFragment[],
   {
