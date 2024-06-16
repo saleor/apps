@@ -103,12 +103,12 @@ export const generateGoogleXmlFeed = ({
     });
   });
 
-  logger.debug("Product data mapped to proxy format", {
+  logger.trace("Product data mapped to proxy format", {
     first: productVariants[0],
     totalLength: productVariants.length,
   });
 
-  logger.debug("Creating XMLBuilder");
+  logger.trace("Creating XMLBuilder");
 
   const builder = new XMLBuilder({
     attributeNamePrefix: "@_",
@@ -121,7 +121,7 @@ export const generateGoogleXmlFeed = ({
     preserveOrder: true,
   });
 
-  logger.debug("XMLBuilder created");
+  logger.trace("XMLBuilder created");
 
   const channelData = shopDetailsToProxy({
     title: shopName,
@@ -129,7 +129,7 @@ export const generateGoogleXmlFeed = ({
     storefrontUrl,
   });
 
-  logger.debug("Coverted shop details to proxy format", { channelData });
+  logger.trace("Coverted shop details to proxy format", { channelData });
 
   const data = [
     {

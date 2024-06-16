@@ -23,7 +23,7 @@ export const UploadMultiPart = async ({
 }: UploadFileArgs) => {
   let uploadId;
 
-  logger.debug("Uploading file", { fileName, bucketName });
+  logger.trace("Uploading file", { fileName, bucketName });
 
   try {
     const multipartUpload = await s3Client.send(
@@ -35,7 +35,7 @@ export const UploadMultiPart = async ({
 
     uploadId = multipartUpload.UploadId;
 
-    logger.debug(`Multipart upload ID: ${uploadId}`);
+    logger.trace(`Multipart upload ID: ${uploadId}`);
 
     const uploadPromises = [];
     // Multipart uploads require a minimum size of 5 MB per part.
@@ -59,7 +59,7 @@ export const UploadMultiPart = async ({
             }),
           )
           .then((d) => {
-            logger.debug(`Part ${i + 1}/${numberOfParts} uploaded`);
+            logger.trace(`Part ${i + 1}/${numberOfParts} uploaded`);
             return d;
           }),
       );

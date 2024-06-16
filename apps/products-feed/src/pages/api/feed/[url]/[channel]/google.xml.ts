@@ -104,7 +104,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate = settings.titleTemplate;
     imageSize = settings.imageSize;
   } catch (error) {
-    logger.warn("The application has not been configured");
+    logger.warn("The application has not been configured", { error });
 
     return res
       .status(400)

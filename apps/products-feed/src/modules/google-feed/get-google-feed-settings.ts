@@ -26,12 +26,11 @@ export class GoogleFeedSettingsFetcher {
   }
 
   async fetch(channelSlug: string) {
-    this.logger.debug("Fetching Google Feed settings");
+    this.logger.trace("Fetching Google Feed settings");
 
     const configString = await this.settingsManager.get();
 
     if (!configString) {
-      this.logger.warn("The application has not been configured");
       throw new Error("App is not configured");
     }
 
@@ -39,16 +38,14 @@ export class GoogleFeedSettingsFetcher {
     const channelConfig = appConfig.getUrlsForChannel(channelSlug);
 
     if (!channelConfig) {
-      this.logger.warn("Channel is not configured");
-      throw new Error("App is not configured");
+      throw new Error("Channel is not configured");
     }
 
     const storefrontUrl = channelConfig.storefrontUrl;
     const productStorefrontUrl = channelConfig.productStorefrontUrl;
 
     if (!storefrontUrl.length || !productStorefrontUrl.length) {
-      this.logger.warn("Storefront URLs are not configured");
-      throw new Error("The application has not been configured");
+      throw new Error("Storefront URLs are not configured");
     }
 
     const settings = {

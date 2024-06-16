@@ -104,7 +104,7 @@ export class AppConfig {
       logger.debug("S3 config saved");
       return this;
     } catch (e) {
-      logger.debug("Invalid S3 config provided", { error: e });
+      logger.info("Invalid S3 config provided", { error: e });
       throw new Error("Invalid S3 config provided");
     }
   }
@@ -117,7 +117,7 @@ export class AppConfig {
       logger.debug("Attribute mapping saved");
       return this;
     } catch (e) {
-      logger.debug("Invalid mapping config provided", { error: e });
+      logger.info("Invalid mapping config provided", { error: e });
       throw new Error("Invalid mapping config provided");
     }
   }
@@ -134,7 +134,7 @@ export class AppConfig {
       logger.debug("Channel urls saved");
       return this;
     } catch (e) {
-      logger.debug("Invalid channels config provided", { error: e });
+      logger.info("Invalid channels config provided", { error: e });
       throw new Error("Invalid channels config provided");
     }
   }
