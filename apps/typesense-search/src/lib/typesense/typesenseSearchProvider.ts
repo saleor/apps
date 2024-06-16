@@ -196,17 +196,6 @@ export class TypesenseSearchProvider implements SearchProvider {
     );
   }
 
-  // Method to set indices settings to the default values
-  async updateIndicesSettings() {
-    logger.debug(`updateIndicesSettings called`);
-    await Promise.all(
-      this.#indexNames.map(async (indexName) => {
-        // "grossPrice" might be a configurable field in the future
-        return this.updateCollection(indexName, requiredFields as any, "grossPrice");
-      }),
-    );
-  }
-
   async updatedBatchProducts(productsBatch: ProductWebhookPayloadFragment[]) {
     logger.debug(`updatedBatchProducts called`);
 

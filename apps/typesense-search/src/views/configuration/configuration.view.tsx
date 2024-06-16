@@ -3,7 +3,6 @@ import { Layout } from "@saleor/apps-ui";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { MainInstructions } from "../../components/MainInstructions";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
-import { IndicesSettings } from "../../components/IndicesSettings";
 import { TypesenseFieldsSelectionForm } from "../../components/TypesenseFieldsSelectionForm";
 import { TypesenseConfigurationForm } from "../../components/TypesenseConfigurationForm";
 import { ImportProductsToTypesense } from "../../components/ImportProductToTypesense";
@@ -72,19 +71,6 @@ export const ConfigurationView = () => {
         }
       >
         <ImportProductsToTypesense />
-      </Layout.AppSection>
-
-      <Layout.AppSection
-        includePadding
-        marginTop={14}
-        heading="Set indices settings"
-        sideContent={
-          <Box>
-            <Text>Sets up indices with recommended settings.</Text>
-          </Box>
-        }
-      >
-        <IndicesSettings />
       </Layout.AppSection>
     </Box>
   );
