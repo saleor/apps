@@ -12,7 +12,7 @@ export const ImportProductsToTypesense = () => {
   const [started, setStarted] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isTypesenseImporting, setIsTypesenseImporting] = useState(false);
-
+  const [allImported, setAllImported] = useState(false);
   const products = useQueryAllProducts(!started);
 
   const { data: typesenseConfiguration } = trpcClient.configuration.getConfig.useQuery();
@@ -52,20 +52,38 @@ export const ImportProductsToTypesense = () => {
   }, [searchProvider]);
 
   useEffect(() => {
-    if (!searchProvider || isTypesenseImporting || products.length <= currentProductIndex) {
-      return;
-    }
-    (async () => {
-      setIsTypesenseImporting(true);
-      const productsBatchStartIndex = currentProductIndex;
-      const productsBatchEndIndex = Math.min(currentProductIndex + BATCH_SIZE, products.length);
-      const productsBatch = products.slice(productsBatchStartIndex, productsBatchEndIndex);
+    const importBatch = async () => {
+      if (!searchProvider || products.length <= currentProductIndex) {
+        setIsTypesenseImporting(false);
+        return;
+      }
+
+      const productsBatch = products.slice(currentProductIndex, currentProductIndex + BATCH_SIZE);
 
       await searchProvider.updatedBatchProducts(productsBatch);
+      setCurrentProductIndex((prevIndex) => prevIndex + BATCH_SIZE);
       setIsTypesenseImporting(false);
-      setCurrentProductIndex(productsBatchEndIndex);
-    })();
-  }, [searchProvider, currentProductIndex, isTypesenseImporting, products]);
+
+      if (currentProductIndex + BATCH_SIZE >= products.length) {
+        setAllImported(true);
+      }
+    };
+
+    if (started && !isTypesenseImporting) {
+      setIsTypesenseImporting(true);
+      importBatch();
+    }
+  }, [searchProvider, currentProductIndex, isTypesenseImporting, products, started]);
+
+  const productCount = products.length;
+  const variantCount = useMemo(
+    () => countVariants(products, currentProductIndex),
+    [products, currentProductIndex],
+  );
+  const totalVariantCount = useMemo(
+    () => countVariants(products, productCount),
+    [products, productCount],
+  );
 
   return (
     <Layout.AppSectionCard
@@ -73,9 +91,9 @@ export const ImportProductsToTypesense = () => {
         searchProvider &&
         typesenseConfigured && (
           <Box display={"flex"} justifyContent={"flex-end"} gap={4}>
-            {started && !isTypesenseImporting && (
+            {started && allImported && !isTypesenseImporting && (
               <Button disabled={true} onClick={importProducts}>
-                Importing complete
+                Importing complete, refresh the page
               </Button>
             )}
             {!started && !isTypesenseImporting && (
@@ -117,8 +135,7 @@ export const ImportProductsToTypesense = () => {
             alignItems: "center",
           }}
         >
-          {countVariants(products, currentProductIndex)} /{" "}
-          {countVariants(products, products.length)}
+          {variantCount} / {totalVariantCount}
           <progress
             value={currentProductIndex}
             max={products.length}

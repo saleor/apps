@@ -23,8 +23,8 @@ export const TypesenseConfigurationForm = () => {
       host: "",
       protocol: "",
       apiKey: "",
-      port: undefined,
-      connectionTimeoutSeconds: undefined,
+      port: 0,
+      connectionTimeoutSeconds: 0,
     },
     resolver: zodResolver(AppConfigurationSchema),
   });
@@ -34,14 +34,11 @@ export const TypesenseConfigurationForm = () => {
   const { isLoading: isQueryLoading, refetch: refetchConfig } =
     trpcClient.configuration.getConfig.useQuery(undefined, {
       onSuccess(data) {
-        setValue("host", data?.appConfig?.host || "");
-        setValue("protocol", data?.appConfig?.protocol || "");
-        setValue("apiKey", data?.appConfig?.apiKey || "");
-        setValue("port", data?.appConfig?.port || undefined);
-        setValue(
-          "connectionTimeoutSeconds",
-          data?.appConfig?.connectionTimeoutSeconds || undefined,
-        );
+        setValue("host", data?.appConfig?.host ?? "");
+        setValue("protocol", data?.appConfig?.protocol ?? "");
+        setValue("apiKey", data?.appConfig?.apiKey ?? "");
+        setValue("port", data?.appConfig?.port ?? 0);
+        setValue("connectionTimeoutSeconds", data?.appConfig?.connectionTimeoutSeconds ?? 0);
       },
     });
 
@@ -95,7 +92,7 @@ export const TypesenseConfigurationForm = () => {
         </Box>
       }
     >
-      <Box>
+      <Box display="flex" flexDirection="column" gap={2}>
         <Input
           control={control}
           name="host"
@@ -104,16 +101,14 @@ export const TypesenseConfigurationForm = () => {
           label="Typesense host"
           helperText="For example: localhost"
         />
-        <Box marginBottom={5}>
-          <Input
-            control={control}
-            name="protocol"
-            disabled={isFormDisabled}
-            required
-            label="Protocol"
-            helperText="For example: http or https"
-          />
-        </Box>
+        <Input
+          control={control}
+          name="protocol"
+          disabled={isFormDisabled}
+          required
+          label="Protocol"
+          helperText="For example: http or https"
+        />
         <Input
           control={control}
           name="port"
