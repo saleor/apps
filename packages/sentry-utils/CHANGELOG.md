@@ -1,5 +1,11 @@
 # @saleor/sentry-utils
 
+## 0.2.1
+
+### Patch Changes
+
+- 2f59041c: Reverted shared Sentry configuration (init() part). It was not working properly - source maps were not properly assigned. Now configuration is not shared, but repeated in every app separately
+
 ## 0.2.0
 
 ### Minor Changes

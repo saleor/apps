@@ -1,5 +1,13 @@
 # saleor-app-cms-v2
 
+## 2.8.2
+
+### Patch Changes
+
+- 2f59041c: Reverted shared Sentry configuration (init() part). It was not working properly - source maps were not properly assigned. Now configuration is not shared, but repeated in every app separately
+- Updated dependencies [2f59041c]
+  - @saleor/sentry-utils@0.2.1
+
 ## 2.8.1
 
 ### Patch Changes
