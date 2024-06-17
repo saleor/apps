@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
+    "@sentry/nextjs": "7.93.0",
     "eslint-config-saleor": "workspace:*",
     "vite": "4.4.8",
     "vitest": "0.34.1"
@@ -30,7 +30,7 @@
   "main": "index.ts",
   "peerDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@sentry/nextjs": ">=8"
+    "@sentry/nextjs": "7.93.0"
   },
   "type": "module"
 }
