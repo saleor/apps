@@ -1,5 +1,4 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
-import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -12,10 +11,6 @@ const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
-
-if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
-  otelSdk.start();
-}
 
 const logger = createLogger("RunWebhooksMigration");
 
@@ -93,8 +88,4 @@ loggerContext.wrap(async () => {
   }
 
   logger.info(`Webhook migration complete`);
-});
-
-process.on("beforeExit", () => {
-  otelSdk.shutdown().finally(() => process.exit(0));
 });
