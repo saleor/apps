@@ -36,6 +36,11 @@ export default wrapWithLoggerContext(
 
           subscriptionErrorChecker.checkPayload(payload);
 
+          logger.info(
+            "Tax base payload for order calculate taxes",
+            JSON.stringify(payload.taxBase, null, 2),
+          );
+
           loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
           loggerContext.set("orderId", ctx.payload.taxBase.sourceObject.id);
 
