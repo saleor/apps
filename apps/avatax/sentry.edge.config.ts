@@ -6,9 +6,8 @@ Sentry.init({
   environment: process.env.ENV,
   includeLocalVariables: true,
   integrations: [
-    Sentry.localVariablesIntegration({
+    new Sentry.Integrations.LocalVariables({
       captureAllExceptions: true,
     }),
-    Sentry.extraErrorDataIntegration(),
   ],
 });
