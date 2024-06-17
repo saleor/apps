@@ -53,7 +53,7 @@
     "jsdom": "^20.0.3",
     "modern-errors": "^6.0.0",
     "modern-errors-serialize": "^5.0.0",
-    "next": "14.2.4",
+    "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",

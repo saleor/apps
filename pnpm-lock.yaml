@@ -52,13 +52,13 @@ importers:
         version: 1.18.1
       '@saleor/app-sdk':
         specifier: 0.50.1
-        version: 0.50.1(graphql@16.7.1)(next@14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.50.1(graphql@16.7.1)(next@14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/cli':
         specifier: 2.32.1
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@sentry/node':
         specifier: 7.93.0
         version: 7.93.0
@@ -85,8 +85,8 @@ importers:
         specifier: ^13.2.3
         version: 13.2.3(enquirer@2.4.1)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       prettier:
         specifier: 3.0.3
         version: 3.0.3
@@ -107,7 +107,7 @@ importers:
         version: 13.5.4
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -176,7 +176,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -185,7 +185,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -223,8 +223,8 @@ importers:
         specifier: 6.1.0
         version: 6.1.0
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -336,7 +336,7 @@ importers:
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -402,7 +402,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -411,7 +411,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -440,8 +440,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -538,7 +538,7 @@ importers:
         version: 3.0.80
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -598,7 +598,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -607,7 +607,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -636,8 +636,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -722,7 +722,7 @@ importers:
     dependencies:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -776,7 +776,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -802,8 +802,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nuvo-react:
         specifier: ^1.22.1
         version: 1.22.1(@babel/core@7.24.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -891,7 +891,7 @@ importers:
         version: 4.4.6(monaco-editor@0.47.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -963,7 +963,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -972,7 +972,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1007,8 +1007,8 @@ importers:
         specifier: ^4.13.0
         version: 4.13.0
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -1105,7 +1105,7 @@ importers:
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -1168,7 +1168,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1177,7 +1177,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1206,8 +1206,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1355,7 +1355,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -1369,8 +1369,8 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
@@ -1461,7 +1461,7 @@ importers:
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -1530,7 +1530,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1539,7 +1539,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1571,8 +1571,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1657,7 +1657,7 @@ importers:
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -1726,7 +1726,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1735,7 +1735,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1767,8 +1767,8 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1850,7 +1850,7 @@ importers:
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -1919,7 +1919,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: ^4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1928,7 +1928,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1954,8 +1954,8 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2037,7 +2037,7 @@ importers:
     dependencies:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -2097,7 +2097,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: ^2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -2117,8 +2117,8 @@ importers:
         specifier: ^4.11.2
         version: 4.14.4
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2209,7 +2209,7 @@ importers:
         version: 4.4.6(monaco-editor@0.47.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -2275,7 +2275,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@sentry/node':
         specifier: 7.93.0
         version: 7.93.0
@@ -2287,7 +2287,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2331,8 +2331,8 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -2432,7 +2432,7 @@ importers:
         version: 13.5.4
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -2498,7 +2498,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2507,7 +2507,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2539,8 +2539,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(modern-errors@6.0.0)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2622,6 +2622,10 @@ importers:
         version: 5.1.6
 
   packages/e2e:
+    dependencies:
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@playwright/test':
         specifier: ^1.35.1
@@ -2660,8 +2664,8 @@ importers:
         specifier: 7.33.2
         version: 7.33.2(eslint@8.46.0)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2671,6 +2675,9 @@ importers:
       eslint:
         specifier: 8.46.0
         version: 8.46.0
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       tslog:
         specifier: 4.9.2
         version: 4.9.2
@@ -2683,7 +2690,7 @@ importers:
         version: link:../../node_modules/@saleor/app-sdk
       '@sentry/nextjs':
         specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.93.0(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -2698,7 +2705,7 @@ importers:
     dependencies:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        version: 1.9.0
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -2741,6 +2748,9 @@ importers:
       eslint:
         specifier: 8.46.0
         version: 8.46.0
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2760,6 +2770,9 @@ importers:
       eslint:
         specifier: 8.46.0
         version: 8.46.0
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.22.5)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.21.8
@@ -2826,13 +2839,11 @@ importers:
         version: 5.82.1(esbuild@0.17.19)
 
   packages/sentry-utils:
+    dependencies:
+      next:
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@sentry/cli':
-        specifier: 2.32.1
-        version: 2.32.1
-      '@sentry/nextjs':
-        specifier: 7.93.0
-        version: 7.93.0(next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -2871,8 +2882,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2908,7 +2919,7 @@ importers:
         version: 10.34.0(@trpc/server@10.34.0)
       '@trpc/next':
         specifier: 10.34.0
-        version: 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.34.0
         version: 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2932,8 +2943,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.1.6
         version: 5.1.6
@@ -2963,8 +2974,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2996,8 +3007,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(modern-errors@7.0.1)
       next:
-        specifier: 14.2.4
-        version: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 14.1.0
+        version: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1
@@ -5918,62 +5929,62 @@ packages:
   '@next/env@13.5.4':
     resolution: {integrity: sha512-LGegJkMvRNw90WWphGJ3RMHMVplYcOfRWf2Be3td3sUa+1AaxmsYyANsA+znrGCBjXJNi4XAQlSoEfUxs/4kIQ==}
 
-  '@next/env@14.2.4':
-    resolution: {integrity: sha512-3EtkY5VDkuV2+lNmKlbkibIJxcO4oIHEhBWne6PaAp+76J9KoSsGvNikp6ivzAT8dhhBMYrm6op2pS1ApG0Hzg==}
+  '@next/env@14.1.0':
+    resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
 
   '@next/eslint-plugin-next@14.2.3':
     resolution: {integrity: sha512-L3oDricIIjgj1AVnRdRor21gI7mShlSwU/1ZGHmqM3LzHhXXhdkrfeNY5zif25Bi5Dd7fiJHsbhoZCHfXYvlAw==}
 
-  '@next/swc-darwin-arm64@14.2.4':
-    resolution: {integrity: sha512-AH3mO4JlFUqsYcwFUHb1wAKlebHU/Hv2u2kb1pAuRanDZ7pD/A/KPD98RHZmwsJpdHQwfEc/06mgpSzwrJYnNg==}
+  '@next/swc-darwin-arm64@14.1.0':
+    resolution: {integrity: sha512-nUDn7TOGcIeyQni6lZHfzNoo9S0euXnu0jhsbMOmMJUBfgsnESdjN97kM7cBqQxZa8L/bM9om/S5/1dzCrW6wQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@next/swc-darwin-x64@14.2.4':
-    resolution: {integrity: sha512-QVadW73sWIO6E2VroyUjuAxhWLZWEpiFqHdZdoQ/AMpN9YWGuHV8t2rChr0ahy+irKX5mlDU7OY68k3n4tAZTg==}
+  '@next/swc-darwin-x64@14.1.0':
+    resolution: {integrity: sha512-1jgudN5haWxiAl3O1ljUS2GfupPmcftu2RYJqZiMJmmbBT5M1XDffjUtRUzP4W3cBHsrvkfOFdQ71hAreNQP6g==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@next/swc-linux-arm64-gnu@14.2.4':
-    resolution: {integrity: sha512-KT6GUrb3oyCfcfJ+WliXuJnD6pCpZiosx2X3k66HLR+DMoilRb76LpWPGb4tZprawTtcnyrv75ElD6VncVamUQ==}
+  '@next/swc-linux-arm64-gnu@14.1.0':
+    resolution: {integrity: sha512-RHo7Tcj+jllXUbK7xk2NyIDod3YcCPDZxj1WLIYxd709BQ7WuRYl3OWUNG+WUfqeQBds6kvZYlc42NJJTNi4tQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-arm64-musl@14.2.4':
-    resolution: {integrity: sha512-Alv8/XGSs/ytwQcbCHwze1HmiIkIVhDHYLjczSVrf0Wi2MvKn/blt7+S6FJitj3yTlMwMxII1gIJ9WepI4aZ/A==}
+  '@next/swc-linux-arm64-musl@14.1.0':
+    resolution: {integrity: sha512-v6kP8sHYxjO8RwHmWMJSq7VZP2nYCkRVQ0qolh2l6xroe9QjbgV8siTbduED4u0hlk0+tjS6/Tuy4n5XCp+l6g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
-  '@next/swc-linux-x64-gnu@14.2.4':
-    resolution: {integrity: sha512-ze0ShQDBPCqxLImzw4sCdfnB3lRmN3qGMB2GWDRlq5Wqy4G36pxtNOo2usu/Nm9+V2Rh/QQnrRc2l94kYFXO6Q==}
+  '@next/swc-linux-x64-gnu@14.1.0':
+    resolution: {integrity: sha512-zJ2pnoFYB1F4vmEVlb/eSe+VH679zT1VdXlZKX+pE66grOgjmKJHKacf82g/sWE4MQ4Rk2FMBCRnX+l6/TVYzQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-linux-x64-musl@14.2.4':
-    resolution: {integrity: sha512-8dwC0UJoc6fC7PX70csdaznVMNr16hQrTDAMPvLPloazlcaWfdPogq+UpZX6Drqb1OBlwowz8iG7WR0Tzk/diQ==}
+  '@next/swc-linux-x64-musl@14.1.0':
+    resolution: {integrity: sha512-rbaIYFt2X9YZBSbH/CwGAjbBG2/MrACCVu2X0+kSykHzHnYH5FjHxwXLkcoJ10cX0aWCEynpu+rP76x0914atg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
 
-  '@next/swc-win32-arm64-msvc@14.2.4':
-    resolution: {integrity: sha512-jxyg67NbEWkDyvM+O8UDbPAyYRZqGLQDTPwvrBBeOSyVWW/jFQkQKQ70JDqDSYg1ZDdl+E3nkbFbq8xM8E9x8A==}
+  '@next/swc-win32-arm64-msvc@14.1.0':
+    resolution: {integrity: sha512-o1N5TsYc8f/HpGt39OUQpQ9AKIGApd3QLueu7hXk//2xq5Z9OxmV6sQfNp8C7qYmiOlHYODOGqNNa0e9jvchGQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@next/swc-win32-ia32-msvc@14.2.4':
-    resolution: {integrity: sha512-twrmN753hjXRdcrZmZttb/m5xaCBFa48Dt3FbeEItpJArxriYDunWxJn+QFXdJ3hPkm4u7CKxncVvnmgQMY1ag==}
+  '@next/swc-win32-ia32-msvc@14.1.0':
+    resolution: {integrity: sha512-XXIuB1DBRCFwNO6EEzCTMHT5pauwaSj4SWs7CYnME57eaReAKBXCnkUE80p/pAZcewm7hs+vGvNqDPacEXHVkw==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  '@next/swc-win32-x64-msvc@14.2.4':
-    resolution: {integrity: sha512-tkLrjBzqFTP8DVrAAQmZelEahfR9OxWpFR++vAI9FBhCiIxtwHwBHC23SBHCTURBtwB4kc/x44imVOnkKGNVGg==}
+  '@next/swc-win32-x64-msvc@14.1.0':
+    resolution: {integrity: sha512-9WEbVRRAqJ3YFVqEZIxUqkiO8l1nool1LmNxygr5HWF8AcSYsEpneUDhmjUVJEzO2A04+oPtZdombzzPPkTtgg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -7223,14 +7234,11 @@ packages:
   '@storybook/types@7.0.21':
     resolution: {integrity: sha512-gZ8XEsg0upyiisbe2Qv+G+XN2+nZCxj6vJKvgWxuBPCjqN3Uw34cgDrIJuSa8YjE/yl/nsaV5s0xYdFXAl7JVQ==}
 
-  '@swc/counter@0.1.3':
-    resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
-
   '@swc/helpers@0.3.17':
     resolution: {integrity: sha512-tb7Iu+oZ+zWJZ3HJqwx8oNwSDIU440hmVMDPhpACWQWnrZHK99Bxs70gT1L2dnr5Hg50ZRWEFkQCAnOVVV0z1Q==}
 
-  '@swc/helpers@0.5.5':
-    resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
+  '@swc/helpers@0.5.2':
+    resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
 
   '@tanstack/query-core@4.29.19':
     resolution: {integrity: sha512-uPe1DukeIpIHpQi6UzIgBcXsjjsDaLnc7hF+zLBKnaUlh7jFE/A+P8t4cU4VzKPMFB/C970n/9SxtpO5hmIRgw==}
@@ -11583,20 +11591,17 @@ packages:
   neverthrow@6.2.1:
     resolution: {integrity: sha512-amlnNvPXmiUOmNsDfUngNWPdZYOmCUGExQy/kuPCmLbhrXVXIYhY4bnE4D3dWl7OMhSEr9NndUrl4aKGFhFIQg==}
 
-  next@14.2.4:
-    resolution: {integrity: sha512-R8/V7vugY+822rsQGQCjoLhMuC9oFj9SOi4Cl4b2wjDrseD0LRZ10W7R6Czo4w9ZznVSshKjuIomsRjvm9EKJQ==}
+  next@14.1.0:
+    resolution: {integrity: sha512-wlzrsbfeSU48YQBjZhDzOwhWhGsy+uQycR8bHAOt1LY1bn3zZEcDyHQOEoN3aWzQ8LHCAJ1nqrWCc9XF2+O45Q==}
     engines: {node: '>=18.17.0'}
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
-      '@playwright/test': ^1.41.2
       react: ^18.2.0
       react-dom: ^18.2.0
       sass: ^1.3.0
     peerDependenciesMeta:
       '@opentelemetry/api':
-        optional: true
-      '@playwright/test':
         optional: true
       sass:
         optional: true
@@ -18812,37 +18817,37 @@ snapshots:
 
   '@next/env@13.5.4': {}
 
-  '@next/env@14.2.4': {}
+  '@next/env@14.1.0': {}
 
   '@next/eslint-plugin-next@14.2.3':
     dependencies:
       glob: 10.3.10
 
-  '@next/swc-darwin-arm64@14.2.4':
+  '@next/swc-darwin-arm64@14.1.0':
     optional: true
 
-  '@next/swc-darwin-x64@14.2.4':
+  '@next/swc-darwin-x64@14.1.0':
     optional: true
 
-  '@next/swc-linux-arm64-gnu@14.2.4':
+  '@next/swc-linux-arm64-gnu@14.1.0':
     optional: true
 
-  '@next/swc-linux-arm64-musl@14.2.4':
+  '@next/swc-linux-arm64-musl@14.1.0':
     optional: true
 
-  '@next/swc-linux-x64-gnu@14.2.4':
+  '@next/swc-linux-x64-gnu@14.1.0':
     optional: true
 
-  '@next/swc-linux-x64-musl@14.2.4':
+  '@next/swc-linux-x64-musl@14.1.0':
     optional: true
 
-  '@next/swc-win32-arm64-msvc@14.2.4':
+  '@next/swc-win32-arm64-msvc@14.1.0':
     optional: true
 
-  '@next/swc-win32-ia32-msvc@14.2.4':
+  '@next/swc-win32-ia32-msvc@14.1.0':
     optional: true
 
-  '@next/swc-win32-x64-msvc@14.2.4':
+  '@next/swc-win32-x64-msvc@14.1.0':
     optional: true
 
   '@nodelib/fs.scandir@2.1.5':
@@ -18869,8 +18874,7 @@ snapshots:
 
   '@opentelemetry/api@1.8.0': {}
 
-  '@opentelemetry/api@1.9.0':
-    optional: true
+  '@opentelemetry/api@1.9.0': {}
 
   '@opentelemetry/context-async-hooks@1.18.1(@opentelemetry/api@1.7.0)':
     dependencies:
@@ -19724,14 +19728,14 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.2': {}
 
-  '@saleor/app-sdk@0.50.1(graphql@16.7.1)(next@14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@0.50.1(graphql@16.7.1)(next@14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.18.1
       debug: 4.3.4
       graphql: 16.7.1
       jose: 4.14.4
-      next: 14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       raw-body: 2.5.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -19887,7 +19891,7 @@ snapshots:
       '@sentry/utils': 7.93.0
       localforage: 1.10.0
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -19899,7 +19903,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -19910,7 +19914,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -19922,7 +19926,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -19933,7 +19937,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -19945,7 +19949,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -19956,7 +19960,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -19968,7 +19972,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -19979,7 +19983,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -19991,7 +19995,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -20002,7 +20006,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@sentry/nextjs@7.93.0(next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+  '@sentry/nextjs@7.93.0(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
       '@sentry/core': 7.93.0
@@ -20014,7 +20018,7 @@ snapshots:
       '@sentry/vercel-edge': 7.93.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -20787,15 +20791,12 @@ snapshots:
       '@types/express': 4.17.17
       file-system-cache: 2.3.0
 
-  '@swc/counter@0.1.3': {}
-
   '@swc/helpers@0.3.17':
     dependencies:
       tslib: 2.6.2
 
-  '@swc/helpers@0.5.5':
+  '@swc/helpers@0.5.2':
     dependencies:
-      '@swc/counter': 0.1.3
       tslib: 2.6.2
 
   '@tanstack/query-core@4.29.19': {}
@@ -20862,46 +20863,46 @@ snapshots:
     dependencies:
       '@trpc/server': 10.43.1
 
-  '@trpc/next@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/react-query': 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.34.0
-      next: 14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -26385,10 +26386,36 @@ snapshots:
 
   neverthrow@6.2.1: {}
 
-  next@14.2.4(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@babel/core@7.22.5)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.22.5)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+      '@opentelemetry/api': 1.9.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
+  next@14.1.0(@babel/core@7.23.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001588
       graceful-fs: 4.2.11
@@ -26397,24 +26424,24 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+      '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.4(@babel/core@7.23.9)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@babel/core@7.23.9)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001588
       graceful-fs: 4.2.11
@@ -26423,76 +26450,24 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
-  next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001588
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
-      '@opentelemetry/api': 1.8.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
-  next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001588
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
       '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.4(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001588
       graceful-fs: 4.2.11
@@ -26501,67 +26476,93 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+      '@opentelemetry/api': 1.8.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.4(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001588
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
+      '@opentelemetry/api': 1.9.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
+  next@14.1.0(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
       '@opentelemetry/api': 1.7.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@next/env': 14.2.4
-      '@swc/helpers': 0.5.5
+      '@next/env': 14.1.0
+      '@swc/helpers': 0.5.2
       busboy: 1.6.0
       caniuse-lite: 1.0.30001588
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.4
-      '@next/swc-darwin-x64': 14.2.4
-      '@next/swc-linux-arm64-gnu': 14.2.4
-      '@next/swc-linux-arm64-musl': 14.2.4
-      '@next/swc-linux-x64-gnu': 14.2.4
-      '@next/swc-linux-x64-musl': 14.2.4
-      '@next/swc-win32-arm64-msvc': 14.2.4
-      '@next/swc-win32-ia32-msvc': 14.2.4
-      '@next/swc-win32-x64-msvc': 14.2.4
+      '@next/swc-darwin-arm64': 14.1.0
+      '@next/swc-darwin-x64': 14.1.0
+      '@next/swc-linux-arm64-gnu': 14.1.0
+      '@next/swc-linux-arm64-musl': 14.1.0
+      '@next/swc-linux-x64-gnu': 14.1.0
+      '@next/swc-linux-x64-musl': 14.1.0
+      '@next/swc-win32-arm64-msvc': 14.1.0
+      '@next/swc-win32-ia32-msvc': 14.1.0
+      '@next/swc-win32-x64-msvc': 14.1.0
       '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -27132,7 +27133,7 @@ snapshots:
 
   postcss@8.4.24:
     dependencies:
-      nanoid: 3.3.6
+      nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.0.2
 
@@ -28431,6 +28432,13 @@ snapshots:
       js-tokens: 9.0.0
 
   strnum@1.0.5: {}
+
+  styled-jsx@5.1.1(@babel/core@7.22.5)(react@18.2.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+    optionalDependencies:
+      '@babel/core': 7.22.5
 
   styled-jsx@5.1.1(@babel/core@7.23.3)(react@18.2.0):
     dependencies:
