@@ -33,6 +33,12 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
       expect(totalDiscount).toBe(0);
     });
 
+    it("should return 0 if discounts are undefined", () => {
+      const totalDiscount = strategy.getDiscountAmount(undefined);
+
+      expect(totalDiscount).toBe(0);
+    });
+
     it("should return 0 if there are discounts with amount 0", () => {
       const discountsPayload: TaxBaseFragment["discounts"] = [
         {
