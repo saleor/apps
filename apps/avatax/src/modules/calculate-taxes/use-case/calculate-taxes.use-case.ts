@@ -169,7 +169,7 @@ export class CalculateTaxesUseCase {
           errors: [err],
         }),
     ).map((results) => {
-      this.logger.info("Taxes calculated", { calculatedTaxes: results });
+      this.logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(results, null, 2) });
 
       return results;
     });

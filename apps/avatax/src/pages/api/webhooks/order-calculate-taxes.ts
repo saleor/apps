@@ -48,7 +48,7 @@ export default wrapWithLoggerContext(
 
           if (payloadVerificationResult.isErr()) {
             logger.warn("Failed to calculate taxes, due to incomplete payload", {
-              error: payloadVerificationResult.error,
+              error: JSON.stringify(payloadVerificationResult.error, null, 2),
             });
 
             return res.status(400).send(payloadVerificationResult.error.message);
@@ -109,7 +109,9 @@ export default wrapWithLoggerContext(
               ctx.authData,
             );
 
-            logger.info("Taxes calculated", { calculatedTaxes });
+            logger.info("Taxes calculated", {
+              calculatedTaxes: JSON.stringify(calculatedTaxes, null, 2),
+            });
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
