@@ -72,6 +72,8 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 
+  return res.status(200).send("ok");
+
   return useCase
     .sendEventMessages({
       channelSlug: channel,
