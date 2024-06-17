@@ -31,6 +31,7 @@ export const createGraphQLClient = ({ saleorApiUrl, token, opts }: CreateGraphQL
     url: saleorApiUrl,
     exchanges: [
       cacheExchange,
+      // @ts-ignore
       authExchange(async (utils) => {
         return {
           addAuthToOperation(operation) {
