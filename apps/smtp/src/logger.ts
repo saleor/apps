@@ -3,7 +3,8 @@ import packageJson from "../package.json";
 
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
-if (process.env.NODE_ENV !== "production") {
+// eslint-disable-next-line turbo/no-undeclared-env-vars
+if (process.env.NODE_ENV !== "production" || true) {
   attachLoggerConsoleTransport(logger);
 }
 
