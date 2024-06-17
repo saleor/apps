@@ -15,7 +15,6 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
     "@saleor/webhook-utils",
-    "@saleor/sentry-utils",
   ],
   experimental: {},
   /*
