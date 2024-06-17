@@ -8,12 +8,7 @@ const isSentryPropertiesInEnvironment =
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: [
-    "@saleor/apps-shared",
-    "@saleor/apps-ui",
-    "@saleor/react-hook-form-macaw",
-    "@saleor/sentry-utils",
-  ],
+  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-ui", "@saleor/react-hook-form-macaw"],
   experimental: {},
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

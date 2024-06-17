@@ -14,7 +14,6 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
     "@saleor/trpc",
-    "@saleor/sentry-utils",
   ],
   experimental: {},
   /*

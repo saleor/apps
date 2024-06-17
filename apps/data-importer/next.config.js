@@ -8,7 +8,7 @@ const isSentryPropertiesInEnvironment =
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@saleor/apps-shared", "nuvo-react", "@saleor/sentry-utils"],
+  transpilePackages: ["@saleor/apps-shared", "nuvo-react"],
   experimental: {},
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
