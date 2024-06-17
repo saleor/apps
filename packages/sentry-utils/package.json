@@ -7,8 +7,8 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@sentry/cli": "../../node_modules/@sentry/cli",
-    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
+    "@sentry/cli": "2.32.1",
+    "@sentry/nextjs": "7.93.0",
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.1.6"
   },
