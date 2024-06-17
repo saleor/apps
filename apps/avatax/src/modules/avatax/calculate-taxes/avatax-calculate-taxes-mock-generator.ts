@@ -23,6 +23,7 @@ const defaultTaxBase: TaxBase = {
   channel: {
     slug: "default-channel",
   },
+  discounts: [],
   address: {
     streetAddress1: "600 Montgomery St",
     streetAddress2: "",
