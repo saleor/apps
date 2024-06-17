@@ -9,6 +9,9 @@
     "e2e:ui": "playwright test --ui",
     "lint": "eslint . "
   },
+  "dependencies": {
+    "next": "14.1.0"
+  },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
@@ -20,8 +23,5 @@
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
-  "type": "module",
-  "dependencies": {
-    "next": "14.1.0"
-  }
+  "type": "module"
 }
