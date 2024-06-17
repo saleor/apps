@@ -32,6 +32,7 @@ const getBasePayload = (): CalculateTaxesPayload => {
       channel: {
         slug: channelSlug,
       },
+      discounts: [],
       currency: "PLN",
       pricesEnteredWithTax: false,
       shippingPrice: { amount: 0 },
