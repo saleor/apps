@@ -12,7 +12,7 @@ import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage
 import { RootConfig } from "../../../../../modules/app-configuration/app-config";
 import { z, ZodError } from "zod";
 import { withOtel } from "@saleor/apps-otel";
-import { SpanStatusCode, trace } from "@opentelemetry/api";
+import { SpanStatusCode } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { createLogger } from "../../../../../logger";
 import { loggerContext } from "../../../../../logger-context";
@@ -52,21 +52,26 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     validateRequestParams(req);
+    logger.info("Request params validated");
   } catch (e) {
     const error = e as ZodError;
+    const fieldErrors = error.flatten().fieldErrors;
 
-    return res.status(400).json({ error: error.flatten().fieldErrors });
+    logger.warn("Invalid request params", { error: fieldErrors });
+    return res.status(400).json({ error: fieldErrors });
   }
 
   logger.debug("Checking if app is installed in the given env");
   const authData = await apl.get(url as string);
 
   if (!authData) {
-    logger.error(`The app has not been configured with the ${url}`);
+    logger.warn(`The app has not been configured with the ${url}`);
     return res.status(400).json({ error: "The given instance has not been registered" });
   }
 
-  logger.debug("The app is registered for the given URL, checking the configuration");
+  logger.debug("The app is registered for the given URL, checking the configuration", {
+    appId: authData.appId,
+  });
 
   /**
    * use unauthorized client to eliminate possibility of spilling the non-public data
@@ -93,6 +98,15 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
     const settings = await settingsFetcher.fetch(channel);
 
+    logger.info("Settings has been fetched", {
+      storefrontUrl: settings.storefrontUrl,
+      productStorefrontUrl: settings.productStorefrontUrl,
+      bucketName: settings.s3BucketConfiguration?.bucketName,
+      attributeMapping: settings.attributeMapping,
+      titleTemplate: settings.titleTemplate,
+      imageSize: settings.imageSize,
+    });
+
     storefrontUrl = settings.storefrontUrl;
     productStorefrontUrl = settings.productStorefrontUrl;
     bucketConfiguration = settings.s3BucketConfiguration;
@@ -100,7 +114,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate = settings.titleTemplate;
     imageSize = settings.imageSize;
   } catch (error) {
-    logger.warn("The application has not been configured");
+    logger.warn("The application has not been configured", { error });
 
     return res
       .status(400)
@@ -113,6 +127,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const shopDetails = await fetchShopData({ client, channel });
 
+    logger.info("Shop details have been fetched", {
+      shopName: shopDetails.shopName,
+      shopDescription: shopDetails.shopDescription,
+    });
+
     shopName = shopDetails.shopName;
     shopDescription = shopDetails.shopDescription;
   } catch (error) {
@@ -122,7 +141,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (bucketConfiguration) {
-    logger.debug("Bucket configuration found, checking if the feed has been generated recently");
+    logger.info("Bucket configuration found, checking if the feed has been generated recently");
 
     const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
     const fileName = getFileName({
@@ -146,23 +165,27 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
     if (feedLastModificationDate) {
-      logger.debug("Feed has been generated previously, checking the last modification date");
+      logger.info("Feed has been generated previously, checking the last modification date", {
+        feedLastModificationDate,
+      });
 
       const secondsSinceLastModification = (Date.now() - feedLastModificationDate.getTime()) / 1000;
 
       if (secondsSinceLastModification < FEED_CACHE_MAX_AGE) {
-        logger.debug("Feed has been generated recently, returning the last version");
-
         const downloadUrl = getDownloadUrl({
           s3BucketConfiguration: bucketConfiguration,
           saleorApiUrl: authData.saleorApiUrl,
           channel,
         });
 
+        logger.info("Feed has been generated recently, returning the last version", {
+          downloadUrl,
+        });
+
         return res.redirect(downloadUrl);
       }
 
-      logger.debug("Feed is outdated, generating a new one");
+      logger.info("Feed is outdated, generating a new one");
     }
   }
 
@@ -172,8 +195,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     productVariants = await fetchProductData({ client, channel, imageSize });
+
+    logger.info("Product data fetched successfully", {
+      productVariantsLength: productVariants.length,
+    });
   } catch (error) {
-    logger.error(error);
+    logger.error("Error during the product data fetch", { error });
     return res.status(400).end();
   }
 
@@ -189,10 +216,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate,
   });
 
-  logger.debug("Feed generated. Returning formatted XML");
-
   if (!bucketConfiguration) {
-    logger.debug("Bucket configuration not found, returning feed directly");
+    logger.info("Bucket configuration not found, returning feed directly");
 
     res.setHeader("Content-Type", "text/xml");
     res.setHeader("Cache-Control", `s-maxage=${FEED_CACHE_MAX_AGE}`);
@@ -201,7 +226,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  logger.debug("Bucket configuration found, uploading the feed to S3");
+  logger.info("Bucket configuration found, uploading the feed to S3");
   const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,
@@ -226,13 +251,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         channel,
       });
 
-      logger.debug("Feed uploaded to S3, redirecting the download URL", {
+      logger.info("Feed uploaded to S3, redirecting the download URL", {
         downloadUrl,
       });
 
       return res.redirect(downloadUrl);
     } catch (error) {
-      logger.error("Could not upload the feed to S3");
+      logger.error("Could not upload the feed to S3", { error });
       span.setStatus({ code: SpanStatusCode.ERROR });
       return res.status(500).json({ error: "Could not upload the feed to S3" });
     } finally {

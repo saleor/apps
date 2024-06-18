@@ -22,33 +22,39 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantUpdated called");
+    this.logger.debug("onProductVariantUpdated called");
 
     await this.client.updateProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant updated");
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantCreated called");
+    this.logger.debug("onProductVariantCreated called");
 
     await this.client.uploadProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantDeleted called");
+    this.logger.debug("onProductVariantDeleted called");
 
     await this.client.deleteProductVariant({
       configuration: this.providerConfig,
       variant: productVariant,
     });
+
+    this.logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.trace("onProductUpdated called");
+    this.logger.debug("onProductUpdated called");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -66,5 +72,7 @@ export class DatocmsWebhooksProcessor implements ProductWebhooksProcessor {
         });
       }),
     );
+
+    this.logger.info("Product updated");
   }
 }

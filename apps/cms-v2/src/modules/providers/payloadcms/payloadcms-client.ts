@@ -5,7 +5,6 @@ import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloa
 import { FieldsMapper } from "../fields-mapper";
 
 import qs from "qs";
-import { z } from "zod";
 
 type Context = {
   configuration: PayloadCmsProviderConfig.FullShape;
@@ -52,6 +51,10 @@ export class PayloadCMSClient {
   }
 
   async deleteProductVariant(context: Context) {
+    this.logger.debug("deleteProductVariant called", {
+      configId: context.configuration.id,
+    });
+
     const queryString = qs.stringify(
       {
         where: {
@@ -64,6 +67,8 @@ export class PayloadCMSClient {
         addQueryPrefix: true,
       },
     );
+
+    this.logger.debug("Deleting product variant", { queryString });
 
     try {
       const response = await fetch(
@@ -106,7 +111,9 @@ export class PayloadCMSClient {
   }
 
   uploadProductVariant(context: Context) {
-    this.logger.debug("Trying to upload product variant");
+    this.logger.debug("uploadProductVariant called", {
+      configId: context.configuration.id,
+    });
 
     return fetch(this.constructCollectionUrl(context.configuration), {
       method: "POST",
@@ -126,7 +133,9 @@ export class PayloadCMSClient {
   }
 
   async updateProductVariant({ configuration, variant }: Context) {
-    this.logger.debug("Trying to update product variant");
+    this.logger.debug("Calling update product variant", {
+      configId: configuration.id,
+    });
 
     const queryString = qs.stringify(
       {
@@ -140,6 +149,8 @@ export class PayloadCMSClient {
         addQueryPrefix: true,
       },
     );
+
+    this.logger.debug("Updating product variant", { queryString });
 
     try {
       const response = await fetch(this.constructCollectionUrl(configuration) + queryString, {
@@ -159,12 +170,12 @@ export class PayloadCMSClient {
   }
 
   async upsertProductVariant(context: Context) {
-    this.logger.debug("Trying to upsert product variant");
+    this.logger.debug("updateProductVariant called");
 
     try {
       await this.uploadProductVariant(context);
     } catch (e) {
-      this.logger.debug("Failed to upload, will try to update");
+      this.logger.info("Failed to upload, will try to update", { error: e });
 
       await this.updateProductVariant(context);
     }

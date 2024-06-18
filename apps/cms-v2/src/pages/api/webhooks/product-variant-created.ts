@@ -13,6 +13,9 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 
+import { loggerContext } from "../../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@/logger";
 
@@ -66,23 +69,34 @@ const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
+    logger.warn("Product variant not found in payload");
     Sentry.captureException("ProductVariant not found in payload");
 
     return res.status(500).end();
   }
 
-  const configContext = await createWebhookConfigContext({ authData });
+  logger.info("Webhook called", {
+    variantId: payload.productVariant.id,
+    variantName: payload.productVariant.name,
+    channelsIds: payload.productVariant.channelListings?.map((c) => c.channel.id) || [],
+    productId: payload.productVariant.product.id,
+  });
 
-  logger.info("Webhook called");
+  const configContext = await createWebhookConfigContext({ authData });
 
   await new WebhooksProcessorsDelegator({
     context: configContext,
   }).delegateVariantCreatedOperations(payload.productVariant);
 
+  logger.info("Webhook processed successfully");
+
   return res.status(200).end();
 };
 
-export default withOtel(
-  productVariantCreatedWebhook.createHandler(handler),
-  "/api/webhooks/product-variant-created",
+export default wrapWithLoggerContext(
+  withOtel(
+    productVariantCreatedWebhook.createHandler(handler),
+    "/api/webhooks/product-variant-created",
+  ),
+  loggerContext,
 );

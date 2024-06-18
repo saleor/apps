@@ -1,6 +1,8 @@
 import { withOtel } from "@saleor/apps-otel";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
+import { loggerContext } from "../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import packageJson from "../../../package.json";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
@@ -65,4 +67,4 @@ const handler = createManifestHandler({
   },
 });
 
-export default withOtel(handler, "/api/manifest");
+export default wrapWithLoggerContext(withOtel(handler, "/api/manifest"), loggerContext);
