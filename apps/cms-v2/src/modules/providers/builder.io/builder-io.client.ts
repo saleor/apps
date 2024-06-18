@@ -94,7 +94,7 @@ export class BuilderIoClient {
 
       return this.uploadProductVariant(variant);
     } else {
-      this.logger.debug("Found entries in builder.io, will update them", { entriesToUpdate });
+      this.logger.info("Found entries in builder.io, will update them", { entriesToUpdate });
 
       return Promise.all(
         entriesToUpdate.map((id) => {

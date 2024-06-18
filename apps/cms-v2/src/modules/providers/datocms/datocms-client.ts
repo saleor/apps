@@ -190,7 +190,7 @@ export class DatoCMSClient {
         );
 
         if (isUniqueIdError) {
-          this.logger.warn("Found unique id error, will update the product", {
+          this.logger.info("Found unique id error, will update the product", {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });

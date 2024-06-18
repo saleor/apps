@@ -69,7 +69,7 @@ export const providersListRouter = router({
 
       await appConfigService.set(config);
 
-      logger.debug("Provider added");
+      logger.info("Provider added");
     }),
   updateOne: procedure
     .input(ProvidersConfig.Schema.AnyFull)
@@ -84,7 +84,7 @@ export const providersListRouter = router({
 
       const result = await appConfigService.set(config);
 
-      logger.debug("Provider updated");
+      logger.info("Provider updated");
 
       return result;
     }),
@@ -103,7 +103,7 @@ export const providersListRouter = router({
 
       const result = await appConfigService.set(config);
 
-      logger.debug("Provider deleted");
+      logger.info("Provider deleted");
 
       return result;
     }),

@@ -74,7 +74,11 @@ export const channelProviderConnectionRouter = router({
       try {
         config.connections.addConnection(input);
 
-        logger.debug("Connection added successfully");
+        logger.info("Connection added successfully", {
+          providerId: input.providerId,
+          channelSlug: input.channelSlug,
+          providerType: input.providerType,
+        });
       } catch (e) {
         switch ((e as { cause: string }).cause) {
           case "PROVIDER_DOESNT_EXIST":
@@ -93,7 +97,7 @@ export const channelProviderConnectionRouter = router({
             });
         }
 
-        logger.warn("Error adding connection", { error: e });
+        logger.error("Error adding connection", { error: e });
       }
 
       ctx.appConfigService.set(config);
@@ -105,7 +109,9 @@ export const channelProviderConnectionRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const logger = createLogger("channelProviderConnectionRouter.removeConnection");
+      const logger = createLogger("channelProviderConnectionRouter.removeConnection", {
+        connectionId: input.id,
+      });
 
       logger.debug("Removing connection", { connectionId: input.id });
 
@@ -115,7 +121,7 @@ export const channelProviderConnectionRouter = router({
 
       config.connections.deleteConnection(input.id);
 
-      logger.debug("Connection removed successfully");
+      logger.info("Connection removed successfully");
 
       ctx.appConfigService.set(config);
     }),
