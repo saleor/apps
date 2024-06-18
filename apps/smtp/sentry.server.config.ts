@@ -5,10 +5,4 @@ Sentry.init({
   enableTracing: false,
   environment: process.env.ENV,
   includeLocalVariables: true,
-  integrations: [
-    Sentry.localVariablesIntegration({
-      captureAllExceptions: true,
-    }),
-    Sentry.extraErrorDataIntegration(),
-  ],
 });
