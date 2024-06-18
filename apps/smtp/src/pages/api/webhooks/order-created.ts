@@ -112,10 +112,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
     );
 };
 
-export default wrapWithLoggerContext(
-  withOtel(orderCreatedWebhook.createHandler(handler), "api/webhooks/order-created"),
-  loggerContext,
-);
+export default orderCreatedWebhook.createHandler(handler);
 
 export const config = {
   api: {
