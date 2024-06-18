@@ -1,18 +1,15 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { withOtel } from "@saleor/apps-otel";
+import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
-import { saleorApp } from "../../../saleor-app";
 import {
   OrderConfirmedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
-import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { captureException } from "@sentry/nextjs";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
+import { saleorApp } from "../../../saleor-app";
 
 const OrderConfirmedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -71,8 +68,6 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
 
   const channel = order.channel.slug;
 
-  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
-
   const useCase = useCaseFactory.createFromAuthData(authData);
 
   return useCase
@@ -115,9 +110,9 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
     );
 };
 
-export default wrapWithLoggerContext(
-  withOtel(orderConfirmedWebhook.createHandler(handler), "api/webhooks/order-confirmed"),
-  loggerContext,
+export default withOtel(
+  orderConfirmedWebhook.createHandler(handler),
+  "api/webhooks/order-confirmed",
 );
 
 export const config = {
