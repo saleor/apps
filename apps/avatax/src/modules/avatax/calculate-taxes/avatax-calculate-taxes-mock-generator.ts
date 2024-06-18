@@ -23,6 +23,7 @@ const defaultTaxBase: TaxBase = {
   channel: {
     slug: "default-channel",
   },
+  discounts: [],
   address: {
     streetAddress1: "600 Montgomery St",
     streetAddress2: "",
@@ -113,6 +114,11 @@ const defaultTaxBase: TaxBase = {
       email: "demo@saleor.io",
     },
   },
+};
+
+const taxBaseWithDiscounts: TaxBase = {
+  ...defaultTaxBase,
+  discounts: [{ amount: { amount: 21 } }, { amount: { amount: 0.37 } }],
 };
 
 const defaultTransactionModel: TransactionModel = {
@@ -950,6 +956,11 @@ const defaultTaxCodeMatches: AvataxTaxCodeMatches = [
 const testingScenariosMap = {
   default: {
     taxBase: defaultTaxBase,
+    response: defaultTransactionModel,
+    matches: defaultTaxCodeMatches,
+  },
+  withDiscounts: {
+    taxBase: taxBaseWithDiscounts,
     response: defaultTransactionModel,
     matches: defaultTaxCodeMatches,
   },

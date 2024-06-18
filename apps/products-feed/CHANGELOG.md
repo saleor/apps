@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 1.18.3
+
+### Patch Changes
+
+- fbdbaa28: Remove custom Next.js + Sentry error. It was causing non existing paths to be reported as 500 instead of 404. We catch Sentry errors in implicit anyway in api routes.
+- Updated dependencies [fbdbaa28]
+  - @saleor/sentry-utils@0.2.2
+
 ## 1.18.2
 
 ### Patch Changes

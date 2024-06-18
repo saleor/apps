@@ -20,7 +20,7 @@ const nextConfig = () => {
 
   return {
     reactStrictMode: true,
-    transpilePackages: ["@saleor/apps-shared", "@saleor/sentry-utils"],
+    transpilePackages: ["@saleor/apps-shared"],
     experimental: {},
     /*
      * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AvataxClient } from "../../avatax/avatax-client";
+import { AvataxSdkClientFactory } from "../../avatax/avatax-sdk-client-factory";
 import { AvataxWebhookServiceFactory } from "../../taxes/avatax-webhook-service-factory";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
@@ -32,6 +34,7 @@ const getBasePayload = (): CalculateTaxesPayload => {
       channel: {
         slug: channelSlug,
       },
+      discounts: [],
       currency: "PLN",
       pricesEnteredWithTax: false,
       shippingPrice: { amount: 0 },
@@ -74,6 +77,16 @@ const getBasePayload = (): CalculateTaxesPayload => {
         __typename: "Checkout",
         user: { __typename: "User", email: "", avataxCustomerCode: "", id: "" },
       },
+    },
+  };
+};
+
+const getPayloadWithDiscounts = (): CalculateTaxesPayload => {
+  return {
+    ...getBasePayload(),
+    taxBase: {
+      ...getBasePayload().taxBase,
+      discounts: [{ amount: { amount: 10 } }, { amount: { amount: 0.1 } }],
     },
   };
 };
@@ -121,6 +134,26 @@ const getMockedAppConfig = (): AppConfig => {
 
 describe("CalculateTaxesUseCase", () => {
   let instance: CalculateTaxesUseCase;
+  let mockedAvataxClient: any;
+
+  vi.mock("../../../modules/avatax/avatax-client", () => {
+    const AvataxClient = vi.fn();
+
+    AvataxClient.prototype.createTransaction = vi.fn();
+
+    return {
+      AvataxClient,
+    };
+  });
+
+  beforeEach(() => {
+    mockedAvataxClient = new AvataxClient(
+      new AvataxSdkClientFactory().createClient({
+        isSandbox: true,
+        credentials: { username: "mock", password: "mock" },
+      }),
+    );
+  });
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -174,5 +207,28 @@ describe("CalculateTaxesUseCase", () => {
     expect(error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
     // Expect any error to be attached. We dont yet specify errors so these tests will be added later
     expect(error.errors![0]).toBeInstanceOf(Error);
+  });
+
+  it("Uses AutomaticallyDistributedDiscountsStrategy to calculate discounts if present", async () => {
+    mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
+
+    const payload = getPayloadWithDiscounts();
+
+    await instance.calculateTaxes(payload, getMockAuthData());
+
+    expect(mockedAvataxClient.createTransaction).toHaveBeenCalledOnce();
+
+    expect(mockedAvataxClient.createTransaction).toHaveBeenCalledWith({
+      model: expect.objectContaining({
+        discount: 10.1,
+        lines: [
+          expect.objectContaining({
+            discounted: true,
+          }),
+        ],
+      }),
+    });
   });
 });

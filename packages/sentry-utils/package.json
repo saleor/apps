@@ -1,14 +1,12 @@
 {
   "name": "@saleor/sentry-utils",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@sentry/cli": "../../node_modules/@sentry/cli",
-    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.1.6"
   },
