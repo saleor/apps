@@ -14,6 +14,7 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { PriceReductionDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
 
@@ -50,11 +51,13 @@ export class AvataxOrderConfirmedPayloadTransformer {
     confirmedOrderEvent,
     avataxConfig,
     matches,
+    discountsStrategy,
   }: {
     order: DeprecatedOrderConfirmedSubscriptionFragment;
     confirmedOrderEvent: SaleorOrderConfirmedEvent;
     avataxConfig: AvataxConfig;
     matches: AvataxTaxCodeMatches;
+    discountsStrategy: PriceReductionDiscountsStrategy;
   }): Promise<CreateTransactionArgs> {
     const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
     const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
@@ -91,6 +94,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         entityUseCode,
         customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
+        discount: discountsStrategy.getDiscountAmount(confirmedOrderEvent),
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {
@@ -104,6 +108,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
           confirmedOrderEvent,
           matches,
           avataxConfig,
+          discountsStrategy,
         }),
         date,
       },
