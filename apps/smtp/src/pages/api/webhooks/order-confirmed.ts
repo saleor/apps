@@ -1,12 +1,15 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
-import { captureException } from "@sentry/nextjs";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import * as Sentry from "@sentry/nextjs";
 import { gql } from "urql";
 import {
   OrderConfirmedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
@@ -68,6 +71,8 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
 
   const channel = order.channel.slug;
 
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
+
   const useCase = useCaseFactory.createFromAuthData(authData);
 
   return useCase
@@ -102,7 +107,7 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
           }
 
           logger.error("Failed to send email(s) [unhandled error]", { error: err });
-          captureException(new Error("Unhandled useCase error", { cause: err }));
+          Sentry.captureException(new Error("Unhandled useCase error", { cause: err }));
 
           return res.status(500).json({ message: "Failed to send email [unhandled]" });
         },
@@ -110,9 +115,9 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
     );
 };
 
-export default withOtel(
-  orderConfirmedWebhook.createHandler(handler),
-  "api/webhooks/order-confirmed",
+export default wrapWithLoggerContext(
+  withOtel(orderConfirmedWebhook.createHandler(handler), "api/webhooks/order-confirmed"),
+  loggerContext,
 );
 
 export const config = {
