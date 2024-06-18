@@ -72,12 +72,12 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to check if the collection exists in Typesense
-  private async collectionExists(collectionName: string) {
+  async #collectionExists(collectionName: string) {
     return this.#typesense.collections(collectionName).exists();
   }
 
   // Method to create a collection in Typesense
-  private async createCollection(collectionName: string) {
+  async #createCollection(collectionName: string) {
     return this.#typesense.collections().create({
       name: collectionName,
       enable_nested_fields: true,
@@ -86,11 +86,7 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to update a collection in Typesense
-  private async updateCollection(
-    collectionName: string,
-    fields: Field[],
-    defaultSortingField: string,
-  ) {
+  async #updateCollection(collectionName: string, fields: Field[], defaultSortingField: string) {
     return this.#typesense.collections(collectionName).update({
       default_sorting_field: defaultSortingField,
       fields: fields,
@@ -98,13 +94,13 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to delete a document from a collection in Typesense
-  private async deleteDocument(collectionName: string, documentId: string) {
+  async #deleteDocument(collectionName: string, documentId: string) {
     logger.debug(`Deleting document with ID: ${documentId} from collection: ${collectionName}`);
     return this.#typesense.collections(collectionName).documents(documentId).delete();
   }
 
   // Method to filter out keys that are not enabled in the configuration
-  private async filterEnabledKeys(objects: any[]) {
+  async #filterEnabledKeys(objects: any[]) {
     return objects.map((object) => {
       return Object.fromEntries(
         Object.entries(object)
@@ -125,7 +121,7 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to import documents to a collection in Typesense from an array of objects
-  private async importDocuments(collectionName: string, documents: any[]) {
+  async #importDocuments(collectionName: string, documents: any[]) {
     logger.debug(`Importing ${documents.length} documents to collection: ${collectionName}`);
     const filteredDocuments = documents.map((doc) => {
       const filteredDoc: any = {};
@@ -143,24 +139,24 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to save documents grouped by index name
-  private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
+  async #saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
     logger.debug("saveGroupedByIndex called", { groupedByIndex });
     return Promise.all(
       Object.entries(groupedByIndex).map(async ([indexName, objects]) => {
         logger.debug("Processing index:", { indexName, objectsCount: objects.length });
         // First check if the collection exists, if not create it
-        const collectionExists = await this.collectionExists(indexName);
+        const collectionExists = await this.#collectionExists(indexName);
 
         // If the collection does not exist, create it
         if (!collectionExists) {
-          await this.createCollection(indexName);
+          await this.#createCollection(indexName);
         }
         logger.debug("Importing documents to index:", { indexName, objects });
         try {
           // Filter out keys that are not enabled in the configuration
-          const filteredObjectsByKeys = await this.filterEnabledKeys(objects);
+          const filteredObjectsByKeys = await this.#filterEnabledKeys(objects);
           // Import the documents to the index
-          const result = await this.importDocuments(indexName, filteredObjectsByKeys);
+          const result = await this.#importDocuments(indexName, filteredObjectsByKeys);
 
           logger.debug("Import result:", { indexName, result });
         } catch (error: any) {
@@ -172,7 +168,7 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to delete documents grouped by index name
-  private async deleteGroupedByIndex(groupedByIndex: IdsGroupedByIndex) {
+  async #deleteGroupedByIndex(groupedByIndex: IdsGroupedByIndex) {
     logger.debug("deleteGroupedByIndex called", { groupedByIndex });
 
     return Promise.all(
@@ -183,7 +179,7 @@ export class TypesenseSearchProvider implements SearchProvider {
           if (isNotNil(objectId)) {
             logger.debug("Deleting document:", { objectId });
             try {
-              const result = await this.deleteDocument(indexName, objectId);
+              const result = await this.#deleteDocument(indexName, objectId);
 
               logger.debug("Delete result:", { indexName, result });
             } catch (error: any) {
@@ -205,7 +201,7 @@ export class TypesenseSearchProvider implements SearchProvider {
       enabledKeys: this.#enabledKeys,
     });
 
-    await this.saveGroupedByIndex(groupedByIndex);
+    await this.#saveGroupedByIndex(groupedByIndex);
   }
 
   // Method to create a product in Typesense
@@ -249,7 +245,7 @@ export class TypesenseSearchProvider implements SearchProvider {
 
           for (const productId of productIds) {
             try {
-              const result = await this.deleteDocument(indexName, productId);
+              const result = await this.#deleteDocument(indexName, productId);
 
               logger.debug("Delete result:", { indexName, productId, result });
             } catch (error: any) {
@@ -296,7 +292,7 @@ export class TypesenseSearchProvider implements SearchProvider {
 
     if (groupedByIndexToSave && !!Object.keys(groupedByIndexToSave).length) {
       logger.debug("Saving grouped index:", { groupedByIndexToSave });
-      await this.saveGroupedByIndex(groupedByIndexToSave);
+      await this.#saveGroupedByIndex(groupedByIndexToSave);
     }
 
     const staleIndices = this.#indexNames.filter(
@@ -305,7 +301,7 @@ export class TypesenseSearchProvider implements SearchProvider {
 
     if (staleIndices) {
       logger.debug("Deleting stale indices:", { staleIndices });
-      await this.deleteGroupedByIndex(
+      await this.#deleteGroupedByIndex(
         Object.fromEntries(
           staleIndices.map((index) => [index, [productAndVariantToObjectID(productVariant)]]),
         ),
@@ -323,7 +319,7 @@ export class TypesenseSearchProvider implements SearchProvider {
         logger.debug("Deleting variant from index:", { indexName, compositeId });
 
         try {
-          const result = await this.deleteDocument(indexName, compositeId);
+          const result = await this.#deleteDocument(indexName, compositeId);
 
           logger.debug("Delete result:", { indexName, compositeId, result });
         } catch (error: any) {

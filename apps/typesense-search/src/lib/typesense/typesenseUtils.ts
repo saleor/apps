@@ -165,38 +165,38 @@ export function productAndVariantToTypesense({
     grossPrice: listing?.price?.amount,
     pricing: {
       price: {
-        net: variant.pricing?.price?.net.amount,
-        gross: variant.pricing?.price?.gross.amount,
+        net: variant.pricing?.price?.net.amount ?? 0,
+        gross: variant.pricing?.price?.gross.amount ?? 0,
       },
       onSale: variant.pricing?.onSale,
       discount: {
-        net: variant.pricing?.discount?.net.amount,
-        gross: variant.pricing?.discount?.gross.amount,
+        net: variant.pricing?.discount?.net.amount ?? 0,
+        gross: variant.pricing?.discount?.gross.amount ?? 0,
       },
       priceUndiscounted: {
-        net: variant.pricing?.priceUndiscounted?.net.amount,
-        gross: variant.pricing?.priceUndiscounted?.gross.amount,
+        net: variant.pricing?.priceUndiscounted?.net.amount ?? 0,
+        gross: variant.pricing?.priceUndiscounted?.gross.amount ?? 0,
       },
     },
     productPricing: {
       priceRange: {
         start: {
-          gross: parentProductPricing?.priceRange?.start?.gross.amount,
-          net: parentProductPricing?.priceRange?.start?.net.amount,
+          gross: parentProductPricing?.priceRange?.start?.gross.amount ?? 0,
+          net: parentProductPricing?.priceRange?.start?.net.amount ?? 0,
         },
         stop: {
-          gross: parentProductPricing?.priceRange?.stop?.gross.amount,
-          net: parentProductPricing?.priceRange?.stop?.net.amount,
+          gross: parentProductPricing?.priceRange?.stop?.gross.amount ?? 0,
+          net: parentProductPricing?.priceRange?.stop?.net.amount ?? 0,
         },
       },
       priceRangeUndiscounted: {
         start: {
-          gross: parentProductPricing?.priceRangeUndiscounted?.start?.gross.amount,
-          net: parentProductPricing?.priceRangeUndiscounted?.start?.net.amount,
+          gross: parentProductPricing?.priceRangeUndiscounted?.start?.gross.amount ?? 0,
+          net: parentProductPricing?.priceRangeUndiscounted?.start?.net.amount ?? 0,
         },
         stop: {
-          gross: parentProductPricing?.priceRangeUndiscounted?.stop?.gross.amount,
-          net: parentProductPricing?.priceRangeUndiscounted?.stop?.net.amount,
+          gross: parentProductPricing?.priceRangeUndiscounted?.stop?.gross.amount ?? 0,
+          net: parentProductPricing?.priceRangeUndiscounted?.stop?.net.amount ?? 0,
         },
       },
     },
