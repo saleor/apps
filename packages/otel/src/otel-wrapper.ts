@@ -11,8 +11,6 @@ import { loggerProvider, otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 import { sharedOtelConfig } from "./shared-config";
 
-import { waitUntil } from "@vercel/functions";
-
 const tracer = getOtelTracer();
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -82,7 +80,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
             span.end();
 
             try {
-              waitUntil(flushOtel());
+              await flushOtel();
             } catch (e) {
               console.error("Failed to flush OTEL", { error: e });
               // noop - don't block return even if we loose traces
@@ -104,7 +102,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
             span.end();
 
             try {
-              waitUntil(flushOtel());
+              await flushOtel();
             } catch (e) {
               console.error("Failed to flush OTEL", { error: e });
             }
