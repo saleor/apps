@@ -1,3 +1,4 @@
+import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -25,6 +26,7 @@ const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+const discountStrategy = new PriceReductionDiscountsStrategy();
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -132,6 +134,7 @@ export default wrapWithLoggerContext(
                   confirmedOrderEvent,
                   providerConfig.value.avataxConfig.config,
                   ctx.authData,
+                  discountStrategy,
                 );
 
                 logger.info("Order confirmed", { orderId: confirmedOrder.id });

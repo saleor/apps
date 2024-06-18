@@ -1,0 +1,62 @@
+meta {
+  name: 7. Add promo code to checkout
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation AddPromoCodeToCheckout($checkoutId: ID!, $promoCode: String!) {
+    checkoutAddPromoCode(id: $checkoutId, promoCode: $promoCode) {
+      errors {
+        code
+        message
+      }
+      checkout {
+        id
+        lines {
+          variant {
+            name
+            product {
+              name
+            }
+          }
+        }
+        totalPrice {
+          gross {
+            currency
+            amount
+          }
+          tax {
+            currency
+            amount
+          }
+        }
+        shippingPrice {
+          tax {
+            amount
+          }
+          gross {
+            amount
+          }
+          net {
+            amount
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "checkoutId": "{{checkoutId}}",
+      "promoCode": "{{promoCode}}"
+  }
+}
