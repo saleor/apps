@@ -26,7 +26,7 @@ export const appConfigurationRouter = router({
       logger.debug("Configuration fetched");
       return configuration.getRootConfig();
     } catch (e) {
-      logger.debug("Can't fetch the configuration", { error: e });
+      logger.warn("Can't fetch the configuration", { error: e });
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Can't fetch the configuration",
@@ -51,9 +51,9 @@ export const appConfigurationRouter = router({
           bucketName: input.bucketName,
           s3Client,
         });
-        logger.debug("Verification succeeded");
+        logger.info("Verification succeeded");
       } catch {
-        logger.debug("Validation failed");
+        logger.warn("Validation failed");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not access the S3 bucket using the provided credentials",
@@ -80,9 +80,9 @@ export const appConfigurationRouter = router({
           s3Client,
         });
 
-        logger.debug("Bucket access check succeeded");
+        logger.info("Bucket access check succeeded");
       } catch (e) {
-        logger.debug("Bucket access check failed", { error: e });
+        logger.warn("Bucket access check failed", { error: e });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Could not access the S3 bucket using the provided credentials",
@@ -97,7 +97,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.debug("Config saved");
+      logger.info("Config saved");
 
       return null;
     }),
@@ -121,7 +121,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.debug("Saved config");
+      logger.info("Saved config");
 
       return null;
     }),
@@ -136,7 +136,7 @@ export const appConfigurationRouter = router({
       config.setAttributeMapping(input);
 
       await appConfigMetadataManager.set(config.serialize());
-      logger.debug("Attribute map set");
+      logger.info("Attribute map set");
       return null;
     }),
   getAttributes: protectedClientProcedure.query(async ({ ctx: { apiClient } }) => {
@@ -152,7 +152,7 @@ export const appConfigurationRouter = router({
       });
     });
 
-    logger.debug("Returning attributes", { attributes: result });
+    logger.debug("Returning attributes", { first: result[0], totaLength: result.length });
 
     return result;
   }),
@@ -168,7 +168,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.debug("image size set");
+      logger.info("image size set");
       return null;
     }),
 
@@ -187,7 +187,7 @@ export const appConfigurationRouter = router({
           template: input.titleTemplate,
         });
       } catch (err) {
-        logger.debug("Template render failed", { error: err });
+        logger.warn("Template render failed", { error: err });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Submitted template is invalid",
@@ -198,7 +198,7 @@ export const appConfigurationRouter = router({
 
       await appConfigMetadataManager.set(config.serialize());
 
-      logger.debug("Template title set");
+      logger.info("Template title set");
       return null;
     }),
 
@@ -222,7 +222,7 @@ export const appConfigurationRouter = router({
 
         return { title };
       } catch (err) {
-        logger.debug("Template render failed", { error: err });
+        logger.warn("Template render failed", { error: err });
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Submitted template is invalid",
