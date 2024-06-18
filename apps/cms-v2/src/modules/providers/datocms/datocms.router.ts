@@ -5,6 +5,7 @@ import { router } from "../../trpc/trpc-server";
 
 import { DatoCMSClient } from "./datocms-client";
 import { TRPCError } from "@trpc/server";
+import { createLogger } from "../../../logger";
 
 /**
  * Operations specific for Datocms service.
@@ -16,18 +17,32 @@ export const datocmsRouter = router({
     .input(
       z.object({
         apiToken: z.string(),
-      })
+      }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ input }) => {
+      const logger = createLogger("datocmsRouter.fetchContentTypes");
+
+      logger.debug("Calling fetch content types");
+
       const client = new DatoCMSClient({
         apiToken: input.apiToken,
       });
 
-      return client.getContentTypes().catch((err) => {
+      try {
+        const contentTypes = await client.getContentTypes();
+
+        logger.debug("Content types fetched successfully", {
+          contentTypes: contentTypes.map((c) => c.name),
+        });
+
+        return contentTypes;
+      } catch (e) {
+        logger.warn("Can't fetch content types", { error: e });
+
         throw new TRPCError({
           code: "BAD_REQUEST",
         });
-      });
+      }
     }),
 
   fetchContentTypeFields: protectedClientProcedure
@@ -35,21 +50,34 @@ export const datocmsRouter = router({
       z.object({
         contentTypeID: z.string(),
         apiToken: z.string(),
-      })
+      }),
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ input }) => {
+      const logger = createLogger("datocmsRouter.fetchContentTypeFields", {
+        contentTypeID: input.contentTypeID,
+      });
+
+      logger.debug("Calling fetch content type fields");
+
       const client = new DatoCMSClient({
         apiToken: input.apiToken,
       });
 
-      return client
-        .getFieldsForContentType({
+      try {
+        const fields = await client.getFieldsForContentType({
           itemTypeID: input.contentTypeID,
-        })
-        .catch((err) => {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-          });
         });
+
+        logger.debug("Content type fields fetched successfully", {
+          contentTypesIds: fields.map((f) => f.id),
+        });
+        return fields;
+      } catch (e) {
+        logger.warn("Can't fetch content type fields", { error: e });
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+        });
+      }
     }),
 });

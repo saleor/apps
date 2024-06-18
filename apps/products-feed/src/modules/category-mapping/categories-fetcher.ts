@@ -3,13 +3,16 @@ import {
   CategoryWithMappingFragmentFragment,
   FetchCategoriesWithMappingDocument,
 } from "../../../generated/graphql";
+import { createLogger } from "../../logger";
 
 export class CategoriesFetcher {
+  private logger = createLogger("CategoriesFetcher");
+
   constructor(private apiClient: Pick<Client, "query">) {}
 
   private async fetchRecursivePage(
     accumulator: CategoryWithMappingFragmentFragment[],
-    cursor?: string
+    cursor?: string,
   ): Promise<CategoryWithMappingFragmentFragment[]> {
     const result = await this.apiClient
       .query(FetchCategoriesWithMappingDocument, {
@@ -44,6 +47,15 @@ export class CategoriesFetcher {
   async fetchAllCategories(): Promise<CategoryWithMappingFragmentFragment[]> {
     let categories: CategoryWithMappingFragmentFragment[] = [];
 
-    return this.fetchRecursivePage(categories, undefined);
+    this.logger.debug("fetchAllCategories called");
+
+    const result = await this.fetchRecursivePage(categories, undefined);
+
+    this.logger.debug("Categories fetched successfully", {
+      first: result[0],
+      totalLength: result.length,
+    });
+
+    return result;
   }
 }

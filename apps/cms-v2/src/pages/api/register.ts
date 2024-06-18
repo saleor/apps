@@ -1,6 +1,8 @@
 import { withOtel } from "@saleor/apps-otel";
 import { saleorApp } from "@/saleor-app";
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
+import { loggerContext } from "../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -23,4 +25,4 @@ const handler = createAppRegisterHandler({
   ],
 });
 
-export default withOtel(handler, "/api/register");
+export default wrapWithLoggerContext(withOtel(handler, "/api/register"), loggerContext);

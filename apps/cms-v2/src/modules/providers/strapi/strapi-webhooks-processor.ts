@@ -16,23 +16,29 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
   }
 
   async onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantUpdated called");
+    this.logger.debug("onProductVariantUpdated called");
 
-    this.client.updateProduct({ configuration: this.config, variant: productVariant });
+    await this.client.updateProduct({ configuration: this.config, variant: productVariant });
+
+    this.logger.info("Product variant updated");
   }
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantCreated called");
+    this.logger.debug("onProductVariantCreated called");
 
-    this.client.uploadProduct({ configuration: this.config, variant: productVariant });
+    await this.client.uploadProduct({ configuration: this.config, variant: productVariant });
+
+    this.logger.info("Product variant created");
   }
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
-    this.logger.trace("onProductVariantDeleted called");
+    this.logger.debug("onProductVariantDeleted called");
 
-    this.client.deleteProduct({ configuration: this.config, variant: productVariant });
+    await this.client.deleteProduct({ configuration: this.config, variant: productVariant });
+
+    this.logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
-    this.logger.trace("onProductUpdated called");
+    this.logger.debug("onProductUpdated called");
 
     await Promise.all(
       (product.variants ?? []).map((variant) => {
@@ -50,5 +56,7 @@ export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {
         });
       }),
     );
+
+    this.logger.info("Product updated");
   }
 }
