@@ -33,18 +33,24 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
     this.logger.debug("Called onProductVariantUpdated", { variantId: productVariant.id });
 
     await this.client.upsertProductVariant(productVariant);
+
+    this.logger.info("Product variant updated");
   }
 
   async onProductVariantCreated(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("Called onProductVariantCreated", { variantId: productVariant.id });
 
     await this.client.upsertProductVariant(productVariant);
+
+    this.logger.info("Product variant created");
   }
 
   async onProductVariantDeleted(productVariant: WebhookProductVariantFragment): Promise<void> {
     this.logger.debug("Called onProductVariantDeleted", { variantId: productVariant.id });
 
     await this.client.deleteProductVariant(productVariant.id);
+
+    this.logger.debug("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
@@ -63,5 +69,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
         });
       }),
     );
+
+    this.logger.info("Product updated");
   }
 }

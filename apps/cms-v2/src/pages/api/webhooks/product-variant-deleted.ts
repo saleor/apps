@@ -11,6 +11,9 @@ import { createWebhookConfigContext } from "@/modules/webhooks-operations/create
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
 
+import { loggerContext } from "../../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "@/logger";
 
@@ -56,19 +59,25 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
   res,
   context,
 ) => {
-  const logger = createLogger("ProductVariantCreatedWebhook", {
+  const logger = createLogger("ProductVariantDeletedWebhook", {
     saleorApiUrl: context.authData.saleorApiUrl,
   });
 
   const { authData, payload } = context;
 
   if (!payload.productVariant) {
+    logger.warn("Product variant not found in payload");
     Sentry.captureException("Product variant not found in payload");
 
     return res.status(500).end();
   }
 
-  logger.info("Webhook called");
+  logger.info("Webhook called", {
+    variantId: payload.productVariant.id,
+    variantName: payload.productVariant.name,
+    channelsIds: payload.productVariant.channelListings?.map((c) => c.channel.id) || [],
+    productId: payload.productVariant.product.id,
+  });
 
   const configContext = await createWebhookConfigContext({ authData });
 
@@ -76,10 +85,15 @@ const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment
     context: configContext,
   }).delegateVariantDeletedOperations(payload.productVariant);
 
+  logger.info("Webhook processed successfully");
+
   return res.status(200).end();
 };
 
-export default withOtel(
-  productVariantDeletedWebhook.createHandler(handler),
-  "api/webhooks/product-variant-deleted",
+export default wrapWithLoggerContext(
+  withOtel(
+    productVariantDeletedWebhook.createHandler(handler),
+    "api/webhooks/product-variant-deleted",
+  ),
+  loggerContext,
 );

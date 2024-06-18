@@ -3,13 +3,15 @@ import {
   AttributeWithMappingFragmentFragment,
   FetchAttributesWithMappingDocument,
 } from "../../../generated/graphql";
+import { createLogger } from "../../logger";
 
 export class AttributeFetcher {
+  private logger = createLogger("AttributeFetcher");
   constructor(private apiClient: Pick<Client, "query">) {}
 
   private async fetchRecursivePage(
     accumulator: AttributeWithMappingFragmentFragment[],
-    cursor?: string
+    cursor?: string,
   ): Promise<AttributeWithMappingFragmentFragment[]> {
     const result = await this.apiClient
       .query(FetchAttributesWithMappingDocument, {
@@ -44,6 +46,15 @@ export class AttributeFetcher {
   async fetchAllAttributes(): Promise<AttributeWithMappingFragmentFragment[]> {
     let attributes: AttributeWithMappingFragmentFragment[] = [];
 
-    return this.fetchRecursivePage(attributes, undefined);
+    this.logger.debug("fetchAllAttributes called");
+
+    const result = await this.fetchRecursivePage(attributes, undefined);
+
+    this.logger.debug("Attributes fetched successfully", {
+      first: result[0],
+      totalLength: result.length,
+    });
+
+    return result;
   }
 }

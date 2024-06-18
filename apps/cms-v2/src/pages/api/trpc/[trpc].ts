@@ -3,6 +3,8 @@ import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createLogger } from "@/logger";
 import { withOtel } from "@saleor/apps-otel";
+import { loggerContext } from "../../../logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const logger = createLogger("tRPC error");
 
@@ -18,4 +20,4 @@ const handler = trpcNext.createNextApiHandler({
   },
 });
 
-export default withOtel(handler, "/api/trpc");
+export default wrapWithLoggerContext(withOtel(handler, "/api/trpc"), loggerContext);

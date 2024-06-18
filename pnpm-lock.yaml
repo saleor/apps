@@ -408,7 +408,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -438,7 +438,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.23.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -2922,9 +2922,6 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: ../../node_modules/@opentelemetry/semantic-conventions
         version: link:../../node_modules/@opentelemetry/semantic-conventions
-      '@vercel/functions':
-        specifier: 1.0.2
-        version: 1.0.2
       eslint:
         specifier: 8.46.0
         version: 8.46.0
@@ -3014,12 +3011,6 @@ importers:
 
   packages/sentry-utils:
     devDependencies:
-      '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
-      '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -8187,10 +8178,6 @@ packages:
     resolution: {integrity: sha512-Ruw0we95/ugcgidBVOh/jy/LsspsRz4WFHPPnydOgyPOu7h3Vo3BqDA4K0fQ+WmKKfyY8rEasJdbyFYqz8XxnQ==}
     peerDependencies:
       vite: ^2.2.3 || ^3.0.0 || ^4.0.3
-
-  '@vercel/functions@1.0.2':
-    resolution: {integrity: sha512-j3udyHOv/05Y8o3WQ/ANMWa1aYagsY5B3ouImiwgYsz5z4CBUHTY5dk74oQAXYr+bgoVDpdDlmxkpnxGzKEdLQ==}
-    engines: {node: '>= 16'}
 
   '@vitejs/plugin-react@3.1.0':
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
@@ -22470,8 +22457,6 @@ snapshots:
       - terser
       - ts-node
 
-  '@vercel/functions@1.0.2': {}
-
   '@vitejs/plugin-react@3.1.0(vite@4.4.8(@types/node@20.12.3)(terser@5.18.0))':
     dependencies:
       '@babel/core': 7.22.11
@@ -27635,7 +27620,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.3
       '@next/swc-darwin-x64': 14.2.3
@@ -27661,7 +27646,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.23.9)(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.23.3)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.3
       '@next/swc-darwin-x64': 14.2.3

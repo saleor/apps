@@ -16,7 +16,7 @@ export const renderHandlebarsTemplate = ({ template, data }: RenderHandlebarsTem
 
     return compiledTemplate(data);
   } catch (error) {
-    logger.error(error, "Template compilation failed");
+    logger.warn("Template compilation failed", { error });
     throw new Error("Could not render the template");
   }
 };

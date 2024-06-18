@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
+import { PriceReductionDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
 import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
@@ -9,6 +10,7 @@ import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-li
 const matches: AvataxTaxCodeMatches = [];
 const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
 const saleorConfirmedOrderEvent = SaleorOrderConfirmedEventMockFactory.create();
+const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 describe("SaleorOrderToAvataxLinesTransformer", () => {
   it("should transform lines and shipping from order into product and shipping lines ", () => {
@@ -19,6 +21,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
         confirmedOrderEvent: saleorConfirmedOrderEvent,
         matches,
         avataxConfig: avataxConfigMock,
+        discountsStrategy,
       }),
     ).toStrictEqual([
       {
@@ -28,6 +31,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
         quantity: order.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
         taxIncluded: true,
+        discounted: undefined,
       },
       {
         amount: order.shippingPrice.gross.amount,
@@ -35,6 +39,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
         quantity: 1,
         taxCode: avataxConfigMock.shippingTaxCode,
         taxIncluded: expect.any(Boolean),
+        discounted: undefined,
       },
     ]);
   });
@@ -64,6 +69,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
         confirmedOrderEvent: saleorConfirmedOrderEventWithoutShipping,
         matches,
         avataxConfig: avataxConfigMock,
+        discountsStrategy,
       }),
     ).toStrictEqual([
       {
@@ -73,6 +79,7 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
         quantity: order.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
         taxIncluded: true,
+        discounted: undefined,
       },
     ]);
   });

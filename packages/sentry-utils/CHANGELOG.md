@@ -1,5 +1,11 @@
 # @saleor/sentry-utils
 
+## 0.2.2
+
+### Patch Changes
+
+- fbdbaa28: Remove not used deps for sentry
+
 ## 0.2.1
 
 ### Patch Changes

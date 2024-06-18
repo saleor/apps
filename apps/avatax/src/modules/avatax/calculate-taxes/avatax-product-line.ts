@@ -11,6 +11,7 @@ export const avataxProductLine = {
     quantity,
     itemCode,
     description,
+    discounted,
   }: {
     amount: number;
     taxCode: string;
@@ -18,6 +19,7 @@ export const avataxProductLine = {
     quantity: number;
     itemCode?: string;
     description?: string;
+    discounted?: boolean;
   }): LineItemModel {
     return {
       amount,
@@ -26,6 +28,7 @@ export const avataxProductLine = {
       quantity,
       itemCode,
       description,
+      discounted,
     };
   },
 
