@@ -3,4 +3,4 @@
 "cms-v2": minor
 ---
 
-Improve logging by add extra context information
+You can now see more context information in logs that should be helpful in debugging issues with the app.
