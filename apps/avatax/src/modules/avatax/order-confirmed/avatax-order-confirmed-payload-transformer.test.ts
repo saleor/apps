@@ -3,11 +3,13 @@ import { describe, expect, it } from "vitest";
 import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { AvataxClient } from "../avatax-client";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
+import { PriceReductionDiscountsStrategy } from "../discounts";
 import { AvataxOrderConfirmedMockGenerator } from "./avatax-order-confirmed-mock-generator";
 import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 
 const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const saleorOrderConfirmedEventMock = SaleorOrderConfirmedEventMockFactory.create();
+const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 const orderMock = mockGenerator.generateOrder();
 
@@ -27,6 +29,7 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
       confirmedOrderEvent: saleorOrderConfirmedEventMock,
       avataxConfig: avataxConfigMock,
       matches: [],
+      discountsStrategy,
     });
 
     expect(payload.model.type).toBe(DocumentType.SalesInvoice);
@@ -40,6 +43,7 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
         isDocumentRecordingEnabled: false,
       },
       matches: [],
+      discountsStrategy,
     });
 
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
