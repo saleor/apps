@@ -82,7 +82,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
         recipientEmail,
       }),
       error: new Error("Handler timeout error"),
-      timeout: 20_000,
+      timeout: 10_000,
     });
 
     result.match(
