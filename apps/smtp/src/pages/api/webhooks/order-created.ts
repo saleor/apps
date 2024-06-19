@@ -11,6 +11,7 @@ import { captureException } from "@sentry/nextjs";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { race } from "@saleor/apps-otel/src/lib/race";
 
 const OrderCreatedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -73,44 +74,46 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
   const useCase = useCaseFactory.createFromAuthData(authData);
 
   try {
-    return useCase
-      .sendEventMessages({
+    const result = await race({
+      promise: useCase.sendEventMessages({
         channelSlug: channel,
         event: "ORDER_CREATED",
         payload: { order: payload.order },
         recipientEmail,
-      })
-      .then((result) =>
-        result.match(
-          (r) => {
-            logger.info("Successfully sent email(s)");
+      }),
+      error: new Error("Handler timeout error"),
+      timeout: 20_000,
+    });
 
-            return res.status(200).json({ message: "The event has been handled" });
-          },
-          (err) => {
-            const errorInstance = err[0];
+    result.match(
+      (r) => {
+        logger.info("Successfully sent email(s)");
 
-            if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-              logger.error("Failed to send email(s) [server error]", { error: err });
+        return res.status(200).json({ message: "The event has been handled" });
+      },
+      (err) => {
+        const errorInstance = err[0];
 
-              return res.status(500).json({ message: "Failed to send email" });
-            } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
-              logger.info("Failed to send email(s) [client error]", { error: err });
+        if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
+          logger.error("Failed to send email(s) [server error]", { error: err });
 
-              return res.status(400).json({ message: "Failed to send email" });
-            } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
-              logger.info("Sending emails aborted [no op]", { error: err });
+          return res.status(500).json({ message: "Failed to send email" });
+        } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
+          logger.info("Failed to send email(s) [client error]", { error: err });
 
-              return res.status(200).json({ message: "The event has been handled [no op]" });
-            }
+          return res.status(400).json({ message: "Failed to send email" });
+        } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
+          logger.info("Sending emails aborted [no op]", { error: err });
 
-            logger.error("Failed to send email(s) [unhandled error]", { error: err });
-            captureException(new Error("Unhandled useCase error", { cause: err }));
+          return res.status(200).json({ message: "The event has been handled [no op]" });
+        }
 
-            return res.status(500).json({ message: "Failed to send email [unhandled]" });
-          },
-        ),
-      );
+        logger.error("Failed to send email(s) [unhandled error]", { error: err });
+        captureException(new Error("Unhandled useCase error", { cause: err }));
+
+        return res.status(500).json({ message: "Failed to send email [unhandled]" });
+      },
+    );
   } catch (e) {
     logger.error("Unhandled error from useCase", {
       error: e,
