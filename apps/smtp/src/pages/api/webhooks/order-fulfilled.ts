@@ -112,7 +112,12 @@ const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = asy
           return res.status(500).json({ message: "Failed to send email [unhandled]" });
         },
       ),
-    );
+    )
+    .catch((e) => {
+      console.log("error in use case fulfilled");
+
+      return res.status(500).send("error");
+    });
 };
 
 export default wrapWithLoggerContext(

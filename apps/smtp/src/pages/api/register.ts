@@ -13,6 +13,7 @@ const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
  * Required endpoint, called by Saleor to install app.
  * It will exchange tokens with app, so saleorApp.apl will contain token
  */
+// todo withLoggerContext
 export default withOtel(
   createAppRegisterHandler({
     apl: saleorApp.apl,
