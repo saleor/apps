@@ -76,7 +76,7 @@ const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = asy
   const useCase = useCaseFactory.createFromAuthData(authData);
 
   try {
-    return useCase
+    return await useCase
       .sendEventMessages({
         channelSlug: channel,
         event: "ORDER_FULFILLED",
