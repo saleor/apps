@@ -100,7 +100,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 
     captureException(e);
 
-    return res.status(500).send("Failed to execute");
+    return res.status(500).json({ message: "Failed to execute webhook" });
   }
 };
 

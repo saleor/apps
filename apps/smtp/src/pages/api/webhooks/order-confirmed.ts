@@ -121,7 +121,7 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
 
     captureException(e);
 
-    return res.status(500).send("Failed to execute");
+    return res.status(500).json({ message: "Failed to execute webhook" });
   }
 };
 
