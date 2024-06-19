@@ -71,6 +71,7 @@ const handler: NextWebhookApiHandler<ProductVariantUpdatedWebhookPayloadFragment
 
     return res.status(500).end();
   }
+
   logger.info("Webhook called", {
     variantId: payload.productVariant.id,
     variantName: payload.productVariant.name,
