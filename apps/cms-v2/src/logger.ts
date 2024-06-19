@@ -1,4 +1,5 @@
 import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+import { addBreadcrumb } from "@sentry/nextjs";
 import packageJson from "../package.json";
 
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
@@ -12,7 +13,7 @@ if (typeof window === "undefined") {
     async ({ attachLoggerOtelTransport, attachLoggerSentryTransport, LoggerContext }) => {
       const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
 
-      attachLoggerSentryTransport(logger);
+      attachLoggerSentryTransport(logger, addBreadcrumb);
       attachLoggerOtelTransport(logger, packageJson.version, loggerContext);
     },
   );

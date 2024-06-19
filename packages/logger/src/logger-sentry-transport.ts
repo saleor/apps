@@ -1,8 +1,6 @@
 import { ILogObj, Logger } from "tslog";
-import * as Sentry from "@sentry/nextjs";
-import { SeverityLevel } from "@sentry/nextjs";
 
-const loggerLevelToSentryLevel = (level: string): SeverityLevel => {
+const loggerLevelToSentryLevel = (level: string) => {
   switch (level) {
     case "fatal":
     case "error":
@@ -35,9 +33,24 @@ const levelToBreadcrumbType = (level: string) => {
   }
 };
 
-export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
+export const attachLoggerSentryTransport = (
+  logger: Logger<ILogObj>,
+  addBreadcrumb: ({
+    message,
+    type,
+    level,
+    timestamp,
+    data,
+  }: {
+    message: string;
+    type: "default" | "error" | "debug";
+    level: any;
+    timestamp: number;
+    data: Record<string, unknown>;
+  }) => void,
+) => {
   logger.attachTransport((log) => {
-    const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
+    const { message, attributes } = log as ILogObj & {
       message: string;
       attributes: Record<string, unknown>;
     };
@@ -49,7 +62,7 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
     }
 
     logger.attachTransport((log) => {
-      Sentry?.addBreadcrumb?.({
+      addBreadcrumb?.({
         message: message,
         type: levelToBreadcrumbType(log._meta.logLevelName),
         level: loggerLevelToSentryLevel(log._meta.logLevelName),
