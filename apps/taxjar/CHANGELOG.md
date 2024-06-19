@@ -1,5 +1,12 @@
 # app-taxjar
 
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [6f2d6abb]
+  - @saleor/apps-otel@1.3.0
+
 ## 1.2.3
 
 ### Patch Changes

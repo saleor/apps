@@ -1,5 +1,12 @@
 # saleor-app-search
 
+## 1.22.4
+
+### Patch Changes
+
+- Updated dependencies [6f2d6abb]
+  - @saleor/apps-otel@1.3.0
+
 ## 1.22.3
 
 ### Patch Changes
