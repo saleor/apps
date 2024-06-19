@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.3.0
+
+### Minor Changes
+
+- 6f2d6abb: Revert Vercel's waitUntil. Logs that were pushed via this API were broken and not delivered
+
 ## 1.2.2
 
 ### Patch Changes
