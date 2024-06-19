@@ -5,9 +5,6 @@ import { saleorApp } from "../../../saleor-app";
 import { OrderCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
 import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { captureException } from "@sentry/nextjs";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -40,8 +37,6 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
 
 const logger = createLogger(orderCreatedWebhook.webhookPath);
 
-const useCaseFactory = new SendEventMessagesUseCaseFactory();
-
 const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
@@ -51,6 +46,8 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   const { payload, authData } = context;
   const { order } = payload;
+
+  console.log("early return without importing use case");
 
   if (!order) {
     logger.error("No order data payload");
@@ -70,46 +67,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
-  const useCase = useCaseFactory.createFromAuthData(authData);
-
-  return useCase
-    .sendEventMessages({
-      channelSlug: channel,
-      event: "ORDER_CREATED",
-      payload: { order: payload.order },
-      recipientEmail,
-    })
-    .then((result) =>
-      result.match(
-        (r) => {
-          logger.info("Successfully sent email(s)");
-
-          return res.status(200).json({ message: "The event has been handled" });
-        },
-        (err) => {
-          const errorInstance = err[0];
-
-          if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-            logger.error("Failed to send email(s) [server error]", { error: err });
-
-            return res.status(500).json({ message: "Failed to send email" });
-          } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
-            logger.info("Failed to send email(s) [client error]", { error: err });
-
-            return res.status(400).json({ message: "Failed to send email" });
-          } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
-            logger.info("Sending emails aborted [no op]", { error: err });
-
-            return res.status(200).json({ message: "The event has been handled [no op]" });
-          }
-
-          logger.error("Failed to send email(s) [unhandled error]", { error: err });
-          captureException(new Error("Unhandled useCase error", { cause: err }));
-
-          return res.status(500).json({ message: "Failed to send email [unhandled]" });
-        },
-      ),
-    );
+  return res.status(200).send("ok");
 };
 
 export default wrapWithLoggerContext(
