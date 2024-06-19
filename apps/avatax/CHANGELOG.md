@@ -1,5 +1,16 @@
 # app-avatax
 
+## 1.7.0
+
+### Minor Changes
+
+- ba981a73: Fixed discount logic. After this change AvaTax app will send Saleor discounts to Avalara for automatic distribution when handling calculate taxes webhook for order and checkout. Discount logic when confirming order will remain unchanged - AvaTax app will use price reduction discounts and sends totalPrice from Saleor.
+
+### Patch Changes
+
+- Updated dependencies [6f2d6abb]
+  - @saleor/apps-otel@1.3.0
+
 ## 1.6.3
 
 ### Patch Changes

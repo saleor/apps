@@ -1,5 +1,16 @@
 # saleor-app-cms-v2
 
+## 2.9.0
+
+### Minor Changes
+
+- 19f288a4: You can now see more context information in logs that should be helpful in debugging issues with the app.
+
+### Patch Changes
+
+- Updated dependencies [6f2d6abb]
+  - @saleor/apps-otel@1.3.0
+
 ## 2.8.3
 
 ### Patch Changes

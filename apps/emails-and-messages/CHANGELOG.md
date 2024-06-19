@@ -1,5 +1,12 @@
 # saleor-app-emails-and-messages
 
+## 1.13.4
+
+### Patch Changes
+
+- Updated dependencies [6f2d6abb]
+  - @saleor/apps-otel@1.3.0
+
 ## 1.13.3
 
 ### Patch Changes
