@@ -7,9 +7,9 @@ import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumente
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { HandlebarsTemplateCompiler } from "../../smtp/services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../../smtp/services/html-to-text-compiler";
 import { MjmlCompiler } from "../../smtp/services/mjml-compiler";
+import { ok, Result } from "neverthrow";
 
 export class SendEventMessagesUseCaseFactory {
   createFromAuthData(authData: AuthData): SendEventMessagesUseCase {
@@ -28,7 +28,47 @@ export class SendEventMessagesUseCaseFactory {
         },
       },
       emailCompiler: new EmailCompiler(
-        new HandlebarsTemplateCompiler(),
+        {
+          compile(
+            template: string,
+            variables: unknown,
+          ): Result<
+            {
+              template: string;
+            },
+            InstanceType<any>
+          > {
+            return ok({
+              template: `<mj-section>
+  <mj-column>
+    <mj-table>
+      <thead>
+        <tr>
+          <th>
+            Billing address
+          </th>
+          <th>
+            Shipping address
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            b
+          </td>
+          <td>
+            a
+          </td>
+        </tr>
+      </tbody>
+    </mj-table>
+  </mj-column>
+</mj-section>
+`,
+            });
+          },
+        },
         new HtmlToTextCompiler(),
         new MjmlCompiler(),
       ),
