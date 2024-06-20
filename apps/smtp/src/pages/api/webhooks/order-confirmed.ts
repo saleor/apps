@@ -8,7 +8,6 @@ import {
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
 const OrderConfirmedWebhookPayload = gql`
@@ -45,9 +44,7 @@ const handler: NextWebhookApiHandler<OrderConfirmedWebhookPayloadFragment> = asy
 ) => {
   const logger = createLogger(orderConfirmedWebhook.webhookPath);
 
-  const useCaseFactory = new SendEventMessagesUseCaseFactory();
-
-  logger.info(`Webhook received - for order confirmed event - useCaseFactory: ${useCaseFactory}`);
+  logger.info(`Webhook received - for order confirmed event - without factory`);
 
   return res.status(200).json({ message: "The event has been handled" });
 };
