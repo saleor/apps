@@ -1,11 +1,9 @@
 import { type AuthData } from "@saleor/app-sdk/APL";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { type SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { type CompiledEmail, EmailCompiler } from "../../smtp/services/email-compiler";
+import { EmailCompiler } from "../../smtp/services/email-compiler";
 import { SmtpConfigurationService } from "../../smtp/configuration/smtp-configuration.service";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { ok, Result } from "neverthrow";
-import { BaseError } from "../../../errors";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
