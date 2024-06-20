@@ -2,11 +2,13 @@ import { type AuthData } from "@saleor/app-sdk/APL";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { type SendMailArgs } from "../../smtp/services/smtp-email-sender";
 import { type CompiledEmail } from "../../smtp/services/email-compiler";
-import { type FilterConfigurationsArgs } from "../../smtp/configuration/smtp-configuration.service";
+import { SmtpConfigurationService } from "../../smtp/configuration/smtp-configuration.service";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { ok, Result } from "neverthrow";
 import { BaseError } from "../../../errors";
-import { type SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
+import { createSettingsManager } from "../../../lib/metadata-manager";
 
 export class SendEventMessagesUseCaseFactory {
   createFromAuthData(authData: AuthData): SendEventMessagesUseCase {
@@ -35,13 +37,13 @@ export class SendEventMessagesUseCaseFactory {
           });
         },
       },
-      smtpConfigurationService: {
-        getConfigurations(
-          filter?: FilterConfigurationsArgs,
-        ): ResultAsync<SmtpConfiguration[], InstanceType<typeof BaseError>> {
-          return okAsync([]);
-        },
-      },
+      smtpConfigurationService: new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({ client }),
+        metadataManager: new SmtpMetadataManager(
+          createSettingsManager(client, authData.appId),
+          authData.saleorApiUrl,
+        ),
+      }),
     });
   }
 }
