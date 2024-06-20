@@ -7,7 +7,6 @@ import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumente
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { MjmlCompiler } from "../../smtp/services/mjml-compiler";
 import { ok, Result } from "neverthrow";
 import { BaseError } from "../../../errors";
 
@@ -74,7 +73,11 @@ export class SendEventMessagesUseCaseFactory {
             return ok("<html>asdf</html>");
           },
         },
-        new MjmlCompiler(),
+        {
+          compile(mjml: string): Result<string, InstanceType<typeof BaseError>> {
+            return ok("<html>asdf</html>");
+          },
+        },
       ),
       smtpConfigurationService: new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({ client }),
