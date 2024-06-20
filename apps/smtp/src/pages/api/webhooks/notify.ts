@@ -1,13 +1,13 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
-import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { captureException } from "@sentry/nextjs";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { captureException } from "@sentry/nextjs";
+import { NotifySubscriptionPayload, notifyEventMapping } from "../../../lib/notify-event-types";
+import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
+import { saleorApp } from "../../../saleor-app";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -22,11 +22,11 @@ export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   query: "{}", // We are using the default payload instead of subscription
 });
 
-const logger = createLogger(notifyWebhook.webhookPath);
-
-const useCaseFactory = new SendEventMessagesUseCaseFactory();
-
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
+  const logger = createLogger(notifyWebhook.webhookPath);
+
+  const useCaseFactory = new SendEventMessagesUseCaseFactory();
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;

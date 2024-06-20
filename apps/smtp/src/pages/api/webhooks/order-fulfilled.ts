@@ -1,18 +1,18 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
-import { saleorApp } from "../../../saleor-app";
 import {
   OrderDetailsFragmentDoc,
   OrderFulfilledWebhookPayloadFragment,
 } from "../../../../generated/graphql";
-import { withOtel } from "@saleor/apps-otel";
 import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { captureException } from "@sentry/nextjs";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { loggerContext } from "../../../logger-context";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
+import { saleorApp } from "../../../saleor-app";
 
 const OrderFulfilledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -41,15 +41,15 @@ export const orderFulfilledWebhook = new SaleorAsyncWebhook<OrderFulfilledWebhoo
   query: OrderFulfilledGraphqlSubscription,
 });
 
-const logger = createLogger(orderFulfilledWebhook.webhookPath);
-
-const useCaseFactory = new SendEventMessagesUseCaseFactory();
-
 const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = async (
   req,
   res,
   context,
 ) => {
+  const logger = createLogger(orderFulfilledWebhook.webhookPath);
+
+  const useCaseFactory = new SendEventMessagesUseCaseFactory();
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;
