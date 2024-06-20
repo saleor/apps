@@ -5,7 +5,6 @@ import { IHtmlToTextCompiler } from "./html-to-text-compiler";
 import { createLogger } from "../../../logger";
 import { BaseError } from "../../../errors";
 import { err, ok, Result } from "neverthrow";
-import combine = Result.combine;
 
 interface CompileArgs {
   recipientEmail: string;
@@ -127,7 +126,7 @@ export class EmailCompiler implements IEmailCompiler {
       },
     );
 
-    return combine([subjectCompilationResult, bodyCompilationInHtmlResult]).andThen(
+    return Result.combine([subjectCompilationResult, bodyCompilationInHtmlResult]).andThen(
       ([subjectCompiled, bodyCompiledHtml]) => {
         return this.resolveBodyPlainText(bodyCompiledHtml).andThen((bodyPlainText) => {
           logger.debug("Resolved compiled email template");
