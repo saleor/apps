@@ -1,15 +1,12 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
-import { SmtpEmailSender } from "../../smtp/services/smtp-email-sender";
-import { EmailCompiler } from "../../smtp/services/email-compiler";
-import { HandlebarsTemplateCompiler } from "../../smtp/services/handlebars-template-compiler";
-import { HtmlToTextCompiler } from "../../smtp/services/html-to-text-compiler";
-import { MjmlCompiler } from "../../smtp/services/mjml-compiler";
-import { SmtpConfigurationService } from "../../smtp/configuration/smtp-configuration.service";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
-import { createSettingsManager } from "../../../lib/metadata-manager";
+import { type SendMailArgs } from "../../smtp/services/smtp-email-sender";
+import { type CompiledEmail } from "../../smtp/services/email-compiler";
+import { type FilterConfigurationsArgs } from "../../smtp/configuration/smtp-configuration.service";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
+import { ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { BaseError } from "../../../errors";
+import { type SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 
 export class SendEventMessagesUseCaseFactory {
   createFromAuthData(authData: AuthData): SendEventMessagesUseCase {
@@ -19,19 +16,32 @@ export class SendEventMessagesUseCaseFactory {
     });
 
     return new SendEventMessagesUseCase({
-      emailSender: new SmtpEmailSender(),
-      emailCompiler: new EmailCompiler(
-        new HandlebarsTemplateCompiler(),
-        new HtmlToTextCompiler(),
-        new MjmlCompiler(),
-      ),
-      smtpConfigurationService: new SmtpConfigurationService({
-        featureFlagService: new FeatureFlagService({ client }),
-        metadataManager: new SmtpMetadataManager(
-          createSettingsManager(client, authData.appId),
-          authData.saleorApiUrl,
-        ),
-      }),
+      emailSender: {
+        async sendEmailWithSmtp({
+          smtpSettings,
+          mailData,
+        }: SendMailArgs): Promise<{ response: unknown }> {
+          return { response: null };
+        },
+      },
+      emailCompiler: {
+        compile(args): Result<CompiledEmail, InstanceType<typeof BaseError>> {
+          return ok({
+            from: "asd",
+            html: "<html>asfd</html>",
+            text: "Asdf",
+            subject: "sadf",
+            to: "asdf@asdf.com",
+          });
+        },
+      },
+      smtpConfigurationService: {
+        getConfigurations(
+          filter?: FilterConfigurationsArgs,
+        ): ResultAsync<SmtpConfiguration[], InstanceType<typeof BaseError>> {
+          return okAsync([]);
+        },
+      },
     });
   }
 }
