@@ -1,4 +1,4 @@
-// import mjml2html from "mjml";
+import mjml2html from "mjml";
 import { createLogger } from "../../../logger";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 import { BaseError } from "../../../errors";
@@ -17,10 +17,7 @@ export class MjmlCompiler implements IMjmlCompiler {
     this.logger.debug("Trying to compile MJML template");
 
     const safeCompile = fromThrowable(
-      (s: string) => ({
-        errors: [],
-        html: "",
-      }),
+      mjml2html,
       (error) =>
         new MjmlCompiler.FailedToCompileError("Failed to compile MJML", {
           errors: [error],

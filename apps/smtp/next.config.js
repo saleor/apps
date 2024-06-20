@@ -14,6 +14,7 @@ const nextConfig = {
     "@saleor/apps-shared",
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
+    "mjml",
   ],
   experimental: {},
   /*
