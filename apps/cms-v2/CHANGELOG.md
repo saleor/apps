@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.1
+
+### Patch Changes
+
+- ab5baf4e: You can now see when webhook processing is skip due to no having related channels
+
 ## 2.9.0
 
 ### Minor Changes
