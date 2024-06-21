@@ -19,11 +19,9 @@ describe("MjmlCompiler", () => {
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
       "<!doctype html>
-      <html xmlns=\\"http://www.w3.org/1999/xhtml\\" xmlns:v=\\"urn:schemas-microsoft-com:vml\\" xmlns:o=\\"urn:schemas-microsoft-com:office:office\\">
+      <html lang=\\"und\\" dir=\\"auto\\" xmlns=\\"http://www.w3.org/1999/xhtml\\" xmlns:v=\\"urn:schemas-microsoft-com:vml\\" xmlns:o=\\"urn:schemas-microsoft-com:office:office\\">
         <head>
-          <title>
-            
-          </title>
+          <title></title>
           <!--[if !mso]><!-->
           <meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=edge\\">
           <!--<![endif]-->
@@ -70,21 +68,17 @@ describe("MjmlCompiler", () => {
             .moz-text-html .mj-column-per-100 { width:100% !important; max-width: 100%; }
           </style>
           
+          
         
-          <style type=\\"text/css\\">
           
           
-          </style>
-          <style type=\\"text/css\\">
-          
-          </style>
           
         </head>
         <body style=\\"word-spacing:normal;\\">
           
           
             <div
-               style=\\"\\"
+               style=\\"\\" lang=\\"und\\" dir=\\"auto\\"
             >
               
             
