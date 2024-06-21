@@ -16,6 +16,7 @@ export class MjmlCompiler implements IMjmlCompiler {
     this.logger.debug("Trying to compile MJML template");
 
     const safeCompile = fromThrowable(
+      // Used require on purpose - when import where used, modules resolution failed
       require("mjml"),
       (error) =>
         new MjmlCompiler.FailedToCompileError("Failed to compile MJML", {
