@@ -1,5 +1,12 @@
 # smtp
 
+## 1.1.5
+
+### Patch Changes
+
+- 5fbf0437: Fixed error with webhooks timing out. Now root UseCase operation is wrapped with try/catch block, so if unhandled error occurs, response will be returned. Previously response was hanging until lambda was terminated.
+- f199cf13: Changed how MJML compiler is imported in the app. Not it uses legacy require() instead of import. Previous syntax broke the app
+
 ## 1.1.4
 
 ### Patch Changes
