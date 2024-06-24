@@ -92,7 +92,11 @@ const EditSmtpEventPage: NextPage = () => {
           <TextLink href="https://handlebarsjs.com/" newTab={true}>
             Handlebars
           </TextLink>
-          .
+          . Additional syntax via{" "}
+          <TextLink href="https://github.com/helpers/handlebars-helpers/tree/master" newTab>
+            Handlebars Helpers
+          </TextLink>{" "}
+          is supported
         </Text>
         <EventForm configuration={configuration} eventType={eventType} />
       </Box>
