@@ -15,4 +15,20 @@ describe("HandlebarsTemplateCompiler", () => {
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(HandlebarsTemplateCompiler.FailedCompileError);
   });
+
+  it("Supports syntax from handlebars helpers", () => {
+    const template = `{{#is foo "bar"}}I should render{{else}}I should render otherwise{{/is}}`;
+
+    const compiler = new HandlebarsTemplateCompiler();
+    const result1 = compiler.compile(template, { foo: "bar" });
+    const result2 = compiler.compile(template, { foo: "not-bar" });
+
+    expect(result1._unsafeUnwrap()).toEqual({
+      template: "I should render",
+    });
+
+    expect(result2._unsafeUnwrap()).toEqual({
+      template: "I should render otherwise",
+    });
+  });
 });

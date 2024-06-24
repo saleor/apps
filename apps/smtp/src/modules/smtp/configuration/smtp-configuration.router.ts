@@ -167,6 +167,17 @@ export const smtpConfigurationRouter = router({
 
         if (compilationResult.isOk()) {
           renderedEmail = compilationResult.value;
+        } else {
+          let cause = "Failed to render template";
+
+          try {
+            cause = compilationResult.error.errors![0]!.message;
+          } catch (e) {}
+
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: cause,
+          });
         }
       }
 
