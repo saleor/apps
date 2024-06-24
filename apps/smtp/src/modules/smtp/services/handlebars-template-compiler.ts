@@ -3,6 +3,8 @@ import { createLogger } from "../../../logger";
 import { err, ok, Result } from "neverthrow";
 import { BaseError } from "../../../errors";
 
+import handlebars_helpers from "handlebars-helpers";
+
 const logger = createLogger("compileHandlebarsTemplate");
 
 export interface ITemplateCompiler {
@@ -14,6 +16,8 @@ export interface ITemplateCompiler {
     InstanceType<typeof HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError>
   >;
 }
+
+handlebars_helpers({ handlebars: Handlebars });
 
 export class HandlebarsTemplateCompiler implements ITemplateCompiler {
   static HandlebarsTemplateCompilerError = BaseError.subclass("HandlebarsTemplateCompilerError");
