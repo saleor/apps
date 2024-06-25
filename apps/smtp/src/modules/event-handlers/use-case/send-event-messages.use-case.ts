@@ -6,7 +6,6 @@ import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-s
 import { BaseError } from "../../../errors";
 import { err, errAsync, Result, ResultAsync } from "neverthrow";
 import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
-import combineWithAllErrors = Result.combineWithAllErrors;
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -235,6 +234,6 @@ export class SendEventMessagesUseCase {
       ),
     );
 
-    return combineWithAllErrors(processingResults);
+    return Result.combineWithAllErrors(processingResults);
   }
 }

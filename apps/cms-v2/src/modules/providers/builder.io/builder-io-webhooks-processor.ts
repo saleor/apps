@@ -50,7 +50,7 @@ export class BuilderIoWebhooksProcessor implements ProductWebhooksProcessor {
 
     await this.client.deleteProductVariant(productVariant.id);
 
-    this.logger.debug("Product variant deleted");
+    this.logger.info("Product variant deleted");
   }
 
   async onProductUpdated(product: WebhookProductFragment): Promise<void> {
