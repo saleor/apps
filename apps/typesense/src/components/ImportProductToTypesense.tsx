@@ -44,7 +44,7 @@ export const ImportProductsToTypesense = () => {
 
   useEffect(() => {
     if (searchProvider && typesenseConfiguration?.appConfig) {
-      typesenseCredentialsVerifier 
+      typesenseCredentialsVerifier
         .verifyCredentials({
           host: typesenseConfiguration.appConfig.host,
           apiKey: typesenseConfiguration.appConfig.apiKey,

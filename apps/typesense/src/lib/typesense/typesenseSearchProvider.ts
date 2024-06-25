@@ -310,27 +310,33 @@ export class TypesenseSearchProvider implements SearchProvider {
   }
 
   // Method to delete a product variant from Typesense
+
   async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     logger.debug(`deleteProductVariant called`, { productVariant });
     const compositeId = `${productVariant.product.id}_${productVariant.id}`;
 
-    await Promise.all(
-      this.#indexNames.map(async (indexName) => {
-        logger.debug("Deleting variant from index:", { indexName, compositeId });
-
-        try {
-          const result = await this.#deleteDocument(indexName, compositeId);
-
-          logger.debug("Delete result:", { indexName, compositeId, result });
-        } catch (error: any) {
-          logger.error(
-            `Failed to delete variant with composite ID ${compositeId}: ${error.message}`,
-            { error },
-          );
-          throw error;
-        }
-      }),
+    await this.#deleteGroupedByIndex(
+      Object.fromEntries(this.#indexNames.map((index) => [index, [compositeId]])),
     );
+
+    /*
+     * await Promise.all(
+     *   this.#indexNames.map(async (indexName) => {
+     *     logger.debug("Deleting variant from index:", { indexName, compositeId });
+     *     try {
+     *       const result = await this.#deleteDocument(indexName, compositeId);
+     *
+     *       logger.debug("Delete result:", { indexName, compositeId, result });
+     *     } catch (error: any) {
+     *       logger.error(
+     *         `Failed to delete variant with composite ID ${compositeId}: ${error.message}`,
+     *         { error },
+     *       );
+     *       throw error; // This will propagate the error and reject the Promise.all
+     *     }
+     *   }),
+     * );
+     */
   }
 
   // Method to ping Typesense to check if it's up and running
