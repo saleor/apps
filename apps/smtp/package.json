@@ -1,6 +1,6 @@
 {
   "name": "smtp",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -50,6 +50,7 @@
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
     "handlebars": "^4.7.7",
+    "handlebars-helpers": "0.10.0",
     "html-to-text": "^9.0.3",
     "jsdom": "^20.0.3",
     "mjml": "4.15.3",
@@ -79,6 +80,7 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@types/handlebars-helpers": "^0.5.6",
     "@types/html-to-text": "^9.0.0",
     "@types/mjml": "4.7.4",
     "@types/nodemailer": "^6.4.7",
