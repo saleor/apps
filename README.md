@@ -45,7 +45,7 @@ This repository serves as a starting point in the exploration of Saleor apps.
 
 In the `apps` folder, you will find the following applications:
 
-- [avatax](./apps/avatax) - Calculates dynamic taxes via Avatax API
+- [avatax](./apps/avatax) - calculates dynamic taxes via Avatax API
 - [cms](./apps/cms-v2) - exports products from Saleor to CMS.
 - [crm](./apps/crm) - exports customers from Saleor to CRM.
 - [data-importer](./apps/data-importer) - import data from CSV to Saleor.
@@ -55,8 +55,8 @@ In the `apps` folder, you will find the following applications:
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
-- [smtp](./apps/smtp) - Email communication with customers
-- [taxjar](./apps/taxjar) - Calculates dynamic taxes via Taxjar API
+- [smtp](./apps/smtp) - email communication with customers
+- [taxjar](./apps/taxjar) - calculates dynamic taxes via Taxjar API
 
 #### Other official apps
 
