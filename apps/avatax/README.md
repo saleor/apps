@@ -20,7 +20,7 @@
 
 ## Documentation
 
-Visit [Taxes App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/overview) to learn how to configure and develop the app locally.
+Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/avatax/overview) to learn how to configure and develop the app locally.
 
 ## Testing
 
@@ -114,7 +114,7 @@ pnpm migrate
 To run the app in docker, you need to build the image first (run this command in the root directory of the monorepo):
 
 ```shell
-docker build --tag saleor-app-avatax-docker --file Dockerfile.dev .
+docker build --tag saleor-app-avatax-docker --file Dockerfile.avatax.dev .
 ```
 
 Then you can run the image (run this command in the root directory of the monorepo):
