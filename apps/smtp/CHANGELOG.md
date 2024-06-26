@@ -1,5 +1,15 @@
 # smtp
 
+## 1.2.0
+
+### Minor Changes
+
+- dd76ea26: Added support for [Handlebars Helpers](https://github.com/helpers/handlebars-helpers) which adds more flexibility to the template syntax.
+
+### Patch Changes
+
+- dd76ea26: Added displaying of Handlebars error in template editor. Now if invalid syntax is entered, raw error will be displayed above the form
+
 ## 1.1.5
 
 ### Patch Changes
