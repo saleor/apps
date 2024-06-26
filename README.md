@@ -45,17 +45,18 @@ This repository serves as a starting point in the exploration of Saleor apps.
 
 In the `apps` folder, you will find the following applications:
 
-- [Avatax](./apps/avatax) - Calculates dynamic taxes via Avatax API
-- [crm](https://docs.saleor.io/docs/3.x/developer/app-store/apps/crm) - exports customers from Saleor to CRM.
-- [cms](https://docs.saleor.io/docs/3.x/developer/app-store/apps/cms) - exports products from Saleor to CMS.
+- [avatax](./apps/avatax) - calculates dynamic taxes via Avatax API
+- [cms](./apps/cms-v2) - exports products from Saleor to CMS.
+- [crm](./apps/crm) - exports customers from Saleor to CRM.
 - [data-importer](./apps/data-importer) - import data from CSV to Saleor.
-- [emails-and-messages](https://docs.saleor.io/docs/3.x/developer/app-store/apps/emails-and-messages/overview) - notifications and email communication with customers.
-- [invoices](https://docs.saleor.io/docs/3.x/developer/app-store/apps/invoices) - generate invoice PDF for each order.
+- [emails-and-messages](./apps/emails-and-messages/) - notifications and email communication with customers.
+- [invoices](./apps/invoices) - generate invoice PDF for each order.
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
-- [Taxjar](./apps/taxjar) - Calculates dynamic taxes via Taxjar API
+- [smtp](./apps/smtp) - email communication with customers
+- [taxjar](./apps/taxjar) - calculates dynamic taxes via Taxjar API
 
 #### Other official apps
 
