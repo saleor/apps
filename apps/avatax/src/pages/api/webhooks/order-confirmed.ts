@@ -52,7 +52,7 @@ export default wrapWithLoggerContext(
           // Capture error when there is problem with parsing webhook payload - it should not happen
           Sentry.captureException(error);
           logger.error("Error parsing webhook payload into Saleor order", { error });
-          return res.status(500).send(error.message);
+          return res.status(500).json({ message: error.message });
         }
 
         if (confirmedOrderFromPayload.isOk()) {
@@ -64,12 +64,16 @@ export default wrapWithLoggerContext(
                * TODO Should it be 400? Maybe just 200?
                */
               logger.warn("Order is fulfilled, skipping");
-              return res.status(400).send("Skipping fulfilled order to prevent duplication");
+              return res.status(400).json({
+                message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
+              });
             }
 
             if (confirmedOrderEvent.isStrategyFlatRates()) {
               logger.info("Order has flat rates tax strategy, skipping...");
-              return res.status(202).send("Order has flat rates tax strategy.");
+              return res
+                .status(202)
+                .json({ message: `Order ${payload.order?.id} has flat rates tax strategy.` });
             }
 
             const appMetadata = payload.recipient?.privateMetadata ?? [];
@@ -101,7 +105,9 @@ export default wrapWithLoggerContext(
             if (config.isErr()) {
               logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-              return res.status(400).send("App configuration is broken");
+              return res
+                .status(400)
+                .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
             }
 
             metadataCache.setMetadata(appMetadata);
@@ -124,7 +130,9 @@ export default wrapWithLoggerContext(
               );
 
               if (providerConfig.isErr()) {
-                return res.status(400).send("App is not configured properly.");
+                return res.status(400).json({
+                  message: `App is not configured properly for order: ${payload.order?.id}`,
+                });
               }
 
               try {
@@ -157,13 +165,15 @@ export default wrapWithLoggerContext(
 
                 switch (true) {
                   case error instanceof TaxBadPayloadError: {
-                    return res.status(400).send("Order data is not valid.");
+                    return res
+                      .status(400)
+                      .json({ message: `Order: ${payload.order?.id} data is not valid` });
                   }
                 }
                 Sentry.captureException(error);
                 logger.error("Unhandled error executing webhook", { error });
 
-                return res.status(500).send("Unhandled error");
+                return res.status(500).json({ message: "Unhandled error" });
               }
             }
 
@@ -174,13 +184,13 @@ export default wrapWithLoggerContext(
 
               switch (error["constructor"]) {
                 case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                  return res.status(400).send("App is not configured properly.");
+                  return res.status(400).json({ message: "App is not configured properly." });
                 }
                 default: {
                   Sentry.captureException(webhookServiceResult.error);
                   logger.fatal("Unhandled error", { error });
 
-                  return res.status(500).send("Unhandled error");
+                  return res.status(500).json({ message: "Unhandled error" });
                 }
               }
             }
@@ -188,7 +198,7 @@ export default wrapWithLoggerContext(
             Sentry.captureException(error);
             logger.error("Unhandled error executing webhook", { error });
 
-            return res.status(500).send("Unhandled error");
+            return res.status(500).json({ message: "Unhandled error" });
           }
         }
       }),

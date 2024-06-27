@@ -51,25 +51,33 @@ export default wrapWithLoggerContext(
               logger.error("Insufficient order data", { error });
               Sentry.captureException("Insufficient order data");
 
-              return res.status(400).send("Invalid order payload");
+              return res
+                .status(400)
+                .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
             }
             case error instanceof OrderCancelNoAvataxIdError: {
               logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
                 error,
               });
-              return res.status(200).send("Invalid order payload. Likely not an AvaTax order.");
+              return res
+                .status(200)
+                .json({ message: "Invalid order payload. Likely not an AvaTax order." });
             }
             case error instanceof SaleorCancelledOrderEvent.ParsingError: {
               logger.error("Error parsing order payload", { error });
               Sentry.captureException(error);
 
-              return res.status(400).send("Invalid order payload");
+              return res
+                .status(400)
+                .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
             }
             default: {
               logger.error("Unhandled error", { error });
               Sentry.captureException(error);
 
-              return res.status(500).send("Unhandled error");
+              return res
+                .status(500)
+                .json({ message: `Unhandled error for order: ${payload.order?.id}` });
             }
           }
         }
@@ -104,7 +112,9 @@ export default wrapWithLoggerContext(
         if (config.isErr()) {
           logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-          return res.status(400).send("App configuration is broken");
+          return res
+            .status(400)
+            .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
         }
 
         const AvataxWebhookServiceFactory = await import(
@@ -123,7 +133,9 @@ export default wrapWithLoggerContext(
           const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
           if (providerConfig.isErr()) {
-            return res.status(400).send("App is not configured properly.");
+            return res
+              .status(400)
+              .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
           }
 
           await taxProvider.cancelOrder(
@@ -143,13 +155,13 @@ export default wrapWithLoggerContext(
 
           switch (avataxWebhookServiceResult.error["constructor"]) {
             case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-              return res.status(400).send("App is not configured properly.");
+              return res.status(400).json({ message: "App is not configured properly." });
             }
             default: {
               Sentry.captureException(avataxWebhookServiceResult.error);
               logger.fatal("Unhandled error", { error: avataxWebhookServiceResult.error });
 
-              return res.status(500).send("Unhandled error");
+              return res.status(500).json({ message: "Unhandled error" });
             }
           }
         }
