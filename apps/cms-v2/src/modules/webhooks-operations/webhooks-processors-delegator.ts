@@ -66,9 +66,19 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
+    if (connectionsToInclude.length === 0) {
+      this.logger.info("No connections found, skipping");
+      return;
+    }
+
     this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
+
+    if (processors.length === 0) {
+      this.logger.info("No processors found, skipping");
+      return;
+    }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
@@ -102,9 +112,19 @@ export class WebhooksProcessorsDelegator {
       relatedVariantChannels.includes(conn.channelSlug),
     );
 
+    if (connectionsToInclude.length === 0) {
+      this.logger.info("No connections found, skipping");
+      return;
+    }
+
     this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connectionsToInclude);
+
+    if (processors.length === 0) {
+      this.logger.info("No processors found, skipping");
+      return;
+    }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
       processors: processors.length,
@@ -122,9 +142,19 @@ export class WebhooksProcessorsDelegator {
 
     const { connections } = this.opts.context;
 
+    if (connections.length === 0) {
+      this.logger.info("No connections found, skipping");
+      return;
+    }
+
     this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
+
+    if (processors.length === 0) {
+      this.logger.info("No processors found, skipping");
+      return;
+    }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
@@ -142,9 +172,19 @@ export class WebhooksProcessorsDelegator {
 
     const { connections } = this.opts.context;
 
+    if (connections.length === 0) {
+      this.logger.info("No connections found, skipping");
+      return;
+    }
+
     this.logger.trace("Resolved a number of connections to include", connections);
 
     const processors = this.mapConnectionsToProcessors(connections);
+
+    if (processors.length === 0) {
+      this.logger.info("No processors found, skipping");
+      return;
+    }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
       processorsLenght: processors.length,
