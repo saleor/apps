@@ -55,7 +55,7 @@ export default wrapWithLoggerContext(
               error: payloadVerificationResult.error,
             });
 
-            return res.status(400).send(payloadVerificationResult.error.message);
+            return res.status(400).json({ message: payloadVerificationResult.error.message });
           }
 
           const appMetadata = payload.recipient?.privateMetadata ?? [];
@@ -85,7 +85,9 @@ export default wrapWithLoggerContext(
           if (config.isErr()) {
             logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-            return res.status(400).send("App configuration is broken");
+            return res.status(400).json({
+              message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
+            });
           }
 
           metadataCache.setMetadata(appMetadata);
@@ -104,7 +106,9 @@ export default wrapWithLoggerContext(
             const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
             if (providerConfig.isErr()) {
-              return res.status(400).send("App is not configured properly.");
+              return res.status(400).json({
+                message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
+              });
             }
 
             const calculatedTaxes = await taxProvider.calculateTaxes(
@@ -126,13 +130,15 @@ export default wrapWithLoggerContext(
 
             switch (err["constructor"]) {
               case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                return res.status(400).send("App is not configured properly.");
+                return res.status(400).json({
+                  message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
+                });
               }
               default: {
                 Sentry.captureException(avataxWebhookServiceResult.error);
                 logger.fatal("Unhandled error", { error: err });
 
-                return res.status(500).send("Unhandled error");
+                return res.status(500).json({ message: "Unhandled error" });
               }
             }
           }
@@ -150,7 +156,7 @@ export default wrapWithLoggerContext(
 
           Sentry.captureException(error);
 
-          return res.status(500).send("Unhandled error");
+          return res.status(500).json({ message: "Unhandled error" });
         }
       }),
     ),
