@@ -1,14 +1,16 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 
-import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { gql } from "urql";
 import { SaleorVersionQuery } from "../../../generated/graphql";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../logger";
+import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
+
+const logger = createLogger("createAppRegisterHandler");
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -43,12 +45,15 @@ export default wrapWithLoggerContext(
           return true;
         },
       ],
+      onAuthAplSaved: async (req, context) => {
+        logger.info("Avatax app configuration set up successfully", {
+          saleorApiUrl: context.authData.saleorApiUrl,
+        });
+      },
       /**
        * TODO Unify with all apps - shared code. Consider moving to app-sdk
        */
       async onRequestVerified(req, { authData: { token, saleorApiUrl }, respondWithError }) {
-        const logger = createLogger("createAppRegisterHandler.onRequestVerified");
-
         try {
           const client = createInstrumentedGraphqlClient({
             saleorApiUrl,
