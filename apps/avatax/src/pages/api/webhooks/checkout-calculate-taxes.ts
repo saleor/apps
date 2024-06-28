@@ -82,7 +82,9 @@ export default wrapWithLoggerContext(
           if (config.isErr()) {
             logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-            return res.status(400).send("App configuration is broken");
+            return res.status(400).json({
+              message: `App configuration is broken for checkout: ${payload.taxBase.sourceObject.id}`,
+            });
           }
 
           metadataCache.setMetadata(appMetadata);
@@ -90,29 +92,33 @@ export default wrapWithLoggerContext(
           return useCase.calculateTaxes(payload, authData).then((result) => {
             return result.match(
               (value) => {
-                return res.status(200).send(ctx.buildResponse(value));
+                return res.status(200).json(ctx.buildResponse(value));
               },
               (err) => {
                 logger.warn("Error calculating taxes", { error: err });
 
                 switch (err.constructor) {
                   case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
-                    return res.status(500).send("Failed to calculate taxes");
+                    return res.status(500).json({
+                      message: `Failed to calculate taxes for checkout: ${payload.taxBase.sourceObject.id}`,
+                    });
                   }
                   case CalculateTaxesUseCase.ConfigBrokenError: {
-                    return res
-                      .status(500)
-                      .send("Failed to calculate taxes due to invalid configuration");
+                    return res.status(500).json({
+                      message: `Failed to calculate taxes due to invalid configuration for checkout: ${payload.taxBase.sourceObject.id}`,
+                    });
                   }
                   case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
-                    return res
-                      .status(400)
-                      .send("Taxes cant be calculated due to incomplete payload");
+                    return res.status(400).json({
+                      message: `Taxes can't be calculated due to incomplete payload for checkout: ${payload.taxBase.sourceObject.id}`,
+                    });
                   }
                   case CalculateTaxesUseCase.UnhandledError: {
                     captureException(err);
 
-                    return res.status(500).send("Failed to calculate taxes (Unhandled error)");
+                    return res.status(500).json({
+                      message: `Failed to calculate taxes (Unhandled error) for checkout: ${payload.taxBase.sourceObject.id}`,
+                    });
                   }
                 }
               },
@@ -133,7 +139,7 @@ export default wrapWithLoggerContext(
 
           Sentry.captureException(error);
 
-          return res.status(500).send("Unhandled error");
+          return res.status(500).json({ message: "Unhandled error" });
         }
       }),
     ),
