@@ -21,7 +21,7 @@
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "eslint": "8.46.0",
-    "typescript": "5.1.6",
+    "typescript": "5.4.5",
     "urql": "^4.0.4"
   },
   "devDependencies": {
