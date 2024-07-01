@@ -34,3 +34,4 @@ export const AvataxGetTaxError = ExpectedError.subclass("AvataxGetTaxError");
 export const AvataxInvalidCredentialsError = ExpectedError.subclass(
   "AvataxInvalidCredentialsError",
 );
+export const AvataxStringLengthError = ExpectedError.subclass("StringLengthError");
