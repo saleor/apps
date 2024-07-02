@@ -4,6 +4,7 @@ import {
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
+  AvataxStringLengthError,
 } from "../taxes/tax-error";
 import { assertUnreachableWithoutThrow } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
@@ -19,7 +20,7 @@ export class AvataxErrorsParser {
 
   private static schema = z.object({
     // https://developer.avalara.com/avatax/errors/
-    code: z.enum(["InvalidAddress", "GetTaxError", "AuthenticationException"]),
+    code: z.enum(["InvalidAddress", "GetTaxError", "AuthenticationException", "StringLengthError"]),
     details: z.array(
       z.object({
         faultSubCode: z.string().optional(),
@@ -55,6 +56,9 @@ export class AvataxErrorsParser {
       }
       case "AuthenticationException": {
         return AvataxInvalidCredentialsError.normalize(parsedError);
+      }
+      case "StringLengthError": {
+        return AvataxStringLengthError.normalize(parsedError);
       }
       default: {
         assertUnreachableWithoutThrow(parsedError.data.code);
