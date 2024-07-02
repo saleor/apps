@@ -254,20 +254,20 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-document-nodes':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -483,14 +483,14 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -670,14 +670,14 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -833,17 +833,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1044,17 +1044,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1234,17 +1234,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1289,13 +1289,13 @@ importers:
     dependencies:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: 1.8.0
+        version: link:../../node_modules/@opentelemetry/api
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
       '@opentelemetry/core':
         specifier: ../../node_modules/@opentelemetry/core
-        version: 1.24.1(@opentelemetry/api@1.8.0)
+        version: link:../../node_modules/@opentelemetry/core
       '@opentelemetry/exporter-logs-otlp-http':
         specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
         version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
@@ -1319,13 +1319,13 @@ importers:
         version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-base':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-base
-        version: 1.24.1(@opentelemetry/api@1.8.0)
+        version: link:../../node_modules/@opentelemetry/sdk-trace-base
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
       '@opentelemetry/semantic-conventions':
         specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: 1.24.1
+        version: link:../../node_modules/@opentelemetry/semantic-conventions
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
@@ -1367,7 +1367,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
@@ -1400,17 +1400,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1605,17 +1605,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1792,17 +1792,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -1988,14 +1988,14 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -2145,17 +2145,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -2206,7 +2206,7 @@ importers:
         version: 4.4.6(monaco-editor@0.47.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
-        version: 1.9.0
+        version: link:../../node_modules/@opentelemetry/api
       '@opentelemetry/api-logs':
         specifier: ../../node_modules/@opentelemetry/api-logs
         version: link:../../node_modules/@opentelemetry/api-logs
@@ -2281,7 +2281,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2329,7 +2329,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -2368,17 +2368,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -2576,17 +2576,17 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
         specifier: 4.0.0
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
@@ -3000,17 +3000,17 @@ importers:
         specifier: 5.0.2
         version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.1.6)
       '@graphql-codegen/schema-ast':
-        specifier: 4.0.2
-        version: 4.0.2(graphql@16.7.1)
+        specifier: 4.1.0
+        version: 4.1.0(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
-        version: 5.0.5(graphql@16.7.1)
+        specifier: 5.0.8
+        version: 5.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
-        version: 4.0.5(graphql@16.7.1)
+        specifier: 4.0.8
+        version: 4.0.8(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
-        version: 4.1.3(graphql@16.7.1)
+        specifier: 4.2.2
+        version: 4.2.2(graphql@16.7.1)
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
@@ -3774,78 +3774,91 @@ packages:
   '@babel/plugin-proposal-async-generator-functions@7.20.7':
     resolution: {integrity: sha512-xMbiLsn/8RK7Wq7VeVytytS2L6qE69bXPB10YCmMdDZbKF4okCqY74pI/jJQ/8U0b/F6NrT2+14b8/P9/3AMGA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-async-generator-functions instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-class-properties@7.18.6':
     resolution: {integrity: sha512-cumfXOF0+nzZrrN8Rf0t7M+tF6sZc7vhQwYQck9q1/5w2OExlD+b4v4RpMJFaV1Z7WcDRgO6FqvxqxGlwo+RHQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-class-static-block@7.21.0':
     resolution: {integrity: sha512-XP5G9MWNUskFuP30IfFSEFB0Z6HzLIUcjYM4bYOPHXl7eiJ9HFv8tWj6TXTN5QODiEhDZAeI4hLok2iHFFV4hw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-static-block instead.
     peerDependencies:
       '@babel/core': ^7.12.0
 
   '@babel/plugin-proposal-dynamic-import@7.18.6':
     resolution: {integrity: sha512-1auuwmK+Rz13SJj36R+jqFPMJWyKEDd7lLSdOj4oJK0UTgGueSAtkrCvz9ewmgyU/P941Rv2fQwZJN8s6QruXw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-dynamic-import instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-export-namespace-from@7.18.9':
     resolution: {integrity: sha512-k1NtHyOMvlDDFeb9G5PhUXuGj8m/wiwojgQVEhJ/fsVsMCpLyOP4h0uGEjYJKrRI+EVPlb5Jk+Gt9P97lOGwtA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-export-namespace-from instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-json-strings@7.18.6':
     resolution: {integrity: sha512-lr1peyn9kOdbYc0xr0OdHTZ5FMqS6Di+H0Fz2I/JwMzGmzJETNeOFq2pBySw6X/KFL5EWDjlJuMsUGRFb8fQgQ==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-json-strings instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-logical-assignment-operators@7.20.7':
     resolution: {integrity: sha512-y7C7cZgpMIjWlKE5T7eJwp+tnRYM89HmRvWM5EQuB5BoHEONjmQ8lSNmBUwOyy/GFRsohJED51YBF79hE1djug==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-logical-assignment-operators instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-nullish-coalescing-operator@7.18.6':
     resolution: {integrity: sha512-wQxQzxYeJqHcfppzBDnm1yAY0jSRkUXR2z8RePZYrKwMKgMlE8+Z6LUno+bd6LvbGh8Gltvy74+9pIYkr+XkKA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-nullish-coalescing-operator instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-numeric-separator@7.18.6':
     resolution: {integrity: sha512-ozlZFogPqoLm8WBr5Z8UckIoE4YQ5KESVcNudyXOR8uqIkliTEgJ3RoketfG6pmzLdeZF0H/wjE9/cCEitBl7Q==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-numeric-separator instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-object-rest-spread@7.20.7':
     resolution: {integrity: sha512-d2S98yCiLxDVmBmE8UjGcfPvNEUbA1U5q5WxaWFUGRzJSVAZqm5W6MbPct0jxnegUZ0niLeNX+IOzEs7wYg9Dg==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-object-rest-spread instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-optional-catch-binding@7.18.6':
     resolution: {integrity: sha512-Q40HEhs9DJQyaZfUjjn6vE8Cv4GmMHCYuMGIWUnlxH6400VGxOuwWsPt4FxXxJkC/5eOzgn0z21M9gMT4MOhbw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-catch-binding instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-optional-chaining@7.21.0':
     resolution: {integrity: sha512-p4zeefM72gpmEe2fkUr/OnOXpWEf8nAgk7ZYVqqfFiyIG7oFfVZcCrU64hWn5xp4tQ9LkV4bTIa5rD0KANpKNA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-optional-chaining instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-private-methods@7.18.6':
     resolution: {integrity: sha512-nutsvktDItsNn4rpGItSNV2sz1XwS+nfU0Rg8aCx3W3NOKVzdMjJRu0O5OkgDp3ZGICSTbgRpxZoWsxoKRvbeA==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-methods instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -3858,12 +3871,14 @@ packages:
   '@babel/plugin-proposal-private-property-in-object@7.21.11':
     resolution: {integrity: sha512-0QZ8qP/3RLDVBwBFoWAwCtgcDZJVwA5LUJRZU8x2YFfKNuFq161wK3cuGrALu5yiPu+vzwTAg/sMWVNeWeNyaw==}
     engines: {node: '>=6.9.0'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-property-in-object instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
   '@babel/plugin-proposal-unicode-property-regex@7.18.6':
     resolution: {integrity: sha512-2BShG/d5yoZyXZfVePH91urL5wTG6ASZU9M4o03lKK8u8UW1y08OMttBSOADTcJrnPMpvDXRG3G8fyLh4ovs8w==}
     engines: {node: '>=4'}
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-unicode-property-regex instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -5526,23 +5541,28 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  '@graphql-codegen/schema-ast@4.0.2':
-    resolution: {integrity: sha512-5mVAOQQK3Oz7EtMl/l3vOQdc2aYClUzVDHHkMvZlunc+KlGgl81j8TLa+X7ANIllqU4fUEsQU3lJmk4hXP6K7Q==}
+  '@graphql-codegen/plugin-helpers@5.0.4':
+    resolution: {integrity: sha512-MOIuHFNWUnFnqVmiXtrI+4UziMTYrcquljaI5f/T/Bc7oO7sXcfkAvgkNWEEi9xWreYwvuer3VHCuPI/lAFWbw==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  '@graphql-codegen/typed-document-node@5.0.5':
-    resolution: {integrity: sha512-1bWoHYL8673zqq/yyp3L93JKTYrDNLymvibaldWn90PASI770gJ4fzH71RhkGaJDq0F43wmQk0sjz3s/RoKsLA==}
+  '@graphql-codegen/schema-ast@4.1.0':
+    resolution: {integrity: sha512-kZVn0z+th9SvqxfKYgztA6PM7mhnSZaj4fiuBWvMTqA+QqQ9BBed6Pz41KuD/jr0gJtnlr2A4++/0VlpVbCTmQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  '@graphql-codegen/typescript-document-nodes@4.0.5':
-    resolution: {integrity: sha512-e4x5aTBSdA+2YgQT8XyyvN/3ko85Fsdzv9nSkqIdZLu7WgrdxqSzcDHd76B+HldisV8L4PJCWcj4psBa9sDhqw==}
+  '@graphql-codegen/typed-document-node@5.0.8':
+    resolution: {integrity: sha512-ImJd1KwS0vYZiPVZzs8EOZ79V96zN0p1A1MJNpk/8CiJWpIi4FupLLfTMMYq5Rr0AZET+O/A+udw4LDjDrAWvg==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
-  '@graphql-codegen/typescript-operations@4.1.3':
-    resolution: {integrity: sha512-Goga2ISgicr/PLgK2NH5kwyQFctoGKpV+nv4Dr9II0xjHuuNvC6cqA66y/p8zKx6eS9p2GV87/IafqxV8r6K5Q==}
+  '@graphql-codegen/typescript-document-nodes@4.0.8':
+    resolution: {integrity: sha512-HjuuzXvl1kKc0zdxgXsKzPEgwICncNu+5ZUNx37t8Rh9Byk7ZH9SPFyMXRSUek21WPP1BX8giC3JzemrsR2UMw==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/typescript-operations@4.2.2':
+    resolution: {integrity: sha512-8FJHIAubM4r9ElLuuDAKhdOjainSwRHEmGIrtEgEwHARKhMk1Ttj6bpOQDisYlbDl4ZTHWEJCdNa9o9rgcl+9g==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
@@ -5553,8 +5573,8 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
       graphql-tag: ^2.0.0
 
-  '@graphql-codegen/typescript@4.0.5':
-    resolution: {integrity: sha512-PCS6LovGhyNfnmZ2AJ8rN5wGUhysWNsFwCPrZccuwBVCCvcet8/GNKStY5cHiDqG0B5Q+6g8OXVbffhxkkytLA==}
+  '@graphql-codegen/typescript@4.0.8':
+    resolution: {integrity: sha512-kYS3SjGNnC9vgFS8N3vaxzRFkdXX2umMi1SOpHjMFCPjMe8NR0uNdW4nP9T0YEq+DvWgj+XojjpFy2oyz9q12w==}
     peerDependencies:
       graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
@@ -5565,6 +5585,11 @@ packages:
 
   '@graphql-codegen/visitor-plugin-common@5.0.0':
     resolution: {integrity: sha512-qQOZZZ2MxmBEyd0Lm3lVh7zgauLXVBsg3ToucQJHmbk2WUxLMOcaf/+BOBIkrDjvWA8L+JU6COUT6uZc57DBcw==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+
+  '@graphql-codegen/visitor-plugin-common@5.3.0':
+    resolution: {integrity: sha512-+kUk7gRD/72Wfkjd7D96Lonh9k4lFw9d3O1+I07Jyja4QN9H42kdFEO0hM/b4Q9lLkI1yJ66Oym7lWz2Ikj3aw==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
@@ -5771,6 +5796,7 @@ packages:
   '@humanwhocodes/config-array@0.11.10':
     resolution: {integrity: sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -5778,6 +5804,7 @@ packages:
 
   '@humanwhocodes/object-schema@1.2.1':
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    deprecated: Use @eslint/object-schema instead
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -5993,10 +6020,6 @@ packages:
     resolution: {integrity: sha512-AdY5wvN0P2vXBi3b29hxZgSFvdhdxPB9+f0B6s//P9Q8nibRWeA3cHm8UmLpio9ABigkVHJ5NMPk+Mz8VCCyrw==}
     engines: {node: '>=8.0.0'}
 
-  '@opentelemetry/api@1.8.0':
-    resolution: {integrity: sha512-I/s6F7yKUDdtMsoBWXJe8Qz40Tui5vsuKCWJEWVL+5q9sSWRzzx6v2KeNsOBEwd94j0eWkpWCH4yB6rZg9Mf0w==}
-    engines: {node: '>=8.0.0'}
-
   '@opentelemetry/api@1.9.0':
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
     engines: {node: '>=8.0.0'}
@@ -6018,12 +6041,6 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.8.0'
-
-  '@opentelemetry/core@1.24.1':
-    resolution: {integrity: sha512-wMSGfsdmibI88K9wB498zXY04yThPexo8jvwNNlm542HZB7XrrMRBbAyKJqG8qDRJwIBdBrPMi4V9ZPW/sqrcg==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
 
   '@opentelemetry/exporter-logs-otlp-http@0.46.0':
     resolution: {integrity: sha512-XkVppqn4aArfaF7nE2fMou0pzrGLPKo7gjuYvQw39VD9GMtC8RSOt7aUUjaLdw/gFP5ZW4obZrclNttKdCUhwg==}
@@ -6145,12 +6162,6 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.8.0'
 
-  '@opentelemetry/resources@1.24.1':
-    resolution: {integrity: sha512-cyv0MwAaPF7O86x5hk3NNgenMObeejZFLJJDVuSeSMIsknlsj3oOZzRv3qSzlwYomXsICfBeFFlxwHQte5mGXQ==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
-
   '@opentelemetry/sdk-logs@0.45.1':
     resolution: {integrity: sha512-z0RRgW4LeKEKnhXS4F/HnqB6+7gsy63YK47F4XAJYHs4s1KKg8XnQ2RkbuL31i/a9nXkylttYtvsT50CGr487g==}
     engines: {node: '>=14'}
@@ -6195,12 +6206,6 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.8.0'
 
-  '@opentelemetry/sdk-trace-base@1.24.1':
-    resolution: {integrity: sha512-zz+N423IcySgjihl2NfjBf0qw1RWe11XIAWVrTNOSSI6dtSPJiVom2zipFB2AEEtJWpv0Iz6DY6+TjnyTV5pWg==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.0.0 <1.9.0'
-
   '@opentelemetry/sdk-trace-node@1.18.1':
     resolution: {integrity: sha512-ML0l9TNlfLoplLF1F8lb95NGKgdm6OezDS3Ymqav9sYxMd5bnH2LZVzd4xEF+ov5vpZJOGdWxJMs2nC9no7+xA==}
     engines: {node: '>=14'}
@@ -6213,10 +6218,6 @@ packages:
 
   '@opentelemetry/semantic-conventions@1.19.0':
     resolution: {integrity: sha512-14jRpC8f5c0gPSwoZ7SbEJni1PqI+AhAE8m1bMz6v+RPM4OlP1PT2UHBJj5Qh/ALLPjhVU/aZUK3YyjTUqqQVg==}
-    engines: {node: '>=14'}
-
-  '@opentelemetry/semantic-conventions@1.24.1':
-    resolution: {integrity: sha512-VkliWlS4/+GHLLW7J/rVBA00uXus1SWvwFvcUDxDwmFxYfg/2VI6ekwdXS28cjI8Qz2ky2BzG8OUHo+WeYIWqw==}
     engines: {node: '>=14'}
 
   '@peculiar/asn1-schema@2.3.6':
@@ -6248,6 +6249,7 @@ packages:
   '@playwright/test@1.35.1':
     resolution: {integrity: sha512-b5YoFe6J9exsMYg0pQAobNDR85T1nLumUYgUTtKm4d21iX2L7WqKq9dW8NGJ+2vX0etZd+Y7UeuqsxDXm9+5ZA==}
     engines: {node: '>=16'}
+    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
     hasBin: true
 
   '@polka/url@0.5.0':
@@ -7708,8 +7710,8 @@ packages:
   '@vanilla-extract/private@1.0.3':
     resolution: {integrity: sha512-17kVyLq3ePTKOkveHxXuIJZtGYs+cSoev7BlP+Lf4916qfDhk/HBjvlYDe8egrea7LNPHKwSZJK/bzZC+Q6AwQ==}
 
-  '@vanilla-extract/private@1.0.4':
-    resolution: {integrity: sha512-8FGD6AejeC/nXcblgNCM5rnZb9KXa4WNkR03HCWtdJBpANjTgjHEglNLFnhuvdQ78tC6afaxBPI+g7F2NX3tgg==}
+  '@vanilla-extract/private@1.0.5':
+    resolution: {integrity: sha512-6YXeOEKYTA3UV+RC8DeAjFk+/okoNz/h88R+McnzA2zpaVqTR/Ep+vszkWYlGBcMNO7vEkqbq5nT/JMMvhi+tw==}
 
   '@vanilla-extract/recipes@0.5.1':
     resolution: {integrity: sha512-7dCuBgPQQ/89siQ0w2lkfjgkmToPUUDzFlHf5DRmt9ykiiycfA52tmPJ2RI/mr7jXi7U/vEN2aGP9QJSXEpGlA==}
@@ -7882,6 +7884,7 @@ packages:
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
+    deprecated: Use your platform's native atob() and btoa() methods instead
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -8145,6 +8148,7 @@ packages:
   are-we-there-yet@2.0.0:
     resolution: {integrity: sha512-Ci/qENmwHnsYo9xKIcUJN5LeDKdJ6R1Z1j9V/J5wyq8nh/mYPEpIKJbBZXtZjG04HiK7zV/p6Vs9952MrMeUIw==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer supported.
 
   argparse@1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
@@ -9384,6 +9388,7 @@ packages:
   domexception@4.0.0:
     resolution: {integrity: sha512-A2is4PLG+eeSfoTMA95/s4pvAoSo2mKtiM5jlHkAVewmiO8ISFTFKZjH7UAM1Atli/OT/7JHOrJRJiMKUZKYBw==}
     engines: {node: '>=12'}
+    deprecated: Use your platform's native DOMException instead
 
   domhandler@3.3.0:
     resolution: {integrity: sha512-J1C5rIANUbuYK+FuFL98650rihynUOEzRLxW+90bKZRWB6A1X1Tf82GxR1qAWLyfNPRvjqfip3Q5tdYlmAa9lA==}
@@ -10149,6 +10154,7 @@ packages:
 
   formidable@1.2.6:
     resolution: {integrity: sha512-KcpbcpuLNOwrEjnbpMC0gS+X8ciDoZE1kkqzat4a8vrprf+s9pKNQ/QIwWfbfs4ltgmFl3MD177SNTkve3BwGQ==}
+    deprecated: 'Please upgrade to latest, formidable@v2 or formidable@v3! Check these notes: https://bit.ly/2ZEqIau'
 
   forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
@@ -10208,6 +10214,7 @@ packages:
   fstream@1.0.12:
     resolution: {integrity: sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg==}
     engines: {node: '>=0.6'}
+    deprecated: This package is no longer supported.
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
@@ -10229,6 +10236,7 @@ packages:
   gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
+    deprecated: This package is no longer supported.
 
   gensequence@5.0.2:
     resolution: {integrity: sha512-JlKEZnFc6neaeSVlkzBGGgkIoIaSxMgvdamRoPN8r3ozm2r9dusqxeKqYQ7lhzmj2UhFQP8nkyfCaiLQxiLrDA==}
@@ -10346,6 +10354,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
@@ -10462,6 +10471,7 @@ packages:
   har-validator@5.1.5:
     resolution: {integrity: sha512-nmT2T0lljbxdQZfspsno9hgrG3Uir6Ks5afism62poxqBM6sDnMEuPmzTq8XN0OEwqKLLdh1jQI3qyE66Nzb3w==}
     engines: {node: '>=6'}
+    deprecated: this library is no longer supported
 
   hard-rejection@2.1.0:
     resolution: {integrity: sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==}
@@ -11377,6 +11387,7 @@ packages:
 
   lightcookie@1.0.25:
     resolution: {integrity: sha512-SrY/+eBPaKAMnsn7mCsoOMZzoQyCyHHHZlFCu2fjo28XxSyCLjlooKiTxyrXTg8NPaHp1YzWi0lcGG1gDi6KHw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
@@ -11569,6 +11580,7 @@ packages:
 
   loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
+    deprecated: Please upgrade to 2.3.7 which fixes GHSA-4q6p-r6v2-jvc5
 
   loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
@@ -12247,6 +12259,7 @@ packages:
 
   npmlog@5.0.1:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
+    deprecated: This package is no longer supported.
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -12593,6 +12606,7 @@ packages:
   phin@3.7.0:
     resolution: {integrity: sha512-DqnVNrpYhKGBZppNKprD+UJylMeEKOZxHgPB+ZP6mGzf3uA2uox4Ep9tUm+rUc8WLIdHT3HcAE4X8fhwQA9JKg==}
     engines: {node: '>= 8'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
@@ -13230,12 +13244,14 @@ packages:
   request-promise-native@1.0.9:
     resolution: {integrity: sha512-wcW+sIUiWnKgNY0dqCpOZkUbF/I+YPi+f09JZIDa39Ec+q82CpSYniDp+ISgTTbKmnpJWASeJBPZmoxH84wt3g==}
     engines: {node: '>=0.12.0'}
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     peerDependencies:
       request: ^2.34
 
   request@2.88.2:
     resolution: {integrity: sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==}
     engines: {node: '>= 6'}
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -13306,14 +13322,17 @@ packages:
 
   rimraf@2.6.3:
     resolution: {integrity: sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
   rollup@2.78.0:
@@ -13675,6 +13694,7 @@ packages:
 
   sourcemap-codec@1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
 
   space-separated-tokens@1.1.5:
     resolution: {integrity: sha512-q/JSVd1Lptzhf5bkYm4ob4iWPjx0KiRe3sRFBNrVqbJkFaBm5vbbowy1mymoPNLRa52+oadOhJ+K49wsSeSjTA==}
@@ -13893,6 +13913,7 @@ packages:
   superagent@3.8.1:
     resolution: {integrity: sha512-VMBFLYgFuRdfeNQSMLbxGSLfmXL/xc+OO+BZp41Za/NRDBet/BNbkRJrYzCUu0u4GU0i/ml2dtT8b9qgkw9z6Q==}
     engines: {node: '>= 4.0'}
+    deprecated: Please upgrade to v9.0.0+ as we have fixed a public vulnerability with formidable dependency. Note that v9.0.0+ requires Node.js v14.18.0+. See https://github.com/ladjs/superagent/pull/1800 for insight. This project is supported and maintained by the team at Forward Email @ https://forwardemail.net
 
   supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
@@ -18749,7 +18770,7 @@ snapshots:
 
   '@graphql-codegen/add@5.0.2(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
       graphql: 16.7.1
       tslib: 2.6.2
 
@@ -18807,11 +18828,11 @@ snapshots:
       '@babel/template': 7.24.0
       '@graphql-codegen/add': 5.0.2(graphql@16.7.1)
       '@graphql-codegen/gql-tag-operations': 4.0.5(graphql@16.7.1)
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
-      '@graphql-codegen/typed-document-node': 5.0.5(graphql@16.7.1)
-      '@graphql-codegen/typescript': 4.0.5(graphql@16.7.1)
-      '@graphql-codegen/typescript-operations': 4.1.3(graphql@16.7.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-codegen/typed-document-node': 5.0.8(graphql@16.7.1)
+      '@graphql-codegen/typescript': 4.0.8(graphql@16.7.1)
+      '@graphql-codegen/typescript-operations': 4.2.2(graphql@16.7.1)
+      '@graphql-codegen/visitor-plugin-common': 5.3.0(graphql@16.7.1)
       '@graphql-tools/documents': 1.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
@@ -18823,7 +18844,7 @@ snapshots:
 
   '@graphql-codegen/core@4.0.2(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
       '@graphql-tools/schema': 10.0.2(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
@@ -18831,7 +18852,7 @@ snapshots:
 
   '@graphql-codegen/gql-tag-operations@4.0.5(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
       '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       auto-bind: 4.0.0
@@ -18892,17 +18913,27 @@ snapshots:
       lodash: 4.17.21
       tslib: 2.6.2
 
-  '@graphql-codegen/schema-ast@4.0.2(graphql@16.7.1)':
+  '@graphql-codegen/plugin-helpers@5.0.4(graphql@16.7.1)':
+    dependencies:
+      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      change-case-all: 1.0.15
+      common-tags: 1.8.2
+      graphql: 16.7.1
+      import-from: 4.0.0
+      lodash: 4.17.21
+      tslib: 2.6.2
+
+  '@graphql-codegen/schema-ast@4.1.0(graphql@16.7.1)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
       tslib: 2.6.2
 
-  '@graphql-codegen/typed-document-node@5.0.5(graphql@16.7.1)':
+  '@graphql-codegen/typed-document-node@5.0.8(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-codegen/visitor-plugin-common': 5.3.0(graphql@16.7.1)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       graphql: 16.7.1
@@ -18911,10 +18942,10 @@ snapshots:
       - encoding
       - supports-color
 
-  '@graphql-codegen/typescript-document-nodes@4.0.5(graphql@16.7.1)':
+  '@graphql-codegen/typescript-document-nodes@4.0.8(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-codegen/visitor-plugin-common': 5.3.0(graphql@16.7.1)
       auto-bind: 4.0.0
       graphql: 16.7.1
       tslib: 2.6.2
@@ -18922,11 +18953,11 @@ snapshots:
       - encoding
       - supports-color
 
-  '@graphql-codegen/typescript-operations@4.1.3(graphql@16.7.1)':
+  '@graphql-codegen/typescript-operations@4.2.2(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
-      '@graphql-codegen/typescript': 4.0.5(graphql@16.7.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-codegen/typescript': 4.0.8(graphql@16.7.1)
+      '@graphql-codegen/visitor-plugin-common': 5.3.0(graphql@16.7.1)
       auto-bind: 4.0.0
       graphql: 16.7.1
       tslib: 2.6.2
@@ -18946,11 +18977,11 @@ snapshots:
       - encoding
       - supports-color
 
-  '@graphql-codegen/typescript@4.0.5(graphql@16.7.1)':
+  '@graphql-codegen/typescript@4.0.8(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
-      '@graphql-codegen/schema-ast': 4.0.2(graphql@16.7.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-codegen/schema-ast': 4.1.0(graphql@16.7.1)
+      '@graphql-codegen/visitor-plugin-common': 5.3.0(graphql@16.7.1)
       auto-bind: 4.0.0
       graphql: 16.7.1
       tslib: 2.6.2
@@ -18977,7 +19008,24 @@ snapshots:
 
   '@graphql-codegen/visitor-plugin-common@5.0.0(graphql@16.7.1)':
     dependencies:
-      '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.7.1)
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
+      '@graphql-tools/optimize': 2.0.0(graphql@16.7.1)
+      '@graphql-tools/relay-operation-optimizer': 7.0.0(graphql@16.7.1)
+      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      auto-bind: 4.0.0
+      change-case-all: 1.0.15
+      dependency-graph: 0.11.0
+      graphql: 16.7.1
+      graphql-tag: 2.12.6(graphql@16.7.1)
+      parse-filepath: 1.0.2
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@graphql-codegen/visitor-plugin-common@5.3.0(graphql@16.7.1)':
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.7.1)
       '@graphql-tools/optimize': 2.0.0(graphql@16.7.1)
       '@graphql-tools/relay-operation-optimizer': 7.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
@@ -19562,9 +19610,8 @@ snapshots:
 
   '@opentelemetry/api@1.7.0': {}
 
-  '@opentelemetry/api@1.8.0': {}
-
-  '@opentelemetry/api@1.9.0': {}
+  '@opentelemetry/api@1.9.0':
+    optional: true
 
   '@opentelemetry/context-async-hooks@1.18.1(@opentelemetry/api@1.7.0)':
     dependencies:
@@ -19579,11 +19626,6 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.19.0
-
-  '@opentelemetry/core@1.24.1(@opentelemetry/api@1.8.0)':
-    dependencies:
-      '@opentelemetry/api': 1.8.0
-      '@opentelemetry/semantic-conventions': 1.24.1
 
   '@opentelemetry/exporter-logs-otlp-http@0.46.0(@opentelemetry/api@1.7.0)':
     dependencies:
@@ -19746,12 +19788,6 @@ snapshots:
       '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/semantic-conventions': 1.19.0
 
-  '@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0)':
-    dependencies:
-      '@opentelemetry/api': 1.8.0
-      '@opentelemetry/core': 1.24.1(@opentelemetry/api@1.8.0)
-      '@opentelemetry/semantic-conventions': 1.24.1
-
   '@opentelemetry/sdk-logs@0.45.1(@opentelemetry/api-logs@0.45.1)(@opentelemetry/api@1.7.0)':
     dependencies:
       '@opentelemetry/api': 1.7.0
@@ -19820,13 +19856,6 @@ snapshots:
       '@opentelemetry/resources': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/semantic-conventions': 1.19.0
 
-  '@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0)':
-    dependencies:
-      '@opentelemetry/api': 1.8.0
-      '@opentelemetry/core': 1.24.1(@opentelemetry/api@1.8.0)
-      '@opentelemetry/resources': 1.24.1(@opentelemetry/api@1.8.0)
-      '@opentelemetry/semantic-conventions': 1.24.1
-
   '@opentelemetry/sdk-trace-node@1.18.1(@opentelemetry/api@1.7.0)':
     dependencies:
       '@opentelemetry/api': 1.7.0
@@ -19840,8 +19869,6 @@ snapshots:
   '@opentelemetry/semantic-conventions@1.18.1': {}
 
   '@opentelemetry/semantic-conventions@1.19.0': {}
-
-  '@opentelemetry/semantic-conventions@1.24.1': {}
 
   '@peculiar/asn1-schema@2.3.6':
     dependencies:
@@ -21482,17 +21509,6 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/client': 10.43.1(@trpc/server@10.43.1)
-      '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/server': 10.43.1
-      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-ssr-prepass: 1.5.0(react@18.2.0)
-
   '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -21958,7 +21974,7 @@ snapshots:
   '@vanilla-extract/css@1.14.2':
     dependencies:
       '@emotion/hash': 0.9.1
-      '@vanilla-extract/private': 1.0.4
+      '@vanilla-extract/private': 1.0.5
       chalk: 4.1.2
       css-what: 6.1.0
       cssesc: 3.0.0
@@ -21996,7 +22012,7 @@ snapshots:
 
   '@vanilla-extract/private@1.0.3': {}
 
-  '@vanilla-extract/private@1.0.4': {}
+  '@vanilla-extract/private@1.0.5': {}
 
   '@vanilla-extract/recipes@0.5.1(@vanilla-extract/css@1.14.2)':
     dependencies:
@@ -24622,7 +24638,7 @@ snapshots:
       eslint: 8.46.0
       eslint-import-resolver-node: 0.3.7
       eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.29.1(eslint@8.46.0))(eslint@8.46.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.29.1(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5)(eslint@8.46.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.46.0)
       eslint-plugin-react: 7.33.2(eslint@8.46.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.46.0)
@@ -24663,7 +24679,7 @@ snapshots:
       enhanced-resolve: 5.15.0
       eslint: 8.46.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.29.1(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.29.1(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5)(eslint@8.46.0)
       get-tsconfig: 4.7.2
       globby: 13.1.4
       is-core-module: 2.13.1
@@ -24697,7 +24713,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.29.1(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.5.5)(eslint@8.46.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -27998,32 +28014,6 @@ snapshots:
       '@next/swc-win32-ia32-msvc': 14.2.3
       '@next/swc-win32-x64-msvc': 14.2.3
       '@opentelemetry/api': 1.7.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
-  next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 14.2.3
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001588
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.3
-      '@next/swc-darwin-x64': 14.2.3
-      '@next/swc-linux-arm64-gnu': 14.2.3
-      '@next/swc-linux-arm64-musl': 14.2.3
-      '@next/swc-linux-x64-gnu': 14.2.3
-      '@next/swc-linux-x64-musl': 14.2.3
-      '@next/swc-win32-arm64-msvc': 14.2.3
-      '@next/swc-win32-ia32-msvc': 14.2.3
-      '@next/swc-win32-x64-msvc': 14.2.3
-      '@opentelemetry/api': 1.8.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
