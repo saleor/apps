@@ -1,0 +1,10 @@
+query FetchOwnWebhooks($id: ID!) {
+  app(id: $id) {
+    id
+    name
+    isActive
+    webhooks {
+      ...OwnWebhook
+    }
+  }
+}

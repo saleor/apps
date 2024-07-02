@@ -1,0 +1,56 @@
+fragment ProductVariantData on ProductVariant {
+  metadata {
+    key
+    value
+  }
+  id
+  name
+  sku
+  pricing {
+    price {
+      gross {
+        amount
+      }
+      net {
+        amount
+      }
+    }
+    discount {
+      gross {
+        amount
+      }
+      net {
+        amount
+      }
+    }
+    onSale
+    priceUndiscounted {
+      gross {
+        amount
+      }
+      net {
+        amount
+      }
+    }
+  }
+  quantityAvailable 
+  channelListings {
+    id
+    channel {
+      slug
+      currencyCode
+    }
+    price {
+      currency
+      amount
+    }
+  }
+
+  attributes {
+    ...ProductAttributesData
+  }
+
+  product {
+    ...ProductData
+  }
+}

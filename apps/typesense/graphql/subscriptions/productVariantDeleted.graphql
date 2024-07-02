@@ -1,0 +1,18 @@
+subscription ProductVariantDeleted {
+  event {
+    __typename
+    ... on ProductVariantDeleted {
+      productVariant {
+        id
+        product{
+          id
+        }
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}
