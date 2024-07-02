@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.2
+
+### Patch Changes
+
+- 52332d71: You can now see additional logs when webhook processing is skip because of lack of connection or processor
+
 ## 2.9.1
 
 ### Patch Changes
