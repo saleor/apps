@@ -1,6 +1,6 @@
 {
   "name": "cms-v2",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",

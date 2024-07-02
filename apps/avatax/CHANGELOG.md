@@ -1,5 +1,13 @@
 # app-avatax
 
+## 1.7.1
+
+### Patch Changes
+
+- c77d1c5c: Add log to register endpoint. It will help us with spotting new clients using an app.
+- bedc1674: Add support for AvaTax string validation error. This helps us with better error handling.
+- 5670c6ed: Send JSON instead of string when webhook has non 200 response. This will help Saleor in displaying better logs.
+
 ## 1.7.0
 
 ### Minor Changes
