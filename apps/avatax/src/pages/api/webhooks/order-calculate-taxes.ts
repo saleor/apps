@@ -137,11 +137,6 @@ export default wrapWithLoggerContext(
                   message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
                 });
               }
-              case AvataxStringLengthError: {
-                return res.status(400).json({
-                  message: `AvaTax service returned validation error: ${err?.message} while processing order: ${payload.taxBase.sourceObject.id}`,
-                });
-              }
               default: {
                 Sentry.captureException(avataxWebhookServiceResult.error);
                 logger.fatal("Unhandled error", { error: err });
@@ -159,6 +154,17 @@ export default wrapWithLoggerContext(
 
             return res.status(400).json({
               message: "InvalidAppAddressError: Check address in app configuration",
+            });
+          }
+
+          if (error instanceof AvataxStringLengthError) {
+            logger.warn(
+              "AvataxStringLengthError: App returns status 400 due to not valid address data",
+              { error },
+            );
+
+            return res.status(400).json({
+              message: `AvaTax service returned validation error: ${error?.message} while processing order`,
             });
           }
 
