@@ -10,7 +10,10 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
+import {
+  AvataxInvalidAddressError,
+  AvataxStringLengthError,
+} from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
@@ -132,6 +135,11 @@ export default wrapWithLoggerContext(
               case AvataxWebhookServiceFactory.BrokenConfigurationError: {
                 return res.status(400).json({
                   message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
+                });
+              }
+              case AvataxStringLengthError: {
+                return res.status(400).json({
+                  message: `AvaTax service returned validation error: ${err?.message} while processing order: ${payload.taxBase.sourceObject.id}`,
                 });
               }
               default: {
