@@ -164,7 +164,7 @@ export default wrapWithLoggerContext(
             );
 
             return res.status(400).json({
-              message: `AvaTax service returned validation error: ${error?.message} while processing order`,
+              message: `AvaTax service returned validation error: ${error.description} `,
             });
           }
 

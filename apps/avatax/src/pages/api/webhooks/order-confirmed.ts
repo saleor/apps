@@ -172,7 +172,7 @@ export default wrapWithLoggerContext(
                   case error instanceof AvataxStringLengthError: {
                     return res.status(400).json({
                       // @ts-expect-error: error.message is defined - we have to remove this comment after TS upgrade
-                      message: `AvaTax service returned validation error: ${error?.message} while processing order: ${payload.order?.id}`,
+                      message: `AvaTax service returned validation error: ${error?.description}`,
                     });
                   }
                 }
