@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",

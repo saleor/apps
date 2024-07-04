@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.5
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 1.0.4
 
 ### Patch Changes

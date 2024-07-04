@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.3.1
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 1.3.0
 
 ### Minor Changes
