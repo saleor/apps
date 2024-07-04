@@ -58,7 +58,11 @@ export class AvataxErrorsParser {
         return AvataxInvalidCredentialsError.normalize(parsedError);
       }
       case "StringLengthError": {
-        return AvataxStringLengthError.normalize(parsedError);
+        return new AvataxStringLengthError(parsedError.data.code, {
+          props: {
+            description: parsedError.data.details[0].description,
+          },
+        });
       }
       default: {
         assertUnreachableWithoutThrow(parsedError.data.code);

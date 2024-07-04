@@ -10,7 +10,10 @@ import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-
 import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { AvataxInvalidAddressError } from "../../../modules/taxes/tax-error";
+import {
+  AvataxInvalidAddressError,
+  AvataxStringLengthError,
+} from "../../../modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
 import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
 
@@ -151,6 +154,17 @@ export default wrapWithLoggerContext(
 
             return res.status(400).json({
               message: "InvalidAppAddressError: Check address in app configuration",
+            });
+          }
+
+          if (error instanceof AvataxStringLengthError) {
+            logger.warn(
+              "AvataxStringLengthError: App returns status 400 due to not valid address data",
+              { error },
+            );
+
+            return res.status(400).json({
+              message: `AvaTax service returned validation error: ${error.description} `,
             });
           }
 
