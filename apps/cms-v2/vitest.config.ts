@@ -11,7 +11,7 @@ export default defineConfig({
     setupFiles: "./src/setup-tests.ts",
     css: false,
     alias: {
-      "@": "./src",
+      "@/": new URL("./src/", import.meta.url).pathname,
     },
   },
 });

@@ -16,8 +16,8 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "eslint-config-saleor": "workspace:*",
-    "vite": "4.4.8",
-    "vitest": "0.34.1"
+    "vite": "5.1.3",
+    "vitest": "1.2.2"
   },
   "exports": {
     ".": {
