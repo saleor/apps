@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-      - uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         name: Install pnpm
       - run: pnpm install
       - name: Create Release Pull Request
