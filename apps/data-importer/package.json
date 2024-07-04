@@ -34,7 +34,7 @@
     "@sentry/cli": "../../node_modules/@sentry/cli",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "@urql/exchange-auth": "2.1.4",
-    "@vitejs/plugin-react": "4.2.1",
+    "@vitejs/plugin-react": "4.0.4",
     "dot-object": "^2.1.4",
     "dotenv": "16.3.1",
     "graphql": "16.7.1",

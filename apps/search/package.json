@@ -72,7 +72,7 @@
     "@types/debug": "^4.1.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.2.1",
+    "@vitejs/plugin-react": "4.0.4",
     "eslint": "8.46.0",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
