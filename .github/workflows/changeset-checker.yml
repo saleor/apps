@@ -12,15 +12,22 @@ jobs:
     name: Changeset added to the PR
     # Adding 'skip changesets' label to the PR will skip this job
     if: ${{ !contains( github.event.pull_request.labels.*.name, 'skip changeset') && !startsWith(github.head_ref, 'changeset-release/') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v4
         with:
-          # check out full history
-          fetch-depth: 0
-      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        with:
-          run_install: |
-            - args: [--frozen-lockfile]
-      - name: Changeset added
-        run: pnpm changeset status --since origin/main
+          sparse-checkout: ./.changeset
+
+      - name: Changeset file lookup
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_ID: ${{ github.event.number }}
+        run: |
+          files=$(gh pr diff "$PR_ID" --name-only)
+          if [[ $files =~ \.changeset\/.*.md ]]; then
+            echo "Changesets found!"
+          else
+            echo "There is no changeset file in your pull request."
+            exit 1
+          fi
