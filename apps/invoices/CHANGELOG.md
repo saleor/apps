@@ -1,5 +1,17 @@
 # saleor-app-invoices
 
+## 1.19.4
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+- Updated dependencies [17077505]
+  - @saleor/sentry-utils@0.2.3
+  - @saleor/apps-logger@1.2.9
+  - @saleor/apps-shared@1.11.1
+  - @saleor/trpc@3.0.1
+  - @saleor/apps-ui@1.2.7
+
 ## 1.19.3
 
 ### Patch Changes

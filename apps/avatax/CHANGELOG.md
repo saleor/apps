@@ -1,5 +1,21 @@
 # app-avatax
 
+## 1.7.2
+
+### Patch Changes
+
+- e9c9c329: Add support for AvataxStringLengthError while processing order calculate taxes. Right now app will return 400 in such case.
+- 17077505: Updated TypeScript version to 4.5.4.
+- e9c9c329: Add support for AvataxStringLengthError to order calculate taxes webhook. When app gets this error from AvaTax it will return 400 with description of the issue.
+- Updated dependencies [17077505]
+  - @saleor/react-hook-form-macaw@0.2.9
+  - @saleor/webhook-utils@0.1.4
+  - @saleor/sentry-utils@0.2.3
+  - @saleor/apps-logger@1.2.9
+  - @saleor/apps-shared@1.11.1
+  - @saleor/apps-otel@1.3.1
+  - @saleor/apps-ui@1.2.7
+
 ## 1.7.1
 
 ### Patch Changes

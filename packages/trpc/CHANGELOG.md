@@ -1,5 +1,13 @@
 # @saleor/trpc
 
+## 3.0.1
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+- Updated dependencies [17077505]
+  - @saleor/apps-shared@1.11.1
+
 ## 3.0.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # saleor-app-products-feed
 
+## 1.19.1
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+- Updated dependencies [17077505]
+  - @saleor/react-hook-form-macaw@0.2.9
+  - @saleor/webhook-utils@0.1.4
+  - @saleor/sentry-utils@0.2.3
+  - @saleor/apps-logger@1.2.9
+  - @saleor/apps-shared@1.11.1
+  - @saleor/apps-otel@1.3.1
+  - @saleor/apps-ui@1.2.7
+
 ## 1.19.0
 
 ### Minor Changes
