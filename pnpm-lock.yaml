@@ -87,6 +87,9 @@ importers:
       prettier:
         specifier: 3.0.3
         version: 3.0.3
+      sherif:
+        specifier: 0.9.0
+        version: 0.9.0
       syncpack:
         specifier: 10.9.3
         version: 10.9.3
@@ -13559,6 +13562,40 @@ packages:
   shelljs@0.8.5:
     resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
     engines: {node: '>=4'}
+    hasBin: true
+
+  sherif-darwin-arm64@0.9.0:
+    resolution: {integrity: sha512-nP+tn4PzEiVwXgA4t5ZenAIqoZIzJt28DOaR9QI5tKHEOzosgf/RglYtFEU0O+xjbexrE9BOwdlvJ8vKloZ3Mg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  sherif-darwin-x64@0.9.0:
+    resolution: {integrity: sha512-n2PpWLwUJbJaq5lW8Jyll0RCWCNezsP3idAijFHMawUgThUNNMCSzFdLFWbT0ZuResgyDBu2vspMPEtJgwSvvg==}
+    cpu: [x64]
+    os: [darwin]
+
+  sherif-linux-arm64@0.9.0:
+    resolution: {integrity: sha512-S5NPMfWfYIN0JoQfJxDrXZZteRXHv9/r84RsOLZckoLvzTGc33VITg0Gqk2Yrm7j0cBRaFj6EyPxkasJ4iB4SQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  sherif-linux-x64@0.9.0:
+    resolution: {integrity: sha512-4RGatcQFcrK/IW6ZgdGyhjlVA/mS90ZCiNcXewwIzPVafTfyx56QzpWFANtZoUr7fg6o1xUZQ6QqXWk5k/x+pA==}
+    cpu: [x64]
+    os: [linux]
+
+  sherif-windows-arm64@0.9.0:
+    resolution: {integrity: sha512-/Gf4RLkcG/g+kjYR9JYn9338uGt/nbaIs9IWvNGmCODKEf4Xy87rFDr8ZYERArLpSmx+kgLZhi3UvGExy8oCPQ==}
+    cpu: [arm64]
+    os: [win32]
+
+  sherif-windows-x64@0.9.0:
+    resolution: {integrity: sha512-hJpCq/t1IUWu58LktbEsiBdGThtj/gvc9iqjHjSCGdzH8Oz/ALVfqTYibBX0akpnGiVOJd7JFHLv1WuUX6GjpA==}
+    cpu: [x64]
+    os: [win32]
+
+  sherif@0.9.0:
+    resolution: {integrity: sha512-n81vLJac110M1IN4rCl956PVIMGejucg+vZHKfOznU4vSwutc1FxmgQzrVV/bmN9uXdx4Khkl7/nhz82x+SESA==}
     hasBin: true
 
   shimmer@1.2.1:
@@ -29686,6 +29723,33 @@ snapshots:
       glob: 7.2.3
       interpret: 1.4.0
       rechoir: 0.6.2
+
+  sherif-darwin-arm64@0.9.0:
+    optional: true
+
+  sherif-darwin-x64@0.9.0:
+    optional: true
+
+  sherif-linux-arm64@0.9.0:
+    optional: true
+
+  sherif-linux-x64@0.9.0:
+    optional: true
+
+  sherif-windows-arm64@0.9.0:
+    optional: true
+
+  sherif-windows-x64@0.9.0:
+    optional: true
+
+  sherif@0.9.0:
+    optionalDependencies:
+      sherif-darwin-arm64: 0.9.0
+      sherif-darwin-x64: 0.9.0
+      sherif-linux-arm64: 0.9.0
+      sherif-linux-x64: 0.9.0
+      sherif-windows-arm64: 0.9.0
+      sherif-windows-x64: 0.9.0
 
   shimmer@1.2.1: {}
 
