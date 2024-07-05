@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "saleor-apps",
   "version": "0.0.0",
   "scripts": {
@@ -12,19 +11,14 @@
     "generate": "turbo run generate",
     "github:release": "pnpm changeset tag && git push --follow-tags",
     "lint": "turbo run lint",
+    "lint-staged": "lint-staged",
     "lint:fix": "turbo run lint:fix",
     "lint:packages": "sherif -r multiple-dependency-versions -r types-in-dependencies",
     "lint:packages:fix": "sherif --fix",
-    "lint-staged": "lint-staged",
     "prepare": "husky install",
     "start": "turbo run start",
     "test": "turbo run test"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "templates/*"
-  ],
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@opentelemetry/api": "1.7.0",
@@ -51,7 +45,6 @@
     "lint-staged": "^13.2.3",
     "next": "14.2.3",
     "prettier": "3.0.3",
-    "prettier-package-json": "2.8.0",
     "sherif": "0.9.0",
     "turbo": "1.12.4"
   },
@@ -62,13 +55,18 @@
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write",
-    "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files",
-    "package.json": "prettier-package-json --write"
+    "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
   "packageManager": "pnpm@9.2.0",
   "pnpm": {
     "overrides": {
       "crypto-js@<4.2.0": ">=4.2.0"
     }
-  }
+  },
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "templates/*"
+  ]
 }
