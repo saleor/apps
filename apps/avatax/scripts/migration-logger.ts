@@ -6,7 +6,7 @@ import { loggerContext } from "../src/logger-context";
 
 logger.settings.maskValuesOfKeys = ["username", "password", "token"];
 
-if (process.env.DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER === "true") {
+if (process.env.ENABLE_MIGRATION_CONSOLE_LOGGER === "true") {
   attachLoggerConsoleTransport(logger);
 }
 
