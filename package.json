@@ -63,10 +63,7 @@
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files",
-    "package.json": [
-      "prettier-package-json --write",
-      "git add"
-    ]
+    "package.json": "prettier-package-json --write"
   },
   "packageManager": "pnpm@9.2.0",
   "pnpm": {
