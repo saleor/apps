@@ -1,6 +1,6 @@
 {
   "name": "data-importer",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",

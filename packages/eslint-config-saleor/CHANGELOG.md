@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.10
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 0.4.9
 
 ### Patch Changes

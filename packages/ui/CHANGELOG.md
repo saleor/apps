@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.2.7
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 1.2.6
 
 ### Patch Changes

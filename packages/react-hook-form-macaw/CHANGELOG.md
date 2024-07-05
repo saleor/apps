@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.9
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 0.2.8
 
 ### Patch Changes

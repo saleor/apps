@@ -1,7 +1,7 @@
 {
   "name": "@saleor/e2e",
   "description": "",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "",
   "scripts": {
     "check-types": "tsc --noEmit",

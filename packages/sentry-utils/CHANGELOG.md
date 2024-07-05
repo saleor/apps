@@ -1,5 +1,11 @@
 # @saleor/sentry-utils
 
+## 0.2.3
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 0.2.2
 
 ### Patch Changes

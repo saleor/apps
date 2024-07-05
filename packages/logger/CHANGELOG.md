@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.2.9
+
+### Patch Changes
+
+- 17077505: Updated TypeScript version to 4.5.4.
+
 ## 1.2.8
 
 ### Patch Changes
