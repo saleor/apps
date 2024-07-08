@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@urql/exchange-auth": "^2.1.4",
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "semver": "^7.5.1"
   },
   "devDependencies": {

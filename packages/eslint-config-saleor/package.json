@@ -2,7 +2,7 @@
   "name": "eslint-config-saleor",
   "version": "0.4.10",
   "devDependencies": {
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "8.8.0",
     "eslint-config-turbo": "1.10.3",

@@ -36,7 +36,7 @@
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "@urql/exchange-auth": "^2.1.4",
     "dotenv": "16.3.1",
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "graphql": "16.7.1",
     "graphql-tag": "^2.12.6",
     "jose": "^4.11.2",

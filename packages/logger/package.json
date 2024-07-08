@@ -8,7 +8,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "tslog": "4.9.2",
     "typescript": "5.4.5"
   },
