@@ -88,7 +88,7 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitejs/plugin-react": "4.2.1",
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "eslint-plugin-neverthrow": "^1.1.4",
     "graphql-config": "^5.0.3",
