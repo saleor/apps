@@ -65,7 +65,7 @@
     "@types/dot-object": "^2.1.2",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "tsx": "4.7.1",
     "typescript": "5.4.5"

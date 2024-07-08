@@ -79,7 +79,7 @@
     "@types/qs": "^6.9.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
     "tsx": "4.7.1",

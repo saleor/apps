@@ -7,7 +7,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "eslint": "8.46.0",
+    "eslint": "../../node_modules/eslint",
     "typescript": "5.4.5"
   },
   "devDependencies": {
