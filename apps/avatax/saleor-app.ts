@@ -29,7 +29,7 @@ switch (process.env.APL) {
   }
   default:
     apl = new FileAPL({
-      fileName: process.env.APL_FILE_NAME,
+      fileName: process.env.APL_FILE_PATH,
     });
 }
 
