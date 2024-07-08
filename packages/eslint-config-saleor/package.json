@@ -3,10 +3,10 @@
   "version": "0.4.10",
   "devDependencies": {
     "eslint": "../../node_modules/eslint",
-    "eslint-config-next": "14.2.3",
-    "eslint-config-prettier": "8.8.0",
-    "eslint-config-turbo": "1.10.3",
-    "eslint-plugin-react": "7.33.2",
+    "eslint-config-next": "14.2.4",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-config-turbo": "2.0.6",
+    "eslint-plugin-react": "7.34.3",
     "next": "14.2.3",
     "typescript": "5.4.5"
   },
