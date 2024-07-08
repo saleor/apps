@@ -1,5 +1,5 @@
-import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -28,7 +28,9 @@ switch (process.env.APL) {
     break;
   }
   default:
-    apl = new FileAPL();
+    apl = new FileAPL({
+      fileName: process.env.APL_FILE_NAME,
+    });
 }
 
 export const saleorApp = new SaleorApp({
