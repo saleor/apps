@@ -26,6 +26,8 @@ jobs:
         run: pnpm lint
       - name: Check types
         run: pnpm check-types
+      - name: Check package dependencies
+        run: pnpm lint:packages
 
   test:
     runs-on: ubuntu-22.04
