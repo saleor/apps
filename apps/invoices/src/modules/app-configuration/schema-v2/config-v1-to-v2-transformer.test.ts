@@ -7,7 +7,7 @@ describe("ConfigV1ToV2Transformer", function () {
     // @ts-expect-error
     const v2 = new ConfigV1ToV2Transformer().transform(null);
 
-    expect(v2.serialize()).toMatchInlineSnapshot('"{\\"channelsOverrides\\":{}}"');
+    expect(v2.serialize()).toMatchInlineSnapshot(`"{"channelsOverrides":{}}"`);
   });
 
   it("Maps V1 address overrides to V2 - single channel override", () => {
@@ -22,7 +22,7 @@ describe("ConfigV1ToV2Transformer", function () {
     expect(v2.getChannelsOverrides()).toEqual(
       expect.objectContaining({
         "default-channel": getMockAddress(),
-      })
+      }),
     );
   });
 
@@ -42,7 +42,7 @@ describe("ConfigV1ToV2Transformer", function () {
       expect.objectContaining({
         "default-channel": getMockAddress(),
         "custom-channel": getMockAddress(),
-      })
+      }),
     );
   });
 
@@ -66,7 +66,7 @@ describe("ConfigV1ToV2Transformer", function () {
           ...getMockAddress(),
           city: "",
         },
-      })
+      }),
     );
   });
 });
