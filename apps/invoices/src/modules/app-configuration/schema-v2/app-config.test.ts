@@ -11,7 +11,7 @@ describe("AppConfig", function () {
     const serialized = appConfig.serialize();
 
     expect(serialized).toMatchInlineSnapshot(
-      '"{\\"channelsOverrides\\":{\\"test\\":{\\"companyName\\":\\"Saleor\\",\\"cityArea\\":\\"\\",\\"countryArea\\":\\"Dolnoslaskie\\",\\"streetAddress1\\":\\"Techowa 7\\",\\"streetAddress2\\":\\"\\",\\"postalCode\\":\\"12-123\\",\\"city\\":\\"Wrocław\\",\\"country\\":\\"Poland\\"}}}"'
+      `"{"channelsOverrides":{"test":{"companyName":"Saleor","cityArea":"","countryArea":"Dolnoslaskie","streetAddress1":"Techowa 7","streetAddress2":"","postalCode":"12-123","city":"Wrocław","country":"Poland"}}}"`,
     );
   });
 

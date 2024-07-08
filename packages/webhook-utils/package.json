@@ -32,7 +32,7 @@
     "graphql-config": "5.0.3",
     "typescript": "5.4.5",
     "urql": "4.0.4",
-    "vite": "4.4.8",
+    "vite": "5.3.3",
     "vitest": "1.5.0"
   },
   "main": "index.ts",

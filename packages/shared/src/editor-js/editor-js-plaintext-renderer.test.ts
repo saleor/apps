@@ -26,7 +26,7 @@ describe("EditorJsPlaintextRenderer", () => {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nibh lacus, dignissim at aliquet et, gravida sed velit. Suspendisse at volutpat erat. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     );
   });
-  it("Returns text containing angle brackets, when passed block without the style tags", () => {
+  describe("Returns text containing angle brackets, when passed block without the style tags", () => {
     expect(
       EditorJsPlaintextRenderer({
         stringData:

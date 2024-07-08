@@ -46,7 +46,7 @@
     "@trpc/react-query": "10.43.1",
     "@trpc/server": "10.43.1",
     "@urql/exchange-auth": "^2.1.4",
-    "@vitejs/plugin-react": "4.0.4",
+    "@vitejs/plugin-react": "4.3.1",
     "dotenv": "16.3.1",
     "fast-xml-parser": "^4.0.15",
     "graphql": "16.7.1",
@@ -60,8 +60,8 @@
     "react-is": "^18.2.0",
     "urql": "^4.0.4",
     "usehooks-ts": "^2.9.1",
-    "vite": "4.4.8",
-    "vitest": "0.34.1",
+    "vite": "5.3.3",
+    "vitest": "1.6.0",
     "zod": "3.21.4"
   },
   "devDependencies": {
