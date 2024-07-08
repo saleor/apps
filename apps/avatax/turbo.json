@@ -24,7 +24,7 @@
         "SENTRY_PROJECT",
         "SENTRY_AUTH_TOKEN",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "APL_FILE_PATH"
+        "FILE_APL_PATH"
       ]
     },
     "test": {
