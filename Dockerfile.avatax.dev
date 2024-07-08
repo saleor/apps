@@ -15,6 +15,4 @@ RUN turbo prune app-avatax --docker
 
 RUN pnpm install --frozen-lockfile --filter=app-avatax
 
-RUN mkdir --parents auth  # Create a directory to store file APL token
-
 CMD pnpm dev --filter=app-avatax
