@@ -79,8 +79,8 @@ describe("generateGoogleXmlFeed", () => {
     });
 
     expect(result).toMatchInlineSnapshot(`
-      "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-      <rss xmlns:g=\\"http://base.google.com/ns/1.0\\" version=\\"2.0\\">
+      "<?xml version="1.0" encoding="utf-8"?>
+      <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
         <channel>
           <title>Example</title>
           <link>https://example.com</link>
@@ -147,8 +147,8 @@ describe("generateGoogleXmlFeed", () => {
     });
 
     expect(result).toMatchInlineSnapshot(`
-      "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-      <rss xmlns:g=\\"http://base.google.com/ns/1.0\\" version=\\"2.0\\">
+      "<?xml version="1.0" encoding="utf-8"?>
+      <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
         <channel>
           <title>Example</title>
           <link>https://example.com</link>

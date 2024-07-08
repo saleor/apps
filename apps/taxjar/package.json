@@ -60,8 +60,8 @@
     "taxjar": "^4.0.1",
     "urql": "^4.0.4",
     "usehooks-ts": "^2.9.1",
-    "vite": "4.4.8",
-    "vitest": "0.34.1",
+    "vite": "5.3.3",
+    "vitest": "1.6.0",
     "zod": "3.21.4"
   },
   "devDependencies": {
@@ -77,7 +77,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.0.4",
+    "@vitejs/plugin-react": "4.3.1",
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "tsx": "4.7.1",

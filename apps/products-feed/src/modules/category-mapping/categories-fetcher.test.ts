@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CategoriesFetcher } from "./categories-fetcher";
 import { Client, OperationResult } from "urql";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { FetchCategoriesWithMappingQuery } from "../../../generated/graphql";
+import { CategoriesFetcher } from "./categories-fetcher";
 
 type FetchResult = OperationResult<FetchCategoriesWithMappingQuery, { cursor: string | undefined }>;
 
@@ -38,7 +38,7 @@ describe("CategoriesFetcher", () => {
   });
 
   it("Fetches single page of categories correctly", async () => {
-    mockQueryPromise.mockImplementationOnce(async () => {
+    mockQueryPromise.mockImplementationOnce(() => {
       const data: FetchCategoriesWithMappingQuery = {
         categories: {
           pageInfo: {
@@ -72,8 +72,8 @@ describe("CategoriesFetcher", () => {
   });
 
   it("Fetches 3 pages correctly and merges them", async () => {
-    mockQueryPromise.mockImplementationOnce(async () => {
-      await wait();
+    mockQueryPromise.mockImplementationOnce(() => {
+      wait();
 
       return {
         error: undefined,
@@ -89,8 +89,8 @@ describe("CategoriesFetcher", () => {
       } as FetchResult;
     });
 
-    mockQueryPromise.mockImplementationOnce(async () => {
-      await wait();
+    mockQueryPromise.mockImplementationOnce(() => {
+      wait();
 
       return {
         error: undefined,
@@ -108,8 +108,8 @@ describe("CategoriesFetcher", () => {
       } as FetchResult;
     });
 
-    mockQueryPromise.mockImplementationOnce(async () => {
-      await wait();
+    mockQueryPromise.mockImplementationOnce(() => {
+      wait();
 
       return {
         error: undefined,
@@ -144,7 +144,7 @@ describe("CategoriesFetcher", () => {
   });
 
   it("Returns empty array if not categories returned from the API", async () => {
-    mockQueryPromise.mockImplementationOnce(async () => {
+    mockQueryPromise.mockImplementationOnce(() => {
       const data: FetchCategoriesWithMappingQuery = {
         categories: {
           pageInfo: {
