@@ -54,7 +54,6 @@ In the `apps` folder, you will find the following applications:
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
-- [slack](./apps/slack) - get notifications on Slack channel from Saleor events.
 - [smtp](./apps/smtp) - email communication with customers
 - [taxjar](./apps/taxjar) - calculates dynamic taxes via Taxjar API
 
@@ -63,6 +62,10 @@ In the `apps` folder, you will find the following applications:
 Some of the Saleor apps are available in separate repositories:
 
 - [Stripe](https://github.com/saleor/saleor-app-payment-stripe)
+
+#### Example apps
+
+- [Slack integration app example](https://github.com/saleor/example-slack-app)
 
 ## Development
 
