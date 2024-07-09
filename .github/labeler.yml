@@ -3,7 +3,6 @@
 "App: Klaviyo": "apps/klaviyo/**/*"
 "App: Product Feed": "apps/products-feed/**/*"
 "App: Search": "apps/search/**/*"
-"App: Slack": "apps/slack/**/*"
 "App: Avatax": "apps/avatax/**/*"
 "App: Taxjar": "apps/taxjar/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
