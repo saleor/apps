@@ -7,7 +7,7 @@ import packageJson from "../../../package.json";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
-import { checkoutCalculateTaxesSyncWebhook2 } from "@/app/webhooks/checkout-calculate-taxes-2/route";
+import { checkoutCalculateTaxesSyncWebhook2 } from "@/wh";
 
 export default wrapWithLoggerContext(
   withOtel(
