@@ -25,12 +25,6 @@ export const checkoutCalculateTaxesSyncWebhook2 = new SaleorSyncWebhook<Calculat
   webhookPath: "/api/webhooks/checkout-calculate-taxes-2",
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
