@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { MetadataItem } from "../../generated/graphql";
 import { createLogger } from "../logger";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Set global context that stores metadata from webhook payload.
@@ -40,8 +41,8 @@ export class AppMetadataCache {
   }
 }
 
-export const wrapWithMetadataCache = (cache: AppMetadataCache) => (handler: NextApiHandler) => {
-  return (req: NextApiRequest, res: NextApiResponse) => {
+export const wrapWithMetadataCache = (cache: AppMetadataCache) => (handler: any) => {
+  return (req: any, res: any) => {
     return cache.wrap(() => {
       return handler(req, res);
     });

@@ -7,6 +7,7 @@ import packageJson from "../../../package.json";
 import { REQUIRED_SALEOR_VERSION } from "../../../saleor-app";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
+import { checkoutCalculateTaxesSyncWebhook2 } from "@/app/webhooks/checkout-calculate-taxes-2/route";
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -34,7 +35,9 @@ export default wrapWithLoggerContext(
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
-          webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
+          webhooks: [...appWebhooks, checkoutCalculateTaxesSyncWebhook2].map((w) =>
+            w.getWebhookManifest(apiBaseURL),
+          ),
         };
 
         return manifest;
