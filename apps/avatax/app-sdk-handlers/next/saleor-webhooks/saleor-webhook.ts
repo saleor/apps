@@ -177,7 +177,7 @@ export abstract class SaleorWebhook<
                 },
               },
               {
-                status: WebhookErrorCodeMap[e.errorType] || 400,
+                status: 400,
               },
             );
           }
@@ -189,7 +189,7 @@ export abstract class SaleorWebhook<
           if (this.formatErrorResponse) {
             const { code, body } = await this.formatErrorResponse(e, req);
 
-            return NextResponse.json(body, { status: code });
+            return NextResponse.json(body, { status: 400 });
           }
 
           return new NextResponse(null, { status: 500 });
