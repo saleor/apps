@@ -4,7 +4,7 @@ import { orderCancelledAsyncWebhook } from "./src/modules/webhooks/definitions/o
 import { orderConfirmedAsyncWebhook } from "./src/modules/webhooks/definitions/order-confirmed";
 
 export const appWebhooks = [
-  checkoutCalculateTaxesSyncWebhook,
+  // checkoutCalculateTaxesSyncWebhook,
   orderCalculateTaxesSyncWebhook,
   orderCancelledAsyncWebhook,
   orderConfirmedAsyncWebhook,
