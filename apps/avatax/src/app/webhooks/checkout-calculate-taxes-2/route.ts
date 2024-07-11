@@ -1,5 +1,3 @@
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
@@ -12,18 +10,7 @@ import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
-import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
-import { saleorApp } from "../../../../saleor-app";
-import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
-import { SaleorSyncWebhook } from "../../../../app-sdk-handlers/next/saleor-webhooks/saleor-sync-webhook";
-
-export const checkoutCalculateTaxesSyncWebhook2 = new SaleorSyncWebhook<CalculateTaxesPayload>({
-  name: "CheckoutCalculateTaxes2",
-  apl: saleorApp.apl,
-  event: "CHECKOUT_CALCULATE_TAXES",
-  query: UntypedCalculateTaxesDocument,
-  webhookPath: "/api/webhooks/checkout-calculate-taxes-2",
-});
+import { checkoutCalculateTaxesSyncWebhook2 } from "@/wh";
 
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
