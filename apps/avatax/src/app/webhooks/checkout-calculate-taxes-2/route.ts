@@ -130,7 +130,7 @@ const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
                 );
               }
               default: {
-                return NextResponse.json({});
+                return NextResponse.json({}, { status: 500 });
               }
             }
           },
