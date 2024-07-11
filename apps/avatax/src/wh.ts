@@ -8,5 +8,5 @@ export const checkoutCalculateTaxesSyncWebhook2 = new SaleorSyncWebhook<Calculat
   apl: saleorApp.apl,
   event: "CHECKOUT_CALCULATE_TAXES",
   query: UntypedCalculateTaxesDocument,
-  webhookPath: "/api/webhooks/checkout-calculate-taxes-2",
+  webhookPath: "/webhooks/checkout-calculate-taxes-2",
 });
