@@ -21,11 +21,10 @@ export interface WebhookConfig<Event = AsyncWebhookEventType | SyncWebhookEventT
   event: Event;
   isActive?: boolean;
   apl: APL;
-  onError?(error: WebhookError | Error, req: NextRequest, res: NextResponse): void;
+  onError?(error: WebhookError | Error, req: NextRequest): void;
   formatErrorResponse?(
     error: WebhookError | Error,
     req: NextRequest,
-    res: NextResponse,
   ): Promise<{
     code: number;
     body: object | string;
@@ -56,9 +55,8 @@ export const WebhookErrorCodeMap: Record<SaleorWebhookError, number> = {
 
 export type NextWebhookApiHandler<TPayload = unknown, TExtras = {}> = (
   req: NextRequest,
-  res: NextResponse,
   ctx: WebhookContext<TPayload> & TExtras,
-) => unknown | Promise<unknown>;
+) => Promise<NextResponse>;
 
 export abstract class SaleorWebhook<
   TPayload = unknown,
@@ -150,23 +148,23 @@ export abstract class SaleorWebhook<
    * Also provides additional `context` object containing typed payload and request properties.
    */
   createHandler(handlerFn: NextWebhookApiHandler<TPayload, TExtras>) {
-    return async (req: NextRequest, res: NextResponse) => {
+    return async (req: NextRequest): Promise<NextResponse> => {
       await processSaleorWebhook<TPayload>({
         req,
         apl: this.apl,
         allowedEvent: this.event,
       })
         .then(async (context) => {
-          return handlerFn(req, res, { ...(this.extraContext ?? ({} as TExtras)), ...context });
+          return handlerFn(req, { ...(this.extraContext ?? ({} as TExtras)), ...context });
         })
         .catch(async (e) => {
           if (e instanceof WebhookError) {
             if (this.onError) {
-              this.onError(e, req, res);
+              this.onError(e, req);
             }
 
             if (this.formatErrorResponse) {
-              const { code, body } = await this.formatErrorResponse(e, req, res);
+              const { code, body } = await this.formatErrorResponse(e, req);
 
               return NextResponse.json(body, { status: code });
             }
@@ -185,17 +183,19 @@ export abstract class SaleorWebhook<
           }
 
           if (this.onError) {
-            this.onError(e, req, res);
+            this.onError(e, req);
           }
 
           if (this.formatErrorResponse) {
-            const { code, body } = await this.formatErrorResponse(e, req, res);
+            const { code, body } = await this.formatErrorResponse(e, req);
 
             return NextResponse.json(body, { status: code });
           }
 
           return new NextResponse(null, { status: 500 });
         });
+
+      return new NextResponse(null);
     };
   }
 }

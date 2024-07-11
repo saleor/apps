@@ -4,25 +4,26 @@ import { captureException } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { metadataCache, wrapWithMetadataCacheAppRouter } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook2 } from "@/wh";
+import { NextRequest, NextResponse } from "next/server";
 
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
-const withMetadataCache = wrapWithMetadataCache(metadataCache);
+const withMetadataCache = wrapWithMetadataCacheAppRouter(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
 });
 
-export const POST = withMetadataCache(
-  checkoutCalculateTaxesSyncWebhook2.createHandler(async (req, res, ctx) => {
+const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
+  async (req, ctx): Promise<NextResponse> => {
     try {
       const { payload, authData } = ctx;
 
@@ -69,7 +70,7 @@ export const POST = withMetadataCache(
       if (config.isErr()) {
         logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-        return Response.json(
+        return NextResponse.json(
           {
             message: `App configuration is broken for checkout: ${payload.taxBase.sourceObject.id}`,
           },
@@ -79,10 +80,10 @@ export const POST = withMetadataCache(
 
       metadataCache.setMetadata(appMetadata);
 
-      return useCase.calculateTaxes(payload, authData).then((result) => {
+      const res = useCase.calculateTaxes(payload, authData).then((result) => {
         return result.match(
           (value) => {
-            return Response.json(ctx.buildResponse(value), {
+            return NextResponse.json(ctx.buildResponse(value), {
               status: 200,
             });
           },
@@ -91,7 +92,7 @@ export const POST = withMetadataCache(
 
             switch (err.constructor) {
               case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
-                return Response.json(
+                return NextResponse.json(
                   {
                     message: `Failed to calculate taxes for checkout: ${payload.taxBase.sourceObject.id}`,
                   },
@@ -101,7 +102,7 @@ export const POST = withMetadataCache(
                 );
               }
               case CalculateTaxesUseCase.ConfigBrokenError: {
-                return Response.json(
+                return NextResponse.json(
                   {
                     message: `Failed to calculate taxes due to invalid configuration for checkout: ${payload.taxBase.sourceObject.id}`,
                   },
@@ -109,7 +110,7 @@ export const POST = withMetadataCache(
                 );
               }
               case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
-                return Response.json(
+                return NextResponse.json(
                   {
                     message: `Taxes can't be calculated due to incomplete payload for checkout: ${payload.taxBase.sourceObject.id}`,
                   },
@@ -119,7 +120,7 @@ export const POST = withMetadataCache(
               case CalculateTaxesUseCase.UnhandledError: {
                 captureException(err);
 
-                return Response.json(
+                return NextResponse.json(
                   {
                     message: `Failed to calculate taxes (Unhandled error) for checkout: ${payload.taxBase.sourceObject.id}`,
                   },
@@ -128,10 +129,15 @@ export const POST = withMetadataCache(
                   },
                 );
               }
+              default: {
+                return NextResponse.json({});
+              }
             }
           },
         );
       });
+
+      return res;
     } catch (error) {
       // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
       if (error instanceof AvataxInvalidAddressError) {
@@ -140,7 +146,7 @@ export const POST = withMetadataCache(
           { error },
         );
 
-        return Response.json(
+        return NextResponse.json(
           {
             message: "InvalidAppAddressError: Check address in app configuration",
           },
@@ -150,7 +156,9 @@ export const POST = withMetadataCache(
 
       Sentry.captureException(error);
 
-      return Response.json({ message: "Unhandled error" }, { status: 500 });
+      return NextResponse.json({ message: "Unhandled error" }, { status: 500 });
     }
-  }),
+  },
 );
+
+export const POST = withMetadataCache(handler) as (req: NextRequest) => Promise<NextResponse>;
