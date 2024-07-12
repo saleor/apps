@@ -35,9 +35,7 @@ export default wrapWithLoggerContext(
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
-          webhooks: [...appWebhooks, checkoutCalculateTaxesSyncWebhook2].map((w) =>
-            w.getWebhookManifest(apiBaseURL),
-          ),
+          webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
         };
 
         return manifest;

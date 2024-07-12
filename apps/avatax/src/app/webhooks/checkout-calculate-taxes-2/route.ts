@@ -65,7 +65,7 @@ const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
         );
       }
 
-      const res = useCase.calculateTaxes(payload, authData).then((result) => {
+      const res = await useCase.calculateTaxes(payload, authData).then((result) => {
         return result.match(
           (value) => {
             return NextResponse.json(ctx.buildResponse(value), {
