@@ -14,6 +14,7 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
   ],
   experimental: {
+    typedRoutes: true,
     optimizePackageImports: [
       "@sentry/nextjs",
       "@sentry/node",
