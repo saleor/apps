@@ -1,21 +1,16 @@
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCacheAppRouter } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook2 } from "@/wh";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
-
-const withMetadataCache = wrapWithMetadataCacheAppRouter(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
@@ -32,14 +27,6 @@ const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
       logger.info("Tax base payload for checkout calculate taxes", {
         payload: payload.taxBase,
       });
-
-      loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
-      loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
-
-      if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-      }
 
       logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
 
@@ -77,8 +64,6 @@ const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
           { status: 400 },
         );
       }
-
-      metadataCache.setMetadata(appMetadata);
 
       const res = useCase.calculateTaxes(payload, authData).then((result) => {
         return result.match(
@@ -161,4 +146,4 @@ const handler = checkoutCalculateTaxesSyncWebhook2.createHandler(
   },
 );
 
-export const POST = withMetadataCache(handler) as (req: NextRequest) => Promise<NextResponse>;
+export const POST = handler;
