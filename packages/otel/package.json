@@ -22,7 +22,7 @@
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "eslint": "../../node_modules/eslint",
     "typescript": "5.4.5",
-    "urql": "^4.0.4"
+    "urql": "4.0.4"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",

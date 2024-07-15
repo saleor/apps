@@ -181,7 +181,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -189,19 +189,19 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       avatax:
         specifier: ^23.7.0
         version: 23.7.0
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jotai:
         specifier: ^2.4.2
@@ -231,7 +231,7 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -301,7 +301,7 @@ importers:
         specifier: ^1.1.4
         version: 1.1.4(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.4.5))(eslint@node_modules+eslint)(typescript@5.4.5)
       graphql-config:
-        specifier: ^5.0.3
+        specifier: 5.0.3
         version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.4.5)
       pactum:
         specifier: ^3.6.0
@@ -400,14 +400,14 @@ importers:
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
-        specifier: ^4.29.19
+        specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
         specifier: 10.43.1
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -415,7 +415,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -424,13 +424,13 @@ importers:
         specifier: 10.46.4
         version: 10.46.4
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jsdom:
         specifier: ^20.0.3
@@ -460,7 +460,7 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -611,7 +611,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -626,7 +626,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jsdom:
         specifier: ^20.0.3
@@ -647,7 +647,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -774,7 +774,7 @@ importers:
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -789,7 +789,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jose:
         specifier: ^4.11.2
@@ -810,7 +810,7 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -976,7 +976,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -988,7 +988,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       handlebars:
         specifier: ^4.7.7
@@ -1021,7 +1021,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1181,7 +1181,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@web-std/file':
         specifier: ^3.0.2
@@ -1196,7 +1196,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       microinvoice:
         specifier: ^1.0.6
@@ -1217,7 +1217,7 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1353,7 +1353,7 @@ importers:
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       dotenv:
         specifier: 16.3.1
@@ -1362,7 +1362,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
@@ -1380,7 +1380,7 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@18.2.0)
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1543,7 +1543,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -1558,7 +1558,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       handlebars:
         specifier: ^4.7.7
@@ -1582,7 +1582,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1739,7 +1739,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       algoliasearch:
         specifier: 4.23.3
@@ -1757,7 +1757,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
@@ -1775,7 +1775,7 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       zod:
         specifier: 3.21.4
@@ -1917,7 +1917,7 @@ importers:
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
       '@tanstack/react-query':
-        specifier: ^4.29.19
+        specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
         specifier: 10.43.1
@@ -1932,7 +1932,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
@@ -1944,7 +1944,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jsdom:
         specifier: ^20.0.3
@@ -1965,7 +1965,7 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -2122,19 +2122,19 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
       dotenv:
-        specifier: ^16.3.1
-        version: 16.4.5
+        specifier: 16.3.1
+        version: 16.3.1
       graphql:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       handlebars:
         specifier: ^4.7.7
@@ -2179,7 +2179,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -2348,7 +2348,7 @@ importers:
         specifier: 10.43.1
         version: 10.43.1
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       dotenv:
         specifier: 16.3.1
@@ -2357,7 +2357,7 @@ importers:
         specifier: 16.7.1
         version: 16.7.1
       graphql-tag:
-        specifier: ^2.12.6
+        specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       jotai:
         specifier: ^2.4.2
@@ -2387,7 +2387,7 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -2463,7 +2463,7 @@ importers:
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
       dotenv:
-        specifier: ^16.3.1
+        specifier: 16.3.1
         version: 16.3.1
       eslint-config-saleor:
         specifier: workspace:*
@@ -2578,7 +2578,7 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
       '@saleor/app-sdk':
@@ -2670,14 +2670,14 @@ importers:
   packages/shared:
     dependencies:
       '@urql/exchange-auth':
-        specifier: ^2.1.4
+        specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       eslint:
         specifier: ../../node_modules/eslint
         version: link:../../node_modules/eslint
       semver:
-        specifier: ^7.5.1
-        version: 7.5.2
+        specifier: 7.5.1
+        version: 7.5.1
     devDependencies:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
@@ -2692,7 +2692,7 @@ importers:
         specifier: 18.2.5
         version: 18.2.5
       '@types/semver':
-        specifier: ^7.5.0
+        specifier: 7.5.0
         version: 7.5.0
       eslint-config-saleor:
         specifier: workspace:*
@@ -2710,7 +2710,7 @@ importers:
         specifier: 5.4.5
         version: 5.4.5
       urql:
-        specifier: ^4.0.4
+        specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 5.3.3
@@ -2728,7 +2728,7 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@tanstack/react-query':
-        specifier: ^4.29.19
+        specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
         specifier: 10.34.0
@@ -2866,8 +2866,8 @@ importers:
         specifier: 5.3.3
         version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
       vitest:
-        specifier: 1.5.0
-        version: 1.5.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        specifier: 1.6.0
+        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
 
 packages:
 
@@ -7765,32 +7765,17 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
 
-  '@vitest/expect@1.5.0':
-    resolution: {integrity: sha512-0pzuCI6KYi2SIC3LQezmxujU9RK/vwC1U9R0rLuGlNGcOuDWxqWKu6nUdFsX9tH1WU0SXtAxToOsEjeUn1s3hA==}
-
   '@vitest/expect@1.6.0':
     resolution: {integrity: sha512-ixEvFVQjycy/oNgHjqsL6AZCDduC+tflRluaHIzKIsdbzkLn2U/iBnVeJwB6HsIjQBdfMR8Z0tRxKUsvFJEeWQ==}
-
-  '@vitest/runner@1.5.0':
-    resolution: {integrity: sha512-7HWwdxXP5yDoe7DTpbif9l6ZmDwCzcSIK38kTSIt6CFEpMjX4EpCgT6wUmS0xTXqMI6E/ONmfgRKmaujpabjZQ==}
 
   '@vitest/runner@1.6.0':
     resolution: {integrity: sha512-P4xgwPjwesuBiHisAVz/LSSZtDjOTPYZVmNAnpHHSR6ONrf8eCJOFRvUwdHn30F5M1fxhqtl7QZQUk2dprIXAg==}
 
-  '@vitest/snapshot@1.5.0':
-    resolution: {integrity: sha512-qpv3fSEuNrhAO3FpH6YYRdaECnnRjg9VxbhdtPwPRnzSfHVXnNzzrpX4cJxqiwgRMo7uRMWDFBlsBq4Cr+rO3A==}
-
   '@vitest/snapshot@1.6.0':
     resolution: {integrity: sha512-+Hx43f8Chus+DCmygqqfetcAZrDJwvTj0ymqjQq4CvmpKFSTVteEOBzCusu1x2tt4OJcvBflyHUE0DZSLgEMtQ==}
 
-  '@vitest/spy@1.5.0':
-    resolution: {integrity: sha512-vu6vi6ew5N5MMHJjD5PoakMRKYdmIrNJmyfkhRpQt5d9Ewhw9nZ5Aqynbi3N61bvk9UvZ5UysMT6ayIrZ8GA9w==}
-
   '@vitest/spy@1.6.0':
     resolution: {integrity: sha512-leUTap6B/cqi/bQkXUu6bQV5TZPx7pmMBKBQiI0rJA8c3pB56ZsaTbREnF7CJfmvAS4V2cXIBAh/3rVwrrCYgw==}
-
-  '@vitest/utils@1.5.0':
-    resolution: {integrity: sha512-BDU0GNL8MWkRkSRdNFvCUCAVOeHaUlVJ9Tx0TYBZyXaaOTmGtUFObzchCivIBrIwKzvZA7A9sCejVhXM2aY98A==}
 
   '@vitest/utils@1.6.0':
     resolution: {integrity: sha512-21cPiuGMoMZwiOHa2i4LXkMkMkCGzA+MVFV70jRwHo95dL4x/ts5GZhML1QWuy7yfp3WzK3lRvZi3JnXTYqrBw==}
@@ -9409,10 +9394,6 @@ packages:
 
   dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
-    engines: {node: '>=12'}
-
-  dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
 
   dotenv@8.6.0:
@@ -11565,10 +11546,6 @@ packages:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
 
-  magic-string@0.30.7:
-    resolution: {integrity: sha512-8vBuFF/I/+OSLRmdf2wwFCJCz+nSn0m6DPvGH1fS/KiQoSaR+sETbov0eIk9KhEKy8CYqIkIAnbohxT/4H0kuA==}
-    engines: {node: '>=12'}
-
   magic-string@0.30.8:
     resolution: {integrity: sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==}
     engines: {node: '>=12'}
@@ -13373,16 +13350,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.5.2:
-    resolution: {integrity: sha512-SoftuTROv/cRjCze/scjGyiDtcUyxw1rgYQSZY7XTmtR5hX+dm76iDbTH8TkLPHCQmlbQVSSbNZCPM2hb0knnQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-
-  semver@7.5.4:
-    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.2:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
@@ -14526,11 +14493,6 @@ packages:
     engines: {node: '>=v14.16.0'}
     hasBin: true
 
-  vite-node@1.5.0:
-    resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-
   vite-node@1.6.0:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -14590,31 +14552,6 @@ packages:
       sugarss:
         optional: true
       terser:
-        optional: true
-
-  vitest@1.5.0:
-    resolution: {integrity: sha512-d8UKgR0m2kjdxDWX6911uwxout6GHS0XaGH1cksSIVVG8kRlE7G7aBw7myKQCvDI5dT4j7ZMa+l706BIORMDLw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@types/node': ^18.0.0 || >=20.0.0
-      '@vitest/browser': 1.5.0
-      '@vitest/ui': 1.5.0
-      happy-dom: '*'
-      jsdom: '*'
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@types/node':
-        optional: true
-      '@vitest/browser':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
         optional: true
 
   vitest@1.6.0:
@@ -18025,7 +17962,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.2
 
   '@changesets/assemble-release-plan@5.2.4':
     dependencies:
@@ -18034,7 +17971,7 @@ snapshots:
       '@changesets/get-dependents-graph': 1.3.6
       '@changesets/types': 5.2.1
       '@manypkg/get-packages': 1.1.3
-      semver: 7.5.4
+      semver: 7.6.2
 
   '@changesets/changelog-git@0.1.14':
     dependencies:
@@ -18071,7 +18008,7 @@ snapshots:
       p-limit: 2.3.0
       preferred-pm: 3.0.3
       resolve-from: 5.0.0
-      semver: 7.5.4
+      semver: 7.6.2
       spawndamnit: 2.0.0
       term-size: 2.2.1
       tty-table: 4.2.1
@@ -18096,7 +18033,7 @@ snapshots:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.5.4
+      semver: 7.6.2
 
   '@changesets/get-release-plan@3.0.17':
     dependencies:
@@ -19724,7 +19661,7 @@ snapshots:
       '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/instrumentation': 0.46.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/semantic-conventions': 1.19.0
-      semver: 7.5.4
+      semver: 7.6.2
     transitivePeerDependencies:
       - supports-color
 
@@ -19741,7 +19678,7 @@ snapshots:
       '@types/shimmer': 1.0.5
       import-in-the-middle: 1.4.2
       require-in-the-middle: 7.2.0
-      semver: 7.5.4
+      semver: 7.6.2
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -19752,7 +19689,7 @@ snapshots:
       '@types/shimmer': 1.0.5
       import-in-the-middle: 1.7.1
       require-in-the-middle: 7.2.0
-      semver: 7.5.4
+      semver: 7.6.2
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -19913,7 +19850,7 @@ snapshots:
       '@opentelemetry/propagator-b3': 1.18.1(@opentelemetry/api@1.7.0)
       '@opentelemetry/propagator-jaeger': 1.18.1(@opentelemetry/api@1.7.0)
       '@opentelemetry/sdk-trace-base': 1.18.1(@opentelemetry/api@1.7.0)
-      semver: 7.5.4
+      semver: 7.6.2
 
   '@opentelemetry/semantic-conventions@1.18.1': {}
 
@@ -22086,23 +22023,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/expect@1.5.0':
-    dependencies:
-      '@vitest/spy': 1.5.0
-      '@vitest/utils': 1.5.0
-      chai: 4.4.1
-
   '@vitest/expect@1.6.0':
     dependencies:
       '@vitest/spy': 1.6.0
       '@vitest/utils': 1.6.0
       chai: 4.4.1
-
-  '@vitest/runner@1.5.0':
-    dependencies:
-      '@vitest/utils': 1.5.0
-      p-limit: 5.0.0
-      pathe: 1.1.2
 
   '@vitest/runner@1.6.0':
     dependencies:
@@ -22110,32 +22035,15 @@ snapshots:
       p-limit: 5.0.0
       pathe: 1.1.2
 
-  '@vitest/snapshot@1.5.0':
-    dependencies:
-      magic-string: 0.30.7
-      pathe: 1.1.2
-      pretty-format: 29.7.0
-
   '@vitest/snapshot@1.6.0':
     dependencies:
       magic-string: 0.30.8
       pathe: 1.1.2
       pretty-format: 29.7.0
 
-  '@vitest/spy@1.5.0':
-    dependencies:
-      tinyspy: 2.2.1
-
   '@vitest/spy@1.6.0':
     dependencies:
       tinyspy: 2.2.1
-
-  '@vitest/utils@1.5.0':
-    dependencies:
-      diff-sequences: 29.6.3
-      estree-walker: 3.0.3
-      loupe: 2.3.7
-      pretty-format: 29.7.0
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -23775,7 +23683,7 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       file-entry-cache: 6.0.1
       get-stdin: 9.0.0
-      semver: 7.5.4
+      semver: 7.6.2
       strip-ansi: 7.1.0
       vscode-uri: 3.0.7
     transitivePeerDependencies:
@@ -24130,8 +24038,6 @@ snapshots:
   dotenv-expand@10.0.0: {}
 
   dotenv@16.3.1: {}
-
-  dotenv@16.4.5: {}
 
   dotenv@8.6.0: {}
 
@@ -25461,7 +25367,7 @@ snapshots:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
-      minimatch: 9.0.3
+      minimatch: 9.0.5
       minipass: 5.0.0
       path-scurry: 1.11.1
 
@@ -26882,10 +26788,6 @@ snapshots:
   lz-string@1.5.0: {}
 
   magic-string@0.27.0:
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-
-  magic-string@0.30.7:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
 
@@ -29393,14 +29295,6 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
-  semver@7.5.2:
-    dependencies:
-      lru-cache: 6.0.0
-
-  semver@7.5.4:
-    dependencies:
-      lru-cache: 6.0.0
-
   semver@7.6.2: {}
 
   send@0.18.0:
@@ -30636,23 +30530,6 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.5.0(@types/node@20.12.3)(terser@5.18.0):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.3.4
-      pathe: 1.1.2
-      picocolors: 1.0.0
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
   vite-node@1.6.0(@types/node@20.12.3)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
@@ -30689,40 +30566,6 @@ snapshots:
       '@types/node': 20.12.3
       fsevents: 2.3.3
       terser: 5.18.0
-
-  vitest@1.5.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0):
-    dependencies:
-      '@vitest/expect': 1.5.0
-      '@vitest/runner': 1.5.0
-      '@vitest/snapshot': 1.5.0
-      '@vitest/spy': 1.5.0
-      '@vitest/utils': 1.5.0
-      acorn-walk: 8.3.2
-      chai: 4.4.1
-      debug: 4.3.4
-      execa: 8.0.1
-      local-pkg: 0.5.0
-      magic-string: 0.30.7
-      pathe: 1.1.2
-      picocolors: 1.0.0
-      std-env: 3.7.0
-      strip-literal: 2.1.0
-      tinybench: 2.6.0
-      tinypool: 0.8.4
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
-      vite-node: 1.5.0(@types/node@20.12.3)(terser@5.18.0)
-      why-is-node-running: 2.2.2
-    optionalDependencies:
-      '@types/node': 20.12.3
-      jsdom: 20.0.3
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
 
   vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0):
     dependencies:
