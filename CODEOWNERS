@@ -1,12 +1,10 @@
 * @saleor/apps-guild
 /.github/ @saleor/SRE
 
-
-/apps/emails-and-messages @saleor/shopex-js
-/apps/taxes  @saleor/shopex-js
 /apps/avatax  @saleor/shopex-js
-/apps/search @saleor/shopex-js
+/apps/emails-and-messages @saleor/shopex-js
 /apps/klaviyo @saleor/shopex-js
+/apps/search @saleor/shopex-js
 /apps/smtp @saleor/shopex-js
 
 /apps/cms-v2 @saleor/merchant-js
@@ -14,5 +12,4 @@
 /apps/data-importer @saleor/merchant-js
 /apps/invoices @saleor/merchant-js
 /apps/products-feed @saleor/merchant-js
-/apps/slack @saleor/merchant-js
 /apps/segment @saleor/merchant-js
