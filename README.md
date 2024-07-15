@@ -55,7 +55,6 @@ In the `apps` folder, you will find the following applications:
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
 - [smtp](./apps/smtp) - email communication with customers
-- [taxjar](./apps/taxjar) - calculates dynamic taxes via Taxjar API
 
 #### Other official apps
 
@@ -66,6 +65,7 @@ Some of the Saleor apps are available in separate repositories:
 #### Example apps
 
 - [Slack integration app example](https://github.com/saleor/example-slack-app)
+- [Taxjar integration app example](https://github.com/saleor/example-app-taxjar)
 
 ## Development
 

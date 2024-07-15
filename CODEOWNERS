@@ -4,7 +4,6 @@
 
 /apps/emails-and-messages @saleor/shopex-js
 /apps/taxes  @saleor/shopex-js
-/apps/taxjar  @saleor/shopex-js
 /apps/avatax  @saleor/shopex-js
 /apps/search @saleor/shopex-js
 /apps/klaviyo @saleor/shopex-js

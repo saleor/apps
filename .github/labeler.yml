@@ -4,7 +4,6 @@
 "App: Product Feed": "apps/products-feed/**/*"
 "App: Search": "apps/search/**/*"
 "App: Avatax": "apps/avatax/**/*"
-"App: Taxjar": "apps/taxjar/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
 "App: CMS": "apps/cms-v2/**/*"
 "App: CRM": "apps/crm/**/*"
