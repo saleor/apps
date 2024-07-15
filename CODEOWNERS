@@ -2,14 +2,14 @@
 /.github/ @saleor/SRE
 
 /apps/avatax  @saleor/shopex-js
-/apps/emails-and-messages @saleor/shopex-js
-/apps/klaviyo @saleor/shopex-js
-/apps/search @saleor/shopex-js
-/apps/smtp @saleor/shopex-js
 
 /apps/cms-v2 @saleor/merchant-js
 /apps/crm @saleor/merchant-js
 /apps/data-importer @saleor/merchant-js
+/apps/emails-and-messages @saleor/merchant-js
 /apps/invoices @saleor/merchant-js
+/apps/klaviyo @saleor/merchant-js
 /apps/products-feed @saleor/merchant-js
+/apps/search @saleor/merchant-js
 /apps/segment @saleor/merchant-js
+/apps/smtp @saleor/merchant-js
