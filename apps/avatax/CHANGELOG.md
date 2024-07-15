@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.7.3
+
+### Patch Changes
+
+- 8ffaba30: Added `FILE_APL_PATH` env variable. It can be used to specify file name of file where file APL will be stored.
+- 16f9985a: Switch webhook migration to parallel mode. Releases and migrations should be faster now.
+
 ## 1.7.2
 
 ### Patch Changes
