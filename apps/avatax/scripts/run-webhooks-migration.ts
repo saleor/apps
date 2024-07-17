@@ -70,7 +70,7 @@ const runMigrations = async () => {
             const webhooks = appDetails.webhooks;
 
             if (!webhooks?.length) {
-              logger.error("The environment does not have any webhooks, skipping");
+              logger.warn("The environment does not have any webhooks, skipping");
               return [];
             }
 
