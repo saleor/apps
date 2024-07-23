@@ -1,0 +1,21 @@
+meta {
+  name: 9. Run cron job
+  type: http
+  seq: 10
+}
+
+get {
+  url: http://localhost:3000/api/cron/preheat-webhooks-handlers
+  body: none
+  auth: bearer
+}
+
+
+auth:bearer {
+  token: {{cronBearer}}
+}
+
+script:pre-request {
+  const cronSecret = bru.getProcessEnv("CRON_SECRET");
+  bru.setVar('cronBearer', cronSecret);
+}
