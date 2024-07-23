@@ -1,21 +1,3 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "src/pages/api/webhooks/checkout-calculate-taxes.ts": {
-      "memory": 320,
-      "maxDuration": 25
-    },
-    "src/pages/api/webhooks/order-calculate-taxes.ts": {
-      "memory": 320,
-      "maxDuration": 25
-    },
-    "src/pages/api/webhooks/order-cancelled.ts": {
-      "memory": 320,
-      "maxDuration": 25
-    },
-    "src/pages/api/webhooks/order-confirmed.ts": {
-      "memory": 320,
-      "maxDuration": 25
-    }
-  }
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
