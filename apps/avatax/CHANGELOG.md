@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.7.4
+
+### Patch Changes
+
+- 5d68c00a: Added configuration that should help with cold starts of AvaTax app functions.
+
 ## 1.7.3
 
 ### Patch Changes
