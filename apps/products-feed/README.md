@@ -1,99 +1,59 @@
-<div align="center">
-  <h1>Products feed</h1>
+<div style="text-align: center">
+  <img width="150" alt="" src="./public/logo.png">
 </div>
 
-<div align="center">
-  <p>Share products data with the feed aggregators</p>
+<div style="text-align: center">
+  <h1>Saleor App Products feed</h1>
+
+  <p>Product Feed app allows generating an XML file with products and their details. The file can be used as a feed source for Google Merchant Center.</p>
 </div>
 
-## About Saleor Invoices app
+<div style="text-align: center">
+  <a target="_blank" rel="noopener noreferrer" href="https://docs.saleor.io/developer/app-store/apps/product-feed">Docs</a>
+<br><br>
+</div>
 
-- Create Google Merchant Feed XML
+### How to use this project
 
-## Development
+#### Requirements
 
-### Requirements
-
-Before you start, make sure you have installed:
-
-- [Node.js](https://nodejs.org/en/)
+- [node v16](http://nodejs.com)
 - [pnpm](https://pnpm.io/)
-- [Saleor CLI](https://docs.saleor.io/docs/3.x/cli) - optional, but recommended
+- [ngrok](https://ngrok.com/)
+- Saleor Cloud account (free!) or local instance
+- AWS S3 bucket (if you want to store you xml in S3 bucket)
+-
 
-### With CLI
+#### Running app in development mode
 
-The easiest way to set up a Saleor app is by using the Saleor CLI.
+1. Install the dependencies by running the following command in the shell:
 
-[Saleor CLI](https://github.com/saleor/saleor-cli) is designed to save you from the repetitive chores around Saleor development, including creating Apps. It will take the burden of spawning new apps locally, connecting them with Saleor environments, and establishing a tunnel for local development in seconds.
-
-[Full Saleor CLI reference](https://docs.saleor.io/docs/3.x/developer/cli)
-
-If you don't have a (free developer) Saleor Cloud account, create one with the following command:
-
-```
-saleor register
-```
-
-Now you're ready to create your first App:
-
-```
-saleor app create [your-app-name]
-```
-
-In this step, Saleor CLI will:
-
-- clone this repository to the specified folder
-- install dependencies
-- ask you whether you'd like to install the app in the selected Saleor environment
-- create `.env` file
-- start the app in development mode
-
-Having your app ready, the final thing you want to establish is a tunnel with your Saleor environment. Go to your app's directory first and run:
-
-```
-saleor app tunnel
-```
-
-Your local application should be available now to the outside world (Saleor instance) for accepting all the events via webhooks.
-
-A quick note: the next time you come back to your project, it is enough to launch your app in a standard way (and then launch your tunnel as described earlier):
-
-```
-pnpm dev
-```
-
-### Without CLI
-
-1. Install the dependencies by running:
-
-```
+```shell
 pnpm install
 ```
 
-2. Start the local server with:
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference. Set you `SECRET_KEY` in [`.env`](./.env)
 
-```
+3. Start the development server by running the following command in the shell:
+
+```shell
 pnpm dev
 ```
 
-3. Expose local environment using tunnel:
-   Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
+4. Products feed app will be available under `http://localhost:3000`
 
-4. Install application at your dashboard:
+> [!NOTE]
+> To test Products feed, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
 
-If you use Saleor Cloud or your local server is exposed, you can install your app by following this link:
+5. Tunnel the app and install it on the Saleor dashboard.
 
-```
-[YOUR_SALEOR_DASHBOARD_URL]/apps/install?manifestUrl=[YOUR_APP_TUNNEL_MANIFEST_URL]
-```
+### Testing app
 
-This template host manifest at `/api/manifest`
-
-You can also install application using GQL or command line. Follow the guide [how to install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) to learn more.
+[Here](./docs/testing.md) you can find doc how to test the app
 
 ### Generated schema and typings
 
-Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit the `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
+Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
 
 [Learn more](https://www.graphql-code-generator.com/) about GraphQL code generation.
 
@@ -109,6 +69,8 @@ The choice of the APL is done using `APL` environment variable. If value is not 
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
 
-### Environment variables
+### Learn more about Saleor Apps
 
-- `FEED_CACHE_MAX_AGE`: Amount of seconds the the response will be cached for. Default time is 5 minutes.
+[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+
+[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
