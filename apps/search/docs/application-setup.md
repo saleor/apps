@@ -1,27 +1,8 @@
 # App Configuration
 
-## Required configuration options
+## Index prefix
 
-Setting up those values is required by the application to work properly"
-
-- Application ID: ID of the Algolia application
-- Admin key: key required to update documents in the Algolia API
-- Search key: public key used by search preview
-
-All can be found in your Algolia dashboard. Choose existing application or create new one. Then choose `Overview` from the menu on the left hand side.
-Below the welcome message you'll find link to the section with keys:
-
-![](images/overview.png)
-
-This view contains all the keys we'll need:
-
-![](images/keys.png)
-
-Now you can set it in the Search App configuration view and run reindexing operation.
-
-## Optional
-
-- Index prefix: App will create multiple indices. For testing purposes you might want to have separate indices with names starting with `staging`.
+App will create multiple indices. For testing purposes you might want to have separate indices with names starting with `staging`.
 
 # Algolia configuration
 

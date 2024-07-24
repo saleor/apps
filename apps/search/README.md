@@ -1,73 +1,62 @@
-![Saleor App Search](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
-
-<div align="center">
-  <h1>Saleor App Search</h1>
+<div style="text-align: center">
+  <img width="150" alt="" src="./public/logo.png">
 </div>
 
-## About
+<div style="text-align: center">
+  <h1>Saleor Search App</h1>
 
-Saleor App providing integration with the Algolia (and more search engines in the future).
+  <p>The application provides integration with Algolia search engine. It allows you to index your products and search them using Algolia's API.</p>
+</div>
 
-### What's included?
+<div style="text-align: center">
+  <a target="_blank" rel="noopener noreferrer" href="https://docs.saleor.io/developer/app-store/apps/search">Docs</a>
+<br><br>
+</div>
 
-- Synchronize changes of your products catalog with Algolia
-- Search results preview
-- Each channel is a separate index
+### How to use this project
 
-### How to install
+#### Requirements
 
-- start local dev server or deploy the application
-- install the application in your Saleor Instance using manifest URL
-- [configure the application](./docs/application-setup.md)
-
-### Learn more about Apps
-
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
-
-## Development
-
-### Requirements
-
-Before you start, make sure you have installed:
-
-- [Node.js](https://nodejs.org/en/)
+- [node v16](http://nodejs.com)
 - [pnpm](https://pnpm.io/)
-- [Saleor CLI](https://docs.saleor.io/docs/3.x/cli) - optional, but recommended
+- [ngrok](https://ngrok.com/)
+- Saleor Cloud account (free!) or local instance
+- [Algolia](https://www.algolia.com/) account
 
-1. Install the dependencies by running:
+#### Running app in development mode
 
-```
+1. Install the dependencies by running the following command in the shell:
+
+```shell
 pnpm install
 ```
 
-2. Start the local server with:
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference. Set you `SECRET_KEY` in [`.env`](./.env)
 
-```
+3. Start the development server by running the following command in the shell:
+
+```shell
 pnpm dev
 ```
 
-3. Expose local environment using tunnel:
+4. Search app will be available under `http://localhost:3000`
 
-- Use Saleor CLI `saleor app tunnel`
-- Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
+> [!NOTE]
+> To test Search Webhooks, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
 
-4. Install application at your dashboard:
+5. Tunnel the app and install it on the Saleor dashboard.
 
-If you use Saleor Cloud or your local server is exposed, you can install your app by following this link:
+### Testing
 
-```
-[YOUR_SALEOR_DASHBOARD_URL]/apps/install?manifestUrl=[YOUR_APP_TUNNEL_MANIFEST_URL]
-```
+[Here](./docs/testing.md) you can find doc how to test the app
 
-This template host manifest at `/api/manifest`
+### Configuration
 
-You can also install application using GQL or command line. Follow the guide [how to install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) to learn more.
+[Here](./docs/application-setup.md) you can find doc how to setup algolia account
 
 ### Generated schema and typings
 
-Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit the `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
+Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
 
 [Learn more](https://www.graphql-code-generator.com/) about GraphQL code generation.
 
@@ -82,3 +71,9 @@ The choice of the APL is done using `APL` environment variable. If value is not 
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. Can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
+
+### Learn more about Saleor Apps
+
+[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+
+[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
