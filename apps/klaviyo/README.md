@@ -1,8 +1,14 @@
-# Saleor App Klaviyo
+<div style="text-align: center">
+  <img width="150" alt="" src="./public/logo.png">
+</div>
 
-Simple Klaviyo example app for Saleor
+<div style="text-align: center">
+  <h1>Saleor App Klaviyo</h1>
 
-![](docs/readme-assets/app-screen.png)
+  <p>Simple Klaviyo example app for Saleor</p>
+</div>
+
+![](docs/images/app-screen.png)
 
 ### What's included?
 
@@ -10,54 +16,42 @@ Simple Klaviyo example app for Saleor
 - 🏆 4 built-in, example webhooks, that trigger Klaviyo metrics
 - 🎨 Add new webhooks with ease
 
-### The stack
+### How to use this project
 
-Klaviyo app is based on App Template - you can check it [here](https://github.com/saleor/saleor-app-template)
-
-## How to use this project
-
-### Requirements
+#### Requirements
 
 - [node v16](http://nodejs.com)
 - [pnpm](https://pnpm.io/)
+- [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
-- [Saleor CLI](https://docs.saleor.io/docs/3.x/developer/cli)
+- [Klaviyo](https://www.klaviyo.com) account
 
-### Saleor CLI for the win 🚀
+#### Running app in development mode
 
-[Saleor CLI](https://github.com/saleor/saleor-cli) is designed to save you from the repetitive chores around Saleor development, including creating Apps. It will take the burden of spawning new apps locally, connecting them with Saleor environments, and establishing a tunnel for local development in seconds.
+1. Install the dependencies by running the following command in the shell:
 
-[Full Saleor CLI reference](https://docs.saleor.io/docs/3.x/developer/cli)
-
-### Local development
-
-1. Make sure you have installed required tools
-2. Clone repository
-3. Install app dependencies with `pnpm i`
-4. Start dev server `pnpm dev`
-5. To install app in your Saleor Instance and expose dev server to it, run in the separate terminal `saleor app tunnel`
-6. Now you can access the app configuration at [your dashboard]/apps and click on [klaviyo]
-7. Read how to connect the app with the Klaviyo [here](https://github.com/saleor/saleor-app-template)
-
-### Local development without CLI
-
-Add URL of your Saleor instance to the `.env` file:
-
-```
-NEXT_PUBLIC_SALEOR_HOST_URL=https://your-saleor-instance.com
+```shell
+pnpm install
 ```
 
-Install dependencies `pnpm install`
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference. Set you `SECRET_KEY` in [`.env`](./.env)
 
-Start local server `pnpm run dev`
+3. Start the development server by running the following command in the shell:
 
-Follow the guide [how install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) and use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/) in order to expose your local server.
-
-If you use [saleor-dashboard](https://github.com/saleor/saleor-dashboard) and your local server is exposed, you can install your app by following this link:
-
+```shell
+pnpm dev
 ```
-[YOUR_SALEOR_DASHBOARD_URL]/apps/install?manifestUrl=[YOUR_APPS_MANIFEST_URL]
-```
+
+4. Data importer app will be available under `http://localhost:3000`
+
+> [!NOTE]
+> To test Data importer, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
+
+5. Tunnel the app and install it on the Saleor dashboard.
+
+### Testing app
+
+[Here](./docs/testing.md) you can find doc how to test the app
 
 ### Generated schema and typings
 
