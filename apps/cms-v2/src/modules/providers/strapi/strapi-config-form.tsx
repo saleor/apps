@@ -37,7 +37,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         control={control}
         name="configName"
         label="Configuration name"
-        helperText="Meaningful name that will help you understand it later. E.g. 'staging' or 'prod' "
+        helperText={`Meaningful name that will help you understand it later, e.g. "staging" or "prod".`}
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
@@ -47,14 +47,14 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           control={control}
           name="authToken"
           label="Auth token"
-          helperText="Token with full permissions for the content type you want Saleor to store product."
+          helperText="Token with full permissions for the content type you want Saleor to store product in."
         />
         <Input
           required
           control={control}
           name="url"
           label="API Url"
-          helperText="Base api URL, usually without /api suffix"
+          helperText={`Base API URL, usually without the "/api" suffix.`}
           placeholder="https://your-strapi-url.com"
         />
       </Box>
@@ -65,15 +65,15 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           name="itemType"
           control={control}
           placeholder="saleor-products"
-          helperText="Plural name of the content type you want Saleor to send product to. E.g. 'products' or 'product-variants'"
+          helperText={`Plural name of the content type you want Saleor to send product to, e.g. "products" or "product-variants".`}
         />
 
         <Text as="p" variant="heading" size="small">
-          Map fields from Saleor to your Strapi schema.
+          Map fields from Saleor to your Strapi schema
         </Text>
         <Text as="p" marginTop={2} marginBottom={4}>
-          All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
-          type of <Text variant="bodyStrong">JSON</Text>.
+          All fields should be of type <Text variant="bodyStrong">Text</Text>. Channels should be of
+          type <Text variant="bodyStrong">JSON</Text>.
         </Text>
         <Box
           marginBottom={4}
@@ -85,7 +85,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           padding={2}
         >
           <Text variant="caption">Saleor Field</Text>
-          <Text variant="caption">Strapi field</Text>
+          <Text variant="caption">Strapi Field</Text>
         </Box>
         {SaleorProviderFieldsMappingKeys.map((saleorField) => (
           // todo extract this table to component
