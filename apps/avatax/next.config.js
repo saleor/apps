@@ -27,6 +27,7 @@ const nextConfig = {
       "@saleor/apps-shared",
     ],
     bundlePagesExternals: true,
+    esmExternals: true,
   },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
