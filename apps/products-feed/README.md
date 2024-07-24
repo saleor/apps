@@ -47,7 +47,7 @@ pnpm dev
 
 5. Tunnel the app and install it on the Saleor dashboard.
 
-### Testing app
+### Testing
 
 [Here](./docs/testing.md) you can find doc how to test the app
 
