@@ -5,7 +5,7 @@
 <div style="text-align: center">
   <h1>Saleor App Data importer</h1>
 
-  <p>Data Importer allows batch import customers data to Saleor from sources like CSV or Excel</p>
+  <p>Data Importer uses [Nuvo](https://www.getnuvo.com/) to batch import customers data to Saleor from sources like CSV or Excel</p>
 </div>
 
 ### How to use this project
@@ -26,23 +26,25 @@
 pnpm install
 ```
 
-2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference. Set you `NEXT_PUBLIC_NUVO_LICENSE_KEY` in [`.env`](./.env)
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference.
 
-3. Start the development server by running the following command in the shell:
+3. Set you `NEXT_PUBLIC_NUVO_LICENSE_KEY` in [`.env`](./.env). [Here](./docs/configuration.md) you can find how to get the key
+
+4. Start the development server by running the following command in the shell:
 
 ```shell
 pnpm dev
 ```
 
-4. Data importer app will be available under `http://localhost:3000`
+5. Data importer app will be available under `http://localhost:3000`
 
-5. Tunnel the app by running:
+6. Tunnel the app by running:
 
 ```shell
 ngrok http localhost:3000
 ```
 
-6. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
+7. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
 ### Testing
 

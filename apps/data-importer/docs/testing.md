@@ -1,6 +1,6 @@
 ## How to test Data importer app
 
-1. Take [example](./example.csv) file
+1. Take [example](./data/example.csv) file
 2. Import it
 3. Set mapping
    ![field-mapping.png](./images/field-mapping.png)
