@@ -1,12 +1,15 @@
-## How to test Klaviyo app
+## How configure the app:
 
 1. Go to Klaviyo account and copy your public key, follow this [Klaviyo document](https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys)
 2. Back to Dashboard, go to your app and put you api key here and save
    ![public-token.png](images/public-token.png)
-3. Now create new customer in Dashboard
-4. Go to Klaviyo [Metrics page](https://www.klaviyo.com/analytics/metrics), you should see your metric:
+
+## How to test your configuration:
+
+1. If you have everything setup go to Customers section and create new one
+2. To confirm that your metrics was sent, go Klaviyo [Metrics page](https://www.klaviyo.com/analytics/metrics) and you should see your metric:
    ![ss](images/new-metric.png)
-5. Now you can create your own flow
+3. Now you can create your own flow
 
 ## How to create Klaviyo flow:
 

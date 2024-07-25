@@ -1,7 +1,6 @@
-## How to test product sync between Saleor and cms provider
+## How configure the app:
 
 We can use Contentful as example:
-You can skip step 2 to 4 when you have already app and cms provider configured
 
 1. Go to Contentful, login or create free account
 2. Create content model for Saleor product variant
@@ -12,6 +11,11 @@ You can skip step 2 to 4 when you have already app and cms provider configured
    ![cms-token.png](images/cms-token.png)
 5. Update fields mapping in the app
    ![field-mapping.png](images/field-mapping.png)
-6. Go to Dashboard and try to update/create product and variant
-7. You should see variants in content tab in Contentful
+
+## How to test your configuration:
+
+If you set up your configuration like above we can now test connection between Saleor and Contentful.
+
+1. Go to Dashboard and try to update/create product and variant
+2. You should see variants in content tab in Contentful
    ![content.png](images/content.png)
