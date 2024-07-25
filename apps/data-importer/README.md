@@ -44,6 +44,9 @@ pnpm dev
 ngrok http localhost:3000
 ```
 
+> [!NOTE]
+> See [How to tunnel an app](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more info.
+
 7. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
 ### Testing
