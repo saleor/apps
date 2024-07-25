@@ -50,7 +50,7 @@ ngrok http localhost:3000
 > [!NOTE]
 > See [How to tunnel an app](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more info.
 
-6. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
+6. Go to Dashboard, open the `Apps` tab and click `Install external app`, provide your tunnel URL with the path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
 ### Configuration
 
@@ -58,16 +58,16 @@ ngrok http localhost:3000
 
 ### Generated schema and typings
 
-Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
+Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit a `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.
 
 [Learn more](https://www.graphql-code-generator.com/) about GraphQL code generation.
 
 ### Storing registration data - APL
 
-During registration process Saleor API pass the auth token to the app. With this token App can query Saleor API with privileged access (depending on requested permissions during the installation).
-To store this data, app-template use a different [APL interfaces](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md).
+During the registration process, Saleor API passes the auth token to the app. With this token, the app can query Saleor API with privileged access (depending on permissions requested during installation).
+To store this data, the app-template uses a different [APL interface](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md).
 
-The choice of the APL is done using `APL` environment variable. If value is not set, FileAPL is used. Available choices:
+The choice of the APL is done using the `APL` environment variable. If the value is not set, FileAPL is used. Available choices:
 
 - `file`: no additional setup is required. Good choice for local development. Can't be used for multi tenant-apps or be deployed (not intended for production)
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. Can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
