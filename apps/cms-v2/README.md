@@ -49,10 +49,13 @@ pnpm dev
 
 4. CMS app will be available under `http://localhost:3000`
 
-> [!NOTE]
-> To test CMS Webhooks, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
+5. Tunnel the app by running:
 
-5. Tunnel the app and install it on the Saleor dashboard.
+```shell
+ngrok http localhost:3000
+```
+
+6. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
 ### Configuration
 
