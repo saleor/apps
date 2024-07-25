@@ -32,7 +32,7 @@
 pnpm install
 ```
 
-2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference. Set you `SECRET_KEY` in [`.env`](./.env)
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference.
 
 3. Start the development server by running the following command in the shell:
 
