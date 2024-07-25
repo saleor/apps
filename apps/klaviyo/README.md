@@ -5,7 +5,7 @@
 <div style="text-align: center">
   <h1>Saleor App Klaviyo</h1>
 
-  <p>Simple Klaviyo example app for Saleor</p>
+  <p>The application provides integration with Klaviyo. It allows you to send metrics to Klaviyo.</p>
 </div>
 
 ![](docs/images/app-screen.png)
