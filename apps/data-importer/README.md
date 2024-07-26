@@ -12,7 +12,7 @@
 
 #### Requirements
 
-- [node v16](http://nodejs.com)
+- [node v20](https://nodejs.org)
 - [pnpm](https://pnpm.io/)
 - [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
