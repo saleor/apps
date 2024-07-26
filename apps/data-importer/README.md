@@ -49,9 +49,9 @@ ngrok http localhost:3000
 
 7. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with the path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
-### Testing
+### How to use
 
-[Here](./docs/testing.md) you can find doc how to test the app
+[Here](./docs/howToUse.md) you can find doc how to use the app
 
 ### Generated schema and typings
 
