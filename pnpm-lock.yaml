@@ -54,8 +54,8 @@ importers:
         specifier: 1.18.1
         version: 1.18.1
       '@saleor/app-sdk':
-        specifier: 0.50.1
-        version: 0.50.1(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 0.0.0-pr-20240726080115
+        version: 0.0.0-pr-20240726080115(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/cli':
         specifier: 2.32.1
         version: 2.32.1
@@ -6628,12 +6628,12 @@ packages:
   '@rushstack/eslint-patch@1.10.2':
     resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
 
-  '@saleor/app-sdk@0.50.1':
-    resolution: {integrity: sha512-0+0lu5FBHLhB6NskcaL+7jX6eDXk3EKmARGhF9/OalOiCrKYWSPY6UssT56y3FFE2xXg1PQNm4Hc3XmWgOW+gw==}
+  '@saleor/app-sdk@0.0.0-pr-20240726080115':
+    resolution: {integrity: sha512-uYoEReNy6WOBhlL7XnbdIlvFk1nJGTphtGqnAC7QVFaKpzPI1CGOJrnvwzdDmAwjoeG7FPyzAWM2dXif+JpsxQ==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
       graphql: '>=16.6.0'
-      next: '>=12'
+      next: '>=14'
       react: '>=17'
       react-dom: '>=17'
     peerDependenciesMeta:
@@ -19912,7 +19912,7 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.2': {}
 
-  '@saleor/app-sdk@0.50.1(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@0.0.0-pr-20240726080115(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.7.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.18.1

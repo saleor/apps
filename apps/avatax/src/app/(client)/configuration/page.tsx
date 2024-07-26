@@ -1,10 +1,12 @@
+"use client";
+
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
-import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
-import { AppPageLayout } from "../modules/ui/app-page-layout";
-import { Section } from "../modules/ui/app-section";
-import { MatcherSection } from "../modules/ui/matcher-section";
 import { Text } from "@saleor/macaw-ui";
+import { ChannelSection } from "../../../modules/channel-configuration/ui/channel-section";
+import { ProvidersSection } from "../../../modules/provider-connections/ui/providers-section";
+import { AppPageLayout } from "../../../modules/ui/app-page-layout";
+import { Section } from "../../../modules/ui/app-section";
+import { MatcherSection } from "../../../modules/ui/matcher-section";
 
 const Header = () => {
   return (

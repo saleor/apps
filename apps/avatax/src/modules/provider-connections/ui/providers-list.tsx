@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { ProvidersTable } from "../../ui/providers-table";

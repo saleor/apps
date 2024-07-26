@@ -1,6 +1,6 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Text, TextProps } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export interface TextLinkProps extends TextProps {
   href: string;
@@ -34,7 +34,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
 
     if (!appBridge) {
       console.warn(
-        "App bridge is not initialized, TextLink cannot be used with external links without it."
+        "App bridge is not initialized, TextLink cannot be used with external links without it.",
       );
     }
 
@@ -42,7 +42,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
       actions.Redirect({
         to: href,
         newContext: true,
-      })
+      }),
     );
 
     if (props.onClick) {

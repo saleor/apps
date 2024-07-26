@@ -1,9 +1,11 @@
+"use client";
+
 import { Provider } from "jotai";
 import { useRouter } from "next/router";
-import { AvataxInstructions } from "../../../../modules/avatax/ui/avatax-instructions";
-import { EditAvataxConfiguration } from "../../../../modules/avatax/ui/edit-avatax-configuration";
-import { AppPageLayout } from "../../../../modules/ui/app-page-layout";
-import { Section } from "../../../../modules/ui/app-section";
+import { AvataxInstructions } from "../../../../../modules/avatax/ui/avatax-instructions";
+import { EditAvataxConfiguration } from "../../../../../modules/avatax/ui/edit-avatax-configuration";
+import { AppPageLayout } from "../../../../../modules/ui/app-page-layout";
+import { Section } from "../../../../../modules/ui/app-section";
 
 const Header = () => {
   return <Section.Header>Edit your existing AvaTax configuration</Section.Header>;

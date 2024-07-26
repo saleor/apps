@@ -1,8 +1,10 @@
+"use client";
+
 import { Box, Text } from "@saleor/macaw-ui";
 import { Provider } from "jotai";
-import { AvataxInstructions } from "../../../modules/avatax/ui/avatax-instructions";
-import { CreateAvataxConfiguration } from "../../../modules/avatax/ui/create-avatax-configuration";
-import { AppPageLayout } from "../../../modules/ui/app-page-layout";
+import { AvataxInstructions } from "../../../../modules/avatax/ui/avatax-instructions";
+import { CreateAvataxConfiguration } from "../../../../modules/avatax/ui/create-avatax-configuration";
+import { AppPageLayout } from "../../../../modules/ui/app-page-layout";
 
 const Header = () => {
   return (

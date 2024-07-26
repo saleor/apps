@@ -1,10 +1,10 @@
-import React from "react";
-import { AvataxConfigurationForm } from "./avatax-configuration-form";
-import { AvataxConfig, BaseAvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { trpcClient } from "../../trpc/trpc-client";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { useRouter } from "next/router";
 import { Button } from "@saleor/macaw-ui";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { trpcClient } from "../../trpc/trpc-client";
+import { AvataxConfig, BaseAvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { AvataxConfigurationForm } from "./avatax-configuration-form";
 
 export const CreateAvataxConfiguration = () => {
   const router = useRouter();

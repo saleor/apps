@@ -19,7 +19,13 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts", "generated/graphql.ts"],
+      files: [
+        "src/pages/**/*",
+        "src/pages/api/**/*",
+        "vitest.config.ts",
+        "generated/graphql.ts",
+        "src/app/**/*",
+      ],
       rules: {
         "import/no-default-export": "off",
       },

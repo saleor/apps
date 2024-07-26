@@ -1,7 +1,9 @@
+"use client";
+
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { isInIframe } from "@saleor/apps-shared";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 
