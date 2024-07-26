@@ -1,8 +1,14 @@
-# Saleor App Klaviyo
+<div style="text-align: center">
+  <img width="150" alt="" src="./public/logo.png">
+</div>
 
-Simple Klaviyo example app for Saleor
+<div style="text-align: center">
+  <h1>Saleor App Klaviyo</h1>
 
-![](docs/readme-assets/app-screen.png)
+  <p>The application provides integration with Klaviyo. It allows you to send metrics to Klaviyo.</p>
+</div>
+
+![](docs/images/app-screen.png)
 
 ### What's included?
 
@@ -10,54 +16,48 @@ Simple Klaviyo example app for Saleor
 - 🏆 4 built-in, example webhooks, that trigger Klaviyo metrics
 - 🎨 Add new webhooks with ease
 
-### The stack
+### How to use this project
 
-Klaviyo app is based on App Template - you can check it [here](https://github.com/saleor/saleor-app-template)
+#### Requirements
 
-## How to use this project
-
-### Requirements
-
-- [node v16](http://nodejs.com)
+- [node v20](https://nodejs.org)
 - [pnpm](https://pnpm.io/)
+- [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
-- [Saleor CLI](https://docs.saleor.io/docs/3.x/developer/cli)
+- [Klaviyo](https://www.klaviyo.com) account
 
-### Saleor CLI for the win 🚀
+#### Running app in development mode
 
-[Saleor CLI](https://github.com/saleor/saleor-cli) is designed to save you from the repetitive chores around Saleor development, including creating Apps. It will take the burden of spawning new apps locally, connecting them with Saleor environments, and establishing a tunnel for local development in seconds.
+1. Install the dependencies by running the following command in the shell:
 
-[Full Saleor CLI reference](https://docs.saleor.io/docs/3.x/developer/cli)
-
-### Local development
-
-1. Make sure you have installed required tools
-2. Clone repository
-3. Install app dependencies with `pnpm i`
-4. Start dev server `pnpm dev`
-5. To install app in your Saleor Instance and expose dev server to it, run in the separate terminal `saleor app tunnel`
-6. Now you can access the app configuration at [your dashboard]/apps and click on [klaviyo]
-7. Read how to connect the app with the Klaviyo [here](https://github.com/saleor/saleor-app-template)
-
-### Local development without CLI
-
-Add URL of your Saleor instance to the `.env` file:
-
-```
-NEXT_PUBLIC_SALEOR_HOST_URL=https://your-saleor-instance.com
+```shell
+pnpm install
 ```
 
-Install dependencies `pnpm install`
+2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference.
 
-Start local server `pnpm run dev`
+3. Start the development server by running the following command in the shell:
 
-Follow the guide [how install your app](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installation-using-graphql-api) and use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/) in order to expose your local server.
-
-If you use [saleor-dashboard](https://github.com/saleor/saleor-dashboard) and your local server is exposed, you can install your app by following this link:
-
+```shell
+pnpm dev
 ```
-[YOUR_SALEOR_DASHBOARD_URL]/apps/install?manifestUrl=[YOUR_APPS_MANIFEST_URL]
+
+4. Data importer app will be available under `http://localhost:3000`
+
+5. Tunnel the app by running:
+
+```shell
+ngrok http localhost:3000
 ```
+
+> [!NOTE]
+> See [How to tunnel an app](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more info.
+
+6. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
+
+### Configuration
+
+[Here](./docs/configuration.md) you can find doc how configure the app
 
 ### Generated schema and typings
 
@@ -67,10 +67,10 @@ Commands `build` and `dev` would generate schema and typed functions using Saleo
 
 ### Storing registration data - APL
 
-During registration process Saleor API pass the auth token to the app. With this token App can query Saleor API with privileged access (depending on requested permissions during the installation).
-To store this data, app-template use a different [APL interfaces](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md).
+During the registration process, Saleor API passes the auth token to the app. With this token, the app can query Saleor API with privileged access (depending on permissions requested during installation).
+To store this data, app-template uses a different [APL interface](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md).
 
-The choice of the APL is done using `APL` environment variable. If value is not set, FileAPL is used. Available choices:
+The choice of the APL is done using `APL` environment variable. If the value is not set, FileAPL is used. Available choices:
 
 - `file`: no additional setup is required. Good choice for local development. Can't be used for multi tenant-apps or be deployed (not intended for production)
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. Can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set

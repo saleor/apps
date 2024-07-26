@@ -3,10 +3,23 @@
 </div>
 
 <div style="text-align: center">
-  <h1>Saleor App Data importer</h1>
+  <h1>Saleor App CMS</h1>
 
-  <p>Data Importer uses [Nuvo](https://www.getnuvo.com/) to batch import customers data to Saleor from sources like CSV or Excel</p>
+  <p>CMS is a Saleor app that allows one-direction synchronization of Saleor products into supported CMS platforms.</p>
 </div>
+
+<div style="text-align: center">
+  <a target="_blank" rel="noopener noreferrer" href="https://docs.saleor.io/developer/app-store/apps/cms">Docs</a>
+<br><br>
+</div>
+
+### Here are the currently available platforms:
+
+- [Contentful](https://www.contentful.com/)
+- [Strapi](https://strapi.io/)
+- [DatoCMS](https://www.datocms.com/)
+- [Builder.io](https://www.builder.io/)
+- [Payload](https://payloadcms.com/)
 
 ### How to use this project
 
@@ -16,7 +29,7 @@
 - [pnpm](https://pnpm.io/)
 - [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
-- [Nuvo](https://www.getnuvo.com/) account
+- An account of one of the cms providers listed above
 
 #### Running app in development mode
 
@@ -28,17 +41,15 @@ pnpm install
 
 2. Create a file named `.env` and use the contents of the [`.env.example`](./.env.example) file as a reference.
 
-3. Set you `NEXT_PUBLIC_NUVO_LICENSE_KEY` in [`.env`](./.env). [Here](./docs/configuration.md) you can find how to get the key
-
-4. Start the development server by running the following command in the shell:
+3. Start the development server by running the following command in the shell:
 
 ```shell
 pnpm dev
 ```
 
-5. Data importer app will be available under `http://localhost:3000`
+4. CMS app will be available under `http://localhost:3000`
 
-6. Tunnel the app by running:
+5. Tunnel the app by running:
 
 ```shell
 ngrok http localhost:3000
@@ -47,11 +58,11 @@ ngrok http localhost:3000
 > [!NOTE]
 > See [How to tunnel an app](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more info.
 
-7. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with the path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
+6. Go to Dashboard, open `Apps` tab and click `Install external app`, provide your tunnel URL with the path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
-### How to use
+### Configuration
 
-[Here](./docs/howToUse.md) you can find doc how to use the app
+[Here](./docs/configuration.md) you can find doc how configure the app
 
 ### Generated schema and typings
 
