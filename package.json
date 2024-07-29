@@ -13,7 +13,7 @@
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "lint:fix": "turbo run lint:fix",
-    "lint:packages": "sherif -r multiple-dependency-versions",
+    "lint:packages": "sherif -p crm -p invoices",
     "lint:packages:fix": "sherif --fix",
     "prepare": "husky install",
     "start": "turbo run start",
@@ -45,7 +45,7 @@
     "lint-staged": "^13.2.3",
     "next": "14.2.3",
     "prettier": "3.0.3",
-    "sherif": "0.9.0",
+    "sherif": "0.10.0",
     "turbo": "1.12.4"
   },
   "engines": {
