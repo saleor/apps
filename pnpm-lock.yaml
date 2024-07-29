@@ -87,8 +87,8 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
       sherif:
-        specifier: 0.9.0
-        version: 0.9.0
+        specifier: 0.10.0
+        version: 0.10.0
       turbo:
         specifier: 1.12.4
         version: 1.12.4
@@ -210,14 +210,14 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       modern-errors:
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 7.0.1
+        version: 7.0.1
       modern-errors-serialize:
         specifier: 6.0.0
-        version: 6.0.0(modern-errors@7.0.0)
+        version: 6.0.0(modern-errors@7.0.1)
       neverthrow:
-        specifier: 6.1.0
-        version: 6.1.0
+        specifier: 6.2.1
+        version: 6.2.1
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2152,11 +2152,11 @@ importers:
         specifier: 4.15.3
         version: 4.15.3
       modern-errors:
-        specifier: 7.0.0
-        version: 7.0.0
+        specifier: 7.0.1
+        version: 7.0.1
       modern-errors-serialize:
         specifier: 6.0.0
-        version: 6.0.0(modern-errors@7.0.0)
+        version: 6.0.0(modern-errors@7.0.1)
       neverthrow:
         specifier: 6.2.1
         version: 6.2.1
@@ -11548,10 +11548,6 @@ packages:
     peerDependencies:
       modern-errors: ^7.0.0
 
-  modern-errors@7.0.0:
-    resolution: {integrity: sha512-4H55sVGQe0JxbBIH9ea9QUkY3BDSpxauyWYXB5W4LCeYEvjEScYxnoHp9cFHxeCvUuf1a1lqJILo/H2kRV37og==}
-    engines: {node: '>=18.18.0'}
-
   modern-errors@7.0.1:
     resolution: {integrity: sha512-UaWtjvt1LWLTmQq9vBcjVzVyaBS8PyN3YYF9Vzdf7dgaB9ySFBWbIH5nglEfLr1VVF7XrBrHrdp+Tnw7oITfTA==}
     engines: {node: '>=18.18.0'}
@@ -11624,9 +11620,6 @@ packages:
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
-
-  neverthrow@6.1.0:
-    resolution: {integrity: sha512-xNbNjp/6M5vUV+mststgneJN9eJeJCDSYSBTaf3vxgvcKooP+8L0ATFpM8DGfmH7UWKJeoa24Qi33tBP9Ya3zA==}
 
   neverthrow@6.2.1:
     resolution: {integrity: sha512-amlnNvPXmiUOmNsDfUngNWPdZYOmCUGExQy/kuPCmLbhrXVXIYhY4bnE4D3dWl7OMhSEr9NndUrl4aKGFhFIQg==}
@@ -12914,10 +12907,6 @@ packages:
     resolution: {integrity: sha512-vJ7lRuvcn5NTbuT7QS8k+dh6AN5y1R/V2xZmlwvB48bJ2b8v46z+dgx5k1VGrB9xt7ZnC98jWcikHb6gyIJgAg==}
     engines: {node: '>=18.18.0'}
 
-  set-error-stack@2.0.0:
-    resolution: {integrity: sha512-mABWr7mmaY1EVBMXWo32t6byRkKclJ3gipglE2+XGBZxDEk0+zVumRfWyAK3s/EB/TbbUm1Gp0H8VvqlFkMa+g==}
-    engines: {node: '>=16.17.0'}
-
   set-error-stack@3.0.0:
     resolution: {integrity: sha512-jCcA0qrIqYWOct9WlC3xcEE9QaTWKEM9eztxr+fV2pa7ZGfFGiNh4RzqfJI8ps+oDDGtU8uvGPYxARyhI9t17Q==}
     engines: {node: '>=18.18.0'}
@@ -12979,38 +12968,38 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  sherif-darwin-arm64@0.9.0:
-    resolution: {integrity: sha512-nP+tn4PzEiVwXgA4t5ZenAIqoZIzJt28DOaR9QI5tKHEOzosgf/RglYtFEU0O+xjbexrE9BOwdlvJ8vKloZ3Mg==}
+  sherif-darwin-arm64@0.10.0:
+    resolution: {integrity: sha512-4o1EIHsLfCmvT0tryeoLTerPxb47pYdwuWzpeV1+KSaE1hvlorAbBVgc2YBrkdwbgqZrWYzAdeWGmS/Ob3sIMw==}
     cpu: [arm64]
     os: [darwin]
 
-  sherif-darwin-x64@0.9.0:
-    resolution: {integrity: sha512-n2PpWLwUJbJaq5lW8Jyll0RCWCNezsP3idAijFHMawUgThUNNMCSzFdLFWbT0ZuResgyDBu2vspMPEtJgwSvvg==}
+  sherif-darwin-x64@0.10.0:
+    resolution: {integrity: sha512-MhaPxhGmn66J/aLjpIbf93B4XWlu2sKo+rzXohCbCYU2ajsgswMIw8gDi3JGPHLuilhWZB8kS9I/rEczAD3CQA==}
     cpu: [x64]
     os: [darwin]
 
-  sherif-linux-arm64@0.9.0:
-    resolution: {integrity: sha512-S5NPMfWfYIN0JoQfJxDrXZZteRXHv9/r84RsOLZckoLvzTGc33VITg0Gqk2Yrm7j0cBRaFj6EyPxkasJ4iB4SQ==}
+  sherif-linux-arm64@0.10.0:
+    resolution: {integrity: sha512-INTPHGvxdRxIEOAemWfltIyJatL8O9IPxwPkZX499Fn6vK9yj5ZHSlZ+SUgXpp1aX2Yo35gFuHshDRQ1Kuh9UA==}
     cpu: [arm64]
     os: [linux]
 
-  sherif-linux-x64@0.9.0:
-    resolution: {integrity: sha512-4RGatcQFcrK/IW6ZgdGyhjlVA/mS90ZCiNcXewwIzPVafTfyx56QzpWFANtZoUr7fg6o1xUZQ6QqXWk5k/x+pA==}
+  sherif-linux-x64@0.10.0:
+    resolution: {integrity: sha512-NYUDzTdUnCxbDFjpS8VLoUF9aTsZ+3L7q4H5s5m8sHO8e3Swf2jgK7LixNhyGLhLcXtBAP5Veit4zy4yQ3WP1Q==}
     cpu: [x64]
     os: [linux]
 
-  sherif-windows-arm64@0.9.0:
-    resolution: {integrity: sha512-/Gf4RLkcG/g+kjYR9JYn9338uGt/nbaIs9IWvNGmCODKEf4Xy87rFDr8ZYERArLpSmx+kgLZhi3UvGExy8oCPQ==}
+  sherif-windows-arm64@0.10.0:
+    resolution: {integrity: sha512-iKni78rIcN0PTzI+V8+o81R0G7RA391wCxroU6tBS/tkBTBsPNzzO5KpOw3tgyZt3nETbL5hBZbHxV3MuE/+Ag==}
     cpu: [arm64]
     os: [win32]
 
-  sherif-windows-x64@0.9.0:
-    resolution: {integrity: sha512-hJpCq/t1IUWu58LktbEsiBdGThtj/gvc9iqjHjSCGdzH8Oz/ALVfqTYibBX0akpnGiVOJd7JFHLv1WuUX6GjpA==}
+  sherif-windows-x64@0.10.0:
+    resolution: {integrity: sha512-ylERbSsYmjHL6nX+NfX8jcnODKQQPrVT6wyp9INmvY+eoiovE1Ck7HOgyWGXpOEAYnr2/UOooTczKVQJDrXqhA==}
     cpu: [x64]
     os: [win32]
 
-  sherif@0.9.0:
-    resolution: {integrity: sha512-n81vLJac110M1IN4rCl956PVIMGejucg+vZHKfOznU4vSwutc1FxmgQzrVV/bmN9uXdx4Khkl7/nhz82x+SESA==}
+  sherif@0.10.0:
+    resolution: {integrity: sha512-KAKYAnhgJaz2F7EFowXU3xrukrRWkNsC8OhmTD9TW84mu0Pb6jI2GabFd9U/umMTVshDjS9l43D1JAGx/e0JdQ==}
     hasBin: true
 
   shimmer@1.2.1:
@@ -26631,29 +26620,11 @@ snapshots:
 
   modern-ahocorasick@1.0.1: {}
 
-  modern-errors-serialize@6.0.0(modern-errors@7.0.0):
-    dependencies:
-      error-serializer: 7.0.0
-      is-plain-obj: 4.1.0
-      modern-errors: 7.0.0
-
   modern-errors-serialize@6.0.0(modern-errors@7.0.1):
     dependencies:
       error-serializer: 7.0.0
       is-plain-obj: 4.1.0
       modern-errors: 7.0.1
-
-  modern-errors@7.0.0:
-    dependencies:
-      error-class-utils: 4.0.0
-      error-custom-class: 10.0.0
-      filter-obj: 5.1.0
-      is-plain-obj: 4.1.0
-      merge-error-cause: 5.0.0
-      normalize-exception: 3.0.0
-      set-error-message: 3.0.0
-      set-error-props: 6.0.0
-      set-error-stack: 2.0.0
 
   modern-errors@7.0.1:
     dependencies:
@@ -26735,8 +26706,6 @@ snapshots:
   negotiator@0.6.3: {}
 
   neo-async@2.6.2: {}
-
-  neverthrow@6.1.0: {}
 
   neverthrow@6.2.1: {}
 
@@ -28306,10 +28275,6 @@ snapshots:
       is-plain-obj: 4.1.0
       redefine-property: 3.0.0
 
-  set-error-stack@2.0.0:
-    dependencies:
-      normalize-exception: 3.0.0
-
   set-error-stack@3.0.0:
     dependencies:
       normalize-exception: 3.0.0
@@ -28373,32 +28338,32 @@ snapshots:
       interpret: 1.4.0
       rechoir: 0.6.2
 
-  sherif-darwin-arm64@0.9.0:
+  sherif-darwin-arm64@0.10.0:
     optional: true
 
-  sherif-darwin-x64@0.9.0:
+  sherif-darwin-x64@0.10.0:
     optional: true
 
-  sherif-linux-arm64@0.9.0:
+  sherif-linux-arm64@0.10.0:
     optional: true
 
-  sherif-linux-x64@0.9.0:
+  sherif-linux-x64@0.10.0:
     optional: true
 
-  sherif-windows-arm64@0.9.0:
+  sherif-windows-arm64@0.10.0:
     optional: true
 
-  sherif-windows-x64@0.9.0:
+  sherif-windows-x64@0.10.0:
     optional: true
 
-  sherif@0.9.0:
+  sherif@0.10.0:
     optionalDependencies:
-      sherif-darwin-arm64: 0.9.0
-      sherif-darwin-x64: 0.9.0
-      sherif-linux-arm64: 0.9.0
-      sherif-linux-x64: 0.9.0
-      sherif-windows-arm64: 0.9.0
-      sherif-windows-x64: 0.9.0
+      sherif-darwin-arm64: 0.10.0
+      sherif-darwin-x64: 0.10.0
+      sherif-linux-arm64: 0.10.0
+      sherif-linux-x64: 0.10.0
+      sherif-windows-arm64: 0.10.0
+      sherif-windows-x64: 0.10.0
 
   shimmer@1.2.1: {}
 
