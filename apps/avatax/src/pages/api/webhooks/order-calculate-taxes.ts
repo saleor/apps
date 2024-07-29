@@ -11,6 +11,7 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import {
+  AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxStringLengthError,
 } from "../../../modules/taxes/tax-error";
@@ -146,6 +147,19 @@ export default wrapWithLoggerContext(
             }
           }
         } catch (error) {
+          if (error instanceof AvataxGetTaxError) {
+            logger.warn(
+              "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
+              {
+                error,
+              },
+            );
+            return res.status(400).json({
+              message:
+                "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
+            });
+          }
+
           if (error instanceof AvataxInvalidAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
