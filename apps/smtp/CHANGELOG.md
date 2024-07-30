@@ -1,5 +1,12 @@
 # smtp
 
+## 1.2.2
+
+### Patch Changes
+
+- ea25bb83: Updated dependencies responsible for error handling.
+- e38c1417: You can now find how to run and test each app in README file
+
 ## 1.2.1
 
 ### Patch Changes

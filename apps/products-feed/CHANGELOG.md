@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.2
+
+### Patch Changes
+
+- e38c1417: You can now find how to run and test each app in README file
+
 ## 1.19.1
 
 ### Patch Changes

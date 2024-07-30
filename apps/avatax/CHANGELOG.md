@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.7.5
+
+### Patch Changes
+
+- ea25bb83: Updated dependencies responsible for error handling.
+- b789f8d3: Handle GetTaxError from AvaTax when handling order confirmed event. Right now app will return 400 status code with description what happened.
+
 ## 1.7.4
 
 ### Patch Changes

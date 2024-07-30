@@ -1,5 +1,11 @@
 # saleor-app-emails-and-messages
 
+## 1.13.6
+
+### Patch Changes
+
+- 2b01ff77: Update MJML dependency. This allow us to reuse it with SMTP app.
+
 ## 1.13.5
 
 ### Patch Changes
