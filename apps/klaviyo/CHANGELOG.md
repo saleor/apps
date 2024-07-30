@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.12.6
+
+### Patch Changes
+
+- e38c1417: You can now find how to run and test each app in README file
+
 ## 1.12.5
 
 ### Patch Changes

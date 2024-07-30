@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.4
+
+### Patch Changes
+
+- e38c1417: You can now find how to run and test each app in README file
+
 ## 2.9.3
 
 ### Patch Changes
