@@ -20,7 +20,7 @@ export default wrapWithLoggerContext(
 
         logger.info("Generating manifest");
 
-        fetch("https://saleor-app-products-feed-a1txaneh8-saleorcommerce.vercel.app/api/hello");
+        fetch("https://saleor-app-products-feed-lm9js7sie-saleorcommerce.vercel.app/api/hello");
 
         const manifest: AppManifest = {
           about: "Generate feeds consumed by Merchant Platforms",
