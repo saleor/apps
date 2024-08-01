@@ -7,7 +7,6 @@
 /apps/crm @saleor/merchant-js
 /apps/data-importer @saleor/merchant-js
 /apps/emails-and-messages @saleor/merchant-js
-/apps/invoices @saleor/merchant-js
 /apps/klaviyo @saleor/merchant-js
 /apps/products-feed @saleor/merchant-js
 /apps/search @saleor/merchant-js
