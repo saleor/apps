@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createLogger } from "../../logger";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { loggerContext } from "../../logger-context";
 
