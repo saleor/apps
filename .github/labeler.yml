@@ -6,6 +6,5 @@
 "App: Avatax": "apps/avatax/**/*"
 "App: Emails & Messages": "apps/emails-and-messages/**/*"
 "App: CMS": "apps/cms-v2/**/*"
-"App: CRM": "apps/crm/**/*"
 "App: Segment": "apps/segment/**/*"
 "App: SMTP": "apps/smtp/**/*"
