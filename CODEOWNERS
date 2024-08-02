@@ -9,5 +9,4 @@
 /apps/klaviyo @saleor/merchant-js
 /apps/products-feed @saleor/merchant-js
 /apps/search @saleor/merchant-js
-/apps/segment @saleor/merchant-js
 /apps/smtp @saleor/merchant-js
