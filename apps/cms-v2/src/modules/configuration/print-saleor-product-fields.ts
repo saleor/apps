@@ -20,5 +20,8 @@ export const printSaleorProductFields = (fieldName: SaleorProviderFieldsMappingK
     case "variantId": {
       return "Variant ID";
     }
+    case "variantSku": {
+      return "Variant SKU";
+    }
   }
 };

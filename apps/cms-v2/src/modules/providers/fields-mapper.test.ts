@@ -11,10 +11,12 @@ describe("FieldsMapper", () => {
         productSlug: "product-slug",
         variantId: "variant-id",
         variantName: "variant-name",
+        variantSku: "variant-sku",
       },
       variant: {
         id: "aaa-bbb-ccc",
         name: "43",
+        sku: "sku",
         channelListings: [
           {
             channel: {
@@ -37,6 +39,7 @@ describe("FieldsMapper", () => {
       "product-name": "Shoes",
       "product-slug": "shoes",
       "variant-id": "aaa-bbb-ccc",
+      "variant-sku": "sku",
       channels: [
         {
           channel: {

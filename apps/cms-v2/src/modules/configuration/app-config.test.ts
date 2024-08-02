@@ -17,6 +17,7 @@ const getMockContentfulInput = (): ContentfulProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      variantSku: "variantSku",
     },
     spaceId: "test",
   };
@@ -34,6 +35,7 @@ const getMockDatocmsInput = (): DatocmsProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      variantSku: "variantSku",
     },
   };
 };

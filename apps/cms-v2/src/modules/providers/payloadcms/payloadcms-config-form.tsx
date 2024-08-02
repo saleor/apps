@@ -197,6 +197,7 @@ const AddFormVariant = () => {
           productName: "",
           productSlug: "",
           variantId: "",
+          variantSku: "",
         },
       }}
     />
