@@ -13,7 +13,7 @@
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "lint:fix": "turbo run lint:fix",
-    "lint:packages": "sherif -p crm -p invoices",
+    "lint:packages": "sherif",
     "lint:packages:fix": "sherif --fix",
     "prepare": "husky install",
     "start": "turbo run start",
