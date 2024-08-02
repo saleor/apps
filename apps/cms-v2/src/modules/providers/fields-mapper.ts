@@ -9,7 +9,8 @@ export class FieldsMapper {
     variant: WebhookProductVariantFragment;
     configMapping: ProvidersConfig.AnyFullShape["productVariantFieldsMapping"];
   }) {
-    const { channels, variantName, productId, productName, productSlug, variantId } = configMapping;
+    const { channels, variantName, productId, productName, productSlug, variantId, variantSku } =
+      configMapping;
 
     return {
       [variantName]: variant.name,
@@ -18,6 +19,7 @@ export class FieldsMapper {
       [productSlug]: variant.product.slug,
       [variantId]: variant.id,
       [channels]: variant.channelListings,
+      [variantSku]: variant.sku,
     };
   }
 }

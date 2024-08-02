@@ -21,6 +21,7 @@ const getMockContenfulConfiguration = (): ContentfulProviderConfig.FullShape => 
     productSlug: "product-slug",
     variantId: "variant-id",
     variantName: "variant-name",
+    variantSku: "variant-sku",
   },
 });
 
@@ -28,6 +29,7 @@ const getMockWebhookProductVariant = (): WebhookProductVariantFragment => {
   return {
     id: "test-id",
     name: "test-name",
+    sku: "test-sku",
     product: {
       id: "test-product-id",
       name: "test-product-name",
@@ -61,7 +63,7 @@ describe("ContentfulWebhooksProcessor", () => {
 
     processor = new ContentfulWebhooksProcessor(
       getMockContenfulConfiguration(),
-      () => mockContentfulClient
+      () => mockContentfulClient,
     );
   });
 
@@ -74,7 +76,7 @@ describe("ContentfulWebhooksProcessor", () => {
       expect.objectContaining({
         configuration: getMockContenfulConfiguration(),
         variant: mockProductVariant,
-      })
+      }),
     );
   });
 
@@ -87,7 +89,7 @@ describe("ContentfulWebhooksProcessor", () => {
       expect.objectContaining({
         configuration: getMockContenfulConfiguration(),
         variant: mockProductVariant,
-      })
+      }),
     );
   });
 
@@ -100,7 +102,7 @@ describe("ContentfulWebhooksProcessor", () => {
       expect.objectContaining({
         configuration: getMockContenfulConfiguration(),
         variant: mockProductVariant,
-      })
+      }),
     );
   });
 
