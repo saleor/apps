@@ -26,17 +26,6 @@ const logger = createLogger(notifyWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const getNotifyEvent = (payload: NotifySubscriptionPayload) => {
-  if (!payload.notify_event) {
-    return null;
-  }
-
-  /**
-   * Some events are not supported by the SMTP app, but we can still add them to the log context
-   */
-  return notifyEventMapping[payload.notify_event];
-};
-
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.info("Webhook received");
 
@@ -46,8 +35,9 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 
   /**
    * Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
+   * Some events are not supported by the SMTP app, but we can still add them to the log context
    */
-  const event = getNotifyEvent(payload);
+  const event = notifyEventMapping[payload.notify_event];
 
   loggerContext.set("event", event);
 
