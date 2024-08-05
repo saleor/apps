@@ -66,6 +66,7 @@ Some of the Saleor apps are available in separate repositories:
 - [Taxjar integration app example](https://github.com/saleor/example-app-taxjar)
 - [Invoices app example](https://github.com/saleor/example-app-invoices)
 - [CRM app example](https://github.com/saleor/example-app-crm)
+- [Segment app example](https://github.com/saleor/example-app-segment)
 
 ## Development
 
