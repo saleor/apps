@@ -15,7 +15,7 @@
     "lint:fix": "turbo run lint:fix",
     "lint:packages": "sherif",
     "lint:packages:fix": "sherif --fix",
-    "prepare": "husky install",
+    "prepare": "husky",
     "start": "turbo run start",
     "test": "turbo run test"
   },
@@ -41,7 +41,7 @@
     "cspell": "^7.2.0",
     "eslint": "8.57.0",
     "eslint-config-saleor": "workspace:*",
-    "husky": "^8.0.3",
+    "husky": "9.1.4",
     "lint-staged": "^13.2.3",
     "next": "14.2.3",
     "prettier": "3.0.3",
