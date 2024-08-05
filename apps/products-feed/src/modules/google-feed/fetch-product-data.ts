@@ -18,22 +18,22 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
 
   const cursors: Array<string> = [];
 
-  const fistCusror = result.data?.productVariants?.pageInfo.endCursor;
+  const fistCusror = result.data?.products?.pageInfo.endCursor;
 
   if (fistCusror) {
     cursors.push(fistCusror);
   }
 
-  while (result.data?.productVariants?.pageInfo.hasNextPage) {
+  while (result.data?.products?.pageInfo.hasNextPage) {
     result = await client
       .query(FetchProductCursorsDocument, {
         channel: channel,
         first: 100,
-        after: result.data.productVariants.pageInfo.endCursor,
+        after: result.data.products.pageInfo.endCursor,
       })
       .toPromise();
 
-    const endCursor = result.data?.productVariants?.pageInfo.endCursor;
+    const endCursor = result.data?.products?.pageInfo.endCursor;
 
     if (endCursor) {
       cursors.push(endCursor);
@@ -48,7 +48,7 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
   return cursors;
 };
 
-const fetchVariants = async ({
+const fetchProducts = async ({
   client,
   after,
   channel,
@@ -58,7 +58,7 @@ const fetchVariants = async ({
   after?: string;
   channel: string;
   imageSize?: number;
-}): Promise<GoogleFeedProductVariantFragment[]> => {
+}) => {
   const logger = createLogger("fetchVariants", { saleorApiUrl: url, channel });
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
@@ -79,7 +79,7 @@ const fetchVariants = async ({
     return [];
   }
 
-  const productVariants = result.data?.productVariants?.edges.map((e) => e.node) || [];
+  const productVariants = result.data?.products?.edges.map((e) => e.node) || [];
 
   logger.debug("Product variants fetched successfully", {
     first: productVariants[0],
@@ -117,7 +117,7 @@ export const fetchProductData = async ({
   logger.debug(`Query generated ${pageCursors.length} cursors`);
 
   const promises = pageCursors.map((cursor) =>
-    fetchVariants({ client, after: cursor, channel, imageSize }),
+    fetchProducts({ client, after: cursor, channel, imageSize }),
   );
 
   const results = (await Promise.all(promises)).flat();

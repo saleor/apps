@@ -1,5 +1,5 @@
 query FetchProductCursors($first:Int!, $after: String, $channel: String!){
-  productVariants(first:$first, after: $after, channel: $channel){
+  products(first:$first, after: $after, channel: $channel){
     pageInfo{
       hasNextPage
       startCursor
