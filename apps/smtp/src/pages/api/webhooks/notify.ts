@@ -33,6 +33,14 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 
   const { channel_slug: channel, recipient_email: recipientEmail } = payload.payload;
 
+  /**
+   * Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
+   * Some events are not supported by the SMTP app, but we can still add them to the log context
+   */
+  const event = notifyEventMapping[payload.notify_event];
+
+  loggerContext.set("event", event);
+
   if (!recipientEmail?.length) {
     logger.error(`The email recipient has not been specified in the event payload.`);
 
@@ -41,13 +49,10 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 
-  /**
-   * Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
-   */
-  const event = notifyEventMapping[payload.notify_event];
-
   if (!event) {
-    logger.debug(`The type of received notify event (${payload.notify_event}) is not supported.`);
+    loggerContext.set("event", payload.notify_event);
+
+    logger.info(`The type of received notify event (${payload.notify_event}) is not supported.`);
 
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
