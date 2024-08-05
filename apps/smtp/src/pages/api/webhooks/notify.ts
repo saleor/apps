@@ -26,12 +26,30 @@ const logger = createLogger(notifyWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
+const getNotifyEvent = (payload: NotifySubscriptionPayload) => {
+  if (!payload.notify_event) {
+    return null;
+  }
+
+  /**
+   * Some events are not supported by the SMTP app, but we can still add them to the log context
+   */
+  return notifyEventMapping[payload.notify_event];
+};
+
 const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.info("Webhook received");
 
   const { payload, authData } = context;
 
   const { channel_slug: channel, recipient_email: recipientEmail } = payload.payload;
+
+  /**
+   * Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
+   */
+  const event = getNotifyEvent(payload);
+
+  loggerContext.set("event", event);
 
   if (!recipientEmail?.length) {
     logger.error(`The email recipient has not been specified in the event payload.`);
@@ -41,13 +59,10 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 
-  /**
-   * Since NOTIFY can be send on events unrelated to this app, lack of mapping means the App does not support it
-   */
-  const event = notifyEventMapping[payload.notify_event];
-
   if (!event) {
-    logger.debug(`The type of received notify event (${payload.notify_event}) is not supported.`);
+    loggerContext.set("event", payload.notify_event);
+
+    logger.info(`The type of received notify event (${payload.notify_event}) is not supported.`);
 
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
@@ -65,7 +80,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
       .then((result) =>
         result.match(
           (r) => {
-            logger.info("Successfully sent email(s)", { event });
+            logger.info("Successfully sent email(s)");
 
             return res.status(200).json({ message: "The event has been handled" });
           },
@@ -73,20 +88,20 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
             const errorInstance = err[0];
 
             if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-              logger.error("Failed to send email(s) [server error]", { error: err, event });
+              logger.error("Failed to send email(s) [server error]", { error: err });
 
               return res.status(500).json({ message: "Failed to send email" });
             } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
-              logger.info("Failed to send email(s) [client error]", { error: err, event });
+              logger.info("Failed to send email(s) [client error]", { error: err });
 
               return res.status(400).json({ message: "Failed to send email" });
             } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
-              logger.info("Sending emails aborted [no op]", { error: err, event });
+              logger.info("Sending emails aborted [no op]", { error: err });
 
               return res.status(200).json({ message: "The event has been handled [no op]" });
             }
 
-            logger.error("Failed to send email(s) [unhandled error]", { error: err, event });
+            logger.error("Failed to send email(s) [unhandled error]", { error: err });
             captureException(new Error("Unhandled useCase error", { cause: err }));
 
             return res.status(500).json({ message: "Failed to send email [unhandled]" });

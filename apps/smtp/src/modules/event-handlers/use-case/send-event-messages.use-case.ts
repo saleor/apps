@@ -68,7 +68,7 @@ export class SendEventMessagesUseCase {
     const eventSettings = config.events.find((e) => e.eventType === event);
 
     if (!eventSettings) {
-      this.logger.info("Configuration found but settings for this event are missing", { event });
+      this.logger.info("Configuration found but settings for this event are missing");
 
       return errAsync(
         new SendEventMessagesUseCase.EventSettingsMissingError(
@@ -134,7 +134,7 @@ export class SendEventMessagesUseCase {
       );
     }
 
-    this.logger.info("Successfully compiled email template", { event });
+    this.logger.info("Successfully compiled email template");
 
     const smtpSettings: SendMailArgs["smtpSettings"] = {
       host: config.smtpHost,
@@ -157,7 +157,7 @@ export class SendEventMessagesUseCase {
         smtpSettings,
       }),
       (err) => {
-        this.logger.debug("Error sending email with SMTP", { error: err, event });
+        this.logger.debug("Error sending email with SMTP", { error: err });
 
         return new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
           errors: [err],
@@ -185,7 +185,7 @@ export class SendEventMessagesUseCase {
     });
 
     if (availableSmtpConfigurations.isErr()) {
-      this.logger.warn("Failed to fetch configuration", { event });
+      this.logger.warn("Failed to fetch configuration");
 
       return err([
         new SendEventMessagesUseCase.FailedToFetchConfigurationError(
@@ -202,7 +202,7 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      this.logger.warn("Configuration list is empty, app is not configured", { event });
+      this.logger.warn("Configuration list is empty, app is not configured");
 
       return err([
         new SendEventMessagesUseCase.MissingAvailableConfigurationError(
