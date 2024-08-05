@@ -220,7 +220,6 @@ export class SendEventMessagesUseCase {
 
     this.logger.info(
       `Detected valid configuration (${availableSmtpConfigurations.value.length}). Will process to send emails`,
-      { event },
     );
 
     const processingResults = await Promise.all(
