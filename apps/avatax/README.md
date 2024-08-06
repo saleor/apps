@@ -1,11 +1,11 @@
-![Saleor Avatax App](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
+![Saleor AvaTax App](https://user-images.githubusercontent.com/249912/71523206-4e45f800-28c8-11ea-84ba-345a9bfc998a.png)
 
 <div align="center">
-  <h1>Saleor App Avatax</h1>
+  <h1>Saleor App AvaTax</h1>
 </div>
 
 <div align="center">
-  <p>Connect your dynamic taxes calculation to Avatax API.</p>
+  <p>Connect your dynamic taxes calculation to AvaTax API.</p>
 </div>
 
 <div align="center">
@@ -92,7 +92,7 @@ The app has an example environment for `localhost` in `environments/localhost.br
 ### Webhook migration scripts
 
 > [!NOTE]
-> This section refers to apps hosted by Saleor or using REST APL. If you self host Avatax app you need to write your own logic for updating migration scripts.
+> This section refers to apps hosted by Saleor or using REST APL. If you self host AvaTax app you need to write your own logic for updating migration scripts.
 > See [How to update app webhooks](https://docs.saleor.io/docs/3.x/developer/extending/apps/updating-app-webhooks) for more info.
 
 You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first. Set `DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER` to see migration results in your shell.
