@@ -13,7 +13,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
   // We don't use global constant here so if someone changes default tax id in the future, this test will fail
   const CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID = "P0000000";
 
-  it("should return default tax class id if Saleor tax class is not found in tax classes from Avatax", () => {
+  it("should return default tax class id if Saleor tax class is not found in tax classes from AvaTax", () => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
     expect(
@@ -24,7 +24,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
     ).toEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
   });
 
-  it("should return tax code if Saleor tax class is found in Avatax tax classes", () => {
+  it("should return tax code if Saleor tax class is found in AvaTax tax classes", () => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
     expect(
@@ -35,7 +35,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
     ).toEqual("P2137");
   });
 
-  it("should return default tax class id if there are no Avatax tax classes", () => {
+  it("should return default tax class id if there are no AvaTax tax classes", () => {
     const matcher = new AvataxOrderConfirmedTaxCodeMatcher();
 
     expect(

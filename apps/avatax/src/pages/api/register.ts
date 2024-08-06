@@ -46,7 +46,7 @@ export default wrapWithLoggerContext(
         },
       ],
       onAuthAplSaved: async (req, context) => {
-        logger.info("Avatax app configuration set up successfully", {
+        logger.info("AvaTax app configuration set up successfully", {
           saleorApiUrl: context.authData.saleorApiUrl,
         });
       },

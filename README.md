@@ -45,7 +45,7 @@ This repository serves as a starting point in the exploration of Saleor apps.
 
 In the `apps` folder, you will find the following applications:
 
-- [avatax](./apps/avatax) - calculates dynamic taxes via Avatax API
+- [avatax](./apps/avatax) - calculates dynamic taxes via AvaTax API
 - [cms](./apps/cms-v2) - exports products from Saleor to CMS.
 - [data-importer](./apps/data-importer) - import data from CSV to Saleor.
 - [emails-and-messages](./apps/emails-and-messages/) - notifications and email communication with customers.
