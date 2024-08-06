@@ -16,7 +16,7 @@ export default wrapWithLoggerContext(
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
         const manifest: AppManifest = {
-          about: "App connects with Avatax to dynamically calculate taxes",
+          about: "App connects with AvaTax to dynamically calculate taxes",
           appUrl: iframeBaseUrl,
           author: "Saleor Commerce",
           brand: {
@@ -28,7 +28,7 @@ export default wrapWithLoggerContext(
           extensions: [],
           homepageUrl: "https://github.com/saleor/apps",
           id: "saleor.app.avatax",
-          name: "Avatax",
+          name: "AvaTax",
           permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
           requiredSaleorVersion: REQUIRED_SALEOR_VERSION,
           supportUrl: "https://github.com/saleor/apps/discussions",

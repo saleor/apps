@@ -37,7 +37,7 @@ export class AvataxErrorsParser {
     if (!parsedError.success) {
       this.injectedErrorCapture(
         new AvataxErrorsParser.UnhandledErrorShapeError(
-          "Avatax returned error with unknown shape",
+          "AvaTax returned error with unknown shape",
           {
             errors: [parsedError.error],
           },
