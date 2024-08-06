@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { GoogleFeedProductVariantFragment } from "../../../../../../generated/graphql";
+import { GoogleFeedProductFragment } from "../../../../../../generated/graphql";
 import { apl } from "../../../../../saleor-app";
 import { fetchProductData } from "../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
@@ -191,13 +191,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Generating a new feed");
 
-  let productVariants: GoogleFeedProductVariantFragment[] = [];
+  let products: GoogleFeedProductFragment[] = [];
 
   try {
-    productVariants = await fetchProductData({ client, channel, imageSize });
+    products = await fetchProductData({ client, channel, imageSize });
 
     logger.info("Product data fetched successfully", {
-      productVariantsLength: productVariants.length,
+      productVariantsLength: products.length,
     });
   } catch (error) {
     logger.error("Error during the product data fetch", { error });
@@ -211,7 +211,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     shopName,
     storefrontUrl,
     productStorefrontUrl,
-    productVariants,
+    products,
     attributeMapping,
     titleTemplate,
   });

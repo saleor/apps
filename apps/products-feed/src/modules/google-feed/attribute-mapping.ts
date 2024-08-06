@@ -1,14 +1,13 @@
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
+import { GoogleFeedProductFragment } from "../../../generated/graphql";
 import { RootConfig } from "../app-configuration/app-config";
 
 interface GetMappedAttributesArgs {
-  variant: GoogleFeedProductVariantFragment;
+  product: GoogleFeedProductFragment;
+  variant: any;
   attributeMapping?: RootConfig["attributeMapping"];
 }
 
-export const attributeArrayToValueString = (
-  attributes?: GoogleFeedProductVariantFragment["attributes"],
-) => {
+export const attributeArrayToValueString = (attributes?: any) => {
   if (!attributes?.length) {
     return;
   }
@@ -22,6 +21,7 @@ export const attributeArrayToValueString = (
 };
 
 export const getMappedAttributes = ({
+  product,
   variant,
   attributeMapping: mapping,
 }: GetMappedAttributesArgs) => {
@@ -32,7 +32,7 @@ export const getMappedAttributes = ({
   if (!mapping) {
     return;
   }
-  const attributes = variant.attributes.concat(variant.product.attributes);
+  const attributes = variant.attributes.concat(product.attributes);
 
   const materialAttributes = attributes.filter((a) =>
     mapping.materialAttributeIds.includes(a.attribute.id),
