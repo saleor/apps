@@ -1,3 +1,5 @@
+// TODO: Refactor this file to fetcher-like class
+
 import { url } from "inspector";
 import { Client } from "urql";
 import {
@@ -7,37 +9,33 @@ import {
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 
+const VARIANTS_PER_PAGE = 100;
+
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
 
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
   let result = await client
-    .query(FetchProductCursorsDocument, { channel: channel, first: 100 })
+    .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
 
   const cursors: Array<string> = [];
 
-  const fistCusror = result.data?.productVariants?.pageInfo.endCursor;
-
-  if (fistCusror) {
-    cursors.push(fistCusror);
-  }
-
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
-    result = await client
-      .query(FetchProductCursorsDocument, {
-        channel: channel,
-        first: 100,
-        after: result.data.productVariants.pageInfo.endCursor,
-      })
-      .toPromise();
-
     const endCursor = result.data?.productVariants?.pageInfo.endCursor;
 
     if (endCursor) {
       cursors.push(endCursor);
     }
+
+    result = await client
+      .query(FetchProductCursorsDocument, {
+        channel: channel,
+        first: VARIANTS_PER_PAGE,
+        after: result.data.productVariants.pageInfo.endCursor,
+      })
+      .toPromise();
   }
 
   logger.debug("Product cursors fetched successfully", {
@@ -66,7 +64,7 @@ const fetchVariants = async ({
   const result = await client
     .query(FetchProductDataForFeedDocument, {
       channel: channel,
-      first: 100,
+      first: VARIANTS_PER_PAGE,
       after,
       imageSize,
     })
