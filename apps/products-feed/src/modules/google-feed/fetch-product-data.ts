@@ -1,3 +1,5 @@
+// TODO: Refactor this file to fetcher-like class
+
 import { url } from "inspector";
 import { Client } from "urql";
 import {
