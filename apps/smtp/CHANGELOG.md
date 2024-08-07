@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.3
+
+### Patch Changes
+
+- 5763f5ea: You can now see the event in 'notify_user' OTEL logs.
+
 ## 1.2.2
 
 ### Patch Changes
