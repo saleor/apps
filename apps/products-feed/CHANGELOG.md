@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.3
+
+### Patch Changes
+
+- 93f96793: Entries within the xml file are no longer duplicated.
+
 ## 1.19.2
 
 ### Patch Changes
