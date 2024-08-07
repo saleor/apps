@@ -1,4 +1,5 @@
 import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { AuthData } from "@saleor/app-sdk/APL";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
@@ -85,6 +86,12 @@ export class CalculateTaxesUseCase {
       (typeof CalculateTaxesUseCase.CalculateTaxesUseCaseError)["prototype"]
     >
   > {
+    const calculateTaxesEvent = SaleorCalculateTaxesEvent.createFromGraphQL(payload);
+
+    if (calculateTaxesEvent.isErr()) {
+      return err(calculateTaxesEvent.error);
+    }
+
     const payloadVerificationResult = this.verifyPayload(payload);
 
     if (payloadVerificationResult.isErr()) {
@@ -171,6 +178,7 @@ export class CalculateTaxesUseCase {
         providerConfig.value.avataxConfig.config,
         authData,
         discountsStrategy,
+        calculateTaxesEvent.value,
       ),
       (err) =>
         new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {

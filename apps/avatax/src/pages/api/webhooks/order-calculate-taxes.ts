@@ -1,4 +1,5 @@
 import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes/event";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
@@ -49,6 +50,19 @@ export default wrapWithLoggerContext(
           }
 
           logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+
+          const calculateTaxesEvent = SaleorCalculateTaxesEvent.createFromGraphQL(payload);
+
+          if (calculateTaxesEvent.isErr()) {
+            const error = calculateTaxesEvent.error;
+
+            // Capture error when there is problem with parsing webhook payload - it should not happen
+            Sentry.captureException(error);
+            logger.error("Error parsing webhook payload into Saleor order calculate taxes event", {
+              error,
+            });
+            return res.status(500).json({ message: error.message });
+          }
 
           const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
 
@@ -118,6 +132,7 @@ export default wrapWithLoggerContext(
               providerConfig.value.avataxConfig.config,
               ctx.authData,
               discountStrategy,
+              calculateTaxesEvent.value,
             );
 
             logger.info("Taxes calculated", { calculatedTaxes });

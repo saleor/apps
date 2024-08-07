@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { AuthData } from "@saleor/app-sdk/APL";
 import * as Sentry from "@sentry/nextjs";
 import { createLogger } from "../../../logger";
@@ -14,20 +15,28 @@ import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
+type AvataxCalculateTaxesPayload = {
+  /**
+   * @deprecated use `SaleorCalculateTaxesEvent` instead
+   */
+  calculateTaxesPayload: CalculateTaxesPayload;
+  calculateTaxesEvent: SaleorCalculateTaxesEvent;
+};
+
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
 const errorParser = new AvataxErrorsParser(Sentry.captureException);
 
 export class AvataxCalculateTaxesAdapter
-  implements WebhookAdapter<CalculateTaxesPayload, AvataxCalculateTaxesResponse>
+  implements WebhookAdapter<AvataxCalculateTaxesPayload, AvataxCalculateTaxesResponse>
 {
   private logger = createLogger("AvataxCalculateTaxesAdapter");
 
   constructor(private avataxClient: AvataxClient) {}
 
   async send(
-    payload: CalculateTaxesPayload,
+    payload: AvataxCalculateTaxesPayload,
     config: AvataxConfig,
     authData: AuthData,
     discountStrategy: AutomaticallyDistributedDiscountsStrategy,
@@ -39,7 +48,12 @@ export class AvataxCalculateTaxesAdapter
       new AvataxCalculateTaxesPayloadTransformer(),
     );
 
-    const target = await payloadService.getPayload(payload, config, discountStrategy);
+    const target = await payloadService.getPayload(
+      payload.calculateTaxesPayload,
+      payload.calculateTaxesEvent,
+      config,
+      discountStrategy,
+    );
 
     this.logger.info(
       "Calling AvaTax createTransaction with transformed payload for calculate taxes event",

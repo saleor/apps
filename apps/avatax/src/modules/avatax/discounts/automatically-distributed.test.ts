@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEventMockFactory } from "@/modules/saleor/calculate-taxes/mocks";
 import { describe, expect, it } from "vitest";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AutomaticallyDistributedDiscountsStrategy } from "./automatically-distributed";
@@ -26,15 +27,9 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return 0 if no discounts", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [];
+      const event = SaleorCalculateTaxesEventMockFactory.create();
 
-      const totalDiscount = strategy.getDiscountAmount(discountsPayload);
-
-      expect(totalDiscount).toBe(0);
-    });
-
-    it("should return 0 if discounts are undefined", () => {
-      const totalDiscount = strategy.getDiscountAmount(undefined);
+      const totalDiscount = strategy.getDiscountAmount(event);
 
       expect(totalDiscount).toBe(0);
     });
@@ -75,9 +70,8 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return false if there are no discounts", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [];
-
-      const areLinesDiscounted = strategy.areLinesDiscounted(discountsPayload);
+      const event = SaleorCalculateTaxesEventMockFactory.create();
+      const areLinesDiscounted = strategy.areLinesDiscounted(event);
 
       expect(areLinesDiscounted).toBe(false);
     });

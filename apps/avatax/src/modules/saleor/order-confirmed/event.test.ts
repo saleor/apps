@@ -21,9 +21,7 @@ describe("SaleorOrderConfirmedEvent", () => {
 
     expect(result.isErr()).toBe(true);
 
-    if (result.isErr()) {
-      expect(result.error).toBeInstanceOf(SaleorOrderConfirmedEvent.ParsingError);
-    }
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorOrderConfirmedEvent.ParsingError);
   });
 
   describe("isFulfilled method", () => {

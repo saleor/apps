@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
@@ -13,10 +14,10 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+    calculateTaxesEvent: SaleorCalculateTaxesEvent,
   ): LineItemModel[] {
-    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
+    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(calculateTaxesEvent);
 
-    // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
       const taxCode = matcher.match(line, matches);

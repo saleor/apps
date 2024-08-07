@@ -1,6 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrderConfirmedEvent } from "../saleor";
+import { SaleorCalculateTaxesEvent } from "../saleor/calculate-taxes";
 import { CancelOrderPayload, ProviderWebhookService } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { AvataxClient } from "./avatax-client";
@@ -21,10 +22,16 @@ export class AvataxWebhookService implements ProviderWebhookService {
     avataxConfig: AvataxConfig,
     authData: AuthData,
     discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    calculateTaxesEvent: SaleorCalculateTaxesEvent,
   ) {
     const adapter = new AvataxCalculateTaxesAdapter(this.avataxClient);
 
-    const response = await adapter.send(payload, avataxConfig, authData, discountStrategy);
+    const response = await adapter.send(
+      { calculateTaxesPayload: payload, calculateTaxesEvent },
+      avataxConfig,
+      authData,
+      discountStrategy,
+    );
 
     return response;
   }

@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
@@ -26,6 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+    calculateTaxesEvent: SaleorCalculateTaxesEvent,
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
@@ -48,7 +50,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
         entityUseCode,
         customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,
-        discount: discountsStrategy.getDiscountAmount(payload.taxBase.discounts),
+        discount: discountsStrategy.getDiscountAmount(calculateTaxesEvent),
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {
@@ -61,6 +63,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
           avataxConfig,
           matches,
           discountsStrategy,
+          calculateTaxesEvent,
         ),
         date: new Date(),
       },

@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { Result, err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -81,12 +82,22 @@ const getBasePayload = (): CalculateTaxesPayload => {
   };
 };
 
-const getPayloadWithDiscounts = (): CalculateTaxesPayload => {
+const getPayloadWithDiscount = (): CalculateTaxesPayload => {
   return {
     ...getBasePayload(),
     taxBase: {
       ...getBasePayload().taxBase,
-      discounts: [{ amount: { amount: 10 } }, { amount: { amount: 0.1 } }],
+      discounts: [{ amount: { amount: 10 } }],
+    },
+  };
+};
+
+const getPayloadWithTwoDiscounts = (): CalculateTaxesPayload => {
+  return {
+    ...getBasePayload(),
+    taxBase: {
+      ...getBasePayload().taxBase,
+      discounts: [{ amount: { amount: 10 } }, { amount: { amount: 20 } }],
     },
   };
 };
@@ -214,7 +225,7 @@ describe("CalculateTaxesUseCase", () => {
 
     mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
 
-    const payload = getPayloadWithDiscounts();
+    const payload = getPayloadWithDiscount();
 
     await instance.calculateTaxes(payload, getMockAuthData());
 
@@ -222,7 +233,7 @@ describe("CalculateTaxesUseCase", () => {
 
     expect(mockedAvataxClient.createTransaction).toHaveBeenCalledWith({
       model: expect.objectContaining({
-        discount: 10.1,
+        discount: 10,
         lines: [
           expect.objectContaining({
             discounted: true,
@@ -230,5 +241,17 @@ describe("CalculateTaxesUseCase", () => {
         ],
       }),
     });
+  });
+
+  it("Returns parsing error if there are two discounts objects present on payload", async () => {
+    mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+    const payload = getPayloadWithTwoDiscounts();
+
+    const result = await instance.calculateTaxes(payload, getMockAuthData());
+
+    const error = result._unsafeUnwrapErr();
+
+    expect(error).toBeInstanceOf(SaleorCalculateTaxesEvent.ParsingError);
   });
 });

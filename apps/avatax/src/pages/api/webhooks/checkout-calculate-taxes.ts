@@ -11,6 +11,7 @@ import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
@@ -111,6 +112,13 @@ export default wrapWithLoggerContext(
                   case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
                     return res.status(400).json({
                       message: `Taxes can't be calculated due to incomplete payload for checkout: ${payload.taxBase.sourceObject.id}`,
+                    });
+                  }
+                  case SaleorCalculateTaxesEvent.ParsingError: {
+                    captureException(err);
+
+                    return res.status(500).json({
+                      message: `Failed to calculate taxes due to invalid payload for checkout: ${payload.taxBase.sourceObject.id}`,
                     });
                   }
                   case CalculateTaxesUseCase.UnhandledError: {

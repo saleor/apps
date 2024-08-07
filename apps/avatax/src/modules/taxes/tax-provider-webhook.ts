@@ -7,6 +7,7 @@ import {
   PriceReductionDiscountsStrategy,
 } from "../avatax/discounts";
 import { SaleorOrderConfirmedEvent } from "../saleor";
+import { SaleorCalculateTaxesEvent } from "../saleor/calculate-taxes";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 
 export type CalculateTaxesResponse = SyncWebhookResponsesMap["ORDER_CALCULATE_TAXES"];
@@ -21,6 +22,7 @@ export interface ProviderWebhookService {
     avataxConfig: AvataxConfig,
     authData: AuthData,
     discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    calculateTaxesEvent: SaleorCalculateTaxesEvent,
   ) => Promise<CalculateTaxesResponse>;
   confirmOrder: (
     payload: OrderConfirmedSubscriptionFragment,

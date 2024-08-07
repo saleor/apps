@@ -1,3 +1,4 @@
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
@@ -17,11 +18,18 @@ export class AvataxCalculateTaxesPayloadService {
 
   async getPayload(
     payload: CalculateTaxesPayload,
+    calculateTaxesEvent: SaleorCalculateTaxesEvent,
     avataxConfig: AvataxConfig,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
 
-    return this.payloadTransformer.transform(payload, avataxConfig, matches, discountsStrategy);
+    return this.payloadTransformer.transform(
+      payload,
+      avataxConfig,
+      matches,
+      discountsStrategy,
+      calculateTaxesEvent,
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { TaxBaseFragment } from "generated/graphql";
+import { SaleorCalculateTaxesEvent } from "@/modules/saleor/calculate-taxes";
 
 /*
  * Used for checkout and order calculate taxes.
@@ -7,17 +7,11 @@ import { TaxBaseFragment } from "generated/graphql";
  * Docs: https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
  */
 export class AutomaticallyDistributedDiscountsStrategy {
-  getDiscountAmount(taxBaseDiscounts: TaxBaseFragment["discounts"] | undefined) {
-    if (!taxBaseDiscounts) {
-      return 0;
-    }
-
-    return taxBaseDiscounts
-      .map((discount) => discount.amount.amount)
-      .reduce((total, current) => total + Number(current), 0);
+  getDiscountAmount(calculateTaxesEvent: SaleorCalculateTaxesEvent) {
+    return calculateTaxesEvent.getDiscountAmount();
   }
 
-  areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {
-    return this.getDiscountAmount(taxBaseDiscounts) > 0;
+  areLinesDiscounted(calculateTaxesEvent: SaleorCalculateTaxesEvent) {
+    return calculateTaxesEvent.getIsDiscounted();
   }
 }
