@@ -22,7 +22,7 @@ export const TaxBadProviderResponseError = CriticalError.subclass("TaxBadProvide
   } as CommonErrorProps,
 });
 
-// Error thrown by Avatax service.
+// Error thrown by AvaTax service.
 export const AvataxTaxCalculationError = CriticalError.subclass("AvataxTaxCalculationError", {
   props: {
     expected: false,

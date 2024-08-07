@@ -47,7 +47,7 @@ jobs:
         id: find-comment
         with:
           issue-number: ${{ steps.changesets.outputs.pullRequestNumber }}
-          body-includes: Releasing Avatax app checklist
+          body-includes: Releasing AvaTax app checklist
 
       - name: Add release checklist comment to release PR
         if: steps.changesets.outputs.hasChangesets == 'true'
@@ -57,4 +57,4 @@ jobs:
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            🚀 [Releasing Avatax app checklist](https://www.notion.so/saleor/Releasing-Avatax-app-checklist-5bf7928b942042e09e4197b70903c570?pvs=4)
+            🚀 [Releasing AvaTax app checklist](https://www.notion.so/saleor/Releasing-AvaTax-app-checklist-5bf7928b942042e09e4197b70903c570)
