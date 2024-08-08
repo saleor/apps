@@ -1,0 +1,107 @@
+meta {
+  name: 8. Remove lines on draft order
+  type: graphql
+  seq: 9
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  mutation OrderLineDelete($orderLineiId: ID!) {
+    orderLineDelete(id: $orderLineiId) {
+      errors {
+        ...OrderError
+      }
+      order {
+        id
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        total {
+          ...BaseTaxedMoney
+        }
+        subtotal {
+          ...BaseTaxedMoney
+        }
+        shippingPrice {
+          ...BaseTaxedMoney
+        }
+        lines {
+          productVariantId
+          quantity
+          totalPrice {
+            ...BaseTaxedMoney
+          }
+        }
+        deliveryMethod {
+          __typename
+          ... on ShippingMethod {
+            id
+            name
+            price {
+              amount
+            }
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            amount
+          }
+        }
+      }
+    }
+  }
+  
+  fragment BaseTaxedMoney on TaxedMoney {
+    gross {
+      amount
+    }
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+    currency
+  }
+  
+  fragment OrderError on OrderError {
+    code
+    field
+    message
+    addressType
+    orderLines
+    warehouse
+    variants
+    __typename
+  }
+}
+
+body:graphql:vars {
+  {
+    "orderLineiId": "{{orderLineiId1}}"
+  }
+}

@@ -1,0 +1,111 @@
+meta {
+  name: 6. Update shipping method on draft order
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  mutation OrderUpdateShipping($id: ID!, $input: OrderUpdateShippingInput!) {
+    orderUpdateShipping(order: $id, input: $input) {
+      errors {
+        ...OrderError
+      }
+      order {
+        id
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        total {
+          ...BaseTaxedMoney
+        }
+        subtotal {
+          ...BaseTaxedMoney
+        }
+        shippingPrice {
+          ...BaseTaxedMoney
+        }
+        lines {
+          id
+          productVariantId
+          quantity
+          totalPrice {
+            ...BaseTaxedMoney
+          }
+        }
+        deliveryMethod {
+          __typename
+          ... on ShippingMethod {
+            id
+            name
+            price {
+              amount
+            }
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            amount
+          }
+        }
+      }
+    }
+  }
+  
+  fragment BaseTaxedMoney on TaxedMoney {
+    gross {
+      amount
+    }
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+    currency
+  }
+  
+  fragment OrderError on OrderError {
+    code
+    field
+    message
+    addressType
+    orderLines
+    warehouse
+    variants
+    __typename
+  }
+}
+
+body:graphql:vars {
+  {
+      "id": "{{orderId}}",
+      "input": {
+          "shippingMethod": "{{shippingMethodId}}"
+      }
+  }
+}

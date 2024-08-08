@@ -10,7 +10,8 @@ import {
 } from "../generated/graphql";
 import { string } from "pactum-matchers";
 
-describe("App should calculate taxes for checkout with product tax [pricesEnteredWithTax: True]", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
+describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,
