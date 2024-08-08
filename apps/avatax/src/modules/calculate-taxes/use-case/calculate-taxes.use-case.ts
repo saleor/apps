@@ -125,7 +125,7 @@ export class CalculateTaxesUseCase {
         case AvataxWebhookServiceFactory.BrokenConfigurationError: {
           return err(
             new CalculateTaxesUseCase.ConfigBrokenError(
-              "Failed to create instance of Avatax connection due to invalid config",
+              "Failed to create instance of AvaTax connection due to invalid config",
               {
                 errors: [innerError],
               },
@@ -155,7 +155,7 @@ export class CalculateTaxesUseCase {
     if (providerConfig.isErr()) {
       return err(
         new CalculateTaxesUseCase.ConfigBrokenError(
-          "Failed to create instance of Avatax connection due to invalid config",
+          "Failed to create instance of AvaTax connection due to invalid config",
           {
             errors: [providerConfig.error],
           },

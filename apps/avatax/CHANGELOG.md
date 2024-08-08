@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.7.6
+
+### Patch Changes
+
+- 47ab5ef1: Remove not needed log for order calculate taxes that logged email.
+- 2192c555: Remove not used dependencies.
+
 ## 1.7.5
 
 ### Patch Changes

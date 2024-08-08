@@ -1,7 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
+import { Text } from "@saleor/macaw-ui";
 import { Section } from "../../ui/app-section";
 import { ProvidersList } from "./providers-list";
-import { Text } from "@saleor/macaw-ui";
 
 const Intro = () => {
   return (
@@ -14,7 +14,7 @@ const Intro = () => {
             Saleor offers two ways of calculating taxes: flat or dynamic rates.
           </Text>
           <Text as="p" marginBottom={4}>
-            Avatax App leverages the dynamic rates by delegating the tax calculation to third-party
+            AvaTax App leverages the dynamic rates by delegating the tax calculation to third-party
             services.
           </Text>
           <Text as="p">

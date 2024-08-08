@@ -2,7 +2,6 @@
 "App: Klaviyo": "apps/klaviyo/**/*"
 "App: Product Feed": "apps/products-feed/**/*"
 "App: Search": "apps/search/**/*"
-"App: Avatax": "apps/avatax/**/*"
+"App: AvaTax": "apps/avatax/**/*"
 "App: CMS": "apps/cms-v2/**/*"
-"App: Segment": "apps/segment/**/*"
 "App: SMTP": "apps/smtp/**/*"
