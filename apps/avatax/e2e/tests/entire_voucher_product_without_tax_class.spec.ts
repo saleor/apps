@@ -9,7 +9,8 @@ import {
   MoneyFragment,
 } from "../generated/graphql";
 
-describe("App should calculate taxes for checkout with all products voucher applied [pricesEnteredWithTax: False]", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16236
+describe("App should calculate taxes for checkout with entire order voucher applied TC: AVATAX_5", () => {
   const testCase = e2e(
     "Product without tax class [pricesEnteredWithTax: False], voucher [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
   );

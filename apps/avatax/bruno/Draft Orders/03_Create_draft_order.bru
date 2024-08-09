@@ -1,0 +1,52 @@
+meta {
+  name: 03 Create draft order
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  mutation OrderDraftCreate($input: DraftOrderCreateInput!) {
+    draftOrderCreate(input: $input) {
+      errors {
+        ...OrderError
+      }
+      order {
+        id
+      }
+    }
+  }
+  
+  fragment OrderError on OrderError {
+    code
+    field
+    message
+    addressType
+    orderLines
+    warehouse
+    variants
+    __typename
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "channelId": "{{channelId}}",
+      "userEmail": "{{storefrontUserEmail}}"
+    }
+  }
+}
+
+vars:post-response {
+  orderId: res.body.data.draftOrderCreate.order.id
+}

@@ -8,7 +8,7 @@ import {
 } from "../generated/graphql";
 
 // Testmo: https://saleor.testmo.net/repositories/6?case_id=16233
-describe("App should calculate taxes for checkout with product without tax class [pricesEnteredWithTax: False]", () => {
+describe("App should calculate taxes for checkout with product without tax class TC: AVATAX_1", () => {
   const testCase = e2e("Product without tax class [pricesEnteredWithTax: False]");
 
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 300;
