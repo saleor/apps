@@ -1,7 +1,7 @@
 meta {
-  name: 4. Add lines to draft order
+  name: 07 Update shipping method on draft order
   type: graphql
-  seq: 5
+  seq: 7
 }
 
 post {
@@ -15,29 +15,13 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation OrderLinesAdd($id: ID!, $input: [OrderLineCreateInput!]!) {
-    orderLinesCreate(id: $id, input: $input) {
+  mutation OrderUpdateShipping($id: ID!, $input: OrderUpdateShippingInput!) {
+    orderUpdateShipping(order: $id, input: $input) {
       errors {
         ...OrderError
       }
-       order {
+      order {
         id
-        billingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
-        shippingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
         total {
           ...BaseTaxedMoney
         }
@@ -65,12 +49,21 @@ body:graphql {
             }
           }
         }
-        shippingMethods {
-          id
-          name
-          price {
-            amount
+        billingAddress {
+          country {
+            code
           }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
         }
       }
     }
@@ -103,27 +96,9 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "id": "{{orderId}}",
-    "input": [
-      {
-        "quantity": 1,
-        "variantId": "{{productVariantId}}"
-      },
-      {
-        "quantity": 1,
-        "variantId": "{{productVariantId1}}"
-      },
-      
-      {
-        "quantity": 1,
-        "variantId": "{{productVariantId2}}"
+      "id": "{{orderId}}",
+      "input": {
+          "shippingMethod": "{{shippingMethodId}}"
       }
-    ]
   }
-}
-
-vars:post-response {
-  orderLineiId: res.body.data.orderLinesCreate.order.lines[0].id
-  orderLineiId1: res.body.data.orderLinesCreate.order.lines[1].id
-  orderLineiId2: res.body.data.orderLinesCreate.order.lines[2].id
 }

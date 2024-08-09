@@ -1,7 +1,7 @@
 meta {
-  name: 5. Update Addresses on draft order
+  name: 010 Add voucher to draft order
   type: graphql
-  seq: 6
+  seq: 10
 }
 
 post {
@@ -22,6 +22,18 @@ body:graphql {
       }
       order {
         id
+        voucherCode
+        discounts {
+          id
+          type
+          name
+          valueType
+          value
+          reason
+          amount {
+            amount
+          }
+        }
         total {
           ...BaseTaxedMoney
         }
@@ -46,13 +58,6 @@ body:graphql {
             price {
               amount
             }
-          }
-        }
-        shippingMethods {
-          id
-          name
-          price {
-            amount
           }
         }
         billingAddress {
@@ -104,30 +109,7 @@ body:graphql:vars {
   {
     "id": "{{orderId}}",
     "input": {
-        "billingAddress":{
-           "city":"New York",
-           "country":"US",
-           "countryArea":"NY",
-           "firstName":"John",
-           "lastName":"Smith",
-           "phone":"+12125094995",
-           "postalCode":"10001",
-           "streetAddress1":"8559 Lakes Avenue"
-        },
-        "shippingAddress":{
-           "city":"New York",
-           "country":"US",
-           "countryArea":"NY",
-           "firstName":"John",
-           "lastName":"Smith",
-           "phone":"+12125094995",
-           "postalCode":"10001",
-           "streetAddress1":"8559 Lakes Avenue"
-        }
+        "voucherCode": "{{promoCode}}"
     }
   }
-}
-
-vars:post-response {
-  shippingMethodId: res.body.data.draftOrderUpdate.order.shippingMethods[0].id
 }

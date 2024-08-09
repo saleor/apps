@@ -1,7 +1,7 @@
 meta {
-  name: 6. Update shipping method on draft order
+  name: 08 Update lines on draft order
   type: graphql
-  seq: 7
+  seq: 8
 }
 
 post {
@@ -15,29 +15,13 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation OrderUpdateShipping($id: ID!, $input: OrderUpdateShippingInput!) {
-    orderUpdateShipping(order: $id, input: $input) {
-      errors {
+  mutation OrderLineUpdate($orderLineiId: ID!, $input: OrderLineInput!) {
+    orderLineUpdate(id: $orderLineiId, input: $input) {
+     errors {
         ...OrderError
       }
       order {
         id
-        billingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
-        shippingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
         total {
           ...BaseTaxedMoney
         }
@@ -72,6 +56,22 @@ body:graphql {
             amount
           }
         }
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
       }
     }
   }
@@ -103,9 +103,9 @@ body:graphql {
 
 body:graphql:vars {
   {
-      "id": "{{orderId}}",
-      "input": {
-          "shippingMethod": "{{shippingMethodId}}"
-      }
+    "orderLineiId": "{{orderLineiId2}}",
+    "input": {
+      "quantity": 2
+    }
   }
 }

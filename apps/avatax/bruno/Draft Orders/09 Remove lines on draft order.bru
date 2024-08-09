@@ -1,7 +1,7 @@
 meta {
-  name: 9. Add voucher to draft order
+  name: 09 Remove lines on draft order
   type: graphql
-  seq: 10
+  seq: 9
 }
 
 post {
@@ -15,25 +15,13 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation DraftOrderUpdate($id: ID!, $input: DraftOrderInput!) {
-    draftOrderUpdate(id: $id, input: $input) {
+  mutation OrderLineDelete($orderLineiId: ID!) {
+    orderLineDelete(id: $orderLineiId) {
       errors {
         ...OrderError
       }
       order {
         id
-        voucherCode
-        discounts {
-          id
-          type
-          name
-          valueType
-          value
-          reason
-          amount {
-            amount
-          }
-        }
         total {
           ...BaseTaxedMoney
         }
@@ -58,6 +46,13 @@ body:graphql {
             price {
               amount
             }
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            amount
           }
         }
         billingAddress {
@@ -107,9 +102,6 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "id": "{{orderId}}",
-    "input": {
-        "voucherCode": "{{promoCode}}"
-    }
+    "orderLineiId": "{{orderLineiId1}}"
   }
 }
