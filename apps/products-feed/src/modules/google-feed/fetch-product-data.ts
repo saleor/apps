@@ -8,6 +8,7 @@ import {
   GoogleFeedProductVariantFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
+import { ProductProcessingLimit } from "./product-processing-limit";
 
 const VARIANTS_PER_PAGE = 100;
 
@@ -16,17 +17,22 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
 
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
+  const processingLimit = new ProductProcessingLimit();
+
   let result = await client
     .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
 
   const cursors: Array<string> = [];
 
+  processingLimit.drain();
+
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
     const endCursor = result.data?.productVariants?.pageInfo.endCursor;
 
     if (endCursor) {
       cursors.push(endCursor);
+      processingLimit.drain();
     }
 
     result = await client
@@ -37,6 +43,14 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
       })
       .toPromise();
   }
+
+  // TODO: Return cursors (stop fetching more) when the limit is exceeded
+  logger.info("Processing limit status", {
+    isExceeded: processingLimit.isExceeded(),
+    maxPagesAllowance: processingLimit.getMaxPages(),
+    takenPages: processingLimit.getProcessedPages(),
+    variantsPerPage: VARIANTS_PER_PAGE,
+  });
 
   logger.debug("Product cursors fetched successfully", {
     first: cursors[0],
