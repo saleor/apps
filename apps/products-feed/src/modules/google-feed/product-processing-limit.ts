@@ -3,7 +3,7 @@ const MAX_PAGES = 23; // 23 * 100 = ~2300 variants
 export class ProductProcessingLimit {
   private currentNumberOfPages: number;
 
-  constructor(private readonly maxVariants: number = MAX_PAGES) {
+  constructor(private readonly maxVariantsPages: number = MAX_PAGES) {
     this.currentNumberOfPages = 0;
   }
 
