@@ -22,22 +22,6 @@ body:graphql {
       }
       order {
         id
-        billingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
-        shippingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
         total {
           ...BaseTaxedMoney
         }
@@ -70,6 +54,22 @@ body:graphql {
           price {
             amount
           }
+        }
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
         }
       }
     }

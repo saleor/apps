@@ -22,22 +22,6 @@ body:graphql {
       }
       order {
         id
-        billingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
-        shippingAddress {
-          country {
-            code
-          }
-          city
-          postalCode
-          countryArea
-        }
         total {
           ...BaseTaxedMoney
         }
@@ -46,6 +30,18 @@ body:graphql {
         }
         shippingPrice {
           ...BaseTaxedMoney
+        }
+        voucherCode
+        discounts {
+          id
+          type
+          name
+          valueType
+          value
+          reason
+          amount {
+            amount
+          }
         }
         lines {
           productVariantId
@@ -64,12 +60,21 @@ body:graphql {
             }
           }
         }
-        shippingMethods {
-          id
-          name
-          price {
-            amount
+        billingAddress {
+          country {
+            code
           }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
         }
       }
     }
