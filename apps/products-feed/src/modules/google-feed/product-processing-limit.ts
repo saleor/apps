@@ -8,7 +8,7 @@ export class ProductProcessingLimit {
   }
 
   getMaxPages() {
-    return this.maxVariants;
+    return this.maxVariantsPages;
   }
 
   getProcessedPages() {
@@ -20,6 +20,6 @@ export class ProductProcessingLimit {
   }
 
   isExceeded() {
-    return this.currentNumberOfPages >= this.maxVariants;
+    return this.currentNumberOfPages >= this.maxVariantsPages;
   }
 }
