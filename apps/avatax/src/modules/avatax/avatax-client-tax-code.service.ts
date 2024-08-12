@@ -20,10 +20,16 @@ export class AvataxClientTaxCodeService {
   }
 
   async getFilteredTaxCodes({ filter }: { filter: string | null }) {
-    const result = await this.client.listTaxCodes({
-      ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
-      top: 50,
-    });
+    const result = await this.client
+      .listTaxCodes({
+        ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
+        top: 50,
+      })
+      .catch((err) => {
+        this.logger.error("Failed to call listTaxCodes on Avatax client", { error: err });
+
+        throw err;
+      });
 
     return this.filterOutInvalid(result);
   }
