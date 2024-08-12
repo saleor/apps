@@ -1,0 +1,111 @@
+meta {
+  name: 08 Update lines on draft order
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  mutation OrderLineUpdate($orderLineiId: ID!, $input: OrderLineInput!) {
+    orderLineUpdate(id: $orderLineiId, input: $input) {
+     errors {
+        ...OrderError
+      }
+      order {
+        id
+        total {
+          ...BaseTaxedMoney
+        }
+        subtotal {
+          ...BaseTaxedMoney
+        }
+        shippingPrice {
+          ...BaseTaxedMoney
+        }
+        lines {
+          id
+          productVariantId
+          quantity
+          totalPrice {
+            ...BaseTaxedMoney
+          }
+        }
+        deliveryMethod {
+          __typename
+          ... on ShippingMethod {
+            id
+            name
+            price {
+              amount
+            }
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            amount
+          }
+        }
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+      }
+    }
+  }
+  
+  fragment BaseTaxedMoney on TaxedMoney {
+    gross {
+      amount
+    }
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+    currency
+  }
+  
+  fragment OrderError on OrderError {
+    code
+    field
+    message
+    addressType
+    orderLines
+    warehouse
+    variants
+    __typename
+  }
+}
+
+body:graphql:vars {
+  {
+    "orderLineiId": "{{orderLineiId2}}",
+    "input": {
+      "quantity": 2
+    }
+  }
+}

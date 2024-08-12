@@ -1,0 +1,36 @@
+meta {
+  name: 02 Get channel Id
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  query Channel($slug: String) {
+    channel(slug: $slug) {
+      id
+      name
+      slug
+      isActive
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "slug": "{{channel_USD}}"
+  }
+}
+
+vars:post-response {
+  channelId: res.body.data.channel.id
+}
