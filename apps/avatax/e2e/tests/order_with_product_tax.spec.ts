@@ -11,7 +11,8 @@ import {
   StaffUserTokenCreate,
 } from "../generated/graphql";
 
-describe("App should calculates taxes for order with product with tax calss [pricesEnteredWithTax: True]", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18382
+describe("App should calculate taxes for draft order with product with tax class TC: AVATAX_18", () => {
   const testCase = e2e("Product with tax class [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,

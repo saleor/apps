@@ -1,0 +1,133 @@
+meta {
+  name: 06 Update Addresses on draft order
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:graphql {
+  mutation DraftOrderUpdate($id: ID!, $input: DraftOrderInput!) {
+    draftOrderUpdate(id: $id, input: $input) {
+      errors {
+        ...OrderError
+      }
+      order {
+        id
+        total {
+          ...BaseTaxedMoney
+        }
+        subtotal {
+          ...BaseTaxedMoney
+        }
+        shippingPrice {
+          ...BaseTaxedMoney
+        }
+        lines {
+          productVariantId
+          quantity
+          totalPrice {
+            ...BaseTaxedMoney
+          }
+        }
+        deliveryMethod {
+          __typename
+          ... on ShippingMethod {
+            id
+            name
+            price {
+              amount
+            }
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            amount
+          }
+        }
+        billingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+        shippingAddress {
+          country {
+            code
+          }
+          city
+          postalCode
+          countryArea
+        }
+      }
+    }
+  }
+  
+  fragment BaseTaxedMoney on TaxedMoney {
+    gross {
+      amount
+    }
+    net {
+      amount
+    }
+    tax {
+      amount
+    }
+    currency
+  }
+  
+  fragment OrderError on OrderError {
+    code
+    field
+    message
+    addressType
+    orderLines
+    warehouse
+    variants
+    __typename
+  }
+}
+
+body:graphql:vars {
+  {
+    "id": "{{orderId}}",
+    "input": {
+        "billingAddress":{
+           "city":"New York",
+           "country":"US",
+           "countryArea":"NY",
+           "firstName":"John",
+           "lastName":"Smith",
+           "phone":"+12125094995",
+           "postalCode":"10001",
+           "streetAddress1":"8559 Lakes Avenue"
+        },
+        "shippingAddress":{
+           "city":"New York",
+           "country":"US",
+           "countryArea":"NY",
+           "firstName":"John",
+           "lastName":"Smith",
+           "phone":"+12125094995",
+           "postalCode":"10001",
+           "streetAddress1":"8559 Lakes Avenue"
+        }
+    }
+  }
+}
+
+vars:post-response {
+  shippingMethodId: res.body.data.draftOrderUpdate.order.shippingMethods[0].id
+}
