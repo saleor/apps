@@ -288,6 +288,9 @@ importers:
       eslint-plugin-neverthrow:
         specifier: ^1.1.4
         version: 1.1.4(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.4.5))(eslint@node_modules+eslint)(typescript@5.4.5)
+      eslint-plugin-simple-import-sort:
+        specifier: 12.1.1
+        version: 12.1.1(eslint@node_modules+eslint)
       graphql-config:
         specifier: 5.0.3
         version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.4.5)
@@ -8806,6 +8809,11 @@ packages:
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
+
+  eslint-plugin-simple-import-sort@12.1.1:
+    resolution: {integrity: sha512-6nuzu4xwQtE3332Uz0to+TxDQYRLTKRESSc2hefVT48Zc8JthmN23Gx9lnYhu0FtkRSL1oxny3kJ2aveVhmOVA==}
+    peerDependencies:
+      eslint: '>=5.0.0'
 
   eslint-plugin-turbo@1.10.3:
     resolution: {integrity: sha512-g3Mnnk7el1FqxHfqbE/MayLvCsYjA/vKmAnUj66kV4AlM7p/EZqdt42NMcMSKtDVEm0w+utQkkzWG2Xsa0Pd/g==}
@@ -23234,6 +23242,10 @@ snapshots:
       resolve: 2.0.0-next.5
       semver: 6.3.1
       string.prototype.matchall: 4.0.11
+
+  eslint-plugin-simple-import-sort@12.1.1(eslint@node_modules+eslint):
+    dependencies:
+      eslint: link:node_modules/eslint
 
   eslint-plugin-turbo@1.10.3(eslint@8.57.0):
     dependencies:

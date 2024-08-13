@@ -87,6 +87,7 @@
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "eslint-plugin-neverthrow": "^1.1.4",
+    "eslint-plugin-simple-import-sort": "12.1.1",
     "graphql-config": "5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
