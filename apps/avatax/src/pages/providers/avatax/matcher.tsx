@@ -1,12 +1,13 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
+
 import { AvataxTaxCodeMatcherTable } from "../../../modules/avatax/ui/avatax-tax-code-matcher-table";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { AppColumns } from "../../../modules/ui/app-columns";
 import { AppDashboardLink } from "../../../modules/ui/app-dashboard-link";
 import { Section } from "../../../modules/ui/app-section";
-import { TextLink } from "@saleor/apps-ui";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { useRouter } from "next/router";
-import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const Header = () => {
   return <Section.Header>Match Saleor tax classes to AvaTax tax codes</Section.Header>;
@@ -38,10 +39,10 @@ const Description = () => {
           </Text>
           <Text as="p" marginBottom={4}>
             To learn more about AvaTax tax codes, please visit{" "}
-            <TextLink href="https://taxcode.avatax.avalara.com/search?q=OF400000" newTab>
+            <TextLink href="https://taxcode.avatax.avalara.com/search?q=food" newTab>
               AvaTax documentation
             </TextLink>
-            .
+            . You can search for tax codes and enter them in this page.
           </Text>
         </>
       }
