@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.19.3
+
+### Patch Changes
+
+- 93f96793: Entries within the xml file are no longer duplicated.
+- d3d4d155: Now you can see in logs if someone is exceeding variant fetching limits.
+
 ## 1.19.2
 
 ### Patch Changes

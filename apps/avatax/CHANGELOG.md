@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.7.7
+
+### Patch Changes
+
+- 66b4f3b5: Add logs around tax code matcher. Now it's more visible what operations are executed
+
 ## 1.7.6
 
 ### Patch Changes
