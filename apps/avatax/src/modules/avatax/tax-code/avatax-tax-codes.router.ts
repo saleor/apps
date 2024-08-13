@@ -16,6 +16,7 @@ const getAllForIdSchema = z.object({
   uniqueKey: z.string(),
 });
 
+// TODO: Add test, but create dependency injection first, so services can be injected in ctx
 export const avataxTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger("avataxTaxCodesRouter.getAllForId");
@@ -51,7 +52,7 @@ export const avataxTaxCodesRouter = router({
     logger.debug("Returning tax codes");
 
     return taxCodesService.getAllFiltered({ filter: input.filter }).catch((err) => {
-      logger.error("Failed to fetch tax codes from Avatax", { error: err });
+      logger.error("Failed to fetch tax codes from AvaTax", { error: err });
 
       if (err instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
         throw new TRPCError({
@@ -62,7 +63,6 @@ export const avataxTaxCodesRouter = router({
         });
       }
 
-      // TODO Map specific reasons to errors (like invalid credentials should be handled differently)
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Failed to fetch tax codes from AvaTax",

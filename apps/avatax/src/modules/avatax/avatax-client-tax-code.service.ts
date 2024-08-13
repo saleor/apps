@@ -18,7 +18,7 @@ export class AvataxClientTaxCodeService {
   private readonly notSuitableKeys = ["Expired Tax Code - Do Not Use"];
   private logger = createLogger("AvataxClientTaxCodeService");
 
-  constructor(private client: Avatax) {}
+  constructor(private client: Pick<Avatax, "listTaxCodes">) {}
 
   private filterOutInvalid(response: FetchResult<TaxCodeModel>) {
     return response.value.filter((taxCode) => {
@@ -57,8 +57,8 @@ export class AvataxClientTaxCodeService {
 
           // Throw other errors like usual
           throw err;
-        } catch (e) {
-          throw err;
+        } catch (outerError) {
+          throw outerError;
         }
       });
 
