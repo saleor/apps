@@ -1,10 +1,17 @@
 module.exports = {
   extends: ["next", "turbo", "prettier"],
   parser: "@typescript-eslint/parser",
+  plugins: ["simple-import-sort"],
   rules: {
+    "import/order": "off", // to avoid conflicts with simple-import-sort
+    "import/first": "warn",
+    "import/newline-after-import": "warn",
+    "import/no-duplicates": "warn",
+    "import/no-default-export": "warn",
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
-    "import/no-default-export": "error",
     "newline-after-var": "warn",
     "multiline-comment-style": ["warn", "starred-block"],
     "no-restricted-imports": [
