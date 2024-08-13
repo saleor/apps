@@ -1,9 +1,12 @@
-import { SmtpConfigurationService } from "./smtp-configuration.service";
-import { router } from "../../trpc/trpc-server";
-import { z } from "zod";
-import { MjmlCompiler } from "../services/mjml-compiler";
-import Handlebars from "handlebars";
 import { TRPCError } from "@trpc/server";
+import Handlebars from "handlebars";
+import { z } from "zod";
+
+import { createLogger } from "../../../logger";
+import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
+import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
+import { router } from "../../trpc/trpc-server";
+import { MjmlCompiler } from "../services/mjml-compiler";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,
@@ -15,10 +18,8 @@ import {
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
 } from "./smtp-config-input-schema";
-import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
-import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
+import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
-import { createLogger } from "../../../logger";
 
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: typeof SmtpConfigurationService.SmtpConfigurationServiceError | unknown,
@@ -152,16 +153,28 @@ export const smtpConfigurationRouter = router({
       const payload = JSON.parse(input.payload);
 
       if (input.subject) {
-        const compiledSubjectTemplate = Handlebars.compile(input.subject);
+        try {
+          const compiledSubjectTemplate = Handlebars.compile(input.subject);
 
-        renderedSubject = compiledSubjectTemplate(payload);
+          renderedSubject = compiledSubjectTemplate(payload);
+        } catch (e) {
+          logger.error("Error during compile subject template", { error: e });
+          return;
+        }
       }
 
       let renderedEmail = "";
+      let templatedEmail = "";
 
       if (input.template) {
-        const compiledSubjectTemplate = Handlebars.compile(input.template);
-        const templatedEmail = compiledSubjectTemplate(payload);
+        try {
+          const compiledSubjectTemplate = Handlebars.compile(input.template);
+
+          templatedEmail = compiledSubjectTemplate(payload);
+        } catch (e) {
+          logger.error("Error during compile template", { error: e });
+          return;
+        }
 
         const compilationResult = new MjmlCompiler().compile(templatedEmail);
 
