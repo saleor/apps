@@ -1,11 +1,8 @@
 {
   "root": true,
   "extends": ["saleor"],
-  "plugins": ["neverthrow", "simple-import-sort"],
+  "plugins": ["neverthrow"],
   "rules": {
-    "import/order": "off",
-    "simple-import-sort/imports": "warn",
-    "simple-import-sort/exports": "warn",
     "turbo/no-undeclared-env-vars": [
       "error",
       {
