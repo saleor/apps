@@ -159,7 +159,10 @@ export const smtpConfigurationRouter = router({
           renderedSubject = compiledSubjectTemplate(payload);
         } catch (e) {
           logger.error("Error during compile subject template", { error: e });
-          return;
+          return {
+            renderedSubject: "",
+            renderedEmailBody: "",
+          };
         }
       }
 
@@ -173,7 +176,10 @@ export const smtpConfigurationRouter = router({
           templatedEmail = compiledSubjectTemplate(payload);
         } catch (e) {
           logger.error("Error during compile template", { error: e });
-          return;
+          return {
+            renderedSubject: "",
+            renderedEmailBody: "",
+          };
         }
 
         const compilationResult = new MjmlCompiler().compile(templatedEmail);
