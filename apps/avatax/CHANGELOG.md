@@ -1,5 +1,21 @@
 # app-avatax
 
+## 1.7.8
+
+### Patch Changes
+
+- 5d132b2b: Added fallback behavior for Tax Code Matcher: scenario when AvaTax fail to respond with available tax classes.
+
+  ### Before:
+
+  When AvaTax failed to respond, app left Tax Code Matcher page and settings couldn't been set
+
+  ### After
+
+  App ignores missing response from AvaTax and sets empty autocomplete results. Values can be entered manually and will not be validated
+
+- 534bde05: Add logs to AvaTax app logic that transforms Avalara response to Saleor.
+
 ## 1.7.7
 
 ### Patch Changes
