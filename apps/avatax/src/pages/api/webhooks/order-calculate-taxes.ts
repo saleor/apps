@@ -123,7 +123,6 @@ export default wrapWithLoggerContext(
             );
 
             logger.info("Taxes calculated", { calculatedTaxes });
-            console.log("calculatedTaxes", JSON.stringify(calculatedTaxes));
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
