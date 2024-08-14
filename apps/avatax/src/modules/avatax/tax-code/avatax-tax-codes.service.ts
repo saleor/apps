@@ -8,7 +8,7 @@ import { createLogger } from "@/logger";
 export class AvataxTaxCodesService {
   private logger = createLogger("AvataxTaxCodesService");
 
-  constructor(private client: AvataxClient) {}
+  constructor(private client: Pick<AvataxClient, "getFilteredTaxCodes">) {}
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
     return taxCodes.map((item) => ({
