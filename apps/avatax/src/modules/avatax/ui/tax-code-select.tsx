@@ -3,6 +3,7 @@ import { Box, Input, Spinner } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 import { useDebounce } from "usehooks-ts";
+
 import { trpcClient } from "../../trpc/trpc-client";
 
 const useGetTaxCodes = ({ filter, uniqueKey }: { filter: string | null; uniqueKey: string }) => {
@@ -35,17 +36,15 @@ const useGetTaxCodes = ({ filter, uniqueKey }: { filter: string | null; uniqueKe
     },
     {
       enabled: firstConnectionId !== undefined,
+      retry: false,
     },
   );
 
   React.useEffect(() => {
     if (result.error) {
-      notifyError("Error", "Unable to fetch AvaTax tax codes.");
-      setTimeout(() => {
-        router.push("/configuration");
-      }, 1000);
+      notifyError("Error", "Unable to fetch AvaTax tax codes. Please enter values manually");
     }
-  }, [notifyError, result.error, router]);
+  }, [notifyError, result.error]);
 
   return result;
 };
@@ -78,8 +77,11 @@ const useTaxCodeAutocomplete = ({ taxClassId }: { taxClassId: string }) => {
     });
 
   const updateTaxCode = React.useCallback(() => {
-    const isValidCode =
-      taxCodes.some((item) => item.code === debouncedValue) || debouncedValue === "";
+    /**
+     * Disable validation - if AvaTax can't return list of codes, as a fallback we allow to use a plain text.
+     * TODO: This should be refactored
+     */
+    const isValidCode = true;
 
     if (debouncedValue !== prevValueRef.current && isTouched && isValidCode) {
       prevValueRef.current = debouncedValue;
@@ -107,7 +109,10 @@ const useTaxCodeAutocomplete = ({ taxClassId }: { taxClassId: string }) => {
   };
 };
 
-// todo: replace with macaw-ui Autocomplete component when it's ready
+/*
+ * todo: replace with macaw-ui Autocomplete component when it's ready
+ * todo: call tax classes autocomplete fetch only once
+ */
 export const TaxCodeSelect = ({ taxClassId }: { taxClassId: string }) => {
   const { isInputLoading, isInputDisabled, inputText, onInputTextChange, options } =
     useTaxCodeAutocomplete({
