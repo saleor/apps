@@ -1,5 +1,6 @@
 import { Select, SelectProps } from "@saleor/react-hook-form-macaw";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
+
 import { countries } from "./countries";
 
 type CountrySelectProps<TFieldValues extends FieldValues = FieldValues> = Omit<

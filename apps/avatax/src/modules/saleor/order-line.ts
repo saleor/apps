@@ -1,5 +1,6 @@
-import { Result, err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
+
 import { OrderLineFragment } from "../../../generated/graphql";
 import { BaseError } from "../../error";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";

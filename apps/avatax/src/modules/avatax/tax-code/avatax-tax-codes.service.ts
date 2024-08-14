@@ -1,9 +1,11 @@
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
+
+import { createLogger } from "@/logger";
+
 import type { TaxCode } from "../../taxes/tax-code";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
-import { createLogger } from "@/logger";
 
 export class AvataxTaxCodesService {
   private logger = createLogger("AvataxTaxCodesService");

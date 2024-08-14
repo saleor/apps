@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
+
 import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
+import { AvataxOrderCancelledTarget } from "./avatax-order-cancelled-adapter";
 
 export class AvataxOrderCancelledPayloadTransformer {
   constructor() {}

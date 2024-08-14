@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { AvataxInvalidAddressError, AvataxTaxCalculationError } from "../taxes/tax-error";
 import { AvataxErrorsParser } from "./avatax-errors-parser";
 

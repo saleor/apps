@@ -1,10 +1,11 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
+
 import { trpcClient } from "../trpc/trpc-client";
 import { AppCard } from "./app-card";
 import { Section } from "./app-section";
 import { ProviderLabel } from "./provider-label";
 import { Table } from "./table";
-import { useRouter } from "next/router";
 
 const MatcherTable = () => {
   const { data: connections = [], isLoading } = trpcClient.providersConfiguration.getAll.useQuery();

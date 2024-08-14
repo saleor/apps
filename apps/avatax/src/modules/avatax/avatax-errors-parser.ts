@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { BaseError } from "../../error";
 import {
   AvataxGetTaxError,

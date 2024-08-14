@@ -1,9 +1,11 @@
 import Avatax from "avatax";
-import { FetchResult } from "avatax/lib/utils/fetch_result";
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
-import { createLogger } from "../../logger";
-import { BaseError } from "@/error";
+import { FetchResult } from "avatax/lib/utils/fetch_result";
 import { z } from "zod";
+
+import { BaseError } from "@/error";
+
+import { createLogger } from "../../logger";
 
 const AvataxErrorShape = z.object({
   code: z.string(),

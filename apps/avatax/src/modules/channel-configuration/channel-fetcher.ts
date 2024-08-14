@@ -1,4 +1,5 @@
 import { Client } from "urql";
+
 import {
   TaxConfigurationsListDocument,
   TaxConfigurationsListQueryVariables,

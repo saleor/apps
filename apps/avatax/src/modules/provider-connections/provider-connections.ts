@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { avataxConnectionSchema } from "../avatax/avatax-connection-schema";
 
 export const providerConnectionSchema = avataxConnectionSchema;

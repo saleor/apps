@@ -1,4 +1,6 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+
+import { createLogger } from "../../../logger";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 import {
   ProviderConnections,
@@ -10,7 +12,6 @@ import {
   AvataxConnection,
   avataxConnectionSchema,
 } from "../avatax-connection-schema";
-import { createLogger } from "../../../logger";
 
 const getSchema = avataxConnectionSchema.strict();
 

@@ -1,5 +1,6 @@
 import { Provider } from "jotai";
 import { useRouter } from "next/router";
+
 import { AvataxInstructions } from "../../../../modules/avatax/ui/avatax-instructions";
 import { EditAvataxConfiguration } from "../../../../modules/avatax/ui/edit-avatax-configuration";
 import { AppPageLayout } from "../../../../modules/ui/app-page-layout";

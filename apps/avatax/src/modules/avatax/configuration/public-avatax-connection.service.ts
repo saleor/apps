@@ -1,5 +1,6 @@
 import { DeepPartial } from "@trpc/server";
 import { Client } from "urql";
+
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConnectionService } from "./avatax-connection.service";

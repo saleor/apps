@@ -1,9 +1,10 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
-import { getAppConfig } from "./get-app-config";
 import { describe, expect, it, vi } from "vitest";
-import { ProviderConnections } from "../provider-connections/provider-connections";
+
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
+import { ProviderConnections } from "../provider-connections/provider-connections";
+import { getAppConfig } from "./get-app-config";
 
 const mockedSecretKey = "test_secret_key";
 const mockedProviders: ProviderConnections = [
