@@ -1,8 +1,9 @@
 import { Client } from "urql";
+
 import { Obfuscator } from "../../../lib/obfuscator";
+import { createLogger } from "../../../logger";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConnectionService } from "./avatax-connection.service";
-import { createLogger } from "../../../logger";
 
 /*
  * This class is used to merge the given input with the existing configuration.

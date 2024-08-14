@@ -1,4 +1,5 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";

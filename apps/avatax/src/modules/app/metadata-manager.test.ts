@@ -1,8 +1,9 @@
-import { describe, expect, it, Mock, vi } from "vitest";
-import { createSettingsManager } from "./metadata-manager";
-import { Client } from "urql";
-import { AppMetadataCache } from "../../lib/app-metadata-cache";
 import { encrypt } from "@saleor/app-sdk/settings-manager";
+import { Client } from "urql";
+import { describe, expect, it, Mock, vi } from "vitest";
+
+import { AppMetadataCache } from "../../lib/app-metadata-cache";
+import { createSettingsManager } from "./metadata-manager";
 
 const mockGqlClient: Pick<Client, "query" | "mutation"> = {
   mutation: vi.fn(),

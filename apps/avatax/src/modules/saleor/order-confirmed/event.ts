@@ -1,5 +1,6 @@
-import { Result, err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
+
 import { BaseError } from "../../../error";
 import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLine } from "../order-line";

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";

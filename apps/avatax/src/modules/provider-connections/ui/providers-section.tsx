@@ -1,5 +1,6 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui";
+
 import { Section } from "../../ui/app-section";
 import { ProvidersList } from "./providers-list";
 

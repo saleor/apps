@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
+
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { AvataxConfig } from "../avatax/avatax-connection-schema";
 import {

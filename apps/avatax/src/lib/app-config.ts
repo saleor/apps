@@ -1,7 +1,8 @@
-import { MetadataItem } from "../../generated/graphql";
 import { err, fromThrowable, ok, Result } from "neverthrow";
-import { getAppConfig } from "../modules/app/get-app-config";
+
+import { MetadataItem } from "../../generated/graphql";
 import { BaseError } from "../error";
+import { getAppConfig } from "../modules/app/get-app-config";
 import { ChannelsConfig } from "../modules/channel-configuration/channel-config";
 import {
   ProviderConnection,

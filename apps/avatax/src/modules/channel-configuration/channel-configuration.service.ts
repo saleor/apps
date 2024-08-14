@@ -1,12 +1,13 @@
+import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { Client } from "urql";
+
+import { metadataCache } from "../../lib/app-metadata-cache";
+import { createLogger } from "../../logger";
+import { createSettingsManager } from "../app/metadata-manager";
 import { ChannelConfigProperties } from "./channel-config";
+import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { ChannelConfigurationRepository } from "./channel-configuration-repository";
 import { ChannelsFetcher } from "./channel-fetcher";
-import { ChannelConfigurationMerger } from "./channel-configuration-merger";
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { createSettingsManager } from "../app/metadata-manager";
-import { createLogger } from "../../logger";
-import { metadataCache } from "../../lib/app-metadata-cache";
 
 export class ChannelConfigurationService {
   private configurationRepository: ChannelConfigurationRepository;

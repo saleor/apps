@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { AppConfigurationLogger } from "./app-configuration-logger";
-import { AppConfig } from "./app-config";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { AppConfig } from "./app-config";
+import { AppConfigurationLogger } from "./app-configuration-logger";
 
 describe("AppConfigurationLogger", () => {
   const mockWarn = vi.fn();

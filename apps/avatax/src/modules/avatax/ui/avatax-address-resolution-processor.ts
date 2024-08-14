@@ -1,4 +1,5 @@
 import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+
 import { AddressSuggestions } from "./avatax-configuration-address-fragment";
 
 export class AvataxAddressResolutionProcessor {

@@ -1,6 +1,8 @@
+import { describe, expect, it } from "vitest";
+
 import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import { SaleorOrderConfirmedEventMockFactory } from "@/modules/saleor/order-confirmed/mocks";
-import { describe, expect, it } from "vitest";
+
 import { PriceReductionDiscountsStrategy } from "./price-reduction";
 
 describe("PriceReductionDiscountsStrategy", () => {

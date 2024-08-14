@@ -1,6 +1,7 @@
+import { describe, expect, it } from "vitest";
+
 import { AvataxConfigMockGenerator } from "./avatax-config-mock-generator";
 import { AvataxObfuscator } from "./avatax-obfuscator";
-import { describe, expect, it } from "vitest";
 
 const mockAvataxConfig = new AvataxConfigMockGenerator().generateAvataxConfig();
 const obfuscator = new AvataxObfuscator();

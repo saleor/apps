@@ -1,10 +1,11 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
+
 import { ProviderName } from "../../modules/provider-connections/provider-connections";
 import { AppCard } from "../../modules/ui/app-card";
-import { ProviderLabel } from "../../modules/ui/provider-label";
-import { Section } from "../../modules/ui/app-section";
 import { AppPageLayout } from "../../modules/ui/app-page-layout";
+import { Section } from "../../modules/ui/app-section";
+import { ProviderLabel } from "../../modules/ui/provider-label";
 
 const Header = () => {
   return (

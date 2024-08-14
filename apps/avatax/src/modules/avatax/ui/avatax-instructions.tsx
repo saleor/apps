@@ -1,5 +1,6 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
+
 import { Section } from "../../ui/app-section";
 
 export const AvataxInstructions = () => {

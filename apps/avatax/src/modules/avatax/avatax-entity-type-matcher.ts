@@ -1,5 +1,5 @@
-import { AvataxClient } from "./avatax-client";
 import { createLogger } from "../../logger";
+import { AvataxClient } from "./avatax-client";
 
 /*
  * Arbitrary key-value pair that is used to store the entity code in the metadata.

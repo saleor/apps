@@ -1,7 +1,8 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+
+import { createLogger } from "../../logger";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
 import { ChannelConfig, channelsSchema } from "./channel-config";
-import { createLogger } from "../../logger";
 
 export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;
