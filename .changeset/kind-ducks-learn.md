@@ -2,4 +2,4 @@
 "smtp": patch
 ---
 
-Error during rendering template is catch and log
+Error during rendering template is caught and logged
