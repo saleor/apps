@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AutomaticallyDistributedDiscountsStrategy } from "./automatically-distributed";
 

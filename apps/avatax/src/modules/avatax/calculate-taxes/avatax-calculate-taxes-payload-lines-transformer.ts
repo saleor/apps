@@ -1,4 +1,5 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
+
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";

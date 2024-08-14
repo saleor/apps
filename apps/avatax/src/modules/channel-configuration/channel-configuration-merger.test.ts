@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
+
 import { ChannelConfigMockGenerator } from "./channel-config-mock-generator";
-import { ChannelFetcherMockGenerator } from "./channel-fetcher-mock-generator";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
+import { ChannelFetcherMockGenerator } from "./channel-fetcher-mock-generator";
 
 const channelMockGenerator = new ChannelFetcherMockGenerator();
 const channelConfigMockGenerator = new ChannelConfigMockGenerator();

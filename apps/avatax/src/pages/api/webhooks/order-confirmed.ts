@@ -1,9 +1,11 @@
-import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+
+import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
+
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";

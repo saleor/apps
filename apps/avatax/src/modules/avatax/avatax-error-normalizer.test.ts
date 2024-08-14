@@ -1,5 +1,6 @@
 import { AvalaraError } from "avatax/lib/AvaTaxClient";
 import { describe, expect, it } from "vitest";
+
 import { AvataxTaxCalculationError } from "../taxes/tax-error";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 

@@ -1,5 +1,6 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
+
 import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { AvataxClient } from "../avatax-client";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";

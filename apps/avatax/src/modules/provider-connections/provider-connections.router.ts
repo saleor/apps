@@ -1,7 +1,7 @@
+import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { PublicProviderConnectionsService } from "./public-provider-connections.service";
-import { createLogger } from "../../logger";
 
 export const providerConnectionsRouter = router({
   getAll: protectedClientProcedure.query(async ({ ctx }) => {

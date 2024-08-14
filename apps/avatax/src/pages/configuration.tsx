@@ -1,5 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Text } from "@saleor/macaw-ui";
+
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppPageLayout } from "../modules/ui/app-page-layout";

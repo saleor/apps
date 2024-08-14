@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
   SaleorOrderConfirmedEvent,

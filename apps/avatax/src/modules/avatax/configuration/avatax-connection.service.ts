@@ -1,5 +1,6 @@
 import { DeepPartial, TRPCError } from "@trpc/server";
 import { Client } from "urql";
+
 import { metadataCache } from "../../../lib/app-metadata-cache";
 import { createLogger } from "../../../logger";
 import { createSettingsManager } from "../../app/metadata-manager";

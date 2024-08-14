@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { extractTransactionRedactedLogProperties } from "./extract-transaction-redacted-log-properties";
 
 describe("extractTransactionRedactedLogProperties", () => {
