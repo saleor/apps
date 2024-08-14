@@ -8,6 +8,7 @@ import { createLogger } from "../../../logger";
 import { AvataxClient } from "../avatax-client";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { TRPCError } from "@trpc/server";
+import { AvataxClientTaxCodeService } from "@/modules/avatax/avatax-client-tax-code.service";
 
 const getAllForIdSchema = z.object({
   connectionId: z.string(),
@@ -15,6 +16,7 @@ const getAllForIdSchema = z.object({
   uniqueKey: z.string(),
 });
 
+// TODO: Add test, but create dependency injection first, so services can be injected in ctx
 export const avataxTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger("avataxTaxCodesRouter.getAllForId");
@@ -50,12 +52,20 @@ export const avataxTaxCodesRouter = router({
     logger.debug("Returning tax codes");
 
     return taxCodesService.getAllFiltered({ filter: input.filter }).catch((err) => {
-      logger.error("Failed to fetch tax codes from Avatax", { error: err });
+      logger.error("Failed to fetch tax codes from AvaTax", { error: err });
 
-      // TODO Map specific reasons to errors (like invalid credentials should be handled differently)
+      if (err instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          cause: "AvaTax PermissionRequired",
+          message:
+            'AvaTax returned "Not Permitted" error. Verify your license permissions with Avalara support',
+        });
+      }
+
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch tax codes from Avatax",
+        message: "Failed to fetch tax codes from AvaTax",
       });
     });
   }),
