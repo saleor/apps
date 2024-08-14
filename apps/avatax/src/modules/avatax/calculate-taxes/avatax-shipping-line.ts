@@ -1,5 +1,6 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { createLogger } from "../../../logger";
 
 export const SHIPPING_ITEM_CODE = "Shipping";
@@ -28,13 +29,13 @@ export const avataxShippingLine = {
       discounted,
     };
   },
-  getFromTransactionModel(transactionModel: TransactionModel) {
+  getFromAvaTaxTransactionModel(transactionModel: TransactionModel) {
     const shippingLine = transactionModel.lines?.find(
       (line) => line.itemCode === SHIPPING_ITEM_CODE,
     );
 
     if (!shippingLine) {
-      logger.warn("Shipping line not found in the transaction model");
+      logger.debug("Shipping line not found in the transaction model");
     }
 
     return shippingLine;

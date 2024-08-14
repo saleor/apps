@@ -1,4 +1,5 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { createLogger } from "../../../logger";
 import { numbers } from "../../taxes/numbers";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
@@ -15,7 +16,7 @@ export function transformAvataxTransactionModelIntoShipping(
   CalculateTaxesResponse,
   "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
 > {
-  const shippingLine = avataxShippingLine.getFromTransactionModel(transaction);
+  const shippingLine = avataxShippingLine.getFromAvaTaxTransactionModel(transaction);
 
   if (!shippingLine) {
     logger.info(
@@ -32,6 +33,16 @@ export function transformAvataxTransactionModelIntoShipping(
   const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
 
   if (!shippingLine.isItemTaxable) {
+    logger.info(
+      "Transforming non-taxable shipping line from AvaTax to Saleor CalculateTaxesResponse",
+      {
+        shipping_price_gross_amount: shippingLine.lineAmount,
+        shipping_price_net_amount: shippingLine.lineAmount,
+        tax_code: shippingLine.taxCode,
+        shipping_tax_rate: rate,
+      },
+    );
+
     return {
       shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
         shippingLine.lineAmount,
@@ -57,6 +68,13 @@ export function transformAvataxTransactionModelIntoShipping(
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated,
   );
+
+  logger.info("Transforming taxable shipping line from AvaTax to Saleor CalculateTaxesResponse", {
+    shipping_price_gross_amount: shippingGrossAmount,
+    shipping_price_net_amount: shippingTaxableAmount,
+    tax_code: shippingLine.taxCode,
+    shipping_tax_rate: rate,
+  });
 
   return {
     shipping_price_gross_amount: shippingGrossAmount,

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
