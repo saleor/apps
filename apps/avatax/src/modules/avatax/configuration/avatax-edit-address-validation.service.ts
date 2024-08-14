@@ -1,9 +1,10 @@
 import { Client } from "urql";
+
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
+import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AvataxAddressValidationService } from "./avatax-address-validation.service";
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 
 export class AvataxEditAddressValidationService {
   private client: Client;

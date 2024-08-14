@@ -1,4 +1,5 @@
 import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+
 import packageJson from "../package.json";
 
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];

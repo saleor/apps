@@ -1,6 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { Result, err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";

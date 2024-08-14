@@ -1,8 +1,8 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-graphql-client";
 import { loggerContext } from "../src/logger-context";
 import { appWebhooks } from "../webhooks";

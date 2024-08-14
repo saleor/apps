@@ -3,12 +3,13 @@ import { BoundaryLevel } from "avatax/lib/enums/BoundaryLevel";
 import { ChargedTo } from "avatax/lib/enums/ChargedTo";
 import { DocumentStatus } from "avatax/lib/enums/DocumentStatus";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
 import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
+import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
 import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { describe, expect, it } from "vitest";
+
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
 const MOCKED_TRANSACTION: TransactionModel = {

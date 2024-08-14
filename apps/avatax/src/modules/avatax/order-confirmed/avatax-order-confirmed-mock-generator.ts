@@ -1,4 +1,5 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { defaultOrder } from "../../../mocks";
 import { ChannelConfig } from "../../channel-configuration/channel-config";

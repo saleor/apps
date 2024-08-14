@@ -1,6 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
-import { it, describe } from "vitest";
+import { string } from "pactum-matchers";
+import { describe, it } from "vitest";
+
 import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
@@ -8,7 +10,6 @@ import {
   OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { string } from "pactum-matchers";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
 describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {

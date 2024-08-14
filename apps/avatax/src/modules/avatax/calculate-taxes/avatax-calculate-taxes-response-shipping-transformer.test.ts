@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { avataxMockFactory } from "../avatax-mock-factory";
 import { transformAvataxTransactionModelIntoShipping } from "./avatax-calculate-taxes-response-shipping-transformer";
 

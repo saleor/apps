@@ -3,9 +3,10 @@ import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
+
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
+import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 

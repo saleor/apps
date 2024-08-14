@@ -1,4 +1,5 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { AvataxCalculateTaxesResponseLinesTransformer } from "./avatax-calculate-taxes-response-lines-transformer";
 import { transformAvataxTransactionModelIntoShipping } from "./avatax-calculate-taxes-response-shipping-transformer";

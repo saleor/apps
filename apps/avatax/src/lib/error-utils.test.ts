@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { SubscriptionPayloadErrorChecker } from "./error-utils";
 
 describe("SubscriptionPayloadErrorChecker", () => {

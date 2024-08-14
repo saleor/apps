@@ -1,14 +1,16 @@
 import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
+
+import { createLogger } from "@/logger";
+
 import type { TaxCode } from "../../taxes/tax-code";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { AvataxClient } from "../avatax-client";
-import { createLogger } from "@/logger";
 
 export class AvataxTaxCodesService {
   private logger = createLogger("AvataxTaxCodesService");
 
-  constructor(private client: AvataxClient) {}
+  constructor(private client: Pick<AvataxClient, "getFilteredTaxCodes">) {}
 
   private adapt(taxCodes: TaxCodeModel[]): TaxCode[] {
     return taxCodes.map((item) => ({

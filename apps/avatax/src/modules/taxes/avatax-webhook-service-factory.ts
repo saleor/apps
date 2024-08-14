@@ -1,9 +1,10 @@
-import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 import { err, ok } from "neverthrow";
+
+import { BaseError } from "../../error";
+import { AppConfig } from "../../lib/app-config";
 import { AvataxClient } from "../avatax/avatax-client";
 import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
-import { AppConfig } from "../../lib/app-config";
-import { BaseError } from "../../error";
+import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 
 export class AvataxWebhookServiceFactory {
   static BrokenConfigurationError = BaseError.subclass("BrokenConfigurationError");

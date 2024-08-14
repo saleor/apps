@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import * as Sentry from "@sentry/nextjs";
+
 import { createLogger } from "../../../logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -10,8 +11,8 @@ import { AvataxErrorsParser } from "../avatax-errors-parser";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
-import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
@@ -51,9 +52,12 @@ export class AvataxCalculateTaxesAdapter
     try {
       const response = await this.avataxClient.createTransaction(target);
 
-      this.logger.info("AvaTax createTransaction successfully responded");
+      this.logger.info("AvaTax createTransaction successfully responded", {
+        taxCalculationSummary: response.summary,
+      });
 
       const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
+
       const transformedResponse = responseTransformer.transform(response);
 
       this.logger.debug("Transformed AvaTax createTransaction response");

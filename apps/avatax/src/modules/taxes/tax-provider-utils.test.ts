@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { taxProviderUtils } from "./tax-provider-utils";
+
 import { CriticalError } from "../../error";
+import { taxProviderUtils } from "./tax-provider-utils";
 
 describe("taxProviderUtils", () => {
   describe("resolveOptionalOrThrowUnexpectedError", () => {

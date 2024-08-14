@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { SaleorOrderConfirmedEvent } from "./event";
 import { SaleorOrderConfirmedEventMockFactory } from "./mocks";
 

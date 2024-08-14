@@ -1,5 +1,6 @@
-import { Obfuscator } from "./obfuscator";
 import { describe, expect, it } from "vitest";
+
+import { Obfuscator } from "./obfuscator";
 
 const obfuscator = new Obfuscator();
 

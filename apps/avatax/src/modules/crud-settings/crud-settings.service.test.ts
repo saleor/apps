@@ -1,5 +1,6 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { CrudSettingsManager } from "./crud-settings.service";
 
 describe("CrudSettingsService", () => {
