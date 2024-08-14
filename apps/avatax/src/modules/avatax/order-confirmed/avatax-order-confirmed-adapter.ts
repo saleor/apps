@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+
 import { createLogger } from "../../../logger";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
@@ -57,7 +58,9 @@ export class AvataxOrderConfirmedAdapter
     try {
       const response = await this.avataxClient.createTransaction(target);
 
-      this.logger.debug("AvaTax createTransaction successfully responded");
+      this.logger.info("AvaTax createTransaction successfully responded", {
+        taxCalculationSummary: response.summary,
+      });
 
       const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
       const transformedResponse = responseTransformer.transform(response);
