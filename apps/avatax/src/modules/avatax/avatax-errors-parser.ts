@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { BaseError } from "../../error";
 import {
+  AvataxEntityNotFoundError,
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
@@ -21,7 +22,13 @@ export class AvataxErrorsParser {
 
   private static schema = z.object({
     // https://developer.avalara.com/avatax/errors/
-    code: z.enum(["InvalidAddress", "GetTaxError", "AuthenticationException", "StringLengthError"]),
+    code: z.enum([
+      "InvalidAddress",
+      "GetTaxError",
+      "AuthenticationException",
+      "StringLengthError",
+      "EntityNotFoundError",
+    ]),
     details: z.array(
       z.object({
         faultSubCode: z.string().optional(),
@@ -60,6 +67,13 @@ export class AvataxErrorsParser {
       }
       case "StringLengthError": {
         return new AvataxStringLengthError(parsedError.data.code, {
+          props: {
+            description: parsedError.data.details[0].description,
+          },
+        });
+      }
+      case "EntityNotFoundError": {
+        return new AvataxEntityNotFoundError(parsedError.data.code, {
           props: {
             description: parsedError.data.details[0].description,
           },

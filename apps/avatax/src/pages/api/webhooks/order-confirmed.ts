@@ -15,7 +15,11 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
 import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
-import { AvataxStringLengthError, TaxBadPayloadError } from "../../../modules/taxes/tax-error";
+import {
+  AvataxEntityNotFoundError,
+  AvataxStringLengthError,
+  TaxBadPayloadError,
+} from "../../../modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
 
 export const config = {
@@ -172,6 +176,11 @@ export default wrapWithLoggerContext(
                       .json({ message: `Order: ${payload.order?.id} data is not valid` });
                   }
                   case error instanceof AvataxStringLengthError: {
+                    return res.status(400).json({
+                      message: `AvaTax service returned validation error: ${error?.description}`,
+                    });
+                  }
+                  case error instanceof AvataxEntityNotFoundError: {
                     return res.status(400).json({
                       message: `AvaTax service returned validation error: ${error?.description}`,
                     });

@@ -13,6 +13,7 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import {
+  AvataxEntityNotFoundError,
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxStringLengthError,
@@ -174,6 +175,17 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxStringLengthError) {
             logger.warn(
               "AvataxStringLengthError: App returns status 400 due to not valid address data",
+              { error },
+            );
+
+            return res.status(400).json({
+              message: `AvaTax service returned validation error: ${error.description} `,
+            });
+          }
+
+          if (error instanceof AvataxEntityNotFoundError) {
+            logger.warn(
+              "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
               { error },
             );
 

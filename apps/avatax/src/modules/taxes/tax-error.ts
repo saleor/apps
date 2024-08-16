@@ -39,3 +39,8 @@ export const AvataxStringLengthError = ExpectedError.subclass("AvataxStringLengt
     description: "",
   },
 });
+export const AvataxEntityNotFoundError = ExpectedError.subclass("AvataxEntityNotFoundError", {
+  props: {
+    description: "",
+  },
+});
