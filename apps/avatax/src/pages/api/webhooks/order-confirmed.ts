@@ -78,6 +78,7 @@ export default wrapWithLoggerContext(
                 .json({ message: `Order ${payload.order?.id} has flat rates tax strategy.` });
             }
 
+            // metadata passed through subscription payload
             const appMetadata = payload.recipient?.privateMetadata ?? [];
 
             const configExtractor = new AppConfigExtractor();
@@ -155,6 +156,7 @@ export default wrapWithLoggerContext(
 
                 const orderMetadataManager = new OrderMetadataManager(client);
 
+                // We run metadata mutation here. Its public metadata - result from Avatax attached to Saleor entity
                 await orderMetadataManager.updateOrderMetadataWithExternalId(
                   confirmedOrderEvent.getOrderId(),
                   confirmedOrder.id,

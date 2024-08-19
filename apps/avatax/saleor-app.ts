@@ -20,6 +20,10 @@ switch (process.env.APL) {
       throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
     }
 
+    /**
+     * APL:
+     * - Call REST service every time request to app is executed (webhook, frontend call)
+     */
     apl = new SaleorCloudAPL({
       resourceUrl: process.env.REST_APL_ENDPOINT,
       token: process.env.REST_APL_TOKEN,

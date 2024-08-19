@@ -6,6 +6,7 @@ fragment CalculateTaxesEvent on Event {
       ...TaxBase
     }
     recipient {
+      # Entire metadata is fetched to provide app configuration. This can be moved to DB
       privateMetadata {
         key
         value

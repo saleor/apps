@@ -1,5 +1,6 @@
 fragment OrderCancelledSubscription on Order {
   id
+  # Reference to Avatax transaction. Can be stored in the DB?
   avataxId: metafield(key: "avataxId")
   channel {
     id

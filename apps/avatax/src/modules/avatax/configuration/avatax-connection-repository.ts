@@ -15,6 +15,7 @@ import {
 
 const getSchema = avataxConnectionSchema.strict();
 
+// Uses metadata to CRUD settings
 export class AvataxConnectionRepository {
   private crudSettingsManager: CrudSettingsManager;
   private logger = createLogger("AvataxConnectionRepository", {
