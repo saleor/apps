@@ -30,32 +30,35 @@ export function transformAvataxTransactionModelIntoShipping(
     };
   }
 
-  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
-
   if (!shippingLine.isItemTaxable) {
+    const lineAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+      shippingLine.lineAmount,
+      new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
+    );
+    const discountAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+      shippingLine.discountAmount,
+      new TaxBadProviderResponseError("shippingLine.discountAmount is undefined"),
+    );
+    const totalAmount = lineAmount - discountAmount;
+
     logger.info(
       "Transforming non-taxable shipping line from AvaTax to Saleor CalculateTaxesResponse",
       {
-        shipping_price_gross_amount: shippingLine.lineAmount,
-        shipping_price_net_amount: shippingLine.lineAmount,
+        shipping_price_gross_amount: totalAmount,
+        shipping_price_net_amount: totalAmount,
         tax_code: shippingLine.taxCode,
-        shipping_tax_rate: rate,
+        shipping_tax_rate: 0,
       },
     );
 
     return {
-      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-        shippingLine.lineAmount,
-        new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
-      ),
-      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-        shippingLine.lineAmount,
-        new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
-      ),
-
-      shipping_tax_rate: rate,
+      shipping_price_gross_amount: totalAmount,
+      shipping_price_net_amount: totalAmount,
+      shipping_tax_rate: 0, // as the line is not taxable
     };
   }
+
+  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
 
   const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
     shippingLine.taxCalculated,
