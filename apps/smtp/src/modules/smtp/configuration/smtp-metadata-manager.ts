@@ -1,8 +1,12 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpConfig } from "./smtp-config-schema";
-import { fromAsyncThrowable, fromPromise, fromThrowable, ok, ResultAsync } from "neverthrow";
+import { fromPromise, fromThrowable, ok, ResultAsync } from "neverthrow";
+
 import { BaseError } from "../../../errors";
+import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
+import { SmtpConfig } from "./smtp-config-schema";
+
+const PULL_CONFG_TIMEOUT = 3000;
 
 // todo test
 export class SmtpMetadataManager {
@@ -13,10 +17,12 @@ export class SmtpMetadataManager {
   static ParseConfigError = this.SmtpMetadataManagerError.subclass("ParseConfigError");
   static SetConfigError = this.SmtpMetadataManagerError.subclass("SetConfigError");
   static FetchConfigError = this.SmtpMetadataManagerError.subclass("FetchConfigError");
+  static TimeoutExceededError = this.SmtpMetadataManagerError.subclass("TimeoutExceededError");
 
   constructor(
     private metadataManager: SettingsManager,
     private saleorApiUrl: string,
+    private pullConfigTimeout = PULL_CONFG_TIMEOUT,
   ) {}
 
   getConfig(): ResultAsync<
@@ -27,7 +33,13 @@ export class SmtpMetadataManager {
   > {
     this.logger.debug("Fetching SMTP config");
 
-    return fromPromise(this.metadataManager.get(this.metadataKey, this.saleorApiUrl), (e) => {
+    const timeoutedPromise = racePromise({
+      promise: this.metadataManager.get(this.metadataKey, this.saleorApiUrl),
+      timeout: this.pullConfigTimeout,
+      error: new SmtpMetadataManager.TimeoutExceededError("Timeout while fetching metadata"),
+    });
+
+    return fromPromise(timeoutedPromise, (e) => {
       this.logger.debug("Failed to fetch config", { error: e });
 
       return new SmtpMetadataManager.FetchConfigError("Failed to fetch metadata", { errors: [e] });
