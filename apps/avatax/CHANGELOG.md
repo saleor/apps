@@ -1,5 +1,19 @@
 # app-avatax
 
+## 1.8.0
+
+### Minor Changes
+
+- 742a59a2: Changed how AvaTax app reports non-taxable lines (shipping & product) to Saleor:
+  - Now, the total gross and net amount will take into consideration discounts (if applied).
+  - The tax rate for such lines will always be 0.
+
+### Patch Changes
+
+- ba2c21f5: "Not permitted" error when fetching AvaTax tax codes is now handled as client-error. Request will respond with 403 and message will be returned to the frontend
+- ef831404: Handle AvataxEntityNotFoundError error in app instead logging it to Sentry.
+- b5433cbc: Applied code reformatting on the codebase. This should not have any visible effect
+
 ## 1.7.8
 
 ### Patch Changes
