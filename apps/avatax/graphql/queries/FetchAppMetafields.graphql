@@ -1,6 +1,7 @@
 query FetchAppMetafields($keys: [String!]) {
   app {
     id
+    # Programmatic fetch of metadata -> to fetch config
     privateMetafields(keys: $keys)
   }
 }

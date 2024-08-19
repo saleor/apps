@@ -7,6 +7,7 @@ import { createLogger } from "../../logger";
 const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
+// Abstraction on CRUD operations - writing to Saleor metadata
 export class CrudSettingsManager {
   private logger = createLogger("CrudSettingsManager");
 

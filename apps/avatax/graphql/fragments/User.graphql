@@ -1,5 +1,6 @@
 fragment User on User {
   id
   email
+  # Metadata is fetched with user. This is on purpose - must be set on the frontend.
   avataxCustomerCode: metafield(key: "avataxCustomerCode")
 }

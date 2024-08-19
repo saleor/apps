@@ -35,6 +35,7 @@ export class AvataxPatchInputTransformer {
   }
 
   async patchCredentials(id: string, input: AvataxConfig["credentials"]) {
+    // Metadata call
     const connection = await this.connection.getById(id);
 
     const credentials: AvataxConfig["credentials"] = {

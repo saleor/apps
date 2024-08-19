@@ -17,7 +17,10 @@ const getAllForIdSchema = z.object({
   uniqueKey: z.string(),
 });
 
-// TODO: Add test, but create dependency injection first, so services can be injected in ctx
+/*
+ * TODO: Add test, but create dependency injection first, so services can be injected in ctx
+ * Client router - only CRUD from frontend handled here
+ */
 export const avataxTaxCodesRouter = router({
   getAllForId: protectedClientProcedure.input(getAllForIdSchema).query(async ({ ctx, input }) => {
     const logger = createLogger("avataxTaxCodesRouter.getAllForId");

@@ -14,6 +14,9 @@ export interface IAppConfigExtractor {
 
 /**
  * Extracts app configuration from metadata. Performs initial validation, shared by all clients
+ *
+ * It takes metadata from event (or programmatic call) and maps it to the object.
+ * This can be replaced by similar entity, calling DB
  */
 export class AppConfigExtractor implements IAppConfigExtractor {
   static AppConfigExtractorError = BaseError.subclass("AppConfigExtractorError");

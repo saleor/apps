@@ -63,7 +63,9 @@ fragment TaxBase on TaxableObject {
     __typename
     ... on Checkout {
       id
+      # TODO what was that
       avataxEntityCode: metafield(key: "avataxEntityCode")
+      # Legacy field - moved to user
       avataxCustomerCode: metafield(key: "avataxCustomerCode")
       user {
         ...User
@@ -71,7 +73,9 @@ fragment TaxBase on TaxableObject {
     }
     ... on Order {
       id
+      # TODO what was that
       avataxEntityCode: metafield(key: "avataxEntityCode")
+      # Legacy field - moved to user
       avataxCustomerCode: metafield(key: "avataxCustomerCode")
       user {
         ...User
