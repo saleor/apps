@@ -6,7 +6,7 @@ import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { avataxShippingLine } from "./avatax-shipping-line";
-import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
+import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";
 
 const logger = createLogger("transformAvataxTransactionModelIntoShipping");
 
@@ -58,7 +58,9 @@ export function transformAvataxTransactionModelIntoShipping(
     };
   }
 
-  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
+  const rate = extractIntegerRateFromTaxDetailsRates(
+    shippingLine.details?.map((details) => details.rate),
+  );
 
   const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
     shippingLine.taxCalculated,
