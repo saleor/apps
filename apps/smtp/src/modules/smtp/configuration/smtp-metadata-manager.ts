@@ -13,7 +13,7 @@ import { SmtpConfig } from "./smtp-config-schema";
  *Maximum that call can take up to 1.5s, so we've set timeout to 3s as a safe margin,
  *anything longer should be considered as SLA violation
  */
-const PULL_CONFG_TIMEOUT = 3000;
+const PULL_CONFG_TIMEOUT = 100;
 
 // todo test
 export class SmtpMetadataManager {
@@ -48,7 +48,7 @@ export class SmtpMetadataManager {
 
     return fromPromise(timeoutedPromise, (e) => {
       if (e instanceof SmtpMetadataManager.TimeoutExceededError) {
-        this.logger.debug("Fetching config exceeded timeout", { error: e });
+        this.logger.error("Fetching config exceeded timeout", { error: e });
 
         return e;
       }
