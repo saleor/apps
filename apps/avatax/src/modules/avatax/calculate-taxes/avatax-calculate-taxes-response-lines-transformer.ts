@@ -7,7 +7,7 @@ import { taxProviderUtils } from "@/modules/taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "@/modules/taxes/tax-provider-webhook";
 
 import { SHIPPING_ITEM_CODE } from "./avatax-shipping-line";
-import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
+import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";
 
 export class AvataxCalculateTaxesResponseLinesTransformer {
   private logger = createLogger("AvataxCalculateTaxesResponseLinesTransformer");
@@ -44,7 +44,9 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           };
         }
 
-        const rate = extractIntegerRateFromTaxDetails(line.details ?? []);
+        const rate = extractIntegerRateFromTaxDetailsRates(
+          line.details?.map((details) => details.rate),
+        );
 
         const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxCalculated,
