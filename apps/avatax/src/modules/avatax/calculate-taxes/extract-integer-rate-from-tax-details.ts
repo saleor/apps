@@ -8,6 +8,7 @@ export function extractIntegerRateFromTaxDetailsRates(
   rates: Array<number | undefined> | undefined = [],
 ) {
   const rawSum =
+    // @ts-expect-error - update TypeScript to 5.5.4 and remove this line
     rates.filter((num) => num !== undefined).reduce((acc, rate) => acc + rate, 0) * 100;
 
   return parseFloat(rawSum.toPrecision(MAX_AVATAX_DECIMAL_PLACES));
