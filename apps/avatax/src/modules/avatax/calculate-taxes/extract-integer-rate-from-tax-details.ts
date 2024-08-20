@@ -1,3 +1,4 @@
+// AvaTax API maximum decimal places for tax rate is 6 digits - it is based on their API responses (there is no official documentation about it)
 const MAX_AVATAX_DECIMAL_PLACES = 6;
 
 /**
