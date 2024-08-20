@@ -1,4 +1,5 @@
 import { Client, OperationResult } from "urql";
+
 import {
   CreateWebhookDocument,
   CreateWebhookMutationVariables,
@@ -6,10 +7,8 @@ import {
   EnableWebhookDocument,
   FetchOwnWebhooksDocument,
   RemoveWebhookDocument,
-  WebhookEventTypeEnum,
 } from "../../generated/graphql";
 import { createLogger } from "../lib/logger";
-import { appWebhooks } from "../../webhooks";
 
 const logger = createLogger("WebhookActivityTogglerService");
 
@@ -28,7 +27,6 @@ interface IRecreateWebhooksArgs {
 
 export interface IWebhookActivityTogglerService {
   enableOwnWebhooks(): Promise<void>;
-  recreateOwnWebhooks(args: IRecreateWebhooksArgs): Promise<void>;
 }
 
 export class WebhooksActivityClient implements IWebhooksActivityClient {
@@ -137,31 +135,5 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
     }
 
     await Promise.all(webhooksIds.map((id) => this.webhooksClient.enableSingleWebhook(id)));
-  }
-
-  async recreateOwnWebhooks({ baseUrl, enableWebhooks }: IRecreateWebhooksArgs) {
-    const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
-
-    if (!webhooksIds) {
-      throw new Error("Failed fetching webhooks");
-    }
-
-    logger.debug("Removing old webhooks");
-    await Promise.all(webhooksIds.map((id) => this.webhooksClient.removeSingleWebhook(id)));
-    logger.debug("Creating new webhooks");
-    await Promise.all(
-      appWebhooks.map((webhook) => {
-        const manifest = webhook.getWebhookManifest(baseUrl);
-
-        return this.webhooksClient.createWebhook({
-          events: manifest.asyncEvents as WebhookEventTypeEnum[],
-          targetUrl: manifest.targetUrl,
-          name: manifest.name,
-          query: manifest.query,
-          isActive: enableWebhooks,
-        });
-      }),
-    );
-    logger.info("Done creating new webhooks");
   }
 }

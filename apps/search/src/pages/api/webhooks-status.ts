@@ -1,13 +1,13 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
-import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
-import { createLogger } from "../../lib/logger";
-import { Client } from "urql";
-import { isWebhookUpdateNeeded } from "../../lib/algolia/is-webhook-update-needed";
-import { withOtel } from "@saleor/apps-otel";
-import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
-import { loggerContext } from "../../lib/logger-context";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import { Client } from "urql";
+
+import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
+import { saleorApp } from "../../../saleor-app";
+import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../lib/logger";
+import { loggerContext } from "../../lib/logger-context";
 
 const logger = createLogger("webhooksStatusHandler");
 
@@ -20,7 +20,6 @@ type FactoryProps = {
 
 export type WebhooksStatusResponse = {
   webhooks: OwnWebhookFragment[];
-  isUpdateNeeded: boolean;
 };
 
 export const webhooksStatusHandlerFactory =
@@ -47,13 +46,8 @@ export const webhooksStatusHandlerFactory =
         return res.status(500).end();
       }
 
-      const isUpdateNeeded = isWebhookUpdateNeeded({
-        existingWebhookNames: webhooks.map((w) => w.name),
-      });
-
       return res.status(200).json({
         webhooks,
-        isUpdateNeeded,
       });
     } catch (e) {
       logger.error("Failed to fetch webhooks from Saleor - unhandled", { error: e });
