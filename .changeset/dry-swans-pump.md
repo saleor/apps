@@ -2,4 +2,4 @@
 "search": patch
 ---
 
-Now, recreating webhooks endpoint was removed, that means disabling webhooks from apps will not be possible
+Now, recreating webhooks endpoint was removed, that means disabling webhooks from the app will not be possible
