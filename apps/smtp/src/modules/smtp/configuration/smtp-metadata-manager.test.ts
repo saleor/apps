@@ -12,7 +12,9 @@ class MockSettingsManager implements SettingsManager {
 }
 
 describe("SmtpMetadataManager", () => {
-  beforeEach(() => {});
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
 
   describe("getConfig", () => {
     it("returns configuration without errors", async () => {
@@ -20,7 +22,7 @@ describe("SmtpMetadataManager", () => {
 
       vi.spyOn(metadataManager, "get").mockResolvedValue('{"key": "value"}');
 
-      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL, 1000);
+      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
       const result = await instance.getConfig().unwrapOr("error");
 
       expect(result).toEqual({ key: "value" });
@@ -30,12 +32,16 @@ describe("SmtpMetadataManager", () => {
       const metadataManager = new MockSettingsManager();
 
       vi.spyOn(metadataManager, "get").mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 100)),
+        () => new Promise((resolve) => setTimeout(resolve, 15000)),
       );
 
-      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL, 50);
-      const result = await instance.getConfig();
-      const error = result._unsafeUnwrapErr().errors?.pop();
+      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
+      const promise = instance.getConfig();
+
+      await vi.advanceTimersByTimeAsync(3000);
+      const result = await promise;
+
+      const error = result._unsafeUnwrapErr();
 
       expect(error).toBeInstanceOf(SmtpMetadataManager.TimeoutExceededError);
     });

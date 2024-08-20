@@ -6,6 +6,13 @@ import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
 import { SmtpConfig } from "./smtp-config-schema";
 
+/*
+ *In case that pulling metadata takes too loong, the app will stuck and we won't know what is happening, since
+ *function that process lives only 25s. We've set timeout, so if pulling metadata takes too long, we will throw an error.
+ *
+ *Maximum that call can take up to 1.5s, so we've set timeout to 3s as a safe margin,
+ *anything longer should be considered as SLA violation
+ */
 const PULL_CONFG_TIMEOUT = 3000;
 
 // todo test
@@ -41,6 +48,10 @@ export class SmtpMetadataManager {
 
     return fromPromise(timeoutedPromise, (e) => {
       this.logger.debug("Failed to fetch config", { error: e });
+
+      if (e instanceof SmtpMetadataManager.TimeoutExceededError) {
+        return e;
+      }
 
       return new SmtpMetadataManager.FetchConfigError("Failed to fetch metadata", { errors: [e] });
     }).andThen((config) => {
