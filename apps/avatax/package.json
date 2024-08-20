@@ -1,6 +1,6 @@
 {
   "name": "app-avatax",
-  "version": "1.7.8",
+  "version": "1.8.0",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -91,7 +91,7 @@
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
     "tsx": "4.7.1",
-    "typescript": "5.4.5",
+    "typescript": "5.5.4",
     "vite": "5.3.3",
     "vitest": "1.6.0"
   },
