@@ -1,4 +1,6 @@
-import { DiagConsoleLogger, DiagLogLevel, SpanStatusCode, diag } from "@opentelemetry/api";
+import { type ClientRequest } from "node:http";
+
+import { diag, DiagConsoleLogger, DiagLogLevel, SpanStatusCode } from "@opentelemetry/api";
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { Resource } from "@opentelemetry/resources";
@@ -7,7 +9,7 @@ import {
   SemanticAttributes,
   SemanticResourceAttributes,
 } from "@opentelemetry/semantic-conventions";
-import { type ClientRequest } from "node:http";
+
 import { otelLogsProcessor } from "./otel-logs-setup";
 import { batchSpanProcessor } from "./otel-traces-setup";
 
@@ -46,6 +48,7 @@ export const otelSdk = new NodeSDK({
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
   }),
   spanProcessor: batchSpanProcessor,
+  // @ts-expect-error - TODO: there are problems with the OTEL types - update OTEL package and fix it
   logRecordProcessor: otelLogsProcessor,
   textMapPropagator: new W3CTraceContextPropagator(),
   instrumentations: [

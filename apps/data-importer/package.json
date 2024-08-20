@@ -68,7 +68,7 @@
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "tsx": "4.7.1",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   },
   "private": true,
   "saleor": {
