@@ -10,8 +10,7 @@ import { SmtpConfig } from "./smtp-config-schema";
  *In case that pulling metadata takes too loong, the app will stuck and we won't know what is happening, since
  *function that process lives only 25s. We've set timeout, so if pulling metadata takes too long, we will throw an error.
  *
- *Maximum that call can take up to 1.5s, so we've set timeout to 3s as a safe margin,
- *anything longer should be considered as SLA violation
+ *Maximum that call can take up to 1.5s, so we've set timeout to 3s as a safe margin.
  */
 const PULL_CONFG_TIMEOUT = 3000;
 
