@@ -47,11 +47,13 @@ export class SmtpMetadataManager {
     });
 
     return fromPromise(timeoutedPromise, (e) => {
-      this.logger.debug("Failed to fetch config", { error: e });
-
       if (e instanceof SmtpMetadataManager.TimeoutExceededError) {
+        this.logger.debug("Fetching config exceeded timeout", { error: e });
+
         return e;
       }
+
+      this.logger.debug("Failed to fetch config", { error: e });
 
       return new SmtpMetadataManager.FetchConfigError("Failed to fetch metadata", { errors: [e] });
     }).andThen((config) => {
