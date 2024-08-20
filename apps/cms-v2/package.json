@@ -83,7 +83,7 @@
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
     "tsx": "4.7.1",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   },
   "private": true,
   "saleor": {
