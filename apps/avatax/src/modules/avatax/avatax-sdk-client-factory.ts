@@ -1,5 +1,6 @@
 import Avatax from "avatax";
 import { LogOptions } from "avatax/lib/utils/logger";
+
 import packageJson from "../../../package.json";
 
 type AvataxSettings = {

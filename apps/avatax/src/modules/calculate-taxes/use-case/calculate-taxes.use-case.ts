@@ -1,8 +1,10 @@
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AuthData } from "@saleor/app-sdk/APL";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
-import { Result, err, fromPromise } from "neverthrow";
+import { err, fromPromise, Result } from "neverthrow";
+
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";

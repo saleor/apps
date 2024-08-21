@@ -1,6 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
-import { it, describe } from "vitest";
+import { string } from "pactum-matchers";
+import { describe, it } from "vitest";
+
 import {
   CheckoutAddBilling,
   CheckoutAddShipping,
@@ -10,7 +12,6 @@ import {
   OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { string } from "pactum-matchers";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18385
 describe("App should calculate taxes for checkout on update shipping address TC: AVATAX_21", () => {

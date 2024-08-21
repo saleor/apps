@@ -1,9 +1,11 @@
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
+
+import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -11,6 +13,7 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import {
+  AvataxEntityNotFoundError,
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxStringLengthError,
@@ -172,6 +175,17 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxStringLengthError) {
             logger.warn(
               "AvataxStringLengthError: App returns status 400 due to not valid address data",
+              { error },
+            );
+
+            return res.status(400).json({
+              message: `AvaTax service returned validation error: ${error.description} `,
+            });
+          }
+
+          if (error instanceof AvataxEntityNotFoundError) {
+            logger.warn(
+              "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
               { error },
             );
 

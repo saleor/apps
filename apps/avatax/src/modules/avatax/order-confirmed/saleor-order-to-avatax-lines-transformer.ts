@@ -1,4 +1,5 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
+
 import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";

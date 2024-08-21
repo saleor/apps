@@ -1,4 +1,5 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";

@@ -1,11 +1,33 @@
-import { describe, it, expect } from "vitest";
-import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
-import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
+import { describe, expect, it } from "vitest";
 
-describe("extractRateFromTaxDetails", () => {
-  it("Sums rate from list of tax details (percentages)", () => {
-    const mocks = new AvataxCalculateTaxesMockGenerator().generateResponse();
+import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";
 
-    expect(extractIntegerRateFromTaxDetails(mocks.lines![0]!.details!)).toEqual(8.6);
+describe("extractIntegerRateFromTaxDetailsRates", () => {
+  it.each([
+    { rates: [], expected: 0 },
+    {
+      // prettier-ignore
+      rates: [0.047500, 0.020000],
+      expected: 6.75,
+    },
+    {
+      // prettier-ignore
+      rates: [0.047532, 0.021234, 0.012512],
+      expected: 8.1278,
+    },
+    {
+      rates: [0.047532, undefined, 0.012512],
+      expected: 6.0044,
+    },
+    {
+      rates: [undefined, undefined],
+      expected: 0,
+    },
+    {
+      rates: undefined,
+      expected: 0,
+    },
+  ])(`Extracts array of tax rates: $rates into $expected`, ({ rates, expected }) => {
+    expect(extractIntegerRateFromTaxDetailsRates(rates)).toEqual(expected);
   });
 });

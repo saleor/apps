@@ -1,8 +1,9 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
-import { beforeAll } from "vitest";
-import { request, settings, stash } from "pactum";
 import "./data/functions";
 import "dotenv/config";
+
+import { request, settings, stash } from "pactum";
+import { beforeAll } from "vitest";
 
 beforeAll(() => {
   const saleorApiUrl = process.env.TEST_SALEOR_API_URL;

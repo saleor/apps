@@ -1,4 +1,5 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
+
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {

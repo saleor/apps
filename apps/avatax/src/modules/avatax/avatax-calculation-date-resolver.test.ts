@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { AvataxCalculationDateResolver } from "./avatax-calculation-date-resolver";
 

@@ -1,8 +1,8 @@
+import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { channelConfigPropertiesSchema } from "./channel-config";
 import { ChannelConfigurationService } from "./channel-configuration.service";
-import { createLogger } from "../../logger";
 
 const protectedWithConfigurationService = protectedClientProcedure.use(({ next, ctx }) =>
   next({

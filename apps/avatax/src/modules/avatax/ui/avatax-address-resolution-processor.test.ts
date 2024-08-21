@@ -1,8 +1,9 @@
-import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
-import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
-import { describe, expect, it } from "vitest";
-import { ResolutionQuality } from "avatax/lib/enums/ResolutionQuality";
 import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
+import { ResolutionQuality } from "avatax/lib/enums/ResolutionQuality";
+import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+import { describe, expect, it } from "vitest";
+
+import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 
 const mockedSuccessResponse: AddressResolutionModel = {
   address: {

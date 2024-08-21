@@ -1,6 +1,7 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+
 import { logger } from "../logger";
 import { AppConfig } from "./app-config";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 export class AppConfigurationLogger {
   constructor(private injectedLogger: Pick<typeof logger, "info" | "warn">) {}

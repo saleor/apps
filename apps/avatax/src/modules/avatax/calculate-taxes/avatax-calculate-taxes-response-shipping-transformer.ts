@@ -1,11 +1,12 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { createLogger } from "../../../logger";
 import { numbers } from "../../taxes/numbers";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { avataxShippingLine } from "./avatax-shipping-line";
-import { extractIntegerRateFromTaxDetails } from "./extract-integer-rate-from-tax-details";
+import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";
 
 const logger = createLogger("transformAvataxTransactionModelIntoShipping");
 
@@ -15,7 +16,7 @@ export function transformAvataxTransactionModelIntoShipping(
   CalculateTaxesResponse,
   "shipping_price_gross_amount" | "shipping_price_net_amount" | "shipping_tax_rate"
 > {
-  const shippingLine = avataxShippingLine.getFromTransactionModel(transaction);
+  const shippingLine = avataxShippingLine.getFromAvaTaxTransactionModel(transaction);
 
   if (!shippingLine) {
     logger.info(
@@ -29,22 +30,37 @@ export function transformAvataxTransactionModelIntoShipping(
     };
   }
 
-  const rate = extractIntegerRateFromTaxDetails(shippingLine.details ?? []);
-
   if (!shippingLine.isItemTaxable) {
-    return {
-      shipping_price_gross_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-        shippingLine.lineAmount,
-        new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
-      ),
-      shipping_price_net_amount: taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
-        shippingLine.lineAmount,
-        new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
-      ),
+    const lineAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+      shippingLine.lineAmount,
+      new TaxBadProviderResponseError("shippingLine.lineAmount is undefined"),
+    );
+    const discountAmount = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
+      shippingLine.discountAmount,
+      new TaxBadProviderResponseError("shippingLine.discountAmount is undefined"),
+    );
+    const totalAmount = lineAmount - discountAmount;
 
-      shipping_tax_rate: rate,
+    logger.info(
+      "Transforming non-taxable shipping line from AvaTax to Saleor CalculateTaxesResponse",
+      {
+        shipping_price_gross_amount: totalAmount,
+        shipping_price_net_amount: totalAmount,
+        tax_code: shippingLine.taxCode,
+        shipping_tax_rate: 0,
+      },
+    );
+
+    return {
+      shipping_price_gross_amount: totalAmount,
+      shipping_price_net_amount: totalAmount,
+      shipping_tax_rate: 0, // as the line is not taxable
     };
   }
+
+  const rate = extractIntegerRateFromTaxDetailsRates(
+    shippingLine.details?.map((details) => details.rate),
+  );
 
   const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
     shippingLine.taxCalculated,
@@ -57,6 +73,13 @@ export function transformAvataxTransactionModelIntoShipping(
   const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
     shippingTaxableAmount + shippingTaxCalculated,
   );
+
+  logger.info("Transforming taxable shipping line from AvaTax to Saleor CalculateTaxesResponse", {
+    shipping_price_gross_amount: shippingGrossAmount,
+    shipping_price_net_amount: shippingTaxableAmount,
+    tax_code: shippingLine.taxCode,
+    shipping_tax_rate: rate,
+  });
 
   return {
     shipping_price_gross_amount: shippingGrossAmount,

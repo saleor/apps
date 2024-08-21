@@ -1,7 +1,8 @@
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
-import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+
 import { createLogger } from "../../../logger";
+import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 
 export const avataxTaxCodeMatchSchema = z.object({
   saleorTaxClassId: z.string(),

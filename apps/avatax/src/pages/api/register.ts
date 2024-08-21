@@ -1,9 +1,9 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 import { gql } from "urql";
+
 import { SaleorVersionQuery } from "../../../generated/graphql";
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";

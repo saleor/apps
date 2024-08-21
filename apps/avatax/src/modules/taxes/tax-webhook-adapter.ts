@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+
 import { AvataxConfig } from "../avatax/avatax-connection-schema";
 import {
   AutomaticallyDistributedDiscountsStrategy,

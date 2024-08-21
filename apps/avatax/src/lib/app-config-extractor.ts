@@ -1,9 +1,10 @@
-import { MetadataItem } from "../../generated/graphql";
 import { err, fromThrowable, ok, Result } from "neverthrow";
-import { getAppConfig } from "../modules/app/get-app-config";
+
+import { MetadataItem } from "../../generated/graphql";
 import { BaseError } from "../error";
-import { AppConfig } from "./app-config";
 import { createLogger } from "../logger";
+import { getAppConfig } from "../modules/app/get-app-config";
+import { AppConfig } from "./app-config";
 
 export interface IAppConfigExtractor {
   extractAppConfigFromPrivateMetadata(

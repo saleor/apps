@@ -3,11 +3,12 @@ import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
 import { Client, OperationResult } from "urql";
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
+
 import { FetchOwnWebhooksQuery, WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 import { AppConfig } from "../../modules/configuration/configuration";
 import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
-import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 /**
  * Context provided from ProtectedApiHandler to handler body
@@ -52,7 +53,6 @@ describe("webhooksStatusHandler", () => {
 
   const webhooksTogglerServiceMock: IWebhookActivityTogglerService = {
     enableOwnWebhooks: vi.fn(),
-    recreateOwnWebhooks: vi.fn(),
   };
 
   const settingsManagerMock: SettingsManager = {

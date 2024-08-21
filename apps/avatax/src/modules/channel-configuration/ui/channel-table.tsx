@@ -1,9 +1,10 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
 import React from "react";
+
 import { trpcClient } from "../../trpc/trpc-client";
+import { Select } from "../../ui/_select";
 import { Table } from "../../ui/table";
 import { ChannelConfig } from "../channel-config";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { Select } from "../../ui/_select";
 
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {

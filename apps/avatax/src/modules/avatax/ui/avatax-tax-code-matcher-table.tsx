@@ -1,4 +1,6 @@
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
+
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { Table } from "../../ui/table";
@@ -35,6 +37,16 @@ export const AvataxTaxCodeMatcherTable = () => {
               </Table.TR>
             );
           })}
+          <Table.TR>
+            <Table.TD>
+              <Text display="block" marginTop={8}>
+                See AvaTax tax code search to access valid Tax Codes{" "}
+                <TextLink href="https://taxcode.avatax.avalara.com/search?q=food" newTab>
+                  here
+                </TextLink>
+              </Text>
+            </Table.TD>
+          </Table.TR>
         </Table.TBody>
       </Table.Container>
     </AppCard>

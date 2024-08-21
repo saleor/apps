@@ -1,6 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useFormContext } from "react-hook-form";
+
 import { AppToggle } from "../../ui/app-toggle";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";

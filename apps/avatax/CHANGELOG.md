@@ -1,5 +1,41 @@
 # app-avatax
 
+## 1.8.1
+
+### Patch Changes
+
+- c79967ab: Fix AvaTax app tax rate precision. Previously tax rate was send with 2 decimal places to Saleor, now it will be send with 6 decimal places (max of what AvaTax API returns).
+
+## 1.8.0
+
+### Minor Changes
+
+- 742a59a2: Changed how AvaTax app reports non-taxable lines (shipping & product) to Saleor:
+  - Now, the total gross and net amount will take into consideration discounts (if applied).
+  - The tax rate for such lines will always be 0.
+
+### Patch Changes
+
+- ba2c21f5: "Not permitted" error when fetching AvaTax tax codes is now handled as client-error. Request will respond with 403 and message will be returned to the frontend
+- ef831404: Handle AvataxEntityNotFoundError error in app instead logging it to Sentry.
+- b5433cbc: Applied code reformatting on the codebase. This should not have any visible effect
+
+## 1.7.8
+
+### Patch Changes
+
+- 5d132b2b: Added fallback behavior for Tax Code Matcher: scenario when AvaTax fail to respond with available tax classes.
+
+  ### Before:
+
+  When AvaTax failed to respond, app left Tax Code Matcher page and settings couldn't been set
+
+  ### After
+
+  App ignores missing response from AvaTax and sets empty autocomplete results. Values can be entered manually and will not be validated
+
+- 534bde05: Add logs to AvaTax app logic that transforms Avalara response to Saleor.
+
 ## 1.7.7
 
 ### Patch Changes
