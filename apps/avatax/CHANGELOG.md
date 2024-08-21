@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.8.1
+
+### Patch Changes
+
+- c79967ab: Fix AvaTax app tax rate precision. Previously tax rate was send with 2 decimal places to Saleor, now it will be send with 6 decimal places (max of what AvaTax API returns).
+
 ## 1.8.0
 
 ### Minor Changes
