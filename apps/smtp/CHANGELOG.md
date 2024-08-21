@@ -1,5 +1,12 @@
 # smtp
 
+## 1.2.4
+
+### Patch Changes
+
+- e93143c9: Error during rendering template is caught and logged
+- 695f8f5c: Now, fetching settings from Saleor has defined timeout, that means sending email will fail when that timeout will be exceeded.
+
 ## 1.2.3
 
 ### Patch Changes
