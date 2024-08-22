@@ -1,16 +1,18 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import { useForm } from "react-hook-form";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
-
-import { trpcClient } from "../../trpc/trpc-client";
-import { useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
-import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { ButtonsBox, TextLink } from "@saleor/apps-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { useRouter } from "next/router";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+
 import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+import { getContentfulEnvironmentLabel } from "@/modules/providers/contentful/contentful-environment-label";
+
+import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
+import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
+import { trpcClient } from "../../trpc/trpc-client";
 
 type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
 
@@ -204,7 +206,7 @@ const PureForm = ({
                 </Text>
               }
               options={environmentsData.items.map((item) => ({
-                label: item.name,
+                label: getContentfulEnvironmentLabel(item),
                 value: item.sys.id,
               }))}
             />
