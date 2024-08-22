@@ -211,7 +211,9 @@ const PureForm = ({
               }
               options={environmentsData.items.map((item) => ({
                 // Show alias label when given environment is alis
-                label: item.sys.aliasedEnvironment ? `Alias:${item.sys.id}` : item.name,
+                label: item.sys.aliasedEnvironment
+                  ? `Alias: ${item.sys.id} (${item.name})`
+                  : item.name,
                 value: item.sys.id,
               }))}
             />
