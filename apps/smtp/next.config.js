@@ -13,9 +13,16 @@ const nextConfig = {
     "@saleor/apps-logger",
     "@saleor/apps-shared",
     "@saleor/apps-ui",
-    "@saleor/react-hook-form-macaw",
+    "@saleor/react-hook-form-macaw"
   ],
   experimental: {
+    serverComponentsExternalPackages: [
+      /*
+       *It solves the issue with 'require' and handlebars-helpers, when bundlePagesExternals is enabled.
+       *more info: https://nextjs.org/docs/app/api-reference/next-config-js/serverExternalPackages
+       */
+      "handlebars-helpers"
+    ],
     bundlePagesExternals: true,
   },
   /*
