@@ -15,8 +15,9 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
   ],
-  experimental: {},
-  bundlePagesExternals: true,
+  experimental: {
+    bundlePagesExternals: true,
+  },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
    * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
