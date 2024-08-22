@@ -8,7 +8,6 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
-import { getContentfulEnvironmentLabel } from "@/modules/providers/contentful/contentful-environment-label";
 
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
@@ -211,7 +210,7 @@ const PureForm = ({
                 </Text>
               }
               options={environmentsData.items.map((item) => ({
-                label: getContentfulEnvironmentLabel(item),
+                label: item.sys.aliasedEnvironment ? `Alias:${item.sys.id}` : item.name,
                 value: item.sys.id,
               }))}
             />
