@@ -24,10 +24,12 @@ const PureForm = ({
   defaultValues,
   onSubmit,
   onDelete,
+  type,
 }: {
   defaultValues: FormSchema;
   onSubmit(values: FormSchema): void;
   onDelete?(): void;
+  type: "create" | "edit";
 }) => {
   const { notifyError } = useDashboardNotification();
 
@@ -62,7 +64,10 @@ const PureForm = ({
   const { mutate: fetchEnvironments, data: environmentsData } =
     trpcClient.contentful.fetchEnvironmentsFromApi.useMutation({
       onSuccess(data) {
-        setValue("environment", data.items[0].sys.id);
+        // Set initial value when creating config
+        if (type === "create") {
+          setValue("environment", data.items[0].sys.id);
+        }
 
         clearErrors(["authToken", "spaceId"]);
       },
@@ -323,6 +328,7 @@ const AddVariant = () => {
 
   return (
     <ContentfulConfigForm.PureVariant
+      type="create"
       onSubmit={(values) => {
         mutate({
           ...values,
@@ -360,6 +366,7 @@ const EditVariant = ({ configId }: { configId: string }) => {
       enabled: !!configId,
     },
   );
+
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
@@ -384,6 +391,7 @@ const EditVariant = ({ configId }: { configId: string }) => {
 
   return (
     <ContentfulConfigForm.PureVariant
+      type="edit"
       onDelete={() => {
         deleteProvider({ id: configId });
       }}
