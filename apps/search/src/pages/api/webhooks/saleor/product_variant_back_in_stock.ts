@@ -1,11 +1,12 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+
 import { ProductVariantBackInStock } from "../../../../../generated/graphql";
 import { createLogger } from "../../../../lib/logger";
+import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductVariantBackInStock } from "../../../../webhooks/definitions/product-variant-back-in-stock";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
-import { withOtel } from "@saleor/apps-otel";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../../lib/logger-context";
 
 export const config = {
   api: {
@@ -42,12 +43,17 @@ export const handler: NextWebhookApiHandler<ProductVariantBackInStock> = async (
       res.status(200).end();
       return;
     } catch (e) {
-      logger.error("Failed to execute product_variant_back_in_stock webhook", { error: e });
+      logger.error(
+        "Failed to execute product_variant_back_in_stock webhook (algoliaClient.updateProductVariant)",
+        { error: e },
+      );
 
       return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
-    logger.error("Failed to execute product_variant_back_in_stock webhook", { error: e });
+    logger.error("Failed to execute product_variant_back_in_stock webhook (createWebhookContext)", {
+      error: e,
+    });
 
     return res.status(400).json({
       message: (e as Error).message,

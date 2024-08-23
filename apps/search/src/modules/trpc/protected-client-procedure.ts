@@ -1,11 +1,12 @@
-import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
-import { middleware, procedure } from "./trpc-server";
-import { TRPCError } from "@trpc/server";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
+import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
+import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
+import { TRPCError } from "@trpc/server";
+
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
-import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
 import { createLogger } from "../../lib/logger";
+import { middleware, procedure } from "./trpc-server";
 
 const logger = createLogger("protectedClientProcedure");
 
@@ -24,7 +25,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
   const authData = await saleorApp.apl.get(ctx.saleorApiUrl);
 
   if (!authData) {
-    logger.debug("authData not found, throwing 401");
+    logger.warn("authData not found, throwing 401");
 
     throw new TRPCError({
       code: "UNAUTHORIZED",
