@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.5
+
+### Patch Changes
+
+- b487edb2: Now, the flag "bundlePagesExternals" was added, which means cold-starts should be decreased according to Vercel documentation.
+
 ## 1.2.4
 
 ### Patch Changes
