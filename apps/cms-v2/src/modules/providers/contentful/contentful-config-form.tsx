@@ -1,16 +1,17 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import { useForm } from "react-hook-form";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
-
-import { trpcClient } from "../../trpc/trpc-client";
-import { useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
-import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { ButtonsBox, TextLink } from "@saleor/apps-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { useRouter } from "next/router";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+
 import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+
+import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
+import { ContentfulProviderConfig } from "../../configuration/schemas/contentful-provider.schema";
+import { trpcClient } from "../../trpc/trpc-client";
 
 type FormSchema = Omit<ContentfulProviderConfig.InputShape, "type">;
 
@@ -22,10 +23,12 @@ const PureForm = ({
   defaultValues,
   onSubmit,
   onDelete,
+  type,
 }: {
   defaultValues: FormSchema;
   onSubmit(values: FormSchema): void;
   onDelete?(): void;
+  type: "create" | "edit";
 }) => {
   const { notifyError } = useDashboardNotification();
 
@@ -60,7 +63,10 @@ const PureForm = ({
   const { mutate: fetchEnvironments, data: environmentsData } =
     trpcClient.contentful.fetchEnvironmentsFromApi.useMutation({
       onSuccess(data) {
-        setValue("environment", data.items[0].sys.id);
+        // Set initial value when creating config
+        if (type === "create") {
+          setValue("environment", data.items[0].sys.id);
+        }
 
         clearErrors(["authToken", "spaceId"]);
       },
@@ -204,7 +210,10 @@ const PureForm = ({
                 </Text>
               }
               options={environmentsData.items.map((item) => ({
-                label: item.name,
+                // Show alias label when given environment is alis
+                label: item.sys.aliasedEnvironment
+                  ? `Alias: ${item.sys.id} (${item.name})`
+                  : item.name,
                 value: item.sys.id,
               }))}
             />
@@ -321,6 +330,7 @@ const AddVariant = () => {
 
   return (
     <ContentfulConfigForm.PureVariant
+      type="create"
       onSubmit={(values) => {
         mutate({
           ...values,
@@ -358,6 +368,7 @@ const EditVariant = ({ configId }: { configId: string }) => {
       enabled: !!configId,
     },
   );
+
   const { mutate } = trpcClient.providersConfigs.updateOne.useMutation({
     onSuccess() {
       notifySuccess("Success", "Updated configuration");
@@ -382,6 +393,7 @@ const EditVariant = ({ configId }: { configId: string }) => {
 
   return (
     <ContentfulConfigForm.PureVariant
+      type="edit"
       onDelete={() => {
         deleteProvider({ id: configId });
       }}
