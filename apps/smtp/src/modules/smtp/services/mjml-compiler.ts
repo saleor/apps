@@ -1,6 +1,8 @@
-import { createLogger } from "../../../logger";
+import compile from "mjml";
 import { err, fromThrowable, ok, Result } from "neverthrow";
+
 import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
 
 export interface IMjmlCompiler {
   compile(mjml: string): Result<string, InstanceType<typeof BaseError>>;
@@ -16,8 +18,7 @@ export class MjmlCompiler implements IMjmlCompiler {
     this.logger.debug("Trying to compile MJML template");
 
     const safeCompile = fromThrowable(
-      // Used require on purpose - when import where used, modules resolution failed
-      require("mjml"),
+      compile,
       (error) =>
         new MjmlCompiler.FailedToCompileError("Failed to compile MJML", {
           errors: [error],
