@@ -100,4 +100,5 @@ body:graphql:vars {
 
 vars:post-response {
   checkoutId: res.body.data.checkoutCreate.checkout.id
+  shippingMethodId: res.body.data.checkoutCreate.checkout.shippingMethods[1].id
 }
