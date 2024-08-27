@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.6
+
+### Patch Changes
+
+- b708a107: The "require" call was replaced by regular "import" which causes random timeouts on webhook processing in mjml usage.
+
 ## 1.2.5
 
 ### Patch Changes

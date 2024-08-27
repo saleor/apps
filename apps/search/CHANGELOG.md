@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.22.8
+
+### Patch Changes
+
+- 9441359a: Search app now logs warnings when authData is missing. Logged errors in webhook handlers that had the same messages have been changed, meaning that debugging is now easier.
+
 ## 1.22.7
 
 ### Patch Changes
