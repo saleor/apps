@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.7
+
+### Patch Changes
+
+- 9650998a: Now "mjml" is being treated as external and properly handled by "bundlePagesExternals" flag.
+
 ## 1.2.6
 
 ### Patch Changes
