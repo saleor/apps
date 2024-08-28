@@ -24,7 +24,6 @@ const nextConfig = {
        */
       "handlebars",
       "handlebars-helpers",
-      "mjml",
     ],
     bundlePagesExternals: true,
   },
@@ -35,8 +34,13 @@ const nextConfig = {
   /** @type {import('next').NextConfig['webpack']} */
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.ignoreWarnings = [{ module: /opentelemetry/ }];
+      config.ignoreWarnings = [{ module: /opentelemetry/ }, { module: /mjml/ }];
     }
+
+    config.module.rules.push({
+      test: /html-minifier/,
+      use: "null-loader",
+    });
 
     /*
      *When the flag "bundlePagesExternals" is enabled, handlebars cannot be properly loaded,

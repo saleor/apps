@@ -88,6 +88,7 @@
     "@types/react-dom": "18.2.5",
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
+    "null-loader": "4.0.1",
     "tsx": "4.7.1",
     "typescript": "5.5.4"
   },
