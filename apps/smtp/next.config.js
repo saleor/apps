@@ -37,6 +37,10 @@ const nextConfig = {
       config.ignoreWarnings = [{ module: /opentelemetry/ }, { module: /mjml/ }];
     }
 
+    /*
+     *html-minifier/uglify-js loading issue: https://github.com/mjmlio/mjml/issues/2132
+     *Remove when mjml 5 is released: https://github.com/mjmlio/mjml/issues/2132#issuecomment-753010828
+     */
     config.module.rules.push({
       test: /html-minifier/,
       use: "null-loader",
