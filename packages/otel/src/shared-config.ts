@@ -2,7 +2,6 @@ import { BufferConfig } from "@opentelemetry/sdk-logs";
 
 const FLUSH_TIMEOUT = 1_000;
 
-// test
 const batchProcessorConfig: BufferConfig = {
   exportTimeoutMillis: FLUSH_TIMEOUT,
   maxExportBatchSize: 1024,
