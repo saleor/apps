@@ -15,6 +15,11 @@ export const attachLoggerConsoleTransport = (logger: Logger<ILogObj>) => {
     const formattedName = `${(parentNames ?? []).join(":")}:${name}`;
     const formattedDate = date.toISOString();
 
-    console.log(`\x1b[2m ${formattedDate} ${formattedName}\x1b[0m \t${message}`, attributes);
+    console.log(
+      `\x1b[2m ${formattedDate} ${formattedName}\x1b[0m \t${message}`,
+      JSON.stringify(attributes),
+      null,
+      2,
+    );
   });
 };
