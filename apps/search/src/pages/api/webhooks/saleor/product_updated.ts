@@ -3,6 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 
 import { ProductUpdated } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductUpdated } from "../../../../webhooks/definitions/product-updated";
@@ -39,10 +40,17 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
       res.status(200).end();
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
+        logger.error("Failed to update and save product", {
+          error: e,
+        });
+
+        return res.status(400).send((e as Error).message);
+      }
+
       logger.error("Failed to execute product_updated webhook (algoliaClient.updateProduct)", {
         error: e,
       });
-
       return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {

@@ -3,6 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 
 import { ProductVariantUpdated } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductVariantUpdated } from "../../../../webhooks/definitions/product-variant-updated";
@@ -39,6 +40,14 @@ export const handler: NextWebhookApiHandler<ProductVariantUpdated> = async (req,
       res.status(200).end();
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
+        logger.error("Failed to update and save variant", {
+          error: e,
+        });
+
+        return res.status(400).send((e as Error).message);
+      }
+
       logger.error(
         "Failed to execute product_variant_updated webhook (algoliaClient.updateProductVariant)",
         { error: e },

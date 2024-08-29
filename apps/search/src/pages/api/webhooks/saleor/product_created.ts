@@ -3,6 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 
 import { ProductCreated } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductCreated } from "../../../../webhooks/definitions/product-created";
@@ -41,6 +42,14 @@ export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, c
       res.status(200).end();
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
+        logger.error("Failed to create and save product", {
+          error: e,
+        });
+
+        return res.status(400).send((e as Error).message);
+      }
+
       logger.error("Failed to execute product_created webhook (algoliaClient.createProduct)", {
         error: e,
       });
