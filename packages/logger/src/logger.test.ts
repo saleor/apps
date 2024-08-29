@@ -1,9 +1,10 @@
+import { logs } from "@opentelemetry/api-logs";
+import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { describe, expect, it, vi } from "vitest";
+
 import { createLogger } from "./logger";
 import { attachLoggerConsoleTransport } from "./logger-console-transport";
 import { attachLoggerOtelTransport } from "./logger-otel-transport";
-import { logs } from "@opentelemetry/api-logs";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 
 vi.spyOn(console, "log");
 vi.setSystemTime(new Date(2024, 1, 1, 5, 15));
@@ -29,12 +30,16 @@ describe("Logger", () => {
 
       expect(console.log).toBeCalledWith(
         "\x1B[2m 2024-02-01T05:15:00.000Z :Test Logger\x1B[0m \tTest Message",
-        {
-          rootScopePrimitiveArg: 1,
-          rootScopeObjectArg: { objectKey: "objectValue" },
-          childScopePrimitiveArg: 2,
-          childScopeObjectArg: { objectKey: "objectValue" },
-        },
+        JSON.stringify(
+          {
+            rootScopePrimitiveArg: 1,
+            rootScopeObjectArg: { objectKey: "objectValue" },
+            childScopePrimitiveArg: 2,
+            childScopeObjectArg: { objectKey: "objectValue" },
+          },
+          null,
+          2,
+        ),
       );
     });
   });
