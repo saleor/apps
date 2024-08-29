@@ -17,9 +17,7 @@ export const attachLoggerConsoleTransport = (logger: Logger<ILogObj>) => {
 
     console.log(
       `\x1b[2m ${formattedDate} ${formattedName}\x1b[0m \t${message}`,
-      JSON.stringify(attributes),
-      null,
-      2,
+      JSON.stringify(attributes, null, 2),
     );
   });
 };
