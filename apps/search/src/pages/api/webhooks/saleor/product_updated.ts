@@ -45,7 +45,7 @@ export const handler: NextWebhookApiHandler<ProductUpdated> = async (req, res, c
           error: e,
         });
 
-        return res.status(400).send((e as Error).message);
+        return res.status(413).send((e as Error).message);
       }
 
       logger.error("Failed to execute product_updated webhook (algoliaClient.updateProduct)", {
