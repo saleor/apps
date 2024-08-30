@@ -1,11 +1,11 @@
 meta {
-  name: 06 Update Addresses on draft order
+  name: 11. Complete draft order
   type: graphql
-  seq: 6
+  seq: 11
 }
 
 post {
-  url: {{API_URL}}
+  url: {{saleorApiUrl}}
   body: graphql
   auth: bearer
 }
@@ -15,8 +15,8 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation DraftOrderUpdate($id: ID!, $input: DraftOrderInput!) {
-    draftOrderUpdate(id: $id, input: $input) {
+  mutation DraftOrderComplete($id: ID!) {
+    draftOrderComplete(id: $id) {
       errors {
         ...OrderError
       }
@@ -30,6 +30,18 @@ body:graphql {
         }
         shippingPrice {
           ...BaseTaxedMoney
+        }
+        voucherCode
+        discounts {
+          id
+          type
+          name
+          valueType
+          value
+          reason
+          amount {
+            amount
+          }
         }
         lines {
           productVariantId
@@ -46,13 +58,6 @@ body:graphql {
             price {
               amount
             }
-          }
-        }
-        shippingMethods {
-          id
-          name
-          price {
-            amount
           }
         }
         billingAddress {
@@ -102,32 +107,6 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "id": "{{orderId}}",
-    "input": {
-        "billingAddress":{
-           "city":"New York",
-           "country":"US",
-           "countryArea":"NY",
-           "firstName":"John",
-           "lastName":"Smith",
-           "phone":"+12125094995",
-           "postalCode":"10001",
-           "streetAddress1":"8559 Lakes Avenue"
-        },
-        "shippingAddress":{
-           "city":"New York",
-           "country":"US",
-           "countryArea":"NY",
-           "firstName":"John",
-           "lastName":"Smith",
-           "phone":"+12125094995",
-           "postalCode":"10001",
-           "streetAddress1":"8559 Lakes Avenue"
-        }
-    }
+    "id": "{{orderId}}"
   }
-}
-
-vars:post-response {
-  shippingMethodId: res.body.data.draftOrderUpdate.order.shippingMethods[0].id
 }
