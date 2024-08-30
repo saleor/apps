@@ -48,7 +48,7 @@ export const configurationRouter = router({
   setConnectionConfig: protectedClientProcedure
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
-      loggerContext.set("saleorApiUrl", ctx.saleorApiUrl);
+      loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, ctx.saleorApiUrl);
 
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
