@@ -1,6 +1,9 @@
 import { DeepPartial, TRPCError } from "@trpc/server";
 import { Client } from "urql";
 
+import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
+
 import { metadataCache } from "../../../lib/app-metadata-cache";
 import { createLogger } from "../../../logger";
 import { createSettingsManager } from "../../app/metadata-manager";
@@ -12,7 +15,6 @@ import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxConnectionRepository } from "./avatax-connection-repository";
 
 export class AvataxConnectionService {
-  private logger = createLogger("AvataxConnectionService");
   private avataxConnectionRepository: AvataxConnectionRepository;
 
   constructor({
@@ -26,7 +28,9 @@ export class AvataxConnectionService {
   }) {
     const settingsManager = createSettingsManager(client, appId, metadataCache);
 
-    this.avataxConnectionRepository = new AvataxConnectionRepository(settingsManager, saleorApiUrl);
+    this.avataxConnectionRepository = new AvataxConnectionRepository(
+      new CrudSettingsManager(settingsManager, saleorApiUrl, TAX_PROVIDER_KEY),
+    );
   }
 
   private async checkIfAuthorized(input: AvataxConfig) {

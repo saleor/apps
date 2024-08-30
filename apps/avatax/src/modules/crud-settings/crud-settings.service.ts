@@ -10,6 +10,10 @@ const settingsSchema = z.array(settingSchema);
 export class CrudSettingsManager {
   private logger = createLogger("CrudSettingsManager");
 
+  /**
+   * TODO: Remove this class...
+   * ...and also move auth data to methods, not constructor, so it can be created ahead of time
+   */
   constructor(
     /*
      * // todo: invoke createSettingsManager in constructor
