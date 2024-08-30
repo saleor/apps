@@ -1,5 +1,11 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 
+import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
+import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { AvataxOrderConfirmedPayloadTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload-transformer";
+import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
+
 import { createLogger } from "../../../logger";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,
@@ -29,7 +35,11 @@ export class AvataxOrderConfirmedAdapter
 {
   private logger = createLogger("AvataxOrderConfirmedAdapter");
 
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private avataxClient: AvataxClient,
+    private avataxOrderConfirmedResponseTransformer: AvataxOrderConfirmedResponseTransformer,
+    private avataxOrderConfirmedPayloadService: AvataxOrderConfirmedPayloadService,
+  ) {}
 
   async send(
     payload: AvataxOrderConfirmedPayload,
@@ -39,8 +49,7 @@ export class AvataxOrderConfirmedAdapter
   ): Promise<AvataxOrderConfirmedResponse> {
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
-    const payloadService = new AvataxOrderConfirmedPayloadService(this.avataxClient);
-    const target = await payloadService.getPayload(
+    const target = await this.avataxOrderConfirmedPayloadService.getPayload(
       payload.order,
       payload.confirmedOrderEvent,
       config,
@@ -62,8 +71,7 @@ export class AvataxOrderConfirmedAdapter
         taxCalculationSummary: response.summary,
       });
 
-      const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
-      const transformedResponse = responseTransformer.transform(response);
+      const transformedResponse = this.avataxOrderConfirmedResponseTransformer.transform(response);
 
       this.logger.debug("Transformed AvaTax createTransaction response");
 
