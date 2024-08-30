@@ -1,5 +1,6 @@
-import { ChannelConfiguration } from "../channel-configuration-schema";
 import { Text } from "@saleor/macaw-ui";
+
+import { ChannelConfiguration } from "../channel-configuration-schema";
 
 interface OverrideMessageArgs {
   availableChannels: string[];
@@ -13,7 +14,12 @@ export const AssignedChannelsMessage = ({
   if (!override) {
     return (
       <Text>
-        Configuration will be used with <Text variant="bodyStrong"> all</Text> channels.
+        Configuration will be used with{" "}
+        <Text size={4} fontWeight="bold">
+          {" "}
+          all
+        </Text>{" "}
+        channels.
       </Text>
     );
   }
@@ -23,7 +29,7 @@ export const AssignedChannelsMessage = ({
 
     if (!leftChannels.length) {
       return (
-        <Text variant="bodyStrong">
+        <Text size={4} fontWeight="bold">
           Theres no channel which will be used with this configuration.
         </Text>
       );
@@ -31,7 +37,10 @@ export const AssignedChannelsMessage = ({
     return (
       <Text>
         Configuration will be used with channels:{" "}
-        <Text variant="bodyStrong">{leftChannels.join(", ")}</Text>.
+        <Text size={4} fontWeight="bold">
+          {leftChannels.join(", ")}
+        </Text>
+        .
       </Text>
     );
   }
@@ -39,14 +48,19 @@ export const AssignedChannelsMessage = ({
   if (channels.length === 0) {
     return (
       <Text>
-        <Text variant="bodyStrong">No channels assigned. The configuration will not be used!</Text>
+        <Text size={4} fontWeight="bold">
+          No channels assigned. The configuration will not be used!
+        </Text>
       </Text>
     );
   }
   return (
     <Text>
       Configuration will be used with channels:{" "}
-      <Text variant="bodyStrong">{channels.join(", ")}</Text>.
+      <Text size={4} fontWeight="bold">
+        {channels.join(", ")}
+      </Text>
+      .
     </Text>
   );
 };

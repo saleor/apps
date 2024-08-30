@@ -1,8 +1,9 @@
-import { Button, DefaultTheme, useTheme, Text, Box } from "@saleor/macaw-ui";
+import { Box, Button, DefaultTheme, Text, useTheme } from "@saleor/macaw-ui";
 import dotObject from "dot-object";
 import dynamic from "next/dynamic";
 import { ConfigureAPI, OnResults, SettingsAPI } from "nuvo-react";
 import { useCallback, useMemo, useState } from "react";
+
 import { useAuthorizedToken } from "../../authorization/use-authorized-token";
 import { CustomersImportingResults } from "../customers-results/customers-importing-results";
 import {
@@ -25,9 +26,9 @@ const NuvoImporter = dynamic<ConfigureAPI>(
   {
     ssr: false,
     loading() {
-      return <Text>Loading</Text>
+      return <Text>Loading</Text>;
     },
-  }
+  },
 );
 
 const columns = getCustomersModelColumns();
@@ -272,7 +273,7 @@ export const CustomersImporterView = () => {
 
   const handleResults: OnResults = useCallback((resultArray) => {
     const parsedResult = resultArray.map((row) =>
-      getResultModelSchema().parse(dotObject.object(row))
+      getResultModelSchema().parse(dotObject.object(row)),
     );
 
     setImportedLines(parsedResult);
@@ -287,7 +288,7 @@ export const CustomersImporterView = () => {
   }
 
   if (authorized === false) {
-    return <Box color="textCriticalDefault">To use this importer you need MANAGER_USERS permission</Box>;
+    return <Box color="default1">To use this importer you need MANAGER_USERS permission</Box>;
   }
 
   if (importedLines) {
@@ -303,11 +304,7 @@ export const CustomersImporterView = () => {
       <NuvoImporter
         renderUploadButton={({ launch }) => {
           return (
-            <Button
-              size="large"
-              variant="primary"
-              onClick={launch}
-            >
+            <Button size="large" variant="primary" onClick={launch}>
               Upload file
             </Button>
           );

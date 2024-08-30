@@ -129,7 +129,7 @@ export const EditAvataxConfiguration = () => {
     // todo: replace with skeleton once its available in Macaw
     return (
       <Box>
-        <Text color="textNeutralSubdued">Loading...</Text>
+        <Text color="default2">Loading...</Text>
       </Box>
     );
   }
@@ -137,7 +137,7 @@ export const EditAvataxConfiguration = () => {
   if (isGetError) {
     return (
       <Box>
-        <Text color="textCriticalDefault">Error while fetching the provider data.</Text>
+        <Text color="critical1">Error while fetching the provider data.</Text>
       </Box>
     );
   }

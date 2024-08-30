@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+
 import { SaleorProviderFieldsMappingKeys, StrapiProviderConfig } from "../../configuration";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { ButtonsBox, SkeletonLayout } from "@saleor/apps-ui";
 
 type FormShape = Omit<StrapiProviderConfig.InputShape, "type">;
 
@@ -41,7 +42,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide connection details</Text>
+        <Text size={5} fontWeight="bold">
+          Provide connection details
+        </Text>
         <Input
           required
           control={control}
@@ -59,7 +62,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Configure fields mapping</Text>
+        <Text size={5} fontWeight="bold">
+          Configure fields mapping
+        </Text>
         <Input
           label="Item type"
           name="itemType"
@@ -68,12 +73,19 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           helperText="Plural name of the content type you want Saleor to send product to. E.g. 'products' or 'product-variants'"
         />
 
-        <Text as="p" variant="heading" size="small">
+        <Text as="p" size={4} fontWeight="bold">
           Map fields from Saleor to your Strapi schema.
         </Text>
         <Text as="p" marginTop={2} marginBottom={4}>
-          All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
-          type of <Text variant="bodyStrong">JSON</Text>.
+          All fields should be type of{" "}
+          <Text size={4} fontWeight="bold">
+            Text
+          </Text>
+          . Channels should be type of{" "}
+          <Text size={4} fontWeight="bold">
+            JSON
+          </Text>
+          .
         </Text>
         <Box
           marginBottom={4}
@@ -81,11 +93,11 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           __gridTemplateColumns={"50% 50%"}
           borderBottomWidth={1}
           borderBottomStyle="solid"
-          borderColor="neutralHighlight"
+          borderColor="default1"
           padding={2}
         >
-          <Text variant="caption">Saleor Field</Text>
-          <Text variant="caption">Strapi field</Text>
+          <Text size={2}>Saleor Field</Text>
+          <Text size={2}>Strapi field</Text>
         </Box>
         {SaleorProviderFieldsMappingKeys.map((saleorField) => (
           // todo extract this table to component
@@ -97,12 +109,10 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             alignItems="center"
           >
             <Box>
-              <Text as="p" variant="bodyStrong">
+              <Text as="p" size={4} fontWeight="bold">
                 {printSaleorProductFields(saleorField)}
               </Text>
-              <Text variant="caption">
-                {saleorField === "channels" ? "JSON field" : "Text field"}
-              </Text>
+              <Text size={2}>{saleorField === "channels" ? "JSON field" : "Text field"}</Text>
             </Box>
             <Input
               size="small"

@@ -19,7 +19,7 @@ const MatcherTable = () => {
     <AppCard __minHeight={"320px"} height="100%" data-testid="matcher-table">
       {isLoading ? (
         <Box height="100%" display={"flex"} alignItems={"center"} justifyContent={"center"}>
-          <Text color="textNeutralSubdued">Loading...</Text>
+          <Text color="default2">Loading...</Text>
         </Box>
       ) : (
         <>
@@ -53,7 +53,7 @@ const MatcherTable = () => {
             </Table.Container>
           ) : (
             <Box height="100%" display={"flex"} alignItems={"center"} justifyContent={"center"}>
-              <Text color="textNeutralSubdued">You must configure a tax provider first</Text>
+              <Text color="default2">You must configure a tax provider first</Text>
             </Box>
           )}
         </>
@@ -71,7 +71,7 @@ const Intro = () => {
         <>
           Tax Code Matcher allows you to map Saleor tax classes to provider tax codes to extend
           products base tax rate.
-          <Text as="span" display="block" marginY={4}>
+          <Text as="span" display="block" marginY={4} size={4}>
             You need to have at least one provider configured to use this feature.
           </Text>
         </>

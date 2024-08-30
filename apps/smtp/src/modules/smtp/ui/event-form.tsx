@@ -1,19 +1,20 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { trpcClient } from "../../trpc/trpc-client";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CodeEditor } from "./code-editor";
-import { useDebounce } from "usehooks-ts";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useEffect, useState } from "react";
-import { examplePayloads } from "../../event-handlers/default-payloads";
-import { MjmlPreview } from "./mjml-preview";
+import { Controller, useForm } from "react-hook-form";
+import { useDebounce } from "usehooks-ts";
+
 import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { Input } from "@saleor/react-hook-form-macaw";
+import { examplePayloads } from "../../event-handlers/default-payloads";
+import { MessageEventTypes } from "../../event-handlers/message-event-types";
+import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { CodeEditor } from "./code-editor";
+import { MjmlPreview } from "./mjml-preview";
 
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
@@ -106,12 +107,14 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     >
       <Box display="flex" flexDirection="column" gap={defaultPadding}>
         <Box display="flex" justifyContent="space-between">
-          <Text variant="hero">Edit template</Text>
+          <Text size={10} fontWeight="bold">
+            Edit template
+          </Text>
           <Button type="submit">Save</Button>
         </Box>
         {isError && (
           <Box>
-            <Text color={"textCriticalDefault"}>Template compilation failed: {error.message}</Text>
+            <Text color={"critical1"}>Template compilation failed: {error.message}</Text>
           </Box>
         )}
         <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
@@ -156,7 +159,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
             flexDirection="column"
             gap={defaultPadding}
           >
-            <Text variant="heading" as="p">
+            <Text size={5} fontWeight="bold" as="p">
               Subject: {lastValidRenderedSubject}
             </Text>
             <MjmlPreview value={lastValidRenderedTemplate} />

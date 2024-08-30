@@ -1,16 +1,17 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
-import { trpcClient } from "../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
-import { useDashboardNotification } from "@saleor/apps-shared";
+
 import { BasicLayout } from "../../../components/basic-layout";
+import { appUrls } from "../../../modules/app-configuration/urls";
 import { SmtpBasicInformationSection } from "../../../modules/smtp/ui/smtp-basic-information-section";
+import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
+import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangerous-section";
+import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
 import { SmtpSection } from "../../../modules/smtp/ui/smtp-section";
 import { SmtpSenderSection } from "../../../modules/smtp/ui/smtp-sender-section";
-import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangerous-section";
-import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
-import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
-import { appUrls } from "../../../modules/app-configuration/urls";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const LoadingView = () => {
   return (
@@ -21,7 +22,9 @@ const LoadingView = () => {
         { name: "..." },
       ]}
     >
-      <Text variant="hero">Loading...</Text>
+      <Text size={10} fontWeight="bold">
+        Loading...
+      </Text>
     </BasicLayout>
   );
 };
@@ -35,7 +38,9 @@ const NotFoundView = () => {
         { name: "Not found" },
       ]}
     >
-      <Text variant="hero">Could not find the requested configuration.</Text>
+      <Text size={10} fontWeight="bold">
+        Could not find the requested configuration.
+      </Text>
     </BasicLayout>
   );
 };

@@ -1,12 +1,13 @@
-import { Box, Text } from "@saleor/macaw-ui";
 import { Layout, TextLink } from "@saleor/apps-ui";
+import { Box, Text } from "@saleor/macaw-ui";
+
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
-import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
-import { WebhooksStatus } from "../../components/WebhooksStatus";
-import { MainInstructions } from "../../components/MainInstructions";
-import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
-import { IndicesSettings } from "../../components/IndicesSettings";
 import { AlgoliaFieldsSelectionForm } from "../../components/AlgoliaFieldsSelectionForm";
+import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
+import { IndicesSettings } from "../../components/IndicesSettings";
+import { MainInstructions } from "../../components/MainInstructions";
+import { WebhooksStatus } from "../../components/WebhooksStatus";
+import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
@@ -14,7 +15,7 @@ export const ConfigurationView = () => {
   return (
     <Box display="flex" flexDirection="column" gap={10}>
       <Box>
-        <Text variant={"hero"} size={"medium"} as={"h1"}>
+        <Text as={"h1"} size={10} fontWeight="bold">
           Configuration
         </Text>
         <MainInstructions marginTop={1.5} />

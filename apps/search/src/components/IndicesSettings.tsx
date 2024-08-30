@@ -1,6 +1,6 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import React from "react";
 import { Layout, TextLink } from "@saleor/apps-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+
 import { useIndicesSetupMutation } from "../lib/useIndicesSetup";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
@@ -26,12 +26,12 @@ export const IndicesSettings = () => {
       }
     >
       <Box>
-        <Text variant={"heading"} as={"p"} marginBottom={1.5}>
+        <Text size={5} fontWeight="bold" as={"p"} marginBottom={1.5}>
           Performing this operation will update indices to use recommended settings:
         </Text>
         <ul>
           <li>
-            <Text variant="body">
+            <Text>
               Distinct and grouping. According to{" "}
               <TextLink
                 href="https://www.algolia.com/doc/guides/managing-results/refine-results/faceting/"
@@ -44,7 +44,7 @@ export const IndicesSettings = () => {
             </Text>
           </li>
           <li>
-            <Text variant="body">
+            <Text>
               Mark which attributes should be used as{" "}
               <TextLink
                 href="https://www.algolia.com/doc/guides/managing-results/must-do/searchable-attributes/"
@@ -56,7 +56,7 @@ export const IndicesSettings = () => {
             </Text>
           </li>
           <li>
-            <Text variant="body">
+            <Text>
               Set up attributes{" "}
               <TextLink
                 href="https://www.algolia.com/doc/guides/managing-results/refine-results/faceting/"
@@ -68,7 +68,7 @@ export const IndicesSettings = () => {
             </Text>
           </li>
         </ul>
-        <Text variant={"heading"} as={"p"} color={"iconCriticalSubdued"} marginBottom={1.5}>
+        <Text size={5} fontWeight="bold" as={"p"} color={"critical2"} marginBottom={1.5}>
           Please note - if indices are already configured, this operation will overwrite settings
           mentioned above.
         </Text>

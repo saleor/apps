@@ -1,16 +1,17 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+
+import { BoxFooter } from "../../../components/box-footer";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { SectionWithDescription } from "../../../components/section-with-description";
 import { defaultPadding } from "../../../components/ui-defaults";
-import { BoxFooter } from "../../../components/box-footer";
-import { trpcClient } from "../../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { appUrls } from "../../app-configuration/urls";
+import { trpcClient } from "../../trpc/trpc-client";
+import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpDangerousSectionProps {
   configuration: SmtpConfiguration;
@@ -48,9 +49,9 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
           });
         })}
       >
-        <BoxWithBorder backgroundColor="surfaceCriticalSubdued" borderColor="criticalSubdued">
+        <BoxWithBorder backgroundColor="critical1" borderColor="critical1">
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={2}>
-            <Text variant="heading" as="h1">
+            <Text size={5} fontWeight="bold" as="h1">
               Remove provider configuration
             </Text>
             <Text as="p">
@@ -60,7 +61,7 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
             <Text as="p">This operation can&#39;t be undone.</Text>
             <Text as="p">You can still create a new configuration.</Text>
           </Box>
-          <BoxFooter borderColor="criticalSubdued">
+          <BoxFooter borderColor="critical1">
             <Button variant="error" type="submit">
               Remove configuration
             </Button>

@@ -1,13 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { trpcClient } from "../trpc/trpc-client";
-
-import { useForm } from "react-hook-form";
 import { Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 import { ProvidersResolver } from "../providers/providers-resolver";
-import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
+import { trpcClient } from "../trpc/trpc-client";
 
 const FormSchema = z.object({
   connectionId: z.string().min(7),
@@ -16,7 +16,9 @@ const FormSchema = z.object({
 const EmptyState = () => (
   <Layout.AppSectionCard>
     <Box display="flex" flexDirection={"column"} gap={4} justifyContent={"center"}>
-      <Text variant="heading">Bulk products synchronization</Text>
+      <Text size={5} fontWeight="bold">
+        Bulk products synchronization
+      </Text>
       <Text>Create a channel connection above to enable bulk synchronization.</Text>
     </Box>
   </Layout.AppSectionCard>
@@ -45,13 +47,13 @@ export const BulkSyncSection = () => {
 
   return (
     <Layout.AppSectionCard>
-      <Text as="h2" marginBottom={6} variant="heading">
+      <Text as="h2" marginBottom={6} size={5} fontWeight="bold">
         Bulk products synchronization
       </Text>
       <Text as="p">
         Choose a connection and start synchronization. Process is running in the browser.
       </Text>
-      <Text as="p" variant="bodyStrong">
+      <Text as="p" size={4} fontWeight="bold">
         Do not close the app until it is finished
       </Text>
       <Box

@@ -45,25 +45,25 @@ export const VariantsSyncStatusList = ({ variants, ...props }: Props) => {
   return (
     <Box {...props}>
       <Row>
-        <Text variant="caption">Product</Text>
-        <Text variant="caption">Variant</Text>
-        <Text variant="caption">Status</Text>
+        <Text size={2}>Product</Text>
+        <Text size={2}>Variant</Text>
+        <Text size={2}>Status</Text>
       </Row>
       {variants.map((variant) => (
         <Row key={variant.variantId}>
           <Box>
-            <Text variant="bodyStrong" as="p">
+            <Text size={4} fontWeight="bold" as="p">
               {variant.productName}
             </Text>
-            <Text size="small" as="p">
+            <Text size={3} as="p">
               {variant.productID}
             </Text>
           </Box>
           <Box>
-            <Text variant="bodyStrong" as="p">
+            <Text size={4} fontWeight="bold" as="p">
               {variant.variantName}
             </Text>
-            <Text size="small" as="p">
+            <Text size={3} as="p">
               {variant.variantId}
             </Text>
           </Box>

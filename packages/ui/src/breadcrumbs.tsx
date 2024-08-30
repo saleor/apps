@@ -1,6 +1,7 @@
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
 import Link from "next/link";
 import React from "react";
+
 import styles from "./breadcrumbs.module.css";
 
 export type BreadcrumbsItemProps = PropsWithBox<{
@@ -10,12 +11,8 @@ export type BreadcrumbsItemProps = PropsWithBox<{
 
 const BreadcrumbsItem = ({ children, href, isLast = false, ...p }: BreadcrumbsItemProps) => {
   return (
-    <Box fontSize="titleMedium" as="li" {...p}>
-      <Text
-        __fontSize={"inherit"}
-        variant="title"
-        color={isLast ? "textNeutralDefault" : "textNeutralSubdued"}
-      >
+    <Box as="li" {...p}>
+      <Text size={7} color={isLast ? "default1" : "default2"}>
         {href && !isLast ? (
           <Link className={styles.link} href={href}>
             {children}

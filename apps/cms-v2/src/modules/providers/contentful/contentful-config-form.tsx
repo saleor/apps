@@ -137,16 +137,18 @@ const PureForm = ({
         helperText="Meaningful name that will help you understand it later. E.g. 'staging' or 'prod' "
       />
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide connection details</Text>
+        <Text size={5} fontWeight="bold">
+          Provide connection details
+        </Text>
         <Input
           required
           control={control}
           name="spaceId"
           label="Contentful space ID"
           helperText={
-            <Text variant="caption" color="textNeutralSubdued">
+            <Text size={3} color="default2">
               Check{" "}
-              <TextLink size="small" href="https://www.contentful.com/help/find-space-id/" newTab>
+              <TextLink size={1} href="https://www.contentful.com/help/find-space-id/" newTab>
                 how to get space ID
               </TextLink>
             </Text>
@@ -159,10 +161,10 @@ const PureForm = ({
           name="authToken"
           label="Content Management Personal token"
           helperText={
-            <Text variant="caption" color="textNeutralSubdued">
+            <Text size={3} color="default2">
               Check{" "}
               <TextLink
-                size="small"
+                size={1}
                 href="https://www.contentful.com/help/personal-access-tokens/"
                 newTab
               >
@@ -196,11 +198,11 @@ const PureForm = ({
               name="environment"
               label="Contentful environment"
               helperText={
-                <Text variant="caption" color="textNeutralSubdued">
+                <Text size={3} color="default2">
                   Check your environment{" "}
                   <TextLink
                     newTab
-                    size="small"
+                    size={1}
                     href={`https://app.contentful.com/spaces/${getValues(
                       "spaceId",
                     )}/settings/environments`}
@@ -240,7 +242,9 @@ const PureForm = ({
       </Box>
       {contentTypesData && (
         <Box display={"grid"} gap={4} marginY={4}>
-          <Text variant="heading">Configure fields mapping</Text>
+          <Text size={5} fontWeight="bold">
+            Configure fields mapping
+          </Text>
           <Text as="p">First select content type you want to synchronize products with.</Text>
 
           <Select
@@ -254,12 +258,19 @@ const PureForm = ({
           />
 
           <Box marginTop={4}>
-            <Text as="p" variant="heading" size="small">
+            <Text as="p" size={4} fontWeight="bold">
               Map fields from Saleor to your Contentful schema.
             </Text>
             <Text as="p" marginTop={2} marginBottom={4}>
-              All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should
-              be type of <Text variant="bodyStrong">JSON</Text>.
+              All fields should be type of{" "}
+              <Text size={4} fontWeight="bold">
+                Text
+              </Text>
+              . Channels should be type of{" "}
+              <Text size={4} fontWeight="bold">
+                JSON
+              </Text>
+              .
             </Text>
             <Box
               marginBottom={4}
@@ -267,11 +278,11 @@ const PureForm = ({
               __gridTemplateColumns={"50% 50%"}
               borderBottomWidth={1}
               borderBottomStyle="solid"
-              borderColor="neutralHighlight"
+              borderColor="default1"
               padding={2}
             >
-              <Text variant="caption">Saleor Field</Text>
-              <Text variant="caption">Contentful field</Text>
+              <Text size={2}>Saleor Field</Text>
+              <Text size={2}>Contentful field</Text>
             </Box>
             {availableFields &&
               SaleorProviderFieldsMappingKeys.map((saleorField) => (
@@ -283,12 +294,10 @@ const PureForm = ({
                   alignItems="center"
                 >
                   <Box>
-                    <Text as="p" variant="bodyStrong">
+                    <Text as="p" size={4} fontWeight="bold">
                       {printSaleorProductFields(saleorField)}
                     </Text>
-                    <Text variant="caption">
-                      {saleorField === "channels" ? "JSON field" : "Text field"}
-                    </Text>
+                    <Text size={2}>{saleorField === "channels" ? "JSON field" : "Text field"}</Text>
                   </Box>
                   <Select
                     size="small"

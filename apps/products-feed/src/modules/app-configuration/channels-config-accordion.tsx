@@ -1,11 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { Accordion, Box, Button, Divider, PropsWithBox, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { trpcClient } from "../trpc/trpc-client";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { trpcClient } from "../trpc/trpc-client";
 import { AppConfigSchema, ChannelUrlsConfig } from "./app-config";
 import { FeedPreviewCard } from "./feed-preview-card";
-import { useDashboardNotification } from "@saleor/apps-shared";
 
 const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug: string }>) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
@@ -44,7 +45,7 @@ const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug
       gap={3}
       {...props}
     >
-      <Text variant={"heading"} as={"h2"} marginBottom={1.5}>
+      <Text size={5} fontWeight="bold" as={"h2"} marginBottom={1.5}>
         Configure channel URLs
       </Text>
       <Input
@@ -85,7 +86,7 @@ export const ChannelsConfigAccordion = () => {
         <Accordion.Item
           key={channel.id}
           value={channel.id}
-          borderColor={"neutralHighlight"}
+          borderColor={"default1"}
           borderWidth={1}
           borderBottomStyle={"solid"}
           paddingBottom={5}

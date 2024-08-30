@@ -17,7 +17,7 @@ const AddProvider = () => {
       height={"100%"}
       justifyContent={"center"}
     >
-      <Text variant="body">No providers configured yet</Text>
+      <Text>No providers configured yet</Text>
       <Button data-testid="no-providers-list-add-button" onClick={() => router.push("/providers")}>
         Add first provider
       </Button>
@@ -29,7 +29,7 @@ const Skeleton = () => {
   // todo: replace with skeleton
   return (
     <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      <Text color="textNeutralSubdued">Loading...</Text>
+      <Text color="default2">Loading...</Text>
     </Box>
   );
 };

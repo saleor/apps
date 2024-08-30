@@ -52,7 +52,7 @@ export const ChannelTable = () => {
 
   return (
     <Table.Container>
-      <Table.THead color={"textNeutralSubdued"}>
+      <Table.THead color={"default2"}>
         <Table.TR>
           <Table.TH>Channel slug</Table.TH>
           <Table.TH>Provider</Table.TH>
