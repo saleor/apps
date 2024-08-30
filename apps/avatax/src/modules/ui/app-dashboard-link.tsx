@@ -20,13 +20,8 @@ export const AppDashboardLink = ({
   return (
     <Text
       transition={"ease"}
-      size={5}
-      fontWeight={"bold"}
       cursor={"pointer"}
-      color={{
-        default: "default1",
-        hover: "default2",
-      }}
+      color="info1"
       onClick={redirectToDashboardPath}
       {...rest}
     >

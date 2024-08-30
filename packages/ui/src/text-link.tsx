@@ -10,15 +10,7 @@ export interface TextLinkProps extends TextProps {
 const BaseTextLink = (props: TextLinkProps) => {
   return (
     <Text target="_blank" as={"a"} textDecoration={"none"} rel="noopener noreferrer" {...props}>
-      <Text
-        transition={"ease"}
-        variant={"bodyStrong"}
-        size={props.size}
-        color={{
-          default: "text3Decorative",
-          hover: "text1Decorative",
-        }}
-      >
+      <Text transition={"ease"} size={props.size} color="info1">
         {props.children}
       </Text>
     </Text>
@@ -34,7 +26,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
 
     if (!appBridge) {
       console.warn(
-        "App bridge is not initialized, TextLink cannot be used with external links without it."
+        "App bridge is not initialized, TextLink cannot be used with external links without it.",
       );
     }
 
@@ -42,7 +34,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
       actions.Redirect({
         to: href,
         newContext: true,
-      })
+      }),
     );
 
     if (props.onClick) {

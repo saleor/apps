@@ -71,7 +71,7 @@ const Intro = () => {
         <>
           Tax Code Matcher allows you to map Saleor tax classes to provider tax codes to extend
           products base tax rate.
-          <Text as="span" display="block" marginY={4}>
+          <Text as="span" display="block" marginY={4} size={4}>
             You need to have at least one provider configured to use this feature.
           </Text>
         </>

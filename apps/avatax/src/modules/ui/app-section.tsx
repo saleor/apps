@@ -27,7 +27,7 @@ const Description = ({
         </Text>
       )}
       {description && (
-        <Box fontWeight="regular" fontSize={5}>
+        <Box fontWeight="regular" fontSize={4}>
           {description}
         </Box>
       )}
