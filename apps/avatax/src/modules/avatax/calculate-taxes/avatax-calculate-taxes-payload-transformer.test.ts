@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
@@ -26,7 +27,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     } as unknown as CalculateTaxesPayload;
 
     const payload = await new AvataxCalculateTaxesPayloadTransformer(
-      new AvataxCalculateTaxesPayloadLinesTransformer(),
+      new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
       new AvataxEntityTypeMatcher({
         async getEntityUseCode() {
           // todo
@@ -54,7 +55,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     } as unknown as CalculateTaxesPayload;
 
     const payload = await new AvataxCalculateTaxesPayloadTransformer(
-      new AvataxCalculateTaxesPayloadLinesTransformer(),
+      new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
       new AvataxEntityTypeMatcher({
         async getEntityUseCode() {
           // todo
