@@ -1,18 +1,23 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { TRPCError } from "@trpc/server";
+
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
+import { createLogger } from "../../lib/logger";
+import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
-import { createLogger } from "../../lib/logger";
-import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("configuration.router");
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {
+    loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, ctx.saleorApiUrl);
+
     const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
     /**
@@ -43,6 +48,8 @@ export const configurationRouter = router({
   setConnectionConfig: protectedClientProcedure
     .input(AppConfigurationSchema)
     .mutation(async ({ input, ctx }) => {
+      loggerContext.set("saleorApiUrl", ctx.saleorApiUrl);
+
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
 
       const configManager = new AppConfigMetadataManager(settingsManager);
