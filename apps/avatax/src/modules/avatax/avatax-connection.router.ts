@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
+import { Obfuscator } from "@/lib/obfuscator";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { AvataxObfuscator } from "@/modules/avatax/avatax-obfuscator";
 import { AvataxConnectionService } from "@/modules/avatax/configuration/avatax-connection.service";
@@ -153,6 +154,7 @@ export const avataxConnectionRouter = router({
               ),
             ),
           ),
+          new Obfuscator(),
         ),
       );
 
@@ -218,6 +220,7 @@ export const avataxConnectionRouter = router({
               ),
             ),
           ),
+          new Obfuscator(),
         ),
       );
 

@@ -7,11 +7,10 @@ import { AvataxConnectionService } from "./avatax-connection.service";
  * The input from the edit UI is obfuscated, so we need to filter out those fields, and merge it with the existing configuration.
  */
 export class AvataxPatchInputTransformer {
-  private obfuscator: Obfuscator;
-
-  constructor(private avataxConnectionService: AvataxConnectionService) {
-    this.obfuscator = new Obfuscator();
-  }
+  constructor(
+    private avataxConnectionService: AvataxConnectionService,
+    private obfuscator: Obfuscator,
+  ) {}
 
   private checkIfNotObfuscated(config: AvataxConfig) {
     return (
