@@ -1,0 +1,53 @@
+meta {
+  name: 01. Create storefront user
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation CreateStoreFrontUser(
+    $channelSlug: String
+    $email: String!
+    $password: String!
+    $firstName: String
+  ) {
+    accountRegister(
+      input: {
+        firstName: $firstName
+        email: $email
+        password: $password
+        channel: $channelSlug
+        metadata: [{ key: "avataxCustomerCode", value: "code" }]
+      }
+    ) {
+      user {
+        id
+        metadata {
+          key
+          value
+        }
+      }
+      errors {
+        code
+        field
+        message
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+      "channelSlug": "{{channelSlug}}",
+      "email": "{{storefrontUserEmail}}",
+      "password": "{{storefrontUserPassword}}",
+      "firstName": "{{storefrontUserFirstName}}"
+  }
+}

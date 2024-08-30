@@ -1,11 +1,11 @@
 meta {
-  name: 4. Create checkout - US
+  name: 04. Create checkout
   type: graphql
   seq: 4
 }
 
 post {
-  url: {{API_URL}}
+  url: {{channelSlug}}
   body: graphql
   auth: bearer
 }
@@ -93,7 +93,7 @@ body:graphql {
 body:graphql:vars {
   {
       "variantId": "{{productVariantId}}",
-      "channelSlug": "{{channel_USD}}",
+      "channelSlug": "{{channelSlug}}",
       "email": "{{storefrontUserEmail}}"
   }
 }

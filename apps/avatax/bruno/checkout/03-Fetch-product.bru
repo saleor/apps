@@ -1,11 +1,11 @@
 meta {
-  name: 3. Fetch product
+  name: 03. Fetch product
   type: graphql
   seq: 3
 }
 
 post {
-  url: {{API_URL}}
+  url: {{saleorApiUrl}}
   body: graphql
   auth: bearer
 }
@@ -31,7 +31,7 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "channelSlug": "{{channel_USD}}"
+    "channelSlug": "{{channelSlug}}"
   }
 }
 

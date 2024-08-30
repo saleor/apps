@@ -1,7 +1,7 @@
 vars {
-  channelSlug: default-channel
-  promoCode: ""
-  saleorApiUrl: http://localhost:8000/graphql/
+  channelSlug: {{process.env.CHANNEL_SLUG}}
+  promoCode: {{process.env.PROMO_CODE}}
+  saleorApiUrl: {{process.env.SALEOR_API_URL}}
   staffUserEmail: {{process.env.STAFF_USER_EMAIL}}
   staffUserPassword: {{process.env.STAFF_USER_PASSWORD}}
   storefrontUserEmail: {{process.env.STOREFRONT_USER_EMAIL}}
