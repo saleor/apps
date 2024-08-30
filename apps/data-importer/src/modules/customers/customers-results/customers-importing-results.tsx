@@ -1,7 +1,8 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { CustomerImportingRow } from "./customer-importing-row";
-import React, { useState } from "react";
+import { useState } from "react";
+
 import { CustomerColumnSchema } from "../customers-importer-nuvo/customers-columns-model";
+import { CustomerImportingRow } from "./customer-importing-row";
 
 export const CustomersImportingResults = ({
   importedLines,
@@ -12,7 +13,7 @@ export const CustomersImportingResults = ({
 
   return (
     <div style={{ marginTop: 20 }}>
-      <Text display="block" variant="heading">
+      <Text display="block" size={5} fontWeight="bold">
         Customers rows from the imported file
       </Text>
 
