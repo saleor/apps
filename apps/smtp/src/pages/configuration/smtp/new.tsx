@@ -1,24 +1,25 @@
-import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
-import { SectionWithDescription } from "../../../components/section-with-description";
-import { BoxWithBorder } from "../../../components/box-with-border";
-import { defaultPadding } from "../../../components/ui-defaults";
-import { BoxFooter } from "../../../components/box-footer";
-import { trpcClient } from "../../../modules/trpc/trpc-client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/src/use-dashboard-notification";
+import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
+import { Input } from "@saleor/react-hook-form-macaw";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+
+import { BasicLayout } from "../../../components/basic-layout";
+import { BoxFooter } from "../../../components/box-footer";
+import { BoxWithBorder } from "../../../components/box-with-border";
+import { SectionWithDescription } from "../../../components/section-with-description";
+import { defaultPadding } from "../../../components/ui-defaults";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { ConfigurationNameDescriptionText } from "../../../modules/app-configuration/ui/configuration-name-description-text";
+import { appUrls } from "../../../modules/app-configuration/urls";
 import {
   SmtpCreateConfigurationInput,
   smtpCreateConfigurationInputSchema,
 } from "../../../modules/smtp/configuration/smtp-config-input-schema";
-import { BasicLayout } from "../../../components/basic-layout";
-import { useRouter } from "next/router";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { appUrls } from "../../../modules/app-configuration/urls";
 import { smtpUrls } from "../../../modules/smtp/urls";
-import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { Input } from "@saleor/react-hook-form-macaw";
-import { ConfigurationNameDescriptionText } from "../../../modules/app-configuration/ui/configuration-name-description-text";
+import { trpcClient } from "../../../modules/trpc/trpc-client";
 
 const NewSmtpConfigurationPage: NextPage = () => {
   const router = useRouter();
@@ -72,7 +73,9 @@ const NewSmtpConfigurationPage: NextPage = () => {
                 helperText="Name of the configuration, for example 'Production' or 'Test'"
               />
               <Divider />
-              <Text variant="heading">SMTP server connection</Text>
+              <Text size={5} fontWeight="bold">
+                SMTP server connection
+              </Text>
               <Input
                 label="Host"
                 helperText="Address of the SMTP server"

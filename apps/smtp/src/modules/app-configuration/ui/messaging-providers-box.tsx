@@ -1,11 +1,12 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
 import { SemanticChip } from "@saleor/apps-ui";
-import { BoxWithBorder } from "../../../components/box-with-border";
-import { BoxFooter } from "../../../components/box-footer";
-import { defaultPadding } from "../../../components/ui-defaults";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
-import { smtpUrls } from "../../smtp/urls";
 import React from "react";
+
+import { BoxFooter } from "../../../components/box-footer";
+import { BoxWithBorder } from "../../../components/box-with-border";
+import { defaultPadding } from "../../../components/ui-defaults";
+import { smtpUrls } from "../../smtp/urls";
 
 const NoExistingConfigurations = () => {
   const { push } = useRouter();
@@ -67,10 +68,10 @@ export const MessagingProvidersBox = ({
   return (
     <BoxWithBorder>
       <Box padding={defaultPadding} display="grid" gridTemplateColumns={3} gap={defaultPadding}>
-        <Text variant="caption" color="textNeutralSubdued">
+        <Text size={2} color="default2">
           Configuration name
         </Text>
-        <Text variant="caption" color="textNeutralSubdued">
+        <Text size={2} color="default2">
           Status
         </Text>
         <Box />
