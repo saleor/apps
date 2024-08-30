@@ -1,6 +1,7 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
 import { ProductVariantUpdated } from "../../../../../generated/graphql";
 import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
@@ -20,9 +21,9 @@ const logger = createLogger("webhookProductVariantUpdatedWebhookHandler");
 export const handler: NextWebhookApiHandler<ProductVariantUpdated> = async (req, res, context) => {
   const { event, authData } = context;
 
-  logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
-    saleorApiUrl: authData.saleorApiUrl,
-  });
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+
+  logger.info(`New event received: ${event} (${context.payload?.__typename})`);
 
   const { productVariant } = context.payload;
 

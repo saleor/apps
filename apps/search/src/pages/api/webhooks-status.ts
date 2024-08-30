@@ -1,6 +1,7 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { Client } from "urql";
 
 import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
@@ -25,6 +26,8 @@ export type WebhooksStatusResponse = {
 export const webhooksStatusHandlerFactory =
   ({ graphqlClientFactory }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
   async (req, res, { authData }) => {
+    loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+
     /**
      * Initialize services
      */
