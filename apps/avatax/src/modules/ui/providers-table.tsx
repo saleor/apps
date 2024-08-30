@@ -16,7 +16,7 @@ export const ProvidersTable = () => {
 
   return (
     <Table.Container>
-      <Table.THead color={"textNeutralSubdued"}>
+      <Table.THead color={"default2"}>
         <Table.TR>
           <Table.TH>Name</Table.TH>
           <Table.TH>Provider</Table.TH>

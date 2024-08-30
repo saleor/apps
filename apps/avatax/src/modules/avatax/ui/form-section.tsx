@@ -1,5 +1,5 @@
 import { Box, Text } from "@saleor/macaw-ui";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 
 import styles from "./form-section.module.css";
 
@@ -21,13 +21,14 @@ export const FormSection = ({
       <Text
         marginBottom={4}
         as="h3"
-        variant="heading"
-        {...(disabled && { color: "textNeutralDisabled" })}
+        size={5}
+        fontWeight="bold"
+        {...(disabled && { color: "defaultDisabled" })}
       >
         {title}
       </Text>
       {subtitle && (
-        <Text as="p" marginBottom={4} {...(disabled && { color: "textNeutralDisabled" })}>
+        <Text as="p" marginBottom={4} {...(disabled && { color: "defaultDisabled" })}>
           {subtitle}
         </Text>
       )}

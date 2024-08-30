@@ -1,22 +1,25 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
-import { trpcClient } from "../../../../../modules/trpc/trpc-client";
 import { useRouter } from "next/router";
-import { useDashboardNotification } from "@saleor/apps-shared";
+
 import { BasicLayout } from "../../../../../components/basic-layout";
-import { parseMessageEventType } from "../../../../../modules/event-handlers/parse-message-event-type";
 import { appUrls } from "../../../../../modules/app-configuration/urls";
+import { messageEventTypesLabels } from "../../../../../modules/event-handlers/message-event-types";
+import { parseMessageEventType } from "../../../../../modules/event-handlers/parse-message-event-type";
 import { EventForm } from "../../../../../modules/smtp/ui/event-form";
 import { smtpUrls } from "../../../../../modules/smtp/urls";
-import { TextLink } from "@saleor/apps-ui";
-import { messageEventTypesLabels } from "../../../../../modules/event-handlers/message-event-types";
+import { trpcClient } from "../../../../../modules/trpc/trpc-client";
 
 const LoadingView = () => {
   return (
     <BasicLayout
       breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }, { name: "..." }]}
     >
-      <Text variant="hero">Loading...</Text>
+      <Text size={10} fontWeight="bold">
+        Loading...
+      </Text>
     </BasicLayout>
   );
 };
@@ -30,7 +33,9 @@ const NotFoundView = () => {
         { name: "Not found" },
       ]}
     >
-      <Text variant="hero">Could not find the requested configuration.</Text>
+      <Text size={10} fontWeight="bold">
+        Could not find the requested configuration.
+      </Text>
     </BasicLayout>
   );
 };

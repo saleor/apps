@@ -10,8 +10,8 @@ export const HelperText = ({
 }) => {
   return (
     <Text
-      color={disabled ? "textNeutralDisabled" : "textNeutralSubdued"}
-      fontWeight={"captionLarge"}
+      color={disabled ? "defaultDisabled" : "default2"}
+      fontWeight="regular"
       marginTop={2}
       as="p"
     >

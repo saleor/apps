@@ -48,19 +48,12 @@ const ProviderCard = ({
         <Box display={"flex"} justifyContent={"space-between"}>
           <ProviderLabel name={provider} />
           {isComingSoon && (
-            <Text
-              variant="body"
-              fontSize={"headingSmall"}
-              color={"textNeutralSubdued"}
-              textTransform={"uppercase"}
-            >
+            <Text size={9} color="default2" textTransform={"uppercase"}>
               Coming soon
             </Text>
           )}
         </Box>
-        <Text variant="body" __maxWidth={"480px"}>
-          {description}
-        </Text>
+        <Text __maxWidth={"480px"}>{description}</Text>
       </Box>
       <Box display={"flex"} justifyContent={"flex-end"} marginTop={12}>
         {!isComingSoon && (

@@ -19,19 +19,13 @@ const AppSectionCard = ({
   includePadding?: boolean;
 }>) => {
   return (
-    <Box
-      borderStyle={"solid"}
-      borderColor={"neutralPlain"}
-      borderWidth={1}
-      borderRadius={4}
-      {...props}
-    >
+    <Box borderStyle={"solid"} borderColor="default1" borderWidth={1} borderRadius={4} {...props}>
       <Box padding={includePadding ? 5 : 0}>{children}</Box>
       {footer && (
         <Box
           borderTopStyle="solid"
           borderTopWidth={1}
-          borderColor="neutralHighlight"
+          borderColor="default1"
           padding={includePadding ? 5 : 0}
           marginTop={5}
         >
@@ -62,7 +56,7 @@ const AppSection = ({
       {...props}
     >
       <Box>
-        <Text as="h2" variant={"heading"} size={"large"} marginBottom={1.5}>
+        <Text as="h2" size={6} fontWeight="bold" marginBottom={1.5}>
           {heading}
         </Text>
         {sideContent}

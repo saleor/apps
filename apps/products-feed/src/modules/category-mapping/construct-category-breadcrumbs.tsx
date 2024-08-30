@@ -1,10 +1,10 @@
-import { CategoryWithMappingFragmentFragment } from "../../../generated/graphql";
-import React from "react";
 import { Box, ChevronRightIcon, Text } from "@saleor/macaw-ui";
+
+import { CategoryWithMappingFragmentFragment } from "../../../generated/graphql";
 
 export const constructCategoryBreadcrumbs = (category: CategoryWithMappingFragmentFragment) =>
   [category.parent?.parent?.name, category.parent?.name, category.name].filter((segment) =>
-    Boolean(segment)
+    Boolean(segment),
   );
 
 export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragmentFragment }) => {
@@ -17,7 +17,9 @@ export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragme
 
         return (
           <Box display={"flex"} key={category}>
-            <Text variant={isLast ? "bodyStrong" : "body"}>{category}</Text>
+            <Text size={4} fontWeight={isLast ? "bold" : "regular"}>
+              {category}
+            </Text>
             {!isLast && <ChevronRightIcon />}
           </Box>
         );

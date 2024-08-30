@@ -21,7 +21,7 @@ const NoChannelConfigured = () => {
       height={"100%"}
       justifyContent={"center"}
     >
-      <Text variant="body">No channels configured yet</Text>
+      <Text>No channels configured yet</Text>
       <Button data-testid="configure-channel-button" onClick={redirectToTaxes}>
         Configure channels
       </Button>
@@ -33,7 +33,7 @@ const Skeleton = () => {
   // todo: replace with skeleton
   return (
     <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      <Text color="textNeutralSubdued">Loading...</Text>
+      <Text color="default2">Loading...</Text>
     </Box>
   );
 };

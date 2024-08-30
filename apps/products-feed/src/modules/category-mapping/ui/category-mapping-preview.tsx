@@ -1,15 +1,16 @@
 import { Box, Text } from "@saleor/macaw-ui";
+import { useMemo } from "react";
+
 import { trpcClient } from "../../trpc/trpc-client";
 import { CategoryBreadcrumbs } from "../construct-category-breadcrumbs";
 import { GoogleProductCategories } from "../google-product-categories";
-import { useMemo } from "react";
 
 const GoogleCategory = (props: { categoryId: string }) => {
   const googleCategory = useMemo(() => {
     return GoogleProductCategories.find((cat) => cat.id === props.categoryId);
   }, [props.categoryId]);
 
-  return <Text size={"small"}>{googleCategory?.name}</Text>;
+  return <Text size={3}>{googleCategory?.name}</Text>;
 };
 
 export const CategoryMappingPreview = () => {
@@ -25,7 +26,7 @@ export const CategoryMappingPreview = () => {
 
   return (
     <Box>
-      <Text marginBottom={5} as={"h2"} variant={"heading"}>
+      <Text marginBottom={5} as={"h2"} fontSize={5} fontWeight="bold">
         Mapped categories
       </Text>
       {categories!
@@ -36,7 +37,7 @@ export const CategoryMappingPreview = () => {
               key={category.id}
               marginBottom={1.5}
               borderBottomStyle={"solid"}
-              borderColor={"neutralHighlight"}
+              borderColor={"default1"}
               borderWidth={1}
               paddingBottom={1.5}
             >

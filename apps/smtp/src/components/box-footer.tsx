@@ -1,4 +1,5 @@
 import { Box, BoxProps } from "@saleor/macaw-ui";
+
 import { defaultPadding } from "./ui-defaults";
 
 export const BoxFooter = (props: BoxProps) => {
@@ -6,7 +7,7 @@ export const BoxFooter = (props: BoxProps) => {
     <Box
       borderTopStyle="solid"
       borderWidth={1}
-      borderColor="neutralDefault"
+      borderColor="default1"
       padding={defaultPadding}
       display="flex"
       gap={defaultPadding}

@@ -27,7 +27,10 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <Text as="p" marginBottom={8}>
-            You must verify the credentials by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            You must verify the credentials by clicking the{" "}
+            <Text size={4} fontWeight="bold">
+              Verify
+            </Text>{" "}
             button.
           </Text>
           <Text as="p">
@@ -45,7 +48,10 @@ export const AvataxInstructions = () => {
             </li>
           </Box>
           <Text as="p" marginBottom={4}>
-            You must verify the address by clicking the <Text variant="bodyStrong">Verify</Text>{" "}
+            You must verify the address by clicking the{" "}
+            <Text size={4} fontWeight="bold">
+              Verify
+            </Text>{" "}
             button.
           </Text>
           <Text as="p" marginBottom={4}>

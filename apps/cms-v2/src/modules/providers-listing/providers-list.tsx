@@ -1,29 +1,28 @@
+import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
-import { ProvidersConfig } from "../configuration";
 
+import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
-
-import { ButtonsBox, Layout, SkeletonLayout } from "@saleor/apps-ui";
 
 const ProvidersTable = (props: { providers: ProvidersConfig.AnyFullShape[] }) => {
   const { push } = useRouter();
 
   return (
     <Box display="grid" __gridTemplateColumns="repeat(2, auto)" gap={4} alignItems="center">
-      <Text variant="caption">Configuration name</Text>
+      <Text size={2}>Configuration name</Text>
 
       <div />
 
       {props.providers.map((provider) => (
         <React.Fragment key={provider.id}>
           <Box>
-            <Text as="p" variant="bodyStrong">
+            <Text as="p" size={4} fontWeight="bold">
               {provider.configName}
             </Text>
-            <Text as="p" variant="caption">
+            <Text as="p" size={2}>
               {ProvidersResolver.createProviderMeta(provider.type).displayName}
             </Text>
           </Box>
@@ -88,7 +87,7 @@ export const ProvidersList = () => {
     >
       {data.length && (
         <Box>
-          <Text variant="heading" as="h2" marginBottom={4}>
+          <Text size={5} fontWeight="bold" as="h2" marginBottom={4}>
             Providers configurations
           </Text>
           <ProvidersTable providers={data} />

@@ -29,10 +29,8 @@ export const Table = {
   ),
   THead: (props: BoxProps) => <Box {...props} as="thead" />,
   TR: (props: BoxProps) => <Box {...props} as="tr" />,
-  TH: (props: BoxProps) => (
-    <Box fontWeight={"captionSmall"} fontSize={"captionSmall"} {...props} as="th" />
-  ),
+  TH: (props: BoxProps) => <Box fontWeight="regular" fontSize={1} {...props} as="th" />,
   TBody: (props: BoxProps) => <Box {...props} as="tbody" />,
-  TD: (props: BoxProps) => <Box fontSize="bodyMedium" paddingTop={2} {...props} as="td" />,
+  TD: (props: BoxProps) => <Box fontSize={4} paddingTop={2} {...props} as="td" />,
   Skeleton: () => <TableSkeleton />,
 };

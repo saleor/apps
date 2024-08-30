@@ -34,7 +34,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
-    "@saleor/macaw-ui": "1.0.0-pre.7",
+    "@saleor/macaw-ui": "1.1.10",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",

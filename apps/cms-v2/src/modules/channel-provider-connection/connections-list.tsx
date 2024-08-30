@@ -1,10 +1,10 @@
+import { SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import React from "react";
 
+import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
 import { ChanelProviderConnectionsSectionHeader } from "./channel-provider-connections-section-header";
-import { ProvidersResolver } from "../providers/providers-resolver";
-import { SkeletonLayout } from "@saleor/apps-ui";
 
 export const ConnectionsList = (props: { onRemove(connectionId: string): void }) => {
   const { data } = trpcClient.channelsProvidersConnection.fetchConnections.useQuery();
@@ -25,8 +25,8 @@ export const ConnectionsList = (props: { onRemove(connectionId: string): void })
         gap={4}
         alignItems="center"
       >
-        <Text variant="caption">Saleor Channel</Text>
-        <Text variant="caption">Target CMS</Text>
+        <Text size={2}>Saleor Channel</Text>
+        <Text size={2}>Target CMS</Text>
         <div />
         {data?.map((conn) => {
           const provider = providers.find((p) => p.id === conn.providerId);
@@ -42,7 +42,7 @@ export const ConnectionsList = (props: { onRemove(connectionId: string): void })
               <Text>{channels?.find((c) => c.slug === conn.channelSlug)?.name}</Text>
               <Text>
                 <Text>{provider.configName}</Text>
-                <Text color="textNeutralSubdued"> ({providerName})</Text>
+                <Text color="default2"> ({providerName})</Text>
               </Text>
               <Button onClick={() => props.onRemove(conn.id)} variant="tertiary">
                 Remove

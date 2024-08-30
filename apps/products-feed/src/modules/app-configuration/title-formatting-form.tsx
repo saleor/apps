@@ -1,13 +1,12 @@
-import { TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input } from "@saleor/react-hook-form-macaw";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui";
-
-import React, { useCallback, useMemo, useState } from "react";
-import { Input } from "@saleor/react-hook-form-macaw";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { trpcClient } from "../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
 
 type Props = {
   initialData: TitleTemplateInput;
@@ -33,7 +32,7 @@ export const TitleFormattingConfigurationForm = (props: Props) => {
       })}
     >
       <Input control={control} name="titleTemplate" label="Title template" />
-      {props.preview?.length && <Text variant="caption">{props.preview}</Text>}
+      {props.preview?.length && <Text size={2}>{props.preview}</Text>}
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button
           variant="secondary"

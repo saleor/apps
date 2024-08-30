@@ -15,7 +15,7 @@ import { FormSection } from "./form-section";
 const FieldSuggestion = ({ suggestion }: { suggestion: string }) => {
   return (
     <Box alignItems={"center"} display={"flex"} justifyContent={"space-between"} marginTop={1}>
-      <Text paddingLeft={2} color="textNeutralSubdued" variant="caption">
+      <Text paddingLeft={2} color="default2" size={2}>
         {suggestion}
       </Text>
     </Box>

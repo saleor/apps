@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, Box, Text } from "@saleor/macaw-ui";
 import { Select } from "@saleor/react-hook-form-macaw";
+import { TRPCError } from "@trpc/server";
 import { useForm } from "react-hook-form";
+
 import { ChannelProviderConnectionConfig } from "../configuration";
 import { trpcClient } from "../trpc/trpc-client";
-import { TRPCError } from "@trpc/server";
 
 export type AddConnectionFormSchema = Omit<
   ChannelProviderConnectionConfig.InputShape,
@@ -28,7 +29,7 @@ export const AddConnectionForm = (props: {
   } = useForm({
     defaultValues: props.defaultValues,
     resolver: zodResolver(
-      ChannelProviderConnectionConfig.Schema.Input.omit({ providerType: true })
+      ChannelProviderConnectionConfig.Schema.Input.omit({ providerType: true }),
     ),
   });
 
@@ -80,7 +81,7 @@ export const AddConnectionForm = (props: {
         />
       </Box>
       {errors.root?.serverError && (
-        <Text as="p" marginTop={2} color="textCriticalSubdued">
+        <Text as="p" marginTop={2} color="critical2">
           {errors.root?.serverError.message}
         </Text>
       )}

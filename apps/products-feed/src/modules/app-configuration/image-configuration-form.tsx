@@ -1,13 +1,12 @@
-import { ImageSizeInput, imageSizeInputSchema } from "./app-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Select } from "@saleor/react-hook-form-macaw";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui";
-
-import React, { useCallback, useMemo } from "react";
-import { Select } from "@saleor/react-hook-form-macaw";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { trpcClient } from "../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { ImageSizeInput, imageSizeInputSchema } from "./app-config";
 
 type Props = {
   initialData: ImageSizeInput;
@@ -38,7 +37,7 @@ export const ImageConfigurationForm = (props: Props) => {
     >
       <Select control={control} name="imageSize" label="Image size" options={imageSizeOptions} />
       {!!formState.errors.imageSize?.message && (
-        <Text variant="caption" color={"textCriticalSubdued"}>
+        <Text size={2} color={"default2"}>
           {formState.errors.imageSize?.message}
         </Text>
       )}

@@ -7,12 +7,12 @@ export const Modal = ({ onClose, ...rest }: { onClose(): void } & BoxProps) => {
         padding={6}
         borderWidth={1}
         borderRadius={4}
-        borderColor="neutralHighlight"
+        borderColor="default1"
         as="dialog"
         __maxWidth="400px"
-        boxShadow={"modal"}
-        backgroundColor="surfaceNeutralPlain"
-        color="textNeutralDefault"
+        boxShadow="defaultModal"
+        backgroundColor="default1"
+        color="default1"
         open
         {...rest}
       />

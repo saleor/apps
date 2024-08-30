@@ -25,7 +25,9 @@ export const ProviderLabel = ({ name }: { name: ProviderNameWithStripeTax }) => 
   return (
     <Box alignItems={"center"} display={"flex"} gap={3}>
       <Image src={icon} width={20} height={20} alt={`provider icon`} />
-      <Text variant="bodyStrong">{label}</Text>
+      <Text size={4} fontWeight="bold">
+        {label}
+      </Text>
     </Box>
   );
 };

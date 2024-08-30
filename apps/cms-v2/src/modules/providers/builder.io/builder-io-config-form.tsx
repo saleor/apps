@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
+
 import { BuilderIoProviderConfig, SaleorProviderFieldsMappingKeys } from "../../configuration";
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { ButtonsBox, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<BuilderIoProviderConfig.InputShape, "type">;
 const FormSchema = BuilderIoProviderConfig.Schema.Input.omit({ type: true });
@@ -42,7 +43,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide connection details</Text>
+        <Text size={5} fontWeight="bold">
+          Provide connection details
+        </Text>
         <Input
           type="password"
           required
@@ -50,9 +53,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           name="privateApiKey"
           label="Private API key (write API)"
           helperText={
-            <Text variant="caption">
+            <Text size={3}>
               You can find it in and generate in{" "}
-              <TextLink size="small" newTab href="https://builder.io/account/space">
+              <TextLink size={1} newTab href="https://builder.io/account/space">
                 account settings
               </TextLink>
             </Text>
@@ -65,9 +68,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           name="publicApiKey"
           label="Public API key (read API)"
           helperText={
-            <Text variant="caption">
+            <Text size={3}>
               You can find it in{" "}
-              <TextLink size="small" newTab href="https://builder.io/account/space">
+              <TextLink size={1} newTab href="https://builder.io/account/space">
                 account settings
               </TextLink>
             </Text>
@@ -75,7 +78,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         />
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Configure fields mapping</Text>
+        <Text size={5} fontWeight="bold">
+          Configure fields mapping
+        </Text>
         <Input
           required
           control={control}
@@ -85,12 +90,19 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           placeholder="saleor-variant"
         />
 
-        <Text as="p" variant="heading" size="small">
+        <Text as="p" size={4} fontWeight="bold">
           Map fields from Saleor to your contentful schema.
         </Text>
         <Text as="p" marginTop={2} marginBottom={4}>
-          All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
-          type of <Text variant="bodyStrong">JSON</Text>.
+          All fields should be type of{" "}
+          <Text size={4} fontWeight="bold">
+            Text
+          </Text>
+          . Channels should be type of{" "}
+          <Text size={4} fontWeight="bold">
+            JSON
+          </Text>
+          .
         </Text>
         <Box
           marginBottom={4}
@@ -98,11 +110,11 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
           __gridTemplateColumns={"50% 50%"}
           borderBottomWidth={1}
           borderBottomStyle="solid"
-          borderColor="neutralHighlight"
+          borderColor="default1"
           padding={2}
         >
-          <Text variant="caption">Saleor Field</Text>
-          <Text variant="caption">Builder.io field</Text>
+          <Text size={2}>Saleor Field</Text>
+          <Text size={2}>Builder.io field</Text>
         </Box>
         {SaleorProviderFieldsMappingKeys.map((saleorField) => (
           // todo extract this table to component
@@ -114,12 +126,10 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             alignItems="center"
           >
             <Box>
-              <Text as="p" variant="bodyStrong">
+              <Text as="p" size={4} fontWeight="bold">
                 {printSaleorProductFields(saleorField)}
               </Text>
-              <Text variant="caption">
-                {saleorField === "channels" ? "JSON field" : "Text field"}
-              </Text>
+              <Text size={2}>{saleorField === "channels" ? "JSON field" : "Text field"}</Text>
             </Box>
             <Input
               size="small"

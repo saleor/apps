@@ -1,10 +1,9 @@
 import { useAppBridge, useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
-
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Breadcrumbs, ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+
 import { useAppApi } from "../hooks/useAppApi";
 
 interface ConfigurationField {
@@ -15,7 +14,7 @@ interface ConfigurationField {
 function Instructions() {
   return (
     <Box>
-      <Text as={"h3"} variant="heading" marginY={4}>
+      <Text as={"h3"} fontWeight="bold" size={5} marginY={4}>
         How to set up
       </Text>
       <Text as="p" marginBottom={2}>
@@ -27,7 +26,7 @@ function Instructions() {
       <Text as="p" marginBottom={4}>
         Metric name can be customized, PUBLIC_TOKEN must be provided to enable the app.
       </Text>
-      <Text as={"h3"} variant="heading">
+      <Text as={"h3"} fontWeight="bold" size={5}>
         Useful links
       </Text>
       <ul>
@@ -37,7 +36,7 @@ function Instructions() {
           </TextLink>
         </li>
       </ul>
-      <Text as={"h3"} variant="heading">
+      <Text as={"h3"} fontWeight="bold" size={5}>
         How to configure
       </Text>
       <ul>

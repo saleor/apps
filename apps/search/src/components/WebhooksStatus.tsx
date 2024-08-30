@@ -30,20 +30,20 @@ export const WebhooksStatus = () => {
               value={webhook.id}
               key={webhook.id}
               borderBottomStyle={"solid"}
-              borderColor={"neutralPlain"}
+              borderColor={"default1"}
               borderBottomWidth={1}
             >
               <Accordion.Trigger paddingBottom={1.5}>
                 <Box width={"100%"} display={"flex"} gap={2} alignItems={"center"}>
-                  <Text size={"small"} flexGrow="1">
+                  <Text size={3} flexGrow="1">
                     {webhook.asyncEvents[0].name}
                   </Text>
                   {webhook.isActive ? (
-                    <SemanticChip marginLeft={"auto"} size={"small"} variant={"success"}>
+                    <SemanticChip marginLeft={"auto"} size="small" variant={"success"}>
                       ACTIVE
                     </SemanticChip>
                   ) : (
-                    <SemanticChip marginLeft={"auto"} size={"small"} variant={"error"}>
+                    <SemanticChip marginLeft={"auto"} size="small" variant={"error"}>
                       DISABLED
                     </SemanticChip>
                   )}
@@ -52,10 +52,12 @@ export const WebhooksStatus = () => {
               </Accordion.Trigger>
               <Accordion.Content>
                 <Box marginY={3}>
-                  <Text variant={"bodyStrong"}>Delivery attempts</Text>
+                  <Text size={4} fontWeight="bold">
+                    Delivery attempts
+                  </Text>
                   {!hasFailedDeliveries ? (
                     <Box>
-                      <Text size={"small"}>No failed deliveries</Text>
+                      <Text size={3}>No failed deliveries</Text>
                     </Box>
                   ) : null}
                   <Box>
@@ -68,17 +70,15 @@ export const WebhooksStatus = () => {
                             gap={1}
                             key={attempt.node.id}
                           >
-                            <Text display={"block"} size={"small"}>
-                              <Text color={"textNeutralSubdued"}>Status</Text>:{" "}
-                              <Text color={"textCriticalSubdued"}>{attempt.node.status}</Text>
+                            <Text display={"block"} size={3}>
+                              <Text color={"default2"}>Status</Text>:{" "}
+                              <Text color={"critical2"}>{attempt.node.status}</Text>
                             </Text>
-                            <Text display={"block"} size={"small"}>
-                              <Text color={"textNeutralSubdued"}>HTTP </Text>
-                              <Text color={"textCriticalSubdued"}>
-                                {attempt.node.responseStatusCode}
-                              </Text>
+                            <Text display={"block"} size={3}>
+                              <Text color={"default2"}>HTTP </Text>
+                              <Text color={"critical2"}>{attempt.node.responseStatusCode}</Text>
                             </Text>
-                            <Text display={"block"} size={"small"} marginLeft={"auto"}>
+                            <Text display={"block"} size={3} marginLeft={"auto"}>
                               {new Date(attempt.node.createdAt).toLocaleString()}
                             </Text>
                           </Box>

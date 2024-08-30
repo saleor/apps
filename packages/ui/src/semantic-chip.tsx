@@ -1,26 +1,26 @@
-import { BoxProps, Chip, ChipProps, Text, TextProps } from "@saleor/macaw-ui";
+import { BoxProps, Chip, ChipProps, convertSizeToScale, Text, TextProps } from "@saleor/macaw-ui";
 
 type ChipVariant = "default" | "warning" | "error" | "success";
 
 const colorPropsBorderMapping: Record<ChipVariant, BoxProps["borderColor"]> = {
-  default: "neutralSubdued",
-  warning: "criticalDefault",
-  error: "criticalDefault",
-  success: "neutralDefault",
+  default: "default1",
+  warning: "warning1",
+  error: "critical1",
+  success: "success1",
 };
 
 const colorPropsTextMapping: Record<ChipVariant, BoxProps["color"]> = {
-  default: "textNeutralPlain",
-  warning: "textCriticalDefault",
-  error: "textCriticalDefault",
-  success: "text2Decorative",
+  default: "default1",
+  warning: "warning1",
+  error: "critical1",
+  success: "success1",
 };
 
 const colorPropsBgMapping: Record<ChipVariant, BoxProps["backgroundColor"]> = {
-  default: "surfaceNeutralHighlight",
-  warning: "surfaceNeutralHighlight",
-  error: "surfaceCriticalSubdued",
-  success: "decorativeSurfaceSubdued2",
+  default: "default1",
+  warning: "warning1",
+  error: "critical1",
+  success: "success1",
 };
 
 interface ChipTextProps extends ChipProps {
@@ -44,8 +44,7 @@ export const SemanticChip = ({
     >
       <Text
         color={colorPropsTextMapping[variant]}
-        size={size}
-        variant={"caption"}
+        size={convertSizeToScale(size)}
         {...innerTextProps}
       >
         {children}

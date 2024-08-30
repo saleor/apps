@@ -1,7 +1,8 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
+
+import { BoxFooter } from "../../../components/box-footer";
 import { BoxWithBorder } from "../../../components/box-with-border";
 import { defaultPadding } from "../../../components/ui-defaults";
-import { BoxFooter } from "../../../components/box-footer";
 
 interface ProviderSelectionBoxProps {
   providerName: string;
@@ -22,7 +23,9 @@ export const ProviderSelectionBox = (props: ProviderSelectionBoxProps) => {
           paddingBottom={defaultPadding}
         >
           {props.providerLogo}
-          <Text variant="heading">{props.providerName}</Text>
+          <Text size={5} fontWeight="bold">
+            {props.providerName}
+          </Text>
         </Box>
         <Text>{props.providerDescription}</Text>
       </Box>

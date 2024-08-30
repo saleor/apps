@@ -1,4 +1,5 @@
 import { Text } from "@saleor/macaw-ui";
+
 import { useWebhooksStatus } from "../lib/useWebhooksStatus";
 
 export const WebhooksStatusInstructions = () => {
@@ -10,7 +11,7 @@ export const WebhooksStatusInstructions = () => {
         <Text as={"p"} marginBottom={1.5}>
           Check status of registered webhooks.
         </Text>
-        <Text as={"p"} color={"iconCriticalDefault"}>
+        <Text as={"p"} color="critical1">
           Your webhooks were disabled. Most likely, your configuration is invalid. Please check your
           credentials
         </Text>
