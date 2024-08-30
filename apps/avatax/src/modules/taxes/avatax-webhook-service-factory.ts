@@ -1,5 +1,12 @@
 import { err, ok } from "neverthrow";
 
+import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
+import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
+import { AvataxOrderConfirmedAdapter } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter";
+import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
+
 import { BaseError } from "../../error";
 import { AppConfig } from "../../lib/app-config";
 import { AvataxClient } from "../avatax/avatax-client";
@@ -25,10 +32,16 @@ export class AvataxWebhookServiceFactory {
       );
     }
 
+    const avaTaxSdk = new AvataxSdkClientFactory().createClient(
+      channelConfig.value.avataxConfig.config,
+    );
+    const avaTaxClient = new AvataxClient(avaTaxSdk);
+
     const taxProvider = new AvataxWebhookService(
-      new AvataxClient(
-        new AvataxSdkClientFactory().createClient(channelConfig.value.avataxConfig.config),
-      ),
+      new AvataxCalculateTaxesAdapter(avaTaxClient),
+      new AvataxCalculateTaxesPayloadTransformer(),
+      new AvataxOrderCancelledAdapter(avaTaxClient),
+      new AvataxOrderConfirmedAdapter(avaTaxClient),
     );
 
     return ok({ taxProvider });
