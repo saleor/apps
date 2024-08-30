@@ -1,14 +1,14 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
 import { Breadcrumbs, ButtonsBox, Layout } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui";
 import { useEffect, useRef, useState } from "react";
-import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configuration";
-import { AppHeader } from "../ui/app-header";
 
+import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configuration";
+import { ProvidersResolver } from "../providers/providers-resolver";
+import { AppHeader } from "../ui/app-header";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";
 import { useFetchAllProducts } from "./use-fetch-all-products";
 import { VariantsSyncStatusList } from "./variants-sync-status-list";
-import { ProvidersResolver } from "../providers/providers-resolver";
-import { useDashboardNotification } from "@saleor/apps-shared";
 
 const FetchProductsStep = (props: { onButtonClick(): void }) => {
   return (
@@ -19,7 +19,7 @@ const FetchProductsStep = (props: { onButtonClick(): void }) => {
         </ButtonsBox>
       }
     >
-      <Text variant="heading" as="h2" marginBottom={4}>
+      <Text size={5} fontWeight="bold" as="h2" marginBottom={4}>
         Saleor products fetch
       </Text>
       <Text as="p">Click the button to start fetching products from Saleor API</Text>
@@ -31,7 +31,7 @@ const FetchProductsStep = (props: { onButtonClick(): void }) => {
 const SaleorProductsFetchingStep = () => {
   return (
     <Box>
-      <Text variant="heading" as="h2" marginBottom={4}>
+      <Text size={5} fontWeight="bold" as="h2" marginBottom={4}>
         Saleor products fetch
       </Text>
       <Text as="p">Fetching...</Text>
@@ -42,7 +42,7 @@ const SaleorProductsFetchingStep = () => {
 const SaleorProductsFetchedStep = (props: { productsNo: number; variantsNo: number }) => {
   return (
     <Box>
-      <Text variant="heading" as="h2" marginBottom={4}>
+      <Text size={5} fontWeight="bold" as="h2" marginBottom={4}>
         Saleor products fetch
       </Text>
       <Text as="p">
@@ -164,7 +164,7 @@ export const BulkSyncView = ({
           sideContent={<Text>Send listed variants to the CMS</Text>}
         >
           <Layout.AppSectionCard>
-            <Text as="h2" marginBottom={4} variant="heading">
+            <Text as="h2" marginBottom={4} size={5} fontWeight="bold">
               Upload products
             </Text>
             {state === "fetched" && (

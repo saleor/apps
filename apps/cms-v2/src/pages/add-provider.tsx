@@ -1,10 +1,11 @@
-import { CMSProviders } from "@/modules/providers/providers-registry";
-import { AppHeader } from "@/modules/ui/app-header";
 import { Breadcrumbs, Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
+
+import { CMSProviders } from "@/modules/providers/providers-registry";
+import { AppHeader } from "@/modules/ui/app-header";
 
 const AddProviderPage: NextPage = () => {
   const { push } = useRouter();
@@ -37,7 +38,7 @@ const AddProviderPage: NextPage = () => {
                   <Box width="100%" as="img" src={p.logoUrl} />
                 </Box>
                 <Box>
-                  <Text as="h2" marginBottom={4} variant="heading">
+                  <Text as="h2" marginBottom={4} size={5} fontWeight="bold">
                     {p.displayName}
                   </Text>
                   <Text>{p.description}</Text>

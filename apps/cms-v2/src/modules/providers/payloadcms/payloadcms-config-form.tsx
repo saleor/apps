@@ -1,15 +1,17 @@
-import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+
+import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { ButtonsBox, TextLink } from "@saleor/apps-ui";
 
 type FormShape = Omit<PayloadCmsProviderConfig.InputShape, "type">;
 
@@ -47,7 +49,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         helperText="Meaningful name that will help you understand it later. E.g. 'staging' or 'prod' "
       />
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide connection details</Text>
+        <Text size={5} fontWeight="bold">
+          Provide connection details
+        </Text>
         <Input
           required
           control={control}
@@ -58,14 +62,14 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         />
 
         <Box
-          backgroundColor="surfaceNeutralHighlight"
-          borderColor="neutralHighlight"
+          backgroundColor="default1"
+          borderColor="default1"
           borderWidth={1}
           borderStyle={"solid"}
           padding={4}
           borderRadius={4}
         >
-          <Text variant="heading" as="h1" marginBottom={4}>
+          <Text size={5} fontWeight="bold" as="h1" marginBottom={4}>
             Authorization
           </Text>
           <Text marginBottom={2} as="p">
@@ -97,7 +101,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         </Box>
       </Box>
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Configure fields mapping</Text>
+        <Text size={5} fontWeight="bold">
+          Configure fields mapping
+        </Text>
         <Input
           label="Collection Slug"
           name="collectionName"
@@ -106,12 +112,19 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
         />
 
         <React.Fragment>
-          <Text as="p" variant="heading" size="small">
+          <Text as="p" size={4} fontWeight="bold">
             Map fields from Saleor to your Payload schema.
           </Text>
           <Text as="p" marginTop={2} marginBottom={4}>
-            All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should be
-            type of <Text variant="bodyStrong">JSON</Text>.
+            All fields should be type of{" "}
+            <Text size={4} fontWeight="bold">
+              Text
+            </Text>
+            . Channels should be type of{" "}
+            <Text size={4} fontWeight="bold">
+              JSON
+            </Text>
+            .
           </Text>
           <Box
             marginBottom={4}
@@ -119,11 +132,11 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
             __gridTemplateColumns={"50% 50%"}
             borderBottomWidth={1}
             borderBottomStyle="solid"
-            borderColor="neutralHighlight"
+            borderColor="default1"
             padding={2}
           >
-            <Text variant="caption">Saleor Field</Text>
-            <Text variant="caption">Payload field</Text>
+            <Text size={2}>Saleor Field</Text>
+            <Text size={2}>Payload field</Text>
           </Box>
           {SaleorProviderFieldsMappingKeys.map((saleorField) => (
             // todo extract this table to component
@@ -135,12 +148,10 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
               alignItems="center"
             >
               <Box>
-                <Text as="p" variant="bodyStrong">
+                <Text as="p" size={4} fontWeight="bold">
                   {printSaleorProductFields(saleorField)}
                 </Text>
-                <Text variant="caption">
-                  {saleorField === "channels" ? "JSON field" : "Text field"}
-                </Text>
+                <Text size={2}>{saleorField === "channels" ? "JSON field" : "Text field"}</Text>
               </Box>
               <Input
                 size="small"

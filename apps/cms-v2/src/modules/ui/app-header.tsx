@@ -30,7 +30,7 @@ export const AppHeader = ({
       marginBottom={14}
       borderBottomWidth={1}
       borderBottomStyle="solid"
-      borderColor={"neutralHighlight"}
+      borderColor="default1"
       paddingBottom={6}
       {...props}
     >

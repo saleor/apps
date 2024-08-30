@@ -1,15 +1,17 @@
-import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+
+import { SaleorProviderFieldsMappingKeys } from "@/modules/configuration";
+import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
+
 import { printSaleorProductFields } from "../../configuration/print-saleor-product-fields";
 import { trpcClient } from "../../trpc/trpc-client";
-import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
-import { ButtonsBox } from "@saleor/apps-ui";
 
 type FormShape = Omit<DatocmsProviderConfig.InputShape, "type">;
 
@@ -136,7 +138,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       />
 
       <Box display={"grid"} gap={4} marginY={4}>
-        <Text variant="heading">Provide connection details</Text>
+        <Text size={5} fontWeight="bold">
+          Provide connection details
+        </Text>
         <Input
           required
           control={control}
@@ -149,7 +153,9 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
       </Box>
       {contentTypesSelectOptions && (
         <Box display={"grid"} gap={4} marginY={4}>
-          <Text variant="heading">Configure fields mapping</Text>
+          <Text size={5} fontWeight="bold">
+            Configure fields mapping
+          </Text>
           <Select
             label="Item type"
             options={contentTypesSelectOptions}
@@ -160,12 +166,19 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 
           {fieldsData && (
             <React.Fragment>
-              <Text as="p" variant="heading" size="small">
+              <Text as="p" size={4} fontWeight="bold">
                 Map fields from Saleor to your DatoCMS schema.
               </Text>
               <Text as="p" marginTop={2} marginBottom={4}>
-                All fields should be type of <Text variant="bodyStrong">Text</Text>. Channels should
-                be type of <Text variant="bodyStrong">JSON</Text>.
+                All fields should be type of{" "}
+                <Text size={4} fontWeight="bold">
+                  Text
+                </Text>
+                . Channels should be type of{" "}
+                <Text size={4} fontWeight="bold">
+                  JSON
+                </Text>
+                .
               </Text>
               <Box
                 marginBottom={4}
@@ -173,11 +186,11 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
                 __gridTemplateColumns={"50% 50%"}
                 borderBottomWidth={1}
                 borderBottomStyle="solid"
-                borderColor="neutralHighlight"
+                borderColor="default1"
                 padding={2}
               >
-                <Text variant="caption">Saleor Field</Text>
-                <Text variant="caption">DatoCMS field</Text>
+                <Text size={2}>Saleor Field</Text>
+                <Text size={2}>DatoCMS field</Text>
               </Box>
               {SaleorProviderFieldsMappingKeys.map((saleorField) => (
                 // todo extract this table to component
@@ -189,12 +202,10 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
                   alignItems="center"
                 >
                   <Box>
-                    <Text as="p" variant="bodyStrong">
+                    <Text as="p" size={4} fontWeight="bold">
                       {printSaleorProductFields(saleorField)}
                     </Text>
-                    <Text variant="caption">
-                      {saleorField === "channels" ? "JSON field" : "Text field"}
-                    </Text>
+                    <Text size={2}>{saleorField === "channels" ? "JSON field" : "Text field"}</Text>
                   </Box>
                   <Select
                     size="small"
