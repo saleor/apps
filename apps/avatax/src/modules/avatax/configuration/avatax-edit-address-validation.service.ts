@@ -1,5 +1,12 @@
 import { Client } from "urql";
 
+import { metadataCache } from "@/lib/app-metadata-cache";
+import { createSettingsManager } from "@/modules/app/metadata-manager";
+import { AvataxConnectionService } from "@/modules/avatax/configuration/avatax-connection.service";
+import { AvataxConnectionRepository } from "@/modules/avatax/configuration/avatax-connection-repository";
+import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
+
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
@@ -26,11 +33,17 @@ export class AvataxEditAddressValidationService {
   }
 
   async validate(id: string, input: AvataxConfig) {
-    const transformer = new AvataxPatchInputTransformer({
-      client: this.client,
-      appId: this.appId,
-      saleorApiUrl: this.saleorApiUrl,
-    });
+    const transformer = new AvataxPatchInputTransformer(
+      new AvataxConnectionService(
+        new AvataxConnectionRepository(
+          new CrudSettingsManager(
+            createSettingsManager(this.client, this.appId, metadataCache),
+            this.saleorApiUrl,
+            TAX_PROVIDER_KEY,
+          ),
+        ),
+      ),
+    );
 
     const config = await transformer.patchInput(id, input);
 

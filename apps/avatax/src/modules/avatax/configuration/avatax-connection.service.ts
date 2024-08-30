@@ -1,12 +1,5 @@
 import { DeepPartial, TRPCError } from "@trpc/server";
-import { Client } from "urql";
 
-import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
-import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
-
-import { metadataCache } from "../../../lib/app-metadata-cache";
-import { createLogger } from "../../../logger";
-import { createSettingsManager } from "../../app/metadata-manager";
 import { AvataxInvalidCredentialsError } from "../../taxes/tax-error";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
@@ -15,23 +8,7 @@ import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
 import { AvataxConnectionRepository } from "./avatax-connection-repository";
 
 export class AvataxConnectionService {
-  private avataxConnectionRepository: AvataxConnectionRepository;
-
-  constructor({
-    client,
-    appId,
-    saleorApiUrl,
-  }: {
-    client: Client;
-    appId: string;
-    saleorApiUrl: string;
-  }) {
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    this.avataxConnectionRepository = new AvataxConnectionRepository(
-      new CrudSettingsManager(settingsManager, saleorApiUrl, TAX_PROVIDER_KEY),
-    );
-  }
+  constructor(private avataxConnectionRepository: AvataxConnectionRepository) {}
 
   private async checkIfAuthorized(input: AvataxConfig) {
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(input));
