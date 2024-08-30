@@ -37,19 +37,3 @@ body:graphql:vars {
 vars:post-response {
   staffToken: res.body.data.tokenCreate.token
 }
-
-script:pre-request {
-  const { faker } = require('@faker-js/faker');
-  
-  const configuredEmail = bru.getProcessEnv("STAFF_USER_EMAIL");
-  
-  if (configuredEmail) {
-    bru.setVar("staffUserEmail", configuredEmail);
-  }
-  
-  const configuredPassword = bru.getProcessEnv("STAFF_USER_PASSWORD");
-  
-  if (configuredPassword) {
-    bru.setVar("staffUserPassword", configuredPassword);
-  }
-}

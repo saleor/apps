@@ -82,9 +82,17 @@ After that, you have to prepare an environment for Bruno. Environments are a set
 To use your own storefront user create `.env` file inside `bruno` folder with:
 
 ```
+SALEOR_API_URL=
+
 STOREFRONT_USER_EMAIL=
 STOREFRONT_USER_PASSWORD=
 STOREFRONT_USER_NAME=
+
+STAFF_USER_EMAIL=
+STAFF_USER_PASSWORD=
+
+CHANNEL_SLUG=
+PROMO_CODE=
 ```
 
 The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment e.g `cloud.bru` (which will be ignored by git).
