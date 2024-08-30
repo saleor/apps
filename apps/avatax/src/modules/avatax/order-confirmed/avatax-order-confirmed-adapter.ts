@@ -1,11 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 
-import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
-import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
-import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
-import { AvataxOrderConfirmedPayloadTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload-transformer";
-import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
-
 import { createLogger } from "../../../logger";
 import {
   DeprecatedOrderConfirmedSubscriptionFragment,

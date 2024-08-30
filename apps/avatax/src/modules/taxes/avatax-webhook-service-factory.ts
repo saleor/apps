@@ -4,7 +4,6 @@ import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculati
 import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
@@ -16,7 +15,6 @@ import { AvataxOrderConfirmedPayloadService } from "@/modules/avatax/order-confi
 import { AvataxOrderConfirmedPayloadTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload-transformer";
 import { AvataxOrderConfirmedResponseTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-response-transformer";
 import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
-import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 
 import { BaseError } from "../../error";
 import { AppConfig } from "../../lib/app-config";
