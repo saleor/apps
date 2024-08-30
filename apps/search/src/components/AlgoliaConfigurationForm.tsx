@@ -1,17 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { algoliaCredentialsVerifier } from "../lib/algolia/algolia-credentials-verifier";
 import {
   AppConfigurationFields,
   AppConfigurationSchema,
 } from "../modules/configuration/configuration";
 import { trpcClient } from "../modules/trpc/trpc-client";
-import { Layout } from "@saleor/apps-ui";
-import { algoliaCredentialsVerifier } from "../lib/algolia/algolia-credentials-verifier";
 
 export const AlgoliaConfigurationForm = () => {
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -112,7 +113,7 @@ export const AlgoliaConfigurationForm = () => {
 
         {credentialsValidationError && (
           <Box marginTop={5}>
-            <Text color={"textCriticalDefault"}>
+            <Text color={"critical1"}>
               Could not connect to Algolia. Please verify your credentials
             </Text>
           </Box>

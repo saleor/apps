@@ -1,10 +1,11 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
-import { Products, useQueryAllProducts } from "./useQueryAllProducts";
-import { trpcClient } from "../modules/trpc/trpc-client";
 import { Layout } from "@saleor/apps-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { algoliaCredentialsVerifier } from "../lib/algolia/algolia-credentials-verifier";
+import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { trpcClient } from "../modules/trpc/trpc-client";
+import { Products, useQueryAllProducts } from "./useQueryAllProducts";
 
 const BATCH_SIZE = 100;
 
@@ -83,19 +84,19 @@ export const ImportProductsToAlgolia = () => {
     >
       {searchProvider && algoliaConfigured ? (
         <Box>
-          <Text variant={"heading"} as={"p"} marginBottom={1.5}>
+          <Text size={5} fontWeight="bold" as={"p"} marginBottom={1.5}>
             Importing products & variants
           </Text>
           <Text as={"p"}>
             Trigger initial indexing for products catalogue. It can take few minutes.{" "}
           </Text>
-          <Text marginBottom={5} variant={"bodyStrong"}>
+          <Text marginBottom={5} size={4} fontWeight="bold">
             Do not close the app - its running client-side
           </Text>
         </Box>
       ) : (
         <Box>
-          <Text variant={"heading"} as={"p"} color={"textCriticalDefault"} marginBottom={1.5}>
+          <Text size={5} fontWeight="bold" as={"p"} color={"critical1"} marginBottom={1.5}>
             App not configured
           </Text>
           <Text>Configure Algolia first</Text>
