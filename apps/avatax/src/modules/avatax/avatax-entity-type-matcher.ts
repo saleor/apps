@@ -1,12 +1,6 @@
 import { createLogger } from "../../logger";
 import { AvataxClient } from "./avatax-client";
 
-/*
- * Arbitrary key-value pair that is used to store the entity code in the metadata.
- * see: https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax#mapping-the-entity-type
- */
-const AVATAX_ENTITY_CODE = "avataxEntityCode";
-
 export class AvataxEntityTypeMatcher {
   private logger = createLogger("AvataxEntityTypeMatcher");
 

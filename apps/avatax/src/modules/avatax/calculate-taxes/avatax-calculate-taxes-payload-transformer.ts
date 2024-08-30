@@ -38,11 +38,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
-    const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
-    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
-    const entityTypeMatcher = new AvataxEntityTypeMatcher(avataxClient);
-
-    const entityUseCode = await entityTypeMatcher.match(
+    const entityUseCode = await this.avataxEntityTypeMatcher.match(
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
@@ -67,7 +63,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: payloadLinesTransformer.transform(
+        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transform(
           payload.taxBase,
           avataxConfig,
           matches,

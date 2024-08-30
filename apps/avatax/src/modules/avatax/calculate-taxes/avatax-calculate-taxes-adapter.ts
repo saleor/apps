@@ -15,7 +15,10 @@ const errorParser = new AvataxErrorsParser(Sentry.captureException);
 export class AvataxCalculateTaxesAdapter {
   private logger = createLogger("AvataxCalculateTaxesAdapter");
 
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private avataxClient: AvataxClient,
+    private avataxCalculateTaxesResponseTransformer: AvataxCalculateTaxesResponseTransformer,
+  ) {}
 
   async send(avataxModel: AvataxCalculateTaxesTarget): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
@@ -34,9 +37,7 @@ export class AvataxCalculateTaxesAdapter {
         taxCalculationSummary: response.summary,
       });
 
-      const responseTransformer = new AvataxCalculateTaxesResponseTransformer();
-
-      const transformedResponse = responseTransformer.transform(response);
+      const transformedResponse = this.avataxCalculateTaxesResponseTransformer.transform(response);
 
       this.logger.debug("Transformed AvaTax createTransaction response");
 
