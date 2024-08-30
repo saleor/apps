@@ -1,7 +1,9 @@
 import { err, ok } from "neverthrow";
 
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter";
@@ -39,7 +41,10 @@ export class AvataxWebhookServiceFactory {
 
     const taxProvider = new AvataxWebhookService(
       new AvataxCalculateTaxesAdapter(avaTaxClient),
-      new AvataxCalculateTaxesPayloadTransformer(),
+      new AvataxCalculateTaxesPayloadTransformer(
+        new AvataxCalculateTaxesPayloadLinesTransformer(),
+        new AvataxEntityTypeMatcher(avaTaxClient),
+      ),
       new AvataxOrderCancelledAdapter(avaTaxClient),
       new AvataxOrderConfirmedAdapter(avaTaxClient),
     );

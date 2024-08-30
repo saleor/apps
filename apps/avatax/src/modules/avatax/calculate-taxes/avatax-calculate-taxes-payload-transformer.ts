@@ -12,6 +12,11 @@ import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-reposito
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 export class AvataxCalculateTaxesPayloadTransformer {
+  constructor(
+    private avaTaxCalculateTaxesPayloadLinesTransformer: AvataxCalculateTaxesPayloadLinesTransformer,
+    private avataxEntityTypeMatcher: AvataxEntityTypeMatcher,
+  ) {}
+
   private matchDocumentType(config: AvataxConfig): DocumentType {
     /*
      * * For calculating taxes, we always use DocumentType.SalesOrder because it doesn't cause transaction recording.
@@ -22,6 +27,11 @@ export class AvataxCalculateTaxesPayloadTransformer {
     return DocumentType.SalesOrder;
   }
 
+  /**
+   * TODO: Get rid off async mapping!
+   * - Extract all dynamic stuff outside
+   * - Only map, without side effects here
+   */
   async transform(
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
@@ -30,7 +40,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
-    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
+    const entityTypeMatcher = new AvataxEntityTypeMatcher(avataxClient);
 
     const entityUseCode = await entityTypeMatcher.match(
       payload.taxBase.sourceObject.avataxEntityCode,

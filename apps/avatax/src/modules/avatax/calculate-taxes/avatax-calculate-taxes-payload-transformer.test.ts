@@ -1,6 +1,9 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
 
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
+
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
@@ -22,12 +25,15 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       },
     } as unknown as CalculateTaxesPayload;
 
-    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
-      payloadMock,
-      avataxConfigMock,
-      matchesMock,
-      discountsStrategy,
-    );
+    const payload = await new AvataxCalculateTaxesPayloadTransformer(
+      new AvataxCalculateTaxesPayloadLinesTransformer(),
+      new AvataxEntityTypeMatcher({
+        async getEntityUseCode() {
+          // todo
+          return { "@recordsetCount": 1, value: [] };
+        },
+      }),
+    ).transform(payloadMock, avataxConfigMock, matchesMock, discountsStrategy);
 
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
   });
@@ -47,12 +53,15 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       },
     } as unknown as CalculateTaxesPayload;
 
-    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
-      payloadMock,
-      avataxConfigMock,
-      matchesMock,
-      discountsStrategy,
-    );
+    const payload = await new AvataxCalculateTaxesPayloadTransformer(
+      new AvataxCalculateTaxesPayloadLinesTransformer(),
+      new AvataxEntityTypeMatcher({
+        async getEntityUseCode() {
+          // todo
+          return { "@recordsetCount": 1, value: [] };
+        },
+      }),
+    ).transform(payloadMock, avataxConfigMock, matchesMock, discountsStrategy);
 
     expect(payload.model.discount).toBe(21.37);
   });

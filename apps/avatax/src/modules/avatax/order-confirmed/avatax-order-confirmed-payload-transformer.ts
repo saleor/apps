@@ -61,7 +61,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     discountsStrategy: PriceReductionDiscountsStrategy;
   }): Promise<CreateTransactionArgs> {
     const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
-    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
+    const entityTypeMatcher = new AvataxEntityTypeMatcher(this.avataxClient);
     const dateResolver = new AvataxCalculationDateResolver();
     const documentCodeResolver = new AvataxDocumentCodeResolver();
 
