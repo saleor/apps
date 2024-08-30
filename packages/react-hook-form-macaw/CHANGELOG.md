@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.10
+
+### Patch Changes
+
+- 6fed4b19: Migrate to new newest MacawUI version. Functionally nothing has changed. UI may look a bit different but it will be on par with Dashboard UI.
+
 ## 0.2.9
 
 ### Patch Changes
