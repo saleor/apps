@@ -1,5 +1,6 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui";
+
 import { useGetFeedApiUrl } from "../feed-url/use-get-feed-api-url";
 
 interface FeedPreviewCardProps {
@@ -22,7 +23,7 @@ export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPrev
 
   return (
     <Box {...props}>
-      <Text variant={"heading"} as={"h2"} marginBottom={1.5}>
+      <Text size={5} fontWeight="bold" as={"h2"} marginBottom={1.5}>
         Test your feed
       </Text>
       <Input

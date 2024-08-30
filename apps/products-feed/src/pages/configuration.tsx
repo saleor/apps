@@ -1,19 +1,18 @@
-import { NextPage } from "next";
-import React from "react";
-
-import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
+
+import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
+import { useChannelsExistenceChecking } from "../modules/app-configuration/channels/use-channels-existence-checking";
+import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
+import { ConnectedImageConfigurationForm } from "../modules/app-configuration/image-configuration-form";
+import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
+import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
+import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
-import { TextLink } from "@saleor/apps-ui";
-import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
-import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
-import { useRouter } from "next/router";
-import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
-import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";
-import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
-import { ConnectedImageConfigurationForm } from "../modules/app-configuration/image-configuration-form";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
 const ConfigurationPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -32,13 +31,7 @@ const ConfigurationPage: NextPage = () => {
   return (
     <Box>
       <Box __marginBottom="100px">
-        <Text
-          variant={"hero"}
-          size={"medium"}
-          as={"h1"}
-          marginBottom={5}
-          data-testid={"root-heading"}
-        >
+        <Text size={10} fontWeight="bold" as={"h1"} marginBottom={5} data-testid={"root-heading"}>
           Configuration
         </Text>
         <Paragraph>
@@ -66,16 +59,16 @@ const ConfigurationPage: NextPage = () => {
         mainContent={<ConnectedS3ConfigurationForm />}
         sideContent={
           <Box>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Your product database can be quite large. To generate a big XML file, we need to put
               it somewhere so Google can consume it. You need to generate an S3 bucket with public
               read access and provide its credentials to the app.
             </Paragraph>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Please use this bucket only for XMLs. They meant to be public - but other files may
               leak if you put them to the same bucket.
             </Paragraph>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Read about generating AWS credentials{" "}
               <TextLink
                 href={
@@ -101,8 +94,8 @@ const ConfigurationPage: NextPage = () => {
         }
         sideContent={
           <Box>
-            <Paragraph size={"small"}>App will generate separate feed for each channel</Paragraph>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>App will generate separate feed for each channel</Paragraph>
+            <Paragraph size={3}>
               Provide your storefront homepage URL and product template. Use{" "}
               <TextLink href="https://handlebarsjs.com/" newTab>
                 Handlebars
@@ -111,22 +104,22 @@ const ConfigurationPage: NextPage = () => {
             </Paragraph>
             <ul>
               <li>
-                <Text size={"small"}>
+                <Text size={3}>
                   <code>{"{{ variant.product.slug }}"}</code> - product `slug`
                 </Text>
               </li>
               <li>
-                <Text size={"small"}>
+                <Text size={3}>
                   <code>{"{{ variant.id }}"}</code> - product variant id
                 </Text>
               </li>
             </ul>
-            <Paragraph size={"small"}>For example following pattern:</Paragraph>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>For example following pattern:</Paragraph>
+            <Paragraph size={3}>
               <code>{"https://my-shop.com/p/{{ variant.product.slug}/{{ variant.id }}"}</code>
             </Paragraph>
-            <Paragraph size={"small"}>Will produce:</Paragraph>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>Will produce:</Paragraph>
+            <Paragraph size={3}>
               <code>{"https://my-shop.com/p/t-shirt/Xyp2asZ"}</code>
             </Paragraph>
           </Box>
@@ -144,7 +137,7 @@ const ConfigurationPage: NextPage = () => {
         }
         sideContent={
           <Box>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Customize title of the products. Use{" "}
               <TextLink href="https://handlebarsjs.com/" newTab>
                 Handlebars
@@ -174,7 +167,7 @@ const ConfigurationPage: NextPage = () => {
         }
         sideContent={
           <Box>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Map Saleor categories to pre-defined Google categories. It is not required.{" "}
               <TextLink newTab href={"https://support.google.com/merchants/answer/6324436?hl=en"}>
                 Read more
@@ -191,7 +184,7 @@ const ConfigurationPage: NextPage = () => {
         mainContent={<ConnectedAttributeMappingForm />}
         sideContent={
           <Box>
-            <Paragraph size={"small"}>
+            <Paragraph size={3}>
               Choose which product attributes should be used for the feed. If product has multiple
               attribute values, for example &quot;Primary color&quot; and &quot;Secondary
               color&quot;, both values will be used according to Google guidelines:
@@ -235,9 +228,7 @@ const ConfigurationPage: NextPage = () => {
         mainContent={<ConnectedImageConfigurationForm />}
         sideContent={
           <Box>
-            <Paragraph size={"small"}>
-              Configure size of the images submitted in the feed.
-            </Paragraph>
+            <Paragraph size={3}>Configure size of the images submitted in the feed.</Paragraph>
             <ul>
               <li>
                 <TextLink href="https://support.google.com/merchants/answer/6324350?hl=en" newTab>
