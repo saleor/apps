@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
-    "@saleor/macaw-ui": "1.0.0-pre.7",
+    "@saleor/macaw-ui": "1.1.10",
     "@storybook/addon-actions": "^7.0.12",
     "@storybook/addon-essentials": "^7.0.12",
     "@storybook/addon-interactions": "^7.0.12",
