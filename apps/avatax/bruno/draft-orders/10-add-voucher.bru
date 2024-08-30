@@ -1,11 +1,11 @@
 meta {
-  name: 11 Complete draft order
+  name: 10. Add voucher to draft order
   type: graphql
-  seq: 11
+  seq: 10
 }
 
 post {
-  url: {{API_URL}}
+  url: {{saleorApiUrl}}
   body: graphql
   auth: bearer
 }
@@ -15,22 +15,13 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation DraftOrderComplete($id: ID!) {
-    draftOrderComplete(id: $id) {
+  mutation DraftOrderUpdate($id: ID!, $input: DraftOrderInput!) {
+    draftOrderUpdate(id: $id, input: $input) {
       errors {
         ...OrderError
       }
       order {
         id
-        total {
-          ...BaseTaxedMoney
-        }
-        subtotal {
-          ...BaseTaxedMoney
-        }
-        shippingPrice {
-          ...BaseTaxedMoney
-        }
         voucherCode
         discounts {
           id
@@ -42,6 +33,15 @@ body:graphql {
           amount {
             amount
           }
+        }
+        total {
+          ...BaseTaxedMoney
+        }
+        subtotal {
+          ...BaseTaxedMoney
+        }
+        shippingPrice {
+          ...BaseTaxedMoney
         }
         lines {
           productVariantId
@@ -107,6 +107,9 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "id": "{{orderId}}"
+    "id": "{{orderId}}",
+    "input": {
+        "voucherCode": "{{promoCode}}"
+    }
   }
 }

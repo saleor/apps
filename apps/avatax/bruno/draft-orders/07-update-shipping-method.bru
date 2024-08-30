@@ -1,11 +1,11 @@
 meta {
-  name: 09 Remove lines on draft order
+  name: 07. Update shipping method on draft order
   type: graphql
-  seq: 9
+  seq: 7
 }
 
 post {
-  url: {{API_URL}}
+  url: {{saleorApiUrl}}
   body: graphql
   auth: bearer
 }
@@ -15,8 +15,8 @@ auth:bearer {
 }
 
 body:graphql {
-  mutation OrderLineDelete($orderLineiId: ID!) {
-    orderLineDelete(id: $orderLineiId) {
+  mutation OrderUpdateShipping($id: ID!, $input: OrderUpdateShippingInput!) {
+    orderUpdateShipping(order: $id, input: $input) {
       errors {
         ...OrderError
       }
@@ -32,6 +32,7 @@ body:graphql {
           ...BaseTaxedMoney
         }
         lines {
+          id
           productVariantId
           quantity
           totalPrice {
@@ -46,13 +47,6 @@ body:graphql {
             price {
               amount
             }
-          }
-        }
-        shippingMethods {
-          id
-          name
-          price {
-            amount
           }
         }
         billingAddress {
@@ -102,6 +96,9 @@ body:graphql {
 
 body:graphql:vars {
   {
-    "orderLineiId": "{{orderLineiId1}}"
+      "id": "{{orderId}}",
+      "input": {
+          "shippingMethod": "{{shippingMethodId}}"
+      }
   }
 }

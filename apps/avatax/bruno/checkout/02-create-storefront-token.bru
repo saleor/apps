@@ -1,11 +1,11 @@
 meta {
-  name: 2. Create storefront user token
+  name: 02. Create storefront user token
   type: graphql
   seq: 2
 }
 
 post {
-  url: {{API_URL}}
+  url: {{saleorApiUrl}}
   body: graphql
   auth: none
 }
@@ -36,21 +36,4 @@ body:graphql:vars {
 
 vars:post-response {
   storefrontUserToken: res.body.data.tokenCreate.token
-}
-
-script:pre-request {
-  const { faker } = require('@faker-js/faker');
-  
-  const configuredEmail = bru.getProcessEnv("STOREFRONT_USER_EMAIL");
-  
-  if (configuredEmail) {
-    bru.setVar("storefrontUserEmail", configuredEmail);
-  }
-  
-  const configuredPassword = bru.getProcessEnv("STOREFRONT_USER_PASSWORD");
-  
-  if (configuredPassword) {
-    bru.setVar("storefrontUserPassword", configuredPassword);
-  }
-  
 }
