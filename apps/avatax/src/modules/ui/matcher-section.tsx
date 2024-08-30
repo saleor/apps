@@ -19,7 +19,7 @@ const MatcherTable = () => {
     <AppCard __minHeight={"320px"} height="100%" data-testid="matcher-table">
       {isLoading ? (
         <Box height="100%" display={"flex"} alignItems={"center"} justifyContent={"center"}>
-          <Text color="textNeutralSubdued">Loading...</Text>
+          <Text color="default2">Loading...</Text>
         </Box>
       ) : (
         <>
@@ -53,7 +53,7 @@ const MatcherTable = () => {
             </Table.Container>
           ) : (
             <Box height="100%" display={"flex"} alignItems={"center"} justifyContent={"center"}>
-              <Text color="textNeutralSubdued">You must configure a tax provider first</Text>
+              <Text color="default2">You must configure a tax provider first</Text>
             </Box>
           )}
         </>

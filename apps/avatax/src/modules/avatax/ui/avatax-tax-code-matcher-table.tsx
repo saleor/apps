@@ -12,7 +12,7 @@ export const AvataxTaxCodeMatcherTable = () => {
   if (isLoading) {
     return (
       <Box>
-        <Text color="textNeutralSubdued">Loading...</Text>
+        <Text color="default2">Loading...</Text>
       </Box>
     );
   }

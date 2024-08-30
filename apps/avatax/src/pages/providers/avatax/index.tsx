@@ -8,9 +8,7 @@ import { AppPageLayout } from "../../../modules/ui/app-page-layout";
 const Header = () => {
   return (
     <Box>
-      <Text as="p" variant="body">
-        Create new AvaTax configuration
-      </Text>
+      <Text as="p">Create new AvaTax configuration</Text>
     </Box>
   );
 };

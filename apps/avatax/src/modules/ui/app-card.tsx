@@ -5,7 +5,7 @@ export const AppCard = ({ children, ...p }: PropsWithBox<{}>) => {
     <Box
       borderRadius={4}
       borderWidth={1}
-      borderColor={"neutralPlain"}
+      borderColor={"default1"}
       borderStyle={"solid"}
       padding={8}
       {...p}

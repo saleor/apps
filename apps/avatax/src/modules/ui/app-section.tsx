@@ -6,9 +6,7 @@ const MAX_WIDTH = "480px";
 const Header = ({ children, ...props }: PropsWithBox<{ children: React.ReactNode }>) => {
   return (
     <Box __maxWidth={MAX_WIDTH} {...props}>
-      <Text as="p" variant="body">
-        {children}
-      </Text>
+      <Text as="p">{children}</Text>
     </Box>
   );
 };
@@ -24,12 +22,12 @@ const Description = ({
   return (
     <Box display="flex" flexDirection={"column"} gap={10} __maxWidth={MAX_WIDTH} {...props}>
       {title && (
-        <Text as="h3" variant="heading">
+        <Text as="h3" size={5} fontWeight="bold">
           {title}
         </Text>
       )}
       {description && (
-        <Box fontWeight={"bodyMedium"} fontSize={"bodyMedium"}>
+        <Box fontWeight="regular" fontSize={5}>
           {description}
         </Box>
       )}
