@@ -13,16 +13,14 @@ type Params = {
   metadataKey: string;
 };
 
+/**
+ * https://linear.app/saleor/issue/SHOPX-1312/refactor-and-remove-crud-settings-service-avatax
+ */
 export class CrudSettingsManager {
   private logger = createLogger("CrudSettingsManager");
 
-  /**
-   * TODO: Remove this class...
-   * ...and also move auth data to methods, not constructor, so it can be created ahead of time
-   */
   constructor(
     /*
-     * // todo: invoke createSettingsManager in constructor
      * // todo: constructor should accept schema that should be used to validate data
      * Currently, CrudSettingsManager has a big limitation of not validating the inputs in any way.
      * We rely on the classes that implement CrudSettingsManager to provide the data in the correct format,
