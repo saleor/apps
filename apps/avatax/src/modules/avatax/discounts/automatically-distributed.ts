@@ -1,3 +1,4 @@
+import Decimal from "decimal.js-light";
 import { TaxBaseFragment } from "generated/graphql";
 
 /*
@@ -12,9 +13,15 @@ export class AutomaticallyDistributedProductLinesDiscountsStrategy {
       return 0;
     }
 
-    return taxBaseDiscounts
-      .map((discount) => discount.amount.amount)
-      .reduce((total, current) => total + Number(current), 0);
+    return (
+      taxBaseDiscounts
+        // @ts-expect-error - will be available once schema is updated
+        .filter((d) => d.type === "SUBTOTAL")
+        .map((discount) => discount.amount.amount)
+        .reduce((total, current) => {
+          return new Decimal(total).add(current).toNumber();
+        }, 0)
+    );
   }
 
   areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {

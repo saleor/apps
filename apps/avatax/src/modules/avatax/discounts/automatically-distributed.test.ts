@@ -13,11 +13,15 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 21,
           },
+          // @ts-expect-error
+          type: "SUBTOTAL",
         },
         {
           amount: {
             amount: 0.37,
           },
+          // @ts-expect-error
+          type: "SUBTOTAL",
         },
       ];
 
@@ -62,11 +66,15 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 21,
           },
+          // @ts-expect-error
+          type: "SUBTOTAL",
         },
         {
           amount: {
             amount: 0.37,
           },
+          // @ts-expect-error
+          type: "SUBTOTAL",
         },
       ];
 

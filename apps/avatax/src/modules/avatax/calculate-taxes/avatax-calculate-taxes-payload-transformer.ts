@@ -60,7 +60,8 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transform(
+        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transformWithDiscountType(
+          // @ts-expect-error
           payload.taxBase,
           avataxConfig,
           matches,
