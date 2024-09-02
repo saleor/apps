@@ -97,7 +97,7 @@
   },
   "private": true,
   "saleor": {
-    "schemaVersion": "3.18"
+    "schemaVersion": "3.20"
   },
   "type": "module"
 }
