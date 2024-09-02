@@ -19,7 +19,11 @@ describe("CrudSettingsService", () => {
       delete: vi.fn(),
     };
 
-    service = new CrudSettingsManager(mockSettingsManager, "apiUrl", "metadataKey");
+    service = new CrudSettingsManager({
+      metadataManager: mockSettingsManager,
+      saleorApiUrl: "apiUrl",
+      metadataKey: "metadataKey",
+    });
   });
 
   describe("readAll", () => {

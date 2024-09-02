@@ -1,5 +1,3 @@
-import { Client } from "urql";
-
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
@@ -7,32 +5,10 @@ import { AvataxAddressValidationService } from "./avatax-address-validation.serv
 import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
 
 export class AvataxEditAddressValidationService {
-  private client: Client;
-  private appId: string;
-  private saleorApiUrl: string;
-
-  constructor({
-    client,
-    appId,
-    saleorApiUrl,
-  }: {
-    client: Client;
-    appId: string;
-    saleorApiUrl: string;
-  }) {
-    this.client = client;
-    this.appId = appId;
-    this.saleorApiUrl = saleorApiUrl;
-  }
+  constructor(private avataxPatchInputTransformer: AvataxPatchInputTransformer) {}
 
   async validate(id: string, input: AvataxConfig) {
-    const transformer = new AvataxPatchInputTransformer({
-      client: this.client,
-      appId: this.appId,
-      saleorApiUrl: this.saleorApiUrl,
-    });
-
-    const config = await transformer.patchInput(id, input);
+    const config = await this.avataxPatchInputTransformer.patchInput(id, input);
 
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(config));
     const addressValidation = new AvataxAddressValidationService(avataxClient);

@@ -4,14 +4,16 @@ import {
   DeprecatedOrderConfirmedSubscriptionFragment,
   SaleorOrderConfirmedEvent,
 } from "../../saleor";
-import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
+import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxOrderConfirmedPayloadTransformer } from "./avatax-order-confirmed-payload-transformer";
 
 export class AvataxOrderConfirmedPayloadService {
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private avataxOrderConfirmedPayloadTransformer: AvataxOrderConfirmedPayloadTransformer,
+  ) {}
 
   private getMatches(authData: AuthData) {
     const taxCodeMatchesService = AvataxTaxCodeMatchesService.createFromAuthData(authData);
@@ -27,9 +29,8 @@ export class AvataxOrderConfirmedPayloadService {
     discountsStrategy: PriceReductionDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches(authData);
-    const payloadTransformer = new AvataxOrderConfirmedPayloadTransformer(this.avataxClient);
 
-    return payloadTransformer.transform({
+    return this.avataxOrderConfirmedPayloadTransformer.transform({
       order,
       confirmedOrderEvent,
       avataxConfig,

@@ -1,12 +1,8 @@
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-
-import { createLogger } from "../../../logger";
 import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 import {
   ProviderConnections,
   providerConnectionsSchema,
 } from "../../provider-connections/provider-connections";
-import { TAX_PROVIDER_KEY } from "../../provider-connections/public-provider-connections.service";
 import {
   AvataxConfig,
   AvataxConnection,
@@ -16,17 +12,7 @@ import {
 const getSchema = avataxConnectionSchema.strict();
 
 export class AvataxConnectionRepository {
-  private crudSettingsManager: CrudSettingsManager;
-  private logger = createLogger("AvataxConnectionRepository", {
-    metadataKey: TAX_PROVIDER_KEY,
-  });
-  constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
-    this.crudSettingsManager = new CrudSettingsManager(
-      settingsManager,
-      saleorApiUrl,
-      TAX_PROVIDER_KEY,
-    );
-  }
+  constructor(private crudSettingsManager: CrudSettingsManager) {}
 
   private filterAvataxConnections(connections: ProviderConnections): AvataxConnection[] {
     return connections.filter(

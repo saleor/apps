@@ -11,13 +11,15 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
 
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private avataxClient: AvataxClient,
+    private avataxOrderCancelledPayloadTransformer: AvataxOrderCancelledPayloadTransformer,
+  ) {}
 
   async send(payload: CancelOrderPayload, config: AvataxConfig) {
     this.logger.info("Transforming the Saleor payload for cancelling transaction with AvaTax...");
 
-    const payloadTransformer = new AvataxOrderCancelledPayloadTransformer();
-    const target = payloadTransformer.transform(
+    const target = this.avataxOrderCancelledPayloadTransformer.transform(
       payload,
       config.companyCode ?? defaultAvataxConfig.companyCode,
     );
