@@ -34,11 +34,11 @@ export const avataxTaxCodesRouter = router({
 
     const connectionService = new AvataxConnectionService(
       new AvataxConnectionRepository(
-        new CrudSettingsManager(
-          createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
-          ctx.saleorApiUrl,
-          TAX_PROVIDER_KEY,
-        ),
+        new CrudSettingsManager({
+          metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+          saleorApiUrl: ctx.saleorApiUrl,
+          metadataKey: TAX_PROVIDER_KEY,
+        }),
       ),
     );
 

@@ -39,11 +39,11 @@ export class AvataxTaxCodeMatchesService {
     const settingsManager = createSettingsManager(client, authData.appId, metadataCache);
 
     const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(
-      new CrudSettingsManager(
-        settingsManager,
-        authData.saleorApiUrl,
-        AvataxTaxCodeMatchRepository.metadataKey,
-      ),
+      new CrudSettingsManager({
+        metadataManager: settingsManager,
+        saleorApiUrl: authData.saleorApiUrl,
+        metadataKey: AvataxTaxCodeMatchRepository.metadataKey,
+      }),
     );
 
     return new AvataxTaxCodeMatchesService(taxCodeMatchRepository);

@@ -48,11 +48,11 @@ const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx
       connectionService: new PublicAvataxConnectionService(
         new AvataxConnectionService(
           new AvataxConnectionRepository(
-            new CrudSettingsManager(
-              createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
-              ctx.saleorApiUrl,
-              TAX_PROVIDER_KEY,
-            ),
+            new CrudSettingsManager({
+              saleorApiUrl: ctx.saleorApiUrl,
+              metadataKey: TAX_PROVIDER_KEY,
+              metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+            }),
           ),
         ),
         new AvataxObfuscator(),
@@ -147,11 +147,11 @@ export const avataxConnectionRouter = router({
         new AvataxPatchInputTransformer(
           new AvataxConnectionService(
             new AvataxConnectionRepository(
-              new CrudSettingsManager(
-                createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
-                ctx.saleorApiUrl,
-                TAX_PROVIDER_KEY,
-              ),
+              new CrudSettingsManager({
+                saleorApiUrl: ctx.saleorApiUrl,
+                metadataKey: TAX_PROVIDER_KEY,
+                metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+              }),
             ),
           ),
           new Obfuscator(),
@@ -213,11 +213,11 @@ export const avataxConnectionRouter = router({
         new AvataxPatchInputTransformer(
           new AvataxConnectionService(
             new AvataxConnectionRepository(
-              new CrudSettingsManager(
-                createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
-                ctx.saleorApiUrl,
-                TAX_PROVIDER_KEY,
-              ),
+              new CrudSettingsManager({
+                saleorApiUrl: ctx.saleorApiUrl,
+                metadataKey: TAX_PROVIDER_KEY,
+                metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+              }),
             ),
           ),
           new Obfuscator(),

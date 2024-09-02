@@ -22,11 +22,11 @@ export const providerConnectionsRouter = router({
       new PublicAvataxConnectionService(
         new AvataxConnectionService(
           new AvataxConnectionRepository(
-            new CrudSettingsManager(
-              createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
-              ctx.saleorApiUrl,
-              TAX_PROVIDER_KEY,
-            ),
+            new CrudSettingsManager({
+              saleorApiUrl: ctx.saleorApiUrl,
+              metadataKey: TAX_PROVIDER_KEY,
+              metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+            }),
           ),
         ),
         new AvataxObfuscator(),
