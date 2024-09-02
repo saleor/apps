@@ -272,30 +272,409 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
     });
 
     describe("Both SHIPPING and SUBTOTAL discounts types are provided", () => {
-      it.todo(
-        "Subtotal value will be mapped to DISCOUNTED. Shipping will NOT be discounted, but its value will be reduced. Case with single discounts.",
-      );
-      it.todo(
-        "Subtotal value will be mapped to DISCOUNTED. Shipping will NOT be discounted, but its value will be reduced. Case with multiple discounts.",
-      );
+      it("Subtotal value will be mapped to DISCOUNTED. Shipping will NOT be discounted, but its value will be reduced. Case with single discounts.", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const shippingDiscount = 5.0;
+        const subtotalDiscount = 10.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: subtotalDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+          {
+            amount: {
+              amount: shippingDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33 - shippingDiscount,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
+      it("Subtotal value will be mapped to DISCOUNTED. Shipping will NOT be discounted, but its value will be reduced. Case with multiple discounts.", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const shippingDiscount = 5.0;
+        const subtotalDiscount = 10.0;
+
+        const shipping2Discount = 10.0;
+        const subtotal2Discount = 15.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: subtotalDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+          {
+            amount: {
+              amount: shippingDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+          {
+            amount: {
+              amount: subtotal2Discount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+          {
+            amount: {
+              amount: shipping2Discount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33 - shippingDiscount - shipping2Discount,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
     });
 
     describe("Only SUBTOTAL type discount is provided", () => {
-      it.todo(
-        "Subtotal value will be mapped to DISCOUNTED. Shipping will not be reduced and not marked as discounted. Case with single SUBTOTAL discount",
-      );
-      it.todo(
-        "Subtotal value will be mapped to DISCOUNTED. Shipping will not be reduced and not marked as discounted. Case with multiple SUBTOTAL discounts",
-      );
+      it("Subtotal value will be mapped to DISCOUNTED. Shipping will not be reduced and not marked as discounted. Case with single SUBTOTAL discount", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const subtotalDiscount = 10.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: subtotalDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
+      it("Subtotal value will be mapped to DISCOUNTED. Shipping will not be reduced and not marked as discounted. Case with multiple SUBTOTAL discounts", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const subtotalDiscount = 10.0;
+        const subtotal2Discount = 15.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: subtotalDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+          {
+            amount: {
+              amount: subtotal2Discount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SUBTOTAL",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
     });
 
     describe("Only SHIPPING type discount is provided", () => {
-      it.todo(
-        "Subtotal value will not be reduced and not marked as discounted. Shipping value will reduced but not discounted. Case with single SHIPPING discount",
-      );
-      it.todo(
-        "Subtotal value will not be reduced and not marked as discounted. Shipping value will reduced but not discounted. Case with multiple SHIPPING discounts",
-      );
+      it("Subtotal value will not be reduced and not marked as discounted. Shipping value will reduced but not discounted. Case with single SHIPPING discount", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const shippingDiscount = 10.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: shippingDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33 - shippingDiscount,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
+      it("Subtotal value will not be reduced and not marked as discounted. Shipping value will reduced but not discounted. Case with multiple SHIPPING discounts", () => {
+        const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+        const avataxConfigMock = mockGenerator.generateAvataxConfig();
+        const taxBaseMock = mockGenerator.generateTaxBase();
+        const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+        const shippingDiscount = 10.0;
+        const shipping2Discount = 10.0;
+
+        taxBaseMock.discounts = [
+          {
+            amount: {
+              amount: shippingDiscount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+          {
+            amount: {
+              amount: shipping2Discount,
+            },
+            // @ts-expect-error this field will be available in auto-generated schema later
+            type: "SHIPPING",
+          },
+        ];
+
+        const lines = transformer.transformWithDiscountType(
+          // @ts-expect-error
+          taxBaseMock,
+          avataxConfigMock,
+          matchesMock,
+          discountsStrategy,
+        );
+
+        expect(lines).toEqual([
+          {
+            amount: 60,
+            quantity: 3,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 20,
+            quantity: 1,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 100,
+            quantity: 2,
+            taxCode: DEFAULT_TAX_CLASS_ID,
+            taxIncluded: true,
+            discounted: true,
+          },
+          {
+            amount: 48.33 - shippingDiscount - shipping2Discount,
+            itemCode: "Shipping",
+            quantity: 1,
+            taxCode: "FR000000",
+            taxIncluded: true,
+            discounted: false,
+          },
+        ]);
+      });
     });
   });
 });
