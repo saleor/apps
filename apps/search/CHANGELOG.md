@@ -1,5 +1,16 @@
 # saleor-app-search
 
+## 1.22.9
+
+### Patch Changes
+
+- 3e139f2f: Search app now handles Algolia's 'record is too big' error. It means that the app now returns 400s instead of 500s.
+- 6fed4b19: Migrate to new newest MacawUI version. Functionally nothing has changed. UI may look a bit different but it will be on par with Dashboard UI.
+- Updated dependencies [6fed4b19]
+  - @saleor/react-hook-form-macaw@0.2.10
+  - @saleor/apps-shared@1.11.2
+  - @saleor/apps-ui@1.2.8
+
 ## 1.22.8
 
 ### Patch Changes

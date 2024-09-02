@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.11.2
+
+### Patch Changes
+
+- 6fed4b19: Migrate to new newest MacawUI version. Functionally nothing has changed. UI may look a bit different but it will be on par with Dashboard UI.
+
 ## 1.11.1
 
 ### Patch Changes
