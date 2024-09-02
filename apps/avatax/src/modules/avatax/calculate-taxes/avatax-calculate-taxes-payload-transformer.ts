@@ -23,7 +23,16 @@ export class AvataxCalculateTaxesPayloadTransformer {
   }
 
   async transform(
-    payload: CalculateTaxesPayload,
+    payload: CalculateTaxesPayload & {
+      taxBase: CalculateTaxesPayload["taxBase"] & {
+        discounts: Array<{
+          amount: {
+            amount: number;
+          };
+          type: "SHIPPING" | "SUBTOTAL";
+        }>;
+      };
+    },
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
@@ -57,7 +66,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: payloadLinesTransformer.transform(
+        lines: payloadLinesTransformer.transformWithDiscountType(
           payload.taxBase,
           avataxConfig,
           matches,
