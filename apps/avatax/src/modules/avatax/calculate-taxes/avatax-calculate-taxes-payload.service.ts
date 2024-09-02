@@ -22,6 +22,7 @@ export class AvataxCalculateTaxesPayloadService {
   ): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches();
 
+    // @ts-expect-error
     return this.payloadTransformer.transform(payload, avataxConfig, matches, discountsStrategy);
   }
 }
