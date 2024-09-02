@@ -7,12 +7,20 @@ import { createLogger } from "../../logger";
 const settingSchema = z.record(z.any()).and(z.object({ id: z.string() }));
 const settingsSchema = z.array(settingSchema);
 
+type Params = {
+  metadataManager: SettingsManager;
+  saleorApiUrl: string;
+  metadataKey: string;
+};
+
+/**
+ * https://linear.app/saleor/issue/SHOPX-1312/refactor-and-remove-crud-settings-service-avatax
+ */
 export class CrudSettingsManager {
   private logger = createLogger("CrudSettingsManager");
 
   constructor(
     /*
-     * // todo: invoke createSettingsManager in constructor
      * // todo: constructor should accept schema that should be used to validate data
      * Currently, CrudSettingsManager has a big limitation of not validating the inputs in any way.
      * We rely on the classes that implement CrudSettingsManager to provide the data in the correct format,
@@ -20,15 +28,14 @@ export class CrudSettingsManager {
      * (like creating an "id" field, or how it updates the data).
      * So if you make a mistake in data transformations in your class, you will not get any errors.
      */
-    private metadataManager: SettingsManager,
-    private saleorApiUrl: string,
-    private metadataKey: string,
-  ) {
-    this.metadataKey = metadataKey;
-  }
+    private params: Params,
+  ) {}
 
   async readAll() {
-    const result = await this.metadataManager.get(this.metadataKey, this.saleorApiUrl);
+    const result = await this.params.metadataManager.get(
+      this.params.metadataKey,
+      this.params.saleorApiUrl,
+    );
 
     if (!result) {
       return { data: [] };
@@ -40,7 +47,7 @@ export class CrudSettingsManager {
     if (!validation.success) {
       this.logger.error("Error while validating metadata", {
         error: validation.error,
-        metadataKey: this.metadataKey,
+        metadataKey: this.params.metadataKey,
       });
       throw new Error("Error while validating metadata");
     }
@@ -57,7 +64,7 @@ export class CrudSettingsManager {
     const item = settings.find((item) => item.id === id);
 
     if (!item) {
-      this.logger.error("Item not found", { id, metadataKey: this.metadataKey });
+      this.logger.error("Item not found", { id, metadataKey: this.params.metadataKey });
       throw new Error("Item not found");
     }
 
@@ -73,10 +80,10 @@ export class CrudSettingsManager {
     const id = createId();
     const newData = [...prevData, { ...data, id }];
 
-    await this.metadataManager.set({
-      key: this.metadataKey,
+    await this.params.metadataManager.set({
+      key: this.params.metadataKey,
       value: JSON.stringify(newData),
-      domain: this.saleorApiUrl,
+      domain: this.params.saleorApiUrl,
     });
 
     return {
@@ -89,10 +96,10 @@ export class CrudSettingsManager {
     const prevData = settings.data;
     const nextData = prevData.filter((item) => item.id !== id);
 
-    await this.metadataManager.set({
-      key: this.metadataKey,
+    await this.params.metadataManager.set({
+      key: this.params.metadataKey,
       value: JSON.stringify(nextData),
-      domain: this.saleorApiUrl,
+      domain: this.params.saleorApiUrl,
     });
   }
 
@@ -107,10 +114,10 @@ export class CrudSettingsManager {
       return item;
     });
 
-    await this.metadataManager.set({
-      key: this.metadataKey,
+    await this.params.metadataManager.set({
+      key: this.params.metadataKey,
       value: JSON.stringify(nextSettings),
-      domain: this.saleorApiUrl,
+      domain: this.params.saleorApiUrl,
     });
   }
 }

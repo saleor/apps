@@ -1,9 +1,12 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
+import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
+
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrderConfirmedEvent } from "../saleor";
-import { CancelOrderPayload, ProviderWebhookService } from "../taxes/tax-provider-webhook";
+import { CancelOrderPayload } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
-import { AvataxClient } from "./avatax-client";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import {
@@ -13,8 +16,13 @@ import {
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 
-export class AvataxWebhookService implements ProviderWebhookService {
-  constructor(private avataxClient: AvataxClient) {}
+export class AvataxWebhookService {
+  constructor(
+    private calculateTaxesAdapter: AvataxCalculateTaxesAdapter,
+    private calculateTaxesPayloadTransformer: AvataxCalculateTaxesPayloadTransformer,
+    private avaTaxOrderCancelledAdapter: AvataxOrderCancelledAdapter,
+    private avataxOrderConfirmedAdapter: AvataxOrderConfirmedAdapter,
+  ) {}
 
   async calculateTaxes(
     payload: CalculateTaxesPayload,
@@ -22,9 +30,14 @@ export class AvataxWebhookService implements ProviderWebhookService {
     authData: AuthData,
     discountStrategy: AutomaticallyDistributedDiscountsStrategy,
   ) {
-    const adapter = new AvataxCalculateTaxesAdapter(this.avataxClient);
+    const payloadService = new AvataxCalculateTaxesPayloadService(
+      AvataxTaxCodeMatchesService.createFromAuthData(authData),
+      this.calculateTaxesPayloadTransformer,
+    );
 
-    const response = await adapter.send(payload, avataxConfig, authData, discountStrategy);
+    const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
+
+    const response = await this.calculateTaxesAdapter.send(avataxModel);
 
     return response;
   }
@@ -36,9 +49,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
     authData: AuthData,
     discountStrategy: PriceReductionDiscountsStrategy,
   ) {
-    const adapter = new AvataxOrderConfirmedAdapter(this.avataxClient);
-
-    const response = await adapter.send(
+    const response = await this.avataxOrderConfirmedAdapter.send(
       { order, confirmedOrderEvent },
       avataxConfig,
       authData,
@@ -49,8 +60,6 @@ export class AvataxWebhookService implements ProviderWebhookService {
   }
 
   async cancelOrder(payload: CancelOrderPayload, avataxConfig: AvataxConfig) {
-    const adapter = new AvataxOrderCancelledAdapter(this.avataxClient);
-
-    await adapter.send(payload, avataxConfig);
+    await this.avaTaxOrderCancelledAdapter.send(payload, avataxConfig);
   }
 }

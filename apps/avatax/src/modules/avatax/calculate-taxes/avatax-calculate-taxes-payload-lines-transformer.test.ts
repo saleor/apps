@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 
+import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
+
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
-const transformer = new AvataxCalculateTaxesPayloadLinesTransformer();
+const transformer = new AvataxCalculateTaxesPayloadLinesTransformer(
+  new AvataxCalculateTaxesTaxCodeMatcher(),
+);
 
 const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
 

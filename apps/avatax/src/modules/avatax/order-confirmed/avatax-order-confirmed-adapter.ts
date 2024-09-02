@@ -29,7 +29,11 @@ export class AvataxOrderConfirmedAdapter
 {
   private logger = createLogger("AvataxOrderConfirmedAdapter");
 
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private avataxClient: AvataxClient,
+    private avataxOrderConfirmedResponseTransformer: AvataxOrderConfirmedResponseTransformer,
+    private avataxOrderConfirmedPayloadService: AvataxOrderConfirmedPayloadService,
+  ) {}
 
   async send(
     payload: AvataxOrderConfirmedPayload,
@@ -39,8 +43,7 @@ export class AvataxOrderConfirmedAdapter
   ): Promise<AvataxOrderConfirmedResponse> {
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
-    const payloadService = new AvataxOrderConfirmedPayloadService(this.avataxClient);
-    const target = await payloadService.getPayload(
+    const target = await this.avataxOrderConfirmedPayloadService.getPayload(
       payload.order,
       payload.confirmedOrderEvent,
       config,
@@ -62,8 +65,7 @@ export class AvataxOrderConfirmedAdapter
         taxCalculationSummary: response.summary,
       });
 
-      const responseTransformer = new AvataxOrderConfirmedResponseTransformer();
-      const transformedResponse = responseTransformer.transform(response);
+      const transformedResponse = this.avataxOrderConfirmedResponseTransformer.transform(response);
 
       this.logger.debug("Transformed AvaTax createTransaction response");
 

@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+import { metadataCache } from "@/lib/app-metadata-cache";
+import { Obfuscator } from "@/lib/obfuscator";
+import { createSettingsManager } from "@/modules/app/metadata-manager";
+import { AvataxObfuscator } from "@/modules/avatax/avatax-obfuscator";
+import { AvataxConnectionService } from "@/modules/avatax/configuration/avatax-connection.service";
+import { AvataxConnectionRepository } from "@/modules/avatax/configuration/avatax-connection-repository";
+import { AvataxPatchInputTransformer } from "@/modules/avatax/configuration/avatax-patch-input-transformer";
+import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
+
 import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -35,11 +45,18 @@ const avataxErrorsToTrpcErrorsMapper = new AvataxErrorToTrpcErrorMapper();
 const protectedWithConnectionService = protectedClientProcedure.use(({ next, ctx }) =>
   next({
     ctx: {
-      connectionService: new PublicAvataxConnectionService({
-        appId: ctx.appId!,
-        client: ctx.apiClient,
-        saleorApiUrl: ctx.saleorApiUrl,
-      }),
+      connectionService: new PublicAvataxConnectionService(
+        new AvataxConnectionService(
+          new AvataxConnectionRepository(
+            new CrudSettingsManager({
+              saleorApiUrl: ctx.saleorApiUrl,
+              metadataKey: TAX_PROVIDER_KEY,
+              metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+            }),
+          ),
+        ),
+        new AvataxObfuscator(),
+      ),
     },
   }),
 );
@@ -126,11 +143,20 @@ export const avataxConnectionRouter = router({
 
       logger.debug("Route called");
 
-      const addressValidationService = new AvataxEditAddressValidationService({
-        appId: ctx.appId!,
-        client: ctx.apiClient,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+      const addressValidationService = new AvataxEditAddressValidationService(
+        new AvataxPatchInputTransformer(
+          new AvataxConnectionService(
+            new AvataxConnectionRepository(
+              new CrudSettingsManager({
+                saleorApiUrl: ctx.saleorApiUrl,
+                metadataKey: TAX_PROVIDER_KEY,
+                metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+              }),
+            ),
+          ),
+          new Obfuscator(),
+        ),
+      );
 
       const result = await addressValidationService.validate(input.id, input.value);
 
@@ -183,11 +209,20 @@ export const avataxConnectionRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
 
-      const authValidation = new AvataxEditAuthValidationService({
-        appId: ctx.appId!,
-        client: ctx.apiClient,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
+      const authValidation = new AvataxEditAuthValidationService(
+        new AvataxPatchInputTransformer(
+          new AvataxConnectionService(
+            new AvataxConnectionRepository(
+              new CrudSettingsManager({
+                saleorApiUrl: ctx.saleorApiUrl,
+                metadataKey: TAX_PROVIDER_KEY,
+                metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+              }),
+            ),
+          ),
+          new Obfuscator(),
+        ),
+      );
 
       await authValidation.validate(input.id, input.value);
 

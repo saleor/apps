@@ -9,6 +9,8 @@ import { avataxProductLine } from "./avatax-product-line";
 import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
+  constructor(private avataxCalculateTaxesTaxCodeMatcher: AvataxCalculateTaxesTaxCodeMatcher) {}
+
   transform(
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
@@ -19,8 +21,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
 
     // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
-      const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
-      const taxCode = matcher.match(line, matches);
+      const taxCode = this.avataxCalculateTaxesTaxCodeMatcher.match(line, matches);
 
       return avataxProductLine.create({
         amount: line.totalPrice.amount,
