@@ -11,6 +11,9 @@ import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discou
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
+/**
+ * TODO: Merge this with AvataxCalculateTaxesPayloadLinesTransformer
+ */
 export class AvataxCalculateTaxesPayloadTransformer {
   private matchDocumentType(config: AvataxConfig): DocumentType {
     /*
