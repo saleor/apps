@@ -1,7 +1,7 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import Decimal from "decimal.js-light";
 
 import { createLogger } from "../../../logger";
-import { numbers } from "../../taxes/numbers";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
@@ -39,7 +39,7 @@ export function transformAvataxTransactionModelIntoShipping(
       shippingLine.discountAmount,
       new TaxBadProviderResponseError("shippingLine.discountAmount is undefined"),
     );
-    const totalAmount = lineAmount - discountAmount;
+    const totalAmount = new Decimal(lineAmount).sub(new Decimal(discountAmount)).toNumber();
 
     logger.info(
       "Transforming non-taxable shipping line from AvaTax to Saleor CalculateTaxesResponse",
@@ -70,9 +70,10 @@ export function transformAvataxTransactionModelIntoShipping(
     shippingLine.taxableAmount,
     new TaxBadProviderResponseError("shippingLine.taxableAmount is undefined"),
   );
-  const shippingGrossAmount = numbers.roundFloatToTwoDecimals(
-    shippingTaxableAmount + shippingTaxCalculated,
-  );
+  const shippingGrossAmount = new Decimal(shippingTaxableAmount)
+    .add(new Decimal(shippingTaxCalculated))
+    .toDecimalPlaces(2)
+    .toNumber();
 
   logger.info("Transforming taxable shipping line from AvaTax to Saleor CalculateTaxesResponse", {
     shipping_price_gross_amount: shippingGrossAmount,
