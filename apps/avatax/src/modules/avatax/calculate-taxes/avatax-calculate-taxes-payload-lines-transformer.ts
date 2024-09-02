@@ -48,6 +48,19 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     return productLines;
   }
 
+  private calculateShippingDiscount(
+    discounts: Array<TaxBaseFragment["discounts"][0] & { type: "SUBTOTAL" | "SHIPPING" }>,
+  ) {
+    /**
+     * For shipping we sum all the shipping-type discounts and subtract them from shipping price
+     */
+    return discounts
+      .filter((d) => d.type === "SHIPPING")
+      .reduce((sum, discount) => {
+        return sum + discount.amount.amount;
+      }, 0);
+  }
+
   /**
    * Method name is temporary -> replace with "transofrm" later
    * This method is including extra fields that will be added in SHOPX-1145
@@ -80,11 +93,20 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     });
 
     if (taxBase.shippingPrice.amount !== 0) {
+      const shippingAmountMinusDiscounts =
+        taxBase.shippingPrice.amount - this.calculateShippingDiscount(taxBase.discounts);
+
       const shippingLine = avataxShippingLine.create({
-        amount: taxBase.shippingPrice.amount,
+        /**
+         * Do not allow shipping price lower than 0, in case of discounts are
+         */
+        amount: shippingAmountMinusDiscounts >= 0 ? shippingAmountMinusDiscounts : 0,
         taxCode: config.shippingTaxCode,
         taxIncluded: taxBase.pricesEnteredWithTax,
-        discounted: areLinesDiscounted,
+        /**
+         * We are reducing an amount of shipping, so we no longer mark it as discounted (discount is calculated in the amount - price reduction discount strategy)
+         */
+        discounted: false,
       });
 
       return [...productLines, shippingLine];

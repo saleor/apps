@@ -271,6 +271,74 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       ]);
     });
 
+    it('Should return shipping amount "0" if sum of discounts make the amount lower than 0 (do not allow negative price)', () => {
+      const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+      const avataxConfigMock = mockGenerator.generateAvataxConfig();
+      const taxBaseMock = mockGenerator.generateTaxBase();
+      const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+      const shippingDiscount = 10.0;
+      const shipping2Discount = 100.0;
+
+      taxBaseMock.discounts = [
+        {
+          amount: {
+            amount: shippingDiscount,
+          },
+          // @ts-expect-error this field will be available in auto-generated schema later
+          type: "SHIPPING",
+        },
+        {
+          amount: {
+            amount: shipping2Discount,
+          },
+          // @ts-expect-error this field will be available in auto-generated schema later
+          type: "SHIPPING",
+        },
+      ];
+
+      const lines = transformer.transformWithDiscountType(
+        // @ts-expect-error
+        taxBaseMock,
+        avataxConfigMock,
+        matchesMock,
+        discountsStrategy,
+      );
+
+      expect(lines).toEqual([
+        {
+          amount: 60,
+          quantity: 3,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          amount: 20,
+          quantity: 1,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          amount: 100,
+          quantity: 2,
+          taxCode: DEFAULT_TAX_CLASS_ID,
+          taxIncluded: true,
+          discounted: true,
+        },
+        {
+          // Do not allow lower than 0
+          amount: 0,
+          itemCode: "Shipping",
+          quantity: 1,
+          taxCode: "FR000000",
+          taxIncluded: true,
+          discounted: false,
+        },
+      ]);
+    });
+
     describe("Both SHIPPING and SUBTOTAL discounts types are provided", () => {
       it("Subtotal value will be mapped to DISCOUNTED. Shipping will NOT be discounted, but its value will be reduced. Case with single discounts.", () => {
         const mockGenerator = new AvataxCalculateTaxesMockGenerator();
