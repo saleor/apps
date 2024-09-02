@@ -1,3 +1,4 @@
+import Decimal from "decimal.js-light";
 import { TaxBaseFragment } from "generated/graphql";
 
 /*
@@ -17,7 +18,9 @@ export class AutomaticallyDistributedProductLinesDiscountsStrategy {
         // @ts-expect-error - will be available once schema is updated
         .filter((d) => d.type === "SUBTOTAL")
         .map((discount) => discount.amount.amount)
-        .reduce((total, current) => total + Number(current), 0)
+        .reduce((total, current) => {
+          return new Decimal(total).add(current).toNumber();
+        }, 0)
     );
   }
 
