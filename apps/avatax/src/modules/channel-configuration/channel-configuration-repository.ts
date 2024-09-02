@@ -10,6 +10,7 @@ import { ChannelConfig, channelsSchema } from "./channel-config";
 
 export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;
+
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager({
       saleorApiUrl,

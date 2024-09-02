@@ -1,17 +1,6 @@
 body {
-  font-family:
-    Inter,
-    -apple-system,
-    "system-ui",
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
-    sans-serif;
+  font-family: Inter, -apple-system, "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   color: #111;
   padding: 1rem 2rem;
 }
@@ -23,15 +12,8 @@ code {
   display: inline-block;
   margin-top: 10px;
   padding: 0.75rem;
-  font-family:
-    Menlo,
-    Monaco,
-    Lucida Console,
-    Liberation Mono,
-    DejaVu Sans Mono,
-    Bitstream Vera Sans Mono,
-    Courier New,
-    monospace;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
 }
 
 code::before {

@@ -27,9 +27,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
   }
 
   /**
-   * TODO: Get rid off async mapping!
-   * - Extract all dynamic stuff outside
-   * - Only map, without side effects here
+   * https://linear.app/saleor/issue/SHOPX-1313/tech-debt-avatax-refactor-async-transformers
    */
   async transform(
     payload: CalculateTaxesPayload,
