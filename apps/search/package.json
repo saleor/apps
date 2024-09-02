@@ -1,6 +1,6 @@
 {
   "name": "search",
-  "version": "1.22.8",
+  "version": "1.22.9",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
