@@ -8,7 +8,7 @@ import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-p
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxErrorsParser } from "../avatax-errors-parser";
-import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
 import { AvataxCalculateTaxesPayloadService } from "./avatax-calculate-taxes-payload.service";
@@ -31,7 +31,7 @@ export class AvataxCalculateTaxesAdapter
     payload: CalculateTaxesPayload,
     config: AvataxConfig,
     authData: AuthData,
-    discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ): Promise<AvataxCalculateTaxesResponse> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
 

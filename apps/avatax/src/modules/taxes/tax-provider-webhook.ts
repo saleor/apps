@@ -4,7 +4,7 @@ import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/next";
 import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { AvataxConfig } from "../avatax/avatax-connection-schema";
 import {
-  AutomaticallyDistributedDiscountsStrategy,
+  AutomaticallyDistributedProductLinesDiscountsStrategy,
   PriceReductionDiscountsStrategy,
 } from "../avatax/discounts";
 import { SaleorOrderConfirmedEvent } from "../saleor";
@@ -21,7 +21,7 @@ export interface ProviderWebhookService {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     authData: AuthData,
-    discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ) => Promise<CalculateTaxesResponse>;
   confirmOrder: (
     payload: OrderConfirmedSubscriptionFragment,
