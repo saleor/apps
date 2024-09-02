@@ -4,7 +4,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -32,7 +32,7 @@ const logger = createLogger("orderCalculateTaxesSyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
-const discountStrategy = new AutomaticallyDistributedDiscountsStrategy();
+const discountStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
 export default wrapWithLoggerContext(
   withOtel(

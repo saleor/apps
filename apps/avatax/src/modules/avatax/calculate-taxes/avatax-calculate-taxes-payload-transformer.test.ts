@@ -6,7 +6,7 @@ import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/ca
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
-import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 
@@ -14,7 +14,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
   it("returns document type of SalesInvoice", async () => {
     const mockGenerator = new AvataxCalculateTaxesMockGenerator();
     const avataxConfigMock = mockGenerator.generateAvataxConfig();
-    const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+    const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();
@@ -42,7 +42,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
   it("calculates discount amount when there are discounts", async () => {
     const mockGenerator = new AvataxCalculateTaxesMockGenerator("withDiscounts");
     const avataxConfigMock = mockGenerator.generateAvataxConfig();
-    const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+    const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
     const taxBaseMock = mockGenerator.generateTaxBase();
     const matchesMock = mockGenerator.generateTaxCodeMatches();

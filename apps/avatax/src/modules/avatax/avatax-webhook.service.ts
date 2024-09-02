@@ -10,7 +10,7 @@ import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payl
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import {
-  AutomaticallyDistributedDiscountsStrategy,
+  AutomaticallyDistributedProductLinesDiscountsStrategy,
   PriceReductionDiscountsStrategy,
 } from "./discounts";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
@@ -28,7 +28,7 @@ export class AvataxWebhookService {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     authData: AuthData,
-    discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ) {
     const payloadService = new AvataxCalculateTaxesPayloadService(
       AvataxTaxCodeMatchesService.createFromAuthData(authData),

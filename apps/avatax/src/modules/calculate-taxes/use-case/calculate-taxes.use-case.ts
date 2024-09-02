@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
@@ -18,7 +18,7 @@ import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-pay
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
-  private discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+  private discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
   static CalculateTaxesUseCaseError = BaseError.subclass("CalculateTaxesUseCaseError");
   static ExpectedIncompletePayloadError = this.CalculateTaxesUseCaseError.subclass(
