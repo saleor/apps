@@ -17,7 +17,8 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const taxBaseMock = mockGenerator.generateTaxBase();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
 
-      const lines = transformer.transform(
+      const lines = transformer.transformWithDiscountType(
+        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -62,7 +63,8 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const matchesMock = mockGenerator.generateTaxCodeMatches();
       const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 
-      const lines = transformer.transform(
+      const lines = transformer.transformWithDiscountType(
+        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -98,7 +100,8 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const avataxConfigMock = mockGenerator.generateAvataxConfig();
       const taxBaseMock = mockGenerator.generateTaxBase();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
-      const lines = transformer.transform(
+      const lines = transformer.transformWithDiscountType(
+        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -128,12 +131,12 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
           discounted: true,
         },
         {
-          amount: 48.33,
+          amount: 47.96,
           itemCode: "Shipping",
           quantity: 1,
           taxCode: "FR000000",
           taxIncluded: true,
-          discounted: true,
+          discounted: false,
         },
       ]);
     });
