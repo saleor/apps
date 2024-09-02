@@ -1,7 +1,8 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, test } from "vitest";
 
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
+import { DEFAULT_TAX_CLASS_ID } from "@/modules/avatax/constants";
 
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
@@ -61,7 +62,60 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     expect(payload.model.discount).toBe(21);
   });
 
-  // TODO Add tests for money precision calculation
+  test.each([
+    {
+      lineDiscountAmounts: [0.1, 0.2],
+      expectedDiscountSum: 0.3,
+    },
+    {
+      lineDiscountAmounts: [0.1, 0.7],
+      expectedDiscountSum: 0.8,
+    },
+    {
+      lineDiscountAmounts: [0.1, 0.5],
+      expectedDiscountSum: 0.6,
+    },
+    {
+      lineDiscountAmounts: [0.1, 0.1, 0.1, 0.1, 0.1],
+      expectedDiscountSum: 0.5,
+    },
+    {
+      lineDiscountAmounts: [1, 1.1, 1.2],
+      expectedDiscountSum: 3.3,
+    },
+  ])("Sums discounts properly", async ({ lineDiscountAmounts, expectedDiscountSum }) => {
+    const mockGenerator = new AvataxCalculateTaxesMockGenerator("withDiscounts");
+    const avataxConfigMock = mockGenerator.generateAvataxConfig();
+    const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
+
+    const taxBaseMock = mockGenerator.generateTaxBase();
+    const matchesMock = mockGenerator.generateTaxCodeMatches();
+    const payloadMock = {
+      taxBase: taxBaseMock,
+      issuingPrincipal: {
+        __typename: "User",
+        id: "1",
+      },
+    } as unknown as CalculateTaxesPayload;
+
+    taxBaseMock.discounts = lineDiscountAmounts.map((amount) => ({
+      amount: {
+        amount: amount,
+      },
+      type: "SUBTOTAL",
+    }));
+
+    const payload = await new AvataxCalculateTaxesPayloadTransformer().transform(
+      // @ts-expect-error
+      payloadMock,
+      avataxConfigMock,
+      matchesMock,
+      discountsStrategy,
+    );
+
+    expect(payload.model.discount).toBe(expectedDiscountSum);
+  });
+
   describe("Discounts calculation for SUBTOTAL and SHIPPING types", () => {
     it("Set product lines to be discounted. Set shipping line NOT to be discounted, but reduces its amount. Adds discount field which is a sum of SUBTOTAL-type discount", async () => {
       const mockGenerator = new AvataxCalculateTaxesMockGenerator("withDiscounts");

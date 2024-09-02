@@ -27,6 +27,10 @@ describe("extractIntegerRateFromTaxDetailsRates", () => {
       rates: undefined,
       expected: 0,
     },
+    {
+      rates: [0.1, 0.2],
+      expected: 30,
+    },
   ])(`Extracts array of tax rates: $rates into $expected`, ({ rates, expected }) => {
     expect(extractIntegerRateFromTaxDetailsRates(rates)).toEqual(expected);
   });
