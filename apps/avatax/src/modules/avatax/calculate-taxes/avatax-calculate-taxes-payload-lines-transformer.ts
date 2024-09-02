@@ -1,8 +1,9 @@
+import * as Sentry from "@sentry/nextjs";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 
 import { TaxBaseFragment } from "../../../../generated/graphql";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { avataxProductLine } from "./avatax-product-line";
@@ -16,7 +17,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
-    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ): LineItemModel[] {
     const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 
@@ -74,7 +75,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     },
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
-    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ) {
     const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 
@@ -95,6 +96,12 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     if (taxBase.shippingPrice.amount !== 0) {
       const shippingAmountMinusDiscounts =
         taxBase.shippingPrice.amount - this.calculateShippingDiscount(taxBase.discounts);
+
+      if (shippingAmountMinusDiscounts < 0) {
+        Sentry.captureException(
+          new Error("Saleor returned shipping discounts with higher values than shipping amount"),
+        );
+      }
 
       const shippingLine = avataxShippingLine.create({
         /**

@@ -7,7 +7,7 @@ import { AvataxClient } from "./avatax-client";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
 import {
-  AutomaticallyDistributedDiscountsStrategy,
+  AutomaticallyDistributedProductLinesDiscountsStrategy,
   PriceReductionDiscountsStrategy,
 } from "./discounts";
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
@@ -20,7 +20,7 @@ export class AvataxWebhookService implements ProviderWebhookService {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     authData: AuthData,
-    discountStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ) {
     const adapter = new AvataxCalculateTaxesAdapter(this.avataxClient);
 

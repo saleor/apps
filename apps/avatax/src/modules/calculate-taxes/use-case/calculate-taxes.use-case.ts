@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
-import { AutomaticallyDistributedDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
@@ -165,7 +165,7 @@ export class CalculateTaxesUseCase {
       );
     }
 
-    const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+    const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
     return fromPromise(
       taxProvider.calculateTaxes(

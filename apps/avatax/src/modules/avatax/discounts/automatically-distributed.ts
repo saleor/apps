@@ -6,15 +6,19 @@ import { TaxBaseFragment } from "generated/graphql";
  * Note: Discounts on line from Saleor has discount already included in totalPrice.
  * Docs: https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
  */
-export class AutomaticallyDistributedDiscountsStrategy {
+export class AutomaticallyDistributedProductLinesDiscountsStrategy {
   getDiscountAmount(taxBaseDiscounts: TaxBaseFragment["discounts"] | undefined) {
     if (!taxBaseDiscounts) {
       return 0;
     }
 
-    return taxBaseDiscounts
-      .map((discount) => discount.amount.amount)
-      .reduce((total, current) => total + Number(current), 0);
+    return (
+      taxBaseDiscounts
+        // @ts-expect-error - will be available once schema is updated
+        .filter((d) => d.type === "SUBTOTAL")
+        .map((discount) => discount.amount.amount)
+        .reduce((total, current) => total + Number(current), 0)
+    );
   }
 
   areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {

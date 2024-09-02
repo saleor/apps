@@ -7,7 +7,7 @@ import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
-import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
@@ -26,7 +26,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
-    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
     const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
     const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
