@@ -9,12 +9,60 @@ import { avataxProductLine } from "./avatax-product-line";
 import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
+  /**
+   * @deprecated use transformWithDiscountType when new fields available
+   */
   transform(
     taxBase: TaxBaseFragment,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): LineItemModel[] {
+    const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
+
+    // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
+    const productLines: LineItemModel[] = taxBase.lines.map((line) => {
+      const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
+      const taxCode = matcher.match(line, matches);
+
+      return avataxProductLine.create({
+        amount: line.totalPrice.amount,
+        taxIncluded: taxBase.pricesEnteredWithTax,
+        taxCode,
+        quantity: line.quantity,
+        discounted: areLinesDiscounted,
+      });
+    });
+
+    if (taxBase.shippingPrice.amount !== 0) {
+      const shippingLine = avataxShippingLine.create({
+        amount: taxBase.shippingPrice.amount,
+        taxCode: config.shippingTaxCode,
+        taxIncluded: taxBase.pricesEnteredWithTax,
+        discounted: areLinesDiscounted,
+      });
+
+      return [...productLines, shippingLine];
+    }
+
+    return productLines;
+  }
+
+  /**
+   * Method name is temporary -> replace with "transofrm" later
+   * This method is including extra fields that will be added in SHOPX-1145
+   */
+  transformWithDiscountType(
+    taxBase: TaxBaseFragment & {
+      /**
+       * TODO: Replace with auto-generated value once available
+       */
+      discounts: Array<TaxBaseFragment["discounts"][0] & { type: "SUBTOTAL" | "SHIPPING" }>;
+    },
+    config: AvataxConfig,
+    matches: AvataxTaxCodeMatches,
+    discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
+  ) {
     const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 
     // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
