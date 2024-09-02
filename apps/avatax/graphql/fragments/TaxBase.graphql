@@ -39,6 +39,8 @@ fragment TaxDiscount on TaxableObjectDiscount {
   amount {
     amount
   }
+  # new field: type: SUBTOTAL | SHIPPING -> will be introduced in core, we must use it then
+  # TODO: Check what saleor version, only 3.20 or 3.19 too? We must regenerate schema
 }
 
 fragment TaxBase on TaxableObject {
