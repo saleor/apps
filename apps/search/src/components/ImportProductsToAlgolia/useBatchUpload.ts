@@ -154,7 +154,6 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
     if (!searchProvider) return;
 
     startUploading();
-    const batchSize = 10;
     let pendingUploads = [];
 
     for await (const products of getProducts()) {
