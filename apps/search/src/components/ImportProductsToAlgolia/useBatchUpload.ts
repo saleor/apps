@@ -100,7 +100,7 @@ const useGraphQLClient = () => {
       .query(ProductsDataForImportDocument, {
         after: cursor,
         first: PER_PAGE,
-        channel: channelSlug!,
+        channel: channelSlug,
       })
       .toPromise();
 
