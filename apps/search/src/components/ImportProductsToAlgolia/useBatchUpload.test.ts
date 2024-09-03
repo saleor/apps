@@ -38,7 +38,7 @@ describe("useBatchUpload", () => {
     const { result, waitForNextUpdate } = renderHook(() => useBatchUpload(mockSearchProvider));
 
     act(() => {
-      result.current.startImport();
+      result.current.startUpload();
     });
 
     await waitForNextUpdate();
@@ -59,7 +59,7 @@ describe("useBatchUpload", () => {
     const { result } = renderHook(() => useBatchUpload(null));
 
     act(() => {
-      result.current.startImport();
+      result.current.startUpload();
     });
 
     expect(result.current.uploadState.type).toBe("idle");
@@ -97,7 +97,7 @@ describe("useBatchUpload", () => {
     const { result, waitForNextUpdate } = renderHook(() => useBatchUpload(mockSearchProvider));
 
     act(() => {
-      result.current.startImport();
+      result.current.startUpload();
     });
 
     await waitForNextUpdate();

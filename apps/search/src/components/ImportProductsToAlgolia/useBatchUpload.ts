@@ -10,6 +10,7 @@ import {
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 
 const PER_PAGE = 100;
+const PENDING_UPLOADS_BATCH_SIZE = 10;
 
 export type Products = NonNullable<
   ProductsDataForImportQuery["products"]
@@ -66,7 +67,7 @@ const useUploadState = () => {
     }, 1000);
   };
 
-  const startUpload = () => {
+  const startUploading = () => {
     setUploadState({
       type: "uploading",
       progress: { current: 0, total: 0 },
@@ -79,7 +80,7 @@ const useUploadState = () => {
     incrementTotal,
     incrementCurrent,
     finishingUpload,
-    startUpload,
+    startUploading,
   };
 };
 
@@ -137,7 +138,7 @@ const useProductFetcher = () => {
 };
 
 export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
-  const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUpload } =
+  const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
     useUploadState();
   const { getProducts } = useProductFetcher();
 
@@ -149,10 +150,10 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
     incrementCurrent(products.length);
   };
 
-  const startImport = async () => {
+  const startUpload = async () => {
     if (!searchProvider) return;
 
-    startUpload();
+    startUploading();
     const batchSize = 10;
     let pendingUploads = [];
 
@@ -160,7 +161,7 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
       incrementTotal(products.length);
       pendingUploads.push(uploadToAlgolia(products));
 
-      if (pendingUploads.length >= batchSize) {
+      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
         await Promise.all(pendingUploads);
         pendingUploads = [];
       }
@@ -173,5 +174,5 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
     finishingUpload();
   };
 
-  return { startImport, uploadState };
+  return { startUpload, uploadState };
 };

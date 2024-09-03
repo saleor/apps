@@ -8,14 +8,14 @@ export const ImportProductsToAlgolia = () => {
   const configuration = useAlgoliaConfiguration();
   const isConfigured = configuration.type === "configured";
   const searchProvider = isConfigured ? configuration.provider : null;
-  const { startImport, uploadState } = useBatchUpload(searchProvider);
+  const { startUpload, uploadState } = useBatchUpload(searchProvider);
 
   return (
     <Layout.AppSectionCard
       footer={
         isConfigured && (
           <Box display={"flex"} justifyContent={"flex-end"}>
-            <Button disabled={uploadState.type === "uploading"} onClick={startImport}>
+            <Button disabled={uploadState.type === "uploading"} onClick={startUpload}>
               {uploadState.type === "uploading" ? "Importing..." : "Start importing"}
             </Button>
           </Box>
