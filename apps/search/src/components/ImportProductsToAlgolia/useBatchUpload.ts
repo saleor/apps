@@ -94,7 +94,7 @@ const useGraphQLClient = () => {
 
   async function* getProductsByChannel(
     channelSlug: string,
-    cursor: string,
+    cursor: string = "",
   ): AsyncGenerator<Products> {
     const response = await client
       .query(ProductsDataForImportDocument, {
@@ -130,7 +130,7 @@ const useProductFetcher = () => {
     if (!channels) return;
 
     for (const channel of channels) {
-      yield* getProductsByChannel(channel.slug, "");
+      yield* getProductsByChannel(channel.slug);
     }
   }
 
