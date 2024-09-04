@@ -6,7 +6,7 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { resolveTrpcClientError } from "../../../lib/error-utils";
-import { CountrySelect } from "../../ui/country-select";
+import { CountryCombobox } from "../../ui/country-combobox";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 import { useAvataxConfigurationStatus } from "./configuration-status";
@@ -145,7 +145,7 @@ export const AvataxConfigurationAddressFragment = (
           {suggestions?.state && <FieldSuggestion suggestion={suggestions.state} />}
         </Box>
 
-        <CountrySelect
+        <CountryCombobox
           control={control}
           disabled={disabled}
           name="address.country"
