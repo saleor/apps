@@ -13,15 +13,12 @@ export class AutomaticallyDistributedProductLinesDiscountsStrategy {
       return 0;
     }
 
-    return (
-      taxBaseDiscounts
-        // @ts-expect-error - will be available once schema is updated
-        .filter((d) => d.type === "SUBTOTAL")
-        .map((discount) => discount.amount.amount)
-        .reduce((total, current) => {
-          return new Decimal(total).add(current).toNumber();
-        }, 0)
-    );
+    return taxBaseDiscounts
+      .filter((d) => d.type === "SUBTOTAL")
+      .map((discount) => discount.amount.amount)
+      .reduce((total, current) => {
+        return new Decimal(total).add(current).toNumber();
+      }, 0);
   }
 
   areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {

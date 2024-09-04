@@ -22,7 +22,6 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const matchesMock = mockGenerator.generateTaxCodeMatches();
 
       const lines = transformer.transformWithDiscountType(
-        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -68,7 +67,6 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const taxBaseMock = mockGenerator.generateTaxBase({ shippingPrice: { amount: 0 } });
 
       const lines = transformer.transformWithDiscountType(
-        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -105,7 +103,6 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
       const taxBaseMock = mockGenerator.generateTaxBase();
       const matchesMock = mockGenerator.generateTaxCodeMatches();
       const lines = transformer.transformWithDiscountType(
-        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -159,20 +156,17 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
           amount: {
             amount: shippingDiscount,
           },
-          // @ts-expect-error this field will be available in auto-generated schema later
           type: "SHIPPING",
         },
         {
           amount: {
             amount: shipping2Discount,
           },
-          // @ts-expect-error this field will be available in auto-generated schema later
           type: "SHIPPING",
         },
       ];
 
       const lines = transformer.transformWithDiscountType(
-        // @ts-expect-error
         taxBaseMock,
         avataxConfigMock,
         matchesMock,
@@ -228,20 +222,17 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: subtotalDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
           {
             amount: {
               amount: shippingDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,
@@ -297,34 +288,29 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: subtotalDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
           {
             amount: {
               amount: shippingDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
           {
             amount: {
               amount: subtotal2Discount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
           {
             amount: {
               amount: shipping2Discount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,
@@ -379,13 +365,11 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: subtotalDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,
@@ -438,20 +422,17 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: subtotalDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
           {
             amount: {
               amount: subtotal2Discount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SUBTOTAL",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,
@@ -506,13 +487,11 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: shippingDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,
@@ -566,20 +545,17 @@ describe("AvataxCalculateTaxesPayloadLinesTransformer", () => {
             amount: {
               amount: shippingDiscount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
           {
             amount: {
               amount: shipping2Discount,
             },
-            // @ts-expect-error this field will be available in auto-generated schema later
             type: "SHIPPING",
           },
         ];
 
         const lines = transformer.transformWithDiscountType(
-          // @ts-expect-error
           taxBaseMock,
           avataxConfigMock,
           matchesMock,

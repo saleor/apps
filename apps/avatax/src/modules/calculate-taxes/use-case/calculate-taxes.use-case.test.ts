@@ -90,9 +90,7 @@ const getPayloadWithDiscounts = (): CalculateTaxesPayload => {
     taxBase: {
       ...getBasePayload().taxBase,
       discounts: [
-        // @ts-expect-error
         { amount: { amount: 10 }, type: "SUBTOTAL" },
-        // @ts-expect-error
         { amount: { amount: 0.1 }, type: "SHIPPING" },
       ],
     },

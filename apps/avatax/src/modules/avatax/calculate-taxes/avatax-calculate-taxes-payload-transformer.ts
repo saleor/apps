@@ -61,7 +61,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
         },
         currencyCode: payload.taxBase.currency,
         lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transformWithDiscountType(
-          // @ts-expect-error
           payload.taxBase,
           avataxConfig,
           matches,

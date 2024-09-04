@@ -13,9 +13,7 @@ import { avataxShippingLine } from "./avatax-shipping-line";
 export class AvataxCalculateTaxesPayloadLinesTransformer {
   constructor(private avataxCalculateTaxesTaxCodeMatcher: AvataxCalculateTaxesTaxCodeMatcher) {}
 
-  private calculateShippingDiscount(
-    discounts: Array<TaxBaseFragment["discounts"][0] & { type: "SUBTOTAL" | "SHIPPING" }>,
-  ) {
+  private calculateShippingDiscount(discounts: TaxBaseFragment["discounts"]) {
     /**
      * For shipping we sum all the shipping-type discounts and subtract them from shipping price
      */
@@ -31,12 +29,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
    * This method is including extra fields that will be added in SHOPX-1145
    */
   transformWithDiscountType(
-    taxBase: TaxBaseFragment & {
-      /**
-       * TODO: Replace with auto-generated value once available
-       */
-      discounts: Array<TaxBaseFragment["discounts"][0] & { type: "SUBTOTAL" | "SHIPPING" }>;
-    },
+    taxBase: TaxBaseFragment,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,

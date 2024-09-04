@@ -120,9 +120,7 @@ const defaultTaxBase: TaxBase = {
 const taxBaseWithDiscounts: TaxBase = {
   ...defaultTaxBase,
   discounts: [
-    // @ts-expect-error
     { amount: { amount: 21 }, type: "SUBTOTAL" },
-    // @ts-expect-error
     { amount: { amount: 0.37 }, type: "SHIPPING" },
   ],
 };

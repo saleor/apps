@@ -150,28 +150,24 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
           amount: {
             amount: subtotalDiscount1,
           },
-          // @ts-expect-error
           type: "SUBTOTAL",
         },
         {
           amount: {
             amount: shippingDiscount1,
           },
-          // @ts-expect-error
           type: "SHIPPING",
         },
         {
           amount: {
             amount: subtotalDiscount2,
           },
-          // @ts-expect-error
           type: "SUBTOTAL",
         },
         {
           amount: {
             amount: shippingDiscount2,
           },
-          // @ts-expect-error
           type: "SHIPPING",
         },
       ];
@@ -215,7 +211,6 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
           amount: {
             amount: subtotalDiscount1,
           },
-          // @ts-expect-error
           type: "SUBTOTAL",
         },
 
@@ -223,7 +218,6 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
           amount: {
             amount: subtotalDiscount2,
           },
-          // @ts-expect-error
           type: "SUBTOTAL",
         },
       ];
@@ -267,7 +261,6 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
           amount: {
             amount: shippingDiscount1,
           },
-          // @ts-expect-error
           type: "SHIPPING",
         },
 
@@ -275,7 +268,6 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
           amount: {
             amount: shippingDiscount2,
           },
-          // @ts-expect-error
           type: "SHIPPING",
         },
       ];
