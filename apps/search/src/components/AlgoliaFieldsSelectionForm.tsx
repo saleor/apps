@@ -1,14 +1,15 @@
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, Layout } from "@saleor/apps-ui";
 import { Box, Button, Checkbox, Skeleton } from "@saleor/macaw-ui";
-import { trpcClient } from "../modules/trpc/trpc-client";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+
 import {
   AlgoliaRootFields,
   AlgoliaRootFieldsKeys,
   AlgoliaRootFieldsLabelsMap,
 } from "../lib/algolia-fields";
-import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { useDashboardNotification } from "@saleor/apps-shared";
-import { ButtonsBox, Layout } from "@saleor/apps-ui";
+import { trpcClient } from "../modules/trpc/trpc-client";
 
 export const AlgoliaFieldsSelectionForm = () => {
   const { notifySuccess } = useDashboardNotification();
