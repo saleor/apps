@@ -1,3 +1,8 @@
+import { metadataCache } from "@/lib/app-metadata-cache";
+import { createSettingsManager } from "@/modules/app/metadata-manager";
+import { ChannelConfigurationRepository } from "@/modules/channel-configuration/channel-configuration-repository";
+import { ChannelsFetcher } from "@/modules/channel-configuration/channel-fetcher";
+
 import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
@@ -8,9 +13,11 @@ const protectedWithConfigurationService = protectedClientProcedure.use(({ next, 
   next({
     ctx: {
       connectionService: new ChannelConfigurationService(
-        ctx.apiClient,
-        ctx.appId!,
-        ctx.saleorApiUrl,
+        new ChannelConfigurationRepository(
+          createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+          ctx.saleorApiUrl,
+        ),
+        new ChannelsFetcher(ctx.apiClient),
       ),
     },
   }),

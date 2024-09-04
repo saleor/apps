@@ -1,7 +1,4 @@
-import { Client } from "urql";
-
 import { Obfuscator } from "../../../lib/obfuscator";
-import { createLogger } from "../../../logger";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxConnectionService } from "./avatax-connection.service";
 
@@ -10,22 +7,10 @@ import { AvataxConnectionService } from "./avatax-connection.service";
  * The input from the edit UI is obfuscated, so we need to filter out those fields, and merge it with the existing configuration.
  */
 export class AvataxPatchInputTransformer {
-  private logger = createLogger("AvataxPatchInputTransformer");
-  private connection: AvataxConnectionService;
-  private obfuscator: Obfuscator;
-
-  constructor({
-    client,
-    appId,
-    saleorApiUrl,
-  }: {
-    client: Client;
-    appId: string;
-    saleorApiUrl: string;
-  }) {
-    this.connection = new AvataxConnectionService({ client, appId, saleorApiUrl });
-    this.obfuscator = new Obfuscator();
-  }
+  constructor(
+    private avataxConnectionService: AvataxConnectionService,
+    private obfuscator: Obfuscator,
+  ) {}
 
   private checkIfNotObfuscated(config: AvataxConfig) {
     return (
@@ -35,7 +20,7 @@ export class AvataxPatchInputTransformer {
   }
 
   async patchCredentials(id: string, input: AvataxConfig["credentials"]) {
-    const connection = await this.connection.getById(id);
+    const connection = await this.avataxConnectionService.getById(id);
 
     const credentials: AvataxConfig["credentials"] = {
       ...connection.config.credentials,

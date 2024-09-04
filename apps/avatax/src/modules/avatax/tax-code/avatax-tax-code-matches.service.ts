@@ -1,5 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 
+import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+
 import { metadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createSettingsManager } from "../../app/metadata-manager";
@@ -37,8 +39,11 @@ export class AvataxTaxCodeMatchesService {
     const settingsManager = createSettingsManager(client, authData.appId, metadataCache);
 
     const taxCodeMatchRepository = new AvataxTaxCodeMatchRepository(
-      settingsManager,
-      authData.saleorApiUrl,
+      new CrudSettingsManager({
+        metadataManager: settingsManager,
+        saleorApiUrl: authData.saleorApiUrl,
+        metadataKey: AvataxTaxCodeMatchRepository.metadataKey,
+      }),
     );
 
     return new AvataxTaxCodeMatchesService(taxCodeMatchRepository);

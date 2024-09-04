@@ -18,6 +18,8 @@ import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-pay
 export class CalculateTaxesUseCase {
   private logger = createLogger("CalculateTaxesUseCase");
 
+  private discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
+
   static CalculateTaxesUseCaseError = BaseError.subclass("CalculateTaxesUseCaseError");
   static ExpectedIncompletePayloadError = this.CalculateTaxesUseCaseError.subclass(
     "ExpectedIncompletePayloadError",
@@ -165,14 +167,12 @@ export class CalculateTaxesUseCase {
       );
     }
 
-    const discountsStrategy = new AutomaticallyDistributedDiscountsStrategy();
-
     return fromPromise(
       taxProvider.calculateTaxes(
         payload,
         providerConfig.value.avataxConfig.config,
         authData,
-        discountsStrategy,
+        this.discountsStrategy,
       ),
       (err) =>
         new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {

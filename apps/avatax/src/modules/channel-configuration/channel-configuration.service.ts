@@ -1,37 +1,16 @@
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
-
-import { metadataCache } from "../../lib/app-metadata-cache";
-import { createLogger } from "../../logger";
-import { createSettingsManager } from "../app/metadata-manager";
 import { ChannelConfigProperties } from "./channel-config";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
 import { ChannelConfigurationRepository } from "./channel-configuration-repository";
 import { ChannelsFetcher } from "./channel-fetcher";
 
 export class ChannelConfigurationService {
-  private configurationRepository: ChannelConfigurationRepository;
-  private logger = createLogger("ChannelConfigurationService");
-  private settingsManager: EncryptedMetadataManager;
   constructor(
-    private client: Client,
-    private appId: string,
-    private saleorApiUrl: string,
-  ) {
-    const settingsManager = createSettingsManager(client, appId, metadataCache);
-
-    this.settingsManager = settingsManager;
-
-    this.configurationRepository = new ChannelConfigurationRepository(
-      settingsManager,
-      saleorApiUrl,
-    );
-  }
+    private configurationRepository: ChannelConfigurationRepository,
+    private channelsFetcher: ChannelsFetcher,
+  ) {}
 
   async getAll() {
-    const channelsFetcher = new ChannelsFetcher(this.client);
-
-    const channels = await channelsFetcher.fetchChannels();
+    const channels = await this.channelsFetcher.fetchChannels();
 
     const channelConfiguration = await this.configurationRepository.getAll();
 

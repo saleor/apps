@@ -1,19 +1,10 @@
 import { createLogger } from "../../logger";
 import { AvataxClient } from "./avatax-client";
 
-/*
- * Arbitrary key-value pair that is used to store the entity code in the metadata.
- * see: https://docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax#mapping-the-entity-type
- */
-const AVATAX_ENTITY_CODE = "avataxEntityCode";
-
 export class AvataxEntityTypeMatcher {
-  private client: AvataxClient;
   private logger = createLogger("AvataxEntityTypeMatcher");
 
-  constructor({ client }: { client: AvataxClient }) {
-    this.client = client;
-  }
+  constructor(private avataxClient: Pick<AvataxClient, "getEntityUseCode">) {}
 
   private returnFallback() {
     // Empty string will be treated as non existing entity code.
@@ -21,7 +12,7 @@ export class AvataxEntityTypeMatcher {
   }
 
   private async validateEntityCode(entityCode: string) {
-    const result = await this.client.getEntityUseCode(entityCode);
+    const result = await this.avataxClient.getEntityUseCode(entityCode);
 
     // If verified, return the entity code. If not, return empty string.
     return result.value?.[0].code || this.returnFallback();

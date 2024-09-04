@@ -1,7 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { metadataCache } from "@/lib/app-metadata-cache";
+import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { AvataxClientTaxCodeService } from "@/modules/avatax/avatax-client-tax-code.service";
+import { AvataxConnectionRepository } from "@/modules/avatax/configuration/avatax-connection-repository";
+import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
 
 import { createLogger } from "../../../logger";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
@@ -27,11 +32,15 @@ export const avataxTaxCodesRouter = router({
       filter: input.filter,
     });
 
-    const connectionService = new AvataxConnectionService({
-      appId: ctx.appId!,
-      client: ctx.apiClient,
-      saleorApiUrl: ctx.saleorApiUrl,
-    });
+    const connectionService = new AvataxConnectionService(
+      new AvataxConnectionRepository(
+        new CrudSettingsManager({
+          metadataManager: createSettingsManager(ctx.apiClient, ctx.appId, metadataCache),
+          saleorApiUrl: ctx.saleorApiUrl,
+          metadataKey: TAX_PROVIDER_KEY,
+        }),
+      ),
+    );
 
     const connection = await connectionService.getById(input.connectionId).catch((err) => {
       logger.error("Failed to resolve connection from settings", { error: err });

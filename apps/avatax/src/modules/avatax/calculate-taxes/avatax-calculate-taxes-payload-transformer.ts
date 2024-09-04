@@ -2,16 +2,20 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
-import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
+import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AutomaticallyDistributedDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 export class AvataxCalculateTaxesPayloadTransformer {
+  constructor(
+    private avaTaxCalculateTaxesPayloadLinesTransformer: AvataxCalculateTaxesPayloadLinesTransformer,
+    private avataxEntityTypeMatcher: AvataxEntityTypeMatcher,
+  ) {}
+
   private matchDocumentType(config: AvataxConfig): DocumentType {
     /*
      * * For calculating taxes, we always use DocumentType.SalesOrder because it doesn't cause transaction recording.
@@ -22,17 +26,16 @@ export class AvataxCalculateTaxesPayloadTransformer {
     return DocumentType.SalesOrder;
   }
 
+  /**
+   * https://linear.app/saleor/issue/SHOPX-1313/tech-debt-avatax-refactor-async-transformers
+   */
   async transform(
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedDiscountsStrategy,
   ): Promise<CreateTransactionArgs> {
-    const payloadLinesTransformer = new AvataxCalculateTaxesPayloadLinesTransformer();
-    const avataxClient = new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfig));
-    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: avataxClient });
-
-    const entityUseCode = await entityTypeMatcher.match(
+    const entityUseCode = await this.avataxEntityTypeMatcher.match(
       payload.taxBase.sourceObject.avataxEntityCode,
     );
 
@@ -57,7 +60,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: payloadLinesTransformer.transform(
+        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transform(
           payload.taxBase,
           avataxConfig,
           matches,

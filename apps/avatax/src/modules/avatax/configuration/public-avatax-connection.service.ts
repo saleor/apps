@@ -6,47 +6,37 @@ import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConnectionService } from "./avatax-connection.service";
 
 export class PublicAvataxConnectionService {
-  private readonly connectionService: AvataxConnectionService;
-  private readonly obfuscator: AvataxObfuscator;
-  constructor({
-    client,
-    appId,
-    saleorApiUrl,
-  }: {
-    client: Client;
-    appId: string;
-    saleorApiUrl: string;
-  }) {
-    this.connectionService = new AvataxConnectionService({ client, appId, saleorApiUrl });
-    this.obfuscator = new AvataxObfuscator();
-  }
+  constructor(
+    private avataxConnectionService: AvataxConnectionService,
+    private avataxObfuscator: AvataxObfuscator,
+  ) {}
 
   async getAll() {
-    const connections = await this.connectionService.getAll();
+    const connections = await this.avataxConnectionService.getAll();
 
-    return this.obfuscator.obfuscateAvataxConnections(connections);
+    return this.avataxObfuscator.obfuscateAvataxConnections(connections);
   }
 
   async getById(id: string) {
-    const connection = await this.connectionService.getById(id);
+    const connection = await this.avataxConnectionService.getById(id);
 
-    return this.obfuscator.obfuscateAvataxConnection(connection);
+    return this.avataxObfuscator.obfuscateAvataxConnection(connection);
   }
 
   async create(config: AvataxConfig) {
-    return this.connectionService.create(config);
+    return this.avataxConnectionService.create(config);
   }
 
   async update(id: string, config: DeepPartial<AvataxConfig>) {
-    return this.connectionService.update(id, config);
+    return this.avataxConnectionService.update(id, config);
   }
 
   async delete(id: string) {
-    return this.connectionService.delete(id);
+    return this.avataxConnectionService.delete(id);
   }
 
   async verifyConnections() {
-    const connections = await this.connectionService.getAll();
+    const connections = await this.avataxConnectionService.getAll();
 
     if (connections.length === 0) {
       throw new Error("No AvaTax connections found");

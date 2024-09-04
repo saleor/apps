@@ -1,6 +1,11 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { describe, expect, it } from "vitest";
 
+import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
+import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
+
 import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirmed/mocks";
 import { AvataxClient } from "../avatax-client";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
@@ -20,7 +25,12 @@ const orderMock = mockGenerator.generateOrder();
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
 const transformer = new AvataxOrderConfirmedPayloadTransformer(
-  new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfigMock)),
+  new SaleorOrderToAvataxLinesTransformer(),
+  new AvataxEntityTypeMatcher(
+    new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfigMock)),
+  ),
+  new AvataxCalculationDateResolver(),
+  new AvataxDocumentCodeResolver(),
 );
 
 describe("AvataxOrderConfirmedPayloadTransformer", () => {

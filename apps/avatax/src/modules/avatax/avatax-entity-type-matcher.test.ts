@@ -13,7 +13,7 @@ describe("AvataxEntityTypeMatcher", () => {
       ),
     } as any as AvataxClient;
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+    const matcher = new AvataxEntityTypeMatcher(mockAvataxClient);
     const result = await matcher.match(null);
 
     expect(result).toBe("");
@@ -23,7 +23,7 @@ describe("AvataxEntityTypeMatcher", () => {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(Promise.resolve({})),
     } as any as AvataxClient;
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+    const matcher = new AvataxEntityTypeMatcher(mockAvataxClient);
 
     const result = await matcher.match("entityCode");
 
@@ -36,7 +36,7 @@ describe("AvataxEntityTypeMatcher", () => {
       ),
     } as any as AvataxClient;
 
-    const matcher = new AvataxEntityTypeMatcher({ client: mockAvataxClient });
+    const matcher = new AvataxEntityTypeMatcher(mockAvataxClient);
 
     const result = await matcher.match("entityCode");
 

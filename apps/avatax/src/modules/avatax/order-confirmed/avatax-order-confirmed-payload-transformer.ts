@@ -10,7 +10,7 @@ import {
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
-import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
+import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
@@ -22,7 +22,12 @@ import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-li
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
 
-  constructor(private avataxClient: AvataxClient) {}
+  constructor(
+    private saleorOrderToAvataxLinesTransformer: SaleorOrderToAvataxLinesTransformer,
+    private avataxEntityTypeMatcher: AvataxEntityTypeMatcher,
+    private avataxCalculationDateResolver: AvataxCalculationDateResolver,
+    private avataxDocumentCodeResolver: AvataxDocumentCodeResolver,
+  ) {}
 
   private matchDocumentType(config: AvataxConfig): DocumentType {
     if (!config.isDocumentRecordingEnabled) {
@@ -60,14 +65,12 @@ export class AvataxOrderConfirmedPayloadTransformer {
     matches: AvataxTaxCodeMatches;
     discountsStrategy: PriceReductionDiscountsStrategy;
   }): Promise<CreateTransactionArgs> {
-    const saleorOrderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
-    const entityTypeMatcher = new AvataxEntityTypeMatcher({ client: this.avataxClient });
-    const dateResolver = new AvataxCalculationDateResolver();
-    const documentCodeResolver = new AvataxDocumentCodeResolver();
-
-    const entityUseCode = await entityTypeMatcher.match(order.avataxEntityCode);
-    const date = dateResolver.resolve(order.avataxTaxCalculationDate, order.created);
-    const code = documentCodeResolver.resolve({
+    const entityUseCode = await this.avataxEntityTypeMatcher.match(order.avataxEntityCode);
+    const date = this.avataxCalculationDateResolver.resolve(
+      order.avataxTaxCalculationDate,
+      order.created,
+    );
+    const code = this.avataxDocumentCodeResolver.resolve({
       avataxDocumentCode: order.avataxDocumentCode,
       orderId: order.id,
     });
@@ -105,7 +108,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: order.total.currency,
         // we can fall back to empty string because email is not a required field
         email: order.user?.email ?? order.userEmail ?? "",
-        lines: saleorOrderToAvataxLinesTransformer.transform({
+        lines: this.saleorOrderToAvataxLinesTransformer.transform({
           confirmedOrderEvent,
           matches,
           avataxConfig,
