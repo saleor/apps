@@ -1,11 +1,12 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { useEffect, useState } from "react";
+
 import {
   ChannelsDocument,
   ProductsDataForImportDocument,
   ProductsDataForImportQuery,
 } from "../../generated/graphql";
-import { createGraphQLClient } from "@saleor/apps-shared";
 
 const PER_PAGE = 100;
 
