@@ -1,4 +1,4 @@
-import { APL, FileAPL, UpstashAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { APL, FileAPL, SaleorCloudAPL,UpstashAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 /**
@@ -8,7 +8,7 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
  * To read more about storing auth data, read the
  * [APL documentation](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
  */
-const aplType = process.env.APL ?? "file";
+export const aplType = process.env.APL ?? "file";
 let apl: APL;
 
 switch (aplType) {
@@ -39,7 +39,7 @@ switch (aplType) {
 
 if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
   throw new Error(
-    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
+    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager.",
   );
 }
 

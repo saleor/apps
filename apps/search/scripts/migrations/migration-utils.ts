@@ -1,8 +1,9 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
-
-import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { aplType,saleorApp } from "../../saleor-app";
 
 export const verifyRequiredEnvs = () => {
+  if (aplType == "file") return;
+
   const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 
   if (!requiredEnvs.every((env) => process.env[env])) {
@@ -10,11 +11,8 @@ export const verifyRequiredEnvs = () => {
   }
 };
 
-export const fetchCloudAplEnvs = () => {
-  const saleorAPL = new SaleorCloudAPL({
-    token: process.env.REST_APL_TOKEN!,
-    resourceUrl: process.env.REST_APL_ENDPOINT!,
-  });
+export const fetchAplEnvs = () => {
+  const saleorAPL = saleorApp.apl;
 
   return saleorAPL.getAll();
 };
