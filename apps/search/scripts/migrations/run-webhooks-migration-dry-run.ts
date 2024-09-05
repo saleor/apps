@@ -1,7 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
 import * as dotenv from "dotenv";
-import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
+
+import { fetchAplEnvs, verifyRequiredEnvs } from "./migration-utils";
 import { updateWebhooksScript } from "./update-webhooks";
 
 dotenv.config();
@@ -13,7 +14,7 @@ const runMigration = async () => {
 
   console.log("Envs verified, fetching envs");
 
-  const allEnvs = await fetchCloudAplEnvs().catch((r) => {
+  const allEnvs = await fetchAplEnvs().catch((r) => {
     console.error("Could not fetch instances from the APL");
     console.error(r);
 
