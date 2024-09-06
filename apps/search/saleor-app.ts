@@ -1,4 +1,4 @@
-import { APL, FileAPL, SaleorCloudAPL,UpstashAPL } from "@saleor/app-sdk/APL";
+import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 /**
@@ -8,7 +8,7 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
  * To read more about storing auth data, read the
  * [APL documentation](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
  */
-export const aplType = process.env.APL ?? "file";
+const aplType = process.env.APL ?? "file";
 let apl: APL;
 
 switch (aplType) {
