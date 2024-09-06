@@ -29,6 +29,7 @@ beforeAll(() => {
 
   settings.setRequestDefaultRetryCount(3); // retry up to 3 times by default
   settings.setRequestDefaultRetryDelay(50); // wait 50ms between retries
+  settings.setLogLevel("DEBUG");
 
   /*
    * We have to use baseUrl (without /graphql/ suffix)
