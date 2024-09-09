@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.5
+
+### Patch Changes
+
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 1.19.4
 
 ### Patch Changes

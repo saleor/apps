@@ -1,5 +1,13 @@
 # app-avatax
 
+## 1.8.3
+
+### Patch Changes
+
+- 8fb5ea61: Migrate from country select into country combobox when configuring AvaTax app. It should be easier to search for countries instead of selecting them from long list.
+- 63f6bbfd: Refactor: Extracted dependencies to the highest possible creation place. This should not introduce any functional change
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 1.8.2
 
 ### Patch Changes

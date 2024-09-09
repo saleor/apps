@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.22.10
+
+### Patch Changes
+
+- f57cd9b9: Now flag the "bundlePagesExternals" is enabled. This means cold-run can be reduced accordingly to Vercel recommendation.
+- 77329589: The initial import of product to algolia is no longer stuck while processing. This means the UI now informs you when the upload is finished.
+- 2c185816: Active webhooks are no longer disabling themselves when running migrations. This means when some webhook is active, migration will turn on all of them.
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 1.22.9
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.7
+
+### Patch Changes
+
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 2.9.6
 
 ### Patch Changes

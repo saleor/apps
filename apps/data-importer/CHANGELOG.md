@@ -1,5 +1,11 @@
 # saleor-app-data-importer
 
+## 1.12.7
+
+### Patch Changes
+
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 1.12.6
 
 ### Patch Changes
