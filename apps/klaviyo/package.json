@@ -1,6 +1,6 @@
 {
   "name": "klaviyo",
-  "version": "1.12.7",
+  "version": "1.12.8",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",

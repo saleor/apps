@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.9
+
+### Patch Changes
+
+- 45a47156: Updated @saleor/app-sdk to 0.50.2. No functional changes are introduced
+
 ## 1.2.8
 
 ### Patch Changes
