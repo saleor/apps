@@ -33,7 +33,7 @@ export const updateWebhooksScript = async ({
       }
 
       // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-      const enabled = webhooks.some((w) => w.isActive);
+      const isActive = webhooks.some((w) => w.isActive);
 
       const targetUrl = appDetails.appUrl;
 
@@ -43,7 +43,7 @@ export const updateWebhooksScript = async ({
 
       const baseUrl = new URL(targetUrl).origin;
 
-      return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
+      return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive }));
     },
   });
 

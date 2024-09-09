@@ -1,4 +1,4 @@
-import { APL, FileAPL, UpstashAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 /**
@@ -39,7 +39,7 @@ switch (aplType) {
 
 if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
   throw new Error(
-    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
+    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager.",
   );
 }
 
