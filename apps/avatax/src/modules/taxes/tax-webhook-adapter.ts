@@ -2,7 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 
 import { AvataxConfig } from "../avatax/avatax-connection-schema";
 import {
-  AutomaticallyDistributedDiscountsStrategy,
+  AutomaticallyDistributedProductLinesDiscountsStrategy,
   PriceReductionDiscountsStrategy,
 } from "../avatax/discounts";
 
@@ -11,6 +11,8 @@ export interface WebhookAdapter<TPayload extends Record<string, any>, TResponse 
     payload: TPayload,
     config: AvataxConfig,
     authData: AuthData,
-    discountsStrategy: AutomaticallyDistributedDiscountsStrategy | PriceReductionDiscountsStrategy,
+    discountsStrategy:
+      | AutomaticallyDistributedProductLinesDiscountsStrategy
+      | PriceReductionDiscountsStrategy,
   ): Promise<TResponse>;
 }

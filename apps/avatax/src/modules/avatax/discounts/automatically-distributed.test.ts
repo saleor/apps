@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { TaxBaseFragment } from "../../../../generated/graphql";
-import { AutomaticallyDistributedDiscountsStrategy } from "./automatically-distributed";
+import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "./automatically-distributed";
 
 describe("AutomaticallyDistributedDiscountsStrategy", () => {
-  const strategy = new AutomaticallyDistributedDiscountsStrategy();
+  const strategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
   describe("getDiscountAmount", () => {
     it("should get total discount amount", () => {
@@ -13,11 +13,13 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 21,
           },
+          type: "SUBTOTAL",
         },
         {
           amount: {
             amount: 0.37,
           },
+          type: "SUBTOTAL",
         },
       ];
 
@@ -46,6 +48,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 0,
           },
+          type: "SUBTOTAL",
         },
       ];
 
@@ -62,11 +65,13 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 21,
           },
+          type: "SUBTOTAL",
         },
         {
           amount: {
             amount: 0.37,
           },
+          type: "SUBTOTAL",
         },
       ];
 
@@ -89,6 +94,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
           amount: {
             amount: 0,
           },
+          type: "SHIPPING",
         },
       ];
 

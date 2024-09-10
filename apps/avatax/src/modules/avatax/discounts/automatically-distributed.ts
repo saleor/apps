@@ -1,3 +1,4 @@
+import Decimal from "decimal.js-light";
 import { TaxBaseFragment } from "generated/graphql";
 
 /*
@@ -6,15 +7,18 @@ import { TaxBaseFragment } from "generated/graphql";
  * Note: Discounts on line from Saleor has discount already included in totalPrice.
  * Docs: https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
  */
-export class AutomaticallyDistributedDiscountsStrategy {
+export class AutomaticallyDistributedProductLinesDiscountsStrategy {
   getDiscountAmount(taxBaseDiscounts: TaxBaseFragment["discounts"] | undefined) {
     if (!taxBaseDiscounts) {
       return 0;
     }
 
     return taxBaseDiscounts
+      .filter((d) => d.type === "SUBTOTAL")
       .map((discount) => discount.amount.amount)
-      .reduce((total, current) => total + Number(current), 0);
+      .reduce((total, current) => {
+        return new Decimal(total).add(current).toNumber();
+      }, 0);
   }
 
   areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {
