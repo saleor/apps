@@ -2,6 +2,8 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { err, ok, Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
+
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
@@ -38,7 +40,7 @@ const getBasePayload = (): CalculateTaxesPayload => {
       discounts: [],
       currency: "PLN",
       pricesEnteredWithTax: false,
-      shippingPrice: { amount: 0 },
+      shippingPrice: { amount: 30 },
       address: {
         city: "",
         country: {
@@ -87,7 +89,10 @@ const getPayloadWithDiscounts = (): CalculateTaxesPayload => {
     ...getBasePayload(),
     taxBase: {
       ...getBasePayload().taxBase,
-      discounts: [{ amount: { amount: 10 } }, { amount: { amount: 0.1 } }],
+      discounts: [
+        { amount: { amount: 10 }, type: "SUBTOTAL" },
+        { amount: { amount: 0.1 }, type: "SHIPPING" },
+      ],
     },
   };
 };
@@ -210,7 +215,7 @@ describe("CalculateTaxesUseCase", () => {
     expect(error.errors![0]).toBeInstanceOf(Error);
   });
 
-  it("Uses AutomaticallyDistributedDiscountsStrategy to calculate discounts if present", async () => {
+  it("Calculates proper discount (extra field with sum of SUBTOTAL-type amountes) and properly reduces price of shipping line", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
     mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
@@ -223,12 +228,18 @@ describe("CalculateTaxesUseCase", () => {
 
     expect(mockedAvataxClient.createTransaction).toHaveBeenCalledWith({
       model: expect.objectContaining({
-        discount: 10.1,
-        lines: [
+        discount: 10,
+        lines: expect.arrayContaining([
           expect.objectContaining({
             discounted: true,
+            amount: 100,
           }),
-        ],
+          expect.objectContaining({
+            discounted: false,
+            amount: 29.9,
+            itemCode: SHIPPING_ITEM_CODE,
+          }),
+        ]),
       }),
     });
   });

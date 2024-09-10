@@ -119,7 +119,10 @@ const defaultTaxBase: TaxBase = {
 
 const taxBaseWithDiscounts: TaxBase = {
   ...defaultTaxBase,
-  discounts: [{ amount: { amount: 21 } }, { amount: { amount: 0.37 } }],
+  discounts: [
+    { amount: { amount: 21 }, type: "SUBTOTAL" },
+    { amount: { amount: 0.37 }, type: "SHIPPING" },
+  ],
 };
 
 const defaultTransactionModel: TransactionModel = {

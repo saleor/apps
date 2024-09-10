@@ -39,6 +39,7 @@ fragment TaxDiscount on TaxableObjectDiscount {
   amount {
     amount
   }
+  type
 }
 
 fragment TaxBase on TaxableObject {
