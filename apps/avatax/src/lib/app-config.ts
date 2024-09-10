@@ -38,7 +38,7 @@ export class AppConfig implements IAppConfig {
   ) {}
 
   getConfigForChannelSlug(slug: string): GetConfigForChannelResult {
-    const channelConfig = this.config.channels.find((channel) => channel.config.slug === slug);
+    const channelConfig = this.config.channels?.find((channel) => channel.config.slug === slug);
 
     if (!channelConfig) {
       return err(
