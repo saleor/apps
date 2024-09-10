@@ -1,13 +1,13 @@
 mutation CreateCheckout(
   $channelSlug: String!
-  $variantId: ID!
   $email: String!
   $address: AddressInput!
+  $lines: [CheckoutLineInput!]!
 ) {
   checkoutCreate(
     input: {
       channel: $channelSlug
-      lines: [{ quantity: 10, variantId: $variantId }]
+      lines: $lines
       email: $email
       shippingAddress: $address
       billingAddress: $address

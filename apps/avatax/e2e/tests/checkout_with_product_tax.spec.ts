@@ -42,7 +42,7 @@ describe("App should calculate taxes for checkout with product with tax class TC
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
         "@OVERRIDES@": {
-          variantId: "$M{Product.Juice.variantId}",
+          lines: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
           channelSlug: "$M{Channel.PricesWithTax.slug}",
         },
       })

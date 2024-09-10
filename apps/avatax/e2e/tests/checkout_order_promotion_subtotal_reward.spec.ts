@@ -3,46 +3,40 @@ import { string } from "pactum-matchers";
 import { describe, it } from "vitest";
 
 import {
-  CheckoutAddVoucher,
+  CheckoutLinesUpdate,
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
   MoneyFragment,
 } from "../generated/graphql";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16236
-describe("App should calculate taxes for checkout with entire order voucher applied TC: AVATAX_5", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&pagination_current=2&case_id=24373
+describe("App should calculate taxes for checkout with order promotion with subtotal reward TC: AVATAX_40", () => {
   const testCase = e2e(
-    "Product without tax class [pricesEnteredWithTax: False], voucher [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
+    "pricesEnteredWithTax: False, promotion [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
   );
 
   const CURRENCY = "USD";
 
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 16.33;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 299.5;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.58;
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 326.08;
 
   const SHIPPING_NET_PRICE = 69.31;
-  const SHIPPING_TAX_PRICE = 6.14;
-  const SHIPPING_GROSS_PRICE = 75.45;
+  const SHIPPING_TAX_PRICE = 6.15;
+  const SHIPPING_GROSS_PRICE = 75.46;
 
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 7.48;
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 91.79;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 368.81;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 32.73;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 401.54;
 
-  const VOUCHER_AMOUNT = 2.25;
+  const PRODUCT_NET_PRICE_AFTER_PROMOTION = 449.25;
+  const PRODUCT_TAX_PRICE_AFTER_PROMOTION = 39.87;
+  const PRODUCT_GROSS_PRICE_AFTER_PROMOTION = 489.12;
 
-  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 69.31;
-  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 6.15;
-  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 75.46;
-
-  const PRODUCT_NET_PRICE_AFTER_VOUCHER = 12.75;
-  const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.13;
-  const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 13.88;
-
-  const TOTAL_NET_PRICE_AFTER_VOUCHER = 82.06;
-  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.28;
-  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 89.34;
+  const TOTAL_NET_PRICE_INCLUDING_ORDER_PROMOTION = 518.56;
+  const TOTAL_TAX_PRICE_INCLUDING_ORDER_PROMOTION = 46.02;
+  const TOTAL_GROSS_PRICE_INCLUDING_ORDER_PROMOTION = 564.58;
 
   const getMoney = (amount: number): MoneyFragment => {
     return {
@@ -66,7 +60,7 @@ describe("App should calculate taxes for checkout with entire order voucher appl
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:USA",
         "@OVERRIDES@": {
-          lines: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
+          lines: [{ quantity: 1, variantId: "$M{Product.ExpensiveTshirt.variantId}" }],
         },
       })
       .expectStatus(200)
@@ -83,7 +77,8 @@ describe("App should calculate taxes for checkout with entire order voucher appl
         currency: "USD",
       } as MoneyFragment)
       .retry()
-      .stores("CheckoutId", "data.checkoutCreate.checkout.id");
+      .stores("CheckoutId", "data.checkoutCreate.checkout.id")
+      .stores("CheckoutLineId", "data.checkoutCreate.checkout.lines[0].id");
   });
 
   it("should have taxes calculated when shipping is added to checkout", async () => {
@@ -122,43 +117,41 @@ describe("App should calculate taxes for checkout with entire order voucher appl
       .retry();
   });
 
-  it("should have taxes calculated when voucher is added to checkout", async () => {
+  it("should have taxes calculated when order promotion applies", async () => {
     await testCase
       .step("Add voucher code")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(CheckoutAddVoucher)
+      .withGraphQLQuery(CheckoutLinesUpdate)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "AddVoucher:USA:Percentage",
+        "@DATA:TEMPLATE@": "UpdateLines",
       })
-      .expectJson("data.checkoutAddPromoCode.checkout.discountName", "$M{Voucher.Percentage.name}")
-      .expectJson("data.checkoutAddPromoCode.checkout.discount", getMoney(VOUCHER_AMOUNT))
       .expectJson(
-        "data.checkoutAddPromoCode.checkout.lines[0].totalPrice",
+        "data.checkoutLinesUpdate.checkout.lines[0].totalPrice",
         getCompleteMoney({
-          gross: PRODUCT_GROSS_PRICE_AFTER_VOUCHER,
-          net: PRODUCT_NET_PRICE_AFTER_VOUCHER,
-          tax: PRODUCT_TAX_PRICE_AFTER_VOUCHER,
+          gross: PRODUCT_GROSS_PRICE_AFTER_PROMOTION,
+          net: PRODUCT_NET_PRICE_AFTER_PROMOTION,
+          tax: PRODUCT_TAX_PRICE_AFTER_PROMOTION,
         }),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.checkout.lines[0].undiscountedTotalPrice",
+        "data.checkoutLinesUpdate.checkout.lines[0].undiscountedUnitPrice",
         getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.checkout.shippingPrice",
+        "data.checkoutLinesUpdate.checkout.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
-          net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
-          tax: SHIPPING_TAX_PRICE_AFTER_VOUCHER,
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
         }),
       )
       .expectJson(
-        "data.checkoutAddPromoCode.checkout.totalPrice",
+        "data.checkoutLinesUpdate.checkout.totalPrice",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_VOUCHER,
-          net: TOTAL_NET_PRICE_AFTER_VOUCHER,
-          tax: TOTAL_TAX_PRICE_AFTER_VOUCHER,
+          gross: TOTAL_GROSS_PRICE_INCLUDING_ORDER_PROMOTION,
+          net: TOTAL_NET_PRICE_INCLUDING_ORDER_PROMOTION,
+          tax: TOTAL_TAX_PRICE_INCLUDING_ORDER_PROMOTION,
         }),
       )
       .retry();

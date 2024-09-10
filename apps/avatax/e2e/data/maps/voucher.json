@@ -4,6 +4,11 @@
       "id": "Vm91Y2hlcjo0",
       "code": "test_voucher_15percentage",
       "name": "VOUCHER 15%"
+    },
+    "FreeShipping": {
+      "id": "Vm91Y2hlcjox",
+      "code": "FREESHIPPING",
+      "name": "Free shipping"
     }
   }
 }

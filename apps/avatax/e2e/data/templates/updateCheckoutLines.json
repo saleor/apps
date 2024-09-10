@@ -1,0 +1,11 @@
+{
+  "UpdateLines": {
+    "checkoutId": "$S{CheckoutId}",
+    "lines": [
+      {
+        "lineId": "$S{CheckoutLineId}",
+        "quantity": 2
+      }
+    ]
+  }
+}

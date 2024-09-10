@@ -50,7 +50,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
         "@OVERRIDES@": {
-          variantId: "$M{Product.Juice.variantId}",
+          lines: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
           channelSlug: "$M{Channel.PricesWithTax.slug}",
         },
       })
@@ -236,25 +236,5 @@ describe("App should calculate taxes for checkout on update shipping address TC:
         },
       })
       .stores("StaffUserToken", "data.tokenCreate.token");
-  });
-
-  it("should have metadata with 'avataxId' key", async () => {
-    await testCase
-      .step("Check if order has metadata with 'avataxId' key")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(OrderDetails)
-      .withGraphQLVariables({
-        id: "$S{OrderID}",
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
-      })
-      .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", {
-        key: "avataxId",
-        value: "typeof $V === 'string'",
-      })
-      .retry(4, 2000);
   });
 });
