@@ -8,7 +8,6 @@ import {
   DraftOrderComplete,
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
-  OrderDetails,
   OrderDiscountAdd,
   StaffUserTokenCreate,
 } from "../generated/graphql";
@@ -71,7 +70,8 @@ describe("App should calculate taxes for draft order with manual total discount 
           },
         },
       })
-      .stores("StaffUserToken", "data.tokenCreate.token");
+      .stores("StaffUserToken", "data.tokenCreate.token")
+      .retry();
   });
   it("creates order in channel pricesEnteredWithTax: True", async () => {
     await testCase

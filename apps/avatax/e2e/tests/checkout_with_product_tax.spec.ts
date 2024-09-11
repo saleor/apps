@@ -163,7 +163,8 @@ describe("App should calculate taxes for checkout with product with tax class TC
           },
         },
       })
-      .stores("StaffUserToken", "data.tokenCreate.token");
+      .stores("StaffUserToken", "data.tokenCreate.token")
+      .retry();
   });
 
   it("should have metadata with 'avataxId' key", async () => {

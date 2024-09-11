@@ -62,7 +62,8 @@ describe("App should calculate taxes for draft order with product with tax class
           },
         },
       })
-      .stores("StaffUserToken", "data.tokenCreate.token");
+      .stores("StaffUserToken", "data.tokenCreate.token")
+      .retry();
   });
   it("creates order with product with tax class", async () => {
     await testCase
