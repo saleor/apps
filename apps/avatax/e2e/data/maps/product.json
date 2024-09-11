@@ -9,6 +9,11 @@
       "variantId": "UHJvZHVjdFZhcmlhbnQ6Mzg0",
       "id": "UHJvZHVjdDoxNTI=",
       "name": "Apple Juice"
+    },
+    "ExpensiveTshirt": {
+      "variantId": "UHJvZHVjdFZhcmlhbnQ6Mzkw",
+      "id": "UHJvZHVjdDoxNTc=",
+      "name": "Reversed Monotype Tee"
     }
   }
 }

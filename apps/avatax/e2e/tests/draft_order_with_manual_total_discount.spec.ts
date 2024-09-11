@@ -9,12 +9,12 @@ import {
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
   MoneyFragment,
-  OrderDetails,
+  OrderDiscountAdd,
   StaffUserTokenCreate,
 } from "../generated/graphql";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18382
-describe("App should calculate taxes for draft order with product with tax class TC: AVATAX_18", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18386
+describe("App should calculate taxes for draft order with manual total discount applied TC: AVATAX_22", () => {
   const testCase = e2e("Product with tax class [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,
@@ -34,6 +34,14 @@ describe("App should calculate taxes for draft order with product with tax class
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
+
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 69.1;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 63.47;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 5.63;
+
+  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT = 55.45;
+  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 50.93;
+  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 4.52;
 
   const getMoney = (amount: number): MoneyFragment => {
     return {
@@ -66,9 +74,9 @@ describe("App should calculate taxes for draft order with product with tax class
       .stores("StaffUserToken", "data.tokenCreate.token")
       .retry();
   });
-  it("creates order with product with tax class", async () => {
+  it("creates order in channel pricesEnteredWithTax: True", async () => {
     await testCase
-      .step("Create order with product with tax class")
+      .step("Create order in channel")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
@@ -172,6 +180,42 @@ describe("App should calculate taxes for draft order with product with tax class
       );
   });
 
+  it("should add manual discount for total as staff user", async () => {
+    await testCase
+      .step("add manual discount to draft order")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(OrderDiscountAdd)
+      .withGraphQLVariables({
+        orderId: "$S{OrderID}",
+        input: {
+          reason: "manual discount for client",
+          value: 10,
+          valueType: "PERCENTAGE",
+        },
+      })
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .expectStatus(200)
+      .expectJson("data.orderDiscountAdd.order.id", "$S{OrderID}")
+      .expectJson(
+        "data.orderDiscountAdd.order.total",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
+          net: TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
+          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
+        }),
+      )
+      .expectJson(
+        "data.orderDiscountAdd.order.shippingPrice",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT,
+          net: TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT,
+          tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT,
+        }),
+      );
+  });
   it("should complete draft order", async () => {
     await testCase
       .step("Complete draft order")
@@ -186,25 +230,5 @@ describe("App should calculate taxes for draft order with product with tax class
       })
       .expectStatus(200)
       .expectJson("data.draftOrderComplete.order.id", "$S{OrderID}");
-  });
-
-  it("should have metadata with 'avataxId' key", async () => {
-    await testCase
-      .step("Check if order has metadata with 'avataxId' key")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(OrderDetails)
-      .withGraphQLVariables({
-        id: "$S{OrderID}",
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
-      })
-      .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", {
-        key: "avataxId",
-        value: "typeof $V === 'string'",
-      })
-      .retry(4, 2000);
   });
 });

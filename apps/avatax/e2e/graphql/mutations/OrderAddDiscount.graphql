@@ -1,0 +1,10 @@
+mutation OrderDiscountAdd($orderId: ID!, $input: OrderDiscountCommonInput!) {
+  orderDiscountAdd(orderId: $orderId, input: $input) {
+    errors {
+      ...OrderError
+    }
+    order {
+      ...OrderDetailsFragment
+    }
+  }
+}
