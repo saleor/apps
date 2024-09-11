@@ -1,8 +1,8 @@
-mutation CreateCheckoutNoAddress($channelSlug: String!, $variantId: ID!, $email: String!) {
+mutation CreateCheckoutNoAddress($channelSlug: String!, $lines: [CheckoutLineInput!]!, $email: String!) {
   checkoutCreate(
     input: {
       channel: $channelSlug
-      lines: [{ quantity: 10, variantId: $variantId }]
+      lines: $lines
       email: $email
       languageCode: EN_US
     }

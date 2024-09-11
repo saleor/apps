@@ -1,13 +1,23 @@
 {
   "Checkout:USA": {
     "channelSlug": "$M{Channel.USA.slug}",
-    "variantId": "$M{Product.Regular.variantId}",
+    "lines": [
+      {
+        "variantId": "$M{Product.Regular.variantId}",
+        "quantity": 10
+      }
+    ],
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"
   },
   "Checkout:PricesWithTax": {
     "channelSlug": "$M{Channel.PricesWithTax.slug}",
-    "variantId": "$M{Product.Regular.variantId}",
+    "lines": [
+      {
+        "variantId": "$M{Product.Regular.variantId}",
+        "quantity": 10
+      }
+    ],
     "email": "$F{UserEmail}",
     "address": "$M{Address.NewYork}"
   }

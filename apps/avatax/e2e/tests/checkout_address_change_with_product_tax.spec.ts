@@ -50,7 +50,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
         "@OVERRIDES@": {
-          variantId: "$M{Product.Juice.variantId}",
+          lines: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
           channelSlug: "$M{Channel.PricesWithTax.slug}",
         },
       })
@@ -235,7 +235,8 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           },
         },
       })
-      .stores("StaffUserToken", "data.tokenCreate.token");
+      .stores("StaffUserToken", "data.tokenCreate.token")
+      .retry();
   });
 
   it("should have metadata with 'avataxId' key", async () => {

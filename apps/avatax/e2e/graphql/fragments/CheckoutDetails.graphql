@@ -1,7 +1,11 @@
 fragment CheckoutDetails on Checkout {
   id
   lines {
+    id
     undiscountedTotalPrice {
+      ...Money
+    }
+    undiscountedUnitPrice{
       ...Money
     }
     totalPrice {

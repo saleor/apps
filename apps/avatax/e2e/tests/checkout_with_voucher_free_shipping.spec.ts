@@ -10,10 +10,10 @@ import {
   MoneyFragment,
 } from "../generated/graphql";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16236
-describe("App should calculate taxes for checkout with entire order voucher applied TC: AVATAX_5", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16237
+describe("App should calculate taxes for checkout with free shipping voucher applied TC: AVATAX_6", () => {
   const testCase = e2e(
-    "Product without tax class [pricesEnteredWithTax: False], voucher [type: ENTIRE_ORDER, discountValueType: PERCENTAGE]",
+    "Product with tax class [pricesEnteredWithTax: False], voucher [type: SHIPPING, discountValueType: PERCENTAGE]",
   );
 
   const CURRENCY = "USD";
@@ -30,19 +30,15 @@ describe("App should calculate taxes for checkout with entire order voucher appl
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 7.48;
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 91.79;
 
-  const VOUCHER_AMOUNT = 2.25;
+  const VOUCHER_AMOUNT = SHIPPING_NET_PRICE;
 
-  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 69.31;
-  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 6.15;
-  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 75.46;
+  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 0;
+  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 0;
+  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 0;
 
-  const PRODUCT_NET_PRICE_AFTER_VOUCHER = 12.75;
-  const PRODUCT_TAX_PRICE_AFTER_VOUCHER = 1.13;
-  const PRODUCT_GROSS_PRICE_AFTER_VOUCHER = 13.88;
-
-  const TOTAL_NET_PRICE_AFTER_VOUCHER = 82.06;
-  const TOTAL_TAX_PRICE_AFTER_VOUCHER = 7.28;
-  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = 89.34;
+  const TOTAL_NET_PRICE_AFTER_VOUCHER = TOTAL_NET_PRICE_BEFORE_SHIPPING;
+  const TOTAL_TAX_PRICE_AFTER_VOUCHER = TOTAL_TAX_PRICE_BEFORE_SHIPPING;
+  const TOTAL_GROSS_PRICE_AFTER_VOUCHER = TOTAL_GROSS_PRICE_BEFORE_SHIPPING;
 
   const getMoney = (amount: number): MoneyFragment => {
     return {
@@ -129,22 +125,13 @@ describe("App should calculate taxes for checkout with entire order voucher appl
       .post("/graphql/")
       .withGraphQLQuery(CheckoutAddVoucher)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "AddVoucher:USA:Percentage",
+        "@DATA:TEMPLATE@": "AddVoucher:USA:FreeShipping",
       })
-      .expectJson("data.checkoutAddPromoCode.checkout.discountName", "$M{Voucher.Percentage.name}")
+      .expectJson(
+        "data.checkoutAddPromoCode.checkout.discountName",
+        "$M{Voucher.FreeShipping.name}",
+      )
       .expectJson("data.checkoutAddPromoCode.checkout.discount", getMoney(VOUCHER_AMOUNT))
-      .expectJson(
-        "data.checkoutAddPromoCode.checkout.lines[0].totalPrice",
-        getCompleteMoney({
-          gross: PRODUCT_GROSS_PRICE_AFTER_VOUCHER,
-          net: PRODUCT_NET_PRICE_AFTER_VOUCHER,
-          tax: PRODUCT_TAX_PRICE_AFTER_VOUCHER,
-        }),
-      )
-      .expectJson(
-        "data.checkoutAddPromoCode.checkout.lines[0].undiscountedTotalPrice",
-        getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING),
-      )
       .expectJson(
         "data.checkoutAddPromoCode.checkout.shippingPrice",
         getCompleteMoney({
