@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.8
+
+### Patch Changes
+
+- 2bc8c187: Now, the flag "bundlePagesExternals" is enabled, this means the cold-starts time were reduced for this app.
+
 ## 2.9.7
 
 ### Patch Changes
