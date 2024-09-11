@@ -45,8 +45,11 @@ export default wrapWithLoggerContext(
             payload: payload.taxBase,
           });
 
-          loggerContext.set("channelSlug", ctx.payload.taxBase.channel.slug);
-          loggerContext.set("checkoutId", ctx.payload.taxBase.sourceObject.id);
+          loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
+          loggerContext.set(
+            ObservabilityAttributes.CHECKOUT_ID,
+            ctx.payload.taxBase.sourceObject.id,
+          );
 
           if (payload.version) {
             Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
