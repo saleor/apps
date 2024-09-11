@@ -1,5 +1,25 @@
 # app-avatax
 
+## 1.9.0
+
+### Minor Changes
+
+- 4dc63f13: Implemented new discount strategy - for SHIPPING and SUBTOTAL values
+
+  Now, App will do following logic:
+
+  - For line items that represent products, we use [automatic distribution](https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/), so App will not modify amounts, but will mark lines as "discounted: true" and generate "discount" field that will sum all relevant discounts
+  - For shipping line item, app will use [price reduction](https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/), meaning shipping line will _not_ be marked as discounted, but the discount will be subtracted from the amount of the shipping line.
+
+  See updated docs [here](https://docs.saleor.io/developer/app-store/apps/avatax/configuration#discounts)
+
+- f803af6b: Minimal required Saleor version has been upgraded and now it's 3.19.
+
+### Patch Changes
+
+- 3bc35184: Fixed error that was thrown when app was used without channels mapping. Now error is handled properly.
+- e03f703f: Added extra error handling for Public Metadata mutation of the Order.
+
 ## 1.8.3
 
 ### Patch Changes
