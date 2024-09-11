@@ -1,5 +1,8 @@
 import { Client } from "urql";
 
+import { BaseError } from "@/error";
+import { createLogger } from "@/logger";
+
 import {
   UpdatePublicMetadataDocument,
   UpdatePublicMetadataMutation,
@@ -10,6 +13,12 @@ const PROVIDER_ORDER_ID_KEY = "avataxId";
 
 export class OrderMetadataManager {
   private privateOrderIdKey = PROVIDER_ORDER_ID_KEY;
+  private logger = createLogger("OrderMetadataManager");
+
+  static BaseError = BaseError.subclass("OrderMetadataManagerError");
+  static MutationError = OrderMetadataManager.BaseError.subclass(
+    "OrderMetadataManagerMutationError",
+  );
 
   constructor(private client: Client) {}
 
@@ -33,12 +42,29 @@ export class OrderMetadataManager {
         },
       ],
     };
-    const { error } = await this.client
+    const { error, data } = await this.client
       .mutation<UpdatePublicMetadataMutation>(UpdatePublicMetadataDocument, variables)
       .toPromise();
 
-    if (error) {
-      throw error;
+    const gqlErrors = data?.updateMetadata?.errors ?? [];
+
+    const errorToReport = error ?? gqlErrors[0] ?? null;
+
+    if (errorToReport) {
+      this.logger.error("Failed to update metadata", {
+        error: new OrderMetadataManager.MutationError(
+          errorToReport.message ?? "Failed to update metadata",
+          {
+            props: {
+              error: errorToReport,
+            },
+          },
+        ),
+      });
+
+      throw new OrderMetadataManager.MutationError("Failed to update metadata", {
+        props: { error },
+      });
     }
 
     return { ok: true };
