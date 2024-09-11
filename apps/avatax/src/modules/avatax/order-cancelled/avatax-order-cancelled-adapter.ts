@@ -48,6 +48,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
         transactionCode: target.transactionCode,
         companyCode: target.companyCode,
         avataxId: payload.avataxId,
+        error,
       });
 
       throw error;
