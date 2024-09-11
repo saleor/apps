@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        saleor: [318, 319, 320]
+        saleor: [319, 320]
     env:
       ACCESS_TOKEN: ${{ secrets.saleor-token }}
       SALEOR_VERSION: ${{ matrix.saleor }}

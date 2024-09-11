@@ -181,7 +181,7 @@ describe("App should calculate taxes for draft order with manual total discount 
 
   it("should add manual discount for total as staff user", async () => {
     await testCase
-      .step("add manual discouny to draft order")
+      .step("add manual discount to draft order")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(OrderDiscountAdd)
