@@ -62,6 +62,11 @@ export default wrapWithLoggerContext(
         }
 
         if (confirmedOrderFromPayload.isOk()) {
+          loggerContext.set(
+            ObservabilityAttributes.ORDER_ID,
+            confirmedOrderFromPayload.value.getOrderId(),
+          );
+
           try {
             const confirmedOrderEvent = confirmedOrderFromPayload.value;
 
