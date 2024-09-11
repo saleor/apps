@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.6
+
+### Patch Changes
+
+- 2bc8c187: Now, the flag "bundlePagesExternals" is enabled, this means the cold-starts time were reduced for this app.
+
 ## 1.19.5
 
 ### Patch Changes

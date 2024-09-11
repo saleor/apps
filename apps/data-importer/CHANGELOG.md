@@ -1,5 +1,11 @@
 # saleor-app-data-importer
 
+## 1.12.8
+
+### Patch Changes
+
+- 2bc8c187: Now, the flag "bundlePagesExternals" is enabled, this means the cold-starts time were reduced for this app.
+
 ## 1.12.7
 
 ### Patch Changes
