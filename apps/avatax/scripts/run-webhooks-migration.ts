@@ -40,60 +40,58 @@ const runMigrations = async () => {
     process.exit(1);
   });
 
-  await Promise.allSettled(
-    saleorCloudEnv.map(async (saleorEnv) => {
-      loggerContext.wrap(async () => {
-        const { saleorApiUrl, token } = saleorEnv;
+  for (const saleorEnv of saleorCloudEnv) {
+    await loggerContext.wrap(async () => {
+      const { saleorApiUrl, token } = saleorEnv;
 
-        loggerContext.set("dryRun", dryRun.toString());
-        loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+      loggerContext.set("dryRun", dryRun.toString());
+      loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
 
-        logger.info(`Migrating webhooks for ${saleorApiUrl}`);
+      logger.info(`Migrating webhooks for ${saleorApiUrl}`);
 
-        const client = createInstrumentedGraphqlClient({
-          saleorApiUrl: saleorApiUrl,
-          token: token,
-        });
-
-        const runner = new WebhookMigrationRunner({
-          dryRun,
-          logger,
-          client,
-          getManifests: async ({ appDetails, instanceDetails }) => {
-            if (instanceDetails.version) {
-              loggerContext.set(
-                ObservabilityAttributes.SALEOR_VERSION,
-                instanceDetails.version?.toFixed(2),
-              );
-            }
-
-            const webhooks = appDetails.webhooks;
-
-            if (!webhooks?.length) {
-              logger.warn("The environment does not have any webhooks, skipping");
-              return [];
-            }
-
-            const enabled = webhooks.some((w) => w.isActive);
-
-            const targetUrl = appDetails.appUrl;
-
-            if (!targetUrl?.length) {
-              logger.error("App has no defined appUrl, skipping");
-              return [];
-            }
-
-            const baseUrl = new URL(targetUrl).origin;
-
-            // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-            return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
-          },
-        });
-
-        await runner.migrate();
+      const client = createInstrumentedGraphqlClient({
+        saleorApiUrl: saleorApiUrl,
+        token: token,
       });
-    }),
-  );
+
+      const runner = new WebhookMigrationRunner({
+        dryRun,
+        logger,
+        client,
+        getManifests: async ({ appDetails, instanceDetails }) => {
+          if (instanceDetails.version) {
+            loggerContext.set(
+              ObservabilityAttributes.SALEOR_VERSION,
+              instanceDetails.version?.toFixed(2),
+            );
+          }
+
+          const webhooks = appDetails.webhooks;
+
+          if (!webhooks?.length) {
+            logger.warn("The environment does not have any webhooks, skipping");
+            return [];
+          }
+
+          const enabled = webhooks.some((w) => w.isActive);
+
+          const targetUrl = appDetails.appUrl;
+
+          if (!targetUrl?.length) {
+            logger.error("App has no defined appUrl, skipping");
+            return [];
+          }
+
+          const baseUrl = new URL(targetUrl).origin;
+
+          // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
+          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
+        },
+      });
+
+      await runner.migrate();
+    });
+  }
 };
 
 runMigrations();
