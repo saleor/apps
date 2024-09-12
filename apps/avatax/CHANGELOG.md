@@ -1,5 +1,12 @@
 # app-avatax
 
+## 1.9.1
+
+### Patch Changes
+
+- fe5d5d5e: Updated @saleor/app-sdk to 0.50.3. This version removes the limitation of body size for the webhook payloads.
+- 3c974d3f: Attach orderId attribute to order-confirmed logs
+
 ## 1.9.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.10
+
+### Patch Changes
+
+- fe5d5d5e: Updated @saleor/app-sdk to 0.50.3. This version removes the limitation of body size for the webhook payloads.
+
 ## 1.2.9
 
 ### Patch Changes
