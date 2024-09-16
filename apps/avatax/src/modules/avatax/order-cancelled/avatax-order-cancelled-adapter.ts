@@ -16,14 +16,20 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
-  private errorParser = new AvataxErrorsParser(() => {});
+  private errorParser = new AvataxErrorsParser((error) => {
+    captureException(
+      new Error("AvataxOrderCancelledAdapter: Unhandled error caught from Avatax", {
+        cause: error,
+      }),
+    );
+  });
 
   static AvaTaxOrderCancelledAdapterError = BaseError.subclass("AvaTaxOrderCancelledAdapterError");
   static DocumentNotFoundError =
     this.AvaTaxOrderCancelledAdapterError.subclass("DocumentNotFoundError");
 
   constructor(
-    private avataxClient: AvataxClient,
+    private avataxClient: Pick<AvataxClient, "voidTransaction">,
     private avataxOrderCancelledPayloadTransformer: AvataxOrderCancelledPayloadTransformer,
   ) {}
 
@@ -70,12 +76,6 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
               error: e,
             },
           },
-        );
-      } else {
-        captureException(
-          new Error("AvataxOrderCancelledAdapter: Unhandled error caught from Avatax", {
-            cause: e,
-          }),
         );
       }
 

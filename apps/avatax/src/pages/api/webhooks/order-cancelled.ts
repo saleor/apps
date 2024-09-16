@@ -149,6 +149,7 @@ export default wrapWithLoggerContext(
               providerConfig.value.avataxConfig.config,
             );
           } catch (e) {
+            // TODO Test once it becomes testable
             if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
               logger.warn("Document was not found in AvaTax. Responding 400", {
                 error: e,
