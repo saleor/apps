@@ -1,3 +1,9 @@
+import { captureException } from "@sentry/nextjs";
+
+import { BaseError } from "@/error";
+import { AvataxErrorsParser } from "@/modules/avatax/avatax-errors-parser";
+import { AvataxEntityNotFoundError } from "@/modules/taxes/tax-error";
+
 import { createLogger } from "../../../logger";
 import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
@@ -10,9 +16,20 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
+  private errorParser = new AvataxErrorsParser((error) => {
+    captureException(
+      new Error("AvataxOrderCancelledAdapter: Unhandled error caught from Avatax", {
+        cause: error,
+      }),
+    );
+  });
+
+  static AvaTaxOrderCancelledAdapterError = BaseError.subclass("AvaTaxOrderCancelledAdapterError");
+  static DocumentNotFoundError =
+    this.AvaTaxOrderCancelledAdapterError.subclass("DocumentNotFoundError");
 
   constructor(
-    private avataxClient: AvataxClient,
+    private avataxClient: Pick<AvataxClient, "voidTransaction">,
     private avataxOrderCancelledPayloadTransformer: AvataxOrderCancelledPayloadTransformer,
   ) {}
 
@@ -42,6 +59,26 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
         avataxId: payload.avataxId,
       });
     } catch (e) {
+      const parsedError = this.errorParser.parse(e);
+
+      /**
+       * This can happen when AvaTax doesn't have document on their side.
+       * We can't do anything about - hence custom handling of this error
+       */
+      if (parsedError instanceof AvataxEntityNotFoundError) {
+        /**
+         * TODO Replace with neverthrow one day
+         */
+        throw new AvataxOrderCancelledAdapter.DocumentNotFoundError(
+          "AvaTax didnt find the document to void",
+          {
+            props: {
+              error: e,
+            },
+          },
+        );
+      }
+
       const error = normalizeAvaTaxError(e);
 
       this.logger.error("Error voiding the transaction", {
