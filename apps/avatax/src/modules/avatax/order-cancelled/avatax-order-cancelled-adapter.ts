@@ -1,6 +1,8 @@
-import { z } from "zod";
+import { captureException } from "@sentry/nextjs";
 
 import { BaseError } from "@/error";
+import { AvataxErrorsParser } from "@/modules/avatax/avatax-errors-parser";
+import { AvataxEntityNotFoundError } from "@/modules/taxes/tax-error";
 
 import { createLogger } from "../../../logger";
 import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
@@ -14,6 +16,7 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
+  private errorParser = new AvataxErrorsParser(() => {});
 
   static AvaTaxOrderCancelledAdapterError = BaseError.subclass("AvaTaxOrderCancelledAdapterError");
   static DocumentNotFoundError =
@@ -23,19 +26,6 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
     private avataxClient: AvataxClient,
     private avataxOrderCancelledPayloadTransformer: AvataxOrderCancelledPayloadTransformer,
   ) {}
-
-  /**
-   * Locally extract error code - but this should be more global, with some normalization/parsing logic/middleware
-   */
-  private extractAvaTaxErrorCode = (error: unknown): string | null => {
-    const parsedError = z.object({ code: z.string() }).safeParse(error);
-
-    if (!parsedError.success) {
-      return null;
-    }
-
-    return parsedError.data.code;
-  };
 
   async send(payload: CancelOrderPayload, config: AvataxConfig) {
     this.logger.info("Transforming the Saleor payload for cancelling transaction with AvaTax...");
@@ -63,13 +53,13 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
         avataxId: payload.avataxId,
       });
     } catch (e) {
-      const code = this.extractAvaTaxErrorCode(e);
+      const parsedError = this.errorParser.parse(e);
 
       /**
        * This can happen when AvaTax doesn't have document on their side.
        * We can't do anything about - hence custom handling of this error
        */
-      if (code === "EntityNotFoundError") {
+      if (parsedError instanceof AvataxEntityNotFoundError) {
         /**
          * TODO Replace with neverthrow one day
          */
@@ -80,6 +70,12 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
               error: e,
             },
           },
+        );
+      } else {
+        captureException(
+          new Error("AvataxOrderCancelledAdapter: Unhandled error caught from Avatax", {
+            cause: e,
+          }),
         );
       }
 
