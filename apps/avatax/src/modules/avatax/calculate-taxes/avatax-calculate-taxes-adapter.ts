@@ -1,5 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
-
 import { createLogger } from "../../../logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -10,7 +8,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxe
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
-const errorParser = new AvataxErrorsParser(Sentry.captureException);
+const errorParser = new AvataxErrorsParser();
 
 export class AvataxCalculateTaxesAdapter {
   private logger = createLogger("AvataxCalculateTaxesAdapter");
