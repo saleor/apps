@@ -11,7 +11,7 @@ describe("AvataxErrorsParser", () => {
   });
 
   it("should parse know error", () => {
-    const parser = new AvataxErrorsParser(mockErrorCapture);
+    const parser = new AvataxErrorsParser();
     const error = {
       code: "InvalidAddress",
       details: [
@@ -23,20 +23,20 @@ describe("AvataxErrorsParser", () => {
       ],
     };
 
-    const result = parser.parse(error);
+    const result = parser.parse(error, mockErrorCapture);
 
     expect(result).toBeInstanceOf(AvataxInvalidAddressError);
     expect(mockErrorCapture).not.toHaveBeenCalled();
   });
 
   it("should normalize unknown error and capture it into error tracking", () => {
-    const parser = new AvataxErrorsParser(mockErrorCapture);
+    const parser = new AvataxErrorsParser();
     const error = {
       code: "UnknownError",
       details: [],
     };
 
-    const result = parser.parse(error);
+    const result = parser.parse(error, mockErrorCapture);
 
     expect(result).toBeInstanceOf(AvataxTaxCalculationError);
     expect(mockErrorCapture).toHaveBeenCalledWith(
