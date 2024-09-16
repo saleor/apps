@@ -1,5 +1,3 @@
-import { captureException } from "@sentry/nextjs";
-
 import { BaseError } from "@/error";
 import { AvataxErrorsParser } from "@/modules/avatax/avatax-errors-parser";
 import { AvataxEntityNotFoundError } from "@/modules/taxes/tax-error";
@@ -16,13 +14,7 @@ export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 
 export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: string }, void> {
   private logger = createLogger("AvataxOrderCancelledAdapter");
-  private errorParser = new AvataxErrorsParser((error) => {
-    captureException(
-      new Error("AvataxOrderCancelledAdapter: Unhandled error caught from Avatax", {
-        cause: error,
-      }),
-    );
-  });
+  private errorParser = new AvataxErrorsParser();
 
   static AvaTaxOrderCancelledAdapterError = BaseError.subclass("AvaTaxOrderCancelledAdapterError");
   static DocumentNotFoundError =

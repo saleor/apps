@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 
 import { BaseError } from "../../error";
@@ -13,12 +14,6 @@ import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {
   static UnhandledErrorShapeError = BaseError.subclass("UnhandledErrorShapeError");
-
-  constructor(
-    private injectedErrorCapture: (
-      exception: InstanceType<typeof AvataxErrorsParser.UnhandledErrorShapeError>,
-    ) => void,
-  ) {}
 
   private static schema = z.object({
     // https://developer.avalara.com/avatax/errors/
@@ -39,11 +34,11 @@ export class AvataxErrorsParser {
     ),
   });
 
-  parse(err: unknown) {
+  parse(err: unknown, injectedErrorCapture = Sentry.captureException) {
     const parsedError = AvataxErrorsParser.schema.safeParse(err);
 
     if (!parsedError.success) {
-      this.injectedErrorCapture(
+      injectedErrorCapture(
         new AvataxErrorsParser.UnhandledErrorShapeError(
           "AvaTax returned error with unknown shape",
           {
