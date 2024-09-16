@@ -4,6 +4,8 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
+
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
@@ -139,12 +141,25 @@ export default wrapWithLoggerContext(
               .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
           }
 
-          await taxProvider.cancelOrder(
-            {
-              avataxId: cancelledOrderInstance.getAvataxId(),
-            },
-            providerConfig.value.avataxConfig.config,
-          );
+          try {
+            await taxProvider.cancelOrder(
+              {
+                avataxId: cancelledOrderInstance.getAvataxId(),
+              },
+              providerConfig.value.avataxConfig.config,
+            );
+          } catch (e) {
+            // TODO Test once it becomes testable
+            if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
+              logger.warn("Document was not found in AvaTax. Responding 400", {
+                error: e,
+              });
+
+              return res.status(400).send({
+                message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
+              });
+            }
+          }
 
           logger.info("Order cancelled");
 
