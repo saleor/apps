@@ -155,7 +155,9 @@ export default wrapWithLoggerContext(
                 error: e,
               });
 
-              return res.status(400).end();
+              return res.status(400).send({
+                message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
+              });
             }
           }
 
