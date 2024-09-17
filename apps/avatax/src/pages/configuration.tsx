@@ -1,6 +1,8 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Text } from "@saleor/macaw-ui";
 
+import { LogsRootSection } from "@/modules/client-logs/ui/logs-root-section";
+
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppPageLayout } from "../modules/ui/app-page-layout";
@@ -39,6 +41,7 @@ const ConfigurationPage = () => {
       <ProvidersSection />
       <ChannelSection />
       <MatcherSection />
+      <LogsRootSection />
     </AppPageLayout>
   );
 };
