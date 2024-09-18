@@ -22,6 +22,10 @@
 
 Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/avatax/overview) to learn how to configure and develop the app locally.
 
+### DynamoDB
+
+TODO
+
 ## Testing
 
 ### E2E tests

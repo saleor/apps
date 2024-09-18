@@ -5,7 +5,7 @@ import { err, fromPromise, Result } from "neverthrow";
 
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
-import { ILogWriterFactory } from "@/modules/client-logs/log-writer";
+import { ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";

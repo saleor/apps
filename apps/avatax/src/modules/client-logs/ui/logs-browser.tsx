@@ -21,7 +21,7 @@ const formatUserFriendlyDate = (date: Date) => {
 
 const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
   return (
-    <Box>
+    <Box __maxHeight="500px" overflow="scroll">
       {logs.map((log) => (
         <Box
           borderBottomWidth={1}
