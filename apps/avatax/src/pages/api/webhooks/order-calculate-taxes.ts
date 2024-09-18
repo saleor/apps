@@ -5,17 +5,13 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
-import { ClientLog, ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
 import {
   createLogsDocumentClient,
   createLogsDynamoClient,
 } from "@/modules/client-logs/dynamo-client";
-import {
-  ClientLogDynamoEntityFactory,
-  LogByDateEntity,
-  LogsTable,
-} from "@/modules/client-logs/dynamo-schema";
+import { ClientLogDynamoEntityFactory, LogsTable } from "@/modules/client-logs/dynamo-schema";
 import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";

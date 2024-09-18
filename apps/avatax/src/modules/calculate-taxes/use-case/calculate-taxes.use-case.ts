@@ -4,6 +4,8 @@ import { captureException } from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
+import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { ILogWriterFactory } from "@/modules/client-logs/log-writer";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
@@ -33,6 +35,7 @@ export class CalculateTaxesUseCase {
   constructor(
     private deps: {
       configExtractor: IAppConfigExtractor;
+      logWriterFactory: ILogWriterFactory;
     },
   ) {}
 
@@ -89,6 +92,8 @@ export class CalculateTaxesUseCase {
       (typeof CalculateTaxesUseCase.CalculateTaxesUseCaseError)["prototype"]
     >
   > {
+    const logWriter = this.deps.logWriterFactory.createWriter(authData);
+
     const payloadVerificationResult = this.verifyPayload(payload);
 
     if (payloadVerificationResult.isErr()) {
@@ -102,6 +107,15 @@ export class CalculateTaxesUseCase {
 
     if (config.isErr()) {
       this.logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Failed to calculate taxes. Invalid config",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
 
       return err(
         new CalculateTaxesUseCase.ConfigBrokenError("Failed to extract app config from metadata", {
@@ -148,6 +162,15 @@ export class CalculateTaxesUseCase {
     });
 
     if (webhookServiceResult.isErr()) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Failed to calculate taxes. Invalid config",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
       return webhookServiceResult.error;
     }
 
@@ -157,6 +180,15 @@ export class CalculateTaxesUseCase {
     const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
     if (providerConfig.isErr()) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Failed to calculate taxes. Invalid config",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
       return err(
         new CalculateTaxesUseCase.ConfigBrokenError(
           "Failed to create instance of AvaTax connection due to invalid config",
@@ -174,12 +206,32 @@ export class CalculateTaxesUseCase {
         authData,
         this.discountsStrategy,
       ),
-      (err) =>
-        new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
+      (err) => {
+        ClientLogStoreRequest.create({
+          level: "error",
+          message: "Failed to calculate taxes.",
+          checkoutOrOrderId: payload.taxBase.sourceObject.id,
+          channelId: payload.taxBase.channel.slug,
+        })
+          .mapErr(captureException)
+          .map(logWriter.writeLog);
+
+        return new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
           errors: [err],
-        }),
+        });
+      },
     ).map((results) => {
       this.logger.info("Taxes calculated", { calculatedTaxes: results });
+
+      ClientLogStoreRequest.create({
+        level: "info",
+        message: "Taxes calculated",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+        attributes: results,
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
 
       return results;
     });
