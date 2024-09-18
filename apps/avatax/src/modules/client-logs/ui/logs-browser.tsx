@@ -21,57 +21,44 @@ const formatUserFriendlyDate = (date: Date) => {
 
 const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
   return (
-    <Box as="table" verticalAlign="middle">
-      <tbody>
-        <Box as={"tr"}>
-          <th>
-            <Text size={2} color={"default2"}>
-              Date
+    <Box>
+      {logs.map((log) => (
+        <Box
+          borderBottomWidth={1}
+          borderBottomStyle={"solid"}
+          borderColor={"default1"}
+          display="grid"
+          key={log.id}
+          textAlign="left"
+          padding={4}
+        >
+          <Box>
+            <Text lineHeight={8} size={1}>
+              {formatUserFriendlyDate(new Date(log.date))}
             </Text>
-          </th>
-          <th>
-            <Text size={2} color={"default2"}>
-              Message and entity ID
+          </Box>
+          <Box>
+            <Text
+              fontWeight="bold"
+              size={2}
+              as={"p"}
+              color={log.level === "error" ? "critical1" : "default1"}
+            >
+              {log.message}
             </Text>
-          </th>
-          <th>
-            <Text size={2} color={"default2"}>
-              Additional attributes
-            </Text>
-          </th>
-        </Box>
-        {logs.map((log) => (
-          <Box
-            borderBottomWidth={1}
-            borderBottomStyle={"solid"}
-            borderColor={"default1"}
-            as="tr"
-            key={log.id}
-            textAlign="left"
-          >
-            <th>
-              <Text lineHeight={8} size={1}>
-                {formatUserFriendlyDate(new Date(log.date))}
-              </Text>
-            </th>
-            <th>
-              <Text size={2} as={"p"}>
-                {log.message}
-              </Text>
-              <Text size={1}>
-                <code>{log.checkoutOrOrderId}</code>
-              </Text>
-            </th>
-            <th>
+            <Text size={1}>ID: {log.checkoutOrOrderId}</Text>
+          </Box>
+          {Object.keys(log.attributes).length > 0 ? (
+            <Box>
               <Text size={1}>
                 <code>
                   <pre>{JSON.stringify(log.attributes, null, 2)}</pre>
                 </code>
               </Text>
-            </th>
-          </Box>
-        ))}
-      </tbody>
+            </Box>
+          ) : null}
+        </Box>
+      ))}
     </Box>
   );
 };
@@ -111,6 +98,7 @@ const LogsByDate = () => {
   return (
     <Box>
       <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5} marginBottom={4}>
+        <Text marginRight={2}>From</Text>
         <RangeInput
           onChange={(values) => {
             const [start, end] = values;
@@ -123,7 +111,9 @@ const LogsByDate = () => {
           size="large"
           type="datetime-local"
           value={[formatDateForInput(rangeDates.start), formatDateForInput(rangeDates.end)]}
-        />
+        >
+          <Text marginX={2}>To</Text>
+        </RangeInput>
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
       {logs && logs.length ? (
