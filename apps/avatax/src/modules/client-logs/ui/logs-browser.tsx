@@ -21,7 +21,7 @@ const formatUserFriendlyDate = (date: Date) => {
 
 const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
   return (
-    <Box as="table">
+    <Box as="table" verticalAlign="middle">
       <tbody>
         <Box as={"tr"}>
           <th>
@@ -31,12 +31,7 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
           </th>
           <th>
             <Text size={2} color={"default2"}>
-              Checkout or Order ID
-            </Text>
-          </th>
-          <th>
-            <Text size={2} color={"default2"}>
-              Message
+              Message and entity ID
             </Text>
           </th>
           <th>
@@ -52,6 +47,7 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
             borderColor={"default1"}
             as="tr"
             key={log.id}
+            textAlign="left"
           >
             <th>
               <Text lineHeight={8} size={1}>
@@ -59,16 +55,18 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
               </Text>
             </th>
             <th>
+              <Text size={2} as={"p"}>
+                {log.message}
+              </Text>
               <Text size={1}>
                 <code>{log.checkoutOrOrderId}</code>
               </Text>
             </th>
             <th>
-              <Text size={1}>{log.message}</Text>
-            </th>
-            <th>
               <Text size={1}>
-                <code>{JSON.stringify(log.attributes, null, 2)}</code>
+                <code>
+                  <pre>{JSON.stringify(log.attributes, null, 2)}</pre>
+                </code>
               </Text>
             </th>
           </Box>
@@ -152,7 +150,8 @@ const LogsByCheckoutOrOrderId = () => {
     <Box>
       <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5} marginBottom={4}>
         <Input
-          label="PSP Reference"
+          width={"100%"}
+          label="Order or checkout ID"
           onChange={(event) => {
             setQuery(event.target.value);
           }}
@@ -188,7 +187,7 @@ export const LogsBrowser = () => {
             <Text>Query by date</Text>
           </Switch.Item>
           <Switch.Item id="logs-browser-psp" value="psp">
-            <Text>Query by PSP Reference</Text>
+            <Text>Query by Order or Checkout ID</Text>
           </Switch.Item>
         </Switch>
       </Box>
