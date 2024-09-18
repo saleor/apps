@@ -5,6 +5,8 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
+import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -29,11 +31,14 @@ const logger = createLogger("orderCancelledAsyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
+const logsWriterFactory = new LogWriterFactory();
+
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
         const { payload } = ctx;
+        const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
         subscriptionErrorChecker.checkPayload(payload);
 
@@ -54,6 +59,15 @@ export default wrapWithLoggerContext(
               logger.error("Insufficient order data", { error });
               Sentry.captureException("Insufficient order data");
 
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Missing order data.",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
               return res
                 .status(400)
                 .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
@@ -62,6 +76,16 @@ export default wrapWithLoggerContext(
               logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
                 error,
               });
+
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Missing avataxId field in order metadata",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
               return res
                 .status(200)
                 .json({ message: "Invalid order payload. Likely not an AvaTax order." });
@@ -70,6 +94,15 @@ export default wrapWithLoggerContext(
               logger.error("Error parsing order payload", { error });
               Sentry.captureException(error);
 
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Failed to parse payload",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
               return res
                 .status(400)
                 .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
@@ -77,6 +110,15 @@ export default wrapWithLoggerContext(
             default: {
               logger.error("Unhandled error", { error });
               Sentry.captureException(error);
+
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Unknown error",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
 
               return res
                 .status(500)
@@ -115,6 +157,15 @@ export default wrapWithLoggerContext(
         if (config.isErr()) {
           logger.warn("Failed to extract app config from metadata", { error: config.error });
 
+          ClientLogStoreRequest.create({
+            level: "error",
+            message: "Failed to void order. Broken configuration.",
+            checkoutOrOrderId: payload.order?.id,
+            channelId: payload.order?.channel.slug,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
           return res
             .status(400)
             .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
@@ -136,6 +187,15 @@ export default wrapWithLoggerContext(
           const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
           if (providerConfig.isErr()) {
+            ClientLogStoreRequest.create({
+              level: "error",
+              message: "Failed to void order. Broken configuration.",
+              checkoutOrOrderId: payload.order?.id,
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
             return res
               .status(400)
               .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
@@ -159,7 +219,25 @@ export default wrapWithLoggerContext(
                 message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
               });
             }
+
+            ClientLogStoreRequest.create({
+              level: "error",
+              message: "Failed to void order. AvaTax returned error.",
+              checkoutOrOrderId: payload.order?.id,
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
           }
+
+          ClientLogStoreRequest.create({
+            level: "info",
+            message: "Order voided in AvaTax",
+            checkoutOrOrderId: payload.order?.id,
+            channelId: payload.order?.channel.slug,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
 
           logger.info("Order cancelled");
 
@@ -171,11 +249,29 @@ export default wrapWithLoggerContext(
 
           switch (avataxWebhookServiceResult.error["constructor"]) {
             case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Broken configuration.",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
               return res.status(400).json({ message: "App is not configured properly." });
             }
             default: {
               Sentry.captureException(avataxWebhookServiceResult.error);
               logger.fatal("Unhandled error", { error: avataxWebhookServiceResult.error });
+
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to void order. Unhandled error",
+                checkoutOrOrderId: payload.order?.id,
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
 
               return res.status(500).json({ message: "Unhandled error" });
             }
