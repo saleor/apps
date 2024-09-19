@@ -101,7 +101,9 @@ export class CalculateTaxesUseCase {
     const config = this.extractConfig(appMetadata, channelSlug);
 
     if (config.isErr()) {
-      this.logger.warn("Failed to extract app config from metadata", { error: config.error });
+      this.logger.warn("Failed to extract app config from metadata", {
+        error: JSON.stringify(config.error),
+      });
 
       return err(
         new CalculateTaxesUseCase.ConfigBrokenError("Failed to extract app config from metadata", {
@@ -121,7 +123,7 @@ export class CalculateTaxesUseCase {
       this.logger.warn(
         `Error in taxes calculation occurred: ${innerError.name} ${innerError.message}`,
         {
-          error: innerError,
+          error: JSON.stringify(innerError),
         },
       );
 
@@ -138,7 +140,7 @@ export class CalculateTaxesUseCase {
         }
         default: {
           Sentry.captureException(innerError);
-          this.logger.fatal("Unhandled error", { error: err });
+          this.logger.fatal("Unhandled error", { error: JSON.stringify(err) });
 
           return err(
             new CalculateTaxesUseCase.UnhandledError("Unhandled error", { errors: [innerError] }),

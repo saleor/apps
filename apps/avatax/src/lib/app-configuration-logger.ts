@@ -11,7 +11,7 @@ export class AppConfigurationLogger {
 
     if (config.isErr()) {
       this.injectedLogger.warn("Failed to resolve configuration properly", {
-        error: config.error,
+        error: JSON.stringify(config.error),
         [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
       });
 

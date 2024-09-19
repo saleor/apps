@@ -39,7 +39,9 @@ export class AvataxClientTaxCodeService {
         top: 50,
       })
       .catch((err) => {
-        this.logger.error("Failed to call listTaxCodes on Avatax client", { error: err });
+        this.logger.error("Failed to call listTaxCodes on Avatax client", {
+          error: JSON.stringify(err),
+        });
 
         try {
           const parsedError = AvataxErrorShape.parse(err);
