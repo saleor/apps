@@ -15,8 +15,8 @@ export const taxClassesRouter = router({
 
     logger.debug("Returning tax classes");
 
-    return taxClassesFetcher.fetch().catch((err) => {
-      logger.error("Failed to fetch tax classes", { error: JSON.stringify(err) });
+    return taxClassesFetcher.fetch().catch((error) => {
+      logger.error("Failed to fetch tax classes", { error });
 
       // TODO: Map errors from Saleor and return proper response
       throw new TRPCError({

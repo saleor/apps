@@ -61,7 +61,7 @@ export class OrderMetadataManager {
       );
 
       this.logger.error("Failed to update metadata", {
-        error: JSON.stringify(error),
+        error,
       });
 
       throw new OrderMetadataManager.MutationError("Failed to update metadata", {

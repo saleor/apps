@@ -38,13 +38,13 @@ export class AvataxClientTaxCodeService {
         ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
         top: 50,
       })
-      .catch((err) => {
+      .catch((error) => {
         this.logger.error("Failed to call listTaxCodes on Avatax client", {
-          error: JSON.stringify(err),
+          error,
         });
 
         try {
-          const parsedError = AvataxErrorShape.parse(err);
+          const parsedError = AvataxErrorShape.parse(error);
 
           /*
            * Catch specific client error so it's returned to the frontend

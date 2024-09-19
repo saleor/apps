@@ -48,7 +48,7 @@ export class AppConfigExtractor implements IAppConfigExtractor {
 
     if (appConfigResult.isErr()) {
       this.logger.error("Failed to resolve app configuration", {
-        error: JSON.stringify(appConfigResult.error),
+        error: appConfigResult.error,
       });
 
       return err(

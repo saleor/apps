@@ -49,14 +49,14 @@ export class SubscriptionPayloadErrorChecker {
         if (this.handledErrorPath.every((path) => graphQLError.path?.includes(path))) {
           // This is handled error - app don't have access to user object. We should migrate clients to use metadata on checkout/order objects instead.
           this.injectedLogger.info(`Payload contains handled GraphQL error for ${subscription}`, {
-            error: JSON.stringify(graphQLError),
+            error: graphQLError,
             subscription,
           });
           return;
         }
 
         this.injectedLogger.error(`Payload contains unhandled GraphQL error for ${subscription}`, {
-          error: JSON.stringify(graphQLError),
+          error: graphQLError,
           subscription,
         });
 

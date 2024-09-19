@@ -102,7 +102,7 @@ export class CalculateTaxesUseCase {
 
     if (config.isErr()) {
       this.logger.warn("Failed to extract app config from metadata", {
-        error: JSON.stringify(config.error),
+        error: config.error,
       });
 
       return err(
@@ -123,7 +123,7 @@ export class CalculateTaxesUseCase {
       this.logger.warn(
         `Error in taxes calculation occurred: ${innerError.name} ${innerError.message}`,
         {
-          error: JSON.stringify(innerError),
+          error: innerError,
         },
       );
 
@@ -140,7 +140,7 @@ export class CalculateTaxesUseCase {
         }
         default: {
           Sentry.captureException(innerError);
-          this.logger.fatal("Unhandled error", { error: JSON.stringify(err) });
+          this.logger.fatal("Unhandled error", { error: innerError });
 
           return err(
             new CalculateTaxesUseCase.UnhandledError("Unhandled error", { errors: [innerError] }),

@@ -23,10 +23,10 @@ export class AvataxTaxCodesService {
   }
 
   async getAllFiltered({ filter }: { filter: string | null }): Promise<TaxCode[]> {
-    const response = await this.client.getFilteredTaxCodes({ filter }).catch((err) => {
-      this.logger.error("Failed to fetch filtered tax codes", { error: JSON.stringify(err) });
+    const response = await this.client.getFilteredTaxCodes({ filter }).catch((error) => {
+      this.logger.error("Failed to fetch filtered tax codes", { error });
 
-      throw err;
+      throw error;
     });
 
     return this.adapt(response);
