@@ -123,6 +123,7 @@ export default wrapWithLoggerContext(
               discountStrategy,
             );
 
+            logger.info("Taxes calculated successfully for order - without more info");
             logger.info("Taxes calculated successfully for order", {
               calculatedTaxes: JSON.stringify(calculatedTaxes),
             });
