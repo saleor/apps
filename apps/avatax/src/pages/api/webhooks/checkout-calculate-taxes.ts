@@ -83,7 +83,9 @@ export default wrapWithLoggerContext(
             });
 
           if (config.isErr()) {
-            logger.warn("Failed to extract app config from metadata", { error: config.error });
+            logger.warn("Failed to extract app config from metadata", {
+              error: JSON.stringify(config.error),
+            });
 
             return res.status(400).json({
               message: `App configuration is broken for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -132,7 +134,7 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxInvalidAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
-              { error },
+              { error: JSON.stringify(error.toJSON()) },
             );
 
             return res.status(400).json({
