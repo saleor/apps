@@ -46,10 +46,6 @@ export const attachLoggerOtelTransport = (
      * Try to serialize Error. Modern-errors has plugin to serialize
      * https://github.com/ehmicky/modern-errors-serialize
      *
-     * It add "serialize" method that converts class to plain object, working for OTEL.
-     *
-     * This is not perfect, doesn't work for nested object. We probably need to introduce some abstraction
-     * on logger error?
      */
     try {
       serializedAttributes.error = JSON.stringify(serializedAttributes.error);
