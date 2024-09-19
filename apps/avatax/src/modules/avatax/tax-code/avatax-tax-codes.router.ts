@@ -64,7 +64,7 @@ export const avataxTaxCodesRouter = router({
     return taxCodesService.getAllFiltered({ filter: input.filter }).catch((error) => {
       logger.error("Failed to fetch tax codes from AvaTax", { error });
 
-      if (err instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
+      if (error instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
         throw new TRPCError({
           code: "FORBIDDEN",
           cause: "AvaTax PermissionRequired",

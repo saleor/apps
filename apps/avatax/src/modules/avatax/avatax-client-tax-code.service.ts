@@ -54,13 +54,13 @@ export class AvataxClientTaxCodeService {
             throw new AvataxClientTaxCodeService.ForbiddenAccessError(
               "PermissionRequired error was returned from Avatax",
               {
-                cause: err,
+                cause: error,
               },
             );
           }
 
           // Throw other errors like usual
-          throw err;
+          throw error;
         } catch (outerError) {
           throw outerError;
         }
