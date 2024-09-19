@@ -42,7 +42,7 @@ export default wrapWithLoggerContext(
           subscriptionErrorChecker.checkPayload(payload);
 
           logger.info("Tax base payload for checkout calculate taxes", {
-            payload: payload.taxBase,
+            payload: JSON.stringify(payload.taxBase),
           });
 
           loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
@@ -98,7 +98,7 @@ export default wrapWithLoggerContext(
                 return res.status(200).json(ctx.buildResponse(value));
               },
               (err) => {
-                logger.warn("Error calculating taxes", { error: err });
+                logger.warn("Error calculating taxes", { error: JSON.stringify(err.toJSON()) });
 
                 switch (err.constructor) {
                   case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
