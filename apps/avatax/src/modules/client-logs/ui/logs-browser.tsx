@@ -46,7 +46,9 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
             >
               {log.message}
             </Text>
-            <Text size={1}>ID: {log.checkoutOrOrderId}</Text>
+            <Text size={1}>
+              {log.checkoutOrOrder} ID: {log.checkoutOrOrderId}
+            </Text>
           </Box>
           {Object.keys(log.attributes).length > 0 ? (
             <Box>
