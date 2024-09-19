@@ -24,7 +24,7 @@ export class LogWriterFactory implements ILogWriterFactory {
     const dynamoClient = createLogsDynamoClient();
     const logsTable = LogsTable.create({
       documentClient: createLogsDocumentClient(dynamoClient),
-      tableName: clientLogsFeatureConfig.dynamoTableName,
+      tableName: clientLogsFeatureConfig.dynamoTableName!, // If not set, it will throw earlier
     });
     const repository = new LogsRepositoryDynamodb({
       logsTable,
