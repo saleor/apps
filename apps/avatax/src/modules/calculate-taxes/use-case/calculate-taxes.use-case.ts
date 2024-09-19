@@ -179,11 +179,7 @@ export class CalculateTaxesUseCase {
           errors: [err],
         }),
     ).map((results) => {
-      this.logger.info("Taxes calculated successfully for checkout - without more info");
-      this.logger.info("Taxes calculated successfully for checkout", {
-        calculatedTaxes: JSON.stringify(results),
-      });
-      this.logger.info("Taxes calculated", { calculatedTaxes: results });
+      this.logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(results) });
 
       return results;
     });

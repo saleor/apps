@@ -123,11 +123,7 @@ export default wrapWithLoggerContext(
               discountStrategy,
             );
 
-            logger.info("Taxes calculated successfully for order - without more info");
-            logger.info("Taxes calculated successfully for order", {
-              calculatedTaxes: JSON.stringify(calculatedTaxes),
-            });
-            logger.info("Taxes calculated", { calculatedTaxes });
+            logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
           } else if (avataxWebhookServiceResult.isErr()) {
