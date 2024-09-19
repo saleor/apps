@@ -57,7 +57,7 @@ export default wrapWithLoggerContext(
 
           if (payloadVerificationResult.isErr()) {
             logger.warn("Failed to calculate taxes, due to incomplete payload", {
-              error: payloadVerificationResult.error,
+              error: JSON.stringify(payloadVerificationResult.error),
             });
 
             return res.status(400).json({ message: payloadVerificationResult.error.message });
@@ -88,7 +88,9 @@ export default wrapWithLoggerContext(
             });
 
           if (config.isErr()) {
-            logger.warn("Failed to extract app config from metadata", { error: config.error });
+            logger.warn("Failed to extract app config from metadata", {
+              error: JSON.stringify(config.error),
+            });
 
             return res.status(400).json({
               message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
@@ -130,7 +132,7 @@ export default wrapWithLoggerContext(
             const err = avataxWebhookServiceResult.error;
 
             logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-              error: err,
+              error: JSON.stringify(err.toJSON()),
             });
 
             switch (err["constructor"]) {
@@ -141,7 +143,7 @@ export default wrapWithLoggerContext(
               }
               default: {
                 Sentry.captureException(avataxWebhookServiceResult.error);
-                logger.fatal("Unhandled error", { error: err });
+                logger.error("Unhandled error", { error: JSON.stringify(err.toJSON()) });
 
                 return res.status(500).json({ message: "Unhandled error" });
               }
@@ -152,7 +154,7 @@ export default wrapWithLoggerContext(
             logger.warn(
               "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
               {
-                error,
+                error: JSON.stringify(error.toJSON()),
               },
             );
             return res.status(400).json({
@@ -164,7 +166,7 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxInvalidAddressError) {
             logger.warn(
               "InvalidAppAddressError: App returns status 400 due to broken address configuration",
-              { error },
+              { error: JSON.stringify(error.toJSON()) },
             );
 
             return res.status(400).json({
@@ -175,7 +177,7 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxStringLengthError) {
             logger.warn(
               "AvataxStringLengthError: App returns status 400 due to not valid address data",
-              { error },
+              { error: JSON.stringify(error.toJSON()) },
             );
 
             return res.status(400).json({
@@ -186,7 +188,7 @@ export default wrapWithLoggerContext(
           if (error instanceof AvataxEntityNotFoundError) {
             logger.warn(
               "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
-              { error },
+              { error: JSON.stringify(error.toJSON()) },
             );
 
             return res.status(400).json({
