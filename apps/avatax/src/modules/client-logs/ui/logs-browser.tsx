@@ -92,10 +92,17 @@ const LogsByDate = () => {
     };
   });
 
-  const { data: logs, error } = trpcClient.clientLogs.getByDate.useQuery({
+  const {
+    data: logs,
+    error,
+    isLoading,
+  } = trpcClient.clientLogs.getByDate.useQuery({
     startDate: rangeDates.start.toISOString(),
     endDate: rangeDates.end.toISOString(),
   });
+
+  const isEmpty = !isLoading && logs && logs.length === 0;
+  const isLoaded = !isLoading && logs && logs.length > 0;
 
   return (
     <Box>
@@ -118,11 +125,8 @@ const LogsByDate = () => {
         </RangeInput>
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
-      {logs && logs.length ? (
-        <LogsList logs={logs} />
-      ) : (
-        "No logs are available for specified date range"
-      )}
+      {isEmpty && <Text>No logs are available for specified date range</Text>}
+      {isLoaded && <LogsList logs={logs} />}
     </Box>
   );
 };
