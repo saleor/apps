@@ -123,6 +123,9 @@ export default wrapWithLoggerContext(
               discountStrategy,
             );
 
+            logger.info("Taxes calculated successfully for order", {
+              calculatedTaxes: JSON.stringify(calculatedTaxes),
+            });
             logger.info("Taxes calculated", { calculatedTaxes });
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));

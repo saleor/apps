@@ -7,6 +7,11 @@ settings:
 overrides:
   crypto-js@<4.2.0: '>=4.2.0'
 
+patchedDependencies:
+  '@opentelemetry/otlp-transformer@0.46.0':
+    hash: 574tnomfotq3trgkb523x44heq
+    path: patches/@opentelemetry__otlp-transformer@0.46.0.patch
+
 importers:
 
   .:
@@ -18086,7 +18091,7 @@ snapshots:
       '@opentelemetry/api-logs': 0.46.0
       '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/otlp-exporter-base': 0.46.0(@opentelemetry/api@1.7.0)
-      '@opentelemetry/otlp-transformer': 0.46.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-transformer': 0.46.0(patch_hash=574tnomfotq3trgkb523x44heq)(@opentelemetry/api@1.7.0)
       '@opentelemetry/sdk-logs': 0.46.0(@opentelemetry/api-logs@0.46.0)(@opentelemetry/api@1.7.0)
 
   '@opentelemetry/exporter-trace-otlp-grpc@0.45.1(@opentelemetry/api@1.7.0)':
@@ -18113,7 +18118,7 @@ snapshots:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/otlp-exporter-base': 0.46.0(@opentelemetry/api@1.7.0)
-      '@opentelemetry/otlp-transformer': 0.46.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-transformer': 0.46.0(patch_hash=574tnomfotq3trgkb523x44heq)(@opentelemetry/api@1.7.0)
       '@opentelemetry/resources': 1.19.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/sdk-trace-base': 1.19.0(@opentelemetry/api@1.7.0)
 
@@ -18209,7 +18214,7 @@ snapshots:
       '@opentelemetry/sdk-metrics': 1.18.1(@opentelemetry/api@1.7.0)
       '@opentelemetry/sdk-trace-base': 1.18.1(@opentelemetry/api@1.7.0)
 
-  '@opentelemetry/otlp-transformer@0.46.0(@opentelemetry/api@1.7.0)':
+  '@opentelemetry/otlp-transformer@0.46.0(patch_hash=574tnomfotq3trgkb523x44heq)(@opentelemetry/api@1.7.0)':
     dependencies:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/api-logs': 0.46.0
@@ -19458,7 +19463,7 @@ snapshots:
       get-port: 5.1.1
       giget: 1.1.2
       globby: 11.1.0
-      jscodeshift: 0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.11))
+      jscodeshift: 0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.5))
       leven: 3.1.0
       prettier: 2.8.8
       prompts: 2.4.2
@@ -24514,7 +24519,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  jscodeshift@0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.11)):
+  jscodeshift@0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.5)):
     dependencies:
       '@babel/core': 7.23.3
       '@babel/parser': 7.22.16
