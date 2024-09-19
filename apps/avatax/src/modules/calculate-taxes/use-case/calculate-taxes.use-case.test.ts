@@ -3,6 +3,7 @@ import { err, ok, Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
+import { ILogWriter, LogWriterContext, NoopLogWriter } from "@/modules/client-logs/log-writer";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -166,6 +167,11 @@ describe("CalculateTaxesUseCase", () => {
 
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
+      logWriterFactory: {
+        createWriter(context: LogWriterContext): ILogWriter {
+          return new NoopLogWriter();
+        },
+      },
     });
   });
 
@@ -243,4 +249,8 @@ describe("CalculateTaxesUseCase", () => {
       }),
     });
   });
+
+  it.todo("Writes successful log if taxes calculated to Log Writer");
+
+  it.todo("Writes error log if internal error occurs");
 });

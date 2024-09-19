@@ -46,6 +46,7 @@ describe("LogsRepositoryDynamodb", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
       });
 
       const clientLogRequest = clientLogResult._unsafeUnwrap();
@@ -116,6 +117,7 @@ describe("LogsRepositoryDynamodb", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
       });
 
       const clientLogRequest = clientLogResult._unsafeUnwrap();
@@ -174,6 +176,7 @@ describe("LogsRepositoryDynamodb", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
       });
 
       const clientLogRequest = clientLogResult._unsafeUnwrap();
@@ -206,6 +209,7 @@ describe("LogsRepositoryDynamodb", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
       });
 
       const clientLogRequest = clientLogResult._unsafeUnwrap();
@@ -239,6 +243,7 @@ describe("LogsRepositoryDynamodb", () => {
           checkoutOrOrderId: "test-order-id",
           channelId: "test-channel",
           _et: "LOG_BY_DATE",
+          checkoutOrOrder: "checkout",
         },
       ];
 
@@ -308,6 +313,7 @@ describe("LogsRepositoryDynamodb", () => {
           checkoutOrOrderId: "test-order-id",
           channelId: "test-channel",
           _et: "LOG_BY_DATE",
+          checkoutOrOrder: "checkout",
         },
         // This log is invalid
         {
@@ -323,6 +329,7 @@ describe("LogsRepositoryDynamodb", () => {
           checkoutOrOrderId: "test-order-id",
           channelId: "test-channel",
           _et: "LOG_BY_DATE",
+          checkoutOrOrder: "checkout",
         },
       ];
 
@@ -421,6 +428,7 @@ describe("LogsRepositoryDynamodb", () => {
           checkoutOrOrderId: "test-order-id",
           channelId: "test-channel",
           _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
+          checkoutOrOrder: "checkout",
         },
       ];
 
@@ -489,6 +497,7 @@ describe("LogsRepositoryDynamodb", () => {
           transactionId: "test-transaction",
           channelId: "test-channel",
           _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
+          checkoutOrOrder: "checkout",
         },
         // This log is invalid
         {
@@ -505,6 +514,7 @@ describe("LogsRepositoryDynamodb", () => {
           transactionId: "test-transaction",
           channelId: "test-channel",
           _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
+          checkoutOrOrder: "checkout",
         },
       ];
 
@@ -597,6 +607,7 @@ describe("LogsRepositoryMemory", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
         id: "test-id",
       });
 
@@ -626,6 +637,7 @@ describe("LogsRepositoryMemory", () => {
         attributes: { test: "attribute" },
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
+        checkoutOrOrder: "checkout",
       });
 
       const testLog = testLogResult._unsafeUnwrap();
@@ -649,6 +661,7 @@ describe("LogsRepositoryMemory", () => {
         checkoutOrOrderId: "test-order-id",
         channelId: "test-channel-id",
         id: "test-id",
+        checkoutOrOrder: "checkout",
       });
 
       const testLog = testLogResult._unsafeUnwrap();

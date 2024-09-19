@@ -64,6 +64,7 @@ export default wrapWithLoggerContext(
                 message: "Failed to void order. Missing order data.",
                 checkoutOrOrderId: payload.order?.id,
                 channelId: payload.order?.channel.slug,
+                checkoutOrOrder: "order",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
@@ -82,6 +83,7 @@ export default wrapWithLoggerContext(
                 message: "Failed to void order. Missing avataxId field in order metadata",
                 checkoutOrOrderId: payload.order?.id,
                 channelId: payload.order?.channel.slug,
+                checkoutOrOrder: "order",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
@@ -98,6 +100,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: "Failed to void order. Failed to parse payload",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)
@@ -115,6 +118,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: "Failed to void order. Unknown error",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)
@@ -162,6 +166,7 @@ export default wrapWithLoggerContext(
             message: "Failed to void order. Broken configuration.",
             checkoutOrOrderId: payload.order?.id,
             channelId: payload.order?.channel.slug,
+            checkoutOrOrder: "order",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
@@ -192,6 +197,7 @@ export default wrapWithLoggerContext(
               message: "Failed to void order. Broken configuration.",
               checkoutOrOrderId: payload.order?.id,
               channelId: payload.order?.channel.slug,
+              checkoutOrOrder: "order",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
@@ -223,6 +229,7 @@ export default wrapWithLoggerContext(
             ClientLogStoreRequest.create({
               level: "error",
               message: "Failed to void order. AvaTax returned error.",
+              checkoutOrOrder: "order",
               checkoutOrOrderId: payload.order?.id,
               channelId: payload.order?.channel.slug,
             })
@@ -233,6 +240,7 @@ export default wrapWithLoggerContext(
           ClientLogStoreRequest.create({
             level: "info",
             message: "Order voided in AvaTax",
+            checkoutOrOrder: "order",
             checkoutOrOrderId: payload.order?.id,
             channelId: payload.order?.channel.slug,
           })
@@ -253,6 +261,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: "Failed to void order. Broken configuration.",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)
@@ -268,6 +277,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: "Failed to void order. Unhandled error",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)

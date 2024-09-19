@@ -113,6 +113,7 @@ export class CalculateTaxesUseCase {
         message: "Failed to calculate taxes. Invalid config",
         checkoutOrOrderId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "checkout",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
@@ -167,6 +168,7 @@ export class CalculateTaxesUseCase {
         message: "Failed to calculate taxes. Invalid config",
         checkoutOrOrderId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "checkout",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
@@ -185,6 +187,7 @@ export class CalculateTaxesUseCase {
         message: "Failed to calculate taxes. Invalid config",
         checkoutOrOrderId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "checkout",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
@@ -212,6 +215,7 @@ export class CalculateTaxesUseCase {
           message: "Failed to calculate taxes.",
           checkoutOrOrderId: payload.taxBase.sourceObject.id,
           channelId: payload.taxBase.channel.slug,
+          checkoutOrOrder: "checkout",
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
@@ -229,6 +233,7 @@ export class CalculateTaxesUseCase {
         checkoutOrOrderId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.slug,
         attributes: results,
+        checkoutOrOrder: "checkout",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);

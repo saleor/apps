@@ -69,6 +69,7 @@ export default wrapWithLoggerContext(
             level: "error",
             message: "Failed to commit order. Unhandled error.",
             checkoutOrOrderId: payload.order?.id,
+            checkoutOrOrder: "order",
             channelId: payload.order?.channel.slug,
           })
             .mapErr(captureException)
@@ -95,6 +96,7 @@ export default wrapWithLoggerContext(
               level: "info",
               message: "Skip commiting - order already fulfilled",
               checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
               channelId: payload.order?.channel.slug,
             })
               .mapErr(captureException)
@@ -112,6 +114,7 @@ export default wrapWithLoggerContext(
               level: "info",
               message: "Skip commiting - order has flat tax rates strategy",
               checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
               channelId: payload.order?.channel.slug,
             })
               .mapErr(captureException)
@@ -153,6 +156,7 @@ export default wrapWithLoggerContext(
               level: "error",
               message: "Failed to commit order. Configuration error.",
               checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
               channelId: payload.order?.channel.slug,
             })
               .mapErr(captureException)
@@ -189,6 +193,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: "Failed to commit order. Configuration error.",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)
@@ -228,6 +233,7 @@ export default wrapWithLoggerContext(
                 level: "info",
                 message: "Order committed successfully",
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
                 attributes: {
                   confirmedOrderId: confirmedOrder.id,
@@ -246,6 +252,7 @@ export default wrapWithLoggerContext(
                     level: "error",
                     message: "Failed to commit order. Webhook payload invalid",
                     checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
                     channelId: payload.order?.channel.slug,
                   })
                     .mapErr(captureException)
@@ -260,6 +267,7 @@ export default wrapWithLoggerContext(
                     level: "error",
                     message: `Failed to commit order: ${error?.description} `,
                     checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
                     channelId: payload.order?.channel.slug,
                   })
                     .mapErr(captureException)
@@ -274,6 +282,7 @@ export default wrapWithLoggerContext(
                     level: "error",
                     message: `Failed to commit order: ${error?.description} `,
                     checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
                     channelId: payload.order?.channel.slug,
                   })
                     .mapErr(captureException)
@@ -291,6 +300,7 @@ export default wrapWithLoggerContext(
                 level: "error",
                 message: `Failed to commit order: Unhandled error `,
                 checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
                 channelId: payload.order?.channel.slug,
               })
                 .mapErr(captureException)
@@ -311,6 +321,7 @@ export default wrapWithLoggerContext(
                   level: "error",
                   message: `Failed to commit order: Broken configuration `,
                   checkoutOrOrderId: payload.order?.id,
+                  checkoutOrOrder: "order",
                   channelId: payload.order?.channel.slug,
                 })
                   .mapErr(captureException)
@@ -326,6 +337,7 @@ export default wrapWithLoggerContext(
                   level: "error",
                   message: `Failed to commit order: Unhandled error `,
                   checkoutOrOrderId: payload.order?.id,
+                  checkoutOrOrder: "order",
                   channelId: payload.order?.channel.slug,
                 })
                   .mapErr(captureException)
@@ -343,6 +355,7 @@ export default wrapWithLoggerContext(
             level: "error",
             message: `Failed to commit order: Unhandled error `,
             checkoutOrOrderId: payload.order?.id,
+            checkoutOrOrder: "order",
             channelId: payload.order?.channel.slug,
           })
             .mapErr(captureException)

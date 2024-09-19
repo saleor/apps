@@ -26,6 +26,7 @@ const baseClientLogSchema = z.object({
     .default(() => new Date().toISOString()),
   attributes: z.record(z.string(), jsonSchema).default({}),
   checkoutOrOrderId: z.string().optional(),
+  checkoutOrOrder: z.enum(["checkout", "order"]),
   channelId: z.string().optional(),
 });
 

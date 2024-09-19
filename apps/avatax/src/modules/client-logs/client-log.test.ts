@@ -18,6 +18,7 @@ describe("ClientLog", () => {
       attributes: {},
       id: "12345",
       checkoutOrOrderId: "aabbcc",
+      checkoutOrOrder: "checkout",
     };
 
     const result = ClientLog.create(logData);
@@ -37,6 +38,7 @@ describe("ClientLog", () => {
       date: new Date().toISOString(),
       attributes: {},
       id: "12345",
+      checkoutOrOrder: "checkout",
     };
 
     const result = ClientLog.create(logData);
@@ -55,6 +57,7 @@ describe("ClientLogStoreRequest", () => {
       date: new Date().toISOString(),
       attributes: {},
       checkoutOrOrderId: "aabbcc",
+      checkoutOrOrder: "checkout",
     };
     const result = ClientLogStoreRequest.create(logData);
     const log = result._unsafeUnwrap();
@@ -72,6 +75,7 @@ describe("ClientLogStoreRequest", () => {
       date: new Date().toISOString(),
       attributes: {},
       checkoutOrOrderId: "aabbcc",
+      checkoutOrOrder: "checkout",
     } as const;
 
     const result = ClientLogStoreRequest.create(logData);

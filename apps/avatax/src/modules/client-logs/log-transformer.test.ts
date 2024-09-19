@@ -17,6 +17,7 @@ describe("LogsTransformer", () => {
         attributes: { key: "value" },
         channelId: "channel1",
         checkoutOrOrderId: "checkoutOrOrderId",
+        checkoutOrOrder: "checkout",
       })._unsafeUnwrap();
 
       const saleorApiUrl = "saleorApiUrl";
@@ -49,6 +50,7 @@ describe("LogsTransformer", () => {
         level: "debug",
         date: "2024-01-01T10:00:00Z",
         message: "Test log",
+        checkoutOrOrder: "checkout",
       })._unsafeUnwrap();
 
       const saleorApiUrl = "saleorApiUrl";
@@ -85,6 +87,7 @@ describe("LogsTransformer", () => {
         attributes: { key: "value" },
         channelId: "channel1",
         checkoutOrOrderId: "checkoutOrOrderId",
+        checkoutOrOrder: "checkout",
       })._unsafeUnwrap();
 
       const saleorApiUrl = "saleorApiUrl";
@@ -118,6 +121,7 @@ describe("LogsTransformer", () => {
         date: "2024-01-01T10:00:00Z",
         message: "Test log",
         checkoutOrOrderId: "checkoutOrOrderId",
+        checkoutOrOrder: "checkout",
       })._unsafeUnwrap();
 
       const saleorApiUrl = "saleorApiUrl";
@@ -159,6 +163,7 @@ describe("LogsTransformer", () => {
         SK: "psp1#ulid",
         ulid: "ulid",
         TTL: 123456,
+        checkoutOrOrder: "checkout",
       } as const;
 
       const clientLog = transformer.fromDynamoEntityToClientLog(entity)._unsafeUnwrap();
@@ -190,6 +195,7 @@ describe("LogsTransformer", () => {
         SK: "psp1#ulid",
         ulid: "ulid",
         TTL: 123456,
+        checkoutOrOrder: "checkout",
       } as const;
 
       const error = transformer.fromDynamoEntityToClientLog(entity)._unsafeUnwrapErr();

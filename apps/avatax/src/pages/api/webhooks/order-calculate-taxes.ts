@@ -75,6 +75,7 @@ export default wrapWithLoggerContext(
               message: "Taxes not calculated. Missing address or lines",
               checkoutOrOrderId: payload.taxBase.sourceObject.id,
               channelId: payload.taxBase.channel.slug,
+              checkoutOrOrder: "checkout",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
@@ -111,6 +112,7 @@ export default wrapWithLoggerContext(
               message: "Taxes not calculated. App faced problem with configuration.",
               checkoutOrOrderId: payload.taxBase.sourceObject.id,
               channelId: payload.taxBase.channel.slug,
+              checkoutOrOrder: "order",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
@@ -141,6 +143,7 @@ export default wrapWithLoggerContext(
                 message: "Taxes not calculated. App faced problem with configuration.",
                 checkoutOrOrderId: payload.taxBase.sourceObject.id,
                 channelId: payload.taxBase.channel.slug,
+                checkoutOrOrder: "order",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
@@ -164,6 +167,7 @@ export default wrapWithLoggerContext(
               message: "Taxes calculated",
               checkoutOrOrderId: payload.taxBase.sourceObject.id,
               channelId: payload.taxBase.channel.slug,
+              checkoutOrOrder: "order",
               attributes: {
                 calculatedTaxes: calculatedTaxes,
               },
@@ -186,6 +190,7 @@ export default wrapWithLoggerContext(
                   message: "Taxes not calculated. App faced problem with configuration.",
                   checkoutOrOrderId: payload.taxBase.sourceObject.id,
                   channelId: payload.taxBase.channel.slug,
+                  checkoutOrOrder: "order",
                 })
                   .mapErr(captureException)
                   .map(logWriter.writeLog);
@@ -203,6 +208,7 @@ export default wrapWithLoggerContext(
                   message: "Taxes not calculated. Unknown error.",
                   checkoutOrOrderId: payload.taxBase.sourceObject.id,
                   channelId: payload.taxBase.channel.slug,
+                  checkoutOrOrder: "order",
                 })
                   .mapErr(captureException)
                   .map(logWriter.writeLog);
@@ -224,6 +230,7 @@ export default wrapWithLoggerContext(
               level: "error",
               message: "Taxes not calculated. Avalara returned error",
               checkoutOrOrderId: orderId,
+              checkoutOrOrder: "order",
               channelId: channelSlug,
               // todo map error from avalara
             })
@@ -242,6 +249,7 @@ export default wrapWithLoggerContext(
               message: "Taxes not calculated. Avalara returned error: invalid address",
               checkoutOrOrderId: orderId,
               channelId: channelSlug,
+              checkoutOrOrder: "order",
               // todo map error from avalara
             })
               .mapErr(captureException)
@@ -262,6 +270,7 @@ export default wrapWithLoggerContext(
               level: "error",
               message: "Taxes not calculated. Avalara returned error: invalid address",
               checkoutOrOrderId: orderId,
+              checkoutOrOrder: "order",
               channelId: channelSlug,
               // todo map error from avalara
             })
@@ -283,6 +292,7 @@ export default wrapWithLoggerContext(
               level: "error",
               message: "Taxes not calculated. Avalara returned error: entity not found",
               checkoutOrOrderId: orderId,
+              checkoutOrOrder: "order",
               channelId: channelSlug,
               // todo map error from avalara
             })
@@ -305,6 +315,7 @@ export default wrapWithLoggerContext(
             level: "error",
             message: "Taxes not calculated. Unhandled error",
             checkoutOrOrderId: orderId,
+            checkoutOrOrder: "order",
             channelId: channelSlug,
             // todo map error from avalara
           })

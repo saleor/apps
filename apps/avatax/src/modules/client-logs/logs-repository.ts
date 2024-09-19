@@ -293,7 +293,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
       return err(new LogsRepositoryDynamodb.UnprocessedItemsError("Some logs were not written"));
     }
 
-    this.logger.info("Logs written to DynamoDB", {
+    this.logger.debug("Logs written to DynamoDB", {
       ConsumedCapacity: result.value.ConsumedCapacity,
       ItemCollectionMetrics: result.value.ItemCollectionMetrics,
     });

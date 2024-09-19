@@ -11,15 +11,19 @@ export class DynamoDbLogWriter implements ILogWriter {
   constructor(
     private repo: ILogsRepository,
     private context: LogWriterContext,
-  ) {}
+  ) {
+    if (!repo) {
+      throw new Error("Repository is nullish");
+    }
+  }
 
-  async writeLog(log: ClientLogStoreRequest): Promise<void> {
+  writeLog = async (log: ClientLogStoreRequest): Promise<void> => {
     await this.repo.writeLog({
       appId: this.context.appId,
       saleorApiUrl: this.context.saleorApiUrl,
       clientLogRequest: log,
     });
-  }
+  };
 }
 
 /**

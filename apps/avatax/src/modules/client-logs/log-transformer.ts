@@ -34,6 +34,7 @@ export class LogsTransformer {
       date: log.date,
       attributes: JSON.stringify(log.attributes),
       checkoutOrOrderId: log.checkoutOrOrderId,
+      checkoutOrOrder: log.checkoutOrOrder,
       channelId: log.channelId,
     };
   }
@@ -97,6 +98,7 @@ export class LogsTransformer {
       channelId: entity.channelId,
       checkoutOrOrderId: entity.checkoutOrOrderId,
       id: entity.ulid,
+      checkoutOrOrder: entity.checkoutOrOrder as "checkout" | "order",
     }).mapErr(
       (err) =>
         new LogsTransformer.DynamoDBParseError("Attributes cannot be parsed", { cause: err }),

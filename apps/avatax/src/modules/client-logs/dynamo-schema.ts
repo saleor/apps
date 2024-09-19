@@ -98,6 +98,7 @@ export const baseLogSchema = schema({
     .required()
     .default(() => new Date().toISOString())
     .key(),
+  checkoutOrOrder: string().required(),
 });
 
 export const ClientLogDynamoSchema = {
