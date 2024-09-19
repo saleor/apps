@@ -1,0 +1,19 @@
+script:pre-request {
+  // Remove after https://github.com/usebruno/bruno/issues/2960 in done
+  function resolveTemplateVariables(string) {
+    const VARIABLE_NAME_REGEX = /{{([A-Za-z_]\w+)}}/g;
+    
+    return string.replace(
+      VARIABLE_NAME_REGEX,
+      (_, key) => bru.getVar(key) || bru.getEnvVar(key)
+    );
+  }
+  
+  const body = req.getBody();
+  
+  if (!body.variables) {
+    return;
+  }
+  
+  body.variables = resolveTemplateVariables(body.variables);
+}
