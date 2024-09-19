@@ -31,13 +31,14 @@ const getLogsRepository = () => {
     tableName: clientLogsFeatureConfig.dynamoTableName,
   });
   const logByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);
-  const logByPspEntity = ClientLogDynamoEntityFactory.createLogByCheckoutOrOrderId(logsTable);
+  const logByCheckoutOrOrderId =
+    ClientLogDynamoEntityFactory.createLogByCheckoutOrOrderId(logsTable);
 
   return ok(
     new LogsRepositoryDynamodb({
       logsTable,
       logByDateEntity,
-      logByCheckoutOrOrderId: logByPspEntity,
+      logByCheckoutOrOrderId: logByCheckoutOrOrderId,
     }),
   );
 };

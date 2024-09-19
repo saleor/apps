@@ -22,8 +22,6 @@ afterAll(() => {
   vi.useRealTimers();
 });
 
-vi.stubEnv("DYNAMODB_LOGS_ITEM_TTL_IN_DAYS", "30");
-
 describe("DynamoDB Toolbox Entity Tests", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
   const tableName = "test-table";
@@ -48,9 +46,9 @@ describe("DynamoDB Toolbox Entity Tests", () => {
         level: 3,
         message: "Test message",
         attributes: "{}",
-        channelOrOrderId: "12345",
-        transactionId: "test-transaction-id",
         channelId: "test-channel",
+        checkoutOrOrder: "checkout",
+        checkoutOrOrderId: "12345",
         date: mockDate.toISOString(),
       });
 
@@ -59,14 +57,14 @@ describe("DynamoDB Toolbox Entity Tests", () => {
         SK: "12345#mocked-ulid",
         ulid: "mocked-ulid",
         TTL: LogsTable.getDefaultTTL(),
-        _et: "LOG_BY_PSP",
+        _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
         // unmodified fields
         PK: "test-url#test-app-id",
         level: 3,
         message: "Test message",
         attributes: "{}",
-        channelOrOrderId: "12345",
-        transactionId: "test-transaction-id",
+        checkoutOrOrderId: "12345",
+        checkoutOrOrder: "checkout",
         channelId: "test-channel",
         date: "2023-01-01T00:00:00.000Z",
       });
@@ -88,9 +86,8 @@ describe("DynamoDB Toolbox Entity Tests", () => {
         level: 3,
         message: "Test message",
         attributes: "{}",
-        pspReference: "test-psp-reference",
-        transactionId: "test-transaction-id",
         channelId: "test-channel",
+        checkoutOrOrder: "checkout",
         date: mockDate.toISOString(),
       });
 
@@ -104,9 +101,8 @@ describe("DynamoDB Toolbox Entity Tests", () => {
         PK: "test-url#test-app-id",
         level: 3,
         message: "Test message",
+        checkoutOrOrder: "checkout",
         attributes: "{}",
-        pspReference: "test-psp-reference",
-        transactionId: "test-transaction-id",
         channelId: "test-channel",
         date: mockDate.toISOString(),
       });
@@ -116,19 +112,6 @@ describe("DynamoDB Toolbox Entity Tests", () => {
 
 describe("LogsTable", () => {
   describe("getDefaultTTL", () => {
-    it("should return the correct TTL timestamp for 30 days if used in env", async () => {
-      const mockDate = new Date("2023-01-01T00:00:00Z");
-
-      vi.setSystemTime(mockDate);
-
-      const result = LogsTable.getDefaultTTL();
-
-      const expectedDate = new Date("2023-01-31T00:00:00Z");
-      const expected = expectedDate.getTime();
-
-      expect(result).toBe(expected);
-    });
-
     it("should return the correct TTL timestamp for 7 days if used in env", async () => {
       const mockDate = new Date("2023-01-01T00:00:00Z");
 

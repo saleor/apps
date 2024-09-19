@@ -161,7 +161,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
   }): Promise<Result<ClientLog[], InstanceType<typeof LogsRepositoryDynamodb.DataMappingError>>> {
     const transformer = new LogsTransformer();
 
-    this.logger.debug("Starting fetching logs by pspReference from DynamoDB", {
+    this.logger.debug("Starting fetching logs by checkoutOrOrderId from DynamoDB", {
       saleorApiUrl,
       checkoutOrOrderId,
       appId,
@@ -181,20 +181,20 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
         .send(),
       (err) =>
         new LogsRepositoryDynamodb.LogsFetchError(
-          "Error while fetching logs from DynamoDB by pspReference",
+          "Error while fetching logs from DynamoDB by checkoutOrOrderId",
           { cause: err },
         ),
     );
 
     if (fetchResult.isErr()) {
-      this.logger.error("Error while fetching logs from DynamoDB by pspReference", {
+      this.logger.error("Error while fetching logs from DynamoDB by checkoutOrOrderId", {
         error: fetchResult.error,
       });
 
       return err(fetchResult.error);
     }
 
-    this.logger.info("Fetched logs from DynamoDB by pspReference", {
+    this.logger.info("Fetched logs from DynamoDB by checkoutOrOrderId", {
       Count: fetchResult.value.Count,
       ScannedCount: fetchResult.value.ScannedCount,
       ConsumedCapacity: fetchResult.value.ConsumedCapacity,
@@ -203,7 +203,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
     this.logger.debug("Details about fetched logs", { Items: fetchResult.value.Items });
 
     if (!fetchResult.value.Items) {
-      this.logger.info("No logs found for pspReference", { checkoutOrOrderId });
+      this.logger.info("No logs found for checkoutOrOrderId", { checkoutOrOrderId });
 
       return ok([]);
     }
@@ -238,10 +238,6 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
       this.logByDateEntity.build(BatchPutRequest).item(logByDateValues),
     ].filter((v) => !!v);
 
-    /*
-     * We use BatchWrite insetad of Transaction to avoid costs (transactions cost 2x)
-     * We can deal with a missing long for on of our indexes (logByPsp) since it's not a critical data
-     */
     return this.logsTable.build(BatchWriteCommand).requests(...requests);
   }
 

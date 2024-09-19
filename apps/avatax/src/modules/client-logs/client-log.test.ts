@@ -7,8 +7,6 @@ import {
   ClientLogValue,
 } from "./client-log";
 
-vi.stubEnv("DYNAMODB_LOGS_ITEM_TTL_IN_DAYS", "30");
-
 describe("ClientLog", () => {
   test("create returns new instance when used valid input", () => {
     const logData: ClientLogValue = {

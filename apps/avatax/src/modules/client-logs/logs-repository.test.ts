@@ -11,8 +11,6 @@ import { LogsRepositoryDynamodb, LogsRepositoryMemory } from "./logs-repository"
 const saleorApiUrl = "https://test.com/graphql/";
 const appId = "123456";
 
-vi.stubEnv("DYNAMODB_LOGS_ITEM_TTL_IN_DAYS", "30");
-
 describe("LogsRepositoryDynamodb", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
   const tableName = "test-table";
@@ -70,17 +68,17 @@ describe("LogsRepositoryDynamodb", () => {
       expect(args[0].PutRequest!.Item).toStrictEqual(
         expect.objectContaining({
           PK: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
-          SK: expect.stringMatching(/^test-psp-reference#/),
+          SK: expect.stringMatching(/^test-order-id#/),
           ulid: expect.any(String),
           level: 3,
           attributes: '{"test":"attribute"}',
           message: "Test message",
           TTL: expect.any(Number),
-          pspReference: "test-psp-reference",
-          transactionId: "test-transaction-id",
+          checkoutOrOrder: "checkout",
+          checkoutOrOrderId: "test-order-id",
           channelId: "test-channel-id",
           date: expect.any(String),
-          _et: "LOG_BY_PSP",
+          _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
         }),
       );
 
@@ -92,67 +90,8 @@ describe("LogsRepositoryDynamodb", () => {
           attributes: '{"test":"attribute"}',
           message: "Test message",
           TTL: expect.any(Number),
-          pspReference: "test-psp-reference",
-          transactionId: "test-transaction-id",
-          channelId: "test-channel-id",
-          date: expect.any(String),
-          SK: expect.stringMatching(new RegExp(`^${date}#`)),
-          _et: "LOG_BY_DATE",
-        }),
-      );
-    });
-
-    it("skips writing logByPspEntity if pspReference is missing in ClientLog", async () => {
-      mockDocumentClient.on(BatchWriteCommand, {}).resolvesOnce({});
-      const logsRepositoryDynamodb = new LogsRepositoryDynamodb({
-        logsTable,
-        logByCheckoutOrOrderId: logByCheckoutOrOrderId,
-        logByDateEntity,
-      });
-
-      const clientLogResult = ClientLogStoreRequest.create({
-        message: "Test message",
-        level: "info",
-        date: new Date().toISOString(),
-        attributes: { test: "attribute" },
-        checkoutOrOrderId: "test-order-id",
-        channelId: "test-channel-id",
-        checkoutOrOrder: "checkout",
-      });
-
-      const clientLogRequest = clientLogResult._unsafeUnwrap();
-      const date = clientLogRequest.getValue().date;
-
-      const result = await logsRepositoryDynamodb.writeLog({
-        clientLogRequest,
-        saleorApiUrl,
-        appId,
-      });
-
-      expect(result.isOk()).toBe(true);
-
-      expect(result._unsafeUnwrap()).toBeUndefined();
-
-      const args =
-        mockDocumentClient.commandCalls(BatchWriteCommand)[0].args[0].input.RequestItems![
-          tableName
-        ];
-
-      expect(args).toHaveLength(1);
-
-      expect(args[0].PutRequest!.Item).toStrictEqual(
-        expect.objectContaining({
-          PK: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
-          ulid: expect.any(String),
-          level: 3,
-          attributes: '{"test":"attribute"}',
-          message: "Test message",
-          TTL: expect.any(Number),
-          /*
-           * psp is missing
-           * pspReference: "",
-           */
-          transactionId: "test-transaction-id",
+          checkoutOrOrder: "checkout",
+          checkoutOrOrderId: "test-order-id",
           channelId: "test-channel-id",
           date: expect.any(String),
           SK: expect.stringMatching(new RegExp(`^${date}#`)),

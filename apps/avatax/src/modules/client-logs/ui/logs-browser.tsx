@@ -4,7 +4,7 @@ import { useState } from "react";
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
-type LogsTypeSwitchState = "date" | "psp";
+type LogsTypeSwitchState = "date" | "orderOrCheckoutID";
 
 const formatUserFriendlyDate = (date: Date) => {
   const lang = navigator.language ?? "en-GB";
@@ -182,7 +182,7 @@ export const LogsBrowser = () => {
           <Switch.Item id="logs-browser-date" value="date">
             <Text>Query by date</Text>
           </Switch.Item>
-          <Switch.Item id="logs-browser-psp" value="psp">
+          <Switch.Item id="logs-browser-orderOrCheckoutID" value="orderOrCheckoutID">
             <Text>Query by Order or Checkout ID</Text>
           </Switch.Item>
         </Switch>

@@ -3,8 +3,6 @@ import { describe, expect, it, vi } from "vitest";
 import { ClientLog, ClientLogStoreRequest } from "./client-log";
 import { LogsTransformer } from "./log-transformer";
 
-vi.stubEnv("DYNAMODB_LOGS_ITEM_TTL_IN_DAYS", "30");
-
 describe("LogsTransformer", () => {
   const transformer = new LogsTransformer();
 
@@ -37,6 +35,7 @@ describe("LogsTransformer", () => {
         date: "2024-01-01T10:00:00Z",
         attributes: '{"key":"value"}',
         checkoutOrOrderId: "checkoutOrOrderId",
+        checkoutOrOrder: "checkout",
         channelId: "channel1",
         PK: `${saleorApiUrl}#${appId}`,
         SK: `2024-01-01T10:00:00Z#${ulid}`,
@@ -67,6 +66,7 @@ describe("LogsTransformer", () => {
       expect(result).toEqual({
         message: "Test log",
         level: 2,
+        checkoutOrOrder: "checkout",
         date: "2024-01-01T10:00:00Z",
         // attribute is filled in as empty object automatically
         attributes: "{}",
@@ -78,8 +78,8 @@ describe("LogsTransformer", () => {
     });
   });
 
-  describe("fromClientLogToDynamoByPspEntityValue", () => {
-    it("should transform ClientLogStoreRequest to DynamoDB entity value for logByPspSchema", () => {
+  describe("fromClientLogToDynamoByCheckoutOrOrderIdEntityValue", () => {
+    it("should transform ClientLogStoreRequest to DynamoDB entity value for orderOrCheckoutIdSchema", () => {
       const clientLogRequest = ClientLogStoreRequest.create({
         level: "error",
         date: "2024-01-01T10:00:00Z",
@@ -107,9 +107,10 @@ describe("LogsTransformer", () => {
         date: "2024-01-01T10:00:00Z",
         attributes: '{"key":"value"}',
         checkoutOrOrderId: "checkoutOrOrderId",
+        checkoutOrOrder: "checkout",
         channelId: "channel1",
         PK: `${saleorApiUrl}#${appId}`,
-        SK: `psp1#${ulid}`,
+        SK: `checkoutOrOrderId#${ulid}`,
         ulid: expect.any(String),
         TTL: expect.any(Number),
       });
@@ -143,8 +144,9 @@ describe("LogsTransformer", () => {
         attributes: "{}",
         checkoutOrOrderId: "checkoutOrOrderId",
         PK: `${saleorApiUrl}#${appId}`,
-        SK: `psp1#${ulid}`,
+        SK: `checkoutOrOrderId#${ulid}`,
         ulid: expect.any(String),
+        checkoutOrOrder: "checkout",
         TTL: expect.any(Number),
       });
     });
@@ -176,9 +178,9 @@ describe("LogsTransformer", () => {
         message: "Test log",
         attributes: { key: "value" },
         channelId: "channel1",
-        pspReference: "psp1",
-        transactionId: "tx1",
+        checkoutOrOrderId: "checkoutOrOrderId",
         id: "ulid",
+        checkoutOrOrder: "checkout",
       });
     });
 
@@ -189,7 +191,6 @@ describe("LogsTransformer", () => {
         date: "2024-01-01T10:00:00Z",
         attributes: "invalid json",
         pspReference: "psp1",
-        transactionId: "tx1",
         channelId: "channel1",
         PK: "saleorApiUrl#appId",
         SK: "psp1#ulid",

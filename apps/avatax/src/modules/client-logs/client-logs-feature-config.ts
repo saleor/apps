@@ -11,17 +11,11 @@ const schema = z
           return { message: "Provide value in days" };
         },
       })
-      .optional(),
+      .optional()
+      .default(30),
   })
   .superRefine((values, ctx) => {
     if (values.isEnabled === true) {
-      if (!values.ttlInDays) {
-        ctx.addIssue({
-          message: "When logs are enabled, DYNAMODB_LOGS_ITEM_TTL_IN_DAYS must be provided",
-          code: "custom",
-        });
-      }
-
       if (!values.dynamoTableName) {
         ctx.addIssue({
           code: "custom",
