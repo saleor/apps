@@ -123,6 +123,7 @@ export default wrapWithLoggerContext(
               discountStrategy,
             );
 
+            // eslint-disable-next-line @saleor/saleor-app/logger-leak
             logger.info("Taxes calculated", { calculatedTaxes });
 
             return res.status(200).json(ctx.buildResponse(calculatedTaxes));
