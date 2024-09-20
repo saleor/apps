@@ -35,7 +35,7 @@ const runMigrations = async () => {
   logger.info("Fetching environments from the saleor-cloud APL", { dryRun });
 
   const saleorCloudEnv = await saleorAPL.getAll().catch((error) => {
-    logger.error("Could not fetch instances from the Cloud APL", { error, dryRun });
+    logger.error("Could not fetch instances from the Cloud APL", { error: error, dryRun });
 
     process.exit(1);
   });
