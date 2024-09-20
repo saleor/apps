@@ -172,7 +172,7 @@ export default wrapWithLoggerContext(
 
                 return res.status(200).end();
               } catch (error) {
-                logger.debug("Error confirming order", { error });
+                logger.debug("Error confirming order", { error: error });
 
                 switch (true) {
                   case error instanceof TaxBadPayloadError: {
@@ -192,7 +192,7 @@ export default wrapWithLoggerContext(
                   }
                 }
                 Sentry.captureException(error);
-                logger.error("Unhandled error executing webhook", { error });
+                logger.error("Unhandled error executing webhook", { error: error });
 
                 return res.status(500).json({ message: "Unhandled error" });
               }
@@ -217,7 +217,7 @@ export default wrapWithLoggerContext(
             }
           } catch (error) {
             Sentry.captureException(error);
-            logger.error("Unhandled error executing webhook", { error });
+            logger.error("Unhandled error executing webhook", { error: error });
 
             return res.status(500).json({ message: "Unhandled error" });
           }
