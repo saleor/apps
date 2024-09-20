@@ -88,6 +88,7 @@
     ".gitignore",
     "apps/products-feed/src/modules/category-mapping/google-product-categories.ts",
     "apps/taxes/src/modules/ui/countries.ts",
+    "apps/avatax/docker/**",
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/graphql.ts",
