@@ -142,6 +142,7 @@ const getMockedAppConfig = (): AppConfig => {
 describe("CalculateTaxesUseCase", () => {
   let instance: CalculateTaxesUseCase;
   let mockedAvataxClient: any;
+  let logWriter: ILogWriter;
 
   vi.mock("../../../modules/avatax/avatax-client", () => {
     const AvataxClient = vi.fn();
@@ -165,11 +166,15 @@ describe("CalculateTaxesUseCase", () => {
   beforeEach(() => {
     vi.resetAllMocks();
 
+    logWriter = new NoopLogWriter();
+
+    vi.spyOn(logWriter, "writeLog");
+
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
       logWriterFactory: {
         createWriter(context: LogWriterContext): ILogWriter {
-          return new NoopLogWriter();
+          return logWriter;
         },
       },
     });
@@ -221,7 +226,7 @@ describe("CalculateTaxesUseCase", () => {
     expect(error.errors![0]).toBeInstanceOf(Error);
   });
 
-  it("Calculates proper discount (extra field with sum of SUBTOTAL-type amountes) and properly reduces price of shipping line", async () => {
+  it("Calculates proper discount (extra field with sum of SUBTOTAL-type amounts) and properly reduces price of shipping line", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
     mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
@@ -250,7 +255,33 @@ describe("CalculateTaxesUseCase", () => {
     });
   });
 
-  it.todo("Writes successful log if taxes calculated to Log Writer");
+  it("Writes successful log if taxes calculated to Log Writer", async () => {
+    mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
-  it.todo("Writes error log if internal error occurs");
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
+
+    const payload = getPayloadWithDiscounts();
+
+    await instance.calculateTaxes(payload, getMockAuthData());
+
+    expect(logWriter.writeLog).toHaveBeenCalledWith({
+      log: expect.objectContaining({
+        message: "Taxes calculated",
+      }),
+    });
+  });
+
+  it("Writes error log if internal error occurs", async () => {
+    mockGetAppConfig.mockImplementationOnce(() =>
+      err(new AppConfigExtractor.MissingMetadataError("Missing metadata")),
+    );
+
+    await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+    expect(logWriter.writeLog).toHaveBeenCalledWith({
+      log: expect.objectContaining({
+        message: "Failed to calculate taxes. Invalid config",
+      }),
+    });
+  });
 });
