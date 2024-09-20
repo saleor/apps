@@ -8,6 +8,10 @@
       {
         "allowList": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA", "VERCEL_URL", "VERCEL"]
       }
-    ]
+    ],
+    "@saleor/saleor-app/logger-leak": "warn"
+  },
+  "parserOptions": {
+    "project": "tsconfig.json"
   }
 }
