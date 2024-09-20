@@ -1,7 +1,8 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Text } from "@saleor/macaw-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
 
-import { LogsRootSection } from "@/modules/client-logs/ui/logs-root-section";
+import { trpcClient } from "@/modules/trpc/trpc-client";
 
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
@@ -10,10 +11,16 @@ import { Section } from "../modules/ui/app-section";
 import { MatcherSection } from "../modules/ui/matcher-section";
 
 const Header = () => {
+  const { data: logsEnabled } = trpcClient.clientLogs.isEnabled.useQuery();
+  const { push } = useRouter();
+
   return (
-    <Section.Header>
-      Configure the app by connecting to AvaTax. You can connect to multiple accounts.
-    </Section.Header>
+    <Box display="flex" justifyContent="space-between">
+      <Section.Header>
+        Configure the app by connecting to AvaTax. You can connect to multiple accounts.
+      </Section.Header>
+      {logsEnabled && <Button onClick={() => push("/logs")}>Open Logs</Button>}
+    </Box>
   );
 };
 
@@ -41,7 +48,6 @@ const ConfigurationPage = () => {
       <ProvidersSection />
       <ChannelSection />
       <MatcherSection />
-      <LogsRootSection />
     </AppPageLayout>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, Input, RangeInput, Switch, Text } from "@saleor/macaw-ui";
+import { Box, Input, RangeInput, Skeleton, Switch, Text } from "@saleor/macaw-ui";
 import { useState } from "react";
 
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
@@ -19,20 +19,33 @@ const formatUserFriendlyDate = (date: Date) => {
   }).format(date);
 };
 
+const LogsSkeleton = () => {
+  const count = 3;
+
+  return (
+    <Box>
+      {new Array(count).fill(null).map((index) => {
+        return <Skeleton height={20} marginBottom={4} />;
+      })}
+    </Box>
+  );
+};
+
 const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
   return (
-    <Box __maxHeight="500px" overflow="scroll">
+    <Box>
       {logs.map((log) => (
         <Box
           borderBottomWidth={1}
           borderBottomStyle={"solid"}
           borderColor={"default1"}
-          display="grid"
+          display="flex"
           key={log.id}
           textAlign="left"
           padding={4}
+          alignItems="center"
         >
-          <Box>
+          <Box marginRight={4} __width="150px">
             <Text lineHeight={8} size={1}>
               {formatUserFriendlyDate(new Date(log.date))}
             </Text>
@@ -51,11 +64,11 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
             </Text>
           </Box>
           {Object.keys(log.attributes).length > 0 ? (
-            <Box>
-              <Text size={1}>
-                <code>
+            <Box marginLeft="auto" __width="400px">
+              <Text size={1} display={"block"}>
+                <Box as="code" width={"100%"}>
                   <pre>{JSON.stringify(log.attributes, null, 2)}</pre>
-                </code>
+                </Box>
               </Text>
             </Box>
           ) : null}
@@ -66,7 +79,7 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
 };
 
 /**
- * Format date for format yyyy-mm-dd T hh:mm
+ * Format date for format yyyy-mm-dd T hh:mm -> required by RangePicker
  */
 const formatDateForInput = (d: Date) => {
   const pad = (n: number) => n.toString().padStart(2, "0");
@@ -79,7 +92,6 @@ const formatDateForInput = (d: Date) => {
   return `${yyyy}-${MM}-${pad(d.getDate())}T${hh}:${mm}`;
 };
 
-// TODO: Pagination
 const LogsByDate = () => {
   const [rangeDates, setRangeDates] = useState<{ start: Date; end: Date }>(() => {
     const now = Date.now();
@@ -127,6 +139,7 @@ const LogsByDate = () => {
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for specified date range</Text>}
       {isLoaded && <LogsList logs={logs} />}
+      {isLoading && <LogsSkeleton />}
     </Box>
   );
 };
@@ -142,6 +155,9 @@ const LogsByCheckoutOrOrderId = () => {
     { enabled: !!query },
   );
 
+  const isEmpty = !isLoading && logs && logs.length === 0;
+  const isLoaded = !isLoading && logs && logs.length > 0;
+
   return (
     <Box>
       <Box alignItems="center" display="flex" flexWrap="wrap" gap={0.5} marginBottom={4}>
@@ -156,11 +172,10 @@ const LogsByCheckoutOrOrderId = () => {
         />
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
-      {logs && logs.length ? (
-        <LogsList logs={logs} />
-      ) : query && !isLoading ? (
-        "No logs are available for specified ID"
-      ) : null}
+      {isEmpty && <Text>No logs are available for the specified ID</Text>}
+      {isLoaded && <LogsList logs={logs} />}
+      {isLoading && query && <LogsSkeleton />}
+      {!query && <Text>Enter Checkout or Order ID and wait for results</Text>}
     </Box>
   );
 };

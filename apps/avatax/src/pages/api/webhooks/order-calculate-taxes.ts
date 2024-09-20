@@ -75,7 +75,7 @@ export default wrapWithLoggerContext(
               message: "Taxes not calculated. Missing address or lines",
               checkoutOrOrderId: payload.taxBase.sourceObject.id,
               channelId: payload.taxBase.channel.slug,
-              checkoutOrOrder: "checkout",
+              checkoutOrOrder: "order",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);

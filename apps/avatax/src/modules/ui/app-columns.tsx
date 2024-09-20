@@ -5,7 +5,7 @@ export const AppColumns = ({ top, children }: PropsWithChildren<{ top: React.Rea
   return (
     <Box display={"grid"} __gap={"64px"} __marginBottom={"64px"}>
       <Box>{top}</Box>
-      <Box display={"grid"} __gridTemplateColumns={"1fr 2fr"} __rowGap={"96px"} columnGap={10}>
+      <Box display={"grid"} __gridTemplateColumns={"1fr 1fr"} __rowGap={"96px"} columnGap={10}>
         {children}
       </Box>
     </Box>
