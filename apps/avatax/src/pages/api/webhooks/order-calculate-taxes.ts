@@ -160,6 +160,7 @@ export default wrapWithLoggerContext(
               discountStrategy,
             );
 
+            // eslint-disable-next-line @saleor/saleor-app/logger-leak
             logger.info("Taxes calculated", { calculatedTaxes });
 
             ClientLogStoreRequest.create({

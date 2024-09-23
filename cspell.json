@@ -99,7 +99,7 @@
     "apps/*/src/**",
     "apps/*/e2e/data/**",
     "**/*.bru",
-    "**/.eslintrc",
+    "**/.eslintrc*",
     ".github/**",
     "Dockerfile*"
   ]
