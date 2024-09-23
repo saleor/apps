@@ -11,6 +11,10 @@ import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
+import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
+import { DynamoDbLogWriter, ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
+import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
@@ -27,6 +31,7 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
+  logWriterFactory: new LogWriterFactory(),
 });
 
 /**

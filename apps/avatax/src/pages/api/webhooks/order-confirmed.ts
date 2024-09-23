@@ -5,6 +5,8 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
+import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -34,11 +36,15 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const discountStrategy = new PriceReductionDiscountsStrategy();
 
+const logsWriterFactory = new LogWriterFactory();
+
 export default wrapWithLoggerContext(
   withOtel(
     withMetadataCache(
       orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
         const { payload, authData } = ctx;
+
+        const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
         subscriptionErrorChecker.checkPayload(payload);
 
@@ -58,169 +64,304 @@ export default wrapWithLoggerContext(
           // Capture error when there is problem with parsing webhook payload - it should not happen
           Sentry.captureException(error);
           logger.error("Error parsing webhook payload into Saleor order", { error });
+
+          ClientLogStoreRequest.create({
+            level: "error",
+            message: "Failed to commit order. Unhandled error.",
+            checkoutOrOrderId: payload.order?.id,
+            checkoutOrOrder: "order",
+            channelId: payload.order?.channel.slug,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
           return res.status(500).json({ message: error.message });
         }
 
-        if (confirmedOrderFromPayload.isOk()) {
-          loggerContext.set(
-            ObservabilityAttributes.ORDER_ID,
-            confirmedOrderFromPayload.value.getOrderId(),
+        loggerContext.set(
+          ObservabilityAttributes.ORDER_ID,
+          confirmedOrderFromPayload.value.getOrderId(),
+        );
+
+        try {
+          const confirmedOrderEvent = confirmedOrderFromPayload.value;
+
+          if (confirmedOrderEvent.isFulfilled()) {
+            /**
+             * TODO Should it be 400? Maybe just 200?
+             */
+            logger.warn("Order is fulfilled, skipping");
+
+            ClientLogStoreRequest.create({
+              level: "info",
+              message: "Skip commiting - order already fulfilled",
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            return res.status(400).json({
+              message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
+            });
+          }
+
+          if (confirmedOrderEvent.isStrategyFlatRates()) {
+            logger.info("Order has flat rates tax strategy, skipping...");
+
+            ClientLogStoreRequest.create({
+              level: "info",
+              message: "Skip commiting - order has flat tax rates strategy",
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            return res
+              .status(202)
+              .json({ message: `Order ${payload.order?.id} has flat rates tax strategy.` });
+          }
+
+          const appMetadata = payload.recipient?.privateMetadata ?? [];
+
+          const configExtractor = new AppConfigExtractor();
+
+          const config = configExtractor
+            .extractAppConfigFromPrivateMetadata(appMetadata)
+            .map((config) => {
+              try {
+                new AppConfigurationLogger(logger).logConfiguration(
+                  config,
+                  confirmedOrderEvent.getChannelSlug(),
+                );
+              } catch (e) {
+                captureException(
+                  new AppConfigExtractor.LogConfigurationMetricError(
+                    "Failed to log configuration metric",
+                    {
+                      cause: e,
+                    },
+                  ),
+                );
+              }
+
+              return config;
+            });
+
+          if (config.isErr()) {
+            ClientLogStoreRequest.create({
+              level: "error",
+              message: "Failed to commit order. Configuration error.",
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            logger.warn("Failed to extract app config from metadata", { error: config.error });
+
+            return res
+              .status(400)
+              .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
+          }
+
+          metadataCache.setMetadata(appMetadata);
+
+          const AvataxWebhookServiceFactory = await import(
+            "../../../modules/taxes/avatax-webhook-service-factory"
+          ).then((m) => m.AvataxWebhookServiceFactory);
+
+          const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
+            config.value,
+            confirmedOrderEvent.getChannelSlug(),
           );
 
-          try {
-            const confirmedOrderEvent = confirmedOrderFromPayload.value;
+          logger.debug("Confirming order...");
 
-            if (confirmedOrderEvent.isFulfilled()) {
-              /**
-               * TODO Should it be 400? Maybe just 200?
-               */
-              logger.warn("Order is fulfilled, skipping");
-              return res.status(400).json({
-                message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
-              });
-            }
-
-            if (confirmedOrderEvent.isStrategyFlatRates()) {
-              logger.info("Order has flat rates tax strategy, skipping...");
-              return res
-                .status(202)
-                .json({ message: `Order ${payload.order?.id} has flat rates tax strategy.` });
-            }
-
-            const appMetadata = payload.recipient?.privateMetadata ?? [];
-
-            const configExtractor = new AppConfigExtractor();
-
-            const config = configExtractor
-              .extractAppConfigFromPrivateMetadata(appMetadata)
-              .map((config) => {
-                try {
-                  new AppConfigurationLogger(logger).logConfiguration(
-                    config,
-                    confirmedOrderEvent.getChannelSlug(),
-                  );
-                } catch (e) {
-                  captureException(
-                    new AppConfigExtractor.LogConfigurationMetricError(
-                      "Failed to log configuration metric",
-                      {
-                        cause: e,
-                      },
-                    ),
-                  );
-                }
-
-                return config;
-              });
-
-            if (config.isErr()) {
-              logger.warn("Failed to extract app config from metadata", { error: config.error });
-
-              return res
-                .status(400)
-                .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
-            }
-
-            metadataCache.setMetadata(appMetadata);
-
-            const AvataxWebhookServiceFactory = await import(
-              "../../../modules/taxes/avatax-webhook-service-factory"
-            ).then((m) => m.AvataxWebhookServiceFactory);
-
-            const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-              config.value,
+          if (webhookServiceResult.isOk()) {
+            const { taxProvider } = webhookServiceResult.value;
+            const providerConfig = config.value.getConfigForChannelSlug(
               confirmedOrderEvent.getChannelSlug(),
             );
 
-            logger.debug("Confirming order...");
+            if (providerConfig.isErr()) {
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: "Failed to commit order. Configuration error.",
+                checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
 
-            if (webhookServiceResult.isOk()) {
-              const { taxProvider } = webhookServiceResult.value;
-              const providerConfig = config.value.getConfigForChannelSlug(
-                confirmedOrderEvent.getChannelSlug(),
+              return res.status(400).json({
+                message: `App is not configured properly for order: ${payload.order?.id}`,
+              });
+            }
+
+            try {
+              const confirmedOrder = await taxProvider.confirmOrder(
+                // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
+                payload.order,
+                confirmedOrderEvent,
+                providerConfig.value.avataxConfig.config,
+                ctx.authData,
+                discountStrategy,
               );
 
-              if (providerConfig.isErr()) {
-                return res.status(400).json({
-                  message: `App is not configured properly for order: ${payload.order?.id}`,
-                });
-              }
+              logger.info("Order confirmed", { orderId: confirmedOrder.id });
 
-              try {
-                const confirmedOrder = await taxProvider.confirmOrder(
-                  // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
-                  payload.order,
-                  confirmedOrderEvent,
-                  providerConfig.value.avataxConfig.config,
-                  ctx.authData,
-                  discountStrategy,
-                );
+              const client = createInstrumentedGraphqlClient({
+                saleorApiUrl,
+                token,
+              });
 
-                logger.info("Order confirmed", { orderId: confirmedOrder.id });
-                const client = createInstrumentedGraphqlClient({
-                  saleorApiUrl,
-                  token,
-                });
+              const orderMetadataManager = new OrderMetadataManager(client);
 
-                const orderMetadataManager = new OrderMetadataManager(client);
+              await orderMetadataManager.updateOrderMetadataWithExternalId(
+                confirmedOrderEvent.getOrderId(),
+                confirmedOrder.id,
+              );
+              logger.info("Updated order metadata with externalId");
 
-                await orderMetadataManager.updateOrderMetadataWithExternalId(
-                  confirmedOrderEvent.getOrderId(),
-                  confirmedOrder.id,
-                );
-                logger.info("Updated order metadata with externalId");
+              ClientLogStoreRequest.create({
+                level: "info",
+                message: "Order committed successfully",
+                checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
+                channelId: payload.order?.channel.slug,
+                attributes: {
+                  confirmedOrderId: confirmedOrder.id,
+                },
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
 
-                return res.status(200).end();
-              } catch (error) {
-                logger.debug("Error confirming order", { error: error });
+              return res.status(200).end();
+            } catch (error) {
+              logger.debug("Error confirming order", { error: error });
 
-                switch (true) {
-                  case error instanceof TaxBadPayloadError: {
-                    return res
-                      .status(400)
-                      .json({ message: `Order: ${payload.order?.id} data is not valid` });
-                  }
-                  case error instanceof AvataxStringLengthError: {
-                    return res.status(400).json({
-                      message: `AvaTax service returned validation error: ${error?.description}`,
-                    });
-                  }
-                  case error instanceof AvataxEntityNotFoundError: {
-                    return res.status(400).json({
-                      message: `AvaTax service returned validation error: ${error?.description}`,
-                    });
-                  }
+              switch (true) {
+                case error instanceof TaxBadPayloadError: {
+                  ClientLogStoreRequest.create({
+                    level: "error",
+                    message: "Failed to commit order. Webhook payload invalid",
+                    checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
+                    channelId: payload.order?.channel.slug,
+                  })
+                    .mapErr(captureException)
+                    .map(logWriter.writeLog);
+
+                  return res
+                    .status(400)
+                    .json({ message: `Order: ${payload.order?.id} data is not valid` });
                 }
-                Sentry.captureException(error);
-                logger.error("Unhandled error executing webhook", { error: error });
+                case error instanceof AvataxStringLengthError: {
+                  ClientLogStoreRequest.create({
+                    level: "error",
+                    message: `Failed to commit order: ${error?.description} `,
+                    checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
+                    channelId: payload.order?.channel.slug,
+                  })
+                    .mapErr(captureException)
+                    .map(logWriter.writeLog);
+
+                  return res.status(400).json({
+                    message: `AvaTax service returned validation error: ${error?.description}`,
+                  });
+                }
+                case error instanceof AvataxEntityNotFoundError: {
+                  ClientLogStoreRequest.create({
+                    level: "error",
+                    message: `Failed to commit order: ${error?.description} `,
+                    checkoutOrOrderId: payload.order?.id,
+                    checkoutOrOrder: "order",
+                    channelId: payload.order?.channel.slug,
+                  })
+                    .mapErr(captureException)
+                    .map(logWriter.writeLog);
+
+                  return res.status(400).json({
+                    message: `AvaTax service returned validation error: ${error?.description}`,
+                  });
+                }
+              }
+              Sentry.captureException(error);
+              logger.error("Unhandled error executing webhook", { error: error });
+
+              ClientLogStoreRequest.create({
+                level: "error",
+                message: `Failed to commit order: Unhandled error `,
+                checkoutOrOrderId: payload.order?.id,
+                checkoutOrOrder: "order",
+                channelId: payload.order?.channel.slug,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
+              return res.status(500).json({ message: "Unhandled error" });
+            }
+          }
+
+          if (webhookServiceResult.isErr()) {
+            const error = webhookServiceResult.error;
+
+            logger.debug("Error confirming order", { error });
+
+            switch (error["constructor"]) {
+              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+                ClientLogStoreRequest.create({
+                  level: "error",
+                  message: `Failed to commit order: Broken configuration `,
+                  checkoutOrOrderId: payload.order?.id,
+                  checkoutOrOrder: "order",
+                  channelId: payload.order?.channel.slug,
+                })
+                  .mapErr(captureException)
+                  .map(logWriter.writeLog);
+
+                return res.status(400).json({ message: "App is not configured properly." });
+              }
+              default: {
+                Sentry.captureException(webhookServiceResult.error);
+                logger.fatal("Unhandled error", { error });
+
+                ClientLogStoreRequest.create({
+                  level: "error",
+                  message: `Failed to commit order: Unhandled error `,
+                  checkoutOrOrderId: payload.order?.id,
+                  checkoutOrOrder: "order",
+                  channelId: payload.order?.channel.slug,
+                })
+                  .mapErr(captureException)
+                  .map(logWriter.writeLog);
 
                 return res.status(500).json({ message: "Unhandled error" });
               }
             }
-
-            if (webhookServiceResult.isErr()) {
-              const error = webhookServiceResult.error;
-
-              logger.debug("Error confirming order", { error });
-
-              switch (error["constructor"]) {
-                case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-                  return res.status(400).json({ message: "App is not configured properly." });
-                }
-                default: {
-                  Sentry.captureException(webhookServiceResult.error);
-                  logger.fatal("Unhandled error", { error });
-
-                  return res.status(500).json({ message: "Unhandled error" });
-                }
-              }
-            }
-          } catch (error) {
-            Sentry.captureException(error);
-            logger.error("Unhandled error executing webhook", { error: error });
-
-            return res.status(500).json({ message: "Unhandled error" });
           }
+        } catch (error) {
+          Sentry.captureException(error);
+          logger.error("Unhandled error executing webhook", { error: error });
+
+          ClientLogStoreRequest.create({
+            level: "error",
+            message: `Failed to commit order: Unhandled error `,
+            checkoutOrOrderId: payload.order?.id,
+            checkoutOrOrder: "order",
+            channelId: payload.order?.channel.slug,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
+          return res.status(500).json({ message: "Unhandled error" });
         }
       }),
     ),

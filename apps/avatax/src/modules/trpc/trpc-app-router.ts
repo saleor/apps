@@ -1,3 +1,5 @@
+import { clientLogsRouter } from "@/modules/client-logs/client-logs.router";
+
 import { avataxConnectionRouter } from "../avatax/avatax-connection.router";
 import { avataxTaxCodeMatchesRouter } from "../avatax/tax-code/avatax-tax-code-matches.router";
 import { avataxTaxCodesRouter } from "../avatax/tax-code/avatax-tax-codes.router";
@@ -13,6 +15,7 @@ export const appRouter = router({
   taxClasses: taxClassesRouter,
   avataxTaxCodes: avataxTaxCodesRouter,
   avataxMatches: avataxTaxCodeMatchesRouter,
+  clientLogs: clientLogsRouter,
 });
 
 export type AppRouter = typeof appRouter;
