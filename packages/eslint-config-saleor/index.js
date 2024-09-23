@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["next", "turbo", "prettier"],
+  extends: ["next", "turbo", "prettier", "plugin:@saleor/saleor-app/recommended"],
   parser: "@typescript-eslint/parser",
   plugins: ["simple-import-sort"],
   rules: {

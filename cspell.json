@@ -88,6 +88,8 @@
     ".gitignore",
     "apps/products-feed/src/modules/category-mapping/google-product-categories.ts",
     "apps/taxes/src/modules/ui/countries.ts",
+    "apps/avatax/docker/**",
+    "apps/avatax/docker-compose.yaml",
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/graphql.ts",
@@ -97,7 +99,7 @@
     "apps/*/src/**",
     "apps/*/e2e/data/**",
     "**/*.bru",
-    "**/.eslintrc",
+    "**/.eslintrc*",
     ".github/**",
     "Dockerfile*",
     "patches/**"
