@@ -22,6 +22,28 @@
 
 Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/avatax/overview) to learn how to configure and develop the app locally.
 
+### DynamoDB
+
+DynamoDB is used to store Client-side logs. To develop this feature locally:
+
+1. Run `docker compose up` for local DynamoDB instance
+2. Run `bash scripts/setup-dynamodb.sh` to describe DynamoDB table
+
+Ensure following env variables are set
+
+```dotenv
+FF_ENABLE_EXPERIMENTAL_LOGS=true
+DYNAMODB_LOGS_ITEM_TTL_IN_DAYS=30
+DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs # must match scripts/setup-dynamodb.sh
+```
+
+Alternatively, you can connect to AWS-based DynamoDB:
+
+1. Create table in your AWS, based on parameters in `scripts/setup-dynamodb.sh`
+2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)
+
+If `FF_ENABLE_EXPERIMENTAL_LOGS` is not set, you don't have to provide anything - feature will be disabled
+
 ## Testing
 
 ### E2E tests
