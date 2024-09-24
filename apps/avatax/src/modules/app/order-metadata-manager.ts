@@ -51,15 +51,17 @@ export class OrderMetadataManager {
     const errorToReport = error ?? gqlErrors[0] ?? null;
 
     if (errorToReport) {
-      this.logger.error("Failed to update metadata", {
-        error: new OrderMetadataManager.MutationError(
-          errorToReport.message ?? "Failed to update metadata",
-          {
-            props: {
-              error: errorToReport,
-            },
+      const error = new OrderMetadataManager.MutationError(
+        errorToReport.message ?? "Failed to update metadata",
+        {
+          props: {
+            error: errorToReport,
           },
-        ),
+        },
+      );
+
+      this.logger.error("Failed to update metadata", {
+        error,
       });
 
       throw new OrderMetadataManager.MutationError("Failed to update metadata", {

@@ -16,7 +16,7 @@ export const extractTransactionRedactedLogProperties = (model: CreateTransaction
     description: line.description,
     discounted: line.discounted,
   })),
-  date: model.date,
+  date: model.date.toISOString(),
   isTaxIncluded: model.lines[0]?.taxIncluded ?? false,
   discountAmount: model.discount,
 });

@@ -42,8 +42,8 @@ export const avataxTaxCodesRouter = router({
       ),
     );
 
-    const connection = await connectionService.getById(input.connectionId).catch((err) => {
-      logger.error("Failed to resolve connection from settings", { error: err });
+    const connection = await connectionService.getById(input.connectionId).catch((error) => {
+      logger.error("Failed to resolve connection from settings", { error: error });
 
       throw new TRPCError({
         message: "Failed to resolve configuration, please try again",
@@ -61,10 +61,10 @@ export const avataxTaxCodesRouter = router({
 
     logger.debug("Returning tax codes");
 
-    return taxCodesService.getAllFiltered({ filter: input.filter }).catch((err) => {
-      logger.error("Failed to fetch tax codes from AvaTax", { error: err });
+    return taxCodesService.getAllFiltered({ filter: input.filter }).catch((error) => {
+      logger.error("Failed to fetch tax codes from AvaTax", { error: error });
 
-      if (err instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
+      if (error instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
         throw new TRPCError({
           code: "FORBIDDEN",
           cause: "AvaTax PermissionRequired",

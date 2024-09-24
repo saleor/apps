@@ -105,7 +105,9 @@ export default wrapWithLoggerContext(
             });
 
           if (config.isErr()) {
-            logger.warn("Failed to extract app config from metadata", { error: config.error });
+            logger.warn("Failed to extract app config from metadata", {
+              error: config.error,
+            });
 
             ClientLogStoreRequest.create({
               level: "error",
@@ -121,8 +123,6 @@ export default wrapWithLoggerContext(
               message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
             });
           }
-
-          metadataCache.setMetadata(appMetadata);
 
           const AvataxWebhookServiceFactory = await import(
             "../../../modules/taxes/avatax-webhook-service-factory"
@@ -161,7 +161,7 @@ export default wrapWithLoggerContext(
             );
 
             // eslint-disable-next-line @saleor/saleor-app/logger-leak
-            logger.info("Taxes calculated", { calculatedTaxes });
+            logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
 
             ClientLogStoreRequest.create({
               level: "info",
@@ -202,7 +202,7 @@ export default wrapWithLoggerContext(
               }
               default: {
                 Sentry.captureException(avataxWebhookServiceResult.error);
-                logger.fatal("Unhandled error", { error: err });
+                logger.error("Unhandled error", { error: err });
 
                 ClientLogStoreRequest.create({
                   level: "error",
