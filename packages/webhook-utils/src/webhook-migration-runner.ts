@@ -1,14 +1,13 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
-
 import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
 import {
   AppDetails,
   getAppDetailsAndWebhooksData,
 } from "./operations/get-app-details-and-webhooks-data";
 import {
-  getSaleorInstanceDetails,
   SaleorInstanceDetails,
+  getSaleorInstanceDetails,
 } from "./operations/get-saleor-instance-details";
 import { Logger } from "./types";
 import { WebhookUpdater } from "./webhook-updater";
@@ -76,22 +75,12 @@ export class WebhookMigrationRunner {
           });
           break;
         case error instanceof UnknownConnectionError:
-          logger.error(
-            `Migration finished with error while fetching data from Saleor. Aborting...`,
-            {
-              error,
-            },
-          );
-
-          process.exit(1);
-
-          break;
-        default:
-          logger.error(`Migration finished with error while running migrations. Aborting...`, {
+          logger.error(`Migration finished with error while fetching data from Saleor`, {
             error,
           });
-
-          process.exit(1);
+          break;
+        default:
+          logger.error(`Migration finished with error while running migrations`, { error });
       }
     }
   };
