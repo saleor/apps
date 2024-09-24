@@ -96,20 +96,21 @@ describe("Logger", () => {
     });
 
     it("Calls Open Telemetry logger emit() function, passing there error attribute", () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const logger = createLogger("Test Logger", {
         rootScopePrimitiveArg: 1,
         rootScopeObjectArg: {
           objectKey: "objectValue",
         },
+        error: new Error("Error Message"),
       });
 
       const mockOtelEmit = vi.fn().mockImplementation((log) => {
         const error = log.attributes.error;
 
-        expect(error.message).toBe("Error Message");
-        expect(error.cause).toBe("Error cause");
+        // Error is serialized to JSON
+        expect(error).toBe("{}");
       });
 
       vi.spyOn(logs, "getLogger").mockImplementation(() => {
@@ -139,7 +140,7 @@ describe("Logger", () => {
         context: expect.anything(), // Unique otel context
         body: "[Test Logger] Test Message",
         attributes: {
-          error: expect.any(Error),
+          error: expect.any(String),
           rootScopePrimitiveArg: 1,
           rootScopeObjectArg: {
             objectKey: "objectValue",

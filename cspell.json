@@ -101,6 +101,7 @@
     "**/*.bru",
     "**/.eslintrc*",
     ".github/**",
-    "Dockerfile*"
+    "Dockerfile*",
+    "patches/**"
   ]
 }

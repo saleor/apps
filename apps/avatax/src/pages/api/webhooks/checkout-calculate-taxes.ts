@@ -47,7 +47,7 @@ export default wrapWithLoggerContext(
           subscriptionErrorChecker.checkPayload(payload);
 
           logger.info("Tax base payload for checkout calculate taxes", {
-            payload: payload.taxBase,
+            payload: JSON.stringify(payload.taxBase),
           });
 
           loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
@@ -88,24 +88,24 @@ export default wrapWithLoggerContext(
             });
 
           if (config.isErr()) {
-            logger.warn("Failed to extract app config from metadata", { error: config.error });
+            logger.warn("Failed to extract app config from metadata", {
+              error: config.error,
+            });
 
             return res.status(400).json({
               message: `App configuration is broken for checkout: ${payload.taxBase.sourceObject.id}`,
             });
           }
 
-          metadataCache.setMetadata(appMetadata);
-
           return useCase.calculateTaxes(payload, authData).then((result) => {
             return result.match(
               (value) => {
                 return res.status(200).json(ctx.buildResponse(value));
               },
-              (err) => {
-                logger.warn("Error calculating taxes", { error: err });
+              (error) => {
+                logger.warn("Error calculating taxes", { error });
 
-                switch (err.constructor) {
+                switch (error.constructor) {
                   case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
                     return res.status(500).json({
                       message: `Failed to calculate taxes for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -122,7 +122,7 @@ export default wrapWithLoggerContext(
                     });
                   }
                   case CalculateTaxesUseCase.UnhandledError: {
-                    captureException(err);
+                    captureException(error);
 
                     return res.status(500).json({
                       message: `Failed to calculate taxes (Unhandled error) for checkout: ${payload.taxBase.sourceObject.id}`,

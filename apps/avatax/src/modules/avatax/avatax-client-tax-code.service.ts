@@ -38,11 +38,13 @@ export class AvataxClientTaxCodeService {
         ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
         top: 50,
       })
-      .catch((err) => {
-        this.logger.error("Failed to call listTaxCodes on Avatax client", { error: err });
+      .catch((error) => {
+        this.logger.error("Failed to call listTaxCodes on Avatax client", {
+          error,
+        });
 
         try {
-          const parsedError = AvataxErrorShape.parse(err);
+          const parsedError = AvataxErrorShape.parse(error);
 
           /*
            * Catch specific client error so it's returned to the frontend
@@ -52,13 +54,13 @@ export class AvataxClientTaxCodeService {
             throw new AvataxClientTaxCodeService.ForbiddenAccessError(
               "PermissionRequired error was returned from Avatax",
               {
-                cause: err,
+                cause: error,
               },
             );
           }
 
           // Throw other errors like usual
-          throw err;
+          throw error;
         } catch (outerError) {
           throw outerError;
         }

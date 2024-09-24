@@ -29,7 +29,7 @@ export class AppConfigurationLogger {
       appConfigName: resolvedAvataxConfig.config.name,
       shippingTaxCode: resolvedAvataxConfig.config.shippingTaxCode,
       companyCode: resolvedAvataxConfig.config.companyCode,
-      address: resolvedAvataxConfig.config.address,
+      address: JSON.stringify(resolvedAvataxConfig.config.address),
       isSandbox: resolvedAvataxConfig.config.isSandbox,
       isAutocommit: resolvedAvataxConfig.config.isAutocommit,
       isDocumentRecordingEnabled: resolvedAvataxConfig.config.isDocumentRecordingEnabled,
