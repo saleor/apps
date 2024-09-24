@@ -101,9 +101,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
         .query({
           partition: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
           range: {
-            // Dates are stored in ISO format, in UTC timezone
-            gte: startDate.toISOString(),
-            lte: endDate.toISOString(),
+            between: [startDate.toISOString(), endDate.toISOString()],
           },
         })
         .entities(this.logByDateEntity)
@@ -124,7 +122,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
       return err(fetchResult.error);
     }
 
-    this.logger.info("Fetched logs from DynamoDB by date", {
+    this.logger.debug("Fetched logs from DynamoDB by date", {
       Count: fetchResult.value.Count,
       ScannedCount: fetchResult.value.ScannedCount,
       ConsumedCapacity: fetchResult.value.ConsumedCapacity,
@@ -194,7 +192,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
       return err(fetchResult.error);
     }
 
-    this.logger.info("Fetched logs from DynamoDB by checkoutOrOrderId", {
+    this.logger.debug("Fetched logs from DynamoDB by checkoutOrOrderId", {
       Count: fetchResult.value.Count,
       ScannedCount: fetchResult.value.ScannedCount,
       ConsumedCapacity: fetchResult.value.ConsumedCapacity,
