@@ -171,7 +171,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
         .query({
           partition: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
           range: {
-            eq: checkoutOrOrderId,
+            beginsWith: checkoutOrOrderId,
           },
         })
         .entities(this.logsByCheckoutOrOrderId)
