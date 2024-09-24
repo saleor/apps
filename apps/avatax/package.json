@@ -65,7 +65,7 @@
     "jotai": "^2.4.2",
     "jsdom": "^20.0.3",
     "modern-errors": "7.0.1",
-    "modern-errors-serialize": "6.0.0",
+    "modern-errors-serialize": "6.1.0",
     "neverthrow": "6.2.1",
     "next": "14.2.3",
     "react": "18.2.0",

@@ -239,8 +239,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1
       modern-errors-serialize:
-        specifier: 6.0.0
-        version: 6.0.0(modern-errors@7.0.1)
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       neverthrow:
         specifier: 6.2.1
         version: 6.2.1
@@ -1397,8 +1397,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1
       modern-errors-serialize:
-        specifier: 6.0.0
-        version: 6.0.0(modern-errors@7.0.1)
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       neverthrow:
         specifier: 6.2.1
         version: 6.2.1
@@ -1875,8 +1875,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1
       modern-errors-serialize:
-        specifier: 6.0.0
-        version: 6.0.0(modern-errors@7.0.1)
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       next:
         specifier: 14.2.3
         version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -8773,8 +8773,8 @@ packages:
   error-ex@1.3.2:
     resolution: {integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==}
 
-  error-serializer@7.0.0:
-    resolution: {integrity: sha512-VKXwvqgZEDBKmxLUrAzOW6mLtlBnwvvIBDCe0vYnybOYMikWN2uUC+8edKFYMYgbvp8ouTlPM/VPC26G+XVvoQ==}
+  error-serializer@8.0.0:
+    resolution: {integrity: sha512-mh1xG0257SA4P0XfT8RHPyygomaFvVekLpJWvxvNdOnBWIaJLs9otIMCd75MNUbm3aEOCOZ1VkMxxQlmloq7NA==}
     engines: {node: '>=18.18.0'}
 
   error-stack-parser@2.1.4:
@@ -11045,11 +11045,11 @@ packages:
   modern-ahocorasick@1.0.1:
     resolution: {integrity: sha512-yoe+JbhTClckZ67b2itRtistFKf8yPYelHLc7e5xAwtNAXxM6wJTUx2C7QeVSJFDzKT7bCIFyBVybPMKvmB9AA==}
 
-  modern-errors-serialize@6.0.0:
-    resolution: {integrity: sha512-oqfY6NeiZtFcZW4VIoL8fu3xoP/YMswEsUe6cMKZmj6s8M1f8pTVqC5uhQN9sKmTRxDcA6E00V2Cb3NY8b72SQ==}
+  modern-errors-serialize@6.1.0:
+    resolution: {integrity: sha512-Us+REHRbeOM9np4GzDiBtNd1JBHwg8BZrt2kIjAivCtl32635FlszrAwynYx8bGcyRDGM5jVeZJeY4HOMwgBzA==}
     engines: {node: '>=18.18.0'}
     peerDependencies:
-      modern-errors: ^7.0.0
+      modern-errors: ^7.0.1
 
   modern-errors@7.0.1:
     resolution: {integrity: sha512-UaWtjvt1LWLTmQq9vBcjVzVyaBS8PyN3YYF9Vzdf7dgaB9ySFBWbIH5nglEfLr1VVF7XrBrHrdp+Tnw7oITfTA==}
@@ -23656,7 +23656,7 @@ snapshots:
     dependencies:
       is-arrayish: 0.2.1
 
-  error-serializer@7.0.0:
+  error-serializer@8.0.0:
     dependencies:
       is-error-instance: 3.0.0
       is-plain-obj: 4.1.0
@@ -26689,9 +26689,9 @@ snapshots:
 
   modern-ahocorasick@1.0.1: {}
 
-  modern-errors-serialize@6.0.0(modern-errors@7.0.1):
+  modern-errors-serialize@6.1.0(modern-errors@7.0.1):
     dependencies:
-      error-serializer: 7.0.0
+      error-serializer: 8.0.0
       is-plain-obj: 4.1.0
       modern-errors: 7.0.1
 

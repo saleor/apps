@@ -24,3 +24,5 @@ export const ExpectedError = BaseError.subclass("ExpectedError", {
     sentrySeverity: "warning",
   } as CommonErrorProps,
 });
+
+BaseError.serialize(CriticalError, { loose: true });
