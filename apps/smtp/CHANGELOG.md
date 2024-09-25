@@ -1,5 +1,12 @@
 # smtp
 
+## 1.2.11
+
+### Patch Changes
+
+- Updated dependencies [93969b2a]
+  - @saleor/apps-otel@1.3.2
+
 ## 1.2.10
 
 ### Patch Changes
