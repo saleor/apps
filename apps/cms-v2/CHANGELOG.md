@@ -1,5 +1,12 @@
 # saleor-app-cms-v2
 
+## 2.9.10
+
+### Patch Changes
+
+- Updated dependencies [93969b2a]
+  - @saleor/apps-otel@1.3.2
+
 ## 2.9.9
 
 ### Patch Changes

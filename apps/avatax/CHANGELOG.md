@@ -1,5 +1,25 @@
 # app-avatax
 
+## 1.10.0
+
+### Minor Changes
+
+- 3a2aed81: Experimental: Added client logs feature. `FF_ENABLE_EXPERIMENTAL_LOGS` variable must be set to `"true"`
+
+  When enabled, app will required configured DynamoDB table. See readme for details.
+
+  Client logs store business transactions in the persistent storage. Operations like taxes calculation or corresponding failures will be written.
+
+  Logs can be accessed via App's configuration page in Saleor Dashboard.
+
+### Patch Changes
+
+- def3bb15: Fix Eslint issues. It won't affect AvaTax app functionality.
+- dff6d8de: Improved error parser class constructor: now `parse` method will have optional parameter of error capture instead of constructor. This change will not have effect on clients.
+- 5f61e627: Add handling for error occurred due to missing document in AvaTax during cancel (voiding)
+- Updated dependencies [93969b2a]
+  - @saleor/apps-otel@1.3.2
+
 ## 1.9.1
 
 ### Patch Changes
