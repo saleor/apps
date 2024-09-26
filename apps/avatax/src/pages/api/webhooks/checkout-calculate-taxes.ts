@@ -68,6 +68,8 @@ export default wrapWithLoggerContext(
 
           const configExtractor = new AppConfigExtractor();
 
+          metadataCache.setMetadata(appMetadata);
+
           const config = configExtractor
             .extractAppConfigFromPrivateMetadata(appMetadata)
             .map((config) => {
