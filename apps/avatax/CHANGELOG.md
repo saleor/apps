@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.10.1
+
+### Patch Changes
+
+- 7a2384b3: Added serverComponentsExternalPackages to Next.js config in order to fix functions timeouts. Packages added are from `@aws/sdk-*`
+
 ## 1.10.0
 
 ### Minor Changes
