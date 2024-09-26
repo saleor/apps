@@ -40,6 +40,8 @@ export default wrapWithLoggerContext(
         const { payload } = ctx;
         const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
+        metadataCache.setMetadata(payload.recipient?.privateMetadata ?? []);
+
         subscriptionErrorChecker.checkPayload(payload);
 
         if (payload.version) {
