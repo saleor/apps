@@ -48,6 +48,8 @@ export default wrapWithLoggerContext(
         const orderId = ctx.payload.taxBase.sourceObject.id;
         const appMetadata = ctx.payload.recipient?.privateMetadata ?? [];
 
+        metadataCache.setMetadata(appMetadata);
+
         try {
           const { payload } = ctx;
 
