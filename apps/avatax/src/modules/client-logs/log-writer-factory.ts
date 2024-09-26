@@ -3,14 +3,11 @@ import {
   createLogsDocumentClient,
   createLogsDynamoClient,
 } from "@/modules/client-logs/dynamo-client";
+import { DynamoDbLogWriter } from "@/modules/client-logs/dynamo-log-writer";
 import { ClientLogDynamoEntityFactory, LogsTable } from "@/modules/client-logs/dynamo-schema";
-import {
-  DynamoDbLogWriter,
-  ILogWriter,
-  LogWriterContext,
-  NoopLogWriter,
-} from "@/modules/client-logs/log-writer";
+import { ILogWriter, LogWriterContext } from "@/modules/client-logs/log-writer";
 import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
+import { NoopLogWriter } from "@/modules/client-logs/noop-log-writer";
 
 export interface ILogWriterFactory {
   createWriter(context: LogWriterContext): ILogWriter;
