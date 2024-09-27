@@ -10,7 +10,6 @@ import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-t
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
-import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
@@ -48,6 +47,8 @@ export class CalculateTaxesUseCase {
     private deps: {
       configExtractor: IAppConfigExtractor;
       logWriterFactory: ILogWriterFactory;
+      payloadLinesTransformer: AvataxCalculateTaxesPayloadLinesTransformer;
+      calculateTaxesResponseTransformer: AvataxCalculateTaxesResponseTransformer;
     },
   ) {}
 
@@ -110,13 +111,13 @@ export class CalculateTaxesUseCase {
 
     const calculateTaxesAdapter = new AvataxCalculateTaxesAdapter(
       avaTaxClient,
-      new AvataxCalculateTaxesResponseTransformer(),
+      this.deps.calculateTaxesResponseTransformer,
     );
 
     const payloadService = new AvataxCalculateTaxesPayloadService(
       AvataxTaxCodeMatchesService.createFromAuthData(authData),
       new AvataxCalculateTaxesPayloadTransformer(
-        new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
+        this.deps.payloadLinesTransformer,
         new AvataxEntityTypeMatcher(avaTaxClient),
       ),
     );
