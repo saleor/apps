@@ -55,6 +55,7 @@ export const attachLoggerOtelTransport = (
       const errorAttribute = serializedAttributes.error;
       const ErrorConstructor = errorAttribute["constructor"];
 
+      console.log("ErrorConstructor", JSON.stringify(serializedAttributes.error));
       // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
       serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error, {
         exclude: ["errors"],
