@@ -3,16 +3,24 @@ import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
+import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { AvataxWebhookServiceFactory } from "@/modules/taxes/avatax-webhook-service-factory";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { createLogger } from "../../../logger";
-import { AvataxCalculateTaxesResponse } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import {
+  AvataxCalculateTaxesAdapter,
+  AvataxCalculateTaxesResponse,
+} from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
@@ -36,6 +44,8 @@ export class CalculateTaxesUseCase {
     private deps: {
       configExtractor: IAppConfigExtractor;
       logWriterFactory: ILogWriterFactory;
+      calculateTaxesPayloadTransformer: AvataxCalculateTaxesPayloadTransformer;
+      calculateTaxesAdapter: AvataxCalculateTaxesAdapter;
     },
   ) {}
 
@@ -83,6 +93,24 @@ export class CalculateTaxesUseCase {
       });
   }
 
+  private async callAvaTax(
+    payload: CalculateTaxesPayload,
+    avataxConfig: AvataxConfig,
+    authData: AuthData,
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
+  ) {
+    const payloadService = new AvataxCalculateTaxesPayloadService(
+      AvataxTaxCodeMatchesService.createFromAuthData(authData),
+      this.deps.calculateTaxesPayloadTransformer,
+    );
+
+    const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
+
+    const response = await this.deps.calculateTaxesAdapter.send(avataxModel);
+
+    return response;
+  }
+
   async calculateTaxes(
     payload: CalculateTaxesPayload,
     authData: AuthData,
@@ -127,60 +155,8 @@ export class CalculateTaxesUseCase {
       );
     }
 
-    const AvataxWebhookServiceFactory = await import(
-      "../../../modules/taxes/avatax-webhook-service-factory"
-    ).then((m) => m.AvataxWebhookServiceFactory);
-
-    const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-      config.value,
-      channelSlug,
-    ).mapErr((innerError) => {
-      this.logger.warn(
-        `Error in taxes calculation occurred: ${innerError.name} ${innerError.message}`,
-        {
-          error: innerError,
-        },
-      );
-
-      switch (innerError["constructor"]) {
-        case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-          return err(
-            new CalculateTaxesUseCase.ConfigBrokenError(
-              "Failed to create instance of AvaTax connection due to invalid config",
-              {
-                errors: [innerError],
-              },
-            ),
-          );
-        }
-        default: {
-          Sentry.captureException(innerError);
-          this.logger.fatal("Unhandled error", { error: innerError });
-
-          return err(
-            new CalculateTaxesUseCase.UnhandledError("Unhandled error", { errors: [innerError] }),
-          );
-        }
-      }
-    });
-
-    if (webhookServiceResult.isErr()) {
-      ClientLogStoreRequest.create({
-        level: "error",
-        message: "Failed to calculate taxes. Invalid config",
-        checkoutOrOrderId: payload.taxBase.sourceObject.id,
-        channelId: payload.taxBase.channel.slug,
-        checkoutOrOrder: "checkout",
-      })
-        .mapErr(captureException)
-        .map(logWriter.writeLog);
-
-      return webhookServiceResult.error;
-    }
-
     this.logger.info("Found active connection service. Calculating taxes...");
 
-    const { taxProvider } = webhookServiceResult.value;
     const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
     if (providerConfig.isErr()) {
@@ -205,7 +181,7 @@ export class CalculateTaxesUseCase {
     }
 
     return fromPromise(
-      taxProvider.calculateTaxes(
+      this.callAvaTax(
         payload,
         providerConfig.value.avataxConfig.config,
         authData,

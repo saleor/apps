@@ -16,6 +16,9 @@ import {
 import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 
+/**
+ * @deprecated use services below and delete this abstraction
+ */
 export class AvataxWebhookService {
   constructor(
     private calculateTaxesAdapter: AvataxCalculateTaxesAdapter,
@@ -24,6 +27,9 @@ export class AvataxWebhookService {
     private avataxOrderConfirmedAdapter: AvataxOrderConfirmedAdapter,
   ) {}
 
+  /**
+   * @deprecated
+   */
   async calculateTaxes(
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
