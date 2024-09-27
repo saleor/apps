@@ -60,7 +60,7 @@
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@9.11.0",
   "pnpm": {
     "overrides": {
       "crypto-js@<4.2.0": ">=4.2.0"
@@ -70,10 +70,5 @@
       "@opentelemetry/otlp-transformer@0.46.0": "patches/@opentelemetry__otlp-transformer@0.46.0.patch"
     }
   },
-  "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "templates/*"
-  ]
+  "private": true
 }
