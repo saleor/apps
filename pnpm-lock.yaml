@@ -211,9 +211,6 @@ importers:
       avatax:
         specifier: ^23.7.0
         version: 23.7.0
-      aws-sdk-client-mock:
-        specifier: 4.0.1
-        version: 4.0.1
       decimal.js-light:
         specifier: 2.5.1
         version: 2.5.1
@@ -314,6 +311,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+      aws-sdk-client-mock:
+        specifier: 4.0.1
+        version: 4.0.1
       eslint:
         specifier: ../../node_modules/eslint
         version: link:../../node_modules/eslint

@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.3.2
+
+### Patch Changes
+
+- 93969b2a: Patch OTEL dependency - it should handle NaN & Infinity values. It will ensure that logs are properly parsed and send to log service.
+
 ## 1.3.1
 
 ### Patch Changes

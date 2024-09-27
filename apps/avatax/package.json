@@ -1,6 +1,6 @@
 {
   "name": "app-avatax",
-  "version": "1.9.1",
+  "version": "1.10.2",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
@@ -25,7 +25,6 @@
     "@aws-sdk/client-dynamodb": "3.651.1",
     "@aws-sdk/lib-dynamodb": "3.651.1",
     "@aws-sdk/util-dynamodb": "3.651.1",
-    "aws-sdk-client-mock": "4.0.1",
     "dynamodb-toolbox": "1.8.2",
     "@hookform/resolvers": "^3.3.1",
     "@next/env": "^13.5.4",
@@ -76,6 +75,7 @@
     "zod": "3.21.4"
   },
   "devDependencies": {
+    "aws-sdk-client-mock": "4.0.1",
     "@faker-js/faker": "^8.4.1",
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/import-types-preset": "^3.0.0",

@@ -1,26 +1,14 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
-import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
-import { gql } from "urql";
 
-import { SaleorVersionQuery } from "../../../generated/graphql";
-import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../../saleor-app";
-import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { saleorApp } from "../../../saleor-app";
 import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
 
 const logger = createLogger("createAppRegisterHandler");
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
-
-const SaleorVersion = gql`
-  query SaleorVersion {
-    shop {
-      version
-    }
-  }
-`;
 
 /**
  * Required endpoint, called by Saleor to install app.
@@ -45,49 +33,10 @@ export default wrapWithLoggerContext(
           return true;
         },
       ],
-      onAuthAplSaved: async (req, context) => {
+      onAuthAplSaved: async (_req, context) => {
         logger.info("AvaTax app configuration set up successfully", {
           saleorApiUrl: context.authData.saleorApiUrl,
         });
-      },
-      /**
-       * TODO Unify with all apps - shared code. Consider moving to app-sdk
-       */
-      async onRequestVerified(req, { authData: { token, saleorApiUrl }, respondWithError }) {
-        try {
-          const client = createInstrumentedGraphqlClient({
-            saleorApiUrl,
-            token,
-          });
-
-          const saleorVersion = await client
-            .query<SaleorVersionQuery>(SaleorVersion, {})
-            .toPromise()
-            .then((res) => {
-              return res.data?.shop.version;
-            });
-
-          logger.debug("Received saleor version from Shop query", { saleorVersion });
-
-          if (!saleorVersion) {
-            throw new Error("Saleor Version couldn't be fetched from the API");
-          }
-
-          new SaleorVersionCompatibilityValidator(REQUIRED_SALEOR_VERSION).validateOrThrow(
-            saleorVersion,
-          );
-        } catch (e: unknown) {
-          const message = (e as Error)?.message ?? "Unknown error";
-
-          logger.debug("Failed validating semver, will respond with error and status 400", {
-            message,
-          });
-
-          throw respondWithError({
-            message: message,
-            status: 400,
-          });
-        }
       },
     }),
     "/api/register",
