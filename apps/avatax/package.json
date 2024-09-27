@@ -17,7 +17,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
-    "start": "APP_VERSION=${npm_package_version} next start",
+    "start": "next start",
     "test": "vitest --project units"
   },
   "dependencies": {
