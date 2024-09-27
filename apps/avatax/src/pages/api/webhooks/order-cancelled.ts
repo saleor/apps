@@ -4,11 +4,8 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
-import { AvataxClient } from "@/modules/avatax/avatax-client";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
-import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
-import { AvataxOrderCancelledPayloadTransformer } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-payload-transformer";
+import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
@@ -36,15 +33,6 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 const logsWriterFactory = new LogWriterFactory();
-
-const createAvaTaxOrderCancelledAdapterFromConfig = (avataxConfig: AvataxConfig) => {
-  const avaTaxSdk = new AvataxSdkClientFactory().createClient(avataxConfig);
-  const avaTaxClient = new AvataxClient(avaTaxSdk);
-
-  const avataxOrderCancelledPayloadTransformer = new AvataxOrderCancelledPayloadTransformer();
-
-  return new AvataxOrderCancelledAdapter(avaTaxClient, avataxOrderCancelledPayloadTransformer);
-};
 
 export default wrapWithLoggerContext(
   withOtel(
