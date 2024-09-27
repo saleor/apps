@@ -77,6 +77,9 @@ const createAvataxCalculateTaxesPayloadTransformer = (
   );
 };
 
+/**
+ * TODO: Refactor, this should be removed and deps should be directly injected into use cases
+ */
 export class AvataxWebhookServiceFactory {
   static BrokenConfigurationError = BaseError.subclass("BrokenConfigurationError");
 
@@ -96,22 +99,12 @@ export class AvataxWebhookServiceFactory {
       );
     }
 
-    /**
-     * Create dependencies that are injected into the services
-     */
     const avaTaxSdk = new AvataxSdkClientFactory().createClient(
       channelConfig.value.avataxConfig.config,
     );
     const avaTaxClient = new AvataxClient(avaTaxSdk);
-
     const entityTypeMatcher = new AvataxEntityTypeMatcher(avaTaxClient);
 
-    /**
-     * Compose dependencies - as much as possible lifted as high as possible.
-     * Next steps of refactor - remove not needed classes and lift them even higher. And inject into use case
-     *
-     * todo - webhook service should be removed. use case should only take what it needs
-     */
     const taxProvider = new AvataxWebhookService(
       createAvataxCalculateTaxesAdapter(avaTaxClient),
       createAvataxCalculateTaxesPayloadTransformer(entityTypeMatcher),
