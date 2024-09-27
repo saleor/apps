@@ -28,7 +28,7 @@ export class AvataxWebhookService {
   ) {}
 
   /**
-   * @deprecated
+   * @deprecated - use dependencies and call them directly
    */
   async calculateTaxes(
     payload: CalculateTaxesPayload,
