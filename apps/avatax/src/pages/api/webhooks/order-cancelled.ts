@@ -179,121 +179,73 @@ export default wrapWithLoggerContext(
             .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
         }
 
-        const AvataxWebhookServiceFactory = await import(
-          "../../../modules/taxes/avatax-webhook-service-factory"
-        ).then((m) => m.AvataxWebhookServiceFactory);
-
-        const avataxWebhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-          config.value,
-          channelSlug,
-        );
-
         logger.info("Cancelling order...");
 
-        if (avataxWebhookServiceResult.isOk()) {
-          const { taxProvider } = avataxWebhookServiceResult.value;
-          const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+        const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
-          if (providerConfig.isErr()) {
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. Broken configuration.",
-              checkoutOrOrderId: payload.order?.id,
-              channelId: payload.order?.channel.slug,
-              checkoutOrOrder: "order",
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
+        if (providerConfig.isErr()) {
+          ClientLogStoreRequest.create({
+            level: "error",
+            message: "Failed to void order. Broken configuration.",
+            checkoutOrOrderId: payload.order?.id,
+            channelId: payload.order?.channel.slug,
+            checkoutOrOrder: "order",
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
 
-            return res
-              .status(400)
-              .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
-          }
+          return res
+            .status(400)
+            .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
+        }
 
-          const avaTaxOrderCancelledAdapter = createAvaTaxOrderCancelledAdapterFromConfig(
+        const avaTaxOrderCancelledAdapter = createAvaTaxOrderCancelledAdapterFromConfig(
+          providerConfig.value.avataxConfig.config,
+        );
+
+        try {
+          await avaTaxOrderCancelledAdapter.send(
+            {
+              avataxId: cancelledOrderInstance.getAvataxId(),
+            },
             providerConfig.value.avataxConfig.config,
           );
+        } catch (e) {
+          // TODO Test once it becomes testable
+          if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
+            logger.warn("Document was not found in AvaTax. Responding 400", {
+              error: e,
+            });
 
-          try {
-            await avaTaxOrderCancelledAdapter.send(
-              {
-                avataxId: cancelledOrderInstance.getAvataxId(),
-              },
-              providerConfig.value.avataxConfig.config,
-            );
-          } catch (e) {
-            // TODO Test once it becomes testable
-            if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
-              logger.warn("Document was not found in AvaTax. Responding 400", {
-                error: e,
-              });
-
-              return res.status(400).send({
-                message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
-              });
-            }
-
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. AvaTax returned error.",
-              checkoutOrOrder: "order",
-              checkoutOrOrderId: payload.order?.id,
-              channelId: payload.order?.channel.slug,
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
+            return res.status(400).send({
+              message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
+            });
           }
 
           ClientLogStoreRequest.create({
-            level: "info",
-            message: "Order voided in AvaTax",
+            level: "error",
+            message: "Failed to void order. AvaTax returned error.",
             checkoutOrOrder: "order",
             checkoutOrOrderId: payload.order?.id,
             channelId: payload.order?.channel.slug,
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
-
-          logger.info("Order cancelled");
-
-          return res.status(200).end();
         }
 
-        if (avataxWebhookServiceResult.isErr()) {
-          logger.error("Tax provider couldn't cancel the order:", avataxWebhookServiceResult.error);
+        ClientLogStoreRequest.create({
+          level: "info",
+          message: "Order voided in AvaTax",
+          checkoutOrOrder: "order",
+          checkoutOrOrderId: payload.order?.id,
+          channelId: payload.order?.channel.slug,
+        })
+          .mapErr(captureException)
+          .map(logWriter.writeLog);
 
-          switch (avataxWebhookServiceResult.error["constructor"]) {
-            case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: "Failed to void order. Broken configuration.",
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
-              })
-                .mapErr(captureException)
-                .map(logWriter.writeLog);
+        logger.info("Order cancelled");
 
-              return res.status(400).json({ message: "App is not configured properly." });
-            }
-            default: {
-              Sentry.captureException(avataxWebhookServiceResult.error);
-              logger.fatal("Unhandled error", { error: avataxWebhookServiceResult.error });
-
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: "Failed to void order. Unhandled error",
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
-              })
-                .mapErr(captureException)
-                .map(logWriter.writeLog);
-
-              return res.status(500).json({ message: "Unhandled error" });
-            }
-          }
-        }
+        return res.status(200).end();
       }),
     ),
     "/api/webhooks/order-cancelled",
