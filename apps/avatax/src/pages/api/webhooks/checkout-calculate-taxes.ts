@@ -4,6 +4,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { BaseError } from "@/error";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -11,10 +12,7 @@ import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
-import { DynamoDbLogWriter, ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
@@ -33,6 +31,8 @@ const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
   logWriterFactory: new LogWriterFactory(),
 });
+
+const TestError = BaseError.subclass("TestError");
 
 /**
  * TODO: Add tests to handler
@@ -55,6 +55,12 @@ export default wrapWithLoggerContext(
             ObservabilityAttributes.CHECKOUT_ID,
             ctx.payload.taxBase.sourceObject.id,
           );
+
+          const testError = new TestError("Test error", {
+            errors: [new BaseError("Test error 1"), new BaseError("Test error 2")],
+          });
+
+          logger.error("Test error", { error: testError });
 
           if (payload.version) {
             Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
