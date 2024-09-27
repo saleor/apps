@@ -22,6 +22,61 @@ import { AvataxClient } from "../avatax/avatax-client";
 import { AvataxSdkClientFactory } from "../avatax/avatax-sdk-client-factory";
 import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
 
+/**
+ * Create root-level deps.
+ * To be refactored - each use-case should require its own deps
+ */
+const createAvataxOrderConfirmedAdapter = (
+  avaTaxClient: AvataxClient,
+  entityTypeMatcher: AvataxEntityTypeMatcher,
+) => {
+  const orderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
+  const calculationDateResolver = new AvataxCalculationDateResolver();
+  const documentCodeResolver = new AvataxDocumentCodeResolver();
+  const avataxOrderConfirmedResponseTransformer = new AvataxOrderConfirmedResponseTransformer();
+  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer(
+    orderToAvataxLinesTransformer,
+    entityTypeMatcher,
+    calculationDateResolver,
+    documentCodeResolver,
+  );
+
+  const avataxOrderConfirmedPayloadService = new AvataxOrderConfirmedPayloadService(
+    orderConfirmedPayloadTransformer,
+  );
+
+  return new AvataxOrderConfirmedAdapter(
+    avaTaxClient,
+    avataxOrderConfirmedResponseTransformer,
+    avataxOrderConfirmedPayloadService,
+  );
+};
+
+const createAvataxOrderCancelledAdapter = (avaTaxClient: AvataxClient) => {
+  const avataxOrderCancelledPayloadTransformer = new AvataxOrderCancelledPayloadTransformer();
+
+  return new AvataxOrderCancelledAdapter(avaTaxClient, avataxOrderCancelledPayloadTransformer);
+};
+
+const createAvataxCalculateTaxesAdapter = (avaTaxClient: AvataxClient) => {
+  const avataxCalculateTaxesResponseTransformer = new AvataxCalculateTaxesResponseTransformer();
+
+  return new AvataxCalculateTaxesAdapter(avaTaxClient, avataxCalculateTaxesResponseTransformer);
+};
+
+const createAvataxCalculateTaxesPayloadTransformer = (
+  entityTypeMatcher: AvataxEntityTypeMatcher,
+) => {
+  const avataxCalculateTaxesTaxCodeMatcher = new AvataxCalculateTaxesTaxCodeMatcher();
+  const avataxCalculateTaxesPayloadLinesTransformer =
+    new AvataxCalculateTaxesPayloadLinesTransformer(avataxCalculateTaxesTaxCodeMatcher);
+
+  return new AvataxCalculateTaxesPayloadTransformer(
+    avataxCalculateTaxesPayloadLinesTransformer,
+    entityTypeMatcher,
+  );
+};
+
 export class AvataxWebhookServiceFactory {
   static BrokenConfigurationError = BaseError.subclass("BrokenConfigurationError");
 
@@ -41,34 +96,27 @@ export class AvataxWebhookServiceFactory {
       );
     }
 
+    /**
+     * Create dependencies that are injected into the services
+     */
     const avaTaxSdk = new AvataxSdkClientFactory().createClient(
       channelConfig.value.avataxConfig.config,
     );
     const avaTaxClient = new AvataxClient(avaTaxSdk);
 
+    const entityTypeMatcher = new AvataxEntityTypeMatcher(avaTaxClient);
+
     /**
      * Compose dependencies - as much as possible lifted as high as possible.
      * Next steps of refactor - remove not needed classes and lift them even higher. And inject into use case
+     *
+     * todo - webhook service should be removed. use case should only take what it needs
      */
     const taxProvider = new AvataxWebhookService(
-      new AvataxCalculateTaxesAdapter(avaTaxClient, new AvataxCalculateTaxesResponseTransformer()),
-      new AvataxCalculateTaxesPayloadTransformer(
-        new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
-        new AvataxEntityTypeMatcher(avaTaxClient),
-      ),
-      new AvataxOrderCancelledAdapter(avaTaxClient, new AvataxOrderCancelledPayloadTransformer()),
-      new AvataxOrderConfirmedAdapter(
-        avaTaxClient,
-        new AvataxOrderConfirmedResponseTransformer(),
-        new AvataxOrderConfirmedPayloadService(
-          new AvataxOrderConfirmedPayloadTransformer(
-            new SaleorOrderToAvataxLinesTransformer(),
-            new AvataxEntityTypeMatcher(avaTaxClient),
-            new AvataxCalculationDateResolver(),
-            new AvataxDocumentCodeResolver(),
-          ),
-        ),
-      ),
+      createAvataxCalculateTaxesAdapter(avaTaxClient),
+      createAvataxCalculateTaxesPayloadTransformer(entityTypeMatcher),
+      createAvataxOrderCancelledAdapter(avaTaxClient),
+      createAvataxOrderConfirmedAdapter(avaTaxClient, entityTypeMatcher),
     );
 
     return ok({ taxProvider });
