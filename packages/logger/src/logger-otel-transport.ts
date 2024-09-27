@@ -58,8 +58,11 @@ export const attachLoggerOtelTransport = (
 
         // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
         serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error, {
-          // exclude: ["errors"],
-          loose: true,
+          transformObject: (errorObject: any) => {
+            if (errorObject.errors) {
+              errorObject.errors = JSON.stringify(errorObject.errors);
+            }
+          },
         });
         // @ts-expect-error - Additional mapping for Datadog
         serializedAttributes.error.type = serializedAttributes.error.name;

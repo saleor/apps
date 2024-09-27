@@ -51,6 +51,7 @@ export const avataxCustomerCode = {
 
     const testError = new TestError("Test error", {
       errors: [new BaseError("Test error 1"), new BaseError("Test error 2")],
+      // cause: new BaseError("Test error cause"),
     });
 
     logger.info("Returning fallback customer code.", {
