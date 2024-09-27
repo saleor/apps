@@ -4,10 +4,13 @@ import modernErrorsSerialize from "modern-errors-serialize";
 
 export type CommonErrorProps = {
   sentrySeverity: SeverityLevel;
+  date: string;
 };
 
 export const BaseError = ModernError.subclass("BaseError", {
-  props: {} as CommonErrorProps,
+  props: {
+    sentrySeverity: "error",
+  } as CommonErrorProps,
   plugins: [modernErrorsSerialize],
 });
 
