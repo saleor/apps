@@ -7,9 +7,7 @@ export type CommonErrorProps = {
 };
 
 export const BaseError = ModernError.subclass("BaseError", {
-  props: {
-    sentrySeverity: "error",
-  } as CommonErrorProps,
+  props: {} as CommonErrorProps,
   plugins: [modernErrorsSerialize],
 });
 

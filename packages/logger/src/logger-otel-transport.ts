@@ -11,7 +11,7 @@ export const attachLoggerOtelTransport = (
   loggerContext?: LoggerContext,
 ) => {
   logger.attachTransport((log) => {
-    const { message, attributes, _meta, ...inheritedAttributes } = log as ILogObj & {
+    const { message, attributes } = log as ILogObj & {
       message: string;
       attributes: Record<string, unknown>;
     };
@@ -58,11 +58,11 @@ export const attachLoggerOtelTransport = (
 
         // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
         serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error, {
-          exclude: ["errors"],
           transformObject: (errorObject: any) => {
-            if (errorObject.errors) {
-              errorObject.nestedErrors = JSON.stringify(errorObject.errors);
-            }
+            errorObject.errors = JSON.stringify(errorObject.errors);
+            errorObject.stack = errorObject.stack;
+            errorObject.message = errorObject.message;
+            errorObject.cause = errorObject.cause;
           },
         });
         // @ts-expect-error - Additional mapping for Datadog
