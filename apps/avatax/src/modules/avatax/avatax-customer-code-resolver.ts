@@ -1,3 +1,5 @@
+import { BaseError } from "@/error";
+
 import { createLogger } from "../../logger";
 
 const logger = createLogger("avataxCustomerCode");
@@ -45,7 +47,15 @@ export const avataxCustomerCode = {
       return legacyUserId;
     }
 
-    logger.info("Returning fallback customer code.");
+    const TestError = BaseError.subclass("TestError");
+
+    const testError = new TestError("Test error", {
+      errors: [new BaseError("Test error 1"), new BaseError("Test error 2")],
+    });
+
+    logger.info("Returning fallback customer code.", {
+      error: testError,
+    });
     return FALLBACK_CUSTOMER_CODE;
   },
 };
