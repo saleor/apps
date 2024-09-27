@@ -57,12 +57,13 @@ export const attachLoggerOtelTransport = (
 
       // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
       serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error, {
-        lose: true,
-        transformInstance: (error: any) => (error.errors = JSON.stringify(error.errors)),
+        exclude: ["errors"],
       });
       // @ts-expect-error - Additional mapping for Datadog
       serializedAttributes.error.type = serializedAttributes.error.name;
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error serialization failed", JSON.stringify(e));
+    }
 
     logs.getLogger("app-logger-otel").emit({
       body: log._meta.name ? `[${log._meta.name}] ${message}` : message,
