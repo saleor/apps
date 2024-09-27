@@ -1,5 +1,4 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
@@ -16,7 +15,6 @@ import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { AvataxWebhookServiceFactory } from "@/modules/taxes/avatax-webhook-service-factory";
 
 import { MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
@@ -101,9 +99,28 @@ export class CalculateTaxesUseCase {
     payload: CalculateTaxesPayload,
     avataxConfig: AvataxConfig,
     discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
-    calculateTaxesAdapter: AvataxCalculateTaxesAdapter,
-    payloadService: AvataxCalculateTaxesPayloadService,
+    authData: AuthData,
   ) {
+    /**
+     * Create local dependencies. They more-or-less need runtime values, like AuthData.
+     * This is part of the refactor. Later we should refactor these and inject them into use-case
+     */
+    const avaTaxSdk = new AvataxSdkClientFactory().createClient(avataxConfig);
+    const avaTaxClient = new AvataxClient(avaTaxSdk);
+
+    const calculateTaxesAdapter = new AvataxCalculateTaxesAdapter(
+      avaTaxClient,
+      new AvataxCalculateTaxesResponseTransformer(),
+    );
+
+    const payloadService = new AvataxCalculateTaxesPayloadService(
+      AvataxTaxCodeMatchesService.createFromAuthData(authData),
+      new AvataxCalculateTaxesPayloadTransformer(
+        new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
+        new AvataxEntityTypeMatcher(avaTaxClient),
+      ),
+    );
+
     const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
 
     const response = await calculateTaxesAdapter.send(avataxModel);
@@ -180,29 +197,12 @@ export class CalculateTaxesUseCase {
       );
     }
 
-    const avaTaxSdk = new AvataxSdkClientFactory().createClient(
-      providerConfig.value.avataxConfig.config,
-    );
-    const avaTaxClient = new AvataxClient(avaTaxSdk);
-
-    const payloadService = new AvataxCalculateTaxesPayloadService(
-      AvataxTaxCodeMatchesService.createFromAuthData(authData),
-      new AvataxCalculateTaxesPayloadTransformer(
-        new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
-        new AvataxEntityTypeMatcher(avaTaxClient),
-      ),
-    );
-
     return fromPromise(
       this.callAvaTax(
         payload,
         providerConfig.value.avataxConfig.config,
         this.discountsStrategy,
-        new AvataxCalculateTaxesAdapter(
-          avaTaxClient,
-          new AvataxCalculateTaxesResponseTransformer(),
-        ),
-        payloadService,
+        authData,
       ),
       (err) => {
         ClientLogStoreRequest.create({
