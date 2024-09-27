@@ -3,7 +3,7 @@
   "extends": ["//"],
   "pipeline": {
     "lint": {
-      "env": ["OTEL_ACCESS_TOKEN", "ENABLE_OTEL_RUNTIME_LOGS", "OTEL_LOG_LEVEL"]
+      "env": ["OTEL_ACCESS_TOKEN", "ENABLE_OTEL_RUNTIME_LOGS", "OTEL_LOG_LEVEL", "APP_VERSION"]
     }
   }
 }
