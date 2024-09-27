@@ -5,18 +5,9 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
-import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
-import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
-import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
-import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
-import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
-import { AvataxOrderConfirmedAdapter } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter";
-import { AvataxOrderConfirmedPayloadService } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload.service";
-import { AvataxOrderConfirmedPayloadTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload-transformer";
-import { AvataxOrderConfirmedResponseTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-response-transformer";
-import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
+import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
@@ -53,33 +44,9 @@ const discountStrategy = new PriceReductionDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
 
-const createAvataxOrderConfirmedAdapterFromAvataxConfig = (config: AvataxConfig) => {
-  const avaTaxSdk = new AvataxSdkClientFactory().createClient(config);
-  const avaTaxClient = new AvataxClient(avaTaxSdk);
-  const entityTypeMatcher = new AvataxEntityTypeMatcher(avaTaxClient);
-
-  const orderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
-  const calculationDateResolver = new AvataxCalculationDateResolver();
-  const documentCodeResolver = new AvataxDocumentCodeResolver();
-  const avataxOrderConfirmedResponseTransformer = new AvataxOrderConfirmedResponseTransformer();
-  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer(
-    orderToAvataxLinesTransformer,
-    entityTypeMatcher,
-    calculationDateResolver,
-    documentCodeResolver,
-  );
-
-  const avataxOrderConfirmedPayloadService = new AvataxOrderConfirmedPayloadService(
-    orderConfirmedPayloadTransformer,
-  );
-
-  return new AvataxOrderConfirmedAdapter(
-    avaTaxClient,
-    avataxOrderConfirmedResponseTransformer,
-    avataxOrderConfirmedPayloadService,
-  );
-};
-
+/**
+ * In the future this should be part of the use-case
+ */
 async function confirmOrder(
   order: DeprecatedOrderConfirmedSubscriptionFragment,
   confirmedOrderEvent: SaleorOrderConfirmedEvent,
@@ -88,7 +55,7 @@ async function confirmOrder(
   discountStrategy: PriceReductionDiscountsStrategy,
 ) {
   const avataxOrderConfirmedAdapter =
-    createAvataxOrderConfirmedAdapterFromAvataxConfig(avataxConfig);
+    createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig(avataxConfig);
 
   const response = await avataxOrderConfirmedAdapter.send(
     { order, confirmedOrderEvent },
