@@ -59,6 +59,9 @@ export class AvataxOrderConfirmedPayloadTransformer {
     matches,
     discountsStrategy,
   }: {
+    /**
+     * @deprecated use confirmedOrderEvent
+     */
     order: DeprecatedOrderConfirmedSubscriptionFragment;
     confirmedOrderEvent: SaleorOrderConfirmedEvent;
     avataxConfig: AvataxConfig;
