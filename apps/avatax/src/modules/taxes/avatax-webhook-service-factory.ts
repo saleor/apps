@@ -52,12 +52,6 @@ const createAvataxOrderConfirmedAdapter = (
   );
 };
 
-const createAvataxOrderCancelledAdapter = (avaTaxClient: AvataxClient) => {
-  const avataxOrderCancelledPayloadTransformer = new AvataxOrderCancelledPayloadTransformer();
-
-  return new AvataxOrderCancelledAdapter(avaTaxClient, avataxOrderCancelledPayloadTransformer);
-};
-
 const createAvataxCalculateTaxesAdapter = (avaTaxClient: AvataxClient) => {
   const avataxCalculateTaxesResponseTransformer = new AvataxCalculateTaxesResponseTransformer();
 
@@ -108,7 +102,6 @@ export class AvataxWebhookServiceFactory {
     const taxProvider = new AvataxWebhookService(
       createAvataxCalculateTaxesAdapter(avaTaxClient),
       createAvataxCalculateTaxesPayloadTransformer(entityTypeMatcher),
-      createAvataxOrderCancelledAdapter(avaTaxClient),
       createAvataxOrderConfirmedAdapter(avaTaxClient, entityTypeMatcher),
     );
 

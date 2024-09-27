@@ -5,7 +5,6 @@ import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calcula
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 
 import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrderConfirmedEvent } from "../saleor";
-import { CancelOrderPayload } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { AvataxConfig } from "./avatax-connection-schema";
 import { AvataxCalculateTaxesAdapter } from "./calculate-taxes/avatax-calculate-taxes-adapter";
@@ -13,7 +12,6 @@ import {
   AutomaticallyDistributedProductLinesDiscountsStrategy,
   PriceReductionDiscountsStrategy,
 } from "./discounts";
-import { AvataxOrderCancelledAdapter } from "./order-cancelled/avatax-order-cancelled-adapter";
 import { AvataxOrderConfirmedAdapter } from "./order-confirmed/avatax-order-confirmed-adapter";
 
 /**
@@ -23,7 +21,6 @@ export class AvataxWebhookService {
   constructor(
     private calculateTaxesAdapter: AvataxCalculateTaxesAdapter,
     private calculateTaxesPayloadTransformer: AvataxCalculateTaxesPayloadTransformer,
-    private avaTaxOrderCancelledAdapter: AvataxOrderCancelledAdapter,
     private avataxOrderConfirmedAdapter: AvataxOrderConfirmedAdapter,
   ) {}
 
@@ -63,9 +60,5 @@ export class AvataxWebhookService {
     );
 
     return response;
-  }
-
-  async cancelOrder(payload: CancelOrderPayload, avataxConfig: AvataxConfig) {
-    await this.avaTaxOrderCancelledAdapter.send(payload, avataxConfig);
   }
 }
