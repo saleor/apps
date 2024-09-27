@@ -26,31 +26,6 @@ import { AvataxWebhookService } from "../avatax/avatax-webhook.service";
  * Create root-level deps.
  * To be refactored - each use-case should require its own deps
  */
-const createAvataxOrderConfirmedAdapter = (
-  avaTaxClient: AvataxClient,
-  entityTypeMatcher: AvataxEntityTypeMatcher,
-) => {
-  const orderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
-  const calculationDateResolver = new AvataxCalculationDateResolver();
-  const documentCodeResolver = new AvataxDocumentCodeResolver();
-  const avataxOrderConfirmedResponseTransformer = new AvataxOrderConfirmedResponseTransformer();
-  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer(
-    orderToAvataxLinesTransformer,
-    entityTypeMatcher,
-    calculationDateResolver,
-    documentCodeResolver,
-  );
-
-  const avataxOrderConfirmedPayloadService = new AvataxOrderConfirmedPayloadService(
-    orderConfirmedPayloadTransformer,
-  );
-
-  return new AvataxOrderConfirmedAdapter(
-    avaTaxClient,
-    avataxOrderConfirmedResponseTransformer,
-    avataxOrderConfirmedPayloadService,
-  );
-};
 
 const createAvataxCalculateTaxesAdapter = (avaTaxClient: AvataxClient) => {
   const avataxCalculateTaxesResponseTransformer = new AvataxCalculateTaxesResponseTransformer();
@@ -102,7 +77,6 @@ export class AvataxWebhookServiceFactory {
     const taxProvider = new AvataxWebhookService(
       createAvataxCalculateTaxesAdapter(avaTaxClient),
       createAvataxCalculateTaxesPayloadTransformer(entityTypeMatcher),
-      createAvataxOrderConfirmedAdapter(avaTaxClient, entityTypeMatcher),
     );
 
     return ok({ taxProvider });
