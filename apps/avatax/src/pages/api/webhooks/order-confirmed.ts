@@ -1,10 +1,22 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
+import { AvataxClient } from "@/modules/avatax/avatax-client";
+import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AvataxOrderConfirmedAdapter } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter";
+import { AvataxOrderConfirmedPayloadService } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload.service";
+import { AvataxOrderConfirmedPayloadTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-payload-transformer";
+import { AvataxOrderConfirmedResponseTransformer } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-response-transformer";
+import { SaleorOrderToAvataxLinesTransformer } from "@/modules/avatax/order-confirmed/saleor-order-to-avatax-lines-transformer";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
@@ -16,7 +28,10 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
+import {
+  DeprecatedOrderConfirmedSubscriptionFragment,
+  SaleorOrderConfirmedEvent,
+} from "../../../modules/saleor";
 import {
   AvataxEntityNotFoundError,
   AvataxStringLengthError,
@@ -37,6 +52,53 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const discountStrategy = new PriceReductionDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
+
+const createAvataxOrderConfirmedAdapterFromAvataxConfig = (config: AvataxConfig) => {
+  const avaTaxSdk = new AvataxSdkClientFactory().createClient(config);
+  const avaTaxClient = new AvataxClient(avaTaxSdk);
+  const entityTypeMatcher = new AvataxEntityTypeMatcher(avaTaxClient);
+
+  const orderToAvataxLinesTransformer = new SaleorOrderToAvataxLinesTransformer();
+  const calculationDateResolver = new AvataxCalculationDateResolver();
+  const documentCodeResolver = new AvataxDocumentCodeResolver();
+  const avataxOrderConfirmedResponseTransformer = new AvataxOrderConfirmedResponseTransformer();
+  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer(
+    orderToAvataxLinesTransformer,
+    entityTypeMatcher,
+    calculationDateResolver,
+    documentCodeResolver,
+  );
+
+  const avataxOrderConfirmedPayloadService = new AvataxOrderConfirmedPayloadService(
+    orderConfirmedPayloadTransformer,
+  );
+
+  return new AvataxOrderConfirmedAdapter(
+    avaTaxClient,
+    avataxOrderConfirmedResponseTransformer,
+    avataxOrderConfirmedPayloadService,
+  );
+};
+
+async function confirmOrder(
+  order: DeprecatedOrderConfirmedSubscriptionFragment,
+  confirmedOrderEvent: SaleorOrderConfirmedEvent,
+  avataxConfig: AvataxConfig,
+  authData: AuthData,
+  discountStrategy: PriceReductionDiscountsStrategy,
+) {
+  const avataxOrderConfirmedAdapter =
+    createAvataxOrderConfirmedAdapterFromAvataxConfig(avataxConfig);
+
+  const response = await avataxOrderConfirmedAdapter.send(
+    { order, confirmedOrderEvent },
+    avataxConfig,
+    authData,
+    discountStrategy,
+  );
+
+  return response;
+}
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -171,155 +233,74 @@ export default wrapWithLoggerContext(
 
           metadataCache.setMetadata(appMetadata);
 
-          const AvataxWebhookServiceFactory = await import(
-            "../../../modules/taxes/avatax-webhook-service-factory"
-          ).then((m) => m.AvataxWebhookServiceFactory);
+          logger.debug("Confirming order...");
 
-          const webhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-            config.value,
+          const providerConfig = config.value.getConfigForChannelSlug(
             confirmedOrderEvent.getChannelSlug(),
           );
 
-          logger.debug("Confirming order...");
+          if (providerConfig.isErr()) {
+            ClientLogStoreRequest.create({
+              level: "error",
+              message: "Failed to commit order. Configuration error.",
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
 
-          if (webhookServiceResult.isOk()) {
-            const { taxProvider } = webhookServiceResult.value;
-            const providerConfig = config.value.getConfigForChannelSlug(
-              confirmedOrderEvent.getChannelSlug(),
-            );
-
-            if (providerConfig.isErr()) {
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: "Failed to commit order. Configuration error.",
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
-              })
-                .mapErr(captureException)
-                .map(logWriter.writeLog);
-
-              return res.status(400).json({
-                message: `App is not configured properly for order: ${payload.order?.id}`,
-              });
-            }
-
-            try {
-              const confirmedOrder = await taxProvider.confirmOrder(
-                // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
-                payload.order,
-                confirmedOrderEvent,
-                providerConfig.value.avataxConfig.config,
-                ctx.authData,
-                discountStrategy,
-              );
-
-              logger.info("Order confirmed", { orderId: confirmedOrder.id });
-
-              const client = createInstrumentedGraphqlClient({
-                saleorApiUrl,
-                token,
-              });
-
-              const orderMetadataManager = new OrderMetadataManager(client);
-
-              await orderMetadataManager.updateOrderMetadataWithExternalId(
-                confirmedOrderEvent.getOrderId(),
-                confirmedOrder.id,
-              );
-              logger.info("Updated order metadata with externalId");
-
-              ClientLogStoreRequest.create({
-                level: "info",
-                message: "Order committed successfully",
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
-                attributes: {
-                  confirmedOrderId: confirmedOrder.id,
-                },
-              })
-                .mapErr(captureException)
-                .map(logWriter.writeLog);
-
-              return res.status(200).end();
-            } catch (error) {
-              logger.debug("Error confirming order", { error: error });
-
-              switch (true) {
-                case error instanceof TaxBadPayloadError: {
-                  ClientLogStoreRequest.create({
-                    level: "error",
-                    message: "Failed to commit order. Webhook payload invalid",
-                    checkoutOrOrderId: payload.order?.id,
-                    checkoutOrOrder: "order",
-                    channelId: payload.order?.channel.slug,
-                  })
-                    .mapErr(captureException)
-                    .map(logWriter.writeLog);
-
-                  return res
-                    .status(400)
-                    .json({ message: `Order: ${payload.order?.id} data is not valid` });
-                }
-                case error instanceof AvataxStringLengthError: {
-                  ClientLogStoreRequest.create({
-                    level: "error",
-                    message: `Failed to commit order: ${error?.description} `,
-                    checkoutOrOrderId: payload.order?.id,
-                    checkoutOrOrder: "order",
-                    channelId: payload.order?.channel.slug,
-                  })
-                    .mapErr(captureException)
-                    .map(logWriter.writeLog);
-
-                  return res.status(400).json({
-                    message: `AvaTax service returned validation error: ${error?.description}`,
-                  });
-                }
-                case error instanceof AvataxEntityNotFoundError: {
-                  ClientLogStoreRequest.create({
-                    level: "error",
-                    message: `Failed to commit order: ${error?.description} `,
-                    checkoutOrOrderId: payload.order?.id,
-                    checkoutOrOrder: "order",
-                    channelId: payload.order?.channel.slug,
-                  })
-                    .mapErr(captureException)
-                    .map(logWriter.writeLog);
-
-                  return res.status(400).json({
-                    message: `AvaTax service returned validation error: ${error?.description}`,
-                  });
-                }
-              }
-              Sentry.captureException(error);
-              logger.error("Unhandled error executing webhook", { error: error });
-
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: `Failed to commit order: Unhandled error `,
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
-              })
-                .mapErr(captureException)
-                .map(logWriter.writeLog);
-
-              return res.status(500).json({ message: "Unhandled error" });
-            }
+            return res.status(400).json({
+              message: `App is not configured properly for order: ${payload.order?.id}`,
+            });
           }
 
-          if (webhookServiceResult.isErr()) {
-            const error = webhookServiceResult.error;
+          try {
+            const confirmedOrder = await confirmOrder(
+              payload.order!,
+              confirmedOrderEvent,
+              providerConfig.value.avataxConfig.config,
+              ctx.authData,
+              discountStrategy,
+            );
 
-            logger.debug("Error confirming order", { error });
+            logger.info("Order confirmed", { orderId: confirmedOrder.id });
 
-            switch (error["constructor"]) {
-              case AvataxWebhookServiceFactory.BrokenConfigurationError: {
+            const client = createInstrumentedGraphqlClient({
+              saleorApiUrl,
+              token,
+            });
+
+            const orderMetadataManager = new OrderMetadataManager(client);
+
+            await orderMetadataManager.updateOrderMetadataWithExternalId(
+              confirmedOrderEvent.getOrderId(),
+              confirmedOrder.id,
+            );
+            logger.info("Updated order metadata with externalId");
+
+            ClientLogStoreRequest.create({
+              level: "info",
+              message: "Order committed successfully",
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+              attributes: {
+                confirmedOrderId: confirmedOrder.id,
+              },
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            return res.status(200).end();
+          } catch (error) {
+            logger.debug("Error confirming order", { error: error });
+
+            switch (true) {
+              case error instanceof TaxBadPayloadError: {
                 ClientLogStoreRequest.create({
                   level: "error",
-                  message: `Failed to commit order: Broken configuration `,
+                  message: "Failed to commit order. Webhook payload invalid",
                   checkoutOrOrderId: payload.order?.id,
                   checkoutOrOrder: "order",
                   channelId: payload.order?.channel.slug,
@@ -327,15 +308,14 @@ export default wrapWithLoggerContext(
                   .mapErr(captureException)
                   .map(logWriter.writeLog);
 
-                return res.status(400).json({ message: "App is not configured properly." });
+                return res
+                  .status(400)
+                  .json({ message: `Order: ${payload.order?.id} data is not valid` });
               }
-              default: {
-                Sentry.captureException(webhookServiceResult.error);
-                logger.fatal("Unhandled error", { error });
-
+              case error instanceof AvataxStringLengthError: {
                 ClientLogStoreRequest.create({
                   level: "error",
-                  message: `Failed to commit order: Unhandled error `,
+                  message: `Failed to commit order: ${error?.description} `,
                   checkoutOrOrderId: payload.order?.id,
                   checkoutOrOrder: "order",
                   channelId: payload.order?.channel.slug,
@@ -343,9 +323,40 @@ export default wrapWithLoggerContext(
                   .mapErr(captureException)
                   .map(logWriter.writeLog);
 
-                return res.status(500).json({ message: "Unhandled error" });
+                return res.status(400).json({
+                  message: `AvaTax service returned validation error: ${error?.description}`,
+                });
+              }
+              case error instanceof AvataxEntityNotFoundError: {
+                ClientLogStoreRequest.create({
+                  level: "error",
+                  message: `Failed to commit order: ${error?.description} `,
+                  checkoutOrOrderId: payload.order?.id,
+                  checkoutOrOrder: "order",
+                  channelId: payload.order?.channel.slug,
+                })
+                  .mapErr(captureException)
+                  .map(logWriter.writeLog);
+
+                return res.status(400).json({
+                  message: `AvaTax service returned validation error: ${error?.description}`,
+                });
               }
             }
+            Sentry.captureException(error);
+            logger.error("Unhandled error executing webhook", { error: error });
+
+            ClientLogStoreRequest.create({
+              level: "error",
+              message: `Failed to commit order: Unhandled error `,
+              checkoutOrOrderId: payload.order?.id,
+              checkoutOrOrder: "order",
+              channelId: payload.order?.channel.slug,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            return res.status(500).json({ message: "Unhandled error" });
           }
         } catch (error) {
           Sentry.captureException(error);
