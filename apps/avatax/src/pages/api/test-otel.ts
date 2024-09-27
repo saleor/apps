@@ -16,10 +16,10 @@ export default withOtel((req, res) => {
 
   const testError = new TestError("Test error", {
     errors: [new BaseError("Test error 1"), new BaseError("Test error 2")],
-    // cause: new BaseError("Test error cause"),
+    cause: new BaseError("Test error cause"),
   });
 
-  logger.info("Returning fallback customer code.", {
+  logger.info("Testing otel!!!", {
     error: testError,
   });
 
