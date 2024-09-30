@@ -6,7 +6,13 @@ import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-p
 import { SaleorOrderLine } from "../order-line";
 
 export class SaleorOrderConfirmedEvent {
-  private static schema = z.object({
+  /**
+   * While GraphQL provides types contract, not everything can be consumed by the app.
+   * For example App requires lines or shipping to calculate taxes.
+   *
+   * Schema here is additional validation - if these fields don't exist, app must handle gracefully lack of data in payload
+   */
+  private static requiredFieldsSchema = z.object({
     order: z.object({
       channel: z.object({
         taxConfiguration: z.object({
@@ -29,8 +35,8 @@ export class SaleorOrderConfirmedEvent {
   });
 
   private constructor(
-    private data: z.infer<typeof SaleorOrderConfirmedEvent.schema>,
-    private lines: SaleorOrderLine[],
+    private rawPayload: OrderConfirmedPayload,
+    private parsedLines: SaleorOrderLine[],
   ) {}
 
   static ParsingError = BaseError.subclass("SaleorOrderConfirmedEventParsingError");
@@ -45,7 +51,7 @@ export class SaleorOrderConfirmedEvent {
     }
 
     const parser = Result.fromThrowable(
-      SaleorOrderConfirmedEvent.schema.parse,
+      SaleorOrderConfirmedEvent.requiredFieldsSchema.parse,
       SaleorOrderConfirmedEvent.ParsingError.normalize,
     );
 
@@ -63,26 +69,26 @@ export class SaleorOrderConfirmedEvent {
       return err(parsedLinePayload.error);
     }
 
-    return ok(new SaleorOrderConfirmedEvent(parsedPayload.value, parsedLinePayload.value));
+    return ok(new SaleorOrderConfirmedEvent(payload, parsedLinePayload.value));
   };
 
-  getChannelSlug = () => this.data.order.channel.slug;
+  getChannelSlug = () => this.rawPayload.order!.channel.slug;
 
-  getOrderId = () => this.data.order.id;
+  getOrderId = () => this.rawPayload.order!.id;
 
-  isFulfilled = () => this.data.order.status === "FULFILLED";
+  isFulfilled = () => this.rawPayload.order!.status === "FULFILLED";
 
   isStrategyFlatRates = () =>
-    this.data.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
+    this.rawPayload.order!.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
 
-  getIsTaxIncluded = () => this.data.order.channel.taxConfiguration.pricesEnteredWithTax;
+  getIsTaxIncluded = () => this.rawPayload.order!.channel.taxConfiguration.pricesEnteredWithTax;
 
-  getLines = () => this.lines;
+  getLines = () => this.parsedLines;
 
-  hasShipping = () => this.data.order.shippingPrice.net.amount !== 0;
+  hasShipping = () => this.rawPayload.order!.shippingPrice.net.amount !== 0;
 
   getShippingAmount = () =>
     this.getIsTaxIncluded()
-      ? this.data.order.shippingPrice.gross.amount
-      : this.data.order.shippingPrice.net.amount;
+      ? this.rawPayload.order!.shippingPrice.gross.amount
+      : this.rawPayload.order!.shippingPrice.net.amount;
 }
