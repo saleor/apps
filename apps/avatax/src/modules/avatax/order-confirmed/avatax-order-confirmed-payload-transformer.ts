@@ -56,16 +56,11 @@ export class AvataxOrderConfirmedPayloadTransformer {
     return err(new TaxBadPayloadError("OrderConfirmedPayload has no shipping or billing address"));
   }
   async transform({
-    order,
     confirmedOrderEvent,
     avataxConfig,
     matches,
     discountsStrategy,
   }: {
-    /**
-     * @deprecated
-     */
-    order: DeprecatedOrderConfirmedSubscriptionFragment;
     confirmedOrderEvent: SaleorOrderConfirmedEvent;
     avataxConfig: AvataxConfig;
     matches: AvataxTaxCodeMatches;

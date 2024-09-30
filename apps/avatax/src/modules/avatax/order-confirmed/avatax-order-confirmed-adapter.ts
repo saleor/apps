@@ -22,7 +22,6 @@ type AvataxOrderConfirmedPayload = {
   /**
    * @deprecated use `SaleorOrderConfirmedEvent` instead
    */
-  order: DeprecatedOrderConfirmedSubscriptionFragment;
   confirmedOrderEvent: SaleorOrderConfirmedEvent;
 };
 type AvataxOrderConfirmedResponse = CreateOrderResponse;
@@ -53,7 +52,6 @@ export class AvataxOrderConfirmedAdapter
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
     const target = await this.avataxOrderConfirmedPayloadService.getPayload(
-      payload.order,
       payload.confirmedOrderEvent,
       config,
       authData,
