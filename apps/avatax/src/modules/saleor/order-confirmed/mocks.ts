@@ -3,13 +3,12 @@ import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 
 export class SaleorOrderConfirmedEventMockFactory {
-  private static graphqlPayload = {
+  private static _getGraphqlPayload = (): OrderConfirmedPayload => ({
     order: {
       id: "order-id",
       number: "order-number",
       created: "2021-01-01T00:00:00Z",
       status: "FULFILLED" as const,
-      discounts: [],
       channel: {
         id: "channel-id",
         slug: "channel-slug",
@@ -26,10 +25,16 @@ export class SaleorOrderConfirmedEventMockFactory {
           amount: 10,
         },
       },
+      shippingAddress: {
+        __typename: "Address",
+        city: "Krakow",
+        country: { code: "PL", __typename: "CountryDisplay" },
+        countryArea: "Malopolskie",
+        postalCode: "12345",
+        streetAddress1: "Jana Pawla 2",
+        streetAddress2: "2137",
+      },
       total: {
-        gross: {
-          amount: 10,
-        },
         net: {
           amount: 10,
         },
@@ -42,10 +47,10 @@ export class SaleorOrderConfirmedEventMockFactory {
       __typename: "Order" as const,
     },
     __typename: "OrderConfirmed" as const,
-  };
+  });
 
   static create(
-    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventMockFactory.graphqlPayload,
+    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventMockFactory._getGraphqlPayload(),
   ) {
     const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(graphqlPayload);
 
@@ -56,5 +61,5 @@ export class SaleorOrderConfirmedEventMockFactory {
     return possibleOrderLine.value;
   }
 
-  static getGraphqlPayload = () => SaleorOrderConfirmedEventMockFactory.graphqlPayload;
+  static getGraphqlPayload = () => SaleorOrderConfirmedEventMockFactory._getGraphqlPayload();
 }

@@ -3,10 +3,7 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 
 import { createLogger } from "../../../logger";
-import {
-  DeprecatedOrderConfirmedSubscriptionFragment,
-  SaleorOrderConfirmedEvent,
-} from "../../saleor";
+import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";

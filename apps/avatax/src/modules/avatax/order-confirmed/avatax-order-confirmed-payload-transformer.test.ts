@@ -17,8 +17,6 @@ const mockGenerator = new AvataxOrderConfirmedMockGenerator();
 const saleorOrderConfirmedEventMock = SaleorOrderConfirmedEventMockFactory.create();
 const discountsStrategy = new PriceReductionDiscountsStrategy();
 
-const orderMock = mockGenerator.generateOrder();
-
 /**
  * TODO: Dont export this, extract to shared code
  */
@@ -36,7 +34,6 @@ const transformer = new AvataxOrderConfirmedPayloadTransformer(
 describe("AvataxOrderConfirmedPayloadTransformer", () => {
   it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", async () => {
     const payload = await transformer.transform({
-      order: orderMock,
       confirmedOrderEvent: saleorOrderConfirmedEventMock,
       avataxConfig: avataxConfigMock,
       matches: [],
@@ -47,7 +44,6 @@ describe("AvataxOrderConfirmedPayloadTransformer", () => {
   });
   it("returns document type of SalesOrder when isDocumentRecordingEnabled is false", async () => {
     const payload = await transformer.transform({
-      order: orderMock,
       confirmedOrderEvent: saleorOrderConfirmedEventMock,
       avataxConfig: {
         ...avataxConfigMock,

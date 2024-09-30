@@ -11,8 +11,6 @@ export class SaleorOrderConfirmedEvent {
    * For example App requires lines or shipping to calculate taxes.
    *
    * Schema here is additional validation - if these fields don't exist, app must handle gracefully lack of data in payload
-   *
-   * todo add missing tests
    */
   private static requiredFieldsSchema = z.object({
     order: z.object({
