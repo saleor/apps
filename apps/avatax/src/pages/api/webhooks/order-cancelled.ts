@@ -7,6 +7,7 @@ import { captureException } from "@sentry/nextjs";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -225,6 +226,16 @@ export default wrapWithLoggerContext(
 
               return res.status(400).send({
                 message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
+              });
+            }
+
+            if (e instanceof AvataxTransactionAlreadyCancelledError) {
+              logger.warn("Transaction was already cancelled in AvaTax. Responding 200", {
+                error: e,
+              });
+
+              return res.status(200).send({
+                message: "Transaction was already cancelled in AvaTax",
               });
             }
 
