@@ -12,6 +12,7 @@ import {
   OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
+import { getCompleteMoney } from "../utils/moneyUtils";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18382
 describe("App should calculate taxes for draft order with product with tax class TC: AVATAX_18", () => {
@@ -20,8 +21,6 @@ describe("App should calculate taxes for draft order with product with tax class
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
   };
-
-  const CURRENCY = "USD";
 
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
@@ -34,19 +33,6 @@ describe("App should calculate taxes for draft order with product with tax class
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
-
-  const getMoney = (amount: number): MoneyFragment => {
-    return {
-      amount,
-      currency: CURRENCY,
-    };
-  };
-
-  const getCompleteMoney = ({ gross, net, tax }: { gross: number; net: number; tax: number }) => ({
-    gross: getMoney(gross),
-    net: getMoney(net),
-    tax: getMoney(tax),
-  });
 
   it("creates token for staff user", async () => {
     await testCase
