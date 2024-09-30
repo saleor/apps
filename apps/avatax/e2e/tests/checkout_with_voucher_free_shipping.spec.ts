@@ -7,16 +7,14 @@ import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
-  MoneyFragment,
 } from "../generated/graphql";
+import { getCompleteMoney, getMoney } from "../utils/moneyUtils";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16237
 describe("App should calculate taxes for checkout with free shipping voucher applied TC: AVATAX_6", () => {
   const testCase = e2e(
     "Product with tax class [pricesEnteredWithTax: False], voucher [type: SHIPPING, discountValueType: PERCENTAGE]",
   );
-
-  const CURRENCY = "USD";
 
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
@@ -40,19 +38,6 @@ describe("App should calculate taxes for checkout with free shipping voucher app
   const TOTAL_TAX_PRICE_AFTER_VOUCHER = TOTAL_TAX_PRICE_BEFORE_SHIPPING;
   const TOTAL_GROSS_PRICE_AFTER_VOUCHER = TOTAL_GROSS_PRICE_BEFORE_SHIPPING;
 
-  const getMoney = (amount: number): MoneyFragment => {
-    return {
-      amount,
-      currency: CURRENCY,
-    };
-  };
-
-  const getCompleteMoney = ({ gross, net, tax }: { gross: number; net: number; tax: number }) => ({
-    gross: getMoney(gross),
-    net: getMoney(net),
-    tax: getMoney(tax),
-  });
-
   it("should have taxes calculated on checkoutCreate", async () => {
     await testCase
       .step("Create checkout")
@@ -66,18 +51,14 @@ describe("App should calculate taxes for checkout with free shipping voucher app
         },
       })
       .expectStatus(200)
-      .expectJson("data.checkoutCreate.checkout.totalPrice.net", {
-        amount: TOTAL_NET_PRICE_BEFORE_SHIPPING,
-        currency: "USD",
-      } as MoneyFragment)
-      .expectJson("data.checkoutCreate.checkout.totalPrice.gross", {
-        amount: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-        currency: "USD",
-      } as MoneyFragment)
-      .expectJson("data.checkoutCreate.checkout.totalPrice.tax", {
-        amount: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
-        currency: "USD",
-      } as MoneyFragment)
+      .expectJson(
+        "data.checkoutCreate.checkout.totalPrice",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
+          net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
+          tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+        }),
+      )
       .retry()
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
   });
@@ -91,30 +72,23 @@ describe("App should calculate taxes for checkout with free shipping voucher app
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "UpdateDeliveryMethod:USA",
       })
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.net", {
-        currency: "USD",
-        amount: TOTAL_NET_PRICE_AFTER_SHIPPING,
-      } as MoneyFragment)
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.gross", {
-        currency: "USD",
-        amount: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-      } as MoneyFragment)
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.totalPrice.tax", {
-        currency: "USD",
-        amount: TOTAL_TAX_PRICE_AFTER_SHIPPING,
-      } as MoneyFragment)
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.net", {
-        currency: "USD",
-        amount: SHIPPING_NET_PRICE,
-      } as MoneyFragment)
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.gross", {
-        currency: "USD",
-        amount: SHIPPING_GROSS_PRICE,
-      } as MoneyFragment)
-      .expectJson("data.checkoutDeliveryMethodUpdate.checkout.shippingPrice.tax", {
-        currency: "USD",
-        amount: SHIPPING_TAX_PRICE,
-      } as MoneyFragment)
+      .expectStatus(200)
+      .expectJson(
+        "data.checkoutDeliveryMethodUpdate.checkout.totalPrice",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
+          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+        }),
+      )
+      .expectJson(
+        "data.checkoutDeliveryMethodUpdate.checkout.shippingPrice",
+        getCompleteMoney({
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
+        }),
+      )
       .retry();
   });
 
