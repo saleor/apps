@@ -8,6 +8,7 @@ import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/av
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -210,6 +211,20 @@ export default wrapWithLoggerContext(
             },
             providerConfig.value.avataxConfig.config,
           );
+
+          ClientLogStoreRequest.create({
+            level: "info",
+            message: "Order voided in AvaTax",
+            checkoutOrOrder: "order",
+            checkoutOrOrderId: payload.order?.id,
+            channelId: payload.order?.channel.slug,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
+          logger.info("Order cancelled");
+
+          return res.status(200).end();
         } catch (e) {
           // TODO Test once it becomes testable
           if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
@@ -219,6 +234,15 @@ export default wrapWithLoggerContext(
 
             return res.status(400).send({
               message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
+            });
+          }
+          if (e instanceof AvataxTransactionAlreadyCancelledError) {
+            logger.warn("Transaction was already cancelled in AvaTax. Responding 200", {
+              error: e,
+            });
+
+            return res.status(200).send({
+              message: "Transaction was already cancelled in AvaTax",
             });
           }
 
@@ -232,20 +256,6 @@ export default wrapWithLoggerContext(
             .mapErr(captureException)
             .map(logWriter.writeLog);
         }
-
-        ClientLogStoreRequest.create({
-          level: "info",
-          message: "Order voided in AvaTax",
-          checkoutOrOrder: "order",
-          checkoutOrOrderId: payload.order?.id,
-          channelId: payload.order?.channel.slug,
-        })
-          .mapErr(captureException)
-          .map(logWriter.writeLog);
-
-        logger.info("Order cancelled");
-
-        return res.status(200).end();
       }),
     ),
     "/api/webhooks/order-cancelled",
