@@ -201,20 +201,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       },
       providerConfig.value.avataxConfig.config,
     );
-
-    ClientLogStoreRequest.create({
-      level: "info",
-      message: "Order voided in AvaTax",
-      checkoutOrOrder: "order",
-      checkoutOrOrderId: payload.order?.id,
-      channelId: payload.order?.channel.slug,
-    })
-      .mapErr(captureException)
-      .map(logWriter.writeLog);
-
-    logger.info("Order cancelled");
-
-    return res.status(200).end();
   } catch (e) {
     // TODO Test once it becomes testable
     if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
@@ -226,6 +212,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
       });
     }
+
     if (e instanceof AvataxTransactionAlreadyCancelledError) {
       logger.warn("Transaction was already cancelled in AvaTax. Responding 200", {
         error: e,
@@ -246,6 +233,20 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       .mapErr(captureException)
       .map(logWriter.writeLog);
   }
+
+  ClientLogStoreRequest.create({
+    level: "info",
+    message: "Order voided in AvaTax",
+    checkoutOrOrder: "order",
+    checkoutOrOrderId: payload.order?.id,
+    channelId: payload.order?.channel.slug,
+  })
+    .mapErr(captureException)
+    .map(logWriter.writeLog);
+
+  logger.info("Order cancelled");
+
+  return res.status(200).end();
 });
 
 export default wrapWithLoggerContext(
