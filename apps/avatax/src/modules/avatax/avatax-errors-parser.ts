@@ -8,6 +8,7 @@ import {
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
   AvataxStringLengthError,
+  AvataxTransactionAlreadyCancelledError,
 } from "../taxes/tax-error";
 import { assertUnreachableWithoutThrow } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
@@ -23,6 +24,7 @@ export class AvataxErrorsParser {
       "AuthenticationException",
       "StringLengthError",
       "EntityNotFoundError",
+      "TransactionAlreadyCancelled",
     ]),
     details: z.array(
       z.object({
@@ -69,6 +71,13 @@ export class AvataxErrorsParser {
       }
       case "EntityNotFoundError": {
         return new AvataxEntityNotFoundError(parsedError.data.code, {
+          props: {
+            description: parsedError.data.details[0].description,
+          },
+        });
+      }
+      case "TransactionAlreadyCancelled": {
+        return new AvataxTransactionAlreadyCancelledError(parsedError.data.code, {
           props: {
             description: parsedError.data.details[0].description,
           },
