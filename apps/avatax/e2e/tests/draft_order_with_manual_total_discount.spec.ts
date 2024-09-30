@@ -8,10 +8,10 @@ import {
   DraftOrderComplete,
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
-  MoneyFragment,
   OrderDiscountAdd,
   StaffUserTokenCreate,
 } from "../generated/graphql";
+import { getCompleteMoney } from "../utils/moneyUtils";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18386
 describe("App should calculate taxes for draft order with manual total discount applied TC: AVATAX_22", () => {
@@ -20,8 +20,6 @@ describe("App should calculate taxes for draft order with manual total discount 
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
   };
-
-  const CURRENCY = "USD";
 
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
@@ -35,26 +33,13 @@ describe("App should calculate taxes for draft order with manual total discount 
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 69.1;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 63.47;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 5.63;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 75.88;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 69.69;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 6.19;
 
-  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT = 55.45;
-  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 50.93;
-  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 4.52;
-
-  const getMoney = (amount: number): MoneyFragment => {
-    return {
-      amount,
-      currency: CURRENCY,
-    };
-  };
-
-  const getCompleteMoney = ({ gross, net, tax }: { gross: number; net: number; tax: number }) => ({
-    gross: getMoney(gross),
-    net: getMoney(net),
-    tax: getMoney(tax),
-  });
+  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT = 62.38;
+  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 57.3;
+  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 5.08;
 
   it("creates token for staff user", async () => {
     await testCase
