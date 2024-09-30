@@ -97,246 +97,242 @@ async function calculateTaxes(
   return response;
 }
 
-export default wrapWithLoggerContext(
-  withOtel(
-    withMetadataCache(
-      orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
-        const logWriter = logsWriterFactory.createWriter(ctx.authData);
+const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+  const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
-        const channelSlug = ctx.payload.taxBase.channel.slug;
-        const orderId = ctx.payload.taxBase.sourceObject.id;
-        const appMetadata = ctx.payload.recipient?.privateMetadata ?? [];
+  const channelSlug = ctx.payload.taxBase.channel.slug;
+  const orderId = ctx.payload.taxBase.sourceObject.id;
+  const appMetadata = ctx.payload.recipient?.privateMetadata ?? [];
 
-        metadataCache.setMetadata(appMetadata);
+  metadataCache.setMetadata(appMetadata);
 
+  try {
+    const { payload } = ctx;
+
+    subscriptionErrorChecker.checkPayload(payload);
+
+    loggerContext.set("channelSlug", channelSlug);
+    loggerContext.set("orderId", orderId);
+
+    if (payload.version) {
+      Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+      loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+    }
+
+    logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
+
+    const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
+
+    if (payloadVerificationResult.isErr()) {
+      logger.warn("Failed to calculate taxes, due to incomplete payload", {
+        error: payloadVerificationResult.error,
+      });
+
+      ClientLogStoreRequest.create({
+        level: "info",
+        message: "Taxes not calculated. Missing address or lines",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "order",
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      return res.status(400).json({ message: payloadVerificationResult.error.message });
+    }
+
+    const configExtractor = new AppConfigExtractor();
+
+    const config = configExtractor
+      .extractAppConfigFromPrivateMetadata(appMetadata)
+      .map((config) => {
         try {
-          const { payload } = ctx;
-
-          subscriptionErrorChecker.checkPayload(payload);
-
-          loggerContext.set("channelSlug", channelSlug);
-          loggerContext.set("orderId", orderId);
-
-          if (payload.version) {
-            Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-            loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-          }
-
-          logger.info("Handler for ORDER_CALCULATE_TAXES webhook called");
-
-          const payloadVerificationResult = verifyCalculateTaxesPayload(payload);
-
-          if (payloadVerificationResult.isErr()) {
-            logger.warn("Failed to calculate taxes, due to incomplete payload", {
-              error: payloadVerificationResult.error,
-            });
-
-            ClientLogStoreRequest.create({
-              level: "info",
-              message: "Taxes not calculated. Missing address or lines",
-              checkoutOrOrderId: payload.taxBase.sourceObject.id,
-              channelId: payload.taxBase.channel.slug,
-              checkoutOrOrder: "order",
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            return res.status(400).json({ message: payloadVerificationResult.error.message });
-          }
-
-          const configExtractor = new AppConfigExtractor();
-
-          const config = configExtractor
-            .extractAppConfigFromPrivateMetadata(appMetadata)
-            .map((config) => {
-              try {
-                new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
-              } catch (e) {
-                captureException(
-                  new AppConfigExtractor.LogConfigurationMetricError(
-                    "Failed to log configuration metric",
-                    {
-                      cause: e,
-                    },
-                  ),
-                );
-              }
-
-              return config;
-            });
-
-          if (config.isErr()) {
-            logger.warn("Failed to extract app config from metadata", {
-              error: config.error,
-            });
-
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. App faced problem with configuration.",
-              checkoutOrOrderId: payload.taxBase.sourceObject.id,
-              channelId: payload.taxBase.channel.slug,
-              checkoutOrOrder: "order",
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            return res.status(400).json({
-              message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
-            });
-          }
-
-          const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
-
-          if (providerConfig.isErr()) {
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. App faced problem with configuration.",
-              checkoutOrOrderId: payload.taxBase.sourceObject.id,
-              channelId: payload.taxBase.channel.slug,
-              checkoutOrOrder: "order",
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            return res.status(400).json({
-              message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
-            });
-          }
-
-          const calculatedTaxes = await calculateTaxes(
-            payload,
-            providerConfig.value.avataxConfig.config,
-            ctx.authData,
-            discountStrategy,
-          );
-
-          // eslint-disable-next-line @saleor/saleor-app/logger-leak
-          logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
-
-          ClientLogStoreRequest.create({
-            level: "info",
-            message: "Taxes calculated",
-            checkoutOrOrderId: payload.taxBase.sourceObject.id,
-            channelId: payload.taxBase.channel.slug,
-            checkoutOrOrder: "order",
-            attributes: {
-              calculatedTaxes: calculatedTaxes,
-            },
-          })
-            .mapErr(captureException)
-            .map(logWriter.writeLog);
-
-          return res.status(200).json(ctx.buildResponse(calculatedTaxes));
-        } catch (error) {
-          if (error instanceof AvataxGetTaxError) {
-            logger.warn(
-              "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
+          new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
+        } catch (e) {
+          captureException(
+            new AppConfigExtractor.LogConfigurationMetricError(
+              "Failed to log configuration metric",
               {
-                error,
+                cause: e,
               },
-            );
-
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. Avalara returned error",
-              checkoutOrOrderId: orderId,
-              checkoutOrOrder: "order",
-              channelId: channelSlug,
-              // todo map error from avalara
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            return res.status(400).json({
-              message:
-                "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
-            });
-          }
-
-          if (error instanceof AvataxInvalidAddressError) {
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. Avalara returned error: invalid address",
-              checkoutOrOrderId: orderId,
-              channelId: channelSlug,
-              checkoutOrOrder: "order",
-              // todo map error from avalara
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            logger.warn(
-              "InvalidAppAddressError: App returns status 400 due to broken address configuration",
-              { error },
-            );
-
-            return res.status(400).json({
-              message: "InvalidAppAddressError: Check address in app configuration",
-            });
-          }
-
-          if (error instanceof AvataxStringLengthError) {
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. Avalara returned error: invalid address",
-              checkoutOrOrderId: orderId,
-              checkoutOrOrder: "order",
-              channelId: channelSlug,
-              // todo map error from avalara
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            logger.warn(
-              "AvataxStringLengthError: App returns status 400 due to not valid address data",
-              { error },
-            );
-
-            return res.status(400).json({
-              message: `AvaTax service returned validation error: ${error.description} `,
-            });
-          }
-
-          if (error instanceof AvataxEntityNotFoundError) {
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Taxes not calculated. Avalara returned error: entity not found",
-              checkoutOrOrderId: orderId,
-              checkoutOrOrder: "order",
-              channelId: channelSlug,
-              // todo map error from avalara
-            })
-              .mapErr(captureException)
-              .map(logWriter.writeLog);
-
-            logger.warn(
-              "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
-              { error },
-            );
-
-            return res.status(400).json({
-              message: `AvaTax service returned validation error: ${error.description} `,
-            });
-          }
-
-          Sentry.captureException(error);
-
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: "Taxes not calculated. Unhandled error",
-            checkoutOrOrderId: orderId,
-            checkoutOrOrder: "order",
-            channelId: channelSlug,
-            // todo map error from avalara
-          })
-            .mapErr(captureException)
-            .map(logWriter.writeLog);
-
-          return res.status(500).json({ message: "Unhandled error" });
+            ),
+          );
         }
-      }),
-    ),
-    "/api/order-calculate-taxes",
-  ),
+
+        return config;
+      });
+
+    if (config.isErr()) {
+      logger.warn("Failed to extract app config from metadata", {
+        error: config.error,
+      });
+
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. App faced problem with configuration.",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "order",
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      return res.status(400).json({
+        message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
+      });
+    }
+
+    const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+
+    if (providerConfig.isErr()) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. App faced problem with configuration.",
+        checkoutOrOrderId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.slug,
+        checkoutOrOrder: "order",
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      return res.status(400).json({
+        message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
+      });
+    }
+
+    const calculatedTaxes = await calculateTaxes(
+      payload,
+      providerConfig.value.avataxConfig.config,
+      ctx.authData,
+      discountStrategy,
+    );
+
+    // eslint-disable-next-line @saleor/saleor-app/logger-leak
+    logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
+
+    ClientLogStoreRequest.create({
+      level: "info",
+      message: "Taxes calculated",
+      checkoutOrOrderId: payload.taxBase.sourceObject.id,
+      channelId: payload.taxBase.channel.slug,
+      checkoutOrOrder: "order",
+      attributes: {
+        calculatedTaxes: calculatedTaxes,
+      },
+    })
+      .mapErr(captureException)
+      .map(logWriter.writeLog);
+
+    return res.status(200).json(ctx.buildResponse(calculatedTaxes));
+  } catch (error) {
+    if (error instanceof AvataxGetTaxError) {
+      logger.warn(
+        "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
+        {
+          error,
+        },
+      );
+
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. Avalara returned error",
+        checkoutOrOrderId: orderId,
+        checkoutOrOrder: "order",
+        channelId: channelSlug,
+        // todo map error from avalara
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      return res.status(400).json({
+        message:
+          "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
+      });
+    }
+
+    if (error instanceof AvataxInvalidAddressError) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. Avalara returned error: invalid address",
+        checkoutOrOrderId: orderId,
+        channelId: channelSlug,
+        checkoutOrOrder: "order",
+        // todo map error from avalara
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      logger.warn(
+        "InvalidAppAddressError: App returns status 400 due to broken address configuration",
+        { error },
+      );
+
+      return res.status(400).json({
+        message: "InvalidAppAddressError: Check address in app configuration",
+      });
+    }
+
+    if (error instanceof AvataxStringLengthError) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. Avalara returned error: invalid address",
+        checkoutOrOrderId: orderId,
+        checkoutOrOrder: "order",
+        channelId: channelSlug,
+        // todo map error from avalara
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      logger.warn("AvataxStringLengthError: App returns status 400 due to not valid address data", {
+        error,
+      });
+
+      return res.status(400).json({
+        message: `AvaTax service returned validation error: ${error.description} `,
+      });
+    }
+
+    if (error instanceof AvataxEntityNotFoundError) {
+      ClientLogStoreRequest.create({
+        level: "error",
+        message: "Taxes not calculated. Avalara returned error: entity not found",
+        checkoutOrOrderId: orderId,
+        checkoutOrOrder: "order",
+        channelId: channelSlug,
+        // todo map error from avalara
+      })
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
+
+      logger.warn(
+        "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
+        { error },
+      );
+
+      return res.status(400).json({
+        message: `AvaTax service returned validation error: ${error.description} `,
+      });
+    }
+
+    Sentry.captureException(error);
+
+    ClientLogStoreRequest.create({
+      level: "error",
+      message: "Taxes not calculated. Unhandled error",
+      checkoutOrOrderId: orderId,
+      checkoutOrOrder: "order",
+      channelId: channelSlug,
+      // todo map error from avalara
+    })
+      .mapErr(captureException)
+      .map(logWriter.writeLog);
+
+    return res.status(500).json({ message: "Unhandled error" });
+  }
+});
+
+export default wrapWithLoggerContext(
+  withOtel(withMetadataCache(handler), "/api/order-calculate-taxes"),
   loggerContext,
 );
