@@ -1,11 +1,9 @@
 import { MoneyFragment } from "../generated/graphql";
 
-const CURRENCY = "USD";
-
-export const getMoney = (amount: number): MoneyFragment => {
+export const getMoney = (amount: number, currency: string): MoneyFragment => {
   return {
     amount,
-    currency: CURRENCY,
+    currency,
   };
 };
 
@@ -13,12 +11,14 @@ export const getCompleteMoney = ({
   gross,
   net,
   tax,
+  currency,
 }: {
   gross: number;
   net: number;
   tax: number;
+  currency: string;
 }) => ({
-  gross: getMoney(gross),
-  net: getMoney(net),
-  tax: getMoney(tax),
+  gross: getMoney(gross, currency),
+  net: getMoney(net, currency),
+  tax: getMoney(tax, currency),
 });

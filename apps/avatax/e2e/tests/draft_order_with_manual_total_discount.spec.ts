@@ -1,4 +1,5 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
+import { input } from "@saleor/macaw-ui/dist/components/SearchInput/SearchInput.css";
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
@@ -20,6 +21,8 @@ describe("App should calculate taxes for draft order with manual total discount 
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
   };
+
+  const CURRENCY = "USD";
 
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
@@ -91,7 +94,7 @@ describe("App should calculate taxes for draft order with manual total discount 
       .withGraphQLQuery(CreateOrderLines)
       .withGraphQLVariables({
         orderId: "$S{OrderID}",
-        variantId: "$M{Product.Juice.variantId}",
+        input: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -126,6 +129,7 @@ describe("App should calculate taxes for draft order with manual total discount 
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       );
   });
@@ -153,6 +157,7 @@ describe("App should calculate taxes for draft order with manual total discount 
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -161,6 +166,7 @@ describe("App should calculate taxes for draft order with manual total discount 
           gross: TOTAL_GROSS_SHIPPING_PRICE,
           net: TOTAL_NET_SHIPPING_PRICE,
           tax: TOTAL_TAX_SHIPPING_PRICE,
+          currency: CURRENCY,
         }),
       );
   });
@@ -190,6 +196,7 @@ describe("App should calculate taxes for draft order with manual total discount 
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -198,6 +205,7 @@ describe("App should calculate taxes for draft order with manual total discount 
           gross: TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT,
           net: TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT,
           tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT,
+          currency: CURRENCY,
         }),
       );
   });

@@ -22,4 +22,15 @@ fragment OrderDetailsFragment on Order {
       ...Money
     }
   }
+  undiscountedTotal {
+    gross {
+      ...Money
+    }
+    net {
+      ...Money
+    }
+    tax {
+      ...Money
+    }
+  }
 }

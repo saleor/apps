@@ -22,6 +22,8 @@ describe("App should calculate taxes for checkout on update shipping address TC:
     password: process.env.E2E_USER_PASSWORD as string,
   };
 
+  const CURRENCY = "USD";
+
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
@@ -60,6 +62,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           tax: 0,
+          currency: CURRENCY,
         }),
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
@@ -88,6 +91,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       );
   });
@@ -117,6 +121,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       );
   });
@@ -137,6 +142,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -145,6 +151,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       );
   });
@@ -163,6 +170,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -171,6 +179,7 @@ describe("App should calculate taxes for checkout on update shipping address TC:
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .stores("OrderID", "data.checkoutComplete.order.id");
