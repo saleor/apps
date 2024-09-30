@@ -44,3 +44,12 @@ export const AvataxEntityNotFoundError = ExpectedError.subclass("AvataxEntityNot
     description: "",
   },
 });
+
+export const AvataxTransactionAlreadyCancelledError = ExpectedError.subclass(
+  "AvataxTransactionAlreadyCancelledError",
+  {
+    props: {
+      description: "",
+    },
+  },
+);
