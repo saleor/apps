@@ -11,6 +11,8 @@ export class SaleorOrderConfirmedEvent {
    * For example App requires lines or shipping to calculate taxes.
    *
    * Schema here is additional validation - if these fields don't exist, app must handle gracefully lack of data in payload
+   *
+   * todo add missing tests
    */
   private static requiredFieldsSchema = z.object({
     order: z.object({
@@ -91,4 +93,30 @@ export class SaleorOrderConfirmedEvent {
     this.getIsTaxIncluded()
       ? this.rawPayload.order!.shippingPrice.gross.amount
       : this.rawPayload.order!.shippingPrice.net.amount;
+
+  resolveUserEmailOrEmpty = () =>
+    this.rawPayload.order!.user?.email ?? this.rawPayload.order?.userEmail ?? "";
+
+  getOrderCurrency = () => this.rawPayload.order!.total.currency;
+
+  getUserId = () => this.rawPayload.order!.user?.id;
+
+  /**
+   * @deprecated - We should use customer code from order
+   */
+  getLegacyAvaTaxCustomerCode = () => this.rawPayload.order!.user?.avataxCustomerCode;
+
+  getAvaTaxCustomerCode = () => this.rawPayload.order!.avataxCustomerCode;
+
+  getAvaTaxDocumentCode = () => this.rawPayload.order!.avataxDocumentCode;
+
+  getAvaTaxEntityCode = () => this.rawPayload.order!.avataxEntityCode;
+
+  getAvaTaxTaxCalculationDate = () => this.rawPayload.order!.avataxTaxCalculationDate;
+
+  getOrderCreationDate = () => this.rawPayload.order!.created;
+
+  getOrderShippingAddress = () => this.rawPayload.order!.shippingAddress;
+
+  getOrderBillingAddress = () => this.rawPayload.order!.shippingAddress;
 }
