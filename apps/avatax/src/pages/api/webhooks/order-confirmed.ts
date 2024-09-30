@@ -218,7 +218,8 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
     try {
       const confirmedOrder = await confirmOrder(
-        payload.order!,
+        // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
+        payload.order,
         confirmedOrderEvent,
         providerConfig.value.avataxConfig.config,
         ctx.authData,
