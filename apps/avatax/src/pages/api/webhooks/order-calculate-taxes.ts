@@ -1,12 +1,25 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AvataxClient } from "@/modules/avatax/avatax-client";
+import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
+import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
+import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -37,6 +50,52 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const discountStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
+
+const createAvataxCalculateTaxesAdapter = (avaTaxClient: AvataxClient) => {
+  const avataxCalculateTaxesResponseTransformer = new AvataxCalculateTaxesResponseTransformer();
+
+  return new AvataxCalculateTaxesAdapter(avaTaxClient, avataxCalculateTaxesResponseTransformer);
+};
+
+const createAvataxCalculateTaxesPayloadTransformer = (
+  entityTypeMatcher: AvataxEntityTypeMatcher,
+) => {
+  const avataxCalculateTaxesTaxCodeMatcher = new AvataxCalculateTaxesTaxCodeMatcher();
+  const avataxCalculateTaxesPayloadLinesTransformer =
+    new AvataxCalculateTaxesPayloadLinesTransformer(avataxCalculateTaxesTaxCodeMatcher);
+
+  return new AvataxCalculateTaxesPayloadTransformer(
+    avataxCalculateTaxesPayloadLinesTransformer,
+    entityTypeMatcher,
+  );
+};
+
+/**
+ * @deprecated use CalculateTaxesUseCase instead
+ */
+async function calculateTaxes(
+  payload: CalculateTaxesPayload,
+  avataxConfig: AvataxConfig,
+  authData: AuthData,
+  discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
+) {
+  const avaTaxSdk = new AvataxSdkClientFactory().createClient(avataxConfig);
+  const avaTaxClient = new AvataxClient(avaTaxSdk);
+  const calculateTaxesPayloadTransformer = createAvataxCalculateTaxesPayloadTransformer(
+    new AvataxEntityTypeMatcher(avaTaxClient),
+  );
+  const calculateTaxesAdapter = createAvataxCalculateTaxesAdapter(avaTaxClient);
+  const payloadService = new AvataxCalculateTaxesPayloadService(
+    AvataxTaxCodeMatchesService.createFromAuthData(authData),
+    calculateTaxesPayloadTransformer,
+  );
+
+  const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
+
+  const response = await calculateTaxesAdapter.send(avataxModel);
+
+  return response;
+}
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logWriter = logsWriterFactory.createWriter(ctx.authData);
