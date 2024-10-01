@@ -5,6 +5,10 @@ import { BaseError } from "../../../error";
 import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLine } from "../order-line";
 
+type EventWithOrder = Omit<OrderConfirmedPayload, "order"> & {
+  order: NonNullable<OrderConfirmedPayload["order"]>;
+};
+
 export class SaleorOrderConfirmedEvent {
   /**
    * While GraphQL provides types contract, not everything can be consumed by the app.
@@ -35,7 +39,7 @@ export class SaleorOrderConfirmedEvent {
   });
 
   private constructor(
-    private rawPayload: OrderConfirmedPayload,
+    private rawPayload: EventWithOrder,
     private parsedLines: SaleorOrderLine[],
   ) {}
 
@@ -69,52 +73,52 @@ export class SaleorOrderConfirmedEvent {
       return err(parsedLinePayload.error);
     }
 
-    return ok(new SaleorOrderConfirmedEvent(payload, parsedLinePayload.value));
+    return ok(new SaleorOrderConfirmedEvent(payload as EventWithOrder, parsedLinePayload.value));
   };
 
-  getChannelSlug = () => this.rawPayload.order!.channel.slug;
+  getChannelSlug = () => this.rawPayload.order.channel.slug;
 
-  getOrderId = () => this.rawPayload.order!.id;
+  getOrderId = () => this.rawPayload.order.id;
 
-  isFulfilled = () => this.rawPayload.order!.status === "FULFILLED";
+  isFulfilled = () => this.rawPayload.order.status === "FULFILLED";
 
   isStrategyFlatRates = () =>
-    this.rawPayload.order!.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
+    this.rawPayload.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
 
-  getIsTaxIncluded = () => this.rawPayload.order!.channel.taxConfiguration.pricesEnteredWithTax;
+  getIsTaxIncluded = () => this.rawPayload.order.channel.taxConfiguration.pricesEnteredWithTax;
 
   getLines = () => this.parsedLines;
 
-  hasShipping = () => this.rawPayload.order!.shippingPrice.net.amount !== 0;
+  hasShipping = () => this.rawPayload.order.shippingPrice.net.amount !== 0;
 
   getShippingAmount = () =>
     this.getIsTaxIncluded()
-      ? this.rawPayload.order!.shippingPrice.gross.amount
-      : this.rawPayload.order!.shippingPrice.net.amount;
+      ? this.rawPayload.order.shippingPrice.gross.amount
+      : this.rawPayload.order.shippingPrice.net.amount;
 
   resolveUserEmailOrEmpty = () =>
-    this.rawPayload.order!.user?.email ?? this.rawPayload.order?.userEmail ?? "";
+    this.rawPayload.order.user?.email ?? this.rawPayload.order?.userEmail ?? "";
 
-  getOrderCurrency = () => this.rawPayload.order!.total.currency;
+  getOrderCurrency = () => this.rawPayload.order.total.currency;
 
-  getUserId = () => this.rawPayload.order!.user?.id;
+  getUserId = () => this.rawPayload.order.user?.id;
 
   /**
    * @deprecated - We should use customer code from order
    */
-  getLegacyAvaTaxCustomerCode = () => this.rawPayload.order!.user?.avataxCustomerCode;
+  getLegacyAvaTaxCustomerCode = () => this.rawPayload.order.user?.avataxCustomerCode;
 
-  getAvaTaxCustomerCode = () => this.rawPayload.order!.avataxCustomerCode;
+  getAvaTaxCustomerCode = () => this.rawPayload.order.avataxCustomerCode;
 
-  getAvaTaxDocumentCode = () => this.rawPayload.order!.avataxDocumentCode;
+  getAvaTaxDocumentCode = () => this.rawPayload.order.avataxDocumentCode;
 
-  getAvaTaxEntityCode = () => this.rawPayload.order!.avataxEntityCode;
+  getAvaTaxEntityCode = () => this.rawPayload.order.avataxEntityCode;
 
-  getAvaTaxTaxCalculationDate = () => this.rawPayload.order!.avataxTaxCalculationDate;
+  getAvaTaxTaxCalculationDate = () => this.rawPayload.order.avataxTaxCalculationDate;
 
-  getOrderCreationDate = () => this.rawPayload.order!.created;
+  getOrderCreationDate = () => this.rawPayload.order.created;
 
-  getOrderShippingAddress = () => this.rawPayload.order!.shippingAddress;
+  getOrderShippingAddress = () => this.rawPayload.order.shippingAddress;
 
-  getOrderBillingAddress = () => this.rawPayload.order!.shippingAddress;
+  getOrderBillingAddress = () => this.rawPayload.order.shippingAddress;
 }

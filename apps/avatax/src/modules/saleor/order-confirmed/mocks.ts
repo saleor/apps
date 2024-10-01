@@ -3,8 +3,15 @@ import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 
 export class SaleorOrderConfirmedEventMockFactory {
-  private static _getGraphqlPayload = (): OrderConfirmedPayload => ({
+  private static _getGraphqlPayload = (): {
+    order: NonNullable<OrderConfirmedPayload["order"]>;
+    __typename: "OrderConfirmed";
+  } => ({
     order: {
+      user: {
+        id: "id",
+        email: "email@example.com",
+      },
       id: "order-id",
       number: "order-number",
       created: "2021-01-01T00:00:00Z",

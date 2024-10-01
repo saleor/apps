@@ -40,7 +40,7 @@ describe("SaleorOrderConfirmedEvent", () => {
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
         order: {
-          ...payload.order!,
+          ...payload.order,
           status: "CANCELED",
         },
       })._unsafeUnwrap();
@@ -62,7 +62,7 @@ describe("SaleorOrderConfirmedEvent", () => {
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
         order: {
-          ...payload.order!,
+          ...payload.order,
           channel: {
             slug: "channel-slug",
             id: "channel-id",
@@ -84,7 +84,7 @@ describe("SaleorOrderConfirmedEvent", () => {
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
         order: {
-          ...payload.order!,
+          ...payload.order,
           shippingPrice: {
             gross: {
               amount: 10,
@@ -112,7 +112,7 @@ describe("SaleorOrderConfirmedEvent", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(event.getShippingAmount()).toEqual(payload.order!.shippingPrice.gross.amount);
+      expect(event.getShippingAmount()).toEqual(payload.order.shippingPrice.gross.amount);
     });
 
     it("should get shipping amount as shippingPrice net without tax included", () => {
@@ -120,7 +120,7 @@ describe("SaleorOrderConfirmedEvent", () => {
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
         order: {
-          ...payload.order!,
+          ...payload.order,
           channel: {
             slug: "channel-slug",
             id: "channel-id",
@@ -132,7 +132,7 @@ describe("SaleorOrderConfirmedEvent", () => {
         },
       })._unsafeUnwrap();
 
-      expect(event.getShippingAmount()).toEqual(payload.order!.shippingPrice.net.amount);
+      expect(event.getShippingAmount()).toEqual(payload.order.shippingPrice.net.amount);
     });
   });
 
@@ -140,12 +140,12 @@ describe("SaleorOrderConfirmedEvent", () => {
     it("Returns order.user.email if exists", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
-      payload.order!.user = {
+      payload.order.user = {
         email: "a@b.com",
         id: "1",
       };
 
-      payload.order!.userEmail = "another@another.com";
+      payload.order.userEmail = "another@another.com";
 
       const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
@@ -155,7 +155,9 @@ describe("SaleorOrderConfirmedEvent", () => {
     it("Returns order.userEmail.email if exists and user.email doesnt", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
-      payload.order!.userEmail = "another@another.com";
+      payload.order.user = undefined;
+
+      payload.order.userEmail = "another@another.com";
 
       const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
@@ -164,6 +166,9 @@ describe("SaleorOrderConfirmedEvent", () => {
 
     it("Returns empty string if neither user.email or userEmail exist", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+      payload.order.user = undefined;
+      payload.order.userEmail = undefined;
 
       const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
