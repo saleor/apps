@@ -19,10 +19,7 @@ import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import {
-  DeprecatedOrderConfirmedSubscriptionFragment,
-  SaleorOrderConfirmedEvent,
-} from "../../../modules/saleor";
+import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
 import {
   AvataxEntityNotFoundError,
   AvataxStringLengthError,
