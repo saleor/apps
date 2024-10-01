@@ -3,10 +3,7 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 
 import { createLogger } from "../../../logger";
-import {
-  DeprecatedOrderConfirmedSubscriptionFragment,
-  SaleorOrderConfirmedEvent,
-} from "../../saleor";
+import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
 import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
@@ -37,50 +34,57 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     return DocumentType.SalesInvoice;
   }
-  private getSaleorAddress(order: DeprecatedOrderConfirmedSubscriptionFragment) {
-    if (order.shippingAddress) {
-      return ok(order.shippingAddress);
+  private getSaleorAddress(confirmedOrderEvent: SaleorOrderConfirmedEvent) {
+    const shippingAddress = confirmedOrderEvent.getOrderShippingAddress();
+    const billingAddress = confirmedOrderEvent.getOrderBillingAddress();
+
+    if (shippingAddress) {
+      return ok(shippingAddress);
     }
 
-    if (order.billingAddress) {
+    if (billingAddress) {
       this.logger.warn(
         "OrderConfirmedPayload has no shipping address, falling back to billing address",
       );
 
-      return ok(order.billingAddress);
+      return ok(billingAddress);
     }
 
     return err(new TaxBadPayloadError("OrderConfirmedPayload has no shipping or billing address"));
   }
   async transform({
-    order,
     confirmedOrderEvent,
     avataxConfig,
     matches,
     discountsStrategy,
   }: {
-    order: DeprecatedOrderConfirmedSubscriptionFragment;
     confirmedOrderEvent: SaleorOrderConfirmedEvent;
     avataxConfig: AvataxConfig;
     matches: AvataxTaxCodeMatches;
     discountsStrategy: PriceReductionDiscountsStrategy;
   }): Promise<CreateTransactionArgs> {
-    const entityUseCode = await this.avataxEntityTypeMatcher.match(order.avataxEntityCode);
-    const date = this.avataxCalculationDateResolver.resolve(
-      order.avataxTaxCalculationDate,
-      order.created,
+    const entityUseCode = await this.avataxEntityTypeMatcher.match(
+      confirmedOrderEvent.getAvaTaxEntityCode(),
     );
+
+    const date = this.avataxCalculationDateResolver.resolve(
+      confirmedOrderEvent.getAvaTaxTaxCalculationDate(),
+      confirmedOrderEvent.getOrderCreationDate(),
+    );
+
     const code = this.avataxDocumentCodeResolver.resolve({
-      avataxDocumentCode: order.avataxDocumentCode,
-      orderId: order.id,
+      avataxDocumentCode: confirmedOrderEvent.getAvaTaxDocumentCode(),
+      orderId: confirmedOrderEvent.getOrderId(),
     });
+
     const customerCode = avataxCustomerCode.resolve({
-      avataxCustomerCode: order.avataxCustomerCode,
-      legacyAvataxCustomerCode: order.user?.avataxCustomerCode,
-      legacyUserId: order.user?.id,
+      avataxCustomerCode: confirmedOrderEvent.getAvaTaxCustomerCode(),
+      legacyAvataxCustomerCode: confirmedOrderEvent.getLegacyAvaTaxCustomerCode(),
+      legacyUserId: confirmedOrderEvent.getUserId(),
       source: "Order",
     });
-    const addressPayload = this.getSaleorAddress(order);
+
+    const addressPayload = this.getSaleorAddress(confirmedOrderEvent);
 
     if (addressPayload.isErr()) {
       Sentry.captureException(addressPayload.error);
@@ -105,9 +109,9 @@ export class AvataxOrderConfirmedPayloadTransformer {
           shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
           shipTo: avataxAddressFactory.fromSaleorAddress(addressPayload.value),
         },
-        currencyCode: order.total.currency,
+        currencyCode: confirmedOrderEvent.getOrderCurrency(),
         // we can fall back to empty string because email is not a required field
-        email: order.user?.email ?? order.userEmail ?? "",
+        email: confirmedOrderEvent.resolveUserEmailOrEmpty(),
         lines: this.saleorOrderToAvataxLinesTransformer.transform({
           confirmedOrderEvent,
           matches,
