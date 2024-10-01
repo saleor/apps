@@ -48,7 +48,6 @@ const logsWriterFactory = new LogWriterFactory();
  * In the future this should be part of the use-case
  */
 async function confirmOrder(
-  order: DeprecatedOrderConfirmedSubscriptionFragment,
   confirmedOrderEvent: SaleorOrderConfirmedEvent,
   avataxConfig: AvataxConfig,
   authData: AuthData,
@@ -58,7 +57,7 @@ async function confirmOrder(
     createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig(avataxConfig);
 
   const response = await avataxOrderConfirmedAdapter.send(
-    { order, confirmedOrderEvent },
+    { confirmedOrderEvent },
     avataxConfig,
     authData,
     discountStrategy,
@@ -218,8 +217,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
     try {
       const confirmedOrder = await confirmOrder(
-        // @ts-expect-error: OrderConfirmedSubscriptionFragment is deprecated
-        payload.order,
         confirmedOrderEvent,
         providerConfig.value.avataxConfig.config,
         ctx.authData,
