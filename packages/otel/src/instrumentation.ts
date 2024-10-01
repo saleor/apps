@@ -39,12 +39,9 @@ if (process.env.ENABLE_OTEL_RUNTIME_LOGS === "true") {
 
 export const otelSdk = new NodeSDK({
   resource: new Resource({
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
-    // [SemanticResourceAttributes.SERVICE_VERSION]: pkg.version, TODO
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    [SemanticResourceAttributes.SERVICE_VERSION]: process.env.VERCEL_GIT_COMMIT_SHA,
     "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
   }),
   spanProcessor: batchSpanProcessor,

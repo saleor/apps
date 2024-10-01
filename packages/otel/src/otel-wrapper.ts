@@ -1,13 +1,12 @@
-import { SpanKind, SpanStatusCode, type Span } from "@opentelemetry/api";
+import { type Span, SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
-import { otelSdk } from "./instrumentation";
-
-import { race } from "./lib/race";
-import { getOtelTracer } from "./otel-tracer";
 
 import { getAttributesFromRequest } from "./get-attributes-from-request";
+import { otelSdk } from "./instrumentation";
+import { race } from "./lib/race";
 import { loggerProvider, otelLogsProcessor } from "./otel-logs-setup";
+import { getOtelTracer } from "./otel-tracer";
 import { batchSpanProcessor } from "./otel-traces-setup";
 import { sharedOtelConfig } from "./shared-config";
 
