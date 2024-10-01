@@ -1,6 +1,5 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
-import { string } from "pactum-matchers";
 import { describe, it } from "vitest";
 
 import {
@@ -9,8 +8,6 @@ import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckoutNoAddress,
-  OrderDetails,
-  StaffUserTokenCreate,
 } from "../generated/graphql";
 import { getCompleteMoney } from "../utils/moneyUtils";
 

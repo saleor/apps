@@ -8,8 +8,6 @@ import {
   DraftOrderComplete,
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
-  MoneyFragment,
-  OrderDetails,
   StaffUserTokenCreate,
 } from "../generated/graphql";
 import { getCompleteMoney } from "../utils/moneyUtils";
