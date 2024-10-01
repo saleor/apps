@@ -15,10 +15,6 @@ import { getCompleteMoney } from "../utils/moneyUtils";
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
 describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
-  const staffCredentials = {
-    email: process.env.E2E_USER_NAME as string,
-    password: process.env.E2E_USER_PASSWORD as string,
-  };
 
   const CURRENCY = "USD";
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
