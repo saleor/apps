@@ -240,7 +240,8 @@ describe("App should calculate taxes on draft order when order promotion is appl
           tax: UNDISCOUNTE_TOTAL_TAX_PRICE,
           currency: CURRENCY,
         }),
-      );
+      )
+      .expectJson("data.orderLineUpdate.order.discounts[0].type", "ORDER_PROMOTION");
   });
 
   it("should complete draft order", async () => {

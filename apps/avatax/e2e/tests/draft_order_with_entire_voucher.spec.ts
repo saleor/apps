@@ -213,7 +213,8 @@ describe("App should calculate taxes on draft order with entire order voucher ap
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
           currency: CURRENCY,
         }),
-      );
+      )
+      .expectJson("data.draftOrderUpdate.order.discounts[0].type", "VOUCHER");
   });
   it("should complete draft order", async () => {
     await testCase

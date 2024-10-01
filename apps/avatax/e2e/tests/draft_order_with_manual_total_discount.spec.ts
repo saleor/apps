@@ -132,7 +132,6 @@ describe("App should calculate taxes for draft order with manual total discount 
         }),
       );
   });
-
   it("should update order's shipping method as staff user", async () => {
     await testCase
       .step("Update shipping method as staff user")
@@ -169,7 +168,6 @@ describe("App should calculate taxes for draft order with manual total discount 
         }),
       );
   });
-
   it("should add manual discount for total as staff user", async () => {
     await testCase
       .step("add manual discount to draft order")
@@ -206,7 +204,8 @@ describe("App should calculate taxes for draft order with manual total discount 
           tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT,
           currency: CURRENCY,
         }),
-      );
+      )
+      .expectJson("data.orderDiscountAdd.order.discounts[0].type", "MANUAL");
   });
   it("should complete draft order", async () => {
     await testCase
