@@ -8,14 +8,14 @@ import {
   DraftOrderComplete,
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
-  OrderDiscountAdd,
+  DraftOrderUpdateVoucher,
   StaffUserTokenCreate,
 } from "../generated/graphql";
 import { getCompleteMoney } from "../utils/moneyUtils";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18386
-describe("App should calculate taxes for draft order with manual total discount applied TC: AVATAX_22", () => {
-  const testCase = e2e("Product with tax class [pricesEnteredWithTax: True]");
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=18392
+describe("App should calculate taxes on draft order with entire order voucher applied TC: AVATAX_28", () => {
+  const testCase = e2e("Draft order with voucher entire order [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
@@ -23,25 +23,25 @@ describe("App should calculate taxes for draft order with manual total discount 
 
   const CURRENCY = "USD";
 
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 32.66;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 30;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 2.66;
 
-  const TOTAL_GROSS_SHIPPING_PRICE = 69.31;
-  const TOTAL_NET_SHIPPING_PRICE = 63.66;
-  const TOTAL_TAX_SHIPPING_PRICE = 5.65;
+  const TOTAL_GROSS_SHIPPING_PRICE = 75.46;
+  const TOTAL_NET_SHIPPING_PRICE = 69.31;
+  const TOTAL_TAX_SHIPPING_PRICE = 6.15;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 108.12;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 99.31;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 8.81;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 75.88;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 69.69;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 6.19;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_VOUCHER = 103.22;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_VOUCHER = 94.81;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_VOUCHER = 8.41;
 
-  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT = 62.38;
-  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 57.3;
-  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 5.08;
+  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_VOUCHER = 75.45;
+  const TOTAL_NET_SHIPPING_PRICE_AFTER_VOUCHER = 69.31;
+  const TOTAL_TAX_SHIPPING_PRICE_AFTER_VOUCHER = 6.14;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -68,7 +68,7 @@ describe("App should calculate taxes for draft order with manual total discount 
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithoutTax",
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -93,16 +93,16 @@ describe("App should calculate taxes for draft order with manual total discount 
       .withGraphQLQuery(CreateOrderLines)
       .withGraphQLVariables({
         orderId: "$S{OrderID}",
-        input: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
+        input: [{ quantity: 1, variantId: "$M{Product.Regular.variantId}" }],
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 10)
+      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 1)
       .expectJson(
         "data.orderLinesCreate.order.total.gross.amount",
-        TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
+        TOTAL_NET_PRICE_BEFORE_SHIPPING,
       );
   });
   it("should update order as staff user", async () => {
@@ -140,7 +140,7 @@ describe("App should calculate taxes for draft order with manual total discount 
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateShippingMethod)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax:ShippingMethod",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithoutTax:ShippingMethod",
         "@OVERRIDES@": {
           orderId: "$S{OrderID}",
         },
@@ -170,40 +170,47 @@ describe("App should calculate taxes for draft order with manual total discount 
       );
   });
 
-  it("should add manual discount for total as staff user", async () => {
+  it("should add voucher code to draft order", async () => {
     await testCase
-      .step("add manual discount to draft order")
+      .step("add voucher to draft order")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(OrderDiscountAdd)
+      .withGraphQLQuery(DraftOrderUpdateVoucher)
       .withGraphQLVariables({
-        orderId: "$S{OrderID}",
-        input: {
-          reason: "manual discount for client",
-          value: 10,
-          valueType: "PERCENTAGE",
+        "@DATA:TEMPLATE@": "DraftOrder:VoucherCode",
+        "@OVERRIDES@": {
+          orderId: "$S{OrderID}",
         },
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.orderDiscountAdd.order.id", "$S{OrderID}")
+      .expectJson("data.draftOrderUpdate.order.id", "$S{OrderID}")
       .expectJson(
-        "data.orderDiscountAdd.order.total",
+        "data.draftOrderUpdate.order.total",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
-          net: TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT,
+          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING_AFTER_VOUCHER,
+          net: TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_VOUCHER,
+          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_VOUCHER,
           currency: CURRENCY,
         }),
       )
       .expectJson(
-        "data.orderDiscountAdd.order.shippingPrice",
+        "data.draftOrderUpdate.order.shippingPrice",
         getCompleteMoney({
-          gross: TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT,
-          net: TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT,
-          tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT,
+          gross: TOTAL_GROSS_SHIPPING_PRICE_AFTER_VOUCHER,
+          net: TOTAL_NET_SHIPPING_PRICE_AFTER_VOUCHER,
+          tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_VOUCHER,
+          currency: CURRENCY,
+        }),
+      )
+      .expectJson(
+        "data.draftOrderUpdate.order.undiscountedTotal",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
+          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
           currency: CURRENCY,
         }),
       );

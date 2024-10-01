@@ -2,12 +2,21 @@
   "DraftOrder:PricesWithTax": {
     "channelID": "$M{Channel.PricesWithTax.id}"
   },
-  "DraftOrder:PricesWithTax:Address": {
+  "DraftOrder:Address": {
     "billingAddress": "$M{Address.NewYork}",
     "shippingAddress": "$M{Address.NewYork}",
     "userEmail": "$F{UserEmail}"
   },
   "DraftOrder:PricesWithTax:ShippingMethod": {
     "deliveryMethodId": "$M{Channel.PricesWithTax.deliveryMethodId}"
+  },
+  "DraftOrder:PricesWithoutTax": {
+    "channelID": "$M{Channel.USA.id}"
+  },
+  "DraftOrder:PricesWithoutTax:ShippingMethod": {
+    "deliveryMethodId": "$M{Channel.USA.deliveryMethodId}"
+  },
+  "DraftOrder:VoucherCode": {
+    "voucherCode": "$M{Voucher.Percentage.code}"
   }
 }

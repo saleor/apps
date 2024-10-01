@@ -104,7 +104,7 @@ describe("App should calculate taxes for draft order with product with tax class
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateAddress)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax:Address",
+        "@DATA:TEMPLATE@": "DraftOrder:Address",
         "@OVERRIDES@": {
           orderId: "$S{OrderID}",
         },
