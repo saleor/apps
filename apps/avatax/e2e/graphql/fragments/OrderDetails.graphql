@@ -33,4 +33,19 @@ fragment OrderDetailsFragment on Order {
       ...Money
     }
   }
+  lines {
+    id
+    quantity
+    totalPrice {
+      gross {
+        ...Money
+      }
+      net {
+        ...Money
+      }
+      tax {
+        ...Money
+      }
+    }
+  }
 }

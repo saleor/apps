@@ -1,0 +1,10 @@
+fragment Discounts on OrderDiscount {
+  name
+  reason
+  type
+  valueType
+  value
+  amount {
+    amount
+  }
+}

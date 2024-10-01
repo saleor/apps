@@ -8,36 +8,43 @@ import {
   DraftOrderComplete,
   DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
+  OrderLineUpdate,
   StaffUserTokenCreate,
 } from "../generated/graphql";
 import { getCompleteMoney, getMoney } from "../utils/moneyUtils";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=18388
-describe("App should calculate taxes on draft order with products on catalog promotion TC: AVATAX_24", () => {
-  const testCase = e2e(
-    "Draft order with products on catalog promotion [pricesEnteredWithTax: True]",
-  );
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=24175
+describe("App should calculate taxes on draft order when order promotion is applied TC: AVATAX_32", () => {
+  const testCase = e2e("Draft order with order promotion, [pricesEnteredWithTax: False]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
   };
 
   const CURRENCY = "USD";
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 328.22;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 301.46;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.76;
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 326.08;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 299.5;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.58;
 
-  const SHIPPING_GROSS_PRICE = 69.31;
-  const SHIPPING_NET_PRICE = 63.66;
-  const SHIPPING_TAX_PRICE = 5.65;
+  const SHIPPING_GROSS_PRICE = 75.46;
+  const SHIPPING_NET_PRICE = 69.31;
+  const SHIPPING_TAX_PRICE = 6.15;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 397.53;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 365.12;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 32.41;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 401.54;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 368.81;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 32.73;
 
-  const UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING = 414.81;
-  const UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING = 381;
-  const UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING = 33.81;
+  const PRODUCT_TOTAL_GROSS_PRICE_AFTER_PROMOTION = 489.12;
+  const PRODUCT_TOTAL_NET_PRICE_AFTER_PROMOTION = 449.25;
+  const PRODUCT_TOTAL_TAX_PRICE_AFTER_PROMOTION = 39.87;
+
+  const TOTAL_GROSS_PRICE_INCLUDING_ORDER_PROMOTION = 564.58;
+  const TOTAL_NET_PRICE_INCLUDING_ORDER_PROMOTION = 518.56;
+  const TOTAL_TAX_PRICE_INCLUDING_ORDER_PROMOTION = 46.02;
+
+  const UNDISCOUNTE_TOTAL_GROSS_PRICE = 727.62;
+  const UNDISCOUNTE_TOTAL_NET_PRICE = 668.31;
+  const UNDISCOUNTE_TOTAL_TAX_PRICE = 59.31;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -57,14 +64,14 @@ describe("App should calculate taxes on draft order with products on catalog pro
       .stores("StaffUserToken", "data.tokenCreate.token")
       .retry();
   });
-  it("creates order in channel pricesEnteredWithTax: True", async () => {
+  it("creates order in channel pricesEnteredWithTax: False", async () => {
     await testCase
       .step("Create order in channel")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithoutTax",
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -92,7 +99,7 @@ describe("App should calculate taxes on draft order with products on catalog pro
         input: [
           {
             quantity: 1,
-            variantId: "$M{Product.ProductOnCatalogPromotion.variantId}",
+            variantId: "$M{Product.ExpensiveTshirt.variantId}",
           },
         ],
       })
@@ -103,8 +110,9 @@ describe("App should calculate taxes on draft order with products on catalog pro
       .expectJson("data.orderLinesCreate.orderLines[0].quantity", 1)
       .expectJson(
         "data.orderLinesCreate.order.total.gross",
-        getMoney(TOTAL_GROSS_PRICE_BEFORE_SHIPPING, CURRENCY),
-      );
+        getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING, CURRENCY),
+      )
+      .stores("OrderLineId", "data.orderLinesCreate.orderLines[0].id");
   });
   it("should update order address", async () => {
     await testCase
@@ -172,9 +180,64 @@ describe("App should calculate taxes on draft order with products on catalog pro
       .expectJson(
         "data.orderUpdateShipping.order.undiscountedTotal",
         getCompleteMoney({
-          gross: UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-          net: UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
+          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
+        }),
+      );
+  });
+
+  it("should update order line", async () => {
+    await testCase
+      .step("Update order line")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(OrderLineUpdate)
+      .withGraphQLVariables({
+        lineId: "$S{OrderLineId}",
+        input: {
+          quantity: 2,
+        },
+      })
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .expectStatus(200)
+      .expectJson("data.orderLineUpdate.order.id", "$S{OrderID}")
+      .expectJson(
+        "data.orderLineUpdate.order.lines[0].totalPrice",
+        getCompleteMoney({
+          gross: PRODUCT_TOTAL_GROSS_PRICE_AFTER_PROMOTION,
+          net: PRODUCT_TOTAL_NET_PRICE_AFTER_PROMOTION,
+          tax: PRODUCT_TOTAL_TAX_PRICE_AFTER_PROMOTION,
+          currency: CURRENCY,
+        }),
+      )
+      .expectJson(
+        "data.orderLineUpdate.order.total",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_INCLUDING_ORDER_PROMOTION,
+          net: TOTAL_NET_PRICE_INCLUDING_ORDER_PROMOTION,
+          tax: TOTAL_TAX_PRICE_INCLUDING_ORDER_PROMOTION,
+          currency: CURRENCY,
+        }),
+      )
+      .expectJson(
+        "data.orderLineUpdate.order.shippingPrice",
+        getCompleteMoney({
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
+        }),
+      )
+      .expectJson(
+        "data.orderLineUpdate.order.undiscountedTotal",
+        getCompleteMoney({
+          gross: UNDISCOUNTE_TOTAL_GROSS_PRICE,
+          net: UNDISCOUNTE_TOTAL_NET_PRICE,
+          tax: UNDISCOUNTE_TOTAL_TAX_PRICE,
           currency: CURRENCY,
         }),
       );

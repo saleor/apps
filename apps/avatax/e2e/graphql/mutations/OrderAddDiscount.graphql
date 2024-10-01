@@ -5,6 +5,9 @@ mutation OrderDiscountAdd($orderId: ID!, $input: OrderDiscountCommonInput!) {
     }
     order {
       ...OrderDetailsFragment
+      discounts {
+        ...Discounts
+      }
     }
   }
 }

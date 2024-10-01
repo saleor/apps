@@ -15,7 +15,7 @@ import { getCompleteMoney } from "../utils/moneyUtils";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=18392
 describe("App should calculate taxes on draft order with entire order voucher applied TC: AVATAX_28", () => {
-  const testCase = e2e("Draft order with voucher entire order [pricesEnteredWithTax: True]");
+  const testCase = e2e("Draft order with voucher entire order [pricesEnteredWithTax: False]");
   const staffCredentials = {
     email: process.env.E2E_USER_NAME as string,
     password: process.env.E2E_USER_PASSWORD as string,
@@ -27,9 +27,9 @@ describe("App should calculate taxes on draft order with entire order voucher ap
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 30;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 2.66;
 
-  const TOTAL_GROSS_SHIPPING_PRICE = 75.46;
-  const TOTAL_NET_SHIPPING_PRICE = 69.31;
-  const TOTAL_TAX_SHIPPING_PRICE = 6.15;
+  const SHIPPING_GROSS_PRICE = 75.46;
+  const SHIPPING_NET_PRICE = 69.31;
+  const SHIPPING_TAX_PRICE = 6.15;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 108.12;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 99.31;
@@ -39,9 +39,9 @@ describe("App should calculate taxes on draft order with entire order voucher ap
   const TOTAL_NET_PRICE_AFTER_SHIPPING_AFTER_VOUCHER = 94.81;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_VOUCHER = 8.41;
 
-  const TOTAL_GROSS_SHIPPING_PRICE_AFTER_VOUCHER = 75.45;
-  const TOTAL_NET_SHIPPING_PRICE_AFTER_VOUCHER = 69.31;
-  const TOTAL_TAX_SHIPPING_PRICE_AFTER_VOUCHER = 6.14;
+  const SHIPPING_GROSS_PRICE_AFTER_VOUCHER = 75.45;
+  const SHIPPING_NET_PRICE_AFTER_VOUCHER = 69.31;
+  const SHIPPING_TAX_PRICE_AFTER_VOUCHER = 6.14;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -61,7 +61,7 @@ describe("App should calculate taxes on draft order with entire order voucher ap
       .stores("StaffUserToken", "data.tokenCreate.token")
       .retry();
   });
-  it("creates order in channel pricesEnteredWithTax: True", async () => {
+  it("creates order in channel pricesEnteredWithTax: False", async () => {
     await testCase
       .step("Create order in channel")
       .spec()
@@ -162,9 +162,9 @@ describe("App should calculate taxes on draft order with entire order voucher ap
       .expectJson(
         "data.orderUpdateShipping.order.shippingPrice",
         getCompleteMoney({
-          gross: TOTAL_GROSS_SHIPPING_PRICE,
-          net: TOTAL_NET_SHIPPING_PRICE,
-          tax: TOTAL_TAX_SHIPPING_PRICE,
+          gross: SHIPPING_GROSS_PRICE,
+          net: SHIPPING_NET_PRICE,
+          tax: SHIPPING_TAX_PRICE,
           currency: CURRENCY,
         }),
       );
@@ -199,9 +199,9 @@ describe("App should calculate taxes on draft order with entire order voucher ap
       .expectJson(
         "data.draftOrderUpdate.order.shippingPrice",
         getCompleteMoney({
-          gross: TOTAL_GROSS_SHIPPING_PRICE_AFTER_VOUCHER,
-          net: TOTAL_NET_SHIPPING_PRICE_AFTER_VOUCHER,
-          tax: TOTAL_TAX_SHIPPING_PRICE_AFTER_VOUCHER,
+          gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
+          net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
+          tax: SHIPPING_TAX_PRICE_AFTER_VOUCHER,
           currency: CURRENCY,
         }),
       )

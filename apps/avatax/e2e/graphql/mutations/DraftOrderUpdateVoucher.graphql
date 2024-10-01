@@ -6,15 +6,8 @@ mutation DraftOrderUpdateVoucher($orderId: ID!, $voucherCode: String) {
     order {
       ...OrderDetailsFragment
       voucherCode
-      discounts{
-        name
-        reason
-        type
-        valueType
-        value
-        amount{
-          amount
-        }
+      discounts {
+        ...Discounts
       }
     }
   }
