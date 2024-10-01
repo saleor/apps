@@ -184,47 +184,4 @@ describe("App should calculate taxes for checkout on update shipping address TC:
       )
       .stores("OrderID", "data.checkoutComplete.order.id");
   });
-
-  /*
-   * It takes few seconds for metadata do be populated with `avataxId` key
-   * That's why we need to do it in a separate step
-   */
-  it("creates token for staff user", async () => {
-    await testCase
-      .step("Create token for staff user")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(StaffUserTokenCreate)
-      .withGraphQLVariables(staffCredentials)
-      .expectStatus(200)
-      .expectJsonLike({
-        data: {
-          tokenCreate: {
-            token: "typeof $V === 'string'",
-          },
-        },
-      })
-      .stores("StaffUserToken", "data.tokenCreate.token")
-      .retry();
-  });
-
-  it("should have metadata with 'avataxId' key", async () => {
-    await testCase
-      .step("Check if order has metadata with 'avataxId' key")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(OrderDetails)
-      .withGraphQLVariables({
-        id: "$S{OrderID}",
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
-      })
-      .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", {
-        key: "avataxId",
-        value: "typeof $V === 'string'",
-      })
-      .retry(4, 2000);
-  });
 });

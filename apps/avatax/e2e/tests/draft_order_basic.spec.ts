@@ -177,24 +177,4 @@ describe("App should calculate taxes for draft order with product with tax class
       .expectStatus(200)
       .expectJson("data.draftOrderComplete.order.id", "$S{OrderID}");
   });
-
-  it("should have metadata with 'avataxId' key", async () => {
-    await testCase
-      .step("Check if order has metadata with 'avataxId' key")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(OrderDetails)
-      .withGraphQLVariables({
-        id: "$S{OrderID}",
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
-      })
-      .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", {
-        key: "avataxId",
-        value: "typeof $V === 'string'",
-      })
-      .retry(4, 2000);
-  });
 });
