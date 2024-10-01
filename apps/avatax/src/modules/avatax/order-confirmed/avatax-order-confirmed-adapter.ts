@@ -4,10 +4,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { loggerContext } from "@/logger-context";
 
 import { createLogger } from "../../../logger";
-import {
-  DeprecatedOrderConfirmedSubscriptionFragment,
-  SaleorOrderConfirmedEvent,
-} from "../../saleor";
+import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
@@ -19,12 +16,9 @@ import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-pay
 import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
 type AvataxOrderConfirmedPayload = {
-  /**
-   * @deprecated use `SaleorOrderConfirmedEvent` instead
-   */
-  order: DeprecatedOrderConfirmedSubscriptionFragment;
   confirmedOrderEvent: SaleorOrderConfirmedEvent;
 };
+
 type AvataxOrderConfirmedResponse = CreateOrderResponse;
 
 export class AvataxOrderConfirmedAdapter
@@ -53,7 +47,6 @@ export class AvataxOrderConfirmedAdapter
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
     const target = await this.avataxOrderConfirmedPayloadService.getPayload(
-      payload.order,
       payload.confirmedOrderEvent,
       config,
       authData,

@@ -4,7 +4,7 @@ import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-t
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 
-import { DeprecatedOrderConfirmedSubscriptionFragment, SaleorOrderConfirmedEvent } from "../saleor";
+import { SaleorOrderConfirmedEvent } from "../saleor";
 import { CancelOrderPayload } from "../taxes/tax-provider-webhook";
 import { CalculateTaxesPayload } from "../webhooks/payloads/calculate-taxes-payload";
 import { AvataxConfig } from "./avatax-connection-schema";
@@ -43,14 +43,13 @@ export class AvataxWebhookService {
   }
 
   async confirmOrder(
-    order: DeprecatedOrderConfirmedSubscriptionFragment,
     confirmedOrderEvent: SaleorOrderConfirmedEvent,
     avataxConfig: AvataxConfig,
     authData: AuthData,
     discountStrategy: PriceReductionDiscountsStrategy,
   ) {
     const response = await this.avataxOrderConfirmedAdapter.send(
-      { order, confirmedOrderEvent },
+      { confirmedOrderEvent },
       avataxConfig,
       authData,
       discountStrategy,

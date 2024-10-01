@@ -135,4 +135,44 @@ describe("SaleorOrderConfirmedEvent", () => {
       expect(event.getShippingAmount()).toEqual(payload.order.shippingPrice.net.amount);
     });
   });
+
+  describe("resolveUserEmailOrEmpty", () => {
+    it("Returns order.user.email if exists", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+      payload.order.user = {
+        email: "a@b.com",
+        id: "1",
+      };
+
+      payload.order.userEmail = "another@another.com";
+
+      const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
+
+      expect(result._unsafeUnwrap().resolveUserEmailOrEmpty()).toBe("a@b.com");
+    });
+
+    it("Returns order.userEmail.email if exists and user.email doesnt", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+      payload.order.user = undefined;
+
+      payload.order.userEmail = "another@another.com";
+
+      const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
+
+      expect(result._unsafeUnwrap().resolveUserEmailOrEmpty()).toBe("another@another.com");
+    });
+
+    it("Returns empty string if neither user.email or userEmail exist", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+      payload.order.user = undefined;
+      payload.order.userEmail = undefined;
+
+      const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
+
+      expect(result._unsafeUnwrap().resolveUserEmailOrEmpty()).toBe("");
+    });
+  });
 });
