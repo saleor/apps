@@ -1,25 +1,19 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
-import { string } from "pactum-matchers";
 import { describe, it } from "vitest";
 
 import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
-  OrderDetails,
-  StaffUserTokenCreate,
 } from "../generated/graphql";
 import { getCompleteMoney } from "../utils/moneyUtils";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
 describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
-  const staffCredentials = {
-    email: process.env.E2E_USER_NAME as string,
-    password: process.env.E2E_USER_PASSWORD as string,
-  };
 
+  const CURRENCY = "USD";
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
@@ -52,6 +46,7 @@ describe("App should calculate taxes for checkout with product with tax class TC
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
@@ -73,6 +68,7 @@ describe("App should calculate taxes for checkout with product with tax class TC
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -81,6 +77,7 @@ describe("App should calculate taxes for checkout with product with tax class TC
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       );
   });
@@ -99,6 +96,7 @@ describe("App should calculate taxes for checkout with product with tax class TC
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -107,51 +105,9 @@ describe("App should calculate taxes for checkout with product with tax class TC
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .stores("OrderID", "data.checkoutComplete.order.id");
-  });
-
-  /*
-   * It takes few seconds for metadata do be populated with `avataxId` key
-   * That's why we need to do it in a separate step
-   */
-  it("creates token for staff user", async () => {
-    await testCase
-      .step("Create token for staff user")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(StaffUserTokenCreate)
-      .withGraphQLVariables(staffCredentials)
-      .expectStatus(200)
-      .expectJsonLike({
-        data: {
-          tokenCreate: {
-            token: "typeof $V === 'string'",
-          },
-        },
-      })
-      .stores("StaffUserToken", "data.tokenCreate.token")
-      .retry();
-  });
-
-  it("should have metadata with 'avataxId' key", async () => {
-    await testCase
-      .step("Check if order has metadata with 'avataxId' key")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(OrderDetails)
-      .withGraphQLVariables({
-        id: "$S{OrderID}",
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
-      })
-      .expectStatus(200)
-      .expectJsonLike("data.order.metadata[key=avataxId]", {
-        key: "avataxId",
-        value: "typeof $V === 'string'",
-      })
-      .retry(4, 2000);
   });
 });

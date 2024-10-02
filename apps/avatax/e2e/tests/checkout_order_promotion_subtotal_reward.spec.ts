@@ -57,6 +57,7 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id")
@@ -79,6 +80,7 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -87,6 +89,7 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .retry();
@@ -107,11 +110,12 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: PRODUCT_GROSS_PRICE_AFTER_PROMOTION,
           net: PRODUCT_NET_PRICE_AFTER_PROMOTION,
           tax: PRODUCT_TAX_PRICE_AFTER_PROMOTION,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
         "data.checkoutLinesUpdate.checkout.lines[0].undiscountedUnitPrice",
-        getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING),
+        getMoney(TOTAL_NET_PRICE_BEFORE_SHIPPING, CURRENCY),
       )
       .expectJson(
         "data.checkoutLinesUpdate.checkout.shippingPrice",
@@ -119,6 +123,7 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -127,6 +132,7 @@ describe("App should calculate taxes for checkout with order promotion with subt
           gross: TOTAL_GROSS_PRICE_INCLUDING_ORDER_PROMOTION,
           net: TOTAL_NET_PRICE_INCLUDING_ORDER_PROMOTION,
           tax: TOTAL_TAX_PRICE_INCLUDING_ORDER_PROMOTION,
+          currency: CURRENCY,
         }),
       )
       .retry();
