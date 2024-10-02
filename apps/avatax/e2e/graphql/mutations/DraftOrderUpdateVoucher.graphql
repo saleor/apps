@@ -1,0 +1,14 @@
+mutation DraftOrderUpdateVoucher($orderId: ID!, $voucherCode: String) {
+  draftOrderUpdate(id: $orderId, input: {voucherCode: $voucherCode}) {
+    errors {
+      ...OrderError
+    }
+    order {
+      ...OrderDetailsFragment
+      voucherCode
+      discounts {
+        ...Discounts
+      }
+    }
+  }
+}

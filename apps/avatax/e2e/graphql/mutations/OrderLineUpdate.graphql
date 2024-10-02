@@ -1,0 +1,10 @@
+mutation OrderLineUpdate($lineId: ID!, $input: OrderLineInput!) {
+  orderLineUpdate(id: $lineId, input: $input) {
+    order {
+      ...OrderDetailsFragment
+      discounts {
+        ...Discounts
+      }
+    }
+  }
+}

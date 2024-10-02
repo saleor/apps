@@ -16,6 +16,7 @@ describe("App should calculate taxes for checkout with free shipping voucher app
     "Product with tax class [pricesEnteredWithTax: False], voucher [type: SHIPPING, discountValueType: PERCENTAGE]",
   );
 
+  const CURRENCY = "USD";
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 16.33;
@@ -57,6 +58,7 @@ describe("App should calculate taxes for checkout with free shipping voucher app
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .retry()
@@ -79,6 +81,7 @@ describe("App should calculate taxes for checkout with free shipping voucher app
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -87,6 +90,7 @@ describe("App should calculate taxes for checkout with free shipping voucher app
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .retry();
@@ -105,13 +109,14 @@ describe("App should calculate taxes for checkout with free shipping voucher app
         "data.checkoutAddPromoCode.checkout.discountName",
         "$M{Voucher.FreeShipping.name}",
       )
-      .expectJson("data.checkoutAddPromoCode.checkout.discount", getMoney(VOUCHER_AMOUNT))
+      .expectJson("data.checkoutAddPromoCode.checkout.discount", getMoney(VOUCHER_AMOUNT, CURRENCY))
       .expectJson(
         "data.checkoutAddPromoCode.checkout.shippingPrice",
         getCompleteMoney({
           gross: SHIPPING_GROSS_PRICE_AFTER_VOUCHER,
           net: SHIPPING_NET_PRICE_AFTER_VOUCHER,
           tax: SHIPPING_TAX_PRICE_AFTER_VOUCHER,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -120,6 +125,7 @@ describe("App should calculate taxes for checkout with free shipping voucher app
           gross: TOTAL_GROSS_PRICE_AFTER_VOUCHER,
           net: TOTAL_NET_PRICE_AFTER_VOUCHER,
           tax: TOTAL_TAX_PRICE_AFTER_VOUCHER,
+          currency: CURRENCY,
         }),
       )
       .retry();
