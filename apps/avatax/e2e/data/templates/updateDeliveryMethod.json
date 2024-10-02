@@ -2,5 +2,9 @@
   "UpdateDeliveryMethod:USA": {
     "deliveryMethodId": "$M{Channel.USA.deliveryMethodId}",
     "checkoutId": "$S{CheckoutId}"
+  },
+  "UpdateDeliveryMethod:PricesWithTax": {
+    "deliveryMethodId": "$M{Channel.PricesWithTax.deliveryMethodId}",
+    "checkoutId": "$S{CheckoutId}"
   }
 }
