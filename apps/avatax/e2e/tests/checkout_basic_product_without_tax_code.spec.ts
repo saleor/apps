@@ -13,6 +13,7 @@ import { getCompleteMoney, getMoney } from "../utils/moneyUtils";
 describe("App should calculate taxes for checkout with product without tax class TC: AVATAX_1", () => {
   const testCase = e2e("Product without tax class [pricesEnteredWithTax: False]");
 
+  const CURRENCY = "USD";
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 300;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.63;
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 326.63;
@@ -41,6 +42,7 @@ describe("App should calculate taxes for checkout with product without tax class
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .retry()
@@ -63,6 +65,7 @@ describe("App should calculate taxes for checkout with product without tax class
           gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
           tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          currency: CURRENCY,
         }),
       )
       .expectJson(
@@ -71,6 +74,7 @@ describe("App should calculate taxes for checkout with product without tax class
           gross: SHIPPING_GROSS_PRICE,
           net: SHIPPING_NET_PRICE,
           tax: SHIPPING_TAX_PRICE,
+          currency: CURRENCY,
         }),
       )
       .retry();
