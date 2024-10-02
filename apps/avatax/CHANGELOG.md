@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.10.4
+
+### Patch Changes
+
+- f4250c1a: Fixed broken taxes resolving for billing address
+
 ## 1.10.3
 
 ### Patch Changes
