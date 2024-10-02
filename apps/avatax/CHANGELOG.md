@@ -1,5 +1,15 @@
 # app-avatax
 
+## 1.10.3
+
+### Patch Changes
+
+- 630c68ad: Refactored so called "webhook service" class. Now each webhook creates it's own dependencies. It's a part of larger refactor that aims to simplify app's architecture. No functional change is expected.
+- 3896e777: Remove deprecated Saleor version checking on AvaTax register endpoint. Currently Saleor checks if app can be installed for given env on manifest fetching.
+- 186bad79: Added TransactionAlreadyCancelled support for AvaTax app while canceling Saleor order.
+- Updated dependencies [f1025fae]
+  - @saleor/apps-otel@1.3.3
+
 ## 1.10.2
 
 ### Patch Changes
