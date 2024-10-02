@@ -120,5 +120,5 @@ export class SaleorOrderConfirmedEvent {
 
   getOrderShippingAddress = () => this.rawPayload.order.shippingAddress;
 
-  getOrderBillingAddress = () => this.rawPayload.order.shippingAddress;
+  getOrderBillingAddress = () => this.rawPayload.order.billingAddress;
 }
