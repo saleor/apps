@@ -1,0 +1,7 @@
+mutation OrderLineDelete($lineId: ID!) {
+  orderLineDelete(id: $lineId) {
+    order {
+      ...OrderDetailsFragment
+    }
+  }
+}
