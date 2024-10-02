@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.3.3
+
+### Patch Changes
+
+- f1025fae: Pass git commit sha as a version to Node SDK. This ensures that we can have version support for our monitoring service.
+
 ## 1.3.2
 
 ### Patch Changes
