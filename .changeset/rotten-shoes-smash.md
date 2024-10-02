@@ -2,4 +2,4 @@
 
 ---
 
-Data importer is no longer supported and available for installation.
+Data importer app was removed from the repository, this means it will be no longer deployed.
