@@ -10,11 +10,11 @@ import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
+import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
-import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
-import { DynamoDbLogWriter, ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
@@ -32,6 +32,10 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const useCase = new CalculateTaxesUseCase({
   configExtractor: new AppConfigExtractor(),
   logWriterFactory: new LogWriterFactory(),
+  payloadLinesTransformer: new AvataxCalculateTaxesPayloadLinesTransformer(
+    new AvataxCalculateTaxesTaxCodeMatcher(),
+  ),
+  calculateTaxesResponseTransformer: new AvataxCalculateTaxesResponseTransformer(),
 });
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {

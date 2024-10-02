@@ -1,12 +1,25 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AvataxClient } from "@/modules/avatax/avatax-client";
+import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
+import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
+import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
+import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
+import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
+import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
+import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
+import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 
 import { AppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -37,6 +50,52 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const discountStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
+
+const createAvataxCalculateTaxesAdapter = (avaTaxClient: AvataxClient) => {
+  const avataxCalculateTaxesResponseTransformer = new AvataxCalculateTaxesResponseTransformer();
+
+  return new AvataxCalculateTaxesAdapter(avaTaxClient, avataxCalculateTaxesResponseTransformer);
+};
+
+const createAvataxCalculateTaxesPayloadTransformer = (
+  entityTypeMatcher: AvataxEntityTypeMatcher,
+) => {
+  const avataxCalculateTaxesTaxCodeMatcher = new AvataxCalculateTaxesTaxCodeMatcher();
+  const avataxCalculateTaxesPayloadLinesTransformer =
+    new AvataxCalculateTaxesPayloadLinesTransformer(avataxCalculateTaxesTaxCodeMatcher);
+
+  return new AvataxCalculateTaxesPayloadTransformer(
+    avataxCalculateTaxesPayloadLinesTransformer,
+    entityTypeMatcher,
+  );
+};
+
+/**
+ * @deprecated use CalculateTaxesUseCase instead, see checkout-calculate-taxes handler
+ */
+async function calculateTaxes(
+  payload: CalculateTaxesPayload,
+  avataxConfig: AvataxConfig,
+  authData: AuthData,
+  discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
+) {
+  const avaTaxSdk = new AvataxSdkClientFactory().createClient(avataxConfig);
+  const avaTaxClient = new AvataxClient(avaTaxSdk);
+  const calculateTaxesPayloadTransformer = createAvataxCalculateTaxesPayloadTransformer(
+    new AvataxEntityTypeMatcher(avaTaxClient),
+  );
+  const calculateTaxesAdapter = createAvataxCalculateTaxesAdapter(avaTaxClient);
+  const payloadService = new AvataxCalculateTaxesPayloadService(
+    AvataxTaxCodeMatchesService.createFromAuthData(authData),
+    calculateTaxesPayloadTransformer,
+  );
+
+  const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
+
+  const response = await calculateTaxesAdapter.send(avataxModel);
+
+  return response;
+}
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   const logWriter = logsWriterFactory.createWriter(ctx.authData);
@@ -123,100 +182,48 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       });
     }
 
-    const AvataxWebhookServiceFactory = await import(
-      "../../../modules/taxes/avatax-webhook-service-factory"
-    ).then((m) => m.AvataxWebhookServiceFactory);
+    const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
-    const avataxWebhookServiceResult = AvataxWebhookServiceFactory.createFromConfig(
-      config.value,
-      channelSlug,
-    );
-
-    if (avataxWebhookServiceResult.isOk()) {
-      const { taxProvider } = avataxWebhookServiceResult.value;
-      const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
-
-      if (providerConfig.isErr()) {
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Taxes not calculated. App faced problem with configuration.",
-          checkoutOrOrderId: payload.taxBase.sourceObject.id,
-          channelId: payload.taxBase.channel.slug,
-          checkoutOrOrder: "order",
-        })
-          .mapErr(captureException)
-          .map(logWriter.writeLog);
-
-        return res.status(400).json({
-          message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
-        });
-      }
-
-      const calculatedTaxes = await taxProvider.calculateTaxes(
-        payload,
-        providerConfig.value.avataxConfig.config,
-        ctx.authData,
-        discountStrategy,
-      );
-
-      // eslint-disable-next-line @saleor/saleor-app/logger-leak
-      logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
-
+    if (providerConfig.isErr()) {
       ClientLogStoreRequest.create({
-        level: "info",
-        message: "Taxes calculated",
+        level: "error",
+        message: "Taxes not calculated. App faced problem with configuration.",
         checkoutOrOrderId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.slug,
         checkoutOrOrder: "order",
-        attributes: {
-          calculatedTaxes: calculatedTaxes,
-        },
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
 
-      return res.status(200).json(ctx.buildResponse(calculatedTaxes));
-    } else if (avataxWebhookServiceResult.isErr()) {
-      const err = avataxWebhookServiceResult.error;
-
-      logger.warn(`Error in taxes calculation occurred: ${err.name} ${err.message}`, {
-        error: err,
+      return res.status(400).json({
+        message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
       });
-
-      switch (err["constructor"]) {
-        case AvataxWebhookServiceFactory.BrokenConfigurationError: {
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: "Taxes not calculated. App faced problem with configuration.",
-            checkoutOrOrderId: payload.taxBase.sourceObject.id,
-            channelId: payload.taxBase.channel.slug,
-            checkoutOrOrder: "order",
-          })
-            .mapErr(captureException)
-            .map(logWriter.writeLog);
-
-          return res.status(400).json({
-            message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
-          });
-        }
-        default: {
-          Sentry.captureException(avataxWebhookServiceResult.error);
-          logger.error("Unhandled error", { error: err });
-
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: "Taxes not calculated. Unknown error.",
-            checkoutOrOrderId: payload.taxBase.sourceObject.id,
-            channelId: payload.taxBase.channel.slug,
-            checkoutOrOrder: "order",
-          })
-            .mapErr(captureException)
-            .map(logWriter.writeLog);
-
-          return res.status(500).json({ message: "Unhandled error" });
-        }
-      }
     }
+
+    const calculatedTaxes = await calculateTaxes(
+      payload,
+      providerConfig.value.avataxConfig.config,
+      ctx.authData,
+      discountStrategy,
+    );
+
+    // eslint-disable-next-line @saleor/saleor-app/logger-leak
+    logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
+
+    ClientLogStoreRequest.create({
+      level: "info",
+      message: "Taxes calculated",
+      checkoutOrOrderId: payload.taxBase.sourceObject.id,
+      channelId: payload.taxBase.channel.slug,
+      checkoutOrOrder: "order",
+      attributes: {
+        calculatedTaxes: calculatedTaxes,
+      },
+    })
+      .mapErr(captureException)
+      .map(logWriter.writeLog);
+
+    return res.status(200).json(ctx.buildResponse(calculatedTaxes));
   } catch (error) {
     if (error instanceof AvataxGetTaxError) {
       logger.warn(
