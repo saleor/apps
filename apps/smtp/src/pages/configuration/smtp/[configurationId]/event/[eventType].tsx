@@ -1,8 +1,9 @@
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Box, Text, WarningIcon } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { BasicLayout } from "../../../../../components/basic-layout";
 import { appUrls } from "../../../../../modules/app-configuration/urls";
@@ -43,6 +44,11 @@ const NotFoundView = () => {
 const EditSmtpEventPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
   const router = useRouter();
+  const [showTemplateSizeError, setShowTemplateSizeError] = useState(false);
+
+  const handleShowTemplateSizeError = () => {
+    setShowTemplateSizeError(true);
+  };
 
   const configurationId = router.query.configurationId as string;
   const eventTypeFromQuery = router.query.eventType as string | undefined;
@@ -103,7 +109,30 @@ const EditSmtpEventPage: NextPage = () => {
           </TextLink>{" "}
           is supported
         </Text>
-        <EventForm configuration={configuration} eventType={eventType} />
+
+        {showTemplateSizeError && (
+          <Box
+            display="flex"
+            alignItems="center"
+            backgroundColor="warning1"
+            padding={3}
+            gap={1}
+            borderRadius={3}
+            marginTop={1}
+            marginBottom={1}
+          >
+            <WarningIcon size="medium" color="warning1" />
+            <Text size={3}>
+              You template exceeded max template size, reduce your markup to avoid issues.
+            </Text>
+          </Box>
+        )}
+
+        <EventForm
+          configuration={configuration}
+          eventType={eventType}
+          onTemplateSizeValidationError={handleShowTemplateSizeError}
+        />
       </Box>
     </BasicLayout>
   );
