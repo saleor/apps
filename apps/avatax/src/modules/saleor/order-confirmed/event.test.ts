@@ -50,14 +50,14 @@ describe("SaleorOrderConfirmedEvent", () => {
   });
 
   describe("isStrategyFlatRates method", () => {
-    it("should return false if order has tax calculation startegy set to TAX_APP", () => {
+    it("should return false if order has tax calculation strategy set to TAX_APP", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
       expect(event.isStrategyFlatRates()).toBe(false);
     });
 
-    it("should return true if order has tax calculation startegy set to FLAT_RATES", () => {
+    it("should return true if order has tax calculation strategy set to FLAT_RATES", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
@@ -173,6 +173,42 @@ describe("SaleorOrderConfirmedEvent", () => {
       const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
       expect(result._unsafeUnwrap().resolveUserEmailOrEmpty()).toBe("");
+    });
+  });
+
+  describe("Resolving addresses", () => {
+    const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+
+    payload.order.shippingAddress = {
+      streetAddress2: "streetAddress2-shipping",
+      city: "city-shipping",
+      postalCode: "postalCode-shipping",
+      country: {
+        code: "US",
+      },
+      countryArea: "countryArea-shipping",
+      streetAddress1: "streetAddress1-shipping",
+    };
+
+    payload.order.billingAddress = {
+      streetAddress2: "streetAddress2-billing",
+      city: "city-billing",
+      postalCode: "postalCode-billing",
+      country: {
+        code: "US",
+      },
+      countryArea: "countryArea-billing",
+      streetAddress1: "streetAddress1-billing",
+    };
+
+    const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
+
+    it("Returns shipping address", () => {
+      expect(event.getOrderShippingAddress()).toEqual(payload.order.shippingAddress);
+    });
+
+    it("Returns billing address", () => {
+      expect(event.getOrderBillingAddress()).toEqual(payload.order.billingAddress);
     });
   });
 });
