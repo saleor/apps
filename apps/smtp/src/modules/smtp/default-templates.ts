@@ -1,5 +1,3 @@
-import { minify } from "htmlfy";
-
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 
 const addressSection = `<mj-section>
@@ -350,20 +348,20 @@ const defaultOrderFulfillmentUpdatedMjmlTemplate = `<mjml>
 </mjml>`;
 
 export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
-  ACCOUNT_CHANGE_EMAIL_CONFIRM: minify(defaultAccountChangeEmailConfirmationMjmlTemplate),
-  ACCOUNT_CHANGE_EMAIL_REQUEST: minify(defaultAccountChangeEmailRequestMjmlTemplate),
-  ACCOUNT_CONFIRMATION: minify(defaultAccountConfirmationMjmlTemplate),
-  ACCOUNT_DELETE: minify(defaultAccountDeleteMjmlTemplate),
-  ACCOUNT_PASSWORD_RESET: minify(defaultAccountPasswordResetMjmlTemplate),
-  GIFT_CARD_SENT: minify(defaultGiftCardSentMjmlTemplate),
-  INVOICE_SENT: minify(defaultInvoiceSentMjmlTemplate),
-  ORDER_CANCELLED: minify(defaultOrderCancelledMjmlTemplate),
-  ORDER_CONFIRMED: minify(defaultOrderConfirmedMjmlTemplate),
-  ORDER_CREATED: minify(defaultOrderCreatedMjmlTemplate),
-  ORDER_FULFILLED: minify(defaultOrderFulfilledMjmlTemplate),
-  ORDER_FULFILLMENT_UPDATE: minify(defaultOrderFulfillmentUpdatedMjmlTemplate),
-  ORDER_FULLY_PAID: minify(defaultOrderFullyPaidMjmlTemplate),
-  ORDER_REFUNDED: minify(defaultOrderRefundedMjmlTemplate),
+  ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
+  ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
+  ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
+  ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
+  ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
+  GIFT_CARD_SENT: defaultGiftCardSentMjmlTemplate,
+  INVOICE_SENT: defaultInvoiceSentMjmlTemplate,
+  ORDER_CANCELLED: defaultOrderCancelledMjmlTemplate,
+  ORDER_CONFIRMED: defaultOrderConfirmedMjmlTemplate,
+  ORDER_CREATED: defaultOrderCreatedMjmlTemplate,
+  ORDER_FULFILLED: defaultOrderFulfilledMjmlTemplate,
+  ORDER_FULFILLMENT_UPDATE: defaultOrderFulfillmentUpdatedMjmlTemplate,
+  ORDER_FULLY_PAID: defaultOrderFullyPaidMjmlTemplate,
+  ORDER_REFUNDED: defaultOrderRefundedMjmlTemplate,
 };
 
 export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
