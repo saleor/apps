@@ -1,7 +1,8 @@
-mutation CreateDraftOrder($channelID: ID!) {
-  draftOrderCreate(input: { channelId: $channelID }) {
+mutation CreateDraftOrder($input: DraftOrderCreateInput!) {
+  draftOrderCreate(input: $input) {
     order {
       id
+      ...OrderDetailsFragment
     }
   }
 }
