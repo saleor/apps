@@ -1,5 +1,6 @@
 import { Page, test } from "@playwright/test";
 import { AppManifest } from "@saleor/app-sdk/types";
+
 import { assertAppAvailable } from "./assertions/assert-app-available";
 import { installTheApp } from "./operations/install-app";
 import { logInIntoDashboard } from "./operations/log-in-to-dashboard";
@@ -18,7 +19,6 @@ const apps: string[] = [
   "klaviyo",
   "slack",
   "invoices",
-  "data-importer",
 ].reduce<Array<string>>((urls, appSegment) => {
   urls.push(`https://${appSegment}.saleor.app`);
   urls.push(`https://${appSegment}.staging.saleor.app`);

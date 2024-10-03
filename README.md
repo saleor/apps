@@ -47,7 +47,6 @@ In the `apps` folder, you will find the following applications:
 
 - [avatax](./apps/avatax) - calculates dynamic taxes via AvaTax API
 - [cms](./apps/cms-v2) - exports products from Saleor to CMS.
-- [data-importer](./apps/data-importer) - import data from CSV to Saleor.
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
 - [products-feed](./apps/products-feed) - generate products feed XML
 - [search](./apps/search) - connect Saleor with search engines.
