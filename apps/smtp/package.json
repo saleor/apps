@@ -52,6 +52,7 @@
     "handlebars": "^4.7.7",
     "handlebars-helpers": "0.10.0",
     "html-to-text": "^9.0.3",
+    "htmlfy": "0.3.0",
     "jsdom": "^20.0.3",
     "mjml": "4.15.3",
     "modern-errors": "7.0.1",
