@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { prettify } from "htmlfy";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDebounce } from "usehooks-ts";
@@ -14,6 +13,7 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { TemplateStringFormater } from "../services/template-string-formater";
 import { CodeEditor } from "./code-editor";
 import { MjmlPreview } from "./mjml-preview";
 
@@ -23,6 +23,8 @@ interface EventFormProps {
   configuration: SmtpConfiguration;
   eventType: MessageEventTypes;
 }
+
+const templateStringFormater = new TemplateStringFormater();
 
 export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
@@ -35,6 +37,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     defaultValues: {
       id: configuration.id,
       ...eventConfiguration,
+      template: templateStringFormater.format(eventConfiguration.template),
     },
     resolver: zodResolver(smtpUpdateEventSchema),
   });
@@ -103,6 +106,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
       onSubmit={handleSubmit((data, event) => {
         mutate({
           ...data,
+          template: templateStringFormater.compress(data.template),
         });
       })}
     >
@@ -134,7 +138,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
                 return (
                   <CodeEditor
                     initialTemplate={value}
-                    value={prettify(value)}
+                    value={value}
                     onChange={onChange}
                     language="xml"
                   />
