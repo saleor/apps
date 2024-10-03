@@ -1,4 +1,3 @@
-"App: Data Importer": "apps/data-importer/**/*"
 "App: Klaviyo": "apps/klaviyo/**/*"
 "App: Product Feed": "apps/products-feed/**/*"
 "App: Search": "apps/search/**/*"
