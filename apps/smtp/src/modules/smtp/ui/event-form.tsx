@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
+import { prettify } from "htmlfy";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDebounce } from "usehooks-ts";
@@ -133,7 +134,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
                 return (
                   <CodeEditor
                     initialTemplate={value}
-                    value={value}
+                    value={prettify(value)}
                     onChange={onChange}
                     language="xml"
                   />
