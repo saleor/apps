@@ -178,7 +178,20 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         );
       }
 
-      return okAsync(configuration);
+      return okAsync({
+        ...configuration,
+        events: configuration.events.map((event) => {
+          const decompressTemplateResult = this.templateStringCompressor.decompress(event.template);
+          const decompressTemplate = decompressTemplateResult.isOk()
+            ? decompressTemplateResult.value
+            : event.template;
+
+          return {
+            ...event,
+            template: decompressTemplate,
+          };
+        }),
+      });
     });
   }
 
@@ -281,11 +294,8 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         );
       }
 
-      const formattedTemplate = this.templateStringCompressor.decompress(event.template);
-
       return okAsync({
         ...event,
-        template: formattedTemplate.isOk() ? formattedTemplate.value : event.template,
       });
     });
   }
