@@ -1,9 +1,12 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { ok } from "neverthrow";
 import { Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { TemplateStringValidator } from "../smtp/services/template-string-validator";
 import * as statusesExports from "./get-webhook-statuses-from-configurations";
 import { syncWebhookStatus } from "./sync-webhook-status";
 import { WebhookManagementService } from "./webhook-management-service";
@@ -39,6 +42,23 @@ describe("syncWebhookStatus", function () {
       configurations: [],
     },
     featureFlagService: createMockedFeatureFlagService(),
+    templateStringValidator: {
+      logger: {
+        info: vi.fn(),
+        warn: vi.fn(),
+      },
+      validate(template: string) {
+        return ok(true);
+      },
+    } as unknown as TemplateStringValidator,
+    templateStringCompressor: {
+      compress(template: string) {
+        return ok(template);
+      },
+      decompress(template: string) {
+        return ok(template);
+      },
+    },
   });
 
   afterEach(() => {

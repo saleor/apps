@@ -1,13 +1,16 @@
-import { SmtpMetadataManager } from "./smtp-metadata-manager";
-import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { generateRandomId } from "../../../lib/generate-random-id";
-import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
-import { filterConfigurations } from "../../app-configuration/filter-configurations";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { createLogger } from "../../../logger";
-import { BaseError } from "../../../errors";
 import { err, errAsync, fromAsyncThrowable, ok, okAsync, ResultAsync } from "neverthrow";
+
+import { BaseError } from "../../../errors";
+import { generateRandomId } from "../../../lib/generate-random-id";
+import { createLogger } from "../../../logger";
+import { filterConfigurations } from "../../app-configuration/filter-configurations";
+import { MessageEventTypes } from "../../event-handlers/message-event-types";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { TemplateStringCompressor } from "../services/template-string-compressor";
+import { TemplateStringValidator } from "../services/template-string-validator";
+import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
+import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const logger = createLogger("SmtpConfigurationService");
 
@@ -37,13 +40,19 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
   private featureFlagService: FeatureFlagService;
+  private templateStringValidator: TemplateStringValidator;
+  private templateStringCompressor: TemplateStringCompressor;
 
   constructor(args: {
     metadataManager: SmtpMetadataManager;
     initialData?: SmtpConfig;
     featureFlagService: FeatureFlagService;
+    templateStringValidator: TemplateStringValidator;
+    templateStringCompressor: TemplateStringCompressor;
   }) {
     this.metadataConfigurator = args.metadataManager;
+    this.templateStringValidator = args.templateStringValidator;
+    this.templateStringCompressor = args.templateStringCompressor;
 
     if (args.initialData) {
       this.configurationData = args.initialData;
@@ -272,7 +281,12 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         );
       }
 
-      return okAsync(event);
+      const formattedTemplate = this.templateStringCompressor.decompress(event.template);
+
+      return okAsync({
+        ...event,
+        template: formattedTemplate.isOk() ? formattedTemplate.value : event.template,
+      });
     });
   }
 
@@ -303,9 +317,20 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         );
       }
 
+      const compressedTemplateResult = this.templateStringCompressor.compress(
+        eventConfiguration.template ?? "",
+      );
+      const compressedTemplate = compressedTemplateResult.isOk()
+        ? compressedTemplateResult.value
+        : eventConfiguration.template ?? "";
+
+      // For now we only want to validate the template string and log the result
+      this.templateStringValidator.validate(compressedTemplate);
+
       const updatedEventConfiguration = {
         ...config.events[eventIndex],
         ...eventConfiguration,
+        template: compressedTemplate,
       };
 
       config.events[eventIndex] = updatedEventConfiguration;
