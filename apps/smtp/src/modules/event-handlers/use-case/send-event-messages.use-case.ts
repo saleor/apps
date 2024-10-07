@@ -1,6 +1,7 @@
 import { err, errAsync, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
+import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
 import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
@@ -112,8 +113,8 @@ export class SendEventMessagesUseCase {
     }
 
     this.logger.info("Template size", {
-      bodyTemplateSize: new Blob([eventSettings.template]).size,
-      subjectTemplateSize: new Blob([eventSettings.subject]).size,
+      bodyTemplateSize: bytesToKb(new Blob([eventSettings.template]).size),
+      subjectTemplateSize: bytesToKb(new Blob([eventSettings.subject]).size),
     });
 
     const preparedEmailResult = this.deps.emailCompiler.compile({
