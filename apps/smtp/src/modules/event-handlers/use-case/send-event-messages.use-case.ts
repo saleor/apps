@@ -1,11 +1,12 @@
+import { err, errAsync, Result, ResultAsync } from "neverthrow";
+
+import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
 import { IEmailCompiler } from "../../smtp/services/email-compiler";
-import { MessageEventTypes } from "../message-event-types";
-import { createLogger } from "../../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { BaseError } from "../../../errors";
-import { err, errAsync, Result, ResultAsync } from "neverthrow";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { MessageEventTypes } from "../message-event-types";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -109,6 +110,11 @@ export class SendEventMessagesUseCase {
         }),
       );
     }
+
+    this.logger.info("Template size", {
+      bodyTemplateSize: new Blob([eventSettings.template]).size,
+      subjectTemplateSize: new Blob([eventSettings.subject]).size,
+    });
 
     const preparedEmailResult = this.deps.emailCompiler.compile({
       event: event,
