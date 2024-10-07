@@ -1,22 +1,25 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
-import { TemplateStringFormater } from "../services/template-string-formater";
+import { TemplateStringCompressor } from "../services/template-string-compressor";
 import {
   SmtpConfiguration,
   smtpConfigurationEventSchema,
   smtpConfigurationSchema,
 } from "./smtp-config-schema";
 
-const templateStringFormatter = new TemplateStringFormater();
+const templateStringFormatter = new TemplateStringCompressor();
 
 const eventsConfiguration = (): SmtpConfiguration["events"] =>
-  messageEventTypes.map((eventType) =>
-    smtpConfigurationEventSchema.parse({
+  messageEventTypes.map((eventType) => {
+    const template = defaultMjmlTemplates[eventType];
+    const compressedTemplate = templateStringFormatter.compress(template);
+
+    return smtpConfigurationEventSchema.parse({
       eventType: eventType,
-      template: templateStringFormatter.compress(defaultMjmlTemplates[eventType]),
+      template: compressedTemplate.isOk() ? compressedTemplate.value : template,
       subject: defaultMjmlSubjectTemplates[eventType],
-    }),
-  );
+    });
+  });
 
 const configuration = (): SmtpConfiguration => {
   const defaultConfig: SmtpConfiguration = smtpConfigurationSchema.parse({

@@ -1,11 +1,14 @@
-import { describe, expect, it, vi } from "vitest";
-import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpMetadataManager } from "./smtp-metadata-manager";
-import { SmtpConfig } from "./smtp-config-schema";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { ok, okAsync, Result } from "neverthrow";
 import { Client } from "urql";
-import { okAsync } from "neverthrow";
+import { describe, expect, it, vi } from "vitest";
+
+import { BaseError } from "../../../errors";
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { TemplateStringValidator } from "../services/template-string-validator";
+import { SmtpConfig } from "./smtp-config-schema";
+import { SmtpConfigurationService } from "./smtp-configuration.service";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
@@ -210,6 +213,23 @@ describe("SmtpConfigurationService", function () {
           saleorVersion: "3.14.0",
         }),
         metadataManager: configurator,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       expect(getConfigMock).toBeCalledTimes(0);
@@ -233,6 +253,23 @@ describe("SmtpConfigurationService", function () {
           saleorVersion: "3.14.0",
         }),
         metadataManager: configurator,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const configuration = await service.getConfigurationRoot();
@@ -262,6 +299,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       expect((await service.getConfigurationRoot())._unsafeUnwrap()).toEqual(validConfig);
@@ -289,6 +343,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       // Set configuration
@@ -316,6 +387,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       /**
@@ -343,6 +431,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       expect(
@@ -363,6 +468,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const result = await service.getConfiguration({ id: "does-not-exist" });
@@ -387,6 +509,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       expect((await service.getConfigurations())._unsafeUnwrap()).toEqual([]);
@@ -405,6 +544,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       // Only the first configuration is active, so only this one should be returned
@@ -430,6 +586,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: emptyConfigRoot,
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const newConfiguration = (
@@ -465,6 +638,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const updatedConfiguration = (
@@ -503,6 +693,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const result = await service.updateConfiguration({
@@ -532,6 +739,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const idToBeDeleted = validConfig.configurations[0].id;
@@ -567,6 +791,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const result = await service.deleteConfiguration({
@@ -596,6 +837,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       await expect(
@@ -621,6 +879,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const notFoundError = await service.getEventConfiguration({
@@ -660,6 +935,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       await service.updateEventConfiguration({
@@ -698,6 +990,23 @@ describe("SmtpConfigurationService", function () {
         }),
         metadataManager: configurator,
         initialData: { ...validConfig },
+        templateStringValidator: {
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+          },
+          validate(template: string) {
+            return ok(true);
+          },
+        } as unknown as TemplateStringValidator,
+        templateStringCompressor: {
+          compress(template: string) {
+            return ok(template);
+          },
+          decompress(template: string) {
+            return ok(template);
+          },
+        },
       });
 
       const result = await service.updateEventConfiguration({

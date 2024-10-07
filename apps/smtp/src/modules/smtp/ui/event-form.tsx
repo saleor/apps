@@ -13,8 +13,6 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { TemplateStringFormater } from "../services/template-string-formater";
-import { TemplateStringValidator } from "../services/template-string-validation";
 import { CodeEditor } from "./code-editor";
 import { MjmlPreview } from "./mjml-preview";
 
@@ -23,16 +21,9 @@ const PREVIEW_DEBOUNCE_DELAY = 500;
 interface EventFormProps {
   configuration: SmtpConfiguration;
   eventType: MessageEventTypes;
-  onTemplateSizeValidationError: () => void;
 }
 
-const templateStringFormater = new TemplateStringFormater();
-
-export const EventForm = ({
-  configuration,
-  eventType,
-  onTemplateSizeValidationError,
-}: EventFormProps) => {
+export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const eventConfiguration = configuration?.events.find(
@@ -43,7 +34,6 @@ export const EventForm = ({
     defaultValues: {
       id: configuration.id,
       ...eventConfiguration,
-      template: templateStringFormater.format(eventConfiguration.template),
     },
     resolver: zodResolver(smtpUpdateEventSchema),
   });
@@ -80,16 +70,8 @@ export const EventForm = ({
   });
 
   const formSubmitHandler = (data: SmtpUpdateEvent) => {
-    const templateStringValidator = new TemplateStringValidator(templateStringFormater);
-
-    if (!templateStringValidator.validate(data.template)) {
-      onTemplateSizeValidationError();
-      return;
-    }
-
     mutate({
       ...data,
-      template: templateStringFormater.compress(data.template),
     });
   };
 
