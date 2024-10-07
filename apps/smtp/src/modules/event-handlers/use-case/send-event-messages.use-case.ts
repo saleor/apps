@@ -1,11 +1,15 @@
+import { err, errAsync, Result, ResultAsync } from "neverthrow";
+
+import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
 import { IEmailCompiler } from "../../smtp/services/email-compiler";
-import { MessageEventTypes } from "../message-event-types";
-import { createLogger } from "../../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { BaseError } from "../../../errors";
-import { err, errAsync, Result, ResultAsync } from "neverthrow";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { ITemplateStringCompressor } from "../../smtp/services/template-string-compressor";
+import { ITemplateStringValidator } from "../../smtp/services/template-string-validator";
+import { MessageEventTypes } from "../message-event-types";
+import { validateTemplate } from "../validateTemplate";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -47,6 +51,8 @@ export class SendEventMessagesUseCase {
   constructor(
     private deps: {
       smtpConfigurationService: IGetSmtpConfiguration;
+      templateStringValidator: ITemplateStringValidator;
+      templateStringCompressor: ITemplateStringCompressor;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
@@ -109,6 +115,13 @@ export class SendEventMessagesUseCase {
         }),
       );
     }
+
+    // For now we only log result
+    validateTemplate({
+      template: eventSettings.template,
+      templateStringValidator: this.deps.templateStringValidator,
+      templateStringCompressor: this.deps.templateStringCompressor,
+    });
 
     const preparedEmailResult = this.deps.emailCompiler.compile({
       event: event,

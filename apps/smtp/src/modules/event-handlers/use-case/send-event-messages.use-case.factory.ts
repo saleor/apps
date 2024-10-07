@@ -21,6 +21,9 @@ export class SendEventMessagesUseCaseFactory {
       token: authData.token,
     });
 
+    const templateStringCompressor = new TemplateStringCompressor();
+    const templateStringValidator = new TemplateStringValidator();
+
     return new SendEventMessagesUseCase({
       emailSender: new SmtpEmailSender(),
       emailCompiler: new EmailCompiler(
@@ -34,9 +37,11 @@ export class SendEventMessagesUseCaseFactory {
           createSettingsManager(client, authData.appId),
           authData.saleorApiUrl,
         ),
-        templateStringCompressor: new TemplateStringCompressor(),
-        templateStringValidator: new TemplateStringValidator(),
+        templateStringCompressor,
+        templateStringValidator,
       }),
+      templateStringCompressor,
+      templateStringValidator,
     });
   }
 }

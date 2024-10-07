@@ -4,6 +4,8 @@ import { err, ok, Result } from "neverthrow";
 import { BaseError } from "../../../errors";
 
 export interface ITemplateStringCompressor {
+  isCompressed(template: string): Result<boolean, InstanceType<typeof BaseError>>;
+
   compress(template: string): Result<string, InstanceType<typeof BaseError>>;
 
   decompress(template: string): Result<string, InstanceType<typeof BaseError>>;
@@ -11,6 +13,10 @@ export interface ITemplateStringCompressor {
 
 export class TemplateStringCompressor implements ITemplateStringCompressor {
   static TemplateStringFormaterError = BaseError.subclass("TemplateStringFormaterError");
+
+  isCompressed(template: string): Result<boolean, InstanceType<typeof BaseError>> {
+    return ok(/\s/g.test(template));
+  }
 
   compress(templateString: string): Result<string, any> {
     try {
