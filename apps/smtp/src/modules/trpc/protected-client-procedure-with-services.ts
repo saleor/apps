@@ -1,11 +1,13 @@
 import { createSettingsManager } from "../../lib/metadata-manager";
+import { createLogger } from "../../logger";
+import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
+import { TemplateStringCompressor } from "../smtp/services/template-string-compressor";
+import { TemplateStringValidator } from "../smtp/services/template-string-validator";
 import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
-import { protectedClientProcedure } from "./protected-client-procedure";
 import { WebhookManagementService } from "../webhook-management/webhook-management-service";
-import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
-import { createLogger } from "../../logger";
+import { protectedClientProcedure } from "./protected-client-procedure";
 
 const logger = createLogger("protectedWithConfigurationServices middleware");
 
@@ -33,6 +35,8 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
         ctx.saleorApiUrl,
       ),
       featureFlagService,
+      templateStringValidator: new TemplateStringValidator(),
+      templateStringCompressor: new TemplateStringCompressor(),
     });
 
     const result = await next({
