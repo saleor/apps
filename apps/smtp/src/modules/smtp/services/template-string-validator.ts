@@ -7,13 +7,16 @@ export interface ITemplateStringValidator {
   validate(template: string): Result<boolean, InstanceType<typeof BaseError>>;
 }
 
-const MAX_TEMPLATE_SIZE_IN_BYTES = 2500; // 2.5KB
+const MAX_TEMPLATE_SIZE_IN_BYTES = 102000; // 102KB
 
 export class TemplateStringValidator implements ITemplateStringValidator {
   private logger = createLogger("TemplateStringValidator");
 
   validate(template: string): Result<boolean, InstanceType<typeof BaseError>> {
     const templateSize = new Blob([template]).size;
+
+    this.logger.info("Validating template size", { templateSize });
+
     const isTemplateSizeValid = templateSize <= MAX_TEMPLATE_SIZE_IN_BYTES;
 
     if (isTemplateSizeValid) {
