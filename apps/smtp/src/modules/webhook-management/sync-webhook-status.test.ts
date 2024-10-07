@@ -52,6 +52,9 @@ describe("syncWebhookStatus", function () {
       },
     } as unknown as TemplateStringValidator,
     templateStringCompressor: {
+      isCompressed(template: string) {
+        return ok(false);
+      },
       compress(template: string) {
         return ok(template);
       },

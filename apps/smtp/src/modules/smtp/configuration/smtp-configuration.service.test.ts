@@ -223,6 +223,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -263,6 +266,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -309,6 +315,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -353,6 +362,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -397,6 +409,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -441,6 +456,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -478,6 +496,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -519,6 +540,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -554,6 +578,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -596,6 +623,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -648,6 +678,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -703,6 +736,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -749,6 +785,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -801,6 +840,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -847,6 +889,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -880,6 +925,9 @@ describe("SmtpConfigurationService", function () {
         metadataManager: configurator,
         initialData: { ...validConfig },
         templateStringValidator: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           logger: {
             info: vi.fn(),
             warn: vi.fn(),
@@ -889,6 +937,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -945,6 +996,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },
@@ -1000,6 +1054,9 @@ describe("SmtpConfigurationService", function () {
           },
         } as unknown as TemplateStringValidator,
         templateStringCompressor: {
+          isCompressed(template: string) {
+            return ok(true);
+          },
           compress(template: string) {
             return ok(template);
           },

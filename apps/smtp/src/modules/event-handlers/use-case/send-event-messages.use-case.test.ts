@@ -1,13 +1,16 @@
+import { err, errAsync, ok, okAsync, Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { BaseError } from "../../../errors";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
+import { CompiledEmail, IEmailCompiler } from "../../smtp/services/email-compiler";
+import { ISMTPEmailSender } from "../../smtp/services/smtp-email-sender";
+import { ITemplateStringCompressor } from "../../smtp/services/template-string-compressor";
+import { ITemplateStringValidator } from "../../smtp/services/template-string-validator";
+import { MessageEventTypes } from "../message-event-types";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
-import { err, errAsync, ok, okAsync, Result } from "neverthrow";
-import { CompiledEmail, IEmailCompiler } from "../../smtp/services/email-compiler";
-import { BaseError } from "../../../errors";
-import { ISMTPEmailSender } from "../../smtp/services/smtp-email-sender";
-import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
-import { MessageEventTypes } from "../message-event-types";
 
 const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 
@@ -104,10 +107,30 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
   getConfigurations = this.mockGetConfigurationsMethod;
 }
 
+class MockTemplateStringValidator implements ITemplateStringValidator {
+  validate(template: string) {
+    return ok(true);
+  }
+}
+
+class MockTemplateStringCompressor implements ITemplateStringCompressor {
+  isCompressed(template: string) {
+    return ok(false);
+  }
+  compress(template: string) {
+    return ok(template);
+  }
+  decompress(template: string) {
+    return ok(template);
+  }
+}
+
 describe("SendEventMessagesUseCase", () => {
   let emailCompiler: MockEmailCompiler;
   let emailSender: MockSmtpSender;
   let smtpConfigurationService: MockSmptConfigurationService;
+  let templateStringValidator: MockTemplateStringValidator;
+  let templateStringCompressor: MockTemplateStringCompressor;
 
   let useCaseInstance: SendEventMessagesUseCase;
 
@@ -123,6 +146,8 @@ describe("SendEventMessagesUseCase", () => {
     emailCompiler = new MockEmailCompiler();
     emailSender = new MockSmtpSender();
     smtpConfigurationService = new MockSmptConfigurationService();
+    templateStringValidator = new MockTemplateStringValidator();
+    templateStringCompressor = new MockTemplateStringCompressor();
 
     /**
      * Apply default return values, which can be partially overwritten in tests
@@ -142,6 +167,8 @@ describe("SendEventMessagesUseCase", () => {
       emailCompiler,
       emailSender,
       smtpConfigurationService,
+      templateStringCompressor,
+      templateStringValidator,
     });
   });
 
