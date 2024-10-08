@@ -1,11 +1,13 @@
+import { err, errAsync, Result, ResultAsync } from "neverthrow";
+
+import { BaseError } from "../../../errors";
+import { bytesToKb } from "../../../lib/bytes-to-kb";
+import { createLogger } from "../../../logger";
+import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
 import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
 import { IEmailCompiler } from "../../smtp/services/email-compiler";
-import { MessageEventTypes } from "../message-event-types";
-import { createLogger } from "../../../logger";
 import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { BaseError } from "../../../errors";
-import { err, errAsync, Result, ResultAsync } from "neverthrow";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import { MessageEventTypes } from "../message-event-types";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -134,7 +136,10 @@ export class SendEventMessagesUseCase {
       );
     }
 
-    this.logger.info("Successfully compiled email template");
+    this.logger.info("Successfully compiled email template", {
+      bodyTemplateSizeKb: bytesToKb(new Blob([eventSettings.template]).size),
+      subjectTemplateSizeKb: bytesToKb(new Blob([eventSettings.subject]).size),
+    });
 
     const smtpSettings: SendMailArgs["smtpSettings"] = {
       host: config.smtpHost,
