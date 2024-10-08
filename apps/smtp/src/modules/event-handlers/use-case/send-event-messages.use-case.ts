@@ -112,11 +112,6 @@ export class SendEventMessagesUseCase {
       );
     }
 
-    this.logger.info("Template size", {
-      bodyTemplateSize: bytesToKb(new Blob([eventSettings.template]).size),
-      subjectTemplateSize: bytesToKb(new Blob([eventSettings.subject]).size),
-    });
-
     const preparedEmailResult = this.deps.emailCompiler.compile({
       event: event,
       payload: payload,
@@ -141,7 +136,10 @@ export class SendEventMessagesUseCase {
       );
     }
 
-    this.logger.info("Successfully compiled email template");
+    this.logger.info("Successfully compiled email template", {
+      bodyTemplateSizeKb: bytesToKb(new Blob([eventSettings.template]).size),
+      subjectTemplateSizeKb: bytesToKb(new Blob([eventSettings.subject]).size),
+    });
 
     const smtpSettings: SendMailArgs["smtpSettings"] = {
       host: config.smtpHost,
