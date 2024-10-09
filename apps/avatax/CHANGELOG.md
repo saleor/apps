@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.10.5
+
+### Patch Changes
+
+- 2eac9634: Set max memory limits for Webhooks to be 256MB. Before that, it was a default 1769MB. In case of Vercel deployment this will reduce pricing via GB-hours 7 times
+
 ## 1.10.4
 
 ### Patch Changes

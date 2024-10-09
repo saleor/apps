@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.13
+
+### Patch Changes
+
+- 8b66ff67: Processing webhook now logs the size of email and subject template
+
 ## 1.2.12
 
 ### Patch Changes
