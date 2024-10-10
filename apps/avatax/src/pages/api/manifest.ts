@@ -18,7 +18,7 @@ export default wrapWithLoggerContext(
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
-        logger.info("Generating manifest", {
+        logger.warn("Generating manifest", {
           iframeBaseUrl,
           apiBaseURL,
         });
