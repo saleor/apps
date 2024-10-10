@@ -1,22 +1,69 @@
-import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+import { ILogObj, ILogObjMeta, Logger } from "tslog";
 
-import packageJson from "../package.json";
+import { loggerContext } from "./logger-context";
 
-logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
-
-if (process.env.NODE_ENV !== "production") {
-  attachLoggerConsoleTransport(logger);
+function isObject(item: unknown) {
+  return typeof item === "object" && !Array.isArray(item) && item !== null;
 }
 
-if (typeof window === "undefined") {
-  import("@saleor/apps-logger/node").then(
-    async ({ attachLoggerOtelTransport, attachLoggerSentryTransport, LoggerContext }) => {
-      const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
+export const logger = new Logger<ILogObj>({
+  minLevel: 3, // info
+  hideLogPositionForProduction: true,
+  type: "hidden",
+  overwrite: {
+    /**
+     * Format log. Use parent logger (createLogger) args and merge them with args from individual logs
+     */
+    toLogObj(args, log) {
+      const message = args.find((arg) => typeof arg === "string");
+      const attributesFromLog = (args.find(isObject) as Object) ?? {};
+      const parentAttributes = log ?? {};
 
-      attachLoggerSentryTransport(logger);
-      attachLoggerOtelTransport(logger, packageJson.version, loggerContext);
+      return {
+        ...log,
+        message,
+        attributes: {
+          ...parentAttributes,
+          ...attributesFromLog,
+        },
+      };
     },
-  );
-}
+  },
+});
 
-export { createLogger, logger };
+logger.attachTransport((log) => {
+  const { message, attributes, _meta } = log as ILogObj &
+    ILogObjMeta & {
+      message: string;
+      attributes: Record<string, unknown>;
+    };
+
+  const bodyMessage = log._meta.name ? `[${log._meta.name}] ${message}` : message;
+
+  const formattedStuff = JSON.stringify({
+    message: bodyMessage,
+    ...attributes,
+    ...loggerContext.getRawContext(),
+    _meta,
+  });
+
+  if (_meta.logLevelName === "ERROR") {
+    console.error(formattedStuff);
+    return;
+  }
+
+  if (_meta.logLevelName === "WARN") {
+    console.warn(formattedStuff);
+    return;
+  }
+
+  console.log(formattedStuff);
+});
+
+export const createLogger = (name: string, params?: Record<string, unknown>) =>
+  logger.getSubLogger(
+    {
+      name,
+    },
+    params,
+  );
