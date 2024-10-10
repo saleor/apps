@@ -2,7 +2,7 @@
   "name": "app-avatax",
   "version": "1.10.5",
   "scripts": {
-    "build": "pnpm generate && next build",
+    "build": "next build",
     "check-types": "tsc --noEmit",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
@@ -10,8 +10,7 @@
     "e2e": "vitest --project e2e --watch=false",
     "e2e:watch": "vitest --project e2e --watch",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "pnpm run generate:app && pnpm run generate:e2e",
-    "generate:app": "graphql-codegen --config .graphqlrc.ts",
+    "generate": " pnpm run generate:e2e",
     "generate:e2e": "graphql-codegen --config .graphqlrc.ts --project e2e",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
