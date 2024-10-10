@@ -87,7 +87,7 @@ export const OrderConfirmedFragment = graphql(
   [AddressFragment, OrderLineFragment, UserFragment],
 );
 
-const OrderConfirmedEventFragment = graphql(
+export const OrderConfirmedEventFragment = graphql(
   `
     fragment OrderConfirmedEventSubscription on Event {
       __typename

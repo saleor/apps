@@ -30,6 +30,7 @@ const config: IGraphQLConfig = {
         },
       },
     },
+    // todo remove
     default: {
       schema: "graphql/schema.graphql",
       documents: [

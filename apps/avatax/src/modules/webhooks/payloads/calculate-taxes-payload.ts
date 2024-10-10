@@ -1,11 +1,11 @@
 import { ResultOf } from "gql.tada";
 
-import { CalculateTaxesSubscription } from "../../../../graphql/subscriptions/CalculateTaxes";
+import { CalculateTaxesEventFragment } from "../../../../graphql/fragments/CalculateTaxesEvent";
 
 /**
  * Common subset for ORDER and CHECKOUT events
  */
 export type CalculateTaxesPayload = Extract<
-  ResultOf<typeof CalculateTaxesSubscription>,
+  ResultOf<typeof CalculateTaxesEventFragment>,
   { __typename: "CalculateTaxes" }
 >;
