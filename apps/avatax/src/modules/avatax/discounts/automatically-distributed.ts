@@ -1,5 +1,6 @@
 import Decimal from "decimal.js-light";
-import { TaxBaseFragment } from "generated/graphql";
+
+import { TaxDiscountFragment } from "../../../../graphql/fragments/TaxDiscountFragment";
 
 /*
  * Used for checkout and order calculate taxes.
@@ -8,7 +9,7 @@ import { TaxBaseFragment } from "generated/graphql";
  * Docs: https://developer.avalara.com/erp-integration-guide/sales-tax-badge/transactions/discounts-and-overrides/discounting-a-transaction/
  */
 export class AutomaticallyDistributedProductLinesDiscountsStrategy {
-  getDiscountAmount(taxBaseDiscounts: TaxBaseFragment["discounts"] | undefined) {
+  getDiscountAmount(taxBaseDiscounts: TaxDiscountFragment[] | undefined) {
     if (!taxBaseDiscounts) {
       return 0;
     }
@@ -21,7 +22,7 @@ export class AutomaticallyDistributedProductLinesDiscountsStrategy {
       }, 0);
   }
 
-  areLinesDiscounted(taxBaseDiscounts: TaxBaseFragment["discounts"]) {
+  areLinesDiscounted(taxBaseDiscounts: TaxDiscountFragment[]) {
     return this.getDiscountAmount(taxBaseDiscounts) > 0;
   }
 }

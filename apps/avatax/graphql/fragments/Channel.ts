@@ -1,4 +1,4 @@
-import { graphql } from "@/graphql";
+import { graphql, ResultOf } from "@/graphql";
 
 export const ChannelFragment = graphql(`
   fragment Channel on Channel {
@@ -7,3 +7,5 @@ export const ChannelFragment = graphql(`
     slug
   }
 `);
+
+export type ChannelFragmentType = ResultOf<typeof ChannelFragment>;

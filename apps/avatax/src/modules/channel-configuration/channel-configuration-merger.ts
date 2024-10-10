@@ -1,9 +1,14 @@
-import { ChannelFragment } from "../../../generated/graphql";
+import { ResultOf } from "gql.tada";
+
+import { ChannelFragment } from "../../../graphql/fragments/Channel";
 import { createId } from "../../lib/utils";
 import { ChannelsConfig } from "./channel-config";
 
 export class ChannelConfigurationMerger {
-  merge(channels: ChannelFragment[], channelsConfig: ChannelsConfig): ChannelsConfig {
+  merge(
+    channels: ResultOf<typeof ChannelFragment>[],
+    channelsConfig: ChannelsConfig,
+  ): ChannelsConfig {
     return channels.map((channel) => {
       const channelConfig = channelsConfig.find((c) => c.config.slug === channel.slug);
 

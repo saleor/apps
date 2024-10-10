@@ -1,4 +1,4 @@
-import { graphql } from "@/graphql";
+import { graphql, ResultOf } from "@/graphql";
 
 import { WebhookMetadata } from "../fragments/WebhookMetadata";
 
@@ -44,3 +44,7 @@ export const OrderCancelledSubscription = graphql(
   `,
   [OrderCancelledEventSubscriptionFragment],
 );
+
+export type OrderCancelledEventSubscriptionFragmentResult = ResultOf<
+  typeof OrderCancelledEventSubscriptionFragment
+>;

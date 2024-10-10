@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { readFragment } from "@/graphql";
 
-import { OrderLineFragment } from "../../../graphql/fragments/OrderLineFragment";
+import { OrderLineFragment } from "../../../graphql/subscriptions/OrderConfirmed";
 import { BaseError } from "../../error";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";
 import { AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";

@@ -1,11 +1,11 @@
 import { graphql, ResultOf } from "@/graphql";
 
 import { AddressFragment } from "./AddressFragment";
-import { OrderLineFragment } from "./OrderLineFragment";
+import { TaxBaseOrderLineFragment } from "./TaxBaseOrderLineFragment";
 import { TaxDiscountFragment } from "./TaxDiscountFragment";
 import { UserFragment } from "./UserFragment";
 
-const TaxBaseLineFragment = graphql(
+export const TaxBaseLineFragment = graphql(
   `
     fragment TaxBaseLine on TaxableObjectLine {
       sourceLine {
@@ -23,7 +23,7 @@ const TaxBaseLineFragment = graphql(
           }
         }
         ... on OrderLine {
-          ...OrderLine
+          ...TaxBaseOrderLine
         }
       }
       quantity
@@ -35,7 +35,7 @@ const TaxBaseLineFragment = graphql(
       }
     }
   `,
-  [OrderLineFragment],
+  [TaxBaseOrderLineFragment],
 );
 
 export const TaxBaseFragment = graphql(
@@ -83,3 +83,4 @@ export const TaxBaseFragment = graphql(
 );
 
 export type TaxBaseFragmentType = ResultOf<typeof TaxBaseFragment>;
+export type TaxBaseLineFragmentType = ResultOf<typeof TaxBaseLineFragment>;

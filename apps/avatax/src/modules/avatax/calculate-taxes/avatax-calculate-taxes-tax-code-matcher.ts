@@ -1,4 +1,8 @@
-import { TaxBaseLineFragment } from "../../../../generated/graphql";
+import { FragmentOf } from "gql.tada";
+
+import { readFragment } from "@/graphql";
+
+import { TaxBaseLineFragment } from "../../../../graphql/fragments/TaxBase";
 import { CriticalError } from "../../../error";
 import { createLogger } from "../../../logger";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
@@ -15,24 +19,25 @@ export class AvataxCalculateTaxesTaxCodeMatcher {
     return matches.find((m) => m.data.saleorTaxClassId === taxClassId);
   }
 
-  private getTaxClassId(line: TaxBaseLineFragment): string | undefined {
-    if (line.sourceLine.__typename === "CheckoutLine") {
-      return line.sourceLine.checkoutProductVariant.product.taxClass?.id;
+  private getTaxClassId(line: FragmentOf<typeof TaxBaseLineFragment>): string | undefined {
+    const lineFragment = readFragment(TaxBaseLineFragment, line);
+
+    if (lineFragment.sourceLine.__typename === "CheckoutLine") {
+      return lineFragment.sourceLine.checkoutProductVariant.product.taxClass?.id;
     }
 
-    if (line.sourceLine.__typename === "OrderLine") {
-      return line.sourceLine.orderProductVariant?.product.taxClass?.id;
+    if (lineFragment.sourceLine.__typename === "OrderLine") {
+      return lineFragment.sourceLine.orderProductVariant?.product.taxClass?.id;
     }
 
     throw new AvataxCalculateTaxesTaxCodeMatcherError("Unsupported line type", {
       props: {
-        // @ts-expect-error: not handled typename is not typed in GraphQL
         type: line.sourceLine.__typename,
       },
     });
   }
 
-  match(line: TaxBaseLineFragment, matches: AvataxTaxCodeMatches) {
+  match(line: FragmentOf<typeof TaxBaseLineFragment>, matches: AvataxTaxCodeMatches) {
     const taxClassId = this.getTaxClassId(line);
     const possibleMatch = this.mapTaxClassWithTaxMatch(taxClassId, matches);
 
