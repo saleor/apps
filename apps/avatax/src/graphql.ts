@@ -8,6 +8,8 @@ export const graphql = initGraphQLTada<{
   disableMasking: true;
   scalars: {
     Date: string;
+    DateTime: string;
+    Day: string;
     Boolean: boolean;
     Decimal: number;
   };

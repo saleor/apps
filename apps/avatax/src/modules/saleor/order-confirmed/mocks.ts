@@ -1,15 +1,21 @@
+import { ResultOf } from "@/graphql";
+import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
+
+import { OrderConfirmedFragment } from "../../../../graphql/subscriptions/OrderConfirmed";
 import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLineMockFactory } from "../order-line-mocks";
-import { SaleorOrderConfirmedEvent } from "./event";
 
 export class SaleorOrderConfirmedEventMockFactory {
-  private static _getGraphqlPayload = (): {
-    order: NonNullable<OrderConfirmedPayload["order"]>;
-    __typename: "OrderConfirmed";
-  } => ({
-    order: {
+  private static _getGraphqlPayload = () => {
+    const o = {
+      userEmail: "",
+      avataxDocumentCode: null,
+      avataxEntityCode: null,
+      avataxCustomerCode: null,
+      avataxTaxCalculationDate: null,
       user: {
         id: "id",
+        avataxCustomerCode: null,
         email: "email@example.com",
       },
       id: "order-id",
@@ -33,9 +39,16 @@ export class SaleorOrderConfirmedEventMockFactory {
         },
       },
       shippingAddress: {
-        __typename: "Address",
         city: "Krakow",
-        country: { code: "PL", __typename: "CountryDisplay" },
+        country: { code: "PL" },
+        countryArea: "Malopolskie",
+        postalCode: "12345",
+        streetAddress1: "Jana Pawla 2",
+        streetAddress2: "2137",
+      },
+      billingAddress: {
+        city: "Krakow",
+        country: { code: "PL" },
         countryArea: "Malopolskie",
         postalCode: "12345",
         streetAddress1: "Jana Pawla 2",
@@ -51,15 +64,18 @@ export class SaleorOrderConfirmedEventMockFactory {
         currency: "USD",
       },
       lines: [SaleorOrderLineMockFactory.getGraphqlPayload()],
-      __typename: "Order" as const,
-    },
-    __typename: "OrderConfirmed" as const,
-  });
+    } satisfies NonNullable<ResultOf<typeof OrderConfirmedFragment>>;
 
-  static create(
-    graphqlPayload: OrderConfirmedPayload = SaleorOrderConfirmedEventMockFactory._getGraphqlPayload(),
-  ) {
-    const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(graphqlPayload);
+    return {
+      order: o,
+    } as const;
+  };
+
+  static create(graphqlPayload?: OrderConfirmedPayload) {
+    const possibleOrderLine = SaleorOrderConfirmedEvent.createFromGraphQL(
+      graphqlPayload ??
+        (SaleorOrderConfirmedEventMockFactory._getGraphqlPayload() as OrderConfirmedPayload),
+    );
 
     if (possibleOrderLine.isErr()) {
       throw possibleOrderLine.error;

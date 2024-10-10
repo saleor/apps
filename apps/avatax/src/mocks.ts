@@ -4,12 +4,17 @@ import { OrderConfirmedFragment } from "../graphql/subscriptions/OrderConfirmed"
 
 export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
+  userEmail: "",
   user: {
+    avataxCustomerCode: null,
     id: "VXNlcjoyMDg0NTEwNDEw",
     email: "happy.customer@saleor.io",
   },
   number: "1234",
   avataxEntityCode: null,
+  avataxCustomerCode: null,
+  avataxDocumentCode: null,
+  avataxTaxCalculationDate: null,
   created: "2023-05-25T09:18:55.203440+00:00",
   status: "UNFULFILLED",
   channel: {

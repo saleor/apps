@@ -17,7 +17,8 @@ describe("SaleorOrderConfirmedEvent", () => {
     const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
     const result = SaleorOrderConfirmedEvent.createFromGraphQL({
       ...payload,
-      order: undefined,
+      // @ts-expect-error testing
+      order: null,
     });
 
     expect(result.isErr()).toBe(true);
@@ -167,8 +168,8 @@ describe("SaleorOrderConfirmedEvent", () => {
     it("Returns empty string if neither user.email or userEmail exist", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
-      payload.order.user = undefined;
-      payload.order.userEmail = undefined;
+      payload.order.user = null;
+      payload.order.userEmail = null;
 
       const result = SaleorOrderConfirmedEvent.createFromGraphQL(payload);
 
