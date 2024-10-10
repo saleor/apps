@@ -110,15 +110,17 @@ const defaultTaxBase: TaxBaseFragmentType = {
   sourceObject: {
     avataxEntityCode: null,
     id: "mock-id",
+    avataxCustomerCode: null,
     __typename: "Checkout",
     user: {
+      avataxCustomerCode: null,
       id: "123",
       email: "demo@saleor.io",
     },
   },
 };
 
-const taxBaseWithDiscounts: TaxBase = {
+const taxBaseWithDiscounts: TaxBaseFragmentType = {
   ...defaultTaxBase,
   discounts: [
     { amount: { amount: 21 }, type: "SUBTOTAL" },
@@ -975,7 +977,7 @@ type TestingScenario = keyof typeof testingScenariosMap;
 
 export class AvataxCalculateTaxesMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
-  generateTaxBase = (overrides: Partial<TaxBase> = {}): TaxBase =>
+  generateTaxBase = (overrides: Partial<TaxBaseFragmentType> = {}): TaxBaseFragmentType =>
     structuredClone({
       ...testingScenariosMap[this.scenario].taxBase,
       ...overrides,

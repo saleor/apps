@@ -59,6 +59,8 @@ export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
   },
   lines: [
     {
+      productVariantId: "dmFyaWFudC1pZA==",
+      taxClass: null,
       productSku: "328223580",
       productName: "Monospace Tee",
       quantity: 3,
@@ -80,9 +82,10 @@ export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
       },
     },
     {
+      quantity: 1,
+      taxClass: null,
       productName: "Monospace Tee",
       productVariantId: "dmFyaWFudC1pZA==",
-      quantity: 1,
       unitPrice: {
         net: {
           amount: 20,
@@ -99,8 +102,11 @@ export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
           amount: 21.73,
         },
       },
+      productSku: null,
     },
     {
+      productVariantId: "dmFyaaaWFudC1pZA==",
+      taxClass: null,
       productSku: "118223581",
       productName: "Paul's Balance 420",
       quantity: 2,
