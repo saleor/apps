@@ -6,6 +6,8 @@ import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
 
 const getBasePayload = (): CalculateTaxesPayload => {
   return {
+    issuedAt: new Date(2020, 1, 1).toISOString(),
+    version: "",
     __typename: "CalculateTaxes",
     recipient: {
       privateMetadata: [],
