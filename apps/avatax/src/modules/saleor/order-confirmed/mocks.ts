@@ -67,8 +67,12 @@ export class SaleorOrderConfirmedEventMockFactory {
     } satisfies NonNullable<ResultOf<typeof OrderConfirmedFragment>>;
 
     return {
+      issuedAt: "2021-01-01T00:00:00Z",
+      recipient: { privateMetadata: [] },
+      version: "",
       order: o,
-    } as const;
+      __typename: "OrderConfirmed",
+    } satisfies OrderConfirmedPayload;
   };
 
   static create(graphqlPayload?: OrderConfirmedPayload) {
@@ -84,5 +88,6 @@ export class SaleorOrderConfirmedEventMockFactory {
     return possibleOrderLine.value;
   }
 
-  static getGraphqlPayload = () => SaleorOrderConfirmedEventMockFactory._getGraphqlPayload();
+  static getGraphqlPayload = (): OrderConfirmedPayload =>
+    SaleorOrderConfirmedEventMockFactory._getGraphqlPayload();
 }
