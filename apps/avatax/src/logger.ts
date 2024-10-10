@@ -40,12 +40,12 @@ logger.attachTransport((log) => {
 
   const bodyMessage = log._meta.name ? `[${log._meta.name}] ${message}` : message;
 
-  const formattedStuff = JSON.stringify({
+  const formattedStuff = {
     message: bodyMessage,
     ...attributes,
     ...loggerContext.getRawContext(),
     _meta,
-  });
+  };
 
   if (_meta.logLevelName === "ERROR") {
     console.error(formattedStuff);
