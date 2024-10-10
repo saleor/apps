@@ -1,4 +1,4 @@
-import { graphql } from "@/graphql";
+import { graphql, ResultOf } from "@/graphql";
 
 import { AddressFragment } from "../fragments/AddressFragment";
 import { UserFragment } from "../fragments/UserFragment";
@@ -117,3 +117,5 @@ export const OrderConfirmedSubscription = graphql(
   `,
   [OrderConfirmedEventFragment],
 );
+
+export type OrderConfirmedFragmentType = ResultOf<typeof OrderConfirmedFragment>;

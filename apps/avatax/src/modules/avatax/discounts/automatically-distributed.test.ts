@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { TaxDiscountFragment } from "../../../../graphql/fragments/TaxDiscountFragment";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "./automatically-distributed";
 
 describe("AutomaticallyDistributedDiscountsStrategy", () => {
@@ -8,7 +8,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
 
   describe("getDiscountAmount", () => {
     it("should get total discount amount", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [
+      const discountsPayload: TaxDiscountFragment[] = [
         {
           amount: {
             amount: 21,
@@ -29,7 +29,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return 0 if no discounts", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [];
+      const discountsPayload: TaxDiscountFragment[] = [];
 
       const totalDiscount = strategy.getDiscountAmount(discountsPayload);
 
@@ -43,7 +43,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return 0 if there are discounts with amount 0", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [
+      const discountsPayload: TaxDiscountFragment[] = [
         {
           amount: {
             amount: 0,
@@ -60,7 +60,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
 
   describe("areLinesDiscounted", () => {
     it("should return true if there are discounts", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [
+      const discountsPayload: TaxDiscountFragment[] = [
         {
           amount: {
             amount: 21,
@@ -81,7 +81,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return false if there are no discounts", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [];
+      const discountsPayload: TaxDiscountFragment[] = [];
 
       const areLinesDiscounted = strategy.areLinesDiscounted(discountsPayload);
 
@@ -89,7 +89,7 @@ describe("AutomaticallyDistributedDiscountsStrategy", () => {
     });
 
     it("should return false if there are discounts with amount 0", () => {
-      const discountsPayload: TaxBaseFragment["discounts"] = [
+      const discountsPayload: TaxDiscountFragment[] = [
         {
           amount: {
             amount: 0,
