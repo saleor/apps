@@ -38,7 +38,6 @@ const getBasePayload = (): CalculateTaxesPayload => {
           sourceLine: {
             __typename: "OrderLine",
             orderProductVariant: {
-              __typename: "ProductVariant",
               id: "123",
               product: {
                 taxClass: {
@@ -53,9 +52,10 @@ const getBasePayload = (): CalculateTaxesPayload => {
       ],
       sourceObject: {
         id: "123",
+        avataxCustomerCode: "",
         avataxEntityCode: "",
         __typename: "Checkout",
-        user: { __typename: "User", email: "", avataxCustomerCode: "", id: "" },
+        user: { email: "", avataxCustomerCode: "", id: "" },
       },
     },
   };

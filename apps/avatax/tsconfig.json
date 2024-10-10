@@ -23,7 +23,8 @@
         "name": "gql.tada/ts-plugin",
         "schema": "./graphql/schema.graphql",
         "tadaOutputLocation": "./src/graphql-env.d.ts",
-        "shouldCheckForColocatedFragments": false
+        "shouldCheckForColocatedFragments": false,
+        "trackFieldUsage": false
       }
     ]
   },
