@@ -91,4 +91,6 @@ const runMigrations = async () => {
 
 runMigrations();
 
-logger.info(`Webhook migration complete for all environments from saleor-cloud APL`, { dryRun });
+process.on("beforeExit", () => {
+  logger.info(`Webhook migration complete for all environments from saleor-cloud APL`, { dryRun });
+});
