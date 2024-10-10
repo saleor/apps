@@ -78,7 +78,8 @@
     "webhoook",
     "XYZAAABB",
     "XYZAAABB00",
-    "mailhog"
+    "mailhog",
+    "tada"
   ],
   "ignorePaths": [
     "node_modules",
