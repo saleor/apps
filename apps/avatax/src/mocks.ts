@@ -1,6 +1,8 @@
-import { OrderConfirmedSubscriptionFragment } from "../generated/graphql";
+import { ResultOf } from "@/graphql";
 
-export const defaultOrder: OrderConfirmedSubscriptionFragment = {
+import { OrderConfirmedFragment } from "../graphql/subscriptions/OrderConfirmed";
+
+export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
   user: {
     id: "VXNlcjoyMDg0NTEwNDEw",

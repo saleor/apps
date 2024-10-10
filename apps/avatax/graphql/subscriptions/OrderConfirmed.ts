@@ -4,7 +4,8 @@ import { AddressFragment } from "../fragments/AddressFragment";
 import { UserFragment } from "../fragments/UserFragment";
 import { WebhookMetadata } from "../fragments/WebhookMetadata";
 
-const OrderLineFragment = graphql(`
+// should be imported from fragments todo
+export const OrderLineFragment = graphql(`
   fragment OrderLine on OrderLine {
     productSku
     productVariantId
@@ -32,7 +33,7 @@ const OrderLineFragment = graphql(`
   }
 `);
 
-const OrderConfirmedFragment = graphql(
+export const OrderConfirmedFragment = graphql(
   `
     fragment OrderConfirmed on Order {
       id

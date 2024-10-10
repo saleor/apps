@@ -1,6 +1,8 @@
-import { OrderConfirmedEventSubscriptionFragment } from "../../../../generated/graphql";
+import { ResultOf } from "@/graphql";
+
+import { OrderConfirmedSubscription } from "../../../../graphql/subscriptions/OrderConfirmed";
 
 export type OrderConfirmedPayload = Extract<
-  OrderConfirmedEventSubscriptionFragment,
+  ResultOf<typeof OrderConfirmedSubscription>,
   { __typename: "OrderConfirmed" }
 >;

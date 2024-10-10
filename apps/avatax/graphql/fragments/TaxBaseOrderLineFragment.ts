@@ -1,7 +1,7 @@
 import { graphql } from "@/graphql";
 
-export const OrderLineFragment = graphql(`
-  fragment OrderLine on OrderLine {
+export const TaxBaseOrderLineFragment = graphql(`
+  fragment TaxBaseOrderLine on OrderLine {
     id
     orderProductVariant: variant {
       id
