@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.10.6
+
+### Patch Changes
+
+- 02a4e4ba: Increase memory in Avatax. Previous reduction caused a large cold start increase
+
 ## 1.10.5
 
 ### Patch Changes
