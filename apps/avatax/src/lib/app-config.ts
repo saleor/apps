@@ -1,6 +1,6 @@
 import { err, fromThrowable, ok, Result } from "neverthrow";
 
-import { MetadataItem } from "../../generated/graphql";
+import { MetadataItemFragmentType } from "../../graphql/fragments/MetadataItem";
 import { BaseError } from "../error";
 import { getAppConfig } from "../modules/app/get-app-config";
 import { ChannelsConfig } from "../modules/channel-configuration/channel-config";
@@ -78,7 +78,7 @@ export class AppConfig implements IAppConfig {
     return new AppConfig(parsedConfig);
   }
 
-  static createFromEncryptedMetadata(encryptedMetadata: MetadataItem[]) {
+  static createFromEncryptedMetadata(encryptedMetadata: MetadataItemFragmentType[]) {
     /**
      * To make it testable, we need to refactor getAppConfig and allow to inject dependencies first
      */

@@ -1,6 +1,6 @@
 import { err, fromThrowable, ok, Result } from "neverthrow";
 
-import { MetadataItem } from "../../generated/graphql";
+import { MetadataItemFragmentType } from "../../graphql/fragments/MetadataItem";
 import { BaseError } from "../error";
 import { createLogger } from "../logger";
 import { getAppConfig } from "../modules/app/get-app-config";
@@ -8,7 +8,7 @@ import { AppConfig } from "./app-config";
 
 export interface IAppConfigExtractor {
   extractAppConfigFromPrivateMetadata(
-    encryptedPrivateMetadata: MetadataItem[],
+    encryptedPrivateMetadata: MetadataItemFragmentType[],
   ): Result<AppConfig, (typeof BaseError)["prototype"]>;
 }
 
@@ -33,7 +33,7 @@ export class AppConfigExtractor implements IAppConfigExtractor {
    *
    * It also includes basic error handling and logging
    */
-  extractAppConfigFromPrivateMetadata(encryptedPrivateMetadata: MetadataItem[]) {
+  extractAppConfigFromPrivateMetadata(encryptedPrivateMetadata: MetadataItemFragmentType[]) {
     if (!encryptedPrivateMetadata.length) {
       return err(
         new AppConfigExtractor.MissingMetadataError(

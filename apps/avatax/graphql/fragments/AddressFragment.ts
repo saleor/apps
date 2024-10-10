@@ -1,4 +1,4 @@
-import { graphql } from "@/graphql";
+import { graphql, ResultOf } from "@/graphql";
 
 export const AddressFragment = graphql(`
   fragment Address on Address {
@@ -12,3 +12,5 @@ export const AddressFragment = graphql(`
     }
   }
 `);
+
+export type AddressFragmentType = ResultOf<typeof AddressFragment>;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
+import { OrderConfirmedFragmentType } from "../../../graphql/subscriptions/OrderConfirmed";
 import { AvataxDocumentCodeResolver } from "./avatax-document-code-resolver";
 
 const resolver = new AvataxDocumentCodeResolver();
@@ -10,7 +10,7 @@ describe("AvataxDocumentCodeResolver", () => {
     const order = {
       id: "id",
       avataxDocumentCode: "123",
-    } as unknown as OrderConfirmedSubscriptionFragment;
+    } as unknown as OrderConfirmedFragmentType;
 
     expect(
       resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),
@@ -19,7 +19,7 @@ describe("AvataxDocumentCodeResolver", () => {
   it("returns order id when document code is not provided in metadata", () => {
     const order = {
       id: "id",
-    } as unknown as OrderConfirmedSubscriptionFragment;
+    } as unknown as OrderConfirmedFragmentType;
 
     expect(
       resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),

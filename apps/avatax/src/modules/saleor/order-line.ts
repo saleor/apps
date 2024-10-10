@@ -1,7 +1,10 @@
+import { FragmentOf } from "gql.tada";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
-import { OrderLineFragment } from "../../../generated/graphql";
+import { readFragment } from "@/graphql";
+
+import { OrderLineFragment } from "../../../graphql/fragments/OrderLineFragment";
 import { BaseError } from "../../error";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";
 import { AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";
@@ -27,13 +30,13 @@ export class SaleorOrderLine {
 
   static ParsingError = BaseError.subclass("SaleorOrderLineParsingError");
 
-  static createFromGraphQL = (payload: OrderLineFragment) => {
+  static createFromGraphQL = (payload: FragmentOf<typeof OrderLineFragment>) => {
     const parser = Result.fromThrowable(
       SaleorOrderLine.schema.parse,
       SaleorOrderLine.ParsingError.normalize,
     );
 
-    const parsedPayload = parser(payload);
+    const parsedPayload = parser(readFragment(OrderLineFragment, payload));
 
     if (parsedPayload.isErr()) {
       return err(parsedPayload.error);
