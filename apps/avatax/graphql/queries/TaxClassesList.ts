@@ -1,4 +1,4 @@
-import { graphql } from "@/graphql";
+import { graphql, ResultOf } from "@/graphql";
 
 import { TaxClassFragment } from "../fragments/TaxClass";
 
@@ -30,3 +30,5 @@ export const TaxClassesListQuery = graphql(
   `,
   [TaxClassFragment],
 );
+
+export type TaxClassesListQueryResult = ResultOf<typeof TaxClassesListQuery>;
