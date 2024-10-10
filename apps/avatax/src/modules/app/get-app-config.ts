@@ -1,6 +1,6 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
 
-import { MetadataItem } from "../../../generated/graphql";
+import { MetadataItemFragmentType } from "../../../graphql/fragments/MetadataItem";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
   ProviderConnections,
@@ -10,7 +10,7 @@ import {
 /**
  * TODO: Refactor, use DI to inject encrypt/decrypt logic
  */
-export const getAppConfig = (metadata: MetadataItem[]) => {
+export const getAppConfig = (metadata: MetadataItemFragmentType[]) => {
   let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;
 

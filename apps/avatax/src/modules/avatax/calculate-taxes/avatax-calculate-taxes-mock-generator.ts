@@ -8,24 +8,25 @@ import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
 import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { AddressFragment } from "graphql/fragments/AddressFragment";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { readFragment } from "@/graphql";
+
+import { TaxBaseFragmentType } from "../../../../graphql/fragments/TaxBase";
 import { ChannelConfig } from "../../channel-configuration/channel-config";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
-type TaxBase = TaxBaseFragment;
-
-const defaultTaxBase: TaxBase = {
+const defaultTaxBase: TaxBaseFragmentType = {
   pricesEnteredWithTax: true,
   currency: "USD",
   channel: {
     slug: "default-channel",
   },
   discounts: [],
-  address: {
+  address: readFragment(AddressFragment, {
     streetAddress1: "600 Montgomery St",
     streetAddress2: "",
     city: "SAN FRANCISCO",
@@ -34,7 +35,7 @@ const defaultTaxBase: TaxBase = {
     country: {
       code: "US",
     },
-  },
+  }),
   shippingPrice: {
     amount: 48.33,
   },
@@ -109,15 +110,17 @@ const defaultTaxBase: TaxBase = {
   sourceObject: {
     avataxEntityCode: null,
     id: "mock-id",
+    avataxCustomerCode: null,
     __typename: "Checkout",
     user: {
+      avataxCustomerCode: null,
       id: "123",
       email: "demo@saleor.io",
     },
   },
 };
 
-const taxBaseWithDiscounts: TaxBase = {
+const taxBaseWithDiscounts: TaxBaseFragmentType = {
   ...defaultTaxBase,
   discounts: [
     { amount: { amount: 21 }, type: "SUBTOTAL" },
@@ -974,7 +977,7 @@ type TestingScenario = keyof typeof testingScenariosMap;
 
 export class AvataxCalculateTaxesMockGenerator {
   constructor(private scenario: TestingScenario = "default") {}
-  generateTaxBase = (overrides: Partial<TaxBase> = {}): TaxBase =>
+  generateTaxBase = (overrides: Partial<TaxBaseFragmentType> = {}): TaxBaseFragmentType =>
     structuredClone({
       ...testingScenariosMap[this.scenario].taxBase,
       ...overrides,

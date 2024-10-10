@@ -1,4 +1,0 @@
-fragment WebhookMetadata on Event {
-  issuedAt
-  version
-}

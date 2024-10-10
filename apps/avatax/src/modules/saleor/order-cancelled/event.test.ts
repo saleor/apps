@@ -36,7 +36,7 @@ describe("SaleorCancelledOrderEvent", () => {
   it("should fail to create a SaleorCancelledOrderEvent when 'order' is missing", () => {
     const result = SaleorCancelledOrderEvent.create({
       ...validPayload,
-      order: undefined,
+      order: null,
     });
 
     expect(result.isErr()).toBe(true);
@@ -51,7 +51,7 @@ describe("SaleorCancelledOrderEvent", () => {
       ...validPayload,
       order: {
         ...validPayload.order,
-        avataxId: undefined,
+        avataxId: null,
       },
     } as OrderCancelledPayload);
 

@@ -56,7 +56,7 @@
     "pnpm": ">=9"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "*.{js,ts,tsx,!*.d.ts}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },

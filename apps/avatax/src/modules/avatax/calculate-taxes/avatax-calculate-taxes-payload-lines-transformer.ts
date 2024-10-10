@@ -2,7 +2,10 @@ import * as Sentry from "@sentry/nextjs";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import Decimal from "decimal.js-light";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { ResultOf } from "@/graphql";
+
+import { TaxBaseFragment } from "../../../../graphql/fragments/TaxBase";
+import { TaxDiscountFragment } from "../../../../graphql/fragments/TaxDiscountFragment";
 import { AvataxConfig } from "../avatax-connection-schema";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
@@ -13,7 +16,7 @@ import { avataxShippingLine } from "./avatax-shipping-line";
 export class AvataxCalculateTaxesPayloadLinesTransformer {
   constructor(private avataxCalculateTaxesTaxCodeMatcher: AvataxCalculateTaxesTaxCodeMatcher) {}
 
-  private calculateShippingDiscount(discounts: TaxBaseFragment["discounts"]) {
+  private calculateShippingDiscount(discounts: TaxDiscountFragment[]) {
     /**
      * For shipping we sum all the shipping-type discounts and subtract them from shipping price
      */
@@ -29,7 +32,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
    * This method is including extra fields that will be added in SHOPX-1145
    */
   transformWithDiscountType(
-    taxBase: TaxBaseFragment,
+    taxBase: ResultOf<typeof TaxBaseFragment>,
     config: AvataxConfig,
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,

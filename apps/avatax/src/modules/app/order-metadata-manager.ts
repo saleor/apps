@@ -1,13 +1,10 @@
 import { Client } from "urql";
 
 import { BaseError } from "@/error";
+import { VariablesOf } from "@/graphql";
 import { createLogger } from "@/logger";
 
-import {
-  UpdatePublicMetadataDocument,
-  UpdatePublicMetadataMutation,
-  UpdatePublicMetadataMutationVariables,
-} from "../../../generated/graphql";
+import { UpdatePublicMetadataMutation } from "../../../graphql/mutations/UpdatePublicMetadata";
 
 const PROVIDER_ORDER_ID_KEY = "avataxId";
 
@@ -33,7 +30,7 @@ export class OrderMetadataManager {
    * @deprecated - This will not be needed when we move to the new webhook flow because the transactions will be commited during OrderConfirmed
    */
   async updateOrderMetadataWithExternalId(orderId: string, externalId: string) {
-    const variables: UpdatePublicMetadataMutationVariables = {
+    const variables: VariablesOf<typeof UpdatePublicMetadataMutation> = {
       id: orderId,
       input: [
         {
@@ -43,7 +40,7 @@ export class OrderMetadataManager {
       ],
     };
     const { error, data } = await this.client
-      .mutation<UpdatePublicMetadataMutation>(UpdatePublicMetadataDocument, variables)
+      .mutation(UpdatePublicMetadataMutation, variables)
       .toPromise();
 
     const gqlErrors = data?.updateMetadata?.errors ?? [];

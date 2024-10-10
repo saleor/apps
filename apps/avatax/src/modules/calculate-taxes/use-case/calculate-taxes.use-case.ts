@@ -15,7 +15,7 @@ import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-ta
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
-import { MetadataItem } from "../../../../generated/graphql";
+import { MetadataItemFragmentType } from "../../../../graphql/fragments/MetadataItem";
 import { BaseError } from "../../../error";
 import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
@@ -75,7 +75,7 @@ export class CalculateTaxesUseCase {
     });
   }
 
-  private extractConfig(appMetadata: MetadataItem[], channelSlug: string) {
+  private extractConfig(appMetadata: MetadataItemFragmentType[], channelSlug: string) {
     return this.deps.configExtractor
       .extractAppConfigFromPrivateMetadata(appMetadata)
       .map((config) => {

@@ -1,11 +1,8 @@
 import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";
 
-import {
-  FetchAppDetailsDocument,
-  FetchAppDetailsQuery,
-  UpdatePrivateMetadataDocument,
-} from "../../../generated/graphql";
+import { UpdatePrivateMetadataMutation } from "../../../graphql/mutations/UpdatePrivateMetadata";
+import { FetchAppDetailsQuery } from "../../../graphql/queries/FetchAppDetails";
 import { AppMetadataCache } from "../../lib/app-metadata-cache";
 import { createLogger } from "../../logger";
 
@@ -35,9 +32,7 @@ gql`
 `;
 
 export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<MetadataEntry[]> {
-  const { error, data } = await client
-    .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
-    .toPromise();
+  const { error, data } = await client.query(FetchAppDetailsQuery, {}).toPromise();
 
   if (error) {
     return [];
@@ -52,7 +47,7 @@ export async function mutateMetadata(
   appId: string,
 ) {
   const { error: mutationError, data: mutationData } = await client
-    .mutation(UpdatePrivateMetadataDocument, {
+    .mutation(UpdatePrivateMetadataMutation, {
       id: appId,
       input: metadata,
     })

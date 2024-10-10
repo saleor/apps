@@ -17,6 +17,8 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
   it("should transform lines and shipping from order into product and shipping lines ", () => {
     const { order } = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
+    const theOrder = order!;
+
     expect(
       saleorOrderToAvataxLinesTransformer.transform({
         confirmedOrderEvent: saleorConfirmedOrderEvent,
@@ -26,16 +28,16 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       }),
     ).toStrictEqual([
       {
-        amount: order.lines[0].totalPrice.gross.amount,
-        description: order.lines[0].productName,
-        itemCode: order.lines[0].productSku,
-        quantity: order.lines[0].quantity,
+        amount: theOrder.lines[0].totalPrice.gross.amount,
+        description: theOrder.lines[0].productName,
+        itemCode: theOrder.lines[0].productSku,
+        quantity: theOrder.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
         taxIncluded: true,
         discounted: undefined,
       },
       {
-        amount: order.shippingPrice.gross.amount,
+        amount: theOrder.shippingPrice.gross.amount,
         itemCode: SHIPPING_ITEM_CODE,
         quantity: 1,
         taxCode: avataxConfigMock.shippingTaxCode,
@@ -48,22 +50,22 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
   it("should transform only lines from order into product if there is no shipping", () => {
     const orderConfirmedEventPayload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
-    const saleorConfirmedOrderEventWithoutShipping = SaleorOrderConfirmedEventMockFactory.create({
-      ...orderConfirmedEventPayload,
-      order: {
-        ...orderConfirmedEventPayload.order,
-        shippingPrice: {
-          gross: {
-            amount: 0,
-          },
-          net: {
-            amount: 0,
-          },
-        },
+    orderConfirmedEventPayload.order!.shippingPrice = {
+      gross: {
+        amount: 0,
       },
-    });
+      net: {
+        amount: 0,
+      },
+    };
+
+    const saleorConfirmedOrderEventWithoutShipping = SaleorOrderConfirmedEventMockFactory.create(
+      orderConfirmedEventPayload,
+    );
 
     const { order } = orderConfirmedEventPayload;
+
+    const theOrder = order!;
 
     expect(
       saleorOrderToAvataxLinesTransformer.transform({
@@ -74,10 +76,10 @@ describe("SaleorOrderToAvataxLinesTransformer", () => {
       }),
     ).toStrictEqual([
       {
-        amount: order.lines[0].totalPrice.gross.amount,
-        description: order.lines[0].productName,
-        itemCode: order.lines[0].productSku,
-        quantity: order.lines[0].quantity,
+        amount: theOrder.lines[0].totalPrice.gross.amount,
+        description: theOrder.lines[0].productName,
+        itemCode: theOrder.lines[0].productSku,
+        quantity: theOrder.lines[0].quantity,
         taxCode: DEFAULT_TAX_CLASS_ID,
         taxIncluded: true,
         discounted: undefined,

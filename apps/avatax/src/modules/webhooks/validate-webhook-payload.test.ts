@@ -6,6 +6,8 @@ import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
 
 const getBasePayload = (): CalculateTaxesPayload => {
   return {
+    issuedAt: new Date(2020, 1, 1).toISOString(),
+    version: "",
     __typename: "CalculateTaxes",
     recipient: {
       privateMetadata: [],
@@ -38,7 +40,6 @@ const getBasePayload = (): CalculateTaxesPayload => {
           sourceLine: {
             __typename: "OrderLine",
             orderProductVariant: {
-              __typename: "ProductVariant",
               id: "123",
               product: {
                 taxClass: {
@@ -53,9 +54,10 @@ const getBasePayload = (): CalculateTaxesPayload => {
       ],
       sourceObject: {
         id: "123",
+        avataxCustomerCode: "",
         avataxEntityCode: "",
         __typename: "Checkout",
-        user: { __typename: "User", email: "", avataxCustomerCode: "", id: "" },
+        user: { email: "", avataxCustomerCode: "", id: "" },
       },
     },
   };

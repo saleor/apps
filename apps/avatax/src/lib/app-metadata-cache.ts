@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-import { MetadataItem } from "../../generated/graphql";
+import { MetadataItemFragmentType } from "../../graphql/fragments/MetadataItem";
 import { createLogger } from "../logger";
 
 /**
@@ -9,10 +9,10 @@ import { createLogger } from "../logger";
  * Use it as a temporary storage that provides access to metadata in the request scope
  */
 export class AppMetadataCache {
-  private als = new AsyncLocalStorage<{ metadata: MetadataItem[] | null }>();
+  private als = new AsyncLocalStorage<{ metadata: MetadataItemFragmentType[] | null }>();
   private logger = createLogger("AppMetadataCache");
 
-  getRawMetadata(): MetadataItem[] | null {
+  getRawMetadata(): MetadataItemFragmentType[] | null {
     const store = this.als.getStore();
 
     if (!store) {
@@ -30,7 +30,7 @@ export class AppMetadataCache {
     return this.als.run({ metadata: null }, fn);
   }
 
-  setMetadata(metadata: MetadataItem[]) {
+  setMetadata(metadata: MetadataItemFragmentType[]) {
     const store = this.als.getStore();
 
     if (!store) {

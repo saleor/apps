@@ -1,6 +1,7 @@
+import { FragmentOf } from "gql.tada";
 import { describe, expect, it } from "vitest";
 
-import { TaxBaseLineFragment } from "../../../../generated/graphql";
+import { TaxBaseLineFragment } from "../../../../graphql/fragments/TaxBase";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
@@ -9,7 +10,7 @@ const matcher = new AvataxCalculateTaxesTaxCodeMatcher();
 
 describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
   it("returns DEFAULT_TAX_CLASS_ID when tax class is not found", () => {
-    const line: TaxBaseLineFragment = {
+    const line: FragmentOf<typeof TaxBaseLineFragment> = {
       quantity: 1,
       totalPrice: {
         amount: 1,
@@ -22,7 +23,9 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
         __typename: "OrderLine",
         orderProductVariant: {
           id: "1",
-          product: {},
+          product: {
+            taxClass: null,
+          },
         },
       },
     };
@@ -39,7 +42,7 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
     expect(matcher.match(line, matches)).toEqual(DEFAULT_TAX_CLASS_ID);
   });
   it("returns a match when tax class is found", () => {
-    const line: TaxBaseLineFragment = {
+    const line: FragmentOf<typeof TaxBaseLineFragment> = {
       quantity: 1,
       totalPrice: {
         amount: 1,
@@ -76,7 +79,7 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
     expect(taxCode).toEqual("123412");
   });
   it("throws an error when line type is not supported", () => {
-    const line: TaxBaseLineFragment = {
+    const line: FragmentOf<typeof TaxBaseLineFragment> = {
       quantity: 1,
       totalPrice: {
         amount: 1,

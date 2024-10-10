@@ -1,7 +1,7 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { describe, expect, it, vi } from "vitest";
 
-import { MetadataItem } from "../../../generated/graphql";
+import { MetadataItemFragmentType } from "../../../graphql/fragments/MetadataItem";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
 import { getAppConfig } from "./get-app-config";
@@ -46,7 +46,7 @@ const mockedChannels: ChannelsConfig = [
 
 const mockedEncryptedChannels = encrypt(JSON.stringify(mockedChannels), mockedSecretKey);
 
-const mockedMetadata: MetadataItem[] = [
+const mockedMetadata: MetadataItemFragmentType[] = [
   {
     key: "providers",
     value: mockedEncryptedProviders,

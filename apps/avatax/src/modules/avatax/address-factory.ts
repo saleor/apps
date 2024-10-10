@@ -1,9 +1,9 @@
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 
-import { AddressFragment } from "../../../generated/graphql";
+import { AddressFragmentType } from "../../../graphql/fragments/AddressFragment";
 import { AvataxConfig } from "./avatax-connection-schema";
 
-function mapSaleorAddressToAvataxAddress(address: AddressFragment): AvataxAddress {
+function mapSaleorAddressToAvataxAddress(address: AddressFragmentType): AvataxAddress {
   return {
     line1: address.streetAddress1,
     line2: address.streetAddress2,

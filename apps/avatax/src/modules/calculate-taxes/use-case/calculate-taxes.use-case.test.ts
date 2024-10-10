@@ -32,6 +32,8 @@ const channelSlug = "default-channel";
 
 const getBasePayload = (): CalculateTaxesPayload => {
   return {
+    issuedAt: null,
+    version: "",
     __typename: "CalculateTaxes",
     recipient: {
       privateMetadata: [],
@@ -64,7 +66,6 @@ const getBasePayload = (): CalculateTaxesPayload => {
           sourceLine: {
             __typename: "OrderLine",
             orderProductVariant: {
-              __typename: "ProductVariant",
               id: "123",
               product: {
                 taxClass: {
@@ -78,10 +79,11 @@ const getBasePayload = (): CalculateTaxesPayload => {
         },
       ],
       sourceObject: {
+        avataxCustomerCode: "",
         id: "123",
         avataxEntityCode: "",
         __typename: "Checkout",
-        user: { __typename: "User", email: "", avataxCustomerCode: "", id: "" },
+        user: { email: "", avataxCustomerCode: "", id: "" },
       },
     },
   };

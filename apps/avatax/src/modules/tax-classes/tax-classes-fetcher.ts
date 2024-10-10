@@ -1,26 +1,27 @@
 import { Client } from "urql";
 
-import {
-  TaxClassesListDocument,
-  TaxClassesListQueryVariables,
-  TaxClassFragment,
-} from "../../../generated/graphql";
+import { readFragment } from "@/graphql";
+
+import { TaxClassFragment } from "../../../graphql/fragments/TaxClass";
+import { TaxClassesListQuery } from "../../../graphql/queries/TaxClassesList";
 
 export class TaxClassesFetcher {
   constructor(private client: Client) {}
 
-  fetch(): Promise<TaxClassFragment[]> {
+  fetch() {
     return this.client
-      .query(TaxClassesListDocument, {
+      .query(TaxClassesListQuery, {
         /**
          * todo: add pagination
          * * arbitrary limit
          */
         first: 100,
-      } as TaxClassesListQueryVariables)
+      })
       .toPromise()
       .then((r) => {
-        return r.data?.taxClasses?.edges.map(({ node }) => node) ?? [];
+        return (
+          r.data?.taxClasses?.edges.map(({ node }) => readFragment(TaxClassFragment, node)) ?? []
+        );
       });
   }
 }

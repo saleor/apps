@@ -1,13 +1,20 @@
-import { OrderConfirmedSubscriptionFragment } from "../generated/graphql";
+import { ResultOf } from "@/graphql";
 
-export const defaultOrder: OrderConfirmedSubscriptionFragment = {
+import { OrderConfirmedFragment } from "../graphql/subscriptions/OrderConfirmed";
+
+export const defaultOrder: ResultOf<typeof OrderConfirmedFragment> = {
   id: "T3JkZXI6ZTUzZTBlM2MtMjk5Yi00OWYxLWIyZDItY2Q4NWExYTgxYjY2",
+  userEmail: "",
   user: {
+    avataxCustomerCode: null,
     id: "VXNlcjoyMDg0NTEwNDEw",
     email: "happy.customer@saleor.io",
   },
   number: "1234",
   avataxEntityCode: null,
+  avataxCustomerCode: null,
+  avataxDocumentCode: null,
+  avataxTaxCalculationDate: null,
   created: "2023-05-25T09:18:55.203440+00:00",
   status: "UNFULFILLED",
   channel: {
@@ -57,6 +64,8 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
   },
   lines: [
     {
+      productVariantId: "dmFyaWFudC1pZA==",
+      taxClass: null,
       productSku: "328223580",
       productName: "Monospace Tee",
       quantity: 3,
@@ -78,9 +87,10 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
       },
     },
     {
+      quantity: 1,
+      taxClass: null,
       productName: "Monospace Tee",
       productVariantId: "dmFyaWFudC1pZA==",
-      quantity: 1,
       unitPrice: {
         net: {
           amount: 20,
@@ -97,8 +107,11 @@ export const defaultOrder: OrderConfirmedSubscriptionFragment = {
           amount: 21.73,
         },
       },
+      productSku: null,
     },
     {
+      productVariantId: "dmFyaaaWFudC1pZA==",
+      taxClass: null,
       productSku: "118223581",
       productName: "Paul's Balance 420",
       quantity: 2,

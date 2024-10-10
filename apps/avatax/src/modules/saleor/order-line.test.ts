@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { OrderLineFragment } from "../../../generated/graphql";
+import { ResultOf } from "@/graphql";
+
+import { OrderLineFragment } from "../../../graphql/subscriptions/OrderConfirmed";
 import { SaleorOrderLine } from "./order-line";
 import { SaleorOrderLineMockFactory } from "./order-line-mocks";
 
@@ -15,7 +17,7 @@ describe("SaleorOrderLine", () => {
   });
 
   it("should fail to create a SaleorOrderLine when payload is missing", () => {
-    const result = SaleorOrderLine.createFromGraphQL({} as OrderLineFragment);
+    const result = SaleorOrderLine.createFromGraphQL({} as ResultOf<typeof OrderLineFragment>);
 
     expect(result.isErr()).toBe(true);
 

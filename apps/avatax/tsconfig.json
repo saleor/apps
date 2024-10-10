@@ -17,7 +17,16 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "./graphql/schema.graphql",
+        "tadaOutputLocation": "./src/graphql-env.d.ts",
+        "shouldCheckForColocatedFragments": false,
+        "trackFieldUsage": false
+      }
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", ".eslintrc.cjs"],
   "exclude": ["node_modules"]
