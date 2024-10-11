@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
+
+import { BaseError } from "../../../errors";
+import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
 import { SmtpEncryptionType } from "../configuration/smtp-config-schema";
-import { racePromise } from "../../../lib/race-promise";
-import { BaseError } from "../../../errors";
 
 export interface SendMailArgs {
   smtpSettings: {
@@ -106,6 +107,12 @@ export class SmtpEmailSender implements ISMTPEmailSender {
       return { response };
     } catch (error) {
       this.logger.error("Error during sending the email");
+
+      if (error instanceof SmtpEmailSender.SmtpEmailSenderTimeoutError) {
+        this.logger.error("Sending email timeout", { error });
+
+        throw error;
+      }
 
       if (error instanceof Error) {
         this.logger.error(error.message, { error });
