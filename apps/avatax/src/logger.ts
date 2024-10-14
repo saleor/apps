@@ -7,12 +7,16 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  const appsLogger = require("@saleor/apps-logger/node");
+  // Don't remove require - it's necessary for proper logger initialization
+  const {
+    attachLoggerSentryTransport,
+    attachLoggerVercelTransport,
+  } = require("@saleor/apps-logger/node");
 
-  appsLogger.attachLoggerSentryTransport(logger);
+  attachLoggerSentryTransport(logger);
 
   if (process.env.NODE_ENV === "production") {
-    appsLogger.attachLoggerVercelTransport(logger, require("./logger-context").loggerContext);
+    attachLoggerVercelTransport(logger, require("./logger-context").loggerContext);
   }
 }
 

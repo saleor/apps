@@ -3,13 +3,9 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 
-import { createLogger } from "@/logger";
-
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../logger-context";
-
-const logger = createLogger("manifest");
 
 export default wrapWithLoggerContext(
   withOtel(
@@ -17,11 +13,6 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
-
-        logger.info("Generating manifest", {
-          iframeBaseUrl,
-          apiBaseURL,
-        });
 
         const manifest: AppManifest = {
           about: "App connects with AvaTax to dynamically calculate taxes",

@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 
-// const logger = createLogger("index");
-
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
   const isMounted = useIsMounted();
@@ -21,8 +19,6 @@ const IndexPage: NextPage = () => {
   if (isInIframe()) {
     return <span>Loading...</span>;
   }
-
-  // logger.info("Index page");
 
   return (
     <div>

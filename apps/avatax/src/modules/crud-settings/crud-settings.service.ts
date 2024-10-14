@@ -46,7 +46,7 @@ export class CrudSettingsManager {
 
     if (!validation.success) {
       this.logger.error("Error while validating metadata", {
-        error: JSON.stringify(validation.error),
+        error: validation.error,
         metadataKey: this.params.metadataKey,
       });
       throw new Error("Error while validating metadata");
