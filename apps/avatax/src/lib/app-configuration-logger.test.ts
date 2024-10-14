@@ -81,13 +81,13 @@ describe("AppConfigurationLogger", () => {
     );
 
     expect(mockInfo).toHaveBeenCalledWith("Received configuration", {
-      address: JSON.stringify({
+      address: {
         city: "test",
         country: "test",
         zip: "10111",
         state: "NY",
         street: "test",
-      }),
+      },
       appConfigName: "config",
       channelSlug: "default-channel",
       companyCode: "test",

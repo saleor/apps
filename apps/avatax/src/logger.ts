@@ -1,7 +1,5 @@
 import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
 
-import packageJson from "../package.json";
-
 logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
 if (process.env.NODE_ENV !== "production") {
@@ -9,14 +7,17 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  import("@saleor/apps-logger/node").then(
-    async ({ attachLoggerOtelTransport, attachLoggerSentryTransport, LoggerContext }) => {
-      const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
+  // Don't remove require - it's necessary for proper logger initialization
+  const {
+    attachLoggerSentryTransport,
+    attachLoggerVercelTransport,
+  } = require("@saleor/apps-logger/node");
 
-      attachLoggerSentryTransport(logger);
-      attachLoggerOtelTransport(logger, packageJson.version, loggerContext);
-    },
-  );
+  attachLoggerSentryTransport(logger);
+
+  if (process.env.NODE_ENV === "production") {
+    attachLoggerVercelTransport(logger, require("./logger-context").loggerContext);
+  }
 }
 
 export { createLogger, logger };
