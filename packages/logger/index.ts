@@ -1,2 +1,2 @@
-export { logger, createLogger } from "./src/logger";
+export { createLogger, logger } from "./src/logger";
 export { attachLoggerConsoleTransport } from "./src/logger-console-transport";
