@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.14
+
+### Patch Changes
+
+- 0ef7adde: You can now see the error log when sending email has timeout
+
 ## 1.2.13
 
 ### Patch Changes
