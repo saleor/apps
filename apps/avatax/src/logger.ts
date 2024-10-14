@@ -7,14 +7,13 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  import("@saleor/apps-logger/node").then(
-    async ({ attachLoggerSentryTransport, attachLoggerVercelTransport }) => {
-      const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
+  const appsLogger = require("@saleor/apps-logger/node");
 
-      attachLoggerSentryTransport(logger);
-      attachLoggerVercelTransport(logger, loggerContext);
-    },
-  );
+  appsLogger.attachLoggerSentryTransport(logger);
+
+  if (process.env.NODE_ENV === "production") {
+    appsLogger.attachLoggerVercelTransport(logger, require("./logger-context").loggerContext);
+  }
 }
 
 export { createLogger, logger };
