@@ -1,5 +1,13 @@
 # app-avatax
 
+## 1.10.7
+
+### Patch Changes
+
+- 6be0103c: Added new `LoggerVercelTransport` support. It will help us send logs to our infrastructure without need of OTEL unstable logs API.
+- Updated dependencies [6be0103c]
+  - @saleor/apps-logger@1.2.10
+
 ## 1.10.6
 
 ### Patch Changes
