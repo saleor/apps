@@ -1,9 +1,11 @@
 import Algoliasearch, { SearchClient } from "algoliasearch";
+
 import {
   ProductVariantWebhookPayloadFragment,
   ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { isNotNil } from "../isNotNil";
+import { createLogger } from "../logger";
 import { SearchProvider } from "../searchProvider";
 import {
   AlgoliaObject,
@@ -11,7 +13,6 @@ import {
   productAndVariantToAlgolia,
   productAndVariantToObjectID,
 } from "./algoliaUtils";
-import { createLogger } from "../logger";
 
 export interface AlgoliaSearchProviderOptions {
   appId: string;
@@ -36,7 +37,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     channels,
     enabledKeys,
   }: AlgoliaSearchProviderOptions) {
-    this.#algolia = Algoliasearch(appId, apiKey);
+    this.#algolia = Algoliasearch(appId, apiKey); // cspell:disable-line
     this.#indexNamePrefix = indexNamePrefix;
     this.#indexNames =
       channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.#indexNamePrefix)) ||

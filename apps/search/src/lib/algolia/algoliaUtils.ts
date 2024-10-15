@@ -70,7 +70,7 @@ const isAttributeValueBooleanType = (
 ): attributeValue is [{ boolean: boolean; inputType: AttributeInputTypeEnum.Boolean }] => {
   return (
     /**
-     * Boolean type can be only a single value. List API exists due to multi-value fields like multiselects
+     * Boolean type can be only a single value. List API exists due to multi-value fields like multiselect
      */
     attributeValue.length === 1 &&
     attributeValue[0].inputType === AttributeInputTypeEnum.Boolean &&

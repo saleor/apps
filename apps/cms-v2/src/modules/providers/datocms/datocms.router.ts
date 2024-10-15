@@ -10,7 +10,7 @@ import { createLogger } from "../../../logger";
 /**
  * Operations specific for Datocms service.
  *
- * For configruration see providers-list.router.ts
+ * For configuration see providers-list.router.ts
  */
 export const datocmsRouter = router({
   fetchContentTypes: protectedClientProcedure

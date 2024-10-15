@@ -1,0 +1,49 @@
+{
+  "patterns": [
+    {
+      "name": "comment-single-line",
+      "pattern": "/#.*/g"
+    },
+    {
+      "name": "comment-multi-line",
+      "pattern": "/(?:\\/\\*[\\s\\S]*?\\*\\/)/g"
+    },
+    {
+      "name": "comments",
+      "pattern": ["comment-single-line", "comment-multi-line"]
+    }
+  ],
+  "languageSettings": [
+    {
+      "languageId": "markdown",
+      "caseSensitive": true
+    },
+    {
+      "languageId": ["javascriptreact", "typescriptreact", "typescript", "javascript"],
+      "includeRegExpList": ["comments"]
+    }
+  ],
+  "words": [
+    "avatax",
+    "bruno",
+    "codegen",
+    "contentful",
+    "datocms",
+    "klaviyo",
+    "mailhog",
+    "mjml",
+    "neverthrow",
+    "pactum",
+    "saleor",
+    "sendgrid",
+    "shopx",
+    "strapi",
+    "taxjar",
+    "unobfuscated",
+    "upstash",
+    "urql"
+  ],
+  "language": "en-US",
+  "useGitignore": true,
+  "ignorePaths": ["**/graphql.ts", "**/CHANGELOG.md", "**/schema.graphql"]
+}
