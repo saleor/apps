@@ -1,5 +1,12 @@
 # saleor-app-klaviyo
 
+## 1.12.13
+
+### Patch Changes
+
+- Updated dependencies [6be0103c]
+  - @saleor/apps-logger@1.2.10
+
 ## 1.12.12
 
 ### Patch Changes
