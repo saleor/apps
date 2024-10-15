@@ -24,21 +24,24 @@ export const config = {
   },
 };
 
-const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
-
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
-const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
-const useCase = new CalculateTaxesUseCase({
-  configExtractor: new AppConfigExtractor(),
-  logWriterFactory: new LogWriterFactory(),
-  payloadLinesTransformer: new AvataxCalculateTaxesPayloadLinesTransformer(
-    new AvataxCalculateTaxesTaxCodeMatcher(),
-  ),
-  calculateTaxesResponseTransformer: new AvataxCalculateTaxesResponseTransformer(),
-});
-
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+  const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
+
+  /**
+   * Create deps in handler, so it's potentially faster and reduce lambda start
+   */
+  const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+  const useCase = new CalculateTaxesUseCase({
+    configExtractor: new AppConfigExtractor(),
+    logWriterFactory: new LogWriterFactory(),
+    payloadLinesTransformer: new AvataxCalculateTaxesPayloadLinesTransformer(
+      new AvataxCalculateTaxesTaxCodeMatcher(),
+    ),
+    calculateTaxesResponseTransformer: new AvataxCalculateTaxesResponseTransformer(),
+  });
+
   try {
     const { payload, authData } = ctx;
 
