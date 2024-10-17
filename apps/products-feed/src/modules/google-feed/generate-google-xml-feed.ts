@@ -1,19 +1,20 @@
+import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 import { XMLBuilder } from "fast-xml-parser";
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
-import { productToProxy } from "./product-to-proxy";
-import { shopDetailsToProxy } from "./shop-details-to-proxy";
+
+import { createLogger } from "../../logger";
 import { RootConfig } from "../app-configuration/app-config";
-import { getMappedAttributes } from "./attribute-mapping";
-import { priceMapping } from "./price-mapping";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
-import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
+import { getMappedAttributes } from "./attribute-mapping";
+import { ProductVariant } from "./fetch-product-data";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 import { getWeightAttributeValue } from "./get-weight-attribute-value";
-import { createLogger } from "../../logger";
+import { priceMapping } from "./price-mapping";
+import { productToProxy } from "./product-to-proxy";
+import { shopDetailsToProxy } from "./shop-details-to-proxy";
 
 interface GenerateGoogleXmlFeedArgs {
-  productVariants: GoogleFeedProductVariantFragment[];
+  productVariants: ProductVariant[];
   storefrontUrl: string;
   productStorefrontUrl: string;
   titleTemplate: string;

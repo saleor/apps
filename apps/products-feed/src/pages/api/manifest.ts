@@ -1,12 +1,10 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
-
-import { createLogger } from "../../logger";
-
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
 
 import packageJson from "../../../package.json";
-import { withOtel } from "@saleor/apps-otel";
+import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
 
 export default wrapWithLoggerContext(
@@ -32,7 +30,7 @@ export default wrapWithLoggerContext(
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           extensions: [],
           homepageUrl: "https://github.com/saleor/apps",
-          id: "saleor.app.product-feed",
+          id: "saleor.app.product-feedd-dev",
           name: "Product Feed",
           permissions: ["MANAGE_PRODUCTS"],
           supportUrl: "https://github.com/saleor/apps/discussions",
