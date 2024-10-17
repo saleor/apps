@@ -26,7 +26,7 @@ export default wrapWithLoggerContext(
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           extensions: [],
           homepageUrl: "https://github.com/saleor/apps",
-          id: "saleor.app.avatax",
+          id: process.env.MANIFEST_APP_ID ?? "saleor.app.avatax",
           name: "AvaTax",
           permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
           requiredSaleorVersion: ">=3.19 <4",
