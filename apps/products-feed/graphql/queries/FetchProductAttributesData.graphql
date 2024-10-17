@@ -1,12 +1,12 @@
-query FetchProductDataForFeed($first:Int!, $after: String, $channel: String!, $imageSize: Int = 1024){
+query FetchProductAttributesData($first:Int!, $after: String, $channel: String!){
   productVariants(first:$first, after: $after, channel: $channel){
     pageInfo{
       hasNextPage
       endCursor
     }
     edges{
-      node{
-        ...GoogleFeedProductVariant
+      node {
+        ...ProductAttributes
       }
     }
   }

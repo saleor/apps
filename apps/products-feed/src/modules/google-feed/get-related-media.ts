@@ -1,4 +1,5 @@
-import { GoogleFeedProductVariantFragment, ProductMediaType } from "../../../generated/graphql";
+import { ProductMediaType } from "../../../generated/graphql";
+import { ProductVariant } from "./fetch-product-data";
 
 type Media = {
   id: string;
@@ -45,7 +46,7 @@ export const getRelatedMedia = ({
 };
 
 interface GetVariantMediaMapArgs {
-  variant: GoogleFeedProductVariantFragment;
+  variant: ProductVariant;
 }
 
 export const getVariantMediaMap = ({ variant }: GetVariantMediaMapArgs) => {

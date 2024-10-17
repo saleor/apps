@@ -1,0 +1,13 @@
+query FetchProductRelationsData($first:Int!, $after: String, $channel: String!, $imageSize: Int = 1024){
+  productVariants(first:$first, after: $after, channel: $channel){
+    pageInfo{
+      hasNextPage
+      endCursor
+    }
+    edges{
+      node {
+        ...ProductRelations
+      }
+    }
+  }
+}

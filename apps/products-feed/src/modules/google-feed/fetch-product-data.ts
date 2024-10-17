@@ -2,15 +2,24 @@
 
 import { url } from "inspector";
 import { Client } from "urql";
+
 import {
+  BasicProductDataFragment,
+  FetchBasicProductDataDocument,
+  FetchProductAttributesDataDocument,
   FetchProductCursorsDocument,
-  FetchProductDataForFeedDocument,
-  GoogleFeedProductVariantFragment,
+  FetchProductRelationsDataDocument,
+  ProductAttributesFragment,
+  ProductRelationsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 import { ProductProcessingLimit } from "./product-processing-limit";
 
 const VARIANTS_PER_PAGE = 100;
+
+export type ProductVariant = BasicProductDataFragment &
+  ProductAttributesFragment &
+  ProductRelationsFragment;
 
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
@@ -70,13 +79,29 @@ const fetchVariants = async ({
   after?: string;
   channel: string;
   imageSize?: number;
-}): Promise<GoogleFeedProductVariantFragment[]> => {
+}): Promise<ProductVariant[]> => {
   const logger = createLogger("fetchVariants", { saleorApiUrl: url, channel });
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
 
-  const result = await client
-    .query(FetchProductDataForFeedDocument, {
+  const basicProductDataPromise = client
+    .query(FetchBasicProductDataDocument, {
+      channel: channel,
+      first: VARIANTS_PER_PAGE,
+      after,
+    })
+    .toPromise();
+
+  const productAttributesDataPromise = client
+    .query(FetchProductAttributesDataDocument, {
+      channel: channel,
+      first: VARIANTS_PER_PAGE,
+      after,
+    })
+    .toPromise();
+
+  const productRelationsDataPromise = client
+    .query(FetchProductRelationsDataDocument, {
       channel: channel,
       first: VARIANTS_PER_PAGE,
       after,
@@ -84,14 +109,71 @@ const fetchVariants = async ({
     })
     .toPromise();
 
-  if (result.error) {
-    logger.error(`Error during the GraphqlAPI call: ${result.error.message}`, {
-      error: result.error,
-    });
+  const [basicProductData, productAttributesData, productRelationsData] = await Promise.all([
+    basicProductDataPromise,
+    productAttributesDataPromise,
+    productRelationsDataPromise,
+  ]);
+
+  if (basicProductData.error) {
+    logger.error(
+      `Error during the GraphqlAPI call (basicProductData): ${basicProductData.error.message}`,
+      {
+        error: basicProductData.error,
+      },
+    );
     return [];
   }
 
-  const productVariants = result.data?.productVariants?.edges.map((e) => e.node) || [];
+  if (productAttributesData.error) {
+    logger.error(
+      `Error during the GraphqlAPI call (productAttributesData): ${productAttributesData.error.message}`,
+      {
+        error: productAttributesData.error,
+      },
+    );
+    return [];
+  }
+
+  if (productRelationsData.error) {
+    logger.error(
+      `Error during the GraphqlAPI call (productRelationsData): ${productRelationsData.error.message}`,
+      {
+        error: productRelationsData.error,
+      },
+    );
+    return [];
+  }
+
+  const variantEdges = basicProductData.data?.productVariants?.edges || [];
+
+  const productVariants = variantEdges
+    .map((e) => {
+      const attributesEdge = productAttributesData.data?.productVariants?.edges.find(
+        (attr) => attr.node.id === e.node.id,
+      );
+      const relationsEdge = productRelationsData.data?.productVariants?.edges.find(
+        (rel) => rel.node.id === e.node.id,
+      );
+      const attributes = attributesEdge?.node.attributes;
+      const product = relationsEdge?.node.product;
+
+      if (!attributes || !product) {
+        return null;
+      }
+
+      return {
+        ...e.node,
+        attributes,
+        product,
+      };
+    })
+    .filter((e) => e !== null);
+
+  if (productVariants.length !== variantEdges.length) {
+    logger.warn("Some product variants were not fetched correctly");
+    return [];
+  }
 
   logger.debug("Product variants fetched successfully", {
     first: productVariants[0],
