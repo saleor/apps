@@ -8,5 +8,4 @@ module.exports = {
     project: "tsconfig.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["**/generated/graphql.ts"],
 };

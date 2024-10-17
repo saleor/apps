@@ -23,7 +23,7 @@ const procedure = protectedClientProcedure.use(({ ctx, next }) => {
 /**
  * Operations specific for Contentful service.
  *
- * For configruration see providers-list.router.ts
+ * For configuration see providers-list.router.ts
  */
 export const contentfulRouter = router({
   fetchEnvironmentsFromApi: procedure

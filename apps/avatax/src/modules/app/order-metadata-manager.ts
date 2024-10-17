@@ -30,7 +30,7 @@ export class OrderMetadataManager {
    *
    * @param orderId - Saleor order id
    * @param externalId - Provider order id
-   * @deprecated - This will not be needed when we move to the new webhook flow because the transactions will be commited during OrderConfirmed
+   * @deprecated - This will not be needed when we move to the new webhook flow because the transactions will be committed during OrderConfirmed
    */
   async updateOrderMetadataWithExternalId(orderId: string, externalId: string) {
     const variables: UpdatePublicMetadataMutationVariables = {

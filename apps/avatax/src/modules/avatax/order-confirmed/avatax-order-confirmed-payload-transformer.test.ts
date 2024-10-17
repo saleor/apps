@@ -18,7 +18,7 @@ const saleorOrderConfirmedEventMock = SaleorOrderConfirmedEventMockFactory.creat
 const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 /**
- * TODO: Dont export this, extract to shared code
+ * TODO: Don't export this, extract to shared code
  */
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
