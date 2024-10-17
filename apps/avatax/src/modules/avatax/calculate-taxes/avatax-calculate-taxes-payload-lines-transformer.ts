@@ -25,7 +25,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
   }
 
   /**
-   * Method name is temporary -> replace with "transofrm" later
+   * Method name is temporary -> replace with "transform" later
    * This method is including extra fields that will be added in SHOPX-1145
    */
   transformWithDiscountType(
