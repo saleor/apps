@@ -10,7 +10,7 @@ const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 const handler = createAppRegisterHandler({
   apl: saleorApp.apl,
   /**
-   * Prohibit installation from Saleors other than specified by the regex.
+   * Prohibit installation from Saleor other than specified by the regex.
    * Regex source is ENV so if ENV is not set, all installations will be allowed.
    */
   allowedSaleorUrls: [

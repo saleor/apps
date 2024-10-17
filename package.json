@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "turbo run build",
-    "check-spelling": "cspell **/*.{jsx,tsx,js,ts,md,mdx}",
+    "check-spelling": "cspell '**/*.{jsx,tsx,js,ts,md,mdx}'",
     "check-types": "turbo run check-types",
     "deploy": "turbo run deploy",
     "dev": "turbo run dev",
@@ -39,7 +39,7 @@
     "@sentry/cli": "2.32.1",
     "@sentry/nextjs": "7.117.0",
     "@types/node": "20.12.3",
-    "cspell": "^7.2.0",
+    "cspell": "8.15.2",
     "eslint": "8.57.0",
     "eslint-config-saleor": "workspace:*",
     "husky": "9.1.4",

@@ -49,7 +49,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
     /*
      * https://github.com/nodemailer/nodemailer/issues/1461#issuecomment-1263131029
      * [secure argument] it’s not about security but if the server starts tcp connections over TLS mode or not.
-     * If it starts connections in cleartext mode, the client can not use TLS until STARTTLS can be established later.
+     * If it starts connections in cleartext mode, the client can not use TLS until START TLS can be established later.
      */
 
     switch (smtpSettings.encryption) {
