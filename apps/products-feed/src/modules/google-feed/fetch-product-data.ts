@@ -161,10 +161,12 @@ const fetchVariants = async ({
         const product = relatedProductEdge?.node;
 
         if (!attributes) {
+          // TODO: migrate to modern errors
           throw new Error("Attributes not found for variant");
         }
 
         if (!product) {
+          // TODO: migrate to modern errors
           throw new Error("Product not found for variant");
         }
 
