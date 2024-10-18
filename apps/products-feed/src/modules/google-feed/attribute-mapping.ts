@@ -1,14 +1,12 @@
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
 import { RootConfig } from "../app-configuration/app-config";
+import { ProductVariant } from "./fetch-product-data";
 
 interface GetMappedAttributesArgs {
-  variant: GoogleFeedProductVariantFragment;
+  variant: ProductVariant;
   attributeMapping?: RootConfig["attributeMapping"];
 }
 
-export const attributeArrayToValueString = (
-  attributes?: GoogleFeedProductVariantFragment["attributes"],
-) => {
+export const attributeArrayToValueString = (attributes?: ProductVariant["attributes"]) => {
   if (!attributes?.length) {
     return;
   }

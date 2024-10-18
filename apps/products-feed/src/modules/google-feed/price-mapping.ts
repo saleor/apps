@@ -1,4 +1,4 @@
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
+import { ProductVariant } from "./fetch-product-data";
 
 /**
  * Price format has to be altered from the en format to the one expected by Google
@@ -17,7 +17,7 @@ const formatCurrency = (currency: string, amount: number) => {
 };
 
 interface priceMappingArgs {
-  pricing: GoogleFeedProductVariantFragment["pricing"];
+  pricing: ProductVariant["pricing"];
 }
 
 /*
@@ -35,7 +35,7 @@ export const priceMapping = ({ pricing }: priceMappingArgs) => {
   // Price attribute is expected to be a base price
   const formattedUndiscountedPrice = formatCurrency(
     priceUndiscounted.currency,
-    priceUndiscounted.amount
+    priceUndiscounted.amount,
   );
 
   const discountedPrice = pricing?.price?.gross;

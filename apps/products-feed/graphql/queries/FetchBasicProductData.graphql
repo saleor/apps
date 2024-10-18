@@ -1,0 +1,13 @@
+query FetchBasicProductData($first:Int!, $after: String, $channel: String!){
+  productVariants(first:$first, after: $after, channel: $channel){
+    pageInfo{
+      hasNextPage
+      endCursor
+    }
+    edges{
+      node {
+        ...BasicProductData
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
+import { ProductVariant } from "../google-feed/fetch-product-data";
 
-export const exampleVariantData: GoogleFeedProductVariantFragment = {
+export const exampleVariantData: ProductVariant = {
   id: "UHJvZHVjdFZhcmlhbnQ6MzYx", // cspell:disable-line
   name: "M",
   sku: "218223580",
