@@ -11,6 +11,10 @@
     {
       "name": "comments",
       "pattern": ["comment-single-line", "comment-multi-line"]
+    },
+    {
+      "name": "logger",
+      "pattern": "/logger\\.(?:warn|error|info|debug)\\(.*\\)/g"
     }
   ],
   "languageSettings": [
@@ -20,7 +24,7 @@
     },
     {
       "languageId": ["javascriptreact", "typescriptreact", "typescript", "javascript"],
-      "includeRegExpList": ["comments"]
+      "includeRegExpList": ["comments", "logger"]
     }
   ],
   "words": [
@@ -41,6 +45,8 @@
     "taxjar",
     "unobfuscated",
     "upstash",
+    "upserted",
+    "upserting",
     "urql"
   ],
   "language": "en-US",
