@@ -124,8 +124,10 @@ const fetchVariants = async ({
     return [];
   }
 
-  const productIds =
+  const allProductIds =
     basicProductData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
+
+  const productIds = Array.from(new Set(allProductIds));
 
   const relatedProductsData = await client
     .query(FetchRelatedProductsDataDocument, {
