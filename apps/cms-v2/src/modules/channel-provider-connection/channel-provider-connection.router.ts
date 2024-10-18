@@ -1,11 +1,13 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
 import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
 import { createSettingsManager } from "@/modules/configuration/metadata-manager";
 import { ChannelProviderConnectionConfig } from "@/modules/configuration/schemas/channel-provider-connection.schema";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
-import { z } from "zod";
+
 import { FetchChannelsDocument } from "../../../generated/graphql";
-import { TRPCError } from "@trpc/server";
 import { createLogger } from "../../logger";
 
 const procedure = protectedClientProcedure.use(({ ctx, next }) => {
@@ -82,7 +84,7 @@ export const channelProviderConnectionRouter = router({
       } catch (e) {
         switch ((e as { cause: string }).cause) {
           case "PROVIDER_DOESNT_EXIST":
-            logger.warn("Provider doesnt exist");
+            logger.warn("Provider doesn't exist");
             throw new TRPCError({
               code: "BAD_REQUEST",
               cause: "PROVIDER_DOESNT_EXIST",

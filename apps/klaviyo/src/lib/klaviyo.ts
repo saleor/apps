@@ -20,7 +20,7 @@ export const Klaviyo = (token: string): EmailServiceProvider => ({
       }),
     );
 
-    logger.info("Seding Klaviyo request", { url: "https://a.klaviyo.com/api/track" });
+    logger.info("Sending Klaviyo request", { url: "https://a.klaviyo.com/api/track" });
 
     const response = await fetch("https://a.klaviyo.com/api/track", {
       method: "POST",
