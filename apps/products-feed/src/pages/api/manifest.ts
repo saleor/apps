@@ -30,7 +30,7 @@ export default wrapWithLoggerContext(
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           extensions: [],
           homepageUrl: "https://github.com/saleor/apps",
-          id: "saleor.app.product-feedd-dev",
+          id: "saleor.app.product-feedd",
           name: "Product Feed",
           permissions: ["MANAGE_PRODUCTS"],
           supportUrl: "https://github.com/saleor/apps/discussions",
