@@ -8,18 +8,17 @@ import {
   FetchBasicProductDataDocument,
   FetchProductAttributesDataDocument,
   FetchProductCursorsDocument,
-  FetchProductRelationsDataDocument,
+  FetchRelatedProductsDataDocument,
   ProductAttributesFragment,
-  ProductRelationsFragment,
+  RelatedProductsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 import { ProductProcessingLimit } from "./product-processing-limit";
 
 const VARIANTS_PER_PAGE = 100;
 
-export type ProductVariant = BasicProductDataFragment &
-  ProductAttributesFragment &
-  ProductRelationsFragment;
+export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
+  ProductAttributesFragment & { product: RelatedProductsFragment };
 
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
@@ -100,19 +99,9 @@ const fetchVariants = async ({
     })
     .toPromise();
 
-  const productRelationsDataPromise = client
-    .query(FetchProductRelationsDataDocument, {
-      channel: channel,
-      first: VARIANTS_PER_PAGE,
-      after,
-      imageSize,
-    })
-    .toPromise();
-
-  const [basicProductData, productAttributesData, productRelationsData] = await Promise.all([
+  const [basicProductData, productAttributesData] = await Promise.all([
     basicProductDataPromise,
     productAttributesDataPromise,
-    productRelationsDataPromise,
   ]);
 
   if (basicProductData.error) {
@@ -135,11 +124,21 @@ const fetchVariants = async ({
     return [];
   }
 
-  if (productRelationsData.error) {
+  const productIds =
+    basicProductData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
+
+  const relatedProductsData = await client
+    .query(FetchRelatedProductsDataDocument, {
+      ids: productIds,
+      imageSize,
+    })
+    .toPromise();
+
+  if (relatedProductsData.error) {
     logger.error(
-      `Error during the GraphqlAPI call (productRelationsData): ${productRelationsData.error.message}`,
+      `Error during the GraphqlAPI call (relatedProductsData): ${relatedProductsData.error.message}`,
       {
-        error: productRelationsData.error,
+        error: relatedProductsData.error,
       },
     );
     return [];
@@ -147,40 +146,48 @@ const fetchVariants = async ({
 
   const variantEdges = basicProductData.data?.productVariants?.edges || [];
 
-  const productVariants = variantEdges
-    .map((e) => {
-      const attributesEdge = productAttributesData.data?.productVariants?.edges.find(
-        (attr) => attr.node.id === e.node.id,
-      );
-      const relationsEdge = productRelationsData.data?.productVariants?.edges.find(
-        (rel) => rel.node.id === e.node.id,
-      );
-      const attributes = attributesEdge?.node.attributes;
-      const product = relationsEdge?.node.product;
+  try {
+    const productVariants = variantEdges
+      .map((e) => {
+        const attributesEdge = productAttributesData.data?.productVariants?.edges.find(
+          (attr) => attr.node.id === e.node.id,
+        );
 
-      if (!attributes || !product) {
-        return null;
-      }
+        const relatedProductEdge = relatedProductsData.data?.products?.edges.find(
+          (product) => product.node.id === e.node.product.id,
+        );
 
-      return {
-        ...e.node,
-        attributes,
-        product,
-      };
-    })
-    .filter((e) => e !== null);
+        const attributes = attributesEdge?.node.attributes;
+        const product = relatedProductEdge?.node;
 
-  if (productVariants.length !== variantEdges.length) {
-    logger.warn("Some product variants were not fetched correctly");
+        if (!attributes) {
+          throw new Error("Attributes not found for variant");
+        }
+
+        if (!product) {
+          throw new Error("Product not found for variant");
+        }
+
+        return {
+          ...e.node,
+          attributes,
+          product,
+        };
+      })
+      .filter((e) => e !== null);
+
+    logger.debug("Product variants fetched successfully", {
+      first: productVariants[0],
+      totalLength: productVariants.length,
+    });
+
+    return productVariants;
+  } catch (error) {
+    logger.error("Error during the product variants mapping", {
+      error: error instanceof Error ? error.message : error,
+    });
     return [];
   }
-
-  logger.debug("Product variants fetched successfully", {
-    first: productVariants[0],
-    totalLength: productVariants.length,
-  });
-
-  return productVariants;
 };
 
 interface FetchProductDataArgs {

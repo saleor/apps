@@ -2,6 +2,9 @@ fragment BasicProductData on ProductVariant {
     id
     name
     sku
+    product {
+        id
+    }
     weight {
         unit
         value
