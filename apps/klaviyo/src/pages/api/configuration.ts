@@ -1,10 +1,10 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";
+
 import { saleorApp } from "../../../saleor-app";
 import { createSettingsManager } from "../../lib/metadata";
 import { createLogger } from "../../logger";
@@ -65,7 +65,7 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
 
   switch (request.method!) {
     case "GET":
-      logger.info("Returing app configuration");
+      logger.info("Returning app configuration");
 
       return res.json({
         success: true,

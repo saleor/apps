@@ -1,10 +1,11 @@
-import { router } from "../trpc/trpc-server";
-import { protectedClientProcedure } from "../trpc/protected-client-procedure";
-import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
-import { UpdateCategoryMappingDocument } from "../../../generated/graphql";
 import { TRPCError } from "@trpc/server";
-import { CategoriesFetcher } from "./categories-fetcher";
+
+import { UpdateCategoryMappingDocument } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
+import { protectedClientProcedure } from "../trpc/protected-client-procedure";
+import { router } from "../trpc/trpc-server";
+import { CategoriesFetcher } from "./categories-fetcher";
+import { SetCategoryMappingInputSchema } from "./category-mapping-input-schema";
 
 export const categoryMappingRouter = router({
   /**
@@ -23,7 +24,7 @@ export const categoryMappingRouter = router({
       });
     });
 
-    logger.debug("Returning categories", { first: result[0], totaLength: result.length });
+    logger.debug("Returning categories", { first: result[0], totalLength: result.length });
 
     return result;
   }),
