@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.11
+
+### Patch Changes
+
+- 945a27be: Now, a single query for fetching variants was splitted into smaller ones to decrease the API overload.
+
 ## 1.19.10
 
 ### Patch Changes
