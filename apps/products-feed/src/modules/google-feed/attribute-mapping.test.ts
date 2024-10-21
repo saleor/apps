@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { GoogleFeedProductVariantFragment } from "../../../generated/graphql";
-import { attributeArrayToValueString, getMappedAttributes } from "./attribute-mapping";
 
-const productBase: GoogleFeedProductVariantFragment["product"] = {
+import { attributeArrayToValueString, getMappedAttributes } from "./attribute-mapping";
+import { ProductVariant } from "./fetch-product-data";
+
+const productBase: ProductVariant["product"] = {
   name: "Product",
   __typename: "Product",
   id: "product-id",
@@ -47,7 +48,7 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
   ],
 };
 
-const priceBase: GoogleFeedProductVariantFragment["pricing"] = {
+const priceBase: ProductVariant["pricing"] = {
   __typename: "VariantPricingInfo",
   price: {
     __typename: "TaxedMoney",

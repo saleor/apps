@@ -1,0 +1,12 @@
+fragment ProductAttributes on ProductVariant {
+    id
+    attributes {
+        attribute {
+            id
+        }
+        values {
+            value
+            name
+        }
+    }
+}

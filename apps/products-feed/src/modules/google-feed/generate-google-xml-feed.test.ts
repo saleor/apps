@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { GoogleFeedProductVariantFragment, WeightUnitsEnum } from "../../../generated/graphql";
+
+import { WeightUnitsEnum } from "../../../generated/graphql";
+import { ProductVariant } from "./fetch-product-data";
 import { generateGoogleXmlFeed } from "./generate-google-xml-feed";
 
-const productBase: GoogleFeedProductVariantFragment["product"] = {
+const productBase: ProductVariant["product"] = {
   name: "Product",
   __typename: "Product",
   id: "product-id",
@@ -22,7 +24,7 @@ const productBase: GoogleFeedProductVariantFragment["product"] = {
   },
 };
 
-const priceBase: GoogleFeedProductVariantFragment["pricing"] = {
+const priceBase: ProductVariant["pricing"] = {
   __typename: "VariantPricingInfo",
   price: {
     __typename: "TaxedMoney",
