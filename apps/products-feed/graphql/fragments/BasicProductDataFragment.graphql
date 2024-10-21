@@ -1,0 +1,27 @@
+fragment BasicProductData on ProductVariant {
+    id
+    name
+    sku
+    product {
+        id
+    }
+    weight {
+        unit
+        value
+    }
+    pricing {
+        priceUndiscounted {
+            gross {
+                currency
+                amount
+            }
+        }
+        price {
+            gross {
+                currency
+                amount
+            }
+        }
+    }
+    quantityAvailable
+}
