@@ -1,5 +1,12 @@
 # smtp
 
+## 1.2.16
+
+### Patch Changes
+
+- Updated dependencies [6d528dc6]
+  - @saleor/apps-logger@1.2.11
+
 ## 1.2.15
 
 ### Patch Changes
