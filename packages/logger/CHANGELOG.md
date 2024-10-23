@@ -1,5 +1,17 @@
 # @saleor/apps-logger
 
+## 1.2.11
+
+### Patch Changes
+
+- 6d528dc6: Added missing OTEL attributes to `loggerVercelTransport`. They will be visible under `otel` key in log collection service.
+
+  Attributes:
+
+  - `span_id`
+  - `trace_id`
+  - `timestamp`
+
 ## 1.2.10
 
 ### Patch Changes
