@@ -1,6 +1,6 @@
 {
   "name": "app-avatax",
-  "version": "1.10.8",
+  "version": "1.10.9",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
