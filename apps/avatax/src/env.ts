@@ -2,7 +2,7 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-// based on https://env.t3.gg/docs/recipes#booleans
+// https://env.t3.gg/docs/recipes#booleans
 const booleanSchema = z
   .string()
   .refine((s) => s === "true" || s === "false")
