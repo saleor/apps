@@ -13,14 +13,16 @@ const dryRun = args.includes("--dry-run");
 
 const logger = createMigrationScriptLogger("WebhooksMigrationScript");
 
-Sentry.init({
-  dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-  enableTracing: false,
-  environment: env.ENV,
-  includeLocalVariables: true,
-  ignoreErrors: [],
-  integrations: [],
-});
+/*
+ * Sentry.init({
+ *   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+ *   enableTracing: false,
+ *   environment: env.ENV,
+ *   includeLocalVariables: true,
+ *   ignoreErrors: [],
+ *   integrations: [],
+ * });
+ */
 
 const runMigrations = async () => {
   logger.info(`Starting webhooks migration`);
@@ -81,7 +83,8 @@ const runMigrations = async () => {
     });
 
     await runner.migrate().catch((error) => {
-      throw error;
+      // @ts-expect-error
+      Sentry.default.captureException(error);
     });
   }
 };
