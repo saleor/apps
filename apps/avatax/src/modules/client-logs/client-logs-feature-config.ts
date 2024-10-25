@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { env } from "@/env";
+
 const schema = z
   .object({
     isEnabled: z.boolean({ coerce: true }).optional().default(false),
@@ -28,7 +30,7 @@ const schema = z
   });
 
 export const clientLogsFeatureConfig = schema.parse({
-  isEnabled: process.env.FF_ENABLE_EXPERIMENTAL_LOGS,
-  dynamoTableName: process.env.DYNAMODB_LOGS_TABLE_NAME,
-  ttlInDays: process.env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS,
+  isEnabled: env.FF_ENABLE_EXPERIMENTAL_LOGS,
+  dynamoTableName: env.DYNAMODB_LOGS_TABLE_NAME,
+  ttlInDays: env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS,
 });

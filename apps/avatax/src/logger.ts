@@ -1,10 +1,11 @@
 import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
 
 import packageJson from "../package.json";
+import { env } from "./env";
 
 rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
-if (process.env.NODE_ENV !== "production") {
+if (env.NODE_ENV !== "production") {
   attachLoggerConsoleTransport(rootLogger);
 }
 
@@ -17,7 +18,7 @@ if (typeof window === "undefined") {
 
   attachLoggerSentryTransport(rootLogger);
 
-  if (process.env.NODE_ENV === "production") {
+  if (env.NODE_ENV === "production") {
     attachLoggerVercelTransport(
       rootLogger,
       packageJson.version,

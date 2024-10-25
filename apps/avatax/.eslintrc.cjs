@@ -1,9 +1,10 @@
 module.exports = {
   root: true,
   extends: ["saleor"],
-  plugins: ["neverthrow"],
+  plugins: ["neverthrow", "node"],
   rules: {
     "turbo/no-undeclared-env-vars": ["error"],
+    "node/no-process-env": ["error"],
   },
   parserOptions: {
     project: "tsconfig.json",

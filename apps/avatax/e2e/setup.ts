@@ -1,16 +1,17 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-import "./data/functions";
 import "dotenv/config";
+import "./data/functions";
 
 import { request, settings, stash } from "pactum";
 import { beforeAll } from "vitest";
 
+import { env } from "../src/env";
+
 beforeAll(() => {
-  const saleorApiUrl = process.env.TEST_SALEOR_API_URL;
+  const saleorApiUrl = env.TEST_SALEOR_API_URL;
 
   const staffCredentials = {
-    email: process.env.E2E_USER_NAME,
-    password: process.env.E2E_USER_PASSWORD,
+    email: env.E2E_USER_NAME,
+    password: env.E2E_USER_PASSWORD,
   };
 
   if (!saleorApiUrl) {

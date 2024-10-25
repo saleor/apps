@@ -49,6 +49,7 @@ jobs:
           TEST_SALEOR_API_URL: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
           E2E_USER_NAME: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_NAME"
           E2E_USER_PASSWORD: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_PASSWORD"
+          SECRET_KEY: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/SECRET_KEY"
       - name: Generate GraphQL files
         run: pnpm --filter=app-avatax generate
       - name: Run e2e tests

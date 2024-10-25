@@ -1,3 +1,4 @@
+/* eslint-disable node/no-process-env */
 // @ts-check
 
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
