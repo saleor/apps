@@ -1,12 +1,11 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig } from "../channel-configuration/channel-config";
 import { ProviderConnections } from "../provider-connections/provider-connections";
 import { getAppConfig } from "./get-app-config";
 
-const mockedSecretKey = "test_secret_key";
 const mockedProviders: ProviderConnections = [
   {
     provider: "avatax",
@@ -32,7 +31,7 @@ const mockedProviders: ProviderConnections = [
     },
   },
 ];
-const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), mockedSecretKey);
+const mockedEncryptedProviders = encrypt(JSON.stringify(mockedProviders), "test_secret_key");
 
 const mockedChannels: ChannelsConfig = [
   {
@@ -44,7 +43,7 @@ const mockedChannels: ChannelsConfig = [
   },
 ];
 
-const mockedEncryptedChannels = encrypt(JSON.stringify(mockedChannels), mockedSecretKey);
+const mockedEncryptedChannels = encrypt(JSON.stringify(mockedChannels), "test_secret_key");
 
 const mockedMetadata: MetadataItem[] = [
   {
@@ -57,7 +56,7 @@ const mockedMetadata: MetadataItem[] = [
   },
 ];
 
-vi.stubEnv("SECRET_KEY", mockedSecretKey);
+// vi.stubEnv("SECRET_KEY", mockedSecretKey);
 
 describe("getAppConfig", () => {
   it("returns empty providerConnections and channels config when no metadata", () => {
