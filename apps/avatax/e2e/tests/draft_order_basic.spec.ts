@@ -2,8 +2,7 @@
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
-import { env } from "@/env";
-
+import { env } from "../../src/env";
 import {
   CreateDraftOrder,
   CreateOrderLines,
