@@ -81,8 +81,7 @@ const runMigrations = async () => {
     });
 
     await runner.migrate().catch((error) => {
-      console.log(Sentry);
-      process.exit(1);
+      throw error;
     });
   }
 };
