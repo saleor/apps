@@ -1,12 +1,12 @@
-import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
 
 import packageJson from "../package.json";
 import { env } from "./env";
 
-logger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
+rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
 if (env.NODE_ENV !== "production") {
-  attachLoggerConsoleTransport(logger);
+  attachLoggerConsoleTransport(rootLogger);
 }
 
 if (typeof window === "undefined") {
@@ -16,15 +16,21 @@ if (typeof window === "undefined") {
     attachLoggerVercelTransport,
   } = require("@saleor/apps-logger/node");
 
-  attachLoggerSentryTransport(logger);
+  attachLoggerSentryTransport(rootLogger);
 
   if (env.NODE_ENV === "production") {
     attachLoggerVercelTransport(
-      logger,
+      rootLogger,
       packageJson.version,
       require("./logger-context").loggerContext,
     );
   }
 }
 
-export { createLogger, logger };
+export const createLogger = (name: string, params?: Record<string, unknown>) =>
+  rootLogger.getSubLogger(
+    {
+      name: name,
+    },
+    params,
+  );
