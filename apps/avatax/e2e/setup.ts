@@ -4,7 +4,7 @@ import "./data/functions";
 import { request, settings, stash } from "pactum";
 import { beforeAll } from "vitest";
 
-import { env } from "@/env";
+import { env } from "../src/env";
 
 beforeAll(() => {
   const saleorApiUrl = env.TEST_SALEOR_API_URL;
