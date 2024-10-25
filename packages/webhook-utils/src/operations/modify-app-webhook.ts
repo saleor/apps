@@ -36,19 +36,12 @@ export const modifyAppWebhook = async ({
     });
   }
 
-  if (data?.webhookUpdate?.errors) {
-    throw new WebhookMigrationUnknownError("Webhook update failed. The API returned an error", {
-      errors: data.webhookUpdate.errors,
-    });
-  }
-
   const webhook = data?.webhookUpdate?.webhook;
 
   if (!webhook) {
-    throw new WebhookMigrationUnknownError(
-      "Webhook update response is empty. The API returned no additional error.",
-      { cause: error },
-    );
+    throw new WebhookMigrationUnknownError("Webhook update failed. The API returned an error", {
+      errors: data?.webhookUpdate?.errors.map((e) => WebhookMigrationUnknownError.normalize(e)),
+    });
   }
 
   return {

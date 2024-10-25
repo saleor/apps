@@ -76,11 +76,13 @@ export class WebhookMigrationRunner {
         case error instanceof WebhookMigrationUnknownError:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while fetching data from Saleor`,
+            { error },
           );
           throw error;
         default:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while running migrations`,
+            { error },
           );
           throw error;
       }

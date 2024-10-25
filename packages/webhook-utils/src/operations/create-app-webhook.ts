@@ -32,19 +32,12 @@ export const createAppWebhook = async ({
     });
   }
 
-  if (data?.webhookCreate?.errors) {
-    throw new WebhookMigrationUnknownError("Webhook creation failed. The API returned an error", {
-      errors: data.webhookCreate.errors,
-    });
-  }
-
   const webhook = data?.webhookCreate?.webhook;
 
   if (!webhook) {
-    throw new WebhookMigrationUnknownError(
-      "Webhook creation response is empty. The API returned no additional error.",
-      { cause: error },
-    );
+    throw new WebhookMigrationUnknownError("Webhook create failed. The API returned an error", {
+      errors: data?.webhookCreate?.errors.map((e) => WebhookMigrationUnknownError.normalize(e)),
+    });
   }
 
   return {

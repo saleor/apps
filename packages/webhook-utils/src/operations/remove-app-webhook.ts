@@ -14,7 +14,9 @@ interface RemoveAppWebhookArgs {
 }
 
 export const removeAppWebhook = async ({ client, webhookId }: RemoveAppWebhookArgs) => {
-  const { error } = await client.mutation(RemoveAppWebhookDocument, { id: webhookId }).toPromise();
+  const { data, error } = await client
+    .mutation(RemoveAppWebhookDocument, { id: webhookId })
+    .toPromise();
 
   if (doesErrorCodeExistsInErrors(error?.graphQLErrors, "PermissionDenied")) {
     throw new WebhookMigrationAppPermissionDeniedError(
@@ -23,14 +25,14 @@ export const removeAppWebhook = async ({ client, webhookId }: RemoveAppWebhookAr
   }
 
   if (error?.networkError) {
-    throw new WebhookMigrationNetworkError("Network error while creating app webhook", {
+    throw new WebhookMigrationNetworkError("Network error while deleting app webhook", {
       cause: error.networkError,
     });
   }
 
-  if (error) {
-    throw new WebhookMigrationUnknownError(`Webhook creation failed. The API returned an error`, {
-      cause: error,
+  if (!data?.webhookDelete?.webhook?.id) {
+    throw new WebhookMigrationUnknownError("Webhook deletion failed. The API returned an error", {
+      errors: data?.webhookDelete?.errors.map((e) => WebhookMigrationUnknownError.normalize(e)),
     });
   }
 
