@@ -1,6 +1,7 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
+
+import { env } from "@/env";
 
 import {
   CreateDraftOrder,
@@ -17,8 +18,8 @@ import { getCompleteMoney } from "../utils/moneyUtils";
 describe("App should calculate taxes on draft order when changing lines TC: AVATAX_26", () => {
   const testCase = e2e("Changing lines on draft order [pricesEnteredWithTax: True]");
   const staffCredentials = {
-    email: process.env.E2E_USER_NAME as string,
-    password: process.env.E2E_USER_PASSWORD as string,
+    email: env.E2E_USER_NAME,
+    password: env.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";

@@ -1,6 +1,7 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
+
+import { env } from "@/env";
 
 import {
   CreateDraftOrder,
@@ -15,8 +16,8 @@ import { getCompleteMoney } from "../utils/moneyUtils";
 describe("App should exempt taxes on draft order with metadata avataxEntityCode TC: AVATAX_36", () => {
   const testCase = e2e("draft order with avataxEntityCode [pricesEnteredWithTax: True]");
   const staffCredentials = {
-    email: process.env.E2E_USER_NAME as string,
-    password: process.env.E2E_USER_PASSWORD as string,
+    email: env.E2E_USER_NAME as string,
+    password: env.E2E_USER_PASSWORD as string,
   };
 
   const metadata = [

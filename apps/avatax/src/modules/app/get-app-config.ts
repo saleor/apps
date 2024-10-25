@@ -1,5 +1,7 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
 
+import { env } from "@/env";
+
 import { MetadataItem } from "../../../generated/graphql";
 import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
@@ -14,7 +16,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;
 
-  const secretKey = process.env.SECRET_KEY;
+  const secretKey = env.SECRET_KEY;
 
   if (!secretKey) {
     throw new Error("SECRET_KEY env variable is not set");

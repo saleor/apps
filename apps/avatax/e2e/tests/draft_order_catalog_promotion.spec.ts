@@ -1,6 +1,7 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
+
+import { env } from "@/env";
 
 import {
   CreateDraftOrder,
@@ -18,8 +19,8 @@ describe("App should calculate taxes on draft order with products on catalog pro
     "Draft order with products on catalog promotion [pricesEnteredWithTax: True]",
   );
   const staffCredentials = {
-    email: process.env.E2E_USER_NAME as string,
-    password: process.env.E2E_USER_PASSWORD as string,
+    email: env.E2E_USER_NAME,
+    password: env.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";
