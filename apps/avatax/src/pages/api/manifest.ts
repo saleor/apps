@@ -2,7 +2,6 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
-import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 import { loggerContext } from "@/logger-context";
@@ -16,8 +15,6 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
-
-        Sentry.captureException(new Error("Test error - testing env configuration - server side"));
 
         const manifest: AppManifest = {
           about: "App connects with AvaTax to dynamically calculate taxes",
