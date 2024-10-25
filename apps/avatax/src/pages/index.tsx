@@ -1,5 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { isInIframe } from "@saleor/apps-shared";
+import * as Sentry from "@sentry/nextjs";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -9,6 +10,8 @@ const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
   const isMounted = useIsMounted();
   const { replace } = useRouter();
+
+  Sentry.captureException(new Error("Test error - testing env configuration - client side"));
 
   useEffect(() => {
     if (isMounted() && appBridgeState?.ready) {
