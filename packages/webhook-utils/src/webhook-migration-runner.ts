@@ -1,7 +1,11 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
 
-import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
+import {
+  WebhookMigrationAppPermissionDeniedError,
+  WebhookMigrationNetworkError,
+  WebhookMigrationUnknownError,
+} from "./errors";
 import {
   AppDetails,
   getAppDetailsAndWebhooksData,
@@ -61,15 +65,15 @@ export class WebhookMigrationRunner {
       logger.info(`Migration finished successfully for ${saleorApiUrl}`);
     } catch (error) {
       switch (true) {
-        case error instanceof AppPermissionDeniedError:
+        case error instanceof WebhookMigrationAppPermissionDeniedError:
           logger.warn(
             `Migration finished with warning for ${saleorApiUrl}: app probably uninstalled`,
           );
           break;
-        case error instanceof NetworkError:
+        case error instanceof WebhookMigrationNetworkError:
           logger.warn(`Migration finished with warning for ${saleorApiUrl}: Saleor not available`);
           break;
-        case error instanceof UnknownConnectionError:
+        case error instanceof WebhookMigrationUnknownError:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while fetching data from Saleor`,
           );

@@ -7,9 +7,11 @@ export const BaseError = ModernError.subclass("BaseError", {
   plugins: [modernErrorsSerialize],
 });
 
-export const AppPermissionDeniedError = BaseError.subclass("AppPermissionDeniedError");
-export const NetworkError = BaseError.subclass("NetworkError");
-export const UnknownConnectionError = BaseError.subclass("UnknownConnectionError");
+export const WebhookMigrationAppPermissionDeniedError = BaseError.subclass(
+  "WebhookMigrationAppPermissionDeniedError",
+);
+export const WebhookMigrationNetworkError = BaseError.subclass("NetworkError");
+export const WebhookMigrationUnknownError = BaseError.subclass("WebhookMigrationUnknownError");
 
 function getSaleorErrorExtensionCode(extension: GraphQLErrorExtensions) {
   return (extension?.exception as { code: string }).code;

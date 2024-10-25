@@ -80,11 +80,7 @@ const runMigrations = async () => {
       },
     });
 
-    try {
-      await runner.migrate();
-    } catch (error) {
-      throw error;
-    }
+    await runner.migrate();
   }
 };
 

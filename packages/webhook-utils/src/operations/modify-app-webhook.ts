@@ -1,10 +1,11 @@
 import { Client } from "urql";
+
 import { ModifyAppWebhookDocument, WebhookUpdateInput } from "../../generated/graphql";
 import {
-  AppPermissionDeniedError,
-  NetworkError,
-  UnknownConnectionError,
   doesErrorCodeExistsInErrors,
+  WebhookMigrationAppPermissionDeniedError,
+  WebhookMigrationNetworkError,
+  WebhookMigrationUnknownError,
 } from "../errors";
 import { WebhookData } from "../types";
 
@@ -24,22 +25,28 @@ export const modifyAppWebhook = async ({
     .toPromise();
 
   if (doesErrorCodeExistsInErrors(error?.graphQLErrors, "PermissionDenied")) {
-    throw new AppPermissionDeniedError(
+    throw new WebhookMigrationAppPermissionDeniedError(
       "App cannot be migrated because app token permission is no longer valid",
     );
   }
 
   if (error?.networkError) {
-    throw new NetworkError("Network error while modifying app webhook", {
+    throw new WebhookMigrationNetworkError("Network error while modifying app webhook", {
       cause: error.networkError,
+    });
+  }
+
+  if (data?.webhookUpdate?.errors) {
+    throw new WebhookMigrationUnknownError("Webhook update failed. The API returned an error", {
+      errors: data.webhookUpdate.errors,
     });
   }
 
   const webhook = data?.webhookUpdate?.webhook;
 
   if (!webhook) {
-    throw new UnknownConnectionError(
-      "Webhook modify response is empty. The API returned no additional error.",
+    throw new WebhookMigrationUnknownError(
+      "Webhook update response is empty. The API returned no additional error.",
       { cause: error },
     );
   }
