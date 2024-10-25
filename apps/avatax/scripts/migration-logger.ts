@@ -1,16 +1,22 @@
 // eslint-disable-next-line no-restricted-imports
-import { attachLoggerConsoleTransport, createLogger, logger } from "@saleor/apps-logger";
+import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
 import { attachLoggerOtelTransport } from "@saleor/apps-logger/node";
 
 import packageJson from "../package.json";
 import { loggerContext } from "../src/logger-context";
 
-logger.settings.maskValuesOfKeys = ["username", "password", "token"];
+rootLogger.settings.maskValuesOfKeys = ["username", "password", "token"];
 
 if (process.env.ENABLE_MIGRATION_CONSOLE_LOGGER === "true") {
-  attachLoggerConsoleTransport(logger);
+  attachLoggerConsoleTransport(rootLogger);
 }
 
-attachLoggerOtelTransport(logger, packageJson.version, loggerContext);
+attachLoggerOtelTransport(rootLogger, packageJson.version, loggerContext);
 
-export { createLogger, logger };
+export const createMigrationScriptLogger = (name: string, params?: Record<string, unknown>) =>
+  rootLogger.getSubLogger(
+    {
+      name: name,
+    },
+    params,
+  );
