@@ -83,7 +83,8 @@ const runMigrations = async () => {
     try {
       await runner.migrate();
     } catch (error) {
-      Sentry.captureException(error);
+      // @ts-expect-error
+      Sentry.default.captureException(error);
       process.exit(1);
     }
   }

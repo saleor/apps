@@ -63,13 +63,11 @@ export class WebhookMigrationRunner {
       switch (true) {
         case error instanceof AppPermissionDeniedError:
           logger.warn(
-            `Migration finished with warning for ${saleorApiUrl}: request being denied (app probably uninstalled)`,
+            `Migration finished with warning for ${saleorApiUrl}: app probably uninstalled`,
           );
           break;
         case error instanceof NetworkError:
-          logger.warn(
-            `Migration finished with warning for ${saleorApiUrl}: network error (Saleor not available)`,
-          );
+          logger.warn(`Migration finished with warning for ${saleorApiUrl}: Saleor not available`);
           break;
         case error instanceof UnknownConnectionError:
           logger.error(
