@@ -2,6 +2,12 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+// based on https://env.t3.gg/docs/recipes#booleans
+const booleanSchema = z
+  .string()
+  .refine((s) => s === "true" || s === "false")
+  .transform((s) => s === "true");
+
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
@@ -21,11 +27,11 @@ export const env = createEnv({
     DYNAMODB_LOGS_TABLE_NAME: z.string().optional(),
     E2E_USER_NAME: z.string().optional(),
     E2E_USER_PASSWORD: z.string().optional(),
-    ENABLE_MIGRATION_CONSOLE_LOGGER: z.coerce.boolean().optional().default(false),
-    FF_ENABLE_EXPERIMENTAL_LOGS: z.coerce.boolean().optional().default(false),
+    ENABLE_MIGRATION_CONSOLE_LOGGER: booleanSchema.optional().default("false"),
+    FF_ENABLE_EXPERIMENTAL_LOGS: booleanSchema.optional().default("false"),
     FILE_APL_PATH: z.string().optional(),
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.avatax"),
-    OTEL_ENABLED: z.coerce.boolean().optional().default(false),
+    OTEL_ENABLED: booleanSchema.optional().default("false"),
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.number().optional().default(3000),
     REST_APL_ENDPOINT: z.string().optional(),

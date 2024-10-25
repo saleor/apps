@@ -56,8 +56,6 @@ const mockedMetadata: MetadataItem[] = [
   },
 ];
 
-// vi.stubEnv("SECRET_KEY", mockedSecretKey);
-
 describe("getAppConfig", () => {
   it("returns empty providerConnections and channels config when no metadata", () => {
     const { providerConnections, channels } = getAppConfig([]);
