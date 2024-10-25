@@ -81,8 +81,7 @@ const runMigrations = async () => {
     });
 
     await runner.migrate().catch((error) => {
-      // @ts-expect-error - Sentry.captureException is undefined here - we need to use `default`
-      Sentry.default.captureException(error);
+      console.log(Sentry);
       process.exit(1);
     });
   }
