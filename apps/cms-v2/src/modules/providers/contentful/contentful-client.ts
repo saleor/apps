@@ -1,9 +1,10 @@
+import * as Sentry from "@sentry/nextjs";
 import { ClientAPI, createClient, Environment } from "contentful-management";
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+
+import { createLogger } from "@/logger";
 import { ContentfulProviderConfig } from "@/modules/configuration";
 
-import * as Sentry from "@sentry/nextjs";
-import { createLogger, logger } from "@/logger";
+import { WebhookProductVariantFragment } from "../../../../generated/graphql";
 
 type ConstructorOptions = {
   space: string;
@@ -30,7 +31,7 @@ export class ContentfulClient {
   private client: ContentfulApiClientChunk;
   private space: string;
 
-  private logger: typeof logger;
+  private logger: ReturnType<typeof createLogger>;
 
   constructor(opts: ConstructorOptions, clientFactory: SdkClientFactory = defaultSdkClientFactory) {
     this.space = opts.space;
@@ -276,7 +277,7 @@ export class ContentfulClient {
         return this.uploadProductVariant({ configuration, variant });
       }
     } catch (err) {
-      logger.error("Error during the upsert", { error: err });
+      this.logger.error("Error during the upsert", { error: err });
       Sentry.captureException(err);
 
       throw err;

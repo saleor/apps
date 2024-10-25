@@ -28,7 +28,7 @@ function getMinLevel() {
 /*
  * TODO: Add test
  */
-export const logger = new Logger<ILogObj>({
+export const rootLogger = new Logger<ILogObj>({
   minLevel: getMinLevel(),
   hideLogPositionForProduction: true,
   /**
@@ -56,10 +56,12 @@ export const logger = new Logger<ILogObj>({
   },
 });
 
-export const createLogger = (name: string, params?: Record<string, unknown>) =>
-  logger.getSubLogger(
-    {
-      name: name,
-    },
-    params,
-  );
+/*
+ * export const createLogger = (name: string, params?: Record<string, unknown>) =>
+ *   logger.getSubLogger(
+ *     {
+ *       name: name,
+ *     },
+ *     params,
+ *   );
+ */

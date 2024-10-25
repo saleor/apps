@@ -6,7 +6,7 @@ import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-graphql-client";
 import { loggerContext } from "../src/logger-context";
 import { appWebhooks } from "../webhooks";
-import { createLogger } from "./migration-logger";
+import { createMigrationScriptLogger } from "./migration-logger";
 
 const requiredEnvs = ["REST_APL_TOKEN", "REST_APL_ENDPOINT"];
 
@@ -17,7 +17,7 @@ if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
   otelSdk.start();
 }
 
-const logger = createLogger("RunWebhooksMigration");
+const logger = createMigrationScriptLogger("RunWebhooksMigration");
 
 const runMigrations = async () => {
   if (!requiredEnvs.every((env) => process.env[env])) {
