@@ -3,16 +3,18 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 
+import { env } from "@/env";
+import { loggerContext } from "@/logger-context";
+
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
-import { loggerContext } from "../../logger-context";
 
 export default wrapWithLoggerContext(
   withOtel(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }) {
-        const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-        const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+        const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+        const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
 
         const manifest: AppManifest = {
           about: "App connects with AvaTax to dynamically calculate taxes",
@@ -26,7 +28,7 @@ export default wrapWithLoggerContext(
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           extensions: [],
           homepageUrl: "https://github.com/saleor/apps",
-          id: process.env.MANIFEST_APP_ID ?? "saleor.app.avatax",
+          id: env.MANIFEST_APP_ID,
           name: "AvaTax",
           permissions: ["HANDLE_TAXES", "MANAGE_ORDERS"],
           requiredSaleorVersion: ">=3.19 <4",

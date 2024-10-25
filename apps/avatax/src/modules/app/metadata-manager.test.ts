@@ -10,11 +10,8 @@ const mockGqlClient: Pick<Client, "query" | "mutation"> = {
   query: vi.fn(),
 };
 
-const SECRET_KEY = "SECRET_KEY";
 const METADATA_KEY = "foo";
 const METADATA_VALUE = "bar";
-
-vi.stubEnv("SECRET_KEY", SECRET_KEY);
 
 describe("MetadataManager", () => {
   it("Consumes cache if exists", async () => {
@@ -25,7 +22,7 @@ describe("MetadataManager", () => {
       cache.setMetadata([
         {
           key: METADATA_KEY,
-          value: encrypt(METADATA_VALUE, SECRET_KEY),
+          value: encrypt(METADATA_VALUE, "test_secret_key"),
         },
       ]);
 
@@ -48,7 +45,7 @@ describe("MetadataManager", () => {
                 privateMetadata: [
                   {
                     key: METADATA_KEY,
-                    value: encrypt(METADATA_VALUE, SECRET_KEY),
+                    value: encrypt(METADATA_VALUE, "test_secret_key"),
                   },
                 ],
               },
