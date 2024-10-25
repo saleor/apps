@@ -1,9 +1,9 @@
+import { createLogger } from "@/logger";
+import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
-
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 import { PayloadCMSClient } from "./payloadcms-client";
-import { createLogger, logger } from "@/logger";
 
 // todo CORS or proxy
 export class PayloadCmsBulkSyncProcessor implements BulkSyncProcessor {

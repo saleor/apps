@@ -1,8 +1,9 @@
 import { TRPCClientError } from "@trpc/client";
 import { GraphQLError } from "graphql";
 
+import { createLogger } from "@/logger";
+
 import { BaseError } from "../error";
-import { logger } from "../logger";
 import { CalculateTaxesPayload } from "../modules/webhooks/payloads/calculate-taxes-payload";
 import { OrderCancelledPayload } from "../modules/webhooks/payloads/order-cancelled-payload";
 import { OrderConfirmedPayload } from "../modules/webhooks/payloads/order-confirmed-payload";
@@ -21,7 +22,7 @@ export class SubscriptionPayloadErrorChecker {
   private handledErrorPath = ["event", "taxBase", "sourceObject", "user"];
 
   constructor(
-    private injectedLogger: Pick<typeof logger, "error" | "info">,
+    private injectedLogger: Pick<ReturnType<typeof createLogger>, "error" | "info">,
     private injectedErrorCapture: (
       exception: InstanceType<typeof SubscriptionPayloadErrorChecker.SubscriptionPayloadError>,
     ) => void,

@@ -2,9 +2,9 @@ import { logs } from "@opentelemetry/api-logs";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { describe, expect, it, vi } from "vitest";
 
-import { createLogger } from "./logger";
 import { attachLoggerConsoleTransport } from "./logger-console-transport";
 import { attachLoggerOtelTransport } from "./logger-otel-transport";
+import { rootLogger } from "./root-logger";
 
 vi.spyOn(console, "log");
 vi.setSystemTime(new Date(2024, 1, 1, 5, 15));
@@ -12,12 +12,15 @@ vi.setSystemTime(new Date(2024, 1, 1, 5, 15));
 describe("Logger", () => {
   describe("Console Transport", () => {
     it("Prints message and nested object to the console, including attributes passed from the parent scope", () => {
-      const logger = createLogger("Test Logger", {
-        rootScopePrimitiveArg: 1,
-        rootScopeObjectArg: {
-          objectKey: "objectValue",
+      const logger = rootLogger.getSubLogger(
+        { name: "Test Logger" },
+        {
+          rootScopePrimitiveArg: 1,
+          rootScopeObjectArg: {
+            objectKey: "objectValue",
+          },
         },
-      });
+      );
 
       attachLoggerConsoleTransport(logger);
 
@@ -46,12 +49,15 @@ describe("Logger", () => {
 
   describe("Otel Transport", () => {
     it("Calls Open Telemetry logger emit() function, passing there required attributes", () => {
-      const logger = createLogger("Test Logger", {
-        rootScopePrimitiveArg: 1,
-        rootScopeObjectArg: {
-          objectKey: "objectValue",
+      const logger = rootLogger.getSubLogger(
+        { name: "Test Logger" },
+        {
+          rootScopePrimitiveArg: 1,
+          rootScopeObjectArg: {
+            objectKey: "objectValue",
+          },
         },
-      });
+      );
 
       const mockOtelEmit = vi.fn();
 
@@ -96,15 +102,18 @@ describe("Logger", () => {
     });
 
     it("Calls Open Telemetry logger emit() function, passing there error attribute", () => {
-      expect.assertions(3);
-
-      const logger = createLogger("Test Logger", {
-        rootScopePrimitiveArg: 1,
-        rootScopeObjectArg: {
-          objectKey: "objectValue",
+      const logger = rootLogger.getSubLogger(
+        { name: "Test Logger" },
+        {
+          rootScopePrimitiveArg: 1,
+          rootScopeObjectArg: {
+            objectKey: "objectValue",
+          },
+          error: new Error("Error Message"),
         },
-        error: new Error("Error Message"),
-      });
+      );
+
+      expect.assertions(3);
 
       const mockOtelEmit = vi.fn().mockImplementation((log) => {
         const error = log.attributes.error;

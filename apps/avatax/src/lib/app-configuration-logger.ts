@@ -1,10 +1,10 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
-import { logger } from "../logger";
+import { createLogger } from "../logger";
 import { AppConfig } from "./app-config";
 
 export class AppConfigurationLogger {
-  constructor(private injectedLogger: Pick<typeof logger, "info" | "warn">) {}
+  constructor(private injectedLogger: Pick<ReturnType<typeof createLogger>, "info" | "warn">) {}
 
   logConfiguration(configuration: AppConfig, channelSlug: string) {
     const config = configuration.getConfigForChannelSlug(channelSlug);
