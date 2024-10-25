@@ -109,6 +109,7 @@ describe("Logger", () => {
           rootScopeObjectArg: {
             objectKey: "objectValue",
           },
+          error: new Error("Error Message"),
         },
       );
 
