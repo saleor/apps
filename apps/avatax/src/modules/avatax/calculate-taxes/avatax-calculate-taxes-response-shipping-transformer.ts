@@ -62,6 +62,14 @@ export function transformAvataxTransactionModelIntoShipping(
     shippingLine.details?.map((details) => details.rate),
   );
 
+  const hasFee = shippingLine.details?.some((details) => details.isFee);
+
+  if (hasFee) {
+    logger.warn("Shipping line has a fee. App will report this fee as shipping_tax_rate", {
+      details: shippingLine.details,
+    });
+  }
+
   const shippingTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
     shippingLine.taxCalculated,
     new TaxBadProviderResponseError("shippingLine.taxCalculated is undefined"),

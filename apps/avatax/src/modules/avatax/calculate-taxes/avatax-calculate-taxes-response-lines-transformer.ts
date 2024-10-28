@@ -48,6 +48,14 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           line.details?.map((details) => details.rate),
         );
 
+        const hasFee = line.details?.some((details) => details.isFee);
+
+        if (hasFee) {
+          this.logger.warn("Product line has a fee. App will report this fee as tax_rate", {
+            details: line.details,
+          });
+        }
+
         const lineTaxCalculated = taxProviderUtils.resolveOptionalOrThrowUnexpectedError(
           line.taxCalculated,
           new TaxBadPayloadError("line.taxCalculated is undefined"),
