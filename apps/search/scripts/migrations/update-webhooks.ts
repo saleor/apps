@@ -24,6 +24,7 @@ export const updateWebhooksScript = async ({
     dryRun,
     logger: console,
     client,
+    saleorApiUrl: authData.saleorApiUrl,
     getManifests: async ({ appDetails }) => {
       const webhooks = appDetails.webhooks;
 

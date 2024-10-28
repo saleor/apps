@@ -1,29 +1,32 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
-import { otelSdk } from "@saleor/apps-otel/src/instrumentation";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
+import * as Sentry from "@sentry/node";
 
 import { env } from "@/env";
 
 import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-graphql-client";
-import { loggerContext } from "../src/logger-context";
 import { appWebhooks } from "../webhooks";
 import { createMigrationScriptLogger } from "./migration-logger";
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 
-if (env.OTEL_ENABLED && env.OTEL_SERVICE_NAME) {
-  otelSdk.start();
-}
+const logger = createMigrationScriptLogger("WebhooksMigrationScript");
 
-const logger = createMigrationScriptLogger("RunWebhooksMigration");
+Sentry.init({
+  dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  enableTracing: false,
+  environment: env.ENV,
+  includeLocalVariables: true,
+  ignoreErrors: [],
+  integrations: [],
+});
 
 const runMigrations = async () => {
-  logger.info(`Starting webhooks migration`, { dryRun });
+  logger.info(`Starting webhooks migration`);
 
   if (!env.REST_APL_TOKEN || !env.REST_APL_ENDPOINT) {
-    logger.error("REST_APL_TOKEN and REST_APL_ENDPOINT must be set", { dryRun });
+    logger.error("REST_APL_TOKEN and REST_APL_ENDPOINT must be set");
     process.exit(1);
   }
 
@@ -32,64 +35,53 @@ const runMigrations = async () => {
     resourceUrl: env.REST_APL_ENDPOINT,
   });
 
-  logger.info("Fetching environments from the saleor-cloud APL", { dryRun });
-
-  const saleorCloudEnv = await saleorAPL.getAll().catch((error) => {
-    logger.error("Could not fetch instances from the Cloud APL", { error: error, dryRun });
+  const saleorCloudEnv = await saleorAPL.getAll().catch(() => {
+    logger.error("Could not fetch instances from the Cloud APL");
 
     process.exit(1);
   });
 
   for (const saleorEnv of saleorCloudEnv) {
-    await loggerContext.wrap(async () => {
-      const { saleorApiUrl, token } = saleorEnv;
+    const { saleorApiUrl, token } = saleorEnv;
 
-      loggerContext.set("dryRun", dryRun.toString());
-      loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+    logger.info(`Migrating webhooks for ${saleorApiUrl}`);
 
-      logger.info(`Migrating webhooks for ${saleorApiUrl}`);
+    const client = createInstrumentedGraphqlClient({
+      saleorApiUrl: saleorApiUrl,
+      token: token,
+    });
 
-      const client = createInstrumentedGraphqlClient({
-        saleorApiUrl: saleorApiUrl,
-        token: token,
-      });
+    const runner = new WebhookMigrationRunner({
+      dryRun,
+      logger,
+      client,
+      saleorApiUrl,
+      getManifests: async ({ appDetails }) => {
+        const webhooks = appDetails.webhooks;
 
-      const runner = new WebhookMigrationRunner({
-        dryRun,
-        logger,
-        client,
-        getManifests: async ({ appDetails, instanceDetails }) => {
-          if (instanceDetails.version) {
-            loggerContext.set(
-              ObservabilityAttributes.SALEOR_VERSION,
-              instanceDetails.version?.toFixed(2),
-            );
-          }
+        if (!webhooks?.length) {
+          logger.warn("The environment does not have any webhooks, skipping");
+          return [];
+        }
 
-          const webhooks = appDetails.webhooks;
+        const enabled = webhooks.some((w) => w.isActive);
 
-          if (!webhooks?.length) {
-            logger.warn("The environment does not have any webhooks, skipping");
-            return [];
-          }
+        const targetUrl = appDetails.appUrl;
 
-          const enabled = webhooks.some((w) => w.isActive);
+        if (!targetUrl?.length) {
+          logger.error("App has no defined appUrl, skipping");
+          return [];
+        }
 
-          const targetUrl = appDetails.appUrl;
+        const baseUrl = new URL(targetUrl).origin;
 
-          if (!targetUrl?.length) {
-            logger.error("App has no defined appUrl, skipping");
-            return [];
-          }
+        // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
+        return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
+      },
+    });
 
-          const baseUrl = new URL(targetUrl).origin;
-
-          // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
-        },
-      });
-
-      await runner.migrate();
+    await runner.migrate().catch((error) => {
+      Sentry.captureException(error);
     });
   }
 };
@@ -97,6 +89,6 @@ const runMigrations = async () => {
 runMigrations();
 
 process.on("beforeExit", () => {
-  logger.info(`Webhook migration complete for all environments from saleor-cloud APL`, { dryRun });
-  otelSdk.shutdown().finally(() => process.exit(0));
+  logger.info(`Webhook migration complete for all environments from saleor-cloud APL`);
+  process.exit(0);
 });

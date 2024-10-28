@@ -125,7 +125,7 @@ The app has an example environment for `localhost` in `environments/localhost.br
 > This section refers to apps hosted by Saleor or using REST APL. If you self host AvaTax app you need to write your own logic for updating migration scripts.
 > See [How to update app webhooks](https://docs.saleor.io/docs/3.x/developer/extending/apps/updating-app-webhooks) for more info.
 
-You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first. Set `DANGEROUS_ENABLE_MIGRATION_CONSOLE_LOGGER` to see migration results in your shell.
+You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first.
 
 Test migration with dry run, operation will not modify any data:
 

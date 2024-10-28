@@ -1,5 +1,6 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
+
 import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
 import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
 import { getWebhookIdsAndManifestsToUpdate } from "./filters/get-webhook-ids-and-manifests-to-update";
@@ -55,7 +56,7 @@ export class WebhookUpdater {
         newWebhookManifests: webhookManifests,
       });
 
-      logger.info(
+      logger.debug(
         `Scheduled changes: ${webhookIdsAndManifestsToBeUpdated.length} to be updated, ${webhookManifestsToBeAdded.length} to be added, ${webhookToBeRemoved.length} to be removed`,
       );
 
@@ -98,11 +99,12 @@ export class WebhookUpdater {
         this.removedWebhooks.push(webhookDetails);
       }
     } catch (error) {
-      logger.error("Error during update procedure, rolling back changes", { error });
+      logger.info("Error during update procedure, rolling back changes");
 
       await this.rollback();
 
       logger.info("Changes rolled back");
+      throw error;
     }
   };
 
@@ -110,14 +112,14 @@ export class WebhookUpdater {
     const { logger, client, existingWebhooksData } = this.args;
 
     if (this.addedWebhooks.length) {
-      logger.info("Removing added webhooks");
+      logger.debug("Removing added webhooks");
       await Promise.allSettled(
         this.addedWebhooks.map((webhook) => removeAppWebhook({ client, webhookId: webhook.id })),
       );
     }
 
     if (this.modifiedWebhooks.length) {
-      logger.info("Rollback modified webhooks");
+      logger.debug("Rollback modified webhooks");
       await Promise.allSettled(
         this.modifiedWebhooks.map((modifiedWebhook) => {
           const webhookDetails = existingWebhooksData.find(

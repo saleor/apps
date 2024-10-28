@@ -1,10 +1,11 @@
 import { Client } from "urql";
+
 import { GetAppDetailsAndWebhooksDataDocument } from "../../generated/graphql";
 import {
-  AppPermissionDeniedError,
-  NetworkError,
-  UnknownConnectionError,
   doesErrorCodeExistsInErrors,
+  WebhookMigrationAppPermissionDeniedError,
+  WebhookMigrationNetworkError,
+  WebhookMigrationUnknownError,
 } from "../errors";
 import { WebhookData } from "../types";
 
@@ -23,13 +24,13 @@ export const getAppDetailsAndWebhooksData = async ({
   const { data, error } = await client.query(GetAppDetailsAndWebhooksDataDocument, {}).toPromise();
 
   if (doesErrorCodeExistsInErrors(error?.graphQLErrors, "PermissionDenied")) {
-    throw new AppPermissionDeniedError(
+    throw new WebhookMigrationAppPermissionDeniedError(
       "App cannot be migrated because app token permission is no longer valid",
     );
   }
 
   if (error?.networkError) {
-    throw new NetworkError("Network error while fetching app details", {
+    throw new WebhookMigrationNetworkError("Network error while fetching app details", {
       cause: error.networkError,
     });
   }
@@ -37,7 +38,7 @@ export const getAppDetailsAndWebhooksData = async ({
   const app = data?.app;
 
   if (!app) {
-    throw new UnknownConnectionError("Cannot fetch app details", { cause: error });
+    throw new WebhookMigrationUnknownError("Cannot fetch app details", { cause: error });
   }
 
   return {
