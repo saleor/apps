@@ -38,6 +38,7 @@
     "@saleor/app-sdk": "0.50.3",
     "@sentry/cli": "2.32.1",
     "@sentry/nextjs": "7.117.0",
+    "@sentry/node": "7.117.0",
     "@types/node": "20.12.3",
     "cspell": "8.15.2",
     "eslint": "8.57.0",

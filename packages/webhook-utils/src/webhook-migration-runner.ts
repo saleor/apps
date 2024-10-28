@@ -1,13 +1,18 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { Client } from "urql";
-import { AppPermissionDeniedError, NetworkError, UnknownConnectionError } from "./errors";
+
+import {
+  WebhookMigrationAppPermissionDeniedError,
+  WebhookMigrationNetworkError,
+  WebhookMigrationUnknownError,
+} from "./errors";
 import {
   AppDetails,
   getAppDetailsAndWebhooksData,
 } from "./operations/get-app-details-and-webhooks-data";
 import {
-  SaleorInstanceDetails,
   getSaleorInstanceDetails,
+  SaleorInstanceDetails,
 } from "./operations/get-saleor-instance-details";
 import { Logger } from "./types";
 import { WebhookUpdater } from "./webhook-updater";
@@ -26,12 +31,13 @@ export class WebhookMigrationRunner {
       dryRun: boolean;
       logger: Logger;
       client: Client;
+      saleorApiUrl: string;
       getManifests: GetManifestFunction;
     },
   ) {}
 
   public migrate = async () => {
-    const { dryRun, logger, client, getManifests } = this.args;
+    const { dryRun, logger, client, getManifests, saleorApiUrl } = this.args;
 
     try {
       logger.debug("Getting app details and webhooks data");
@@ -56,31 +62,29 @@ export class WebhookMigrationRunner {
 
       await updater.update();
 
-      logger.info("Migration finished successfully");
+      logger.info(`Migration finished successfully for ${saleorApiUrl}`);
     } catch (error) {
       switch (true) {
-        case error instanceof AppPermissionDeniedError:
+        case error instanceof WebhookMigrationAppPermissionDeniedError:
           logger.warn(
-            `Migration finished with warning: request being denied (app probably uninstalled)`,
-            {
-              error,
-              reason: "App probably uninstalled",
-            },
+            `Migration finished with warning for ${saleorApiUrl}: app probably uninstalled`,
           );
           break;
-        case error instanceof NetworkError:
-          logger.warn(`Migration finished with warning: network error (Saleor not available)`, {
-            error,
-            reason: "Saleor not available",
-          });
+        case error instanceof WebhookMigrationNetworkError:
+          logger.warn(`Migration finished with warning for ${saleorApiUrl}: Saleor not available`);
           break;
-        case error instanceof UnknownConnectionError:
-          logger.error(`Migration finished with error while fetching data from Saleor`, {
-            error,
-          });
-          break;
+        case error instanceof WebhookMigrationUnknownError:
+          logger.error(
+            `Migration finished with error for ${saleorApiUrl} while fetching data from Saleor`,
+            { error },
+          );
+          throw error;
         default:
-          logger.error(`Migration finished with error while running migrations`, { error });
+          logger.error(
+            `Migration finished with error for ${saleorApiUrl} while running migrations`,
+            { error },
+          );
+          throw error;
       }
     }
   };
