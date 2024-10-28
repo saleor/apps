@@ -63,7 +63,6 @@ export class WebhookMigrationRunner {
       await updater.update();
 
       logger.info(`Migration finished successfully for ${saleorApiUrl}`);
-      throw new Error("Test migration error");
     } catch (error) {
       switch (true) {
         case error instanceof WebhookMigrationAppPermissionDeniedError:
