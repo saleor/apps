@@ -1,6 +1,6 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from "@sentry/node";
 
 import { env } from "@/env";
 
@@ -81,8 +81,7 @@ const runMigrations = async () => {
     });
 
     await runner.migrate().catch((error) => {
-      // @ts-expect-error - without `default` captureException is undefined. This is because we run this script via `tsx`
-      Sentry.default.captureException(error);
+      Sentry.captureException(error);
     });
   }
 };
