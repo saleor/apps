@@ -1,5 +1,15 @@
 # smtp
 
+## 1.2.16
+
+### Patch Changes
+
+- d088ef37: Use new way of creating logger from `@saleor/apps-logger`
+- Updated dependencies [2f37f075]
+- Updated dependencies [d088ef37]
+- Updated dependencies [6d528dc6]
+  - @saleor/apps-logger@1.3.0
+
 ## 1.2.15
 
 ### Patch Changes

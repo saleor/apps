@@ -1,5 +1,23 @@
 # app-avatax
 
+## 1.11.0
+
+### Minor Changes
+
+- 7a1a74ba: Adds t3-env library for validating env variables.
+
+### Patch Changes
+
+- 5a6ea741: Added warning logs when Avalara returns `isFee` in product or shipping line details.
+- 2f37f075: Improved error handling and reporting while migrating webhooks. After this change we skip logging to OTEL. Logs will be available on Vercel, when migration fail we will send error to Sentry.
+- d088ef37: Use new way of creating logger from `@saleor/apps-logger`
+- Updated dependencies [2f37f075]
+- Updated dependencies [2f37f075]
+- Updated dependencies [d088ef37]
+- Updated dependencies [6d528dc6]
+  - @saleor/apps-logger@1.3.0
+  - @saleor/webhook-utils@0.2.0
+
 ## 1.10.9
 
 ### Patch Changes

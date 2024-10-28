@@ -1,5 +1,17 @@
 # saleor-app-products-feed
 
+## 1.19.12
+
+### Patch Changes
+
+- d088ef37: Use new way of creating logger from `@saleor/apps-logger`
+- Updated dependencies [2f37f075]
+- Updated dependencies [2f37f075]
+- Updated dependencies [d088ef37]
+- Updated dependencies [6d528dc6]
+  - @saleor/apps-logger@1.3.0
+  - @saleor/webhook-utils@0.2.0
+
 ## 1.19.11
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @saleor/apps-logger
 
+## 1.3.0
+
+### Minor Changes
+
+- d088ef37: Renamed exported `logger` to `rootLogger` so we avoid collision of names when using `logger` in monorepo. Also `createLogger` function has been removed in favour of app defining it in their codebase.
+
+### Patch Changes
+
+- 2f37f075: Added `VercelBuildtimeTransport` which can be used to log information during Vercel build time e.g webhook migrations output. Renamed old `attachLoggerVercelTransport` to `attachLoggerVercelRuntimeTransport`.
+- 6d528dc6: Added missing OTEL attributes to `loggerVercelTransport`. They will be visible under `otel` key in log collection service.
+
+  Attributes:
+
+  - `span_id`
+  - `trace_id`
+  - `timestamp`
+
 ## 1.2.10
 
 ### Patch Changes
