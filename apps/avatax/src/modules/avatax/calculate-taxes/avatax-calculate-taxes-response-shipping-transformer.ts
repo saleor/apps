@@ -65,7 +65,7 @@ export function transformAvataxTransactionModelIntoShipping(
   const hasFee = shippingLine.details?.some((details) => details.isFee);
 
   if (hasFee) {
-    logger.warn("Shipping line has a fee. App will report this fee as shipping_tax_rate", {
+    logger.info("Shipping line has a fee. App will report this fee as shipping_tax_rate", {
       details: shippingLine.details,
     });
   }
