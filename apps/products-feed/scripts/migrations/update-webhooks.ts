@@ -22,6 +22,7 @@ export const updateWebhooksScript = async ({
     dryRun,
     logger: console,
     client,
+    saleorApiUrl: authData.saleorApiUrl,
     getManifests: async ({ appDetails }) => {
       // Products feed application has currently no webhooks, so we return empty array
       return [];

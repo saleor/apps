@@ -4,7 +4,7 @@ import { ILogObj, Logger } from "tslog";
 
 import { LoggerContext } from "./logger-context";
 
-export const attachLoggerVercelTransport = (
+export const attachLoggerVercelRuntimeTransport = (
   logger: Logger<ILogObj>,
   appVersion: string,
   loggerContext?: LoggerContext,

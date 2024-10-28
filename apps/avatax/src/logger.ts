@@ -13,13 +13,13 @@ if (typeof window === "undefined") {
   // Don't remove require - it's necessary for proper logger initialization
   const {
     attachLoggerSentryTransport,
-    attachLoggerVercelTransport,
+    attachLoggerVercelRuntimeTransport,
   } = require("@saleor/apps-logger/node");
 
   attachLoggerSentryTransport(rootLogger);
 
   if (env.NODE_ENV === "production") {
-    attachLoggerVercelTransport(
+    attachLoggerVercelRuntimeTransport(
       rootLogger,
       packageJson.version,
       require("./logger-context").loggerContext,

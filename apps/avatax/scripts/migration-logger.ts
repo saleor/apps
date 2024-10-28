@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
-import { attachLoggerVercelBuildTimeTransport, rootLogger } from "@saleor/apps-logger";
+import { attachLoggerVercelBuildtimeTransport, rootLogger } from "@saleor/apps-logger";
 
 rootLogger.settings.maskValuesOfKeys = ["username", "password", "token"];
 
-attachLoggerVercelBuildTimeTransport(rootLogger);
+attachLoggerVercelBuildtimeTransport(rootLogger);
 
 export const createMigrationScriptLogger = (name: string, params?: Record<string, unknown>) =>
   rootLogger.getSubLogger(
