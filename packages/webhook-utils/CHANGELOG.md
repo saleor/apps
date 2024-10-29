@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.0
+
+### Minor Changes
+
+- 2f37f075: Improved error handling of `WebhookMigrationRunner`. Now this class will throw unknown errors that later can be logged to Sentry in respective app.
+
 ## 0.1.4
 
 ### Patch Changes
