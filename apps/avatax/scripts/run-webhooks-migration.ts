@@ -41,49 +41,51 @@ const runMigrations = async () => {
     process.exit(1);
   });
 
-  for (const saleorEnv of saleorCloudEnv) {
-    const { saleorApiUrl, token } = saleorEnv;
+  await Promise.allSettled(
+    saleorCloudEnv.map(async (saleorEnv) => {
+      const { saleorApiUrl, token } = saleorEnv;
 
-    logger.info(`Migrating webhooks for ${saleorApiUrl}`);
+      logger.info(`Migrating webhooks for ${saleorApiUrl}`);
 
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: saleorApiUrl,
-      token: token,
-    });
+      const client = createInstrumentedGraphqlClient({
+        saleorApiUrl: saleorApiUrl,
+        token: token,
+      });
 
-    const runner = new WebhookMigrationRunner({
-      dryRun,
-      logger,
-      client,
-      saleorApiUrl,
-      getManifests: async ({ appDetails }) => {
-        const webhooks = appDetails.webhooks;
+      const runner = new WebhookMigrationRunner({
+        dryRun,
+        logger,
+        client,
+        saleorApiUrl,
+        getManifests: async ({ appDetails }) => {
+          const webhooks = appDetails.webhooks;
 
-        if (!webhooks?.length) {
-          logger.warn("The environment does not have any webhooks, skipping");
-          return [];
-        }
+          if (!webhooks?.length) {
+            logger.warn("The environment does not have any webhooks, skipping");
+            return [];
+          }
 
-        const enabled = webhooks.some((w) => w.isActive);
+          const enabled = webhooks.some((w) => w.isActive);
 
-        const targetUrl = appDetails.appUrl;
+          const targetUrl = appDetails.appUrl;
 
-        if (!targetUrl?.length) {
-          logger.error("App has no defined appUrl, skipping");
-          return [];
-        }
+          if (!targetUrl?.length) {
+            logger.error("App has no defined appUrl, skipping");
+            return [];
+          }
 
-        const baseUrl = new URL(targetUrl).origin;
+          const baseUrl = new URL(targetUrl).origin;
 
-        // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-        return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
-      },
-    });
+          // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
+          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
+        },
+      });
 
-    await runner.migrate().catch((error) => {
-      Sentry.captureException(error);
-    });
-  }
+      await runner.migrate().catch((error) => {
+        Sentry.captureException(error);
+      });
+    }),
+  );
 };
 
 runMigrations();
