@@ -32,7 +32,7 @@ export const env = createEnv({
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.avatax"),
     OTEL_ENABLED: booleanSchema.optional().default("false"),
     OTEL_SERVICE_NAME: z.string().optional(),
-    PORT: z.number().optional().default(3000),
+    PORT: z.coerce.number().optional().default(3000),
     REST_APL_ENDPOINT: z.string().optional(),
     REST_APL_TOKEN: z.string().optional(),
     SECRET_KEY: z.string(),
