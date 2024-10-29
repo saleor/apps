@@ -2,10 +2,10 @@
   "name": "klaviyo",
   "version": "1.12.14",
   "scripts": {
-    "build": "pnpm generate && next build",
+    "build": "next build",
     "check-types": "tsc --noEmit",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",

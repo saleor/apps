@@ -2,10 +2,10 @@
   "name": "app-avatax",
   "version": "1.11.0",
   "scripts": {
-    "build": "pnpm generate && next build",
+    "build": " next build",
     "check-types": "tsc --noEmit",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
-    "dev": "pnpm generate && NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "e2e": "vitest --project e2e --watch=false",
     "e2e:watch": "vitest --project e2e --watch",

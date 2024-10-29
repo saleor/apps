@@ -37,7 +37,6 @@ yarn-error.log*
 
 .saleor-app-auth.json
 coverage/
-apps/**/generated
 .eslintcache
 
 .sentryclirc

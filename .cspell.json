@@ -52,5 +52,5 @@
   ],
   "language": "en-US",
   "useGitignore": true,
-  "ignorePaths": ["**/graphql.ts", "**/CHANGELOG.md", "**/schema.graphql"]
+  "ignorePaths": ["**/graphql.ts", "**/CHANGELOG.md", "**/schema.graphql", "**/generated/types.ts"]
 }
