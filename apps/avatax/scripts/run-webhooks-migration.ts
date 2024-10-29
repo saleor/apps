@@ -77,7 +77,7 @@ const runMigrations = async () => {
           const baseUrl = new URL(targetUrl).origin;
 
           // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
+          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), enabled }));
         },
       });
 
