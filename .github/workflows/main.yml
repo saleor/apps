@@ -26,6 +26,10 @@ jobs:
         run: pnpm check-types
       - name: Check package dependencies
         run: pnpm lint:packages
+      - name: Check for changes in graphql files
+        run: |
+          pnpm generate
+          git diff --name-status --exit-code .
 
   test:
     runs-on: ubuntu-22.04
