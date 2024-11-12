@@ -1,7 +1,11 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseLineFragment } from "generated/graphql";
 
+import { BaseError } from "@/error";
+
 export class AvataxProductLineCalculateTaxesFactory {
+  private static NotSupportedSourceLineError = BaseError.subclass("NotSupportedSourceLineError");
+
   createFromSaleorLine(args: {
     saleorLine: TaxBaseLineFragment;
     taxIncluded: boolean;
@@ -25,5 +29,9 @@ export class AvataxProductLineCalculateTaxesFactory {
     if (line.__typename === "OrderLine") {
       return line.orderProductVariant?.sku ?? line.orderProductVariant?.id ?? "";
     }
+    throw new AvataxProductLineCalculateTaxesFactory.NotSupportedSourceLineError(
+      // @ts-expect-error - we don't have types for not supported source line types
+      `Source line type ${line.__typename} is not supported`,
+    );
   }
 }

@@ -79,4 +79,36 @@ describe("AvataxProductLineFactory", () => {
       taxIncluded: true,
     });
   });
+
+  it("should throw error when source line type is not supported", () => {
+    const factory = new AvataxProductLineCalculateTaxesFactory();
+
+    expect(() =>
+      factory.createFromSaleorLine({
+        saleorLine: {
+          quantity: 1,
+          unitPrice: { amount: 100 },
+          totalPrice: { amount: 100 },
+          sourceLine: {
+            // @ts-expect-error - for tests
+            __typename: "NewLineType",
+            id: "52",
+            orderProductVariant: {
+              __typename: "ProductVariant",
+              id: "fromId",
+              product: {
+                taxClass: {
+                  id: "taxClassId",
+                  name: "taxClassName",
+                },
+              },
+            },
+          },
+        },
+        taxIncluded: true,
+        taxCode: "P00000",
+        discounted: false,
+      }),
+    ).toThrowError("Source line type NewLineType is not supported");
+  });
 });
