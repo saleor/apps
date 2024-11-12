@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { AvataxProductLineFactory } from "./avatax-product-line-factory";
+import { AvataxProductLineCalculateTaxesFactory } from "./avatax-product-line-calculate-taxes-factory";
 
 describe("AvataxProductLineFactory", () => {
   it("should create product line from Saleor checkout line", () => {
-    const factory = new AvataxProductLineFactory();
+    const factory = new AvataxProductLineCalculateTaxesFactory();
 
     const avataxProductLine = factory.createFromSaleorLine({
       saleorLine: {
@@ -43,7 +43,7 @@ describe("AvataxProductLineFactory", () => {
   });
 
   it("should create product line from Saleor order line", () => {
-    const factory = new AvataxProductLineFactory();
+    const factory = new AvataxProductLineCalculateTaxesFactory();
 
     const avataxProductLine = factory.createFromSaleorLine({
       saleorLine: {

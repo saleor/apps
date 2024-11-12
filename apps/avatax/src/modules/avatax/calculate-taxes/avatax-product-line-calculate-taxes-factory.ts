@@ -1,7 +1,7 @@
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import { TaxBaseLineFragment } from "generated/graphql";
 
-export class AvataxProductLineFactory {
+export class AvataxProductLineCalculateTaxesFactory {
   createFromSaleorLine(args: {
     saleorLine: TaxBaseLineFragment;
     taxIncluded: boolean;
