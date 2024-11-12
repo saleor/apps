@@ -30,7 +30,7 @@ export class AvataxProductLineCalculateTaxesFactory {
       return line.orderProductVariant?.sku ?? line.orderProductVariant?.id ?? "";
     }
     throw new AvataxProductLineCalculateTaxesFactory.NotSupportedSourceLineError(
-      // @ts-expect-error - we don't have types for not supported source line types
+      // @ts-expect-error - we don't have types for not supported source line
       `Source line type ${line.__typename} is not supported`,
     );
   }
