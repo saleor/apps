@@ -1,6 +1,23 @@
-"App: Klaviyo": "apps/klaviyo/**/*"
-"App: Product Feed": "apps/products-feed/**/*"
-"App: Search": "apps/search/**/*"
-"App: AvaTax": "apps/avatax/**/*"
-"App: CMS": "apps/cms-v2/**/*"
-"App: SMTP": "apps/smtp/**/*"
+"App: Klaviyo":
+  - changed-files:
+      - any-glob-to-any-file: "apps/klaviyo/**/*"
+
+"App: Product Feed":
+  - changed-files:
+      - any-glob-to-any-file: "apps/products-feed/**/*"
+
+"App: Search":
+  - changed-files:
+      - any-glob-to-any-file: "apps/search/**/*"
+
+"App: AvaTax":
+  - changed-files:
+      - any-glob-to-any-file: "apps/avatax/**/*"
+
+"App: CMS":
+  - changed-files:
+      - any-glob-to-any-file: "apps/cms-v2/**/*"
+
+"App: SMTP":
+  - changed-files:
+      - any-glob-to-any-file: "apps/smtp/**/*"
