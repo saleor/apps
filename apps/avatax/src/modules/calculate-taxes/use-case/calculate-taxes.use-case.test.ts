@@ -66,6 +66,7 @@ const getBasePayload = (): CalculateTaxesPayload => {
             orderProductVariant: {
               __typename: "ProductVariant",
               id: "123",
+              sku: "variantSku",
               product: {
                 taxClass: {
                   id: "321",
