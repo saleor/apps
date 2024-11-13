@@ -2,7 +2,16 @@ import { trace } from "@opentelemetry/api";
 import * as Sentry from "@sentry/nextjs";
 import { ILogObj, Logger } from "tslog";
 
+import { BaseError, UnknownError } from "./errors";
 import { LoggerContext } from "./logger-context";
+
+const VercelMaximumLogSizeExceededError = BaseError.subclass("VercelMaximumLogSizeExceededError");
+
+function isLogExceedingVercelLimit(inputString: string): boolean {
+  const byteLength = new TextEncoder().encode(inputString).length;
+
+  return byteLength > 4096; // Vercel serverless function log limit - 4KB
+}
 
 export const attachLoggerVercelRuntimeTransport = (
   logger: Logger<ILogObj>,
@@ -39,6 +48,17 @@ export const attachLoggerVercelRuntimeTransport = (
         },
       });
 
+      if (isLogExceedingVercelLimit(stringifiedMessage)) {
+        Sentry.captureException(
+          new VercelMaximumLogSizeExceededError("Log message is exceeding Vercel limit", {
+            props: {
+              logName: log._meta.name,
+              logMessage: bodyMessage,
+            },
+          }),
+        );
+      }
+
       // Prints Vercel log in proper level https://vercel.com/docs/observability/runtime-logs#level
       if (_meta.logLevelName === "ERROR") {
         console.error(stringifiedMessage);
@@ -53,7 +73,7 @@ export const attachLoggerVercelRuntimeTransport = (
       console.log(stringifiedMessage);
     } catch (error) {
       Sentry.captureException(
-        new Error("Error during attaching Vercel transport", {
+        new UnknownError("Error during attaching Vercel transport", {
           cause: error,
         }),
       );
