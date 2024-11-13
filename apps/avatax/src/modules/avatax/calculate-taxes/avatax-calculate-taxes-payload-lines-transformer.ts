@@ -7,7 +7,7 @@ import { AvataxConfig } from "../avatax-connection-schema";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
-import { avataxProductLine } from "./avatax-product-line";
+import { AvataxProductLineCalculateTaxesFactory } from "./avatax-product-line-calculate-taxes-factory";
 import { avataxShippingLine } from "./avatax-shipping-line";
 
 export class AvataxCalculateTaxesPayloadLinesTransformer {
@@ -34,17 +34,17 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
     matches: AvataxTaxCodeMatches,
     discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
   ) {
+    const avataxProductLine = new AvataxProductLineCalculateTaxesFactory();
     const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 
     // Price reduction discounts - we send totalPrices with or without discounts and let AvaTax calculate the tax
     const productLines: LineItemModel[] = taxBase.lines.map((line) => {
       const taxCode = this.avataxCalculateTaxesTaxCodeMatcher.match(line, matches);
 
-      return avataxProductLine.create({
-        amount: line.totalPrice.amount,
+      return avataxProductLine.createFromSaleorLine({
+        saleorLine: line,
         taxIncluded: taxBase.pricesEnteredWithTax,
         taxCode,
-        quantity: line.quantity,
         discounted: areLinesDiscounted,
       });
     });

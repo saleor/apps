@@ -5,6 +5,7 @@ fragment TaxBaseLine on TaxableObjectLine {
       id
       checkoutProductVariant: variant {
         id
+        sku
         product {
           taxClass {
             id
@@ -17,6 +18,7 @@ fragment TaxBaseLine on TaxableObjectLine {
       id
       orderProductVariant: variant {
         id
+        sku
         product {
           taxClass {
             id
