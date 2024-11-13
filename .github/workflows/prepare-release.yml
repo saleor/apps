@@ -17,19 +17,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
         # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
       - name: Git fetch tags
         run: git fetch --tags origin
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        name: Install pnpm
-      - run: pnpm install
+        with:
+          run_install: |
+            - args: [--frozen-lockfile]
       - name: Create Release Pull Request
         uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # v1.4.6
         id: changesets
