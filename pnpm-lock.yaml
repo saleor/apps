@@ -1430,6 +1430,12 @@ importers:
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
+      modern-errors:
+        specifier: 7.0.1
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 6.0.0
+        version: 6.0.0(modern-errors@7.0.1)
       vite:
         specifier: 5.3.3
         version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
