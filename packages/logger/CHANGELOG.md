@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.4.0
+
+### Minor Changes
+
+- 92a2a5fd: If Vercel runtime transport log is exceeding Vercel log limit (4kb) error to Sentry will be logged as it won't be visible in log drain.
+
 ## 1.3.0
 
 ### Minor Changes

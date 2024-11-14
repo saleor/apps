@@ -1,6 +1,6 @@
 {
   "name": "smtp",
-  "version": "1.2.16",
+  "version": "1.2.17",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",

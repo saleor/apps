@@ -1,5 +1,17 @@
 # app-avatax
 
+## 1.12.0
+
+### Minor Changes
+
+- 96c3164f: Added AvaTax `itemCode` support when handling order or checkout calculate taxes webhooks. After this change app will send `itemCode` to Avalara based on Saleor variant SKU or variant id.
+
+### Patch Changes
+
+- ed729b62: Run webhook migrations in parallel.
+- Updated dependencies [92a2a5fd]
+  - @saleor/apps-logger@1.4.0
+
 ## 1.11.0
 
 ### Minor Changes

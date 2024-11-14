@@ -1,5 +1,12 @@
 # saleor-app-search
 
+## 1.22.16
+
+### Patch Changes
+
+- Updated dependencies [92a2a5fd]
+  - @saleor/apps-logger@1.4.0
+
 ## 1.22.15
 
 ### Patch Changes
