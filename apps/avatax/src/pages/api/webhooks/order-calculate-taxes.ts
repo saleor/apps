@@ -207,7 +207,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       discountStrategy,
     );
 
-    logger.info("Taxes calculated", { calculatedTaxes: calculatedTaxes });
+    logger.info("Taxes calculated - returning response do Saleor");
 
     ClientLogStoreRequest.create({
       level: "info",
