@@ -55,7 +55,7 @@
     "jsdom": "^20.0.3",
     "mjml": "4.15.3",
     "modern-errors": "7.0.1",
-    "modern-errors-serialize": "6.0.0",
+    "modern-errors-serialize": "6.1.0",
     "neverthrow": "6.2.1",
     "next": "14.2.3",
     "nodemailer": "^6.9.1",
