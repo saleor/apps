@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.1
+
+### Patch Changes
+
+- 69992d56: Update modern-errors-serialize library so it supports excluding error property from serialization
+
 ## 0.2.0
 
 ### Minor Changes
