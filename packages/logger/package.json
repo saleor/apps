@@ -19,7 +19,7 @@
     "vite": "5.3.3",
     "vitest": "1.6.0",
     "modern-errors": "7.0.1",
-    "modern-errors-serialize": "6.0.0"
+    "modern-errors-serialize": "6.1.0"
   },
   "exports": {
     ".": {

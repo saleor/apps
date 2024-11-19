@@ -9,6 +9,9 @@ export type CommonErrorProps = {
 export const BaseError = ModernError.subclass("BaseError", {
   props: {} as CommonErrorProps,
   plugins: [modernErrorsSerialize],
+  serialize: {
+    exclude: ["stack"],
+  },
 });
 
 // Critical errors are reported to Sentry.

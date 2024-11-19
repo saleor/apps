@@ -47,10 +47,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
     subscriptionErrorChecker.checkPayload(payload);
 
-    logger.info("Tax base payload for checkout calculate taxes", {
-      payload: payload.taxBase,
-    });
-
     loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
     loggerContext.set(ObservabilityAttributes.CHECKOUT_ID, ctx.payload.taxBase.sourceObject.id);
 
