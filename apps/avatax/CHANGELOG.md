@@ -1,5 +1,15 @@
 # app-avatax
 
+## 1.12.1
+
+### Patch Changes
+
+- 69992d56: Remove not needed information from AvaTax app logs to make them more readable and to be below Vercel log drain limit.
+- 69992d56: Update modern-errors-serialize library so it supports excluding error property from serialization
+- Updated dependencies [69992d56]
+  - @saleor/webhook-utils@0.2.1
+  - @saleor/apps-logger@1.4.1
+
 ## 1.12.0
 
 ### Minor Changes

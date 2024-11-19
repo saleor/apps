@@ -1,6 +1,6 @@
 {
   "name": "products-feed",
-  "version": "1.19.13",
+  "version": "1.19.14",
   "scripts": {
     "build": "pnpm generate && next build",
     "check-types": "tsc --noEmit",
