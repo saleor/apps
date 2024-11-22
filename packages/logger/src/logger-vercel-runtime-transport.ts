@@ -26,8 +26,8 @@ export const attachLoggerVercelRuntimeTransport = (
 
       const stringifiedMessage = JSON.stringify({
         message: bodyMessage,
-        ...attributes,
         ...(loggerContext?.getRawContext() ?? {}),
+        ...attributes,
         deployment: {
           environment: process.env.ENV,
         },
