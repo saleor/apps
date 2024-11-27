@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.4.2
+
+### Patch Changes
+
+- 1e70b997: Fix Vercel runtime transport logs attribute order - attributes from logs context will be first so log attributes can override them.
+- 83ad6531: Updated Node.js to 22.11
+
 ## 1.4.1
 
 ### Patch Changes

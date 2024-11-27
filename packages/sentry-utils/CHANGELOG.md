@@ -1,5 +1,11 @@
 # @saleor/sentry-utils
 
+## 0.2.4
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 0.2.3
 
 ### Patch Changes

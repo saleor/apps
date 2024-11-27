@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 1.3.4
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 1.3.3
 
 ### Patch Changes

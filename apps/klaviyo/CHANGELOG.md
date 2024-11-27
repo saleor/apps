@@ -1,5 +1,18 @@
 # saleor-app-klaviyo
 
+## 1.12.17
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+- Updated dependencies [1e70b997]
+- Updated dependencies [83ad6531]
+  - @saleor/apps-logger@1.4.2
+  - @saleor/apps-otel@1.3.4
+  - @saleor/sentry-utils@0.2.4
+  - @saleor/apps-shared@1.11.3
+  - @saleor/apps-ui@1.2.9
+
 ## 1.12.16
 
 ### Patch Changes

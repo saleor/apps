@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.11.3
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 1.11.2
 
 ### Patch Changes

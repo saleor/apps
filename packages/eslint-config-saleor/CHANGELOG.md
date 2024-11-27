@@ -1,5 +1,11 @@
 # eslint-config-saleor
 
+## 0.4.11
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 0.4.10
 
 ### Patch Changes

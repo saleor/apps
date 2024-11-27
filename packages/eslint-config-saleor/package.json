@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-saleor",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "devDependencies": {
     "@saleor/eslint-plugin-saleor-app": "0.1.2",
     "@typescript-eslint/parser": "7.15.0",
