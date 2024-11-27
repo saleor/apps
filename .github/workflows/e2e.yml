@@ -50,8 +50,6 @@ jobs:
           E2E_USER_NAME: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_NAME"
           E2E_USER_PASSWORD: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_PASSWORD"
           SECRET_KEY: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/SECRET_KEY"
-      - name: Generate GraphQL files
-        run: pnpm --filter=app-avatax generate
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
