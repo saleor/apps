@@ -1,6 +1,6 @@
 {
   "name": "@saleor/webhook-utils",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "check-types": "tsc --noEmit",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
@@ -16,7 +16,7 @@
     "graphql": "16.7.1",
     "graphql-tag": "2.12.6",
     "modern-errors": "7.0.1",
-    "modern-errors-serialize": "6.0.0",
+    "modern-errors-serialize": "6.1.0",
     "semver": "7.5.1",
     "urql": "4.0.4"
   },

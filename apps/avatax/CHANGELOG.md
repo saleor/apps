@@ -1,5 +1,27 @@
 # app-avatax
 
+## 1.12.1
+
+### Patch Changes
+
+- 69992d56: Remove not needed information from AvaTax app logs to make them more readable and to be below Vercel log drain limit.
+- 69992d56: Update modern-errors-serialize library so it supports excluding error property from serialization
+- Updated dependencies [69992d56]
+  - @saleor/webhook-utils@0.2.1
+  - @saleor/apps-logger@1.4.1
+
+## 1.12.0
+
+### Minor Changes
+
+- 96c3164f: Added AvaTax `itemCode` support when handling order or checkout calculate taxes webhooks. After this change app will send `itemCode` to Avalara based on Saleor variant SKU or variant id.
+
+### Patch Changes
+
+- ed729b62: Run webhook migrations in parallel.
+- Updated dependencies [92a2a5fd]
+  - @saleor/apps-logger@1.4.0
+
 ## 1.11.0
 
 ### Minor Changes

@@ -1,5 +1,20 @@
 # saleor-app-search
 
+## 1.22.17
+
+### Patch Changes
+
+- Updated dependencies [69992d56]
+  - @saleor/webhook-utils@0.2.1
+  - @saleor/apps-logger@1.4.1
+
+## 1.22.16
+
+### Patch Changes
+
+- Updated dependencies [92a2a5fd]
+  - @saleor/apps-logger@1.4.0
+
 ## 1.22.15
 
 ### Patch Changes

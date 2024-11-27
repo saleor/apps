@@ -221,7 +221,7 @@ export class CalculateTaxesUseCase {
         });
       },
     ).map((results) => {
-      this.logger.info("Taxes calculated", { calculatedTaxes: results });
+      this.logger.info("Taxes calculated - returning response do Saleor");
 
       ClientLogStoreRequest.create({
         level: "info",

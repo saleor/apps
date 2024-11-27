@@ -207,8 +207,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       discountStrategy,
     );
 
-    // eslint-disable-next-line @saleor/saleor-app/logger-leak
-    logger.info("Taxes calculated", { calculatedTaxes: JSON.stringify(calculatedTaxes) });
+    logger.info("Taxes calculated - returning response do Saleor");
 
     ClientLogStoreRequest.create({
       level: "info",

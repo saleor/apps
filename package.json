@@ -53,15 +53,16 @@
     "typescript": "5.5.4"
   },
   "engines": {
-    "node": ">=18.17.0 <=20",
-    "pnpm": ">=9"
+    "npm": ">=10.0.0 <11.0.0",
+    "node": ">=22.0.0 <23.0.0",
+    "pnpm": ">=9.0.0 <10.0.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
     "*.{ts,tsx,md}": "prettier --write",
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.12.3",
   "pnpm": {
     "overrides": {
       "crypto-js@<4.2.0": ">=4.2.0"

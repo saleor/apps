@@ -1,5 +1,20 @@
 # smtp
 
+## 1.2.18
+
+### Patch Changes
+
+- 69992d56: Update modern-errors-serialize library so it supports excluding error property from serialization
+- Updated dependencies [69992d56]
+  - @saleor/apps-logger@1.4.1
+
+## 1.2.17
+
+### Patch Changes
+
+- Updated dependencies [92a2a5fd]
+  - @saleor/apps-logger@1.4.0
+
 ## 1.2.16
 
 ### Patch Changes
