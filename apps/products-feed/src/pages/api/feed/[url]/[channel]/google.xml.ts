@@ -199,8 +199,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     productVariants = await fetchProductData({ client, channel, imageSize });
 
+    const totalAttributes = productVariants
+      .map((e) => e.product.attributes.length)
+      .reduce((a, b) => a + b, 0);
+
     logger.info("Product data fetched successfully", {
       productVariantsLength: productVariants.length,
+      totalAttributes,
     });
   } catch (error) {
     logger.error("Error during the product data fetch", { error });
@@ -217,6 +222,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     productVariants,
     attributeMapping,
     titleTemplate,
+  });
+
+  logger.info("Generated XML size", {
+    size: xmlContent.length,
   });
 
   if (!bucketConfiguration) {
