@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.19.16
+
+### Patch Changes
+
+- 0fac242d: Now the total amount of loaded attributes and the size of generated XML is present within the logs.
+
 ## 1.19.15
 
 ### Patch Changes
