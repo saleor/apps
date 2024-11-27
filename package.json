@@ -53,8 +53,9 @@
     "typescript": "5.5.4"
   },
   "engines": {
-    "node": ">=18.17.0 <=20",
-    "pnpm": ">=9"
+    "npm": ">=10.0.0 <11.0.0",
+    "node": ">=22.0.0 <23.0.0",
+    "pnpm": ">=9.0.0 <10.0.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
