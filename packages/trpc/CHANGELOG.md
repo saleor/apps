@@ -1,5 +1,13 @@
 # @saleor/trpc
 
+## 3.0.3
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+- Updated dependencies [83ad6531]
+  - @saleor/apps-shared@1.11.3
+
 ## 3.0.2
 
 ### Patch Changes

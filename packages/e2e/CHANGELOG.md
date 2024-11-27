@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.6
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 1.0.5
 
 ### Patch Changes
