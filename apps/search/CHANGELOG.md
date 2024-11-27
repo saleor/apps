@@ -1,5 +1,20 @@
 # saleor-app-search
 
+## 1.22.18
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+- Updated dependencies [1e70b997]
+- Updated dependencies [83ad6531]
+  - @saleor/apps-logger@1.4.2
+  - @saleor/apps-otel@1.3.4
+  - @saleor/react-hook-form-macaw@0.2.11
+  - @saleor/sentry-utils@0.2.4
+  - @saleor/apps-shared@1.11.3
+  - @saleor/apps-ui@1.2.9
+  - @saleor/webhook-utils@0.2.2
+
 ## 1.22.17
 
 ### Patch Changes

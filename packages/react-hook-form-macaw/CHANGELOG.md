@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.11
+
+### Patch Changes
+
+- 83ad6531: Updated Node.js to 22.11
+
 ## 0.2.10
 
 ### Patch Changes
