@@ -1,7 +1,22 @@
 module.exports = {
-  extends: ["next", "turbo", "prettier", "plugin:@saleor/saleor-app/recommended"],
+  extends: [
+    "next",
+    "turbo",
+    "prettier",
+    "plugin:@saleor/saleor-app/recommended",
+    /*
+     * After upgrade to eslint 9 config should be updated
+     * https://github.com/vitest-dev/eslint-plugin-vitest/tree/main?tab=readme-ov-file#usage
+     *
+     * This is disabled, because it seems not to work, despite being set up just like in docs
+     * Some rules are applied manually in "rules" section - they work.
+     *
+     * TODO: Once we upgrade Vitest and ESLint, try to set up everything again with non-legacy approach
+     */
+    // "plugin:@vitest/legacy-recommended",
+  ],
   parser: "@typescript-eslint/parser",
-  plugins: ["simple-import-sort"],
+  plugins: ["simple-import-sort", "@vitest"],
   rules: {
     "import/order": "off", // to avoid conflicts with simple-import-sort
     "import/first": "warn",
@@ -13,6 +28,8 @@ module.exports = {
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
     "newline-after-var": "warn",
+    "@vitest/prefer-strict-equal": "warn",
+    "@vitest/prefer-vi-mocked": "warn",
     "multiline-comment-style": ["warn", "starred-block"],
     "no-restricted-imports": [
       "error",
