@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, Mock, vi } from "vitest";
 
 import { avataxAddressFactory } from "./address-factory";
 
