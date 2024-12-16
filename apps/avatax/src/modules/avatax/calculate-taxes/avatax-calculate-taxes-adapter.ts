@@ -38,7 +38,7 @@ export class AvataxCalculateTaxesAdapter {
       const transformedResponse = this.avataxCalculateTaxesResponseTransformer.transform(response);
 
       transformedResponse.lines.forEach((l) => {
-        const tax = (l.total_gross_amount = l.total_net_amount);
+        const tax = l.total_gross_amount - l.total_net_amount;
         const rate = l.tax_rate;
 
         if (tax === 0 && rate !== 0) {
