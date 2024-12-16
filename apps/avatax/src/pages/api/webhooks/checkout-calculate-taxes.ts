@@ -31,6 +31,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
   /**
    * Create deps in handler, so it's potentially faster and reduce lambda start
+   * TODO: It's rather not true, we should move it outside
    */
   const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
   const useCase = new CalculateTaxesUseCase({
