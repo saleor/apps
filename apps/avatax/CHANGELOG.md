@@ -1,5 +1,11 @@
 # app-avatax
 
+## 1.12.3
+
+### Patch Changes
+
+- 2b45d2be: Add log when suspicious calculation happen - when line tax rate is non-zero but amount of taxes is zero
+
 ## 1.12.2
 
 ### Patch Changes
