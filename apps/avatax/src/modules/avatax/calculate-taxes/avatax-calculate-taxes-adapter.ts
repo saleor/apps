@@ -40,9 +40,10 @@ export class AvataxCalculateTaxesAdapter {
       transformedResponse.lines.forEach((l) => {
         const tax = l.total_gross_amount - l.total_net_amount;
         const rate = l.tax_rate;
+        const lineIsZero = l.total_net_amount === 0 ?? l.total_gross_amount === 0;
 
-        if (tax === 0 && rate !== 0) {
-          this.logger.warn("Line has zero tax, but rate is not zero", {
+        if (tax === 0 && rate !== 0 && !lineIsZero) {
+          this.logger.warn("Non-zero line has zero tax, but rate is not zero", {
             taxCalculationSummary: response.summary,
           });
         }
