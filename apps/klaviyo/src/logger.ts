@@ -9,14 +9,21 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  import("@saleor/apps-logger/node").then(
-    async ({ attachLoggerOtelTransport, attachLoggerSentryTransport }) => {
-      const loggerContext = await import("./logger-context").then((m) => m.loggerContext);
+  // Don't remove require - it's necessary for proper logger initialization
+  const {
+    attachLoggerSentryTransport,
+    attachLoggerVercelRuntimeTransport,
+  } = require("@saleor/apps-logger/node");
 
-      attachLoggerSentryTransport(rootLogger);
-      attachLoggerOtelTransport(rootLogger, packageJson.version, loggerContext);
-    },
-  );
+  attachLoggerSentryTransport(rootLogger);
+
+  if (process.env.NODE_ENV === "production") {
+    attachLoggerVercelRuntimeTransport(
+      rootLogger,
+      packageJson.version,
+      require("./logger-context").loggerContext,
+    );
+  }
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>
