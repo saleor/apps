@@ -1,7 +1,7 @@
 fragment OrderFullyPaidSubscriptionPayload on OrderFullyPaid {
   order {
-      ...OrderBase
-    }
+    ...OrderBase
+  }
 }
 
 subscription OrderFullyPaid {

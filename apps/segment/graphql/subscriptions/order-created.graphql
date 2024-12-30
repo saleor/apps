@@ -1,7 +1,7 @@
 fragment OrderCreatedSubscriptionPayload on OrderCreated {
   order {
-      ...OrderBase
-    }
+    ...OrderBase
+  }
 }
 
 subscription OrderCreated {

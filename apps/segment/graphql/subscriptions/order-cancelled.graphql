@@ -1,7 +1,7 @@
 fragment OrderCancelledSubscriptionPayload on OrderCancelled {
   order {
-      ...OrderBase
-    }
+    ...OrderBase
+  }
 }
 
 subscription OrderCancelled {

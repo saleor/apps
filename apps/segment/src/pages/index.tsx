@@ -1,10 +1,9 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { isInIframe } from "@saleor/apps-shared";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
-
-import { isInIframe } from "@/lib/is-in-iframe";
 
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();

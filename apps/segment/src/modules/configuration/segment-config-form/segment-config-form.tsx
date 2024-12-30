@@ -1,14 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 import { Button, Text } from "@saleor/macaw-ui";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { ButtonsBox } from "@/components/ButtonsBox";
-import { Input } from "@/components/Input";
-import { Layout } from "@/components/Layout";
-import { SkeletonLayout } from "@/components/SkeletonLayout";
-import { TextLink } from "@/components/TextLink";
-import { useDashboardNotification } from "@/lib/use-dashboard-notification";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 import { RootConfig } from "../schemas/root-config.schema";
@@ -39,9 +36,9 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
         type="password"
         label="Segment write key"
         helperText={
-          <Text size={3} as="p" marginTop={2}>
+          <Text>
             Read about write keys in{" "}
-            <TextLink newTab size={5} href="https://segment.com/docs/connections/find-writekey/">
+            <TextLink newTab href="https://segment.com/docs/connections/find-writekey/">
               Segment documentation
             </TextLink>
           </Text>

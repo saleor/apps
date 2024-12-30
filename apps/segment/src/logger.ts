@@ -10,12 +10,7 @@ if (process.env.NODE_ENV !== "production") {
 
 if (typeof window === "undefined") {
   // Don't remove require - it's necessary for proper logger initialization
-  const {
-    attachLoggerSentryTransport,
-    attachLoggerVercelRuntimeTransport,
-  } = require("@saleor/apps-logger/node");
-
-  attachLoggerSentryTransport(rootLogger);
+  const { attachLoggerVercelRuntimeTransport } = require("@saleor/apps-logger/node");
 
   if (process.env.NODE_ENV === "production") {
     attachLoggerVercelRuntimeTransport(
