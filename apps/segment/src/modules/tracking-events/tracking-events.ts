@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { OrderBaseFragment } from "../../../generated/graphql";
 
 export type TrackingBaseEvent = {

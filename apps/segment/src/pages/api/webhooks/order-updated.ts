@@ -1,11 +1,12 @@
+import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+
 import { SegmentNotConfiguredError } from "@/errors";
 import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
+import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
 import { saleorApp } from "@/saleor-app";
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { wrapWithLoggerContext } from "@/logger-context";
+
 import {
   OrderUpdatedDocument,
   OrderUpdatedSubscriptionPayloadFragment,

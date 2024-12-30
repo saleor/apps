@@ -1,16 +1,17 @@
-import { Box, Button } from "@saleor/macaw-ui";
-import { Input } from "@/components/Input";
-import { RootConfig } from "../schemas/root-config.schema";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Text } from "@saleor/macaw-ui";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { ButtonsBox } from "@/components/ButtonsBox";
+import { Input } from "@/components/Input";
+import { Layout } from "@/components/Layout";
+import { SkeletonLayout } from "@/components/SkeletonLayout";
 import { TextLink } from "@/components/TextLink";
-import { ButtonsBox } from '@/components/ButtonsBox'
-import { Layout } from '@/components/Layout'
-import { SkeletonLayout } from '@/components/SkeletonLayout'
-import { Text } from "@saleor/macaw-ui";
-import { trpcClient } from "@/modules/trpc/trpc-client";
 import { useDashboardNotification } from "@/lib/use-dashboard-notification";
+import { trpcClient } from "@/modules/trpc/trpc-client";
+
+import { RootConfig } from "../schemas/root-config.schema";
 
 const Schema = RootConfig.Schema.unwrap();
 
@@ -38,13 +39,9 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
         type="password"
         label="Segment write key"
         helperText={
-          <Text variant="caption" as="p" marginTop={2}>
+          <Text size={3} as="p" marginTop={2}>
             Read about write keys in{" "}
-            <TextLink
-              newTab
-              size="small"
-              href="https://segment.com/docs/connections/find-writekey/"
-            >
+            <TextLink newTab size={5} href="https://segment.com/docs/connections/find-writekey/">
               Segment documentation
             </TextLink>
           </Text>

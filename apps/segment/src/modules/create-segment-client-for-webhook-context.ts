@@ -1,8 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { AppConfigMetadataManager } from "./configuration/app-config-metadata-manager";
-import { SegmentEventsTracker } from "./tracking-events/segment-events-tracker";
-import { SegmentClient } from "./segment/segment.client";
+
 import { SegmentNotConfiguredError } from "@/errors";
+
+import { AppConfigMetadataManager } from "./configuration/app-config-metadata-manager";
+import { SegmentClient } from "./segment/segment.client";
+import { SegmentEventsTracker } from "./tracking-events/segment-events-tracker";
 
 export const createSegmentClientForWebhookContext = async (context: { authData: AuthData }) => {
   const config = await AppConfigMetadataManager.createFromAuthData(context.authData).get();

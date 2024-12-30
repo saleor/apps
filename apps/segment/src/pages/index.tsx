@@ -1,8 +1,9 @@
-import { NextPage } from "next";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
-import { useRouter } from "next/router";
+
 import { isInIframe } from "@/lib/is-in-iframe";
 
 const IndexPage: NextPage = () => {

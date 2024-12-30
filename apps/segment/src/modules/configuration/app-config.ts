@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { RootConfig } from "./schemas/root-config.schema";
 
 export class AppConfig {
@@ -11,7 +12,13 @@ export class AppConfig {
   }
 
   static parse(serializedSchema: string) {
-    return new AppConfig(JSON.parse(serializedSchema));
+    try {
+      const parsedJSON = JSON.parse(serializedSchema);
+
+      return new AppConfig(parsedJSON as RootConfig.Shape);
+    } catch (e) {
+      throw new Error("Error parsing JSON", { cause: e });
+    }
   }
 
   serialize() {

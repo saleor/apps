@@ -1,6 +1,7 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { EncryptedMetadataManagerFactory } from "@/lib/metadata-manager";
 import { Client } from "urql";
+
+import { EncryptedMetadataManagerFactory } from "@/lib/metadata-manager";
 
 export const createSettingsManager = (
   client: Pick<Client, "query" | "mutation">,

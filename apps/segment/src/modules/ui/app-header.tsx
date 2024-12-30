@@ -1,5 +1,6 @@
-import { TextLink } from "@/components/TextLink";
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
+
+import { TextLink } from "@/components/TextLink";
 
 type Props = PropsWithBox<{}>;
 
@@ -9,11 +10,11 @@ export const AppHeader = ({ ...props }: Props) => {
       marginBottom={14}
       borderBottomWidth={1}
       borderBottomStyle="solid"
-      borderColor={"neutralHighlight"}
+      borderColor="default1"
       paddingBottom={6}
       {...props}
     >
-      <Text as="h1" marginBottom={4} variant="title">
+      <Text as="h1" marginBottom={4} size={2}>
         Configuration
       </Text>
       <Text>

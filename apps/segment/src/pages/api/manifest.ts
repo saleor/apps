@@ -2,6 +2,7 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+
 import packageJson from "../../../package.json";
 import { orderCancelledWebhook } from "./webhooks/order-cancelled";
 import { orderCreatedWebhook } from "./webhooks/order-created";

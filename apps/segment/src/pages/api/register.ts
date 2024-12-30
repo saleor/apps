@@ -1,6 +1,7 @@
-import { loggerContext ,wrapWithLoggerContext} from "@/logger-context";
-import { saleorApp } from "@/saleor-app";
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
+
+import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+import { saleorApp } from "@/saleor-app";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 

@@ -1,8 +1,10 @@
-import { createTRPCNext } from "@trpc/next";
+import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { httpBatchLink } from "@trpc/client";
+import { createTRPCNext } from "@trpc/next";
+
 import { appBridgeInstance } from "@/pages/_app";
+
 import { AppRouter } from "./trpc-app-router";
-import {SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER} from "@saleor/app-sdk/const";
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return "";
@@ -10,7 +12,6 @@ function getBaseUrl() {
 
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
-
 
 export const trpcClient = createTRPCNext<AppRouter>({
   config() {

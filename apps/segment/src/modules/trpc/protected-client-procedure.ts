@@ -1,14 +1,15 @@
-import { createLogger } from "@/logger";
 import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
+import { Permission } from "@saleor/app-sdk/types";
 import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
+
+import { createLogger } from "@/logger";
 import { saleorApp } from "@/saleor-app";
+
 import { middleware, procedure } from "./trpc-server";
-import {Permission} from "@saleor/app-sdk/types";
-import {createGraphQLClient} from '@/lib/create-graphql-client'
 
 const REQUIRED_SALEOR_PERMISSIONS: Permission[] = ["MANAGE_APPS"];
-
 
 const logger = createLogger("ProtectedClientProcedure");
 
