@@ -45,12 +45,13 @@ This repository serves as a starting point in the exploration of Saleor apps.
 
 In the `apps` folder, you will find the following applications:
 
-- [avatax](./apps/avatax) - calculates dynamic taxes via AvaTax API
+- [avatax](./apps/avatax) - calculates dynamic taxes via AvaTax API.
 - [cms](./apps/cms-v2) - exports products from Saleor to CMS.
 - [klaviyo](./apps/klaviyo) - send Saleor events to Klaviyo, where you can notify the customers.
-- [products-feed](./apps/products-feed) - generate products feed XML
+- [products-feed](./apps/products-feed) - generate products feed XML.
 - [search](./apps/search) - connect Saleor with search engines.
-- [smtp](./apps/smtp) - email communication with customers
+- [segment](./apps/segment/) - connect Saleor with Twilio Segment.
+- [smtp](./apps/smtp) - email communication with customers.
 
 #### Other official apps
 
@@ -64,7 +65,6 @@ Some of the Saleor apps are available in separate repositories:
 - [Taxjar integration app example](https://github.com/saleor/example-app-taxjar)
 - [Invoices app example](https://github.com/saleor/example-app-invoices)
 - [CRM app example](https://github.com/saleor/example-app-crm)
-- [Segment app example](https://github.com/saleor/example-app-segment)
 - [Sendgrid integration app example](https://github.com/saleor/example-app-sendgrid)
 
 ## Development
