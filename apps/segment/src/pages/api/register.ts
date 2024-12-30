@@ -1,4 +1,5 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
+import escapeStringRegexp from "escape-string-regexp";
 
 import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
 import { saleorApp } from "@/saleor-app";
@@ -15,7 +16,7 @@ export default wrapWithLoggerContext(
     allowedSaleorUrls: [
       (url) => {
         if (allowedUrlsPattern) {
-          const regex = new RegExp(allowedUrlsPattern);
+          const regex = new RegExp(escapeStringRegexp(allowedUrlsPattern));
 
           return regex.test(url);
         }
