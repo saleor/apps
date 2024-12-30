@@ -92,6 +92,18 @@ const formatDateForInput = (d: Date) => {
   return `${yyyy}-${MM}-${pad(d.getDate())}T${hh}:${mm}`;
 };
 
+/**
+ * Format date for ISO format with seconds & milliseconds set to 00 -> required by clientLogsRouter.getByDate.
+ * It allows us to cache the query as seconds won't change between UI changes.
+ */
+const formatDateForQuery = (d: Date): string => {
+  d.setSeconds(0);
+
+  d.setMilliseconds(0);
+
+  return d.toISOString();
+};
+
 const LogsByDate = () => {
   const [rangeDates, setRangeDates] = useState<{ start: Date; end: Date }>(() => {
     const now = Date.now();
@@ -109,8 +121,8 @@ const LogsByDate = () => {
     error,
     isLoading,
   } = trpcClient.clientLogs.getByDate.useQuery({
-    startDate: rangeDates.start.toISOString(),
-    endDate: rangeDates.end.toISOString(),
+    startDate: formatDateForQuery(rangeDates.start),
+    endDate: formatDateForQuery(rangeDates.end),
   });
 
   const isEmpty = !isLoading && logs && logs.length === 0;
