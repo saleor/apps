@@ -28,8 +28,8 @@
     }
   ],
   "words": [
-    "avatax",
     "avalara",
+    "avatax",
     "bruno",
     "codegen",
     "contentful",
@@ -39,15 +39,16 @@
     "mjml",
     "neverthrow",
     "pactum",
+    "quickstart",
     "saleor",
     "sendgrid",
     "shopx",
     "strapi",
     "taxjar",
     "unobfuscated",
-    "upstash",
     "upserted",
     "upserting",
+    "upstash",
     "urql"
   ],
   "language": "en-US",
