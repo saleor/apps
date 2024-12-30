@@ -21,3 +21,7 @@
 "App: SMTP":
   - changed-files:
       - any-glob-to-any-file: "apps/smtp/**/*"
+
+"App: Segment":
+  - changed-files:
+      - any-glob-to-any-file: "apps/segment/**/*"
