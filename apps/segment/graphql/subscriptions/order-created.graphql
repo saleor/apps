@@ -1,0 +1,11 @@
+fragment OrderCreatedSubscriptionPayload on OrderCreated {
+  order {
+      ...OrderBase
+    }
+}
+
+subscription OrderCreated {
+  event {
+    ...OrderCreatedSubscriptionPayload
+  }
+}
