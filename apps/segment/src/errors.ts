@@ -1,5 +1,9 @@
-export class SegmentNotConfiguredError extends Error {
-  constructor() {
-    super("Segment not configured");
-  }
-}
+import ModernError from "modern-errors";
+import modernErrorsSerialize from "modern-errors-serialize";
+
+export const BaseError = ModernError.subclass("BaseError", {
+  plugins: [modernErrorsSerialize],
+  serialize: {
+    exclude: ["stack"],
+  },
+});

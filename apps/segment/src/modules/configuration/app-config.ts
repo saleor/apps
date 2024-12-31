@@ -1,9 +1,13 @@
 import { z } from "zod";
 
+import { BaseError } from "@/errors";
+
 import { RootConfig } from "./schemas/root-config.schema";
 
 export class AppConfig {
   private rootData: RootConfig.Shape = null;
+
+  static JSONParseError = BaseError.subclass("JSONParseError");
 
   constructor(initialData?: RootConfig.Shape) {
     if (initialData) {
@@ -17,7 +21,7 @@ export class AppConfig {
 
       return new AppConfig(parsedJSON as RootConfig.Shape);
     } catch (e) {
-      throw new Error("Error parsing JSON", { cause: e });
+      throw new AppConfig.JSONParseError("Error parsing JSON with app config", { cause: e });
     }
   }
 
