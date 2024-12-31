@@ -6,7 +6,7 @@ import { AppConfigMetadataManager } from "./configuration/app-config-metadata-ma
 import { SegmentClient } from "./segment/segment.client";
 import { SegmentEventsTracker } from "./tracking-events/segment-events-tracker";
 
-export const SegmentNotConfiguredError = BaseError.subclass("SegmentNotConfiguredError");
+export const SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
 
 export const createSegmentClientForWebhookContext = async (context: { authData: AuthData }) => {
   const config = await AppConfigMetadataManager.createFromAuthData(context.authData).get();
@@ -14,7 +14,7 @@ export const createSegmentClientForWebhookContext = async (context: { authData: 
   const segmentKey = config.getConfig()?.segmentWriteKey;
 
   if (!segmentKey) {
-    throw new SegmentNotConfiguredError("Segment write key not found in app config");
+    throw new SegmentWriteKeyNotFoundError("Segment write key not found in app config");
   }
 
   return new SegmentEventsTracker(
