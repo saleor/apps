@@ -29,7 +29,7 @@ export const env = createEnv({
     VERCEL_URL: z.string().optional(),
   },
   shared: {
-    NODE_ENV: z.enum(["development", "production", "test"]),
+    NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
     ENV: z.enum(["local", "development", "staging", "production"]).optional().default("local"),
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
