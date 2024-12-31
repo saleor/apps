@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/schema.v1.json",
   "extends": ["//"],
   "pipeline": {
     "deploy": {
@@ -14,7 +14,10 @@
         "SECRET_KEY",
         "NEXT_PUBLIC_SENTRY_DSN",
         "FILE_APL_PATH",
-        "MANIFEST_APP_ID"
+        "MANIFEST_APP_ID",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "SENTRY_AUTH_TOKEN"
       ]
     }
   }
