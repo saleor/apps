@@ -1,9 +1,10 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import { SegmentNotConfiguredError } from "@/errors";
 import { OrderCreatedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
-import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+import { loggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
 import { orderCreatedAsyncWebhook } from "@/modules/webhooks/definitions/order-created";
