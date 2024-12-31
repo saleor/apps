@@ -18,13 +18,11 @@ export const configurationRouter = router({
 
     const config = await manager.get();
 
-    logger.info("Fetched config");
+    logger.debug("Successfully fetched config");
 
     return config.getConfig();
   }),
   setConfig: protectedClientProcedure.input(z.string().min(1)).mutation(async ({ input, ctx }) => {
-    logger.info("Request to set config");
-
     const manager = AppConfigMetadataManager.createFromAuthData({
       appId: ctx.appId,
       saleorApiUrl: ctx.saleorApiUrl,
@@ -37,6 +35,6 @@ export const configurationRouter = router({
 
     await manager.set(config);
 
-    logger.info("Config set successfully");
+    logger.debug("Successfully set config");
   }),
 });
