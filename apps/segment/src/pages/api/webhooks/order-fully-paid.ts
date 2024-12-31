@@ -1,31 +1,18 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 
 import { SegmentNotConfiguredError } from "@/errors";
+import { OrderFullyPaidSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
-import { saleorApp } from "@/saleor-app";
-
-import {
-  OrderFullyPaidDocument,
-  OrderFullyPaidSubscriptionPayloadFragment,
-} from "../../../../generated/graphql";
+import { orderFullyPaidAsyncWebhook } from "@/modules/webhooks/definitions/order-fully-paid";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-export const orderFullyPaidWebhook =
-  new SaleorAsyncWebhook<OrderFullyPaidSubscriptionPayloadFragment>({
-    name: "Order Fully Paid  v1",
-    webhookPath: "api/webhooks/order-fully-paid",
-    event: "ORDER_FULLY_PAID",
-    apl: saleorApp.apl,
-    query: OrderFullyPaidDocument,
-  });
 
 const logger = createLogger("orderFullyPaidAsyncWebhook");
 
@@ -61,4 +48,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
   }
 };
 
-export default wrapWithLoggerContext(orderFullyPaidWebhook.createHandler(handler), loggerContext);
+export default wrapWithLoggerContext(
+  orderFullyPaidAsyncWebhook.createHandler(handler),
+  loggerContext,
+);

@@ -1,31 +1,18 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 
 import { SegmentNotConfiguredError } from "@/errors";
+import { OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
-import { saleorApp } from "@/saleor-app";
-
-import {
-  OrderRefundedDocument,
-  OrderRefundedSubscriptionPayloadFragment,
-} from "../../../../generated/graphql";
+import { orderRefundedAsyncWebhook } from "@/modules/webhooks/definitions/order-refunded";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-export const orderRefundedWebhook =
-  new SaleorAsyncWebhook<OrderRefundedSubscriptionPayloadFragment>({
-    name: "Order Refunded v1",
-    webhookPath: "api/webhooks/order-refunded",
-    event: "ORDER_REFUNDED",
-    apl: saleorApp.apl,
-    query: OrderRefundedDocument,
-  });
 
 const logger = createLogger("orderRefundedAsyncWebhook");
 
@@ -61,4 +48,7 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
   }
 };
 
-export default wrapWithLoggerContext(orderRefundedWebhook.createHandler(handler), loggerContext);
+export default wrapWithLoggerContext(
+  orderRefundedAsyncWebhook.createHandler(handler),
+  loggerContext,
+);

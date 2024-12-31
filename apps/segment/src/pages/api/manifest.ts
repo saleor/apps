@@ -1,23 +1,21 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
-import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+import { env } from "@/env";
+import { loggerContext } from "@/logger-context";
+import { appWebhooks } from "@/modules/webhooks/webhooks";
 
 import packageJson from "../../../package.json";
-import { orderCancelledWebhook } from "./webhooks/order-cancelled";
-import { orderCreatedWebhook } from "./webhooks/order-created";
-import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
-import { orderRefundedWebhook } from "./webhooks/order-refunded";
-import { orderUpdatedWebhook } from "./webhooks/order-updated";
 
 export default wrapWithLoggerContext(
   createManifestHandler({
     async manifestFactory({ appBaseUrl }) {
-      const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-      const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+      const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+      const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
 
       const manifest: AppManifest = {
-        about: "Seamlessly feed Segment with Saleor events",
+        about: "Seamlessly feed Twillo Segment with Saleor events",
         appUrl: iframeBaseUrl,
         author: "Saleor Commerce",
         brand: {
@@ -26,30 +24,19 @@ export default wrapWithLoggerContext(
           },
         },
         dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-        extensions: [
-          /**
-           * Optionally, extend Dashboard with custom UIs
-           * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
-           */
-        ],
+        extensions: [],
         homepageUrl: "https://github.com/saleor/apps",
-        id: "saleor.app.segment",
+        id: env.MANIFEST_APP_ID,
         name: "Twilio Segment",
         permissions: ["MANAGE_ORDERS"],
-        requiredSaleorVersion: ">=3.14 <4",
+        requiredSaleorVersion: ">=3.20 <4",
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
         /*
          * TODO Add webhooks disabled and enable then when configured
          */
-        webhooks: [
-          orderCreatedWebhook.getWebhookManifest(appBaseUrl),
-          orderUpdatedWebhook.getWebhookManifest(appBaseUrl),
-          orderCancelledWebhook.getWebhookManifest(appBaseUrl),
-          orderRefundedWebhook.getWebhookManifest(appBaseUrl),
-          orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
-        ],
+        webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
       };
 
       return manifest;
