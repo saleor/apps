@@ -41,7 +41,10 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
 
     await segmentEventTracker.trackEvent(
-      trackingEventFactory.createOrderCancelledEvent(payload.order),
+      trackingEventFactory.createOrderCancelledEvent({
+        orderBase: payload.order,
+        issuedAt: payload.issuedAt,
+      }),
     );
 
     logger.info("Order cancelled event successfully sent to Segment");

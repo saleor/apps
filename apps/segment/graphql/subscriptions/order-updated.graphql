@@ -1,4 +1,5 @@
 fragment OrderUpdatedSubscriptionPayload on OrderUpdated {
+  issuedAt
   order {
     ...OrderBase
   }

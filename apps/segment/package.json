@@ -39,7 +39,7 @@
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
-    "@segment/analytics-node": "^1.1.0",
+    "@segment/analytics-node": "2.2.0",
     "@sentry/cli": "../../node_modules/@sentry/cli",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "@sentry/node": "../../node_modules/@sentry/node",

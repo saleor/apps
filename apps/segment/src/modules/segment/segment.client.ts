@@ -1,7 +1,12 @@
 import { Analytics, TrackParams } from "@segment/analytics-node";
+import { Callback } from "@segment/analytics-node/dist/types/app/dispatch-emit";
+
+import packageJson from "../../../package.json";
+import { TrackingBaseEvent } from "../tracking-events/tracking-events";
 
 //https://segment.com/docs/connections/sources/catalog/libraries/server/node/#graceful-shutdown
 export class SegmentClient {
+  // todo: add error handling
   private readonly client: Analytics;
 
   constructor({ segmentWriteKey }: { segmentWriteKey: string }) {
@@ -18,11 +23,26 @@ export class SegmentClient {
   }
 
   // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#track
-  track(event: Pick<TrackParams, "properties" | "event"> & { userId: string }) {
-    this.client.track({
-      ...event,
-      timestamp: new Date(),
-    });
+  track(
+    event: Pick<TrackParams, "properties" | "event"> &
+      Pick<TrackingBaseEvent, "userId" | "issuedAt">,
+    callback?: Callback,
+  ) {
+    const { issuedAt = new Date(), ...eventProps } = event;
+
+    this.client.track(
+      {
+        ...eventProps,
+        timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
+        context: {
+          app: {
+            name: "Saleor Segment app",
+            version: packageJson.version,
+          },
+        },
+      },
+      callback,
+    );
   }
 
   flush() {
