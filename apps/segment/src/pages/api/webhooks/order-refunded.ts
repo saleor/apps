@@ -42,7 +42,10 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
 
     await segmentEventTracker.trackEvent(
-      trackingEventFactory.createOrderRefundedEvent(payload.order),
+      trackingEventFactory.createOrderRefundedEvent({
+        orderBase: payload.order,
+        issuedAt: payload.issuedAt,
+      }),
     );
 
     logger.info("Order refunded event successfully sent to Segment");

@@ -42,7 +42,10 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
     const segmentEventTracker = await createSegmentClientForWebhookContext({ authData });
 
     await segmentEventTracker.trackEvent(
-      trackingEventFactory.createOrderCompletedEvent(payload.order),
+      trackingEventFactory.createOrderCompletedEvent({
+        orderBase: payload.order,
+        issuedAt: payload.issuedAt,
+      }),
     );
 
     logger.info("Order fully paid event successfully sent to Segment");
