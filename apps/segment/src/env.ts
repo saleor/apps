@@ -19,7 +19,7 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     FILE_APL_PATH: z.string().optional(),
-    MANIFEST_APP_ID: z.string().optional().default("saleor.app.segment"),
+    MANIFEST_APP_ID: z.string().optional().default("saleor.app.segment-v2"),
     REST_APL_ENDPOINT: z.string().optional(),
     REST_APL_TOKEN: z.string().optional(),
     OTEL_ENABLED: booleanSchema.optional().default("false"),
