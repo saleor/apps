@@ -1,5 +1,4 @@
 import { Analytics, TrackParams } from "@segment/analytics-node";
-import { Callback } from "@segment/analytics-node/dist/types/app/dispatch-emit";
 
 import packageJson from "../../../package.json";
 import { TrackingBaseEvent } from "../tracking-events/tracking-events";
@@ -26,23 +25,19 @@ export class SegmentClient {
   track(
     event: Pick<TrackParams, "properties" | "event"> &
       Pick<TrackingBaseEvent, "userId" | "issuedAt">,
-    callback?: Callback,
   ) {
-    const { issuedAt = new Date(), ...eventProps } = event;
+    const { issuedAt, ...eventProps } = event;
 
-    this.client.track(
-      {
-        ...eventProps,
-        timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
-        context: {
-          app: {
-            name: "Saleor Segment app",
-            version: packageJson.version,
-          },
+    this.client.track({
+      ...eventProps,
+      timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
+      context: {
+        app: {
+          name: "Saleor Segment app",
+          version: packageJson.version,
         },
       },
-      callback,
-    );
+    });
   }
 
   flush() {

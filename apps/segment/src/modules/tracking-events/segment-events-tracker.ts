@@ -5,17 +5,13 @@ export class SegmentEventsTracker {
   constructor(private segmentClient: SegmentClient) {}
 
   async trackEvent(event: TrackingBaseEvent) {
-    // Based on https://segment.com/docs/connections/sources/catalog/libraries/server/node/#usage-in-serverless-environments
-    await new Promise((resolve) =>
-      this.segmentClient.track(
-        {
-          event: event.type,
-          userId: event.userId,
-          properties: event.payload,
-          issuedAt: event.issuedAt,
-        },
-        resolve,
-      ),
-    );
+    this.segmentClient.track({
+      event: event.type,
+      userId: event.userId,
+      properties: event.payload,
+      issuedAt: event.issuedAt,
+    });
+
+    this.segmentClient.flush();
   }
 }
