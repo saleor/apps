@@ -1,15 +1,17 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
 import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
-import { SegmentEventsTracker } from "../tracking-events/segment-events-tracker";
 import { SegmentClient } from "./segment.client";
+import { SegmentEventsTracker } from "./segment-events-tracker";
 
-export const SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
+export interface ISegmentEventTrackerFactory {
+  createFromAuthData(authData: AuthData): Promise<Result<SegmentEventsTracker, unknown>>;
+}
 
-export class SegmentEventTrackerFactory {
+export class SegmentEventTrackerFactory implements ISegmentEventTrackerFactory {
   static SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
 
   constructor() {}

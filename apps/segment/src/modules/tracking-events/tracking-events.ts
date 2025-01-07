@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import { OrderBaseFragment } from "../../../generated/graphql";
+import { OrderBaseFragment } from "@/generated/graphql";
 
 export type TrackingBaseEvent = {
   type: string;
