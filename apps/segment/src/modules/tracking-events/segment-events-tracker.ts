@@ -10,7 +10,7 @@ export class SegmentEventsTracker {
       this.segmentClient.track(
         {
           event: event.type,
-          userId: event.userId,
+          user: event.user,
           properties: event.payload,
           issuedAt: event.issuedAt,
         },
