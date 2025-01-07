@@ -15,15 +15,16 @@ jobs:
       MAILCHIMP_CLIENT_SECRET: "mocked"
     steps:
       - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
-      - name: Setup PNPM
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
-        with:
-          run_install: |
-            - args: [--frozen-lockfile]
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Check linter
         run: pnpm lint
       - name: Check types
