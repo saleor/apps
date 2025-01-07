@@ -1,4 +1,3 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { err, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
@@ -16,9 +15,9 @@ export class TrackEventUseCase {
     },
   ) {}
 
-  async track(event: TrackingBaseEvent, authData: AuthData) {
+  async track(event: TrackingBaseEvent) {
     const segmentEventTrackerResult =
-      await this.deps.segmentEventTrackerFactory.createFromAuthData(authData);
+      await this.deps.segmentEventTrackerFactory.createFromAppConfig();
 
     if (segmentEventTrackerResult.isErr()) {
       return err(

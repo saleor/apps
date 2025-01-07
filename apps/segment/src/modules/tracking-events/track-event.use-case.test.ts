@@ -1,4 +1,3 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
@@ -16,15 +15,9 @@ describe("TrackEventUseCase", () => {
   };
   const mockedSegmentEventTracker = new SegmentEventsTracker(mockedSegmentClient);
   const mockedSegmentEventTrackerFactory: ISegmentEventTrackerFactory = {
-    createFromAuthData: (_: AuthData) => {
+    createFromAppConfig: () => {
       return Promise.resolve(ok(mockedSegmentEventTracker));
     },
-  };
-
-  const mockedAuthData: AuthData = {
-    token: "token",
-    saleorApiUrl: "https://example/graphql/",
-    appId: "appId",
   };
 
   it("creates instance", () => {
@@ -45,7 +38,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    await useCase.track(event, mockedAuthData);
+    await useCase.track(event);
 
     expect(mockedSegmentClient.track).toHaveBeenCalledWith({
       event: "Saleor Order Created",
@@ -79,7 +72,7 @@ describe("TrackEventUseCase", () => {
 
   it("returns error when creating Segment client fails", async () => {
     const mockedSegmentEventTrackerFactory: ISegmentEventTrackerFactory = {
-      createFromAuthData: (_: AuthData) => {
+      createFromAppConfig: () => {
         return Promise.resolve(err(new Error("Error while creating Segment client")));
       },
     };
@@ -93,7 +86,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event, mockedAuthData);
+    const result = await useCase.track(event);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseSegmentClientError,
@@ -109,7 +102,7 @@ describe("TrackEventUseCase", () => {
     };
     const mockedSegmentEventTracker = new SegmentEventsTracker(mockedSegmentClient);
     const mockedSegmentEventTrackerFactory: ISegmentEventTrackerFactory = {
-      createFromAuthData: (_: AuthData) => {
+      createFromAppConfig: () => {
         return Promise.resolve(ok(mockedSegmentEventTracker));
       },
     };
@@ -123,7 +116,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event, mockedAuthData);
+    const result = await useCase.track(event);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseUnknownError,

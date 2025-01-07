@@ -1,23 +1,26 @@
-import { AuthData } from "@saleor/app-sdk/APL";
 import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
+import { IAppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
 import { SegmentClient } from "./segment.client";
 import { SegmentEventsTracker } from "./segment-events-tracker";
 
 export interface ISegmentEventTrackerFactory {
-  createFromAuthData(authData: AuthData): Promise<Result<SegmentEventsTracker, unknown>>;
+  createFromAppConfig(): Promise<Result<SegmentEventsTracker, unknown>>;
 }
 
 export class SegmentEventTrackerFactory implements ISegmentEventTrackerFactory {
   static SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
 
-  constructor() {}
+  constructor(
+    private deps: {
+      appConfigMetadataManager: IAppConfigMetadataManager;
+    },
+  ) {}
 
-  async createFromAuthData(authData: AuthData) {
-    const config = await AppConfigMetadataManager.createFromAuthData(authData).get();
+  async createFromAppConfig() {
+    const config = await this.deps.appConfigMetadataManager.get();
 
     const segmentKey = config.getConfig()?.segmentWriteKey;
 

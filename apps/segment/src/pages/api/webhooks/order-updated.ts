@@ -6,6 +6,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { OrderUpdatedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
+import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
 import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
@@ -18,9 +19,6 @@ export const config = {
 };
 
 const logger = createLogger("orderUpdatedAsyncWebhook");
-
-const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
-const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
 const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = async (
   req,
@@ -40,12 +38,16 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
   loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.order.id);
 
   try {
+    const appConfigMetadataManager = AppConfigMetadataManager.createFromAuthData(authData);
+    const segmentEventTrackerFactory = new SegmentEventTrackerFactory({ appConfigMetadataManager });
+    const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
+
     const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: payload.order,
       issuedAt: payload.issuedAt,
     });
 
-    return useCase.track(event, authData).then((result) => {
+    return useCase.track(event).then((result) => {
       return result.match(
         () => {
           logger.info("Order updated event successfully sent to Segment");
