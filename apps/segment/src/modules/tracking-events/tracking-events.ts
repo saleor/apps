@@ -14,13 +14,13 @@ const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
 
   const userId = user?.id ?? userEmail;
 
-  try {
-    const parsedUserId = stringValidator.parse(userId);
+  const parsedUserId = stringValidator.safeParse(userId);
 
-    return parsedUserId;
-  } catch (e) {
-    throw e;
+  if (parsedUserId.success) {
+    return parsedUserId.data;
   }
+
+  return "anonymous";
 };
 
 /**
