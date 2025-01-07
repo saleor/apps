@@ -5,10 +5,15 @@ import { createGraphQLClient } from "@saleor/apps-shared";
 import { AppConfig } from "./app-config";
 import { createSettingsManager } from "./metadata-manager";
 
-export class AppConfigMetadataManager {
+export interface IAppConfigMetadataManager {
+  get(): Promise<AppConfig>;
+  set(config: AppConfig): Promise<void>;
+}
+
+export class AppConfigMetadataManager implements IAppConfigMetadataManager {
   public readonly metadataKey = "app-config-v1";
 
-  constructor(private mm: SettingsManager) {}
+  private constructor(private mm: SettingsManager) {}
 
   async get() {
     const metadata = await this.mm.get(this.metadataKey);
