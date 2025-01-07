@@ -3,7 +3,7 @@ import { err, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { SegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
+import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
 import { TrackingBaseEvent } from "./tracking-events";
 
 export class TrackEventUseCase {
@@ -12,7 +12,7 @@ export class TrackEventUseCase {
 
   constructor(
     private deps: {
-      segmentEventTrackerFactory: SegmentEventTrackerFactory;
+      segmentEventTrackerFactory: ISegmentEventTrackerFactory;
     },
   ) {}
 
