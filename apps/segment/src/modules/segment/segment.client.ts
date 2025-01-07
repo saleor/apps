@@ -5,7 +5,6 @@ import { TrackingBaseEvent } from "../tracking-events/tracking-events";
 
 //https://segment.com/docs/connections/sources/catalog/libraries/server/node/#graceful-shutdown
 export class SegmentClient {
-  // todo: add error handling
   private readonly client: Analytics;
 
   constructor({ segmentWriteKey }: { segmentWriteKey: string }) {
