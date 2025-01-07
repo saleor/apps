@@ -3,8 +3,8 @@ import { err, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { SegmentEventTrackerFactory } from "./create-segment-client-for-webhook-context";
-import { TrackingBaseEvent } from "./tracking-events/tracking-events";
+import { SegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
+import { TrackingBaseEvent } from "./tracking-events";
 
 export class TrackEventUseCase {
   static TrackEventUseCaseUnknownError = BaseError.subclass("TrackEventUseCaseUnknowError");

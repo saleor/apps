@@ -6,8 +6,8 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { SegmentEventTrackerFactory } from "@/modules/create-segment-client-for-webhook-context";
-import { TrackEventUseCase } from "@/modules/track-event.use-case";
+import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
+import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
 import { orderRefundedAsyncWebhook } from "@/modules/webhooks/definitions/order-refunded";
 
