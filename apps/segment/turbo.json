@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "pipeline": {
+    "deploy": {
+      "env": [
+        "ALLOWED_DOMAIN_PATTERN",
+        "APL",
+        "APP_API_BASE_URL",
+        "APP_IFRAME_BASE_URL",
+        "PORT",
+        "REST_APL_ENDPOINT",
+        "REST_APL_TOKEN",
+        "SECRET_KEY",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "FILE_APL_PATH",
+        "MANIFEST_APP_ID"
+      ]
+    }
+  }
+}
