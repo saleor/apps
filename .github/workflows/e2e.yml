@@ -30,8 +30,13 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
-          run_install: |
-            - args: [--frozen-lockfile, --filter=app-avatax]
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter=app-avatax
       - name: Get Saleor snapshot
         run: |
           BACKUP=$(pnpm dlx saleor backup list --name="snapshot-avatax-$SALEOR_VERSION" --latest --json)
