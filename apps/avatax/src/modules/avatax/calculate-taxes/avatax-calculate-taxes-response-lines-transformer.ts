@@ -52,7 +52,18 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
 
         if (hasFee) {
           this.logger.info("Product line has a fee. App will report this fee as tax_rate", {
-            details: line.details,
+            details: line.details?.map((details) => ({
+              country: details.country,
+              region: details.region,
+              jurisCode: details.jurisCode,
+              nonTaxableAmount: details.nonTaxableAmount,
+              taxableAmount: details.taxableAmount,
+              rate: details.rate,
+              tax: details.tax,
+              taxType: details.taxType,
+              rateType: details.rateType,
+              isFee: details.isFee,
+            })),
           });
         }
 
