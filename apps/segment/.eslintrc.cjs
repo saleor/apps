@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: ["saleor"],
-  plugins: ["node"],
+  plugins: ["neverthrow", "node"],
   rules: {
     "turbo/no-undeclared-env-vars": ["error"],
     "node/no-process-env": ["error"],
