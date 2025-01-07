@@ -1,10 +1,12 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import escapeStringRegexp from "escape-string-regexp";
 
-import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+import { env } from "@/env";
+import { loggerContext } from "@/logger-context";
 import { saleorApp } from "@/saleor-app";
 
-const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
+const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
 
 /**
  * Required endpoint, called by Saleor to install app.

@@ -4,6 +4,7 @@ module.exports = {
   plugins: ["node"],
   rules: {
     "turbo/no-undeclared-env-vars": ["error"],
+    "node/no-process-env": ["error"],
   },
   parserOptions: {
     project: "tsconfig.json",

@@ -12,6 +12,7 @@ export default defineConfig({
     css: false,
     alias: {
       "@/": new URL("./src/", import.meta.url).pathname,
+      "@/generated": new URL("./generated/", import.meta.url).pathname,
     },
   },
 });

@@ -11,7 +11,10 @@
         "PORT",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "SECRET_KEY"
+        "SECRET_KEY",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "FILE_APL_PATH",
+        "MANIFEST_APP_ID"
       ]
     }
   }

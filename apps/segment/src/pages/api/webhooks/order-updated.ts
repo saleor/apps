@@ -1,30 +1,19 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import { SegmentNotConfiguredError } from "@/errors";
+import { OrderUpdatedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
-import { loggerContext, wrapWithLoggerContext } from "@/logger-context";
+import { loggerContext } from "@/logger-context";
 import { createSegmentClientForWebhookContext } from "@/modules/create-segment-client-for-webhook-context";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
-import { saleorApp } from "@/saleor-app";
-
-import {
-  OrderUpdatedDocument,
-  OrderUpdatedSubscriptionPayloadFragment,
-} from "../../../../generated/graphql";
+import { orderUpdatedAsyncWebhook } from "@/modules/webhooks/definitions/order-updated";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-export const orderUpdatedWebhook = new SaleorAsyncWebhook<OrderUpdatedSubscriptionPayloadFragment>({
-  name: "Order Updated v1",
-  webhookPath: "api/webhooks/order-updated",
-  event: "ORDER_UPDATED",
-  apl: saleorApp.apl,
-  query: OrderUpdatedDocument,
-});
 
 const logger = createLogger("orderUpdatedAsyncWebhook");
 
@@ -60,4 +49,7 @@ const handler: NextWebhookApiHandler<OrderUpdatedSubscriptionPayloadFragment> = 
   }
 };
 
-export default wrapWithLoggerContext(orderUpdatedWebhook.createHandler(handler), loggerContext);
+export default wrapWithLoggerContext(
+  orderUpdatedAsyncWebhook.createHandler(handler),
+  loggerContext,
+);
