@@ -13,4 +13,8 @@ export const orderRefundedAsyncWebhook =
     event: "ORDER_REFUNDED",
     apl: saleorApp.apl,
     query: OrderRefundedDocument,
+    /**
+     * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+     */
+    isActive: false,
   });
