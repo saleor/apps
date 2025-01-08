@@ -1,9 +1,8 @@
 import { Result } from "neverthrow";
-import { Client } from "urql";
 
 import { BaseError } from "@/errors";
 
-import { IWebhooksActivityClient, WebhooksActivityClient } from "./webhook-activity-client";
+import { IWebhooksActivityClient } from "./webhook-activity-client";
 
 export interface IWebhookActivityService {
   enableAppWebhooks(): Promise<void>;
@@ -13,24 +12,17 @@ export interface IWebhookActivityService {
  * Service responsible for managing app webhooks `isActive` state.
  */
 export class WebhookActivityService implements IWebhookActivityService {
-  private webhooksClient: IWebhooksActivityClient;
-
-  private static WebhookActivityServiceWebhooksError = BaseError.subclass(
+  static WebhookActivityServiceWebhooksError = BaseError.subclass(
     "WebhookActivityServiceWebhooksError",
   );
 
   constructor(
     private ownAppId: string,
-    private client: Pick<Client, "query" | "mutation">,
-    options?: {
-      WebhooksClient: IWebhooksActivityClient;
-    },
-  ) {
-    this.webhooksClient = options?.WebhooksClient ?? new WebhooksActivityClient(this.client);
-  }
+    private client: IWebhooksActivityClient,
+  ) {}
 
   async enableAppWebhooks() {
-    const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
+    const webhooksIds = await this.client.fetchAppWebhooksIDs(this.ownAppId);
 
     if (webhooksIds.isErr()) {
       throw new WebhookActivityService.WebhookActivityServiceWebhooksError(
@@ -42,7 +34,7 @@ export class WebhookActivityService implements IWebhookActivityService {
     }
 
     const appWebhooksEnableResult = Result.combine(
-      await Promise.all(webhooksIds.value.map((id) => this.webhooksClient.enableSingleWebhook(id))),
+      await Promise.all(webhooksIds.value.map((id) => this.client.enableSingleWebhook(id))),
     );
 
     if (appWebhooksEnableResult.isErr()) {
