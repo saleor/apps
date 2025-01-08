@@ -1,5 +1,4 @@
 * @saleor/apps-guild
-/.github/ @saleor/SRE
 
 /apps/avatax  @saleor/shopex-js
 /apps/segment @saleor/shopex-js
