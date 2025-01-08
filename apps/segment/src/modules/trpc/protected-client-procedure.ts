@@ -11,11 +11,9 @@ import { middleware, procedure } from "./trpc-server";
 
 const REQUIRED_SALEOR_PERMISSIONS: Permission[] = ["MANAGE_APPS"];
 
-const logger = createLogger("ProtectedClientProcedure");
+const logger = createLogger("protectedClientProcedure");
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
-  logger.debug("attachAppToken middleware");
-
   if (!ctx.saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
 
@@ -46,12 +44,9 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
 });
 
 const validateClientToken = middleware(async ({ ctx, next, meta }) => {
-  logger.debug(
-    {
-      permissions: meta?.requiredClientPermissions,
-    },
-    "Calling validateClientToken middleware with permissions required",
-  );
+  logger.debug("Calling validateClientToken middleware with permissions required", {
+    permissions: meta?.requiredClientPermissions,
+  });
 
   if (!ctx.token) {
     throw new TRPCError({
@@ -77,8 +72,9 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
 
   if (!ctx.ssr) {
     try {
-      logger.debug("trying to verify JWT token from frontend");
-      logger.debug({ token: ctx.token ? `${ctx.token[0]}...` : undefined });
+      logger.debug("trying to verify JWT token from frontend", {
+        token: ctx.token ? `${ctx.token[0]}...` : undefined,
+      });
 
       await verifyJWT({
         appId: ctx.appId,
