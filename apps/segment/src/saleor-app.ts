@@ -2,19 +2,18 @@ import { APL, FileAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "./env";
+import { BaseError } from "./errors";
 
 export let apl: APL;
 
-switch (env.APL) {
-  case "file":
-    apl = new FileAPL({
-      fileName: env.FILE_APL_PATH,
-    });
+const MisconfiguredSaleorCloudAPLError = BaseError.subclass("MisconfiguredSaleorCloudAPLError");
 
-    break;
+switch (env.APL) {
   case "saleor-cloud": {
     if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
-      throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
+      throw new MisconfiguredSaleorCloudAPLError(
+        "Rest APL is not configured - missing env variables. Check saleor-app.ts",
+      );
     }
 
     apl = new SaleorCloudAPL({
@@ -24,9 +23,14 @@ switch (env.APL) {
 
     break;
   }
-  default: {
-    throw new Error("Invalid APL config");
-  }
+
+  case "file":
+  default:
+    apl = new FileAPL({
+      fileName: env.FILE_APL_PATH,
+    });
+
+    break;
 }
 
 export const saleorApp = new SaleorApp({
