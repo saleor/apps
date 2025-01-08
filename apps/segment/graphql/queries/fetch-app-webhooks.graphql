@@ -2,6 +2,7 @@ query FetchAppWebhooks($id: ID!) {
   app(id: $id) {
     webhooks {
       id
+      isActive
     }
   }
 }

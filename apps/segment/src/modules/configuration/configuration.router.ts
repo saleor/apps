@@ -12,6 +12,23 @@ import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 const logger = createLogger("configurationRouter");
 
 export const configurationRouter = router({
+  getWebhookConfig: protectedClientProcedure.query(async ({ ctx }) => {
+    const webhookActivityClient = new WebhooksActivityClient(ctx.apiClient);
+    const webhookActivityService = new WebhookActivityService(ctx.appId, webhookActivityClient);
+
+    const isActiveResult = await webhookActivityService.getWebhooksIsActive();
+
+    if (isActiveResult.isErr()) {
+      logger.error("Error during fetching webhooks isActive", { error: isActiveResult.error });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "There was an error with fetching webhooks information. Contact Saleor support.",
+      });
+    }
+
+    return { areWebhooksActive: isActiveResult.value.some(Boolean) };
+  }),
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {
     const manager = AppConfigMetadataManager.createFromAuthData({
       appId: ctx.appId,
@@ -40,13 +57,13 @@ export const configurationRouter = router({
 
     logger.debug("Successfully set config");
 
-    try {
-      const webhookActivityClient = new WebhooksActivityClient(ctx.apiClient);
-      const webhookActivityService = new WebhookActivityService(ctx.appId, webhookActivityClient);
+    const webhookActivityClient = new WebhooksActivityClient(ctx.apiClient);
+    const webhookActivityService = new WebhookActivityService(ctx.appId, webhookActivityClient);
 
-      await webhookActivityService.enableAppWebhooks();
-    } catch (error) {
-      logger.error("Error during enabling app webhooks", { error: error });
+    const enableAppWebhooksResult = await webhookActivityService.enableAppWebhooks();
+
+    if (enableAppWebhooksResult.isErr()) {
+      logger.error("Error during enabling app webhooks", { error: enableAppWebhooksResult.error });
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

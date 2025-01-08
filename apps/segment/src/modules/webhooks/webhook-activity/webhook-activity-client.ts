@@ -5,7 +5,9 @@ import { BaseError } from "@/errors";
 import { EnableWebhookDocument, FetchAppWebhooksDocument } from "@/generated/graphql";
 
 export interface IWebhooksActivityClient {
-  fetchAppWebhooksIDs(id: string): Promise<Result<string[], unknown>>;
+  fetchAppWebhooksInformation(
+    id: string,
+  ): Promise<Result<{ id: string; isActive: boolean }[], unknown>>;
   enableSingleWebhook(id: string): Promise<Result<undefined, unknown>>;
 }
 
@@ -14,7 +16,7 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
 
   constructor(private client: Pick<Client, "query" | "mutation">) {}
 
-  async fetchAppWebhooksIDs(id: string) {
+  async fetchAppWebhooksInformation(id: string) {
     const result = await this.client.query(FetchAppWebhooksDocument, { id }).toPromise();
 
     if (result.error || !result.data) {
@@ -32,7 +34,7 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
         ),
       );
     }
-    return ok(result.data.app.webhooks.map((w) => w.id));
+    return ok(result.data.app.webhooks.map((w) => w));
   }
 
   async enableSingleWebhook(id: string) {
