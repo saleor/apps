@@ -10,4 +10,8 @@ export const orderUpdatedAsyncWebhook =
     event: "ORDER_UPDATED",
     apl: saleorApp.apl,
     query: OrderUpdatedDocument,
+    /**
+     * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+     */
+    isActive: false,
   });
