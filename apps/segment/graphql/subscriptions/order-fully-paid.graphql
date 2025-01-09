@@ -1,4 +1,5 @@
 fragment OrderFullyPaidSubscriptionPayload on OrderFullyPaid {
+  issuedAt
   order {
     ...OrderBase
   }

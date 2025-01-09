@@ -4,13 +4,14 @@ import { TrackingBaseEvent } from "./tracking-events";
 export class SegmentEventsTracker {
   constructor(private segmentClient: SegmentClient) {}
 
-  trackEvent(event: TrackingBaseEvent) {
+  async trackEvent(event: TrackingBaseEvent) {
     this.segmentClient.track({
       event: event.type,
       userId: event.userId,
       properties: event.payload,
+      issuedAt: event.issuedAt,
     });
 
-    return this.segmentClient.flush();
+    this.segmentClient.flush();
   }
 }
