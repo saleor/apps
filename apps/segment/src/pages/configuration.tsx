@@ -4,6 +4,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 import { SegmentConfigForm } from "@/modules/configuration/segment-config-form/segment-config-form";
+import { WebhookStatus } from "@/modules/configuration/webhooks-status/webhooks-status";
 import { AppHeader } from "@/modules/ui/app-header";
 
 const ConfigurationPage: NextPage = () => {
@@ -26,6 +27,12 @@ const ConfigurationPage: NextPage = () => {
         sideContent={<Text>Provide Segment credentials to allow sending events.</Text>}
       >
         <SegmentConfigForm />
+      </Layout.AppSection>
+      <Layout.AppSection
+        heading="Webhooks status"
+        sideContent={<Text>Check status of registered webhooks.</Text>}
+      >
+        <WebhookStatus />
       </Layout.AppSection>
     </Box>
   );

@@ -52,10 +52,13 @@ export const SegmentConfigForm = () => {
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { data: config, isLoading, refetch } = trpcClient.configuration.getConfig.useQuery();
+  const utils = trpcClient.useUtils();
+
   const { mutate } = trpcClient.configuration.setConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration saved");
       refetch();
+      utils.configuration.getWebhookConfig.refetch();
     },
     onError() {
       notifyError("Error saving configuration");

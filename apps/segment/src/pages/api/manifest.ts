@@ -33,9 +33,6 @@ export default wrapWithLoggerContext(
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
-        /*
-         * TODO Add webhooks disabled and enable then when configured
-         */
         webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
       };
 

@@ -13,4 +13,8 @@ export const orderFullyPaidAsyncWebhook =
     event: "ORDER_FULLY_PAID",
     apl: saleorApp.apl,
     query: OrderFullyPaidDocument,
+    /**
+     * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+     */
+    isActive: false,
   });

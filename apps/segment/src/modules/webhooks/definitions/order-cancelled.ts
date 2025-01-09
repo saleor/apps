@@ -13,4 +13,8 @@ export const orderCancelledAsyncWebhook =
     event: "ORDER_CANCELLED",
     apl: saleorApp.apl,
     query: OrderCancelledDocument,
+    /**
+     * Webhook is disabled by default. Will be enabled by the app when configuration succeeds
+     */
+    isActive: false,
   });
