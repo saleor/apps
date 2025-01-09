@@ -4,9 +4,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 export const WebhookStatus = () => {
-  const { data: config, isLoading, refetch } = trpcClient.configuration.getWebhookConfig.useQuery();
-
-  console.log(config);
+  const { data: config, isLoading } = trpcClient.configuration.getWebhookConfig.useQuery();
 
   if (isLoading || !config) {
     return <SkeletonLayout.Section />;

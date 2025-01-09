@@ -58,12 +58,11 @@ describe("WebhookActivityService", () => {
 
     const service = new WebhookActivityService("app-id", mockedClient);
 
-    // TODO: I used try-catch because I couldn't make the expect statement work
-    try {
-      await service.enableAppWebhooks();
-    } catch (e) {
-      expect(e).toBeInstanceOf(WebhookActivityService.WebhookActivityServiceWebhooksError);
-    }
+    const result = await service.enableAppWebhooks();
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      WebhookActivityService.WebhookActivityServiceWebhooksError,
+    );
 
     expect(mockedClient.fetchAppWebhooksInformation).toHaveBeenCalled();
     expect(mockedClient.enableSingleWebhook).not.toHaveBeenCalled();
@@ -79,12 +78,11 @@ describe("WebhookActivityService", () => {
 
     const service = new WebhookActivityService("app-id", mockedClient);
 
-    // TODO: I used try-catch because I couldn't make the expect statement work
-    try {
-      await service.enableAppWebhooks();
-    } catch (e) {
-      expect(e).toBeInstanceOf(WebhookActivityService.WebhookActivityServiceWebhooksError);
-    }
+    const result = await service.enableAppWebhooks();
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      WebhookActivityService.WebhookActivityServiceWebhooksError,
+    );
 
     expect(mockedClient.fetchAppWebhooksInformation).toHaveBeenCalled();
     expect(mockedClient.enableSingleWebhook).toHaveBeenCalled();
