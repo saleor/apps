@@ -60,7 +60,7 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
           switch (error.constructor) {
             case TrackEventUseCase.TrackEventUseCaseSegmentClientError: {
               logger.warn("Cannot create Segment Client. Event won't be send to Segment", {
-                error,
+                error: error,
               });
 
               return res.status(200).json({
@@ -71,7 +71,7 @@ const handler: NextWebhookApiHandler<OrderCreatedSubscriptionPayloadFragment> = 
 
             case TrackEventUseCase.TrackEventUseCaseUnknownError: {
               logger.error("Unknown error while sending order created event to Segment", {
-                error,
+                error: error,
               });
 
               return res
