@@ -14,7 +14,7 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file"]).optional().default("file"),
+    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).optional().default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
@@ -27,6 +27,7 @@ export const env = createEnv({
     PORT: z.coerce.number().optional().default(3000),
     SECRET_KEY: z.string(),
     VERCEL_URL: z.string().optional(),
+    DYNAMODB_CONFIG_TABLE_NAME: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
@@ -51,6 +52,7 @@ export const env = createEnv({
     REST_APL_TOKEN: process.env.REST_APL_TOKEN,
     SECRET_KEY: process.env.SECRET_KEY,
     VERCEL_URL: process.env.VERCEL_URL,
+    DYNAMODB_CONFIG_TABLE_NAME: process.env.DYNAMODB_CONFIG_TABLE_NAME,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

@@ -16,6 +16,10 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.651.1",
+    "@aws-sdk/lib-dynamodb": "3.651.1",
+    "@aws-sdk/util-dynamodb": "3.651.1",
+    "dynamodb-toolbox": "1.8.2",
     "@hookform/resolvers": "^3.3.1",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
     "@opentelemetry/api-logs": "../../node_modules/@opentelemetry/api-logs",

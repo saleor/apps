@@ -17,7 +17,8 @@
         "MANIFEST_APP_ID",
         "SENTRY_ORG",
         "SENTRY_PROJECT",
-        "SENTRY_AUTH_TOKEN"
+        "SENTRY_AUTH_TOKEN",
+        "DYNAMODB_CONFIG_TABLE_NAME"
       ]
     }
   }
