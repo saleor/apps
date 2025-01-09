@@ -12,6 +12,8 @@ export const SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfig
 export class SegmentEventTrackerFactory {
   static SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
 
+  constructor() {}
+
   async createFromAuthData(authData: AuthData) {
     const config = await AppConfigMetadataManager.createFromAuthData(authData).get();
 

@@ -8,7 +8,7 @@ import { TrackingBaseEvent } from "./tracking-events/tracking-events";
 
 export class TrackEventUseCase {
   static TrackEventUseCaseUnknownError = BaseError.subclass("TrackEventUseCaseUnknowError");
-  static TrackEventUseCaseHandledError = BaseError.subclass("TrackEventUseCaseHandledError");
+  static TrackEventUseCaseSegmentClientError = BaseError.subclass("TrackEventUseCaseHandledError");
 
   constructor(
     private deps: {
@@ -22,22 +22,22 @@ export class TrackEventUseCase {
 
     if (segmentEventTrackerResult.isErr()) {
       return err(
-        new TrackEventUseCase.TrackEventUseCaseHandledError("Error while creating Segment client", {
-          cause: segmentEventTrackerResult.error,
-        }),
+        new TrackEventUseCase.TrackEventUseCaseSegmentClientError(
+          "Error while creating Segment client",
+          {
+            cause: segmentEventTrackerResult.error,
+          },
+        ),
       );
     }
 
-    return ResultAsync.fromThrowable(
-      () => segmentEventTrackerResult.value.trackEvent(event),
-      (error) => {
-        return new TrackEventUseCase.TrackEventUseCaseUnknownError(
-          "Error while sending event to Segment",
-          {
-            cause: error,
-          },
-        );
-      },
-    );
+    return ResultAsync.fromPromise(segmentEventTrackerResult.value.trackEvent(event), (error) => {
+      return new TrackEventUseCase.TrackEventUseCaseUnknownError(
+        "Error while sending event to Segment",
+        {
+          cause: error,
+        },
+      );
+    });
   }
 }

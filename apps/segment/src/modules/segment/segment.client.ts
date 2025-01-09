@@ -1,4 +1,5 @@
 import { Analytics, TrackParams } from "@segment/analytics-node";
+import { Callback } from "@segment/analytics-node/dist/types/app/dispatch-emit";
 
 import packageJson from "../../../package.json";
 import { TrackingBaseEvent } from "../tracking-events/tracking-events";
@@ -22,24 +23,27 @@ export class SegmentClient {
 
   // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#track
   track(
-    event: Pick<TrackParams, "properties" | "event"> &
-      Pick<TrackingBaseEvent, "userId" | "issuedAt">,
+    event: Pick<TrackParams, "properties" | "event"> & Pick<TrackingBaseEvent, "user" | "issuedAt">,
+    callback?: Callback,
   ) {
-    const { issuedAt, ...eventProps } = event;
+    const { issuedAt, user, ...eventProps } = event;
 
-    this.client.track({
-      ...eventProps,
-      timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
-      context: {
-        app: {
-          name: "Saleor Segment app",
-          version: packageJson.version,
+    // https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/identity/
+    const userInfo = user.type === "logged" ? { userId: user.id } : { anonymousId: user.id };
+
+    this.client.track(
+      {
+        ...eventProps,
+        ...userInfo,
+        timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
+        context: {
+          app: {
+            name: "Saleor Segment app",
+            version: packageJson.version,
+          },
         },
       },
-    });
-  }
-
-  flush() {
-    return this.client.closeAndFlush({ timeout: 1000 });
+      callback,
+    );
   }
 }
