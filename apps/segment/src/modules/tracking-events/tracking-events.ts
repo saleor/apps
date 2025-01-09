@@ -1,26 +1,37 @@
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import { OrderBaseFragment } from "../../../generated/graphql";
+import { OrderBaseFragment } from "@/generated/graphql";
 
 export type TrackingBaseEvent = {
   type: string;
-  userId: string;
+  user: {
+    id: string;
+    type: "logged" | "anonymous";
+  };
   payload: Record<string, unknown>;
   issuedAt: string | null | undefined;
 };
 
-const getUserId = ({ user, userEmail }: OrderBaseFragment) => {
+const getUserInfo = ({ user, userEmail }: OrderBaseFragment) => {
   const stringValidator = z.string().min(1);
 
   const userId = user?.id ?? userEmail;
 
-  try {
-    const parsedUserId = stringValidator.parse(userId);
+  const parsedUserId = stringValidator.safeParse(userId);
 
-    return parsedUserId;
-  } catch (e) {
-    throw e;
+  if (parsedUserId.success) {
+    return {
+      id: parsedUserId.data,
+      type: "logged",
+    } as const;
   }
+
+  return {
+    // https://segment.com/docs/guides/working-with-ids/#segments-guidance-on-identifier-formats
+    id: uuidv4(),
+    type: "anonymous",
+  } as const;
 };
 
 /**
@@ -39,7 +50,7 @@ export const trackingEventFactory = {
 
     return {
       type: "Saleor Order Created",
-      userId: getUserId(orderBase),
+      user: getUserInfo(orderBase),
       issuedAt,
       payload: {
         ...order,
@@ -57,7 +68,7 @@ export const trackingEventFactory = {
 
     return {
       type: "Saleor Order Updated",
-      userId: getUserId(orderBase),
+      user: getUserInfo(orderBase),
       issuedAt,
       payload: {
         ...order,
@@ -75,7 +86,7 @@ export const trackingEventFactory = {
 
     return {
       type: "Saleor Order Cancelled",
-      userId: getUserId(orderBase),
+      user: getUserInfo(orderBase),
       issuedAt,
       payload: {
         ...order,
@@ -93,7 +104,7 @@ export const trackingEventFactory = {
 
     return {
       type: "Saleor Order Refunded",
-      userId: getUserId(orderBase),
+      user: getUserInfo(orderBase),
       issuedAt,
       payload: {
         ...order,
@@ -111,7 +122,7 @@ export const trackingEventFactory = {
 
     return {
       type: "Saleor Order Completed",
-      userId: getUserId(orderBase),
+      user: getUserInfo(orderBase),
       issuedAt,
       payload: {
         ...order,

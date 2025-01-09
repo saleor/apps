@@ -3,8 +3,15 @@ import { Analytics, TrackParams } from "@segment/analytics-node";
 import packageJson from "../../../package.json";
 import { TrackingBaseEvent } from "../tracking-events/tracking-events";
 
-//https://segment.com/docs/connections/sources/catalog/libraries/server/node/#graceful-shutdown
-export class SegmentClient {
+export type EventToTrack = Pick<TrackParams, "properties" | "event"> &
+  Pick<TrackingBaseEvent, "user" | "issuedAt">;
+
+export interface ISegmentClient {
+  track(event: EventToTrack): void;
+  flush(): Promise<void>;
+}
+
+export class SegmentClient implements ISegmentClient {
   private readonly client: Analytics;
 
   constructor({ segmentWriteKey }: { segmentWriteKey: string }) {
@@ -21,14 +28,15 @@ export class SegmentClient {
   }
 
   // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#track
-  track(
-    event: Pick<TrackParams, "properties" | "event"> &
-      Pick<TrackingBaseEvent, "userId" | "issuedAt">,
-  ) {
-    const { issuedAt, ...eventProps } = event;
+  track(event: EventToTrack) {
+    const { issuedAt, user, ...eventProps } = event;
+
+    // https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/identity/
+    const userInfo = user.type === "logged" ? { userId: user.id } : { anonymousId: user.id };
 
     this.client.track({
       ...eventProps,
+      ...userInfo,
       timestamp: issuedAt ? new Date(issuedAt) : new Date(), // use timestamp from Saleor event as events may be async or fallback to current date
       context: {
         app: {
@@ -40,6 +48,7 @@ export class SegmentClient {
   }
 
   flush() {
+    // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#graceful-shutdown
     return this.client.closeAndFlush({ timeout: 1000 });
   }
 }
