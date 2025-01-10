@@ -1,6 +1,6 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { Client } from "urql";
-import { describe, expect, it, Mock, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AppMetadataCache } from "../../lib/app-metadata-cache";
 import { createSettingsManager } from "./metadata-manager";
@@ -36,7 +36,8 @@ describe("MetadataManager", () => {
     const cache = new AppMetadataCache();
     const manager = createSettingsManager(mockGqlClient, "test-id", cache);
 
-    (vi.mocked(mockGqlClient.query)).mockImplementationOnce(() => {
+    // @ts-expect-error mocking the request for testing
+    vi.mocked(mockGqlClient.query).mockImplementationOnce(() => {
       return {
         async toPromise() {
           return {
