@@ -1,9 +1,10 @@
-import { type Span, SpanKind, SpanStatusCode, context } from "@opentelemetry/api";
-import { type CombinedError, type Operation, makeOperation, mapExchange } from "urql";
-import { getOtelTracer } from "./otel-tracer";
+import { context,type Span, SpanKind, SpanStatusCode } from "@opentelemetry/api";
+import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import { type CombinedError, makeOperation, mapExchange,type Operation } from "urql";
+
 import { GraphQLAttributeNames, ObservabilityAttributes } from "./lib/observability-attributes";
 import { addInputVariableAttributes, addRequestHeaderAttributes } from "./otel-graphql-utils";
-import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import { getOtelTracer } from "./otel-tracer";
 
 type Definition = {
   name: {

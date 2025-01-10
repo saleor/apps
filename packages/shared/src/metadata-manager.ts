@@ -1,6 +1,6 @@
 import {
-  MetadataEntry,
   EncryptedMetadataManager,
+  MetadataEntry,
   MetadataManager,
   SettingsManager,
 } from "@saleor/app-sdk/settings-manager";

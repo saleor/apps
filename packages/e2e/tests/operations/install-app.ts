@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+
 import { routing } from "../../setup/routing";
 
 interface InstallTheAppArgs {

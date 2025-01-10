@@ -36,7 +36,7 @@ describe("MetadataManager", () => {
     const cache = new AppMetadataCache();
     const manager = createSettingsManager(mockGqlClient, "test-id", cache);
 
-    (mockGqlClient.query as Mock).mockImplementationOnce(() => {
+    (vi.mocked(mockGqlClient.query)).mockImplementationOnce(() => {
       return {
         async toPromise() {
           return {

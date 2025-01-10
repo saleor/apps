@@ -1,7 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
+
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
+import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
 
 /**

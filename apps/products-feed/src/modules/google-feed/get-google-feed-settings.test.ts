@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { GoogleFeedSettingsFetcher } from "./get-google-feed-settings";
+
 import { AppConfig } from "../app-configuration/app-config";
+import { GoogleFeedSettingsFetcher } from "./get-google-feed-settings";
 
 describe("GoogleFeedSettingsFetcher", () => {
   it("Fetches channel-specific config with S3 config from Metadata", async () => {

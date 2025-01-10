@@ -1,4 +1,5 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+
 import { AppConfigurationFields } from "./configuration";
 
 /**

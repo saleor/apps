@@ -1,11 +1,12 @@
-import { Page, test, expect } from "@playwright/test";
+import { expect,Page, test } from "@playwright/test";
+
 import { logInIntoDashboard } from "../../operations/log-in-to-dashboard";
 import { openTheApp } from "../../operations/open-app";
-import { fillAwsS3Form } from "./operations/fill-aws-s3-form";
 import { assertAppRender } from "./assertions/assert-app-render";
+import { fillAwsS3Form } from "./operations/fill-aws-s3-form";
 import { fillChannelConfig } from "./operations/fill-channel-config";
-import { setCategoryMapping } from "./operations/set-category-mapping";
 import { navigateToCategoryMapping } from "./operations/navigate-to-category-mapping";
+import { setCategoryMapping } from "./operations/set-category-mapping";
 
 test.describe("Product Feed Configuration", () => {
   let page: Page;

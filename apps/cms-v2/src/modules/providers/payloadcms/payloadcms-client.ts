@@ -1,10 +1,10 @@
-import { createLogger } from "@/logger";
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
-import { FieldsMapper } from "../fields-mapper";
-
 import qs from "qs";
+
+import { createLogger } from "@/logger";
+import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+
+import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { FieldsMapper } from "../fields-mapper";
 
 type Context = {
   configuration: PayloadCmsProviderConfig.FullShape;

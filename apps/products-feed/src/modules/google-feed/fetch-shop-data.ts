@@ -1,5 +1,6 @@
 import { url } from "inspector";
 import { Client } from "urql";
+
 import { ShopDetailsDocument } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 

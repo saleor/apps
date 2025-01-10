@@ -1,4 +1,4 @@
-import { FrameLocator, expect } from "@playwright/test";
+import { expect,FrameLocator } from "@playwright/test";
 
 export const navigateToCategoryMapping = async (iframeLocator: FrameLocator) => {
   await iframeLocator.getByText("Map categories").click({ force: true });

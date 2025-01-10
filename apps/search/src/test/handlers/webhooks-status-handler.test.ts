@@ -70,7 +70,7 @@ describe("webhooksStatusHandler", () => {
       graphqlClientFactory: () => client,
     });
 
-    (client.query as Mock).mockImplementationOnce(() => {
+    (vi.mocked(client.query)).mockImplementationOnce(() => {
       return {
         async toPromise() {
           return appWebhooksResponseData;
@@ -88,7 +88,7 @@ describe("webhooksStatusHandler", () => {
       indexNamePrefix: "test",
     });
 
-    (settingsManagerMock.get as Mock).mockReturnValueOnce(validConfig.serialize());
+    (vi.mocked(settingsManagerMock.get)).mockReturnValueOnce(validConfig.serialize());
 
     const { req, res } = createMocks({});
 

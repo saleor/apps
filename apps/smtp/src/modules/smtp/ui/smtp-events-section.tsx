@@ -1,26 +1,27 @@
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui";
-import { defaultPadding } from "../../../components/ui-defaults";
-import { SectionWithDescription } from "../../../components/section-with-description";
-import { useRouter } from "next/router";
-import { smtpUrls } from "../urls";
-import { TextLink } from "@saleor/apps-ui";
-import React from "react";
-import { messageEventTypesLabels } from "../../event-handlers/message-event-types";
-import { BoxFooter } from "../../../components/box-footer";
-import { Table } from "../../../components/table";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { TextLink } from "@saleor/apps-ui";
+import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
+import React from "react";
+import { useForm } from "react-hook-form";
+
+import { BoxFooter } from "../../../components/box-footer";
+import { BoxWithBorder } from "../../../components/box-with-border";
+import { ManagePermissionsTextLink } from "../../../components/manage-permissions-text-link";
+import { SectionWithDescription } from "../../../components/section-with-description";
+import { Table } from "../../../components/table";
+import { defaultPadding } from "../../../components/ui-defaults";
+import { getEventFormStatus } from "../../../lib/get-event-form-status";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { messageEventTypesLabels } from "../../event-handlers/message-event-types";
+import { trpcClient } from "../../trpc/trpc-client";
 import {
   SmtpUpdateEventArray,
   smtpUpdateEventArraySchema,
 } from "../configuration/smtp-config-input-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { trpcClient } from "../../trpc/trpc-client";
-import { useForm } from "react-hook-form";
-import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { getEventFormStatus } from "../../../lib/get-event-form-status";
-import { ManagePermissionsTextLink } from "../../../components/manage-permissions-text-link";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { smtpUrls } from "../urls";
 
 interface SmtpEventsSectionProps {
   configuration: SmtpConfiguration;

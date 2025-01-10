@@ -1,9 +1,10 @@
+import { createLogger } from "@/logger";
+
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 import { ContentfulProviderConfig } from "../../configuration";
 import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
-import { createLogger } from "@/logger";
 
 export class ContentfulBulkSyncProcessor implements BulkSyncProcessor {
   private logger = createLogger("ContentfulBulkSyncProcessor");

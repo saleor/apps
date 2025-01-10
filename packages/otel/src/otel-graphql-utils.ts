@@ -1,4 +1,5 @@
 import { type Span } from "@opentelemetry/api";
+
 import { GraphQLAttributeNames } from "./lib/observability-attributes";
 
 export const addRequestHeaderAttributes = (

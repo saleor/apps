@@ -1,8 +1,9 @@
-import { useEffect } from "react";
-import { Meta, StoryObj } from "@storybook/react";
-import { Combobox } from "./Combobox";
-import { useForm } from "react-hook-form";
 import { action } from "@storybook/addon-actions";
+import { Meta, StoryObj } from "@storybook/react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+import { Combobox } from "./Combobox";
 
 const meta: Meta<typeof Combobox> = {
   title: "Components / Combobox",

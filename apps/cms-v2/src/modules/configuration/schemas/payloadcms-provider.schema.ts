@@ -1,5 +1,7 @@
-import { PayloadCMS } from "@/modules/providers/payloadcms/payloadcms";
 import { z } from "zod";
+
+import { PayloadCMS } from "@/modules/providers/payloadcms/payloadcms";
+
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const InputSchema = z.object({

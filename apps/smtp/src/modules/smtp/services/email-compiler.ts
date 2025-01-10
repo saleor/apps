@@ -1,10 +1,11 @@
-import { IMjmlCompiler } from "./mjml-compiler";
-import { ITemplateCompiler } from "./handlebars-template-compiler";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { IHtmlToTextCompiler } from "./html-to-text-compiler";
-import { createLogger } from "../../../logger";
-import { BaseError } from "../../../errors";
 import { err, ok, Result } from "neverthrow";
+
+import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
+import { MessageEventTypes } from "../../event-handlers/message-event-types";
+import { ITemplateCompiler } from "./handlebars-template-compiler";
+import { IHtmlToTextCompiler } from "./html-to-text-compiler";
+import { IMjmlCompiler } from "./mjml-compiler";
 
 interface CompileArgs {
   recipientEmail: string;

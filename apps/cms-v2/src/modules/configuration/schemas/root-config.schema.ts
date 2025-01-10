@@ -1,10 +1,11 @@
 import { z } from "zod";
+
+import { BuilderIoProviderConfig } from "./builder-provider.schema";
 import { ChannelProviderConnectionConfig } from "./channel-provider-connection.schema";
 import { ContentfulProviderConfig } from "./contentful-provider.schema";
-import { BuilderIoProviderConfig } from "./builder-provider.schema";
-import { StrapiProviderConfig } from "./strapi-provider.schema";
 import { DatocmsProviderConfig } from "./datocms-provider.schema";
 import { PayloadCmsProviderConfig } from "./payloadcms-provider.schema";
+import { StrapiProviderConfig } from "./strapi-provider.schema";
 
 export namespace ProvidersConfig {
   const AnyFull = z.union([

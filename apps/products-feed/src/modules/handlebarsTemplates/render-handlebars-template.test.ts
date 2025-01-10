@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { renderHandlebarsTemplate } from "./render-handlebars-template";
 
 describe("renderHandlebarsTemplate", () => {

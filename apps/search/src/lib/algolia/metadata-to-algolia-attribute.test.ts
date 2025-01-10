@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
 
 describe("metadataToAlgoliaAttribute", () => {

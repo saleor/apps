@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { channelListingToAlgoliaIndexId, productAndVariantToAlgolia } from "./algoliaUtils";
+
 import { AttributeInputTypeEnum } from "../../../generated/graphql";
+import { channelListingToAlgoliaIndexId, productAndVariantToAlgolia } from "./algoliaUtils";
 
 describe("algoliaUtils", function () {
   describe("channelListingToAlgoliaIndexId", function () {

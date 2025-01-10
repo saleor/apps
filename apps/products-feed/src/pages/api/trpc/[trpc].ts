@@ -1,11 +1,12 @@
-import * as trpcNext from "@trpc/server/adapters/next";
-import { createTrpcContext } from "../../../modules/trpc/trpc-context";
-import { appRouter } from "../../../modules/trpc/trpc-app-router";
-import { withOtel } from "@saleor/apps-otel";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
-import { createLogger } from "../../../logger";
 import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import * as trpcNext from "@trpc/server/adapters/next";
+
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+import { appRouter } from "../../../modules/trpc/trpc-app-router";
+import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 import { saleorApp } from "../../../saleor-app";
 
 const logger = createLogger("tRPC error");

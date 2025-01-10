@@ -1,7 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ContentfulClient, ContentfulApiClientChunk } from "./contentful-client";
+import { beforeEach,describe, expect, it, vi } from "vitest";
+
 import { ContentfulProviderConfig } from "@/modules/configuration";
+
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { ContentfulApiClientChunk,ContentfulClient } from "./contentful-client";
 
 const getMockContenfulConfiguration = (): ContentfulProviderConfig.FullShape => ({
   authToken: "test-token",

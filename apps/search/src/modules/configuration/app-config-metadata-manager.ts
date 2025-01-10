@@ -1,9 +1,9 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-
-import { createGraphQLClient } from "@saleor/apps-shared";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { AppConfig } from "./configuration";
+import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { createGraphQLClient } from "@saleor/apps-shared";
+
 import { createSettingsManager } from "../../lib/metadata";
+import { AppConfig } from "./configuration";
 
 export class AppConfigMetadataManager {
   public readonly metadataKey = "app-config-v2";

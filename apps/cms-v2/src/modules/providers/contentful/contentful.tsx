@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui";
 
-import logo from "./contentful-logo.svg";
 import { CMSProviderMeta } from "../cms-provider-meta";
+import logo from "./contentful-logo.svg";
 
 export const Contentful = {
   formSideInfo: (
