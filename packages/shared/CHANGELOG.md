@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.11.4
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 1.11.3
 
 ### Patch Changes
