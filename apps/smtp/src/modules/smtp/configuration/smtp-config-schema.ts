@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { messageEventTypes } from "../../event-handlers/message-event-types";
+
 import { channelConfigurationSchema } from "../../channels/channel-configuration-schema";
+import { messageEventTypes } from "../../event-handlers/message-event-types";
 
 export const smtpEncryptionTypes = ["NONE", "TLS", "SSL"] as const;
 export type SmtpEncryptionType = (typeof smtpEncryptionTypes)[number];

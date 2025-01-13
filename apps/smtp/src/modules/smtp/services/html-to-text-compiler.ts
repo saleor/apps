@@ -1,8 +1,8 @@
 import { convert } from "html-to-text";
-
-import { createLogger } from "../../../logger";
 import { fromThrowable, Result } from "neverthrow";
+
 import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
 
 export interface IHtmlToTextCompiler {
   compile(html: string): Result<string, InstanceType<typeof BaseError>>;

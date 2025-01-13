@@ -1,6 +1,7 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
 import * as dotenv from "dotenv";
+
 import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
 import { updateWebhooksScript } from "./update-webhooks";
 

@@ -1,3 +1,6 @@
+import dynamic from "next/dynamic";
+import { ComponentType, ReactElement } from "react";
+
 import { BulkSyncProcessor } from "../bulk-sync/bulk-sync-processor";
 import {
   BuilderIoProviderConfig,
@@ -5,27 +8,24 @@ import {
   ProvidersConfig,
   StrapiProviderConfig,
 } from "../configuration";
-import { ContentfulBulkSyncProcessor } from "./contentful/contentful-bulk-sync-processor";
-import { DatocmsBulkSyncProcessor } from "./datocms/datocms-bulk-sync-processor";
-import { StrapiBulkSyncProcessor } from "./strapi/strapi-bulk-sync-processor";
-
-import dynamic from "next/dynamic";
-import { ComponentType, ReactElement } from "react";
+import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
+import { PayloadCmsProviderConfig } from "../configuration/schemas/payloadcms-provider.schema";
+import { BuilderIo } from "./builder.io/builder-io";
+import { BuilderIoBulkSyncProcessor } from "./builder.io/builder-io-bulk-sync-processor";
+import { BuilderIoWebhooksProcessor } from "./builder.io/builder-io-webhooks-processor";
 import { Contentful } from "./contentful/contentful";
+import { ContentfulBulkSyncProcessor } from "./contentful/contentful-bulk-sync-processor";
 import { ContentfulWebhooksProcessor } from "./contentful/contentful-webhooks-processor";
 import { Datocms } from "./datocms/datocms";
+import { DatocmsBulkSyncProcessor } from "./datocms/datocms-bulk-sync-processor";
 import { DatocmsWebhooksProcessor } from "./datocms/datocms-webhooks-processor";
+import { PayloadCMS } from "./payloadcms/payloadcms";
+import { PayloadCmsBulkSyncProcessor } from "./payloadcms/payloadcms-bulk-sync-processor";
+import { PayloadCmsWebhooksProcessor } from "./payloadcms/payloadcms-webhooks-processor";
 import { CMS, CMSType } from "./providers-registry";
 import { Strapi } from "./strapi/strapi";
+import { StrapiBulkSyncProcessor } from "./strapi/strapi-bulk-sync-processor";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";
-import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
-import { BuilderIo } from "./builder.io/builder-io";
-import { BuilderIoWebhooksProcessor } from "./builder.io/builder-io-webhooks-processor";
-import { BuilderIoBulkSyncProcessor } from "./builder.io/builder-io-bulk-sync-processor";
-import { PayloadCmsBulkSyncProcessor } from "./payloadcms/payloadcms-bulk-sync-processor";
-import { PayloadCmsProviderConfig } from "../configuration/schemas/payloadcms-provider.schema";
-import { PayloadCMS } from "./payloadcms/payloadcms";
-import { PayloadCmsWebhooksProcessor } from "./payloadcms/payloadcms-webhooks-processor";
 
 /**
  * Almost-single source of new providers. Every time app will need to resolve a provider, it will use on of these factories.

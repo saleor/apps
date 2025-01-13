@@ -1,13 +1,14 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
+import escapeStringRegexp from "escape-string-regexp";
+
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../logger";
+import { loggerContext } from "../../logger-context";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
-import { loggerContext } from "../../logger-context";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -22,7 +23,7 @@ export default wrapWithLoggerContext(
       allowedSaleorUrls: [
         (url) => {
           if (allowedUrlsPattern) {
-            const regex = new RegExp(allowedUrlsPattern);
+            const regex = new RegExp(escapeStringRegexp(allowedUrlsPattern));
 
             return regex.test(url);
           }

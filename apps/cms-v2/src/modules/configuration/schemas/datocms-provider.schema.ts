@@ -1,5 +1,7 @@
-import { Datocms } from "@/modules/providers/datocms/datocms";
 import { z } from "zod";
+
+import { Datocms } from "@/modules/providers/datocms/datocms";
+
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const InputSchema = z.object({

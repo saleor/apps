@@ -1,9 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
-import { createSettingsManager } from "../../lib/metadata-manager";
-import { AppConfig } from "../app-configuration/app-config";
+
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "../../logger";
+import { AppConfig } from "../app-configuration/app-config";
+import { AppConfigMetadataManager } from "../app-configuration/app-config-metadata-manager";
 
 export class GoogleFeedSettingsFetcher {
   private logger = createLogger("GoogleFeedSettingsFetcher");

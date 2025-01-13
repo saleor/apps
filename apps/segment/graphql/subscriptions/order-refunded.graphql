@@ -1,0 +1,12 @@
+fragment OrderRefundedSubscriptionPayload on OrderRefunded {
+  issuedAt
+  order {
+    ...OrderBase
+  }
+}
+
+subscription OrderRefunded {
+  event {
+    ...OrderRefundedSubscriptionPayload
+  }
+}

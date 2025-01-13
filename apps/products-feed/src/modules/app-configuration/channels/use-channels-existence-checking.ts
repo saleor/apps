@@ -1,6 +1,7 @@
-import { trpcClient } from "../../trpc/trpc-client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+
+import { trpcClient } from "../../trpc/trpc-client";
 
 /**
  * This app requires channels to exist, so redirect to error page if channels don't exist

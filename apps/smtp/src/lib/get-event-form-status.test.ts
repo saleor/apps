@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { getEventFormStatus } from "./get-event-form-status";
+
 import { PermissionEnum } from "../../generated/graphql";
+import { getEventFormStatus } from "./get-event-form-status";
 
 describe("getEventFormStatus", function () {
   it("No message or disable flag, when event other than GIFT_CARD_SENT is passed", () => {

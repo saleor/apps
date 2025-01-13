@@ -1,14 +1,13 @@
-import { AppConfigSchema, RootConfig } from "./app-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Multiselect } from "@saleor/react-hook-form-macaw";
+import React, { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui";
-
-import React, { useCallback, useMemo } from "react";
-import { Multiselect } from "@saleor/react-hook-form-macaw";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { trpcClient } from "../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
 import { AttributeWithMappingFragmentFragment } from "../../../generated/graphql";
+import { trpcClient } from "../trpc/trpc-client";
+import { AppConfigSchema, RootConfig } from "./app-config";
 
 type AttributeMappingConfiguration = Exclude<RootConfig["attributeMapping"], null>;
 

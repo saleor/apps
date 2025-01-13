@@ -1,5 +1,7 @@
-import { Strapi } from "@/modules/providers/strapi/strapi";
 import { z } from "zod";
+
+import { Strapi } from "@/modules/providers/strapi/strapi";
+
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const InputSchema = z.object({

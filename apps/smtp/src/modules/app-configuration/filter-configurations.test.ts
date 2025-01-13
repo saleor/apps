@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { FilterableConfiguration, filterConfigurations } from "./filter-configurations";
 
 const enabledConfiguration: FilterableConfiguration = {

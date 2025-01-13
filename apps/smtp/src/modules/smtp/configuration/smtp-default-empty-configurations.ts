@@ -1,5 +1,4 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
-
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import {
   SmtpConfiguration,

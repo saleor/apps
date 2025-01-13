@@ -1,13 +1,14 @@
 import { TRPCError } from "@trpc/server";
+
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
+import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../../lib/metadata";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
 import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
-import { createLogger } from "../../lib/logger";
-import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 
 const logger = createLogger("configuration.router");
 

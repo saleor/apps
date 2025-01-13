@@ -1,6 +1,7 @@
 import { expect, Page } from "@playwright/test";
-import { routing } from "../../setup/routing";
+
 import { configuration } from "../../setup/configuration";
+import { routing } from "../../setup/routing";
 
 interface checkIfAppIsAvailableArgs {
   page: Page;

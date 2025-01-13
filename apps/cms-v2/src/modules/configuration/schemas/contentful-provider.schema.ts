@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { Contentful } from "../../providers/contentful/contentful";
 import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 

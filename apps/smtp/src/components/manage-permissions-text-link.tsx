@@ -1,8 +1,9 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
-import { PermissionEnum } from "../../generated/graphql";
-import { Text } from "@saleor/macaw-ui";
 import { TextLink } from "@saleor/apps-ui";
+import { Text } from "@saleor/macaw-ui";
+
+import { PermissionEnum } from "../../generated/graphql";
 
 interface ManagePermissionsTextLinkProps {
   missingPermission: PermissionEnum;

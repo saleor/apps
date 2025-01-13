@@ -1,7 +1,7 @@
-import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
-import { AppWebhook, WebhookManagementService } from "./webhook-management-service";
-import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
 import { createLogger } from "../../logger";
+import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
+import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
+import { AppWebhook, WebhookManagementService } from "./webhook-management-service";
 
 const logger = createLogger("SyncWebhooksStatus");
 

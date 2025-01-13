@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useCallback } from "react";
 
 export const useDashboardNotification = () => {
   const { appBridge } = useAppBridge();

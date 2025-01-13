@@ -1,21 +1,22 @@
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { BoxWithBorder } from "../../../components/box-with-border";
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import { defaultPadding } from "../../../components/ui-defaults";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { trpcClient } from "../../trpc/trpc-client";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
+
 import { BoxFooter } from "../../../components/box-footer";
+import { BoxWithBorder } from "../../../components/box-with-border";
 import { SectionWithDescription } from "../../../components/section-with-description";
+import { defaultPadding } from "../../../components/ui-defaults";
+import { setBackendErrors } from "../../../lib/set-backend-errors";
+import { ConfigurationActiveDescriptionText } from "../../app-configuration/ui/configuration-active-description-text";
+import { ConfigurationNameDescriptionText } from "../../app-configuration/ui/configuration-name-description-text";
+import { trpcClient } from "../../trpc/trpc-client";
 import {
   SmtpUpdateBasicInformation,
   smtpUpdateBasicInformationSchema,
 } from "../configuration/smtp-config-input-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { Input } from "@saleor/react-hook-form-macaw";
-import { ConfigurationNameDescriptionText } from "../../app-configuration/ui/configuration-name-description-text";
-import { ConfigurationActiveDescriptionText } from "../../app-configuration/ui/configuration-active-description-text";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpBasicInformationSectionProps {
   configuration: SmtpConfiguration;

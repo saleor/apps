@@ -1,10 +1,10 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { createLogger } from "../../logger";
-
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { saleorApp } from "../../saleor-app";
 import { withOtel } from "@saleor/apps-otel";
+import escapeStringRegexp from "escape-string-regexp";
+
 import { loggerContext } from "../../logger-context";
+import { saleorApp } from "../../saleor-app";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
@@ -19,7 +19,7 @@ export default wrapWithLoggerContext(
       allowedSaleorUrls: [
         (url) => {
           if (allowedUrlsPattern) {
-            const regex = new RegExp(allowedUrlsPattern);
+            const regex = new RegExp(escapeStringRegexp(allowedUrlsPattern));
 
             return regex.test(url);
           }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { getWeightAttributeValue } from "./get-weight-attribute-value";
+
 import { WeightUnitsEnum } from "../../../generated/graphql";
+import { getWeightAttributeValue } from "./get-weight-attribute-value";
 
 describe("getWeightAttributeValueTest", () => {
   it("Returns undefined, when weight is not provided", () => {

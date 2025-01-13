@@ -1,16 +1,16 @@
-import { OrderDetailsFragmentDoc } from "./../../../../generated/graphql";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { gql } from "urql";
-import { saleorApp } from "../../../saleor-app";
-import { OrderCreatedWebhookPayloadFragment } from "../../../../generated/graphql";
-import { withOtel } from "@saleor/apps-otel";
-import { createLogger } from "../../../logger";
-import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { captureException } from "@sentry/nextjs";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
+import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { captureException } from "@sentry/nextjs";
+import { gql } from "urql";
+
+import { OrderCreatedWebhookPayloadFragment , OrderDetailsFragmentDoc } from "../../../../generated/graphql";
+import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
+import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
+import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
+import { saleorApp } from "../../../saleor-app";
 
 const OrderCreatedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}

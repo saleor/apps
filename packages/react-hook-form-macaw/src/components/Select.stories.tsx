@@ -1,8 +1,9 @@
-import { useEffect } from "react";
-import { Meta, StoryObj } from "@storybook/react";
-import { Select } from "./Select";
-import { useForm } from "react-hook-form";
 import { action } from "@storybook/addon-actions";
+import { Meta, StoryObj } from "@storybook/react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+import { Select } from "./Select";
 
 const meta: Meta<typeof Select> = {
   title: "Components / Select",

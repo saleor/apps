@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { BulkImportProductFragment } from "../../../generated/graphql";
 import { VariantsSyncStatusListItem } from "./variants-sync-status-list";
 

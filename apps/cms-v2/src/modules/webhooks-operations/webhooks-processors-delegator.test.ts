@@ -1,8 +1,9 @@
-import { describe, vi, it, expect, beforeEach } from "vitest";
+import { beforeEach,describe, expect, it, vi } from "vitest";
+
+import { WebhookProductVariantFragment } from "../../../generated/graphql";
+import { AppConfig, ContentfulProviderConfig, DatocmsProviderConfig } from "../configuration";
 import { ProductWebhooksProcessor } from "./product-webhooks-processor";
 import { WebhooksProcessorsDelegator } from "./webhooks-processors-delegator";
-import { AppConfig, ContentfulProviderConfig, DatocmsProviderConfig } from "../configuration";
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
 
 const getMockContentfulInput = (): ContentfulProviderConfig.InputShape => {
   return {

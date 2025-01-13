@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { isAvailableInChannel } from "./is-available-in-channel";
 
 describe("isAvailableInChannel", function () {

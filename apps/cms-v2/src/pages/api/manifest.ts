@@ -1,14 +1,14 @@
-import { withOtel } from "@saleor/apps-otel";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
-import { loggerContext } from "../../logger-context";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
 
 import packageJson from "../../../package.json";
+import { loggerContext } from "../../logger-context";
+import { productUpdatedWebhook } from "./webhooks/product-updated";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
 import { productVariantDeletedWebhook } from "./webhooks/product-variant-deleted";
 import { productVariantUpdatedWebhook } from "./webhooks/product-variant-updated";
-import { productUpdatedWebhook } from "./webhooks/product-updated";
 
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {

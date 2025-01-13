@@ -1,5 +1,6 @@
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { BatchSpanProcessor, ReadableSpan } from "@opentelemetry/sdk-trace-base";
+
 import { sharedOtelConfig } from "./shared-config";
 
 class CustomSpanProcessor extends BatchSpanProcessor {

@@ -1,4 +1,5 @@
-import { Page, expect } from "@playwright/test";
+import { expect,Page } from "@playwright/test";
+
 import { routing } from "../../setup/routing";
 
 interface InstallTheAppArgs {
