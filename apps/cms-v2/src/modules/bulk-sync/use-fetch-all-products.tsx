@@ -1,7 +1,7 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { createGraphQLClient } from "@saleor/apps-shared";
 import { useEffect, useState } from "react";
 
-import { createGraphQLClient } from "@saleor/apps-shared";
 import {
   BulkImportProductFragment,
   FetchProductsPaginatedDocument,

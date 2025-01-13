@@ -1,10 +1,10 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { gql } from "urql";
-
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";
+import { gql } from "urql";
+
 import {
   FulfillmentCreatedWebhookPayloadFragment,
   UntypedFulfillmentCreatedDocument,

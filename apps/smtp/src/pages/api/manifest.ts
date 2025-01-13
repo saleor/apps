@@ -1,8 +1,8 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
+import { withOtel } from "@saleor/apps-otel";
 
 import packageJson from "../../../package.json";
-import { withOtel } from "@saleor/apps-otel";
 
 export default withOtel(
   createManifestHandler({

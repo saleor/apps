@@ -1,6 +1,8 @@
 import { z } from "zod";
-import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
+
 import { BuilderIo } from "@/modules/providers/builder.io/builder-io";
+
+import { SaleorProviderFieldsMappingSchema } from "./saleor-provider-fields-mapping.schema";
 
 const InputSchema = z.object({
   type: z.literal(BuilderIo.type),

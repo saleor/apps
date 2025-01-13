@@ -1,4 +1,3 @@
-import { MessageEventTypes } from "./message-event-types";
 import {
   GiftCardSentWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
@@ -19,6 +18,7 @@ import {
   NotifyPayloadAccountPasswordReset,
   NotifyPayloadFulfillmentUpdate,
 } from "../../lib/notify-event-types";
+import { MessageEventTypes } from "./message-event-types";
 
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",

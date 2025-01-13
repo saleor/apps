@@ -1,7 +1,6 @@
-import React, { useCallback, useRef } from "react";
-
 import Editor from "@monaco-editor/react";
 import { useTheme } from "@saleor/macaw-ui";
+import React, { useCallback, useRef } from "react";
 
 type Props = {
   onChange(value: string): void;

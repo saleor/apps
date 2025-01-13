@@ -1,7 +1,8 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { saleorApp } from "../../../saleor-app";
-import { withOtel } from "@saleor/apps-otel";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+
+import { saleorApp } from "../../../saleor-app";
 import { loggerContext } from "../../lib/logger-context";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;

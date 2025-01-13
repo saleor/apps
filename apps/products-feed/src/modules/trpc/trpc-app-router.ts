@@ -1,7 +1,7 @@
-import { channelsRouter } from "../app-configuration/channels/channels.router";
-import { router } from "./trpc-server";
 import { appConfigurationRouter } from "../app-configuration/app-configuration.router";
+import { channelsRouter } from "../app-configuration/channels/channels.router";
 import { categoryMappingRouter } from "../category-mapping/category-mapping.router";
+import { router } from "./trpc-server";
 
 export const appRouter = router({
   channels: channelsRouter,

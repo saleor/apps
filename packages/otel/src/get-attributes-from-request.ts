@@ -1,6 +1,6 @@
-import { NextApiRequest } from "next";
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import { SALEOR_API_URL_HEADER } from "@saleor/app-sdk/const";
+import { NextApiRequest } from "next";
 
 const pruneEmptyKeys = (obj: Record<string, unknown>): Record<string, string> => {
   const clonedObj = { ...obj };

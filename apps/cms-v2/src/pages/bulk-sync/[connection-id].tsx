@@ -1,9 +1,10 @@
-import { BulkSyncView } from "@/modules/bulk-sync/bulk-sync-view";
-import { trpcClient } from "@/modules/trpc/trpc-client";
 import { SkeletonLayout } from "@saleor/apps-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { z } from "zod";
+
+import { BulkSyncView } from "@/modules/bulk-sync/bulk-sync-view";
+import { trpcClient } from "@/modules/trpc/trpc-client";
 
 const BulkSyncPage: NextPage = () => {
   const { query } = useRouter();

@@ -1,7 +1,8 @@
 import { S3Client } from "@aws-sdk/client-s3";
+
+import { MULTI_PART_SIZE_THRESHOLD } from "./const";
 import { UploadMultiPart } from "./upload-multi-part";
 import { UploadSinglePart } from "./upload-single-part";
-import { MULTI_PART_SIZE_THRESHOLD } from "./const";
 
 export interface UploadFileArgs {
   s3Client: S3Client;

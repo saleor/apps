@@ -1,4 +1,5 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+
 import { ProductUpdated, ProductUpdatedDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
 

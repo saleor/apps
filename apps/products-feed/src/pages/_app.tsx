@@ -1,12 +1,14 @@
 import "@saleor/macaw-ui/style";
+
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
-import React from "react";
-import { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
-import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { NoSSRWrapper } from "@saleor/apps-shared";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AppProps } from "next/app";
+import React from "react";
+
+import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { trpcClient } from "../modules/trpc/trpc-client";
 
 /**

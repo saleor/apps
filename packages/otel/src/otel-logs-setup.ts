@@ -1,5 +1,4 @@
 import { logs } from "@opentelemetry/api-logs";
-import { BatchLogRecordProcessor, LoggerProvider } from "@opentelemetry/sdk-logs";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import {
   detectResourcesSync,
@@ -8,6 +7,8 @@ import {
   osDetectorSync,
   processDetector,
 } from "@opentelemetry/resources";
+import { BatchLogRecordProcessor, LoggerProvider } from "@opentelemetry/sdk-logs";
+
 import { sharedOtelConfig } from "./shared-config";
 
 const batchLogRecordProcessor = new BatchLogRecordProcessor(

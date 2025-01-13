@@ -1,9 +1,10 @@
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { useDashboardNotification } from "@saleor/apps-shared";
-import { trpcClient } from "../../trpc/trpc-client";
+
 import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { UniversalChannelsSection } from "../../channels/ui/universal-channels-section";
 import { UpdateChannelsInput } from "../../channels/channel-configuration-schema";
+import { UniversalChannelsSection } from "../../channels/ui/universal-channels-section";
+import { trpcClient } from "../../trpc/trpc-client";
+import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpChannelsSectionProps {
   configuration: SmtpConfiguration;

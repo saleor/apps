@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { SaleorVersionCompatibilityValidator } from "./saleor-version-compatibility-validator";
 
 describe("SaleorVersionCompatibilityValidator", () => {

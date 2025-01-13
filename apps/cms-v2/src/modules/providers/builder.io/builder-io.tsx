@@ -1,8 +1,8 @@
+import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui";
 
-import logo from "./builder-logo.svg";
 import { CMSProviderMeta } from "../cms-provider-meta";
-import { TextLink } from "@saleor/apps-ui";
+import logo from "./builder-logo.svg";
 
 export const BuilderIo = {
   formSideInfo: (

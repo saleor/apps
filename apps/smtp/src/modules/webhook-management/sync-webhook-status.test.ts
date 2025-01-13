@@ -1,6 +1,7 @@
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";

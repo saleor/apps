@@ -1,8 +1,9 @@
+import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
+import { renderHook } from "@testing-library/react";
 import React, { PropsWithChildren } from "react";
 import { describe, expect, it } from "vitest";
-import { renderHook } from "@testing-library/react";
+
 import { useGetFeedApiUrl } from "./use-get-feed-api-url";
-import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 
 describe("useGetFeedApiUrl", function () {
   const appBridge = new AppBridge({ saleorApiUrl: "https://example.com/graphql/" });

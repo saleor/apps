@@ -1,4 +1,4 @@
-import { Select as $Select, type SelectProps as $SelectProps, Option } from "@saleor/macaw-ui";
+import { Option,Select as $Select, type SelectProps as $SelectProps } from "@saleor/macaw-ui";
 import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 export type SelectProps<T extends FieldValues = FieldValues> = Omit<
