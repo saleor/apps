@@ -73,7 +73,7 @@ export class DynamoDBEncryptedSettingsManager implements SettingsManager {
         });
 
         if (possibleResult.isErr()) {
-          throw new BaseError("Failed to set config entry");
+          throw new BaseError("Failed to set config entries");
         }
       });
 

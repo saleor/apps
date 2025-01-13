@@ -70,6 +70,7 @@ export class DynamoDBApl implements APL {
   }
 
   async getAll(): Promise<AuthData[]> {
+    // TODO: add pagination
     const entriesResult = await this.segmentAplRepository.getAllEntries({
       appManifestId: this.appManifestId,
     });
