@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { priceMapping } from "./price-mapping";
 
 describe("priceMapping", () => {

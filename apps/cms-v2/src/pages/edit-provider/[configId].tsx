@@ -1,12 +1,12 @@
-import { ProvidersResolver } from "@/modules/providers/providers-resolver";
-
-import { trpcClient } from "@/modules/trpc/trpc-client";
-import { AppHeader } from "@/modules/ui/app-header";
 import { Breadcrumbs, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+
+import { ProvidersResolver } from "@/modules/providers/providers-resolver";
+import { trpcClient } from "@/modules/trpc/trpc-client";
+import { AppHeader } from "@/modules/ui/app-header";
 
 const EditProviderPage: NextPage = () => {
   const { push, query } = useRouter();

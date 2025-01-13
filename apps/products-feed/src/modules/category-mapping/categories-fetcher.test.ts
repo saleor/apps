@@ -1,5 +1,6 @@
 import { Client, OperationResult } from "urql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { FetchCategoriesWithMappingQuery } from "../../../generated/graphql";
 import { CategoriesFetcher } from "./categories-fetcher";
 

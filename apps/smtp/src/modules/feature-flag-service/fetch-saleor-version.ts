@@ -1,4 +1,5 @@
 import { Client, gql } from "urql";
+
 import { FetchSaleorVersionDocument, FetchSaleorVersionQuery } from "../../../generated/graphql";
 
 gql`

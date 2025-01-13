@@ -1,7 +1,8 @@
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
-import { ConfigurationView } from "../views/configuration/configuration.view";
 import { isInIframe } from "@saleor/apps-shared";
 import { Text } from "@saleor/macaw-ui";
+
+import { ConfigurationView } from "../views/configuration/configuration.view";
 
 const IndexPage = () => {
   const { appBridgeState } = useAppBridge();

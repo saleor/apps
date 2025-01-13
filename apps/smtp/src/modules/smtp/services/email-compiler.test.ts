@@ -1,7 +1,8 @@
+import { err, Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { EmailCompiler } from "./email-compiler";
 import { HandlebarsTemplateCompiler } from "./handlebars-template-compiler";
-import { err, Result } from "neverthrow";
 import { HtmlToTextCompiler } from "./html-to-text-compiler";
 import { MjmlCompiler } from "./mjml-compiler";
 

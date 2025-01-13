@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
-import { useCallback } from "react";
 import { useDashboardNotification } from "@saleor/apps-shared";
+import { useMutation } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export const useIndicesSetupMutation = () => {
   const fetch: typeof window.fetch = useAuthenticatedFetch();

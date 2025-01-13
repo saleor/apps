@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
 import { getWebhookStatusesFromConfigurations } from "./get-webhook-statuses-from-configurations";
 import { webhookStatusesFactory } from "./webhook-status-dict";

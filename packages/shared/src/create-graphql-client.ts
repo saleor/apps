@@ -1,5 +1,5 @@
 import { authExchange } from "@urql/exchange-auth";
-import { cacheExchange, createClient as urqlCreateClient, fetchExchange, Exchange } from "urql";
+import { cacheExchange, createClient as urqlCreateClient, Exchange,fetchExchange } from "urql";
 
 export interface CreateGraphQLClientArgs {
   saleorApiUrl: string;

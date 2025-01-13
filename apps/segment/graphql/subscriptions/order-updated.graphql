@@ -1,0 +1,12 @@
+fragment OrderUpdatedSubscriptionPayload on OrderUpdated {
+  issuedAt
+  order {
+    ...OrderBase
+  }
+}
+
+subscription OrderUpdated {
+  event {
+    ...OrderUpdatedSubscriptionPayload
+  }
+}

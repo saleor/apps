@@ -1,11 +1,12 @@
-import { describe, expect, it, vi } from "vitest";
-import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { SmtpMetadataManager } from "./smtp-metadata-manager";
-import { SmtpConfig } from "./smtp-config-schema";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { Client } from "urql";
 import { okAsync } from "neverthrow";
+import { Client } from "urql";
+import { describe, expect, it, vi } from "vitest";
+
+import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { SmtpConfig } from "./smtp-config-schema";
+import { SmtpConfigurationService } from "./smtp-configuration.service";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 

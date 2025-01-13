@@ -1,23 +1,20 @@
-import { withOtel } from "@saleor/apps-otel";
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { withOtel } from "@saleor/apps-otel";
+import * as Sentry from "@sentry/nextjs";
 import { gql } from "urql";
+
+import { createLogger } from "@/logger";
+import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
+import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
+import { saleorApp } from "@/saleor-app";
+
 import {
   ProductVariantCreatedWebhookPayloadFragment,
   ProductVariantCreatedWebhookPayloadFragmentDoc,
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
-
-import { saleorApp } from "@/saleor-app";
-
-import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
-
-import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
-
 import { loggerContext } from "../../../logger-context";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-
-import * as Sentry from "@sentry/nextjs";
-import { createLogger } from "@/logger";
 
 export const config = {
   api: {

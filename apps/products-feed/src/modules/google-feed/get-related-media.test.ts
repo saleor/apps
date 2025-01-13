@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { getRelatedMedia } from "./get-related-media";
+
 import { ProductMediaType } from "../../../generated/graphql";
+import { getRelatedMedia } from "./get-related-media";
 
 describe("getRelatedMedia", () => {
   it("Returns thumbnail, when set to the product", () => {

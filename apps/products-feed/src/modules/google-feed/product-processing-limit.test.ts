@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { ProductProcessingLimit } from "./product-processing-limit";
 
 describe("ProductProcessingLimit", () => {

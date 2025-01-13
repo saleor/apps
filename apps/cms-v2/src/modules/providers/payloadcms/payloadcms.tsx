@@ -1,8 +1,8 @@
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 
 import { CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./logo.png";
-import { TextLink } from "@saleor/apps-ui";
 
 export const PayloadCMS = {
   formSideInfo: (

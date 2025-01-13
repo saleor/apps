@@ -1,10 +1,11 @@
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import * as trpcNext from "@trpc/server/adapters/next";
+
 import { createLogger } from "../../../logger";
+import { loggerContext } from "../../../logger-context";
 import { appRouter } from "../../../modules/trpc/trpc-app-router";
 import { createTrpcContext } from "../../../modules/trpc/trpc-context";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { loggerContext } from "../../../logger-context";
 
 const logger = createLogger("tRPC wrapper");
 

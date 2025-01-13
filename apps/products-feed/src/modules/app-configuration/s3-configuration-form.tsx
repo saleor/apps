@@ -1,14 +1,13 @@
-import { AppConfigSchema, RootConfig } from "./app-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
+import React, { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { Box, Button, Text } from "@saleor/macaw-ui";
-
-import React, { useCallback, useMemo } from "react";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { trpcClient } from "../trpc/trpc-client";
-import { useDashboardNotification } from "@saleor/apps-shared";
 import { awsRegionList } from "../file-storage/s3/aws-region-list";
+import { trpcClient } from "../trpc/trpc-client";
+import { AppConfigSchema, RootConfig } from "./app-config";
 
 type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;
 

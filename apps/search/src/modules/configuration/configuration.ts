@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { AlgoliaRootFieldsKeys } from "../../lib/algolia-fields";
 
 export const AppConfigurationSchema = z.object({

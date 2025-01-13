@@ -1,0 +1,12 @@
+fragment OrderFullyPaidSubscriptionPayload on OrderFullyPaid {
+  issuedAt
+  order {
+    ...OrderBase
+  }
+}
+
+subscription OrderFullyPaid {
+  event {
+    ...OrderFullyPaidSubscriptionPayload
+  }
+}

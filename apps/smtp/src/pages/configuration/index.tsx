@@ -1,14 +1,15 @@
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
+
+import { BasicLayout } from "../../components/basic-layout";
 import { SectionWithDescription } from "../../components/section-with-description";
 import {
   ConfigurationListItem,
   MessagingProvidersBox,
 } from "../../modules/app-configuration/ui/messaging-providers-box";
-import { trpcClient } from "../../modules/trpc/trpc-client";
 import { appUrls } from "../../modules/app-configuration/urls";
-import { BasicLayout } from "../../components/basic-layout";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { trpcClient } from "../../modules/trpc/trpc-client";
 
 const ConfigurationPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();

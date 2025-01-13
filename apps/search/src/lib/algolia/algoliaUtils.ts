@@ -1,13 +1,14 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
+
 import {
   AttributeInputTypeEnum,
   ProductAttributesDataFragment,
   ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
+import { AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
 import { isNotNil } from "../isNotNil";
 import { safeParseJson } from "../safe-parse-json";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
-import { AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
 
 type PartialChannelListing = {
   channel: {

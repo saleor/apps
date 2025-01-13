@@ -1,4 +1,5 @@
 import Algolia from "algoliasearch";
+
 import { createLogger } from "../logger";
 
 export interface IAlgoliaCredentialsVerifier {

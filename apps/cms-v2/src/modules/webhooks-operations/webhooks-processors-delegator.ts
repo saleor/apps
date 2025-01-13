@@ -1,4 +1,5 @@
 import { createLogger } from "@/logger";
+
 import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
 import { ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
