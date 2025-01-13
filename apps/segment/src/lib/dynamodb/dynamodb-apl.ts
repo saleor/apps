@@ -3,8 +3,8 @@ import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-
 
 import { BaseError } from "@/errors";
 
+import { SegmentAPLRepository } from "./segment-apl-repository";
 import { SegmentConfigTable, SegmentConfigTableEntityFactory } from "./segment-config-table";
-import { SegmentAPLRepository } from "./segment-repository";
 
 export class DynamoDBApl implements APL {
   private segmentAplRepository: SegmentAPLRepository;

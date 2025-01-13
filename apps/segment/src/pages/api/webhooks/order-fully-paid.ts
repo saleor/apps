@@ -3,10 +3,12 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
+import { env } from "@/env";
 import { OrderFullyPaidSubscriptionPayloadFragment } from "@/generated/graphql";
+import { documentClient } from "@/lib/dynamodb/segment-config-table";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
+import { DynamoDBConfigManager } from "@/modules/configuration/dynamodb-config-manager";
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
 import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
@@ -19,6 +21,13 @@ export const config = {
 };
 
 const logger = createLogger("orderFullyPaidAsyncWebhook");
+
+const appConfigMetadataManager = new DynamoDBConfigManager({
+  documentClient: documentClient,
+  tableName: env.DYNAMODB_CONFIG_TABLE_NAME ?? "",
+});
+const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
+const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
 const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> = async (
   req,
@@ -38,16 +47,17 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
   loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.order.id);
 
   try {
-    const appConfigMetadataManager = AppConfigMetadataManager.createFromAuthData(authData);
-    const segmentEventTrackerFactory = new SegmentEventTrackerFactory({ appConfigMetadataManager });
-    const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
-
     const event = trackingEventFactory.createOrderCompletedEvent({
       orderBase: payload.order,
       issuedAt: payload.issuedAt,
     });
 
-    return useCase.track(event).then((result) => {
+    const config = await appConfigMetadataManager.get({
+      saleorApiUrl: authData.saleorApiUrl,
+      appId: authData.appId,
+    });
+
+    return useCase.track(event, config).then((result) => {
       return result.match(
         () => {
           logger.info("Order fully paid event successfully sent to Segment");

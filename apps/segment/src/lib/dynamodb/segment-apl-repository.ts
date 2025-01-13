@@ -26,7 +26,7 @@ export class SegmentAPLRepository {
       this.deps.segmentAPLEntity
         .build(GetItemCommand)
         .key({
-          PK: SegmentConfigTable.getPrimaryKey({
+          PK: SegmentConfigTable.getAPLPrimaryKey({
             appManifestId: args.appManifestId,
           }),
           SK: SegmentConfigTable.getAPLSortKey({
@@ -60,7 +60,7 @@ export class SegmentAPLRepository {
       this.deps.segmentAPLEntity
         .build(PutItemCommand)
         .item({
-          PK: SegmentConfigTable.getPrimaryKey({
+          PK: SegmentConfigTable.getAPLPrimaryKey({
             appManifestId: args.appManifestId,
           }),
           SK: SegmentConfigTable.getAPLSortKey({
@@ -93,7 +93,7 @@ export class SegmentAPLRepository {
       this.deps.segmentAPLEntity
         .build(DeleteItemCommand)
         .key({
-          PK: SegmentConfigTable.getPrimaryKey({
+          PK: SegmentConfigTable.getAPLPrimaryKey({
             appManifestId: args.appManifestId,
           }),
           SK: SegmentConfigTable.getAPLSortKey({
@@ -121,7 +121,7 @@ export class SegmentAPLRepository {
       this.deps.segmentAPLEntity.table
         .build(QueryCommand)
         .query({
-          partition: SegmentConfigTable.getPrimaryKey({ appManifestId: args.appManifestId }),
+          partition: SegmentConfigTable.getAPLPrimaryKey({ appManifestId: args.appManifestId }),
         })
         .entities(this.deps.segmentAPLEntity)
         .send(),
