@@ -7,7 +7,6 @@
 "@saleor/apps-otel": patch
 "@saleor/trpc": patch
 "klaviyo": patch
-"segment": patch
 "@saleor/e2e": patch
 "app-avatax": patch
 "cms-v2": patch
@@ -16,4 +15,4 @@
 "smtp": patch
 ---
 
-Fixed autofixable liniting issues. No functional changes.
+Fixed autofixable linting issues. No functional changes.

@@ -2,7 +2,6 @@
 "products-feed": patch
 "@saleor/apps-logger": patch
 "klaviyo": patch
-"segment": patch
 "app-avatax": patch
 "cms-v2": patch
 "search": patch
