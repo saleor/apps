@@ -10,7 +10,7 @@ const VercelMaximumLogSizeExceededError = BaseError.subclass("VercelMaximumLogSi
 function isLogExceedingVercelLimit(inputString: string): boolean {
   const byteLength = new TextEncoder().encode(inputString).length;
 
-  return byteLength > 256_000; // Vercel serverless function log limit - 256KB https://vercel.com/docs/observability/runtime-logs#limits
+  return byteLength > 4096; // Vercel serverless function log limit - 4KB
 }
 
 export const attachLoggerVercelRuntimeTransport = (
