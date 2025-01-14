@@ -23,15 +23,14 @@ export const getRelatedMedia = ({
   variantMediaMap,
   productMedia,
 }: getRelatedMediaArgs) => {
-  // Saleor always uses the first photo as thumbnail - even if it's assigned to the variant
-  const productThumbnailUrl = productMedia[0]?.url;
-
   const mediaAssignedToAnyVariant = Object.values(variantMediaMap).flat() || [];
 
   const mediaAssignedToNoVariant =
     productMedia?.filter((m) => !mediaAssignedToAnyVariant.find((vm) => vm.id === m.id)) || [];
 
   const mediaAssignedToVariant = variantMediaMap[productVariantId] || [];
+  // Saleor always uses the first photo as thumbnail - even if it's assigned to the variant
+  const productThumbnailUrl = mediaAssignedToVariant[0]?.url || productMedia[0]?.url;
 
   const additionalImages =
     [...mediaAssignedToVariant, ...mediaAssignedToNoVariant]
