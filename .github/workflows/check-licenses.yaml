@@ -36,6 +36,10 @@ jobs:
           name: "deny-gpl"
           mode: "deny"
           reason: "GPL licenses are not compatible with BSD-3-Clause"
+          exceptions:
+            # store2 is under a dual license (MIT OR GPL-3.0), thus is compatible with our project.
+            # License metadata (for v2.14.2): https://github.com/nbubna/store/blob/20cce53b83b5870b6715fa929e4aa773cfa5e179/package.json#L32
+            - store2
         - pattern: "*proprietary*"
           name: "deny-proprietary"
           mode: "deny"
