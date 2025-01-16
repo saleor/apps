@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.18
+
+### Patch Changes
+
+- 0db174a8: Removed regex escape for `ALLOWED_DOMAINS_URL` env variable from register handler. It isn't user input and escaping regex was causing problem with apps installation.
+
 ## 2.9.17
 
 ### Patch Changes
