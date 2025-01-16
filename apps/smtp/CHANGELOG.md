@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.21
+
+### Patch Changes
+
+- 0db174a8: Removed regex escape for `ALLOWED_DOMAINS_URL` env variable from register handler. It isn't user input and escaping regex was causing problem with apps installation.
+
 ## 1.2.20
 
 ### Patch Changes

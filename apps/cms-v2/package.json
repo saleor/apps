@@ -1,6 +1,6 @@
 {
   "name": "cms-v2",
-  "version": "2.9.17",
+  "version": "2.9.18",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
