@@ -1,6 +1,7 @@
 {
   "name": "saleor-apps",
   "version": "0.0.0",
+  "license": "(BSD-3-Clause AND CC-BY-4.0)",
   "scripts": {
     "build": "turbo run build",
     "check-spelling": "cspell '**/*.{jsx,tsx,js,ts,md,mdx}'",
