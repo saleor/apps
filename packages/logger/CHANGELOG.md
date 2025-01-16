@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.4.3
+
+### Patch Changes
+
+- 9bbf9ee5: Increased Vercel log limit to new value - 256KB. See [announcement](https://vercel.com/changelog/updated-logging-limits-for-vercel-functions) blog post from Vercel for more details.
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 1.4.2
 
 ### Patch Changes
