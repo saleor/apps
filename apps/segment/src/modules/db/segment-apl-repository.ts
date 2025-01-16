@@ -7,9 +7,10 @@ import { createLogger } from "@/logger";
 import { SegmentAPLEntityType, SegmentMainTable } from "@/modules/db/segment-main-table";
 
 import { SegmentAPLMapper } from "./segment-apl-mapper";
+import { APLRepository } from "./types";
 
-export class SegmentAPLRepository {
-  private logger = createLogger("DynamoDBAPLRepository");
+export class SegmentAPLRepository implements APLRepository {
+  private logger = createLogger("SegmentAPLRepository");
 
   private segmentAPLMapper = new SegmentAPLMapper();
 

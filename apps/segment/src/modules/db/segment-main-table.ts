@@ -3,24 +3,14 @@ import { Entity, schema, string, Table } from "dynamodb-toolbox";
 
 import { createDynamoDBClient, createDynamoDBDocumentClient } from "@/lib/dynamodb-client";
 
-export class SegmentMainTable extends Table<
-  { name: "PK"; type: "string" },
-  {
-    name: "SK";
-    type: "string";
-  }
-> {
-  private constructor(
-    args: ConstructorParameters<
-      typeof Table<
-        { name: "PK"; type: "string" },
-        {
-          name: "SK";
-          type: "string";
-        }
-      >
-    >[number],
-  ) {
+type PartitionKey = { name: "PK"; type: "string" };
+type SortKey = { name: "SK"; type: "string" };
+
+/**
+ * This table is used to store all relevant data for the Segment application meaning: APL, configuration, etc.
+ */
+export class SegmentMainTable extends Table<PartitionKey, SortKey> {
+  private constructor(args: ConstructorParameters<typeof Table<PartitionKey, SortKey>>[number]) {
     super(args);
   }
 

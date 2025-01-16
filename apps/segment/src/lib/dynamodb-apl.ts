@@ -1,27 +1,22 @@
 import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-sdk/APL";
 
+import { env } from "@/env";
 import { BaseError } from "@/errors";
-import { SegmentAPLRepository } from "@/modules/db/segment-apl-repository";
-import { SegmentAPLEntityType } from "@/modules/db/segment-main-table";
+import { APLRepository } from "@/modules/db/types";
 
 export class DynamoAPL implements APL {
-  private segmentAPLRepository: SegmentAPLRepository;
-
   static SetAuthDataError = BaseError.subclass("SetAuthDataError");
   static DeleteAuthDataError = BaseError.subclass("DeleteAuthDataError");
   static MissingEnvVariablesError = BaseError.subclass("MissingEnvVariablesError");
 
-  constructor({ segmentAPLEntity }: { segmentAPLEntity: SegmentAPLEntityType }) {
-    this.segmentAPLRepository = new SegmentAPLRepository({ segmentAPLEntity });
-  }
+  constructor(private deps: { repository: APLRepository }) {}
 
   async get(saleorApiUrl: string): Promise<AuthData | undefined> {
-    const getEntryResult = await this.segmentAPLRepository.getEntry({
+    const getEntryResult = await this.deps.repository.getEntry({
       saleorApiUrl,
     });
 
     if (getEntryResult.isErr()) {
-      // TODO: should we throw here?
       return undefined;
     }
 
@@ -29,7 +24,7 @@ export class DynamoAPL implements APL {
   }
 
   async set(authData: AuthData): Promise<void> {
-    const setEntryResult = await this.segmentAPLRepository.setEntry({
+    const setEntryResult = await this.deps.repository.setEntry({
       authData,
     });
 
@@ -43,7 +38,7 @@ export class DynamoAPL implements APL {
   }
 
   async delete(saleorApiUrl: string): Promise<void> {
-    const deleteEntryResult = await this.segmentAPLRepository.deleteEntry({
+    const deleteEntryResult = await this.deps.repository.deleteEntry({
       saleorApiUrl,
     });
 
@@ -57,10 +52,9 @@ export class DynamoAPL implements APL {
   }
 
   async getAll(): Promise<AuthData[]> {
-    const getAllEntriesResult = await this.segmentAPLRepository.getAllEntries();
+    const getAllEntriesResult = await this.deps.repository.getAllEntries();
 
     if (getAllEntriesResult.isErr()) {
-      // TODO: should we throw here?
       return [];
     }
 
@@ -99,9 +93,8 @@ export class DynamoAPL implements APL {
       "AWS_REGION",
       "AWS_ACCESS_KEY_ID",
       "AWS_SECRET_ACCESS_KEY",
-    ];
+    ] as const;
 
-    // eslint-disable-next-line node/no-process-env
-    return variables.every((variable) => !!process.env[variable]);
+    return variables.every((variable) => !!env[variable]);
   }
 }
