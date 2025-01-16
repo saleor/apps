@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.2.10
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 1.2.9
 
 ### Patch Changes
