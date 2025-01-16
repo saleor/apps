@@ -1,4 +1,5 @@
 import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-sdk/APL";
+import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
 
 import { env } from "@/env";
 import { BaseError } from "@/errors";
@@ -9,56 +10,74 @@ export class DynamoAPL implements APL {
   static DeleteAuthDataError = BaseError.subclass("DeleteAuthDataError");
   static MissingEnvVariablesError = BaseError.subclass("MissingEnvVariablesError");
 
+  private tracer = getOtelTracer();
+
   constructor(private deps: { repository: APLRepository }) {}
 
   async get(saleorApiUrl: string): Promise<AuthData | undefined> {
-    const getEntryResult = await this.deps.repository.getEntry({
-      saleorApiUrl,
+    return this.tracer.startActiveSpan("DynamoAPL.get", async (span) => {
+      const getEntryResult = await this.deps.repository.getEntry({
+        saleorApiUrl,
+      });
+
+      if (getEntryResult.isErr()) {
+        span.end();
+        return undefined;
+      }
+
+      span.end();
+      return getEntryResult.value;
     });
-
-    if (getEntryResult.isErr()) {
-      return undefined;
-    }
-
-    return getEntryResult.value;
   }
 
   async set(authData: AuthData): Promise<void> {
-    const setEntryResult = await this.deps.repository.setEntry({
-      authData,
-    });
-
-    if (setEntryResult.isErr()) {
-      throw new DynamoAPL.SetAuthDataError("Failed to set APL entry", {
-        cause: setEntryResult.error,
+    return this.tracer.startActiveSpan("DynamoAPL.set", async (span) => {
+      const setEntryResult = await this.deps.repository.setEntry({
+        authData,
       });
-    }
 
-    return undefined;
+      if (setEntryResult.isErr()) {
+        span.end();
+        throw new DynamoAPL.SetAuthDataError("Failed to set APL entry", {
+          cause: setEntryResult.error,
+        });
+      }
+
+      span.end();
+      return undefined;
+    });
   }
 
   async delete(saleorApiUrl: string): Promise<void> {
-    const deleteEntryResult = await this.deps.repository.deleteEntry({
-      saleorApiUrl,
-    });
-
-    if (deleteEntryResult.isErr()) {
-      throw new DynamoAPL.DeleteAuthDataError("Failed to delete APL entry", {
-        cause: deleteEntryResult.error,
+    return this.tracer.startActiveSpan("DynamoAPL.delete", async (span) => {
+      const deleteEntryResult = await this.deps.repository.deleteEntry({
+        saleorApiUrl,
       });
-    }
 
-    return undefined;
+      if (deleteEntryResult.isErr()) {
+        span.end();
+        throw new DynamoAPL.DeleteAuthDataError("Failed to delete APL entry", {
+          cause: deleteEntryResult.error,
+        });
+      }
+
+      span.end();
+      return undefined;
+    });
   }
 
   async getAll(): Promise<AuthData[]> {
-    const getAllEntriesResult = await this.deps.repository.getAllEntries();
+    return this.tracer.startActiveSpan("DynamoAPL.getAll", async (span) => {
+      const getAllEntriesResult = await this.deps.repository.getAllEntries();
 
-    if (getAllEntriesResult.isErr()) {
-      return [];
-    }
+      if (getAllEntriesResult.isErr()) {
+        span.end();
+        return [];
+      }
 
-    return getAllEntriesResult.value;
+      span.end();
+      return getAllEntriesResult.value;
+    });
   }
 
   async isReady(): Promise<AplReadyResult> {
