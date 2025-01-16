@@ -1,6 +1,6 @@
 {
   "name": "segment",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
@@ -54,7 +54,6 @@
     "@vitejs/plugin-react": "4.3.1",
     "dotenv": "16.3.1",
     "dynamodb-toolbox": "1.8.2",
-    "escape-string-regexp": "5.0.0",
     "graphql": "16.7.1",
     "graphql-tag": "2.12.6",
     "modern-errors": "7.0.1",

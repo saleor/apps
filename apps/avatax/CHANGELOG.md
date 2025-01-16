@@ -1,5 +1,28 @@
 # app-avatax
 
+## 1.12.5
+
+### Patch Changes
+
+- 0db174a8: Removed regex escape for `ALLOWED_DOMAINS_URL` env variable from register handler. It isn't user input and escaping regex was causing problem with apps installation.
+
+## 1.12.4
+
+### Patch Changes
+
+- 9bbf9ee5: Increased Vercel log limit to new value - 256KB. See [announcement](https://vercel.com/changelog/updated-logging-limits-for-vercel-functions) blog post from Vercel for more details.
+- 9bbf9ee5: Escape ALLOWED_DOMAIN_PATTERN regex. It ensures that regex constructed from env variable is sanitized and can't be used to Denial of Service attack.
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+- 9bbf9ee5: Add log when suspicious calculation happen - when line tax rate is non-zero but amount of taxes is zero
+- Updated dependencies [9bbf9ee5]
+- Updated dependencies [9bbf9ee5]
+  - @saleor/apps-logger@1.4.3
+  - @saleor/react-hook-form-macaw@0.2.12
+  - @saleor/webhook-utils@0.2.3
+  - @saleor/apps-shared@1.11.4
+  - @saleor/apps-otel@1.3.5
+  - @saleor/apps-ui@1.2.10
+
 ## 1.12.3
 
 ### Patch Changes

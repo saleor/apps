@@ -1,6 +1,6 @@
 {
   "name": "app-avatax",
-  "version": "1.12.3",
+  "version": "1.12.5",
   "scripts": {
     "build": " next build",
     "check-types": "tsc --noEmit",
@@ -60,7 +60,6 @@
     "decimal.js-light": "2.5.1",
     "dotenv": "16.3.1",
     "dynamodb-toolbox": "1.8.2",
-    "escape-string-regexp": "5.0.0",
     "graphql": "16.7.1",
     "graphql-tag": "2.12.6",
     "jotai": "^2.4.2",
