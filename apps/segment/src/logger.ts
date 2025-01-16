@@ -8,7 +8,7 @@ rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "api
 
 const require = createRequire(import.meta.url);
 
-if (env.NODE_ENV !== "production") {
+if (env.NODE_ENV === "development") {
   attachLoggerConsoleTransport(rootLogger);
 }
 
