@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.12.19
+
+### Patch Changes
+
+- 0db174a8: Removed regex escape for `ALLOWED_DOMAINS_URL` env variable from register handler. It isn't user input and escaping regex was causing problem with apps installation.
+
 ## 1.12.18
 
 ### Patch Changes

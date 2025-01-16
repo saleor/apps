@@ -1,6 +1,6 @@
 {
   "name": "search",
-  "version": "1.22.19",
+  "version": "1.22.20",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
