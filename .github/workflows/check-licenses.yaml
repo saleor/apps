@@ -1,0 +1,45 @@
+name: Check Licenses
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      # Labels are needed to handle external contributors
+      - labeled
+      - unlabeled
+    paths:
+      # Self
+      - ".github/workflows/check-licenses.yaml"
+      # JS/TS Ecosystem
+      - "**/package.json"
+      - "**/pnpm-lock.yaml"
+      - "**/package-lock.json"
+
+jobs:
+  default:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: saleor/saleor-internal-actions/.github/workflows/run-license-check.yaml@v1
+    with:
+      # List of ecosystems to scan.
+      ecosystems: >-
+        javascript
+      # Grant rules (https://github.com/anchore/grant/blob/4362dc22cf5ea9baeccfa59b2863879afe0c30d7/README.md#usage)
+      rules: |
+        # Explicitly allow LGPL as "*GPL*" rule will cause to reject them otherwise.
+        - pattern: "*lgpl*"
+          name: "allow-lgpl"
+          mode: "allow"
+          reason: "LGPL is allowed."
+        - pattern: "*gpl*"
+          name: "deny-gpl"
+          mode: "deny"
+          reason: "GPL licenses are not compatible with BSD-3-Clause"
+          exceptions:
+            # store2 is under a dual license (MIT OR GPL-3.0), thus is compatible with our project.
+            # License metadata (for v2.14.2): https://github.com/nbubna/store/blob/20cce53b83b5870b6715fa929e4aa773cfa5e179/package.json#L32
+            - store2
+        - pattern: "*proprietary*"
+          name: "deny-proprietary"
+          mode: "deny"
