@@ -1,5 +1,11 @@
 # segment
 
+## 2.0.3
+
+### Patch Changes
+
+- b61ce914: Added DynamoDB APL. This APL is using DynamoDB as storage.
+
 ## 2.0.2
 
 ### Patch Changes
