@@ -6,8 +6,10 @@ import { BaseError } from "@/errors";
 import { APLRepository } from "@/modules/db/types";
 
 export class DynamoAPL implements APL {
+  static GetAuthDataError = BaseError.subclass("GetAuthDataError");
   static SetAuthDataError = BaseError.subclass("SetAuthDataError");
   static DeleteAuthDataError = BaseError.subclass("DeleteAuthDataError");
+  static GetAllAuthDataError = BaseError.subclass("GetAllAuthDataError");
   static MissingEnvVariablesError = BaseError.subclass("MissingEnvVariablesError");
 
   private tracer = getOtelTracer();
@@ -21,6 +23,13 @@ export class DynamoAPL implements APL {
       });
 
       if (getEntryResult.isErr()) {
+        span.end();
+        throw new DynamoAPL.GetAuthDataError("Failed to get APL entry", {
+          cause: getEntryResult.error,
+        });
+      }
+
+      if (!getEntryResult.value) {
         span.end();
         return undefined;
       }
@@ -71,6 +80,13 @@ export class DynamoAPL implements APL {
       const getAllEntriesResult = await this.deps.repository.getAllEntries();
 
       if (getAllEntriesResult.isErr()) {
+        span.end();
+        throw new DynamoAPL.GetAllAuthDataError("Failed to get all APL entries", {
+          cause: getAllEntriesResult.error,
+        });
+      }
+
+      if (!getAllEntriesResult.value) {
         span.end();
         return [];
       }

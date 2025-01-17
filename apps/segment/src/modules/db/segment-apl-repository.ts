@@ -51,7 +51,7 @@ export class SegmentAPLRepository implements APLRepository {
     if (!getEntryResult.value.Item) {
       this.logger.warn("APL entry not found", { args });
 
-      return err(new SegmentAPLRepository.ReadEntityError("APL entry not found"));
+      return ok(null);
     }
 
     return ok(this.segmentAPLMapper.dynamoDBEntityToAuthData(getEntryResult.value.Item));
@@ -128,8 +128,12 @@ export class SegmentAPLRepository implements APLRepository {
       return err(scanEntriesResult.error);
     }
 
-    return ok(
-      scanEntriesResult.value.Items?.map(this.segmentAPLMapper.dynamoDBEntityToAuthData) ?? [],
-    );
+    const possibleItems = scanEntriesResult.value.Items ?? [];
+
+    if (possibleItems.length > 0) {
+      return ok(possibleItems.map(this.segmentAPLMapper.dynamoDBEntityToAuthData));
+    }
+
+    return ok(null);
   }
 }

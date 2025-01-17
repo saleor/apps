@@ -41,6 +41,17 @@ describe("DynamoAPL", () => {
     expect(result).toBeUndefined();
   });
 
+  it("should throw an error if getting auth data fails", async () => {
+    const repository = new InMemoryAPLRepository();
+    const apl = new DynamoAPL({ repository });
+
+    vi.spyOn(repository, "getEntry").mockReturnValue(
+      Promise.resolve(err(new BaseError("Error getting data"))),
+    );
+
+    await expect(apl.get("saleorApiUrl")).rejects.toThrowError(DynamoAPL.GetAuthDataError);
+  });
+
   it("should set auth data", async () => {
     const repository = new InMemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
@@ -136,7 +147,7 @@ describe("DynamoAPL", () => {
     expect(result).toStrictEqual([mockedAuthData, secondEntry]);
   });
 
-  it("should return empty array if getting all auth data fails", async () => {
+  it("should throw an error if getting all auth data fails", async () => {
     const repository = new InMemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
@@ -144,9 +155,7 @@ describe("DynamoAPL", () => {
       err(new BaseError("Error getting data")),
     );
 
-    const result = await apl.getAll();
-
-    expect(result).toStrictEqual([]);
+    await expect(apl.getAll()).rejects.toThrowError(DynamoAPL.GetAllAuthDataError);
   });
 
   it("should return ready:true when APL related env variables are set", async () => {

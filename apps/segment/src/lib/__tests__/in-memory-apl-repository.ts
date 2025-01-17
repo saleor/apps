@@ -9,12 +9,12 @@ export class InMemoryAPLRepository implements APLRepository {
 
   async getEntry(args: {
     saleorApiUrl: string;
-  }): Promise<Result<AuthData, InstanceType<typeof BaseError>>> {
+  }): Promise<Result<AuthData | null, InstanceType<typeof BaseError>>> {
     if (this.entries[args.saleorApiUrl]) {
       return ok(this.entries[args.saleorApiUrl]);
     }
 
-    return err(new BaseError("Error geting entry"));
+    return ok(null);
   }
 
   async setEntry(args: {
@@ -35,7 +35,13 @@ export class InMemoryAPLRepository implements APLRepository {
     return err(new BaseError("Error deleting entry"));
   }
 
-  async getAllEntries(): Promise<Result<AuthData[], InstanceType<typeof BaseError>>> {
-    return ok(Object.values(this.entries));
+  async getAllEntries(): Promise<Result<AuthData[] | null, InstanceType<typeof BaseError>>> {
+    const values = Object.values(this.entries);
+
+    if (values.length === 0) {
+      return ok(null);
+    }
+
+    return ok(values);
   }
 }

@@ -65,8 +65,8 @@ describe("SegmentAPLRepository", () => {
     });
   });
 
-  it("should fail to get AuthData entry from DynamoDB if it does not exist", async () => {
-    mockDocumentClient.on(GetCommand, {}).resolvesOnce({});
+  it("should handle errors when getting AuthData from DynamoDB", async () => {
+    mockDocumentClient.on(GetCommand, {}).rejectsOnce("Exception");
 
     const repository = new SegmentAPLRepository({ segmentAPLEntity });
 
@@ -75,6 +75,18 @@ describe("SegmentAPLRepository", () => {
     expect(result.isErr()).toBe(true);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(SegmentAPLRepository.ReadEntityError);
+  });
+
+  it("should return null if AuthData entry does not exist in DynamoDB", async () => {
+    mockDocumentClient.on(GetCommand, {}).resolvesOnce({});
+
+    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+
+    const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
+
+    expect(result.isOk()).toBe(true);
+
+    expect(result._unsafeUnwrap()).toBe(null);
   });
 
   it("should successfully set AuthData entry in DynamoDB", async () => {
@@ -179,6 +191,20 @@ describe("SegmentAPLRepository", () => {
         token: "newAppToken",
       },
     ]);
+  });
+
+  it("should return null if there are no AuthData entries in DynamoDB", async () => {
+    mockDocumentClient.on(ScanCommand, {}).resolvesOnce({
+      Items: [],
+    });
+
+    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+
+    const result = await repository.getAllEntries();
+
+    expect(result.isOk()).toBe(true);
+
+    expect(result._unsafeUnwrap()).toBe(null);
   });
 
   it("should handle error when getting all AuthData entries from DynamoDB", async () => {
