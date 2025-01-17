@@ -1,6 +1,7 @@
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
+import { AppConfig } from "../configuration/app-config";
 import { ISegmentClient } from "../segment/segment.client";
 import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
 import { SegmentEventsTracker } from "../segment/segment-events-tracker";
@@ -19,6 +20,7 @@ describe("TrackEventUseCase", () => {
       return Promise.resolve(ok(mockedSegmentEventTracker));
     },
   };
+  const mockedAppConfig = new AppConfig({ segmentWriteKey: "key" });
 
   it("creates instance", () => {
     const instance = new TrackEventUseCase({
@@ -38,7 +40,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    await useCase.track(event);
+    await useCase.track(event, mockedAppConfig);
 
     expect(mockedSegmentClient.track).toHaveBeenCalledWith({
       event: "Saleor Order Created",
@@ -86,7 +88,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event);
+    const result = await useCase.track(event, mockedAppConfig);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseSegmentClientError,
@@ -116,7 +118,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event);
+    const result = await useCase.track(event, mockedAppConfig);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseUnknownError,

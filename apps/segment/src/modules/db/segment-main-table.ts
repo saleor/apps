@@ -1,6 +1,7 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Entity, schema, string, Table } from "dynamodb-toolbox";
 
+import { env } from "@/env";
 import { createDynamoDBClient, createDynamoDBDocumentClient } from "@/lib/dynamodb-client";
 
 type PartitionKey = { name: "PK"; type: "string" };
@@ -39,6 +40,14 @@ export class SegmentMainTable extends Table<PartitionKey, SortKey> {
   static getAPLSortKey() {
     return `APL` as const;
   }
+
+  static getConfigPrimaryKey({ saleorApiUrl, appId }: { saleorApiUrl: string; appId: string }) {
+    return `${saleorApiUrl}#${appId}` as const;
+  }
+
+  static getConfigSortKey({ configKey }: { configKey: string }) {
+    return `APP_CONFIG#${configKey}` as const;
+  }
 }
 
 const SegmentConfigTableSchema = {
@@ -51,11 +60,21 @@ const SegmentConfigTableSchema = {
     appId: string(),
     jwks: string().optional(),
   }),
+  config: schema({
+    PK: string().key(),
+    SK: string().key(),
+    value: string(),
+  }),
 };
 
 export const client = createDynamoDBClient();
 
 export const documentClient = createDynamoDBDocumentClient(client);
+
+export const segmentMainTable = SegmentMainTable.create({
+  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
+  documentClient,
+});
 
 export const SegmentMainTableEntityFactory = {
   createAPLEntity: (table: SegmentMainTable) => {
@@ -75,6 +94,26 @@ export const SegmentMainTableEntityFactory = {
       },
     });
   },
+  createConfigEntity: (table: SegmentMainTable) => {
+    return new Entity({
+      table,
+      name: "Config",
+      schema: SegmentConfigTableSchema.config,
+      timestamps: {
+        created: {
+          name: "createdAt",
+          savedAs: "createdAt",
+        },
+        modified: {
+          name: "modifiedAt",
+          savedAs: "modifiedAt",
+        },
+      },
+    });
+  },
 };
 
 export type SegmentAPLEntityType = ReturnType<typeof SegmentMainTableEntityFactory.createAPLEntity>;
+export type SegmentConfigEntityType = ReturnType<
+  typeof SegmentMainTableEntityFactory.createConfigEntity
+>;

@@ -9,7 +9,7 @@ import { SegmentAPLEntityType, SegmentMainTable } from "@/modules/db/segment-mai
 import { SegmentAPLMapper } from "./segment-apl-mapper";
 import { APLRepository } from "./types";
 
-export class SegmentAPLRepository implements APLRepository {
+export class SegmentConfigRepository implements APLRepository {
   private logger = createLogger("SegmentAPLRepository");
 
   private segmentAPLMapper = new SegmentAPLMapper();
@@ -37,7 +37,7 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.ReadEntityError("Failed to read APL entity", { cause: error }),
+        new SegmentConfigRepository.ReadEntityError("Failed to read APL entity", { cause: error }),
     );
 
     if (getEntryResult.isErr()) {
@@ -64,7 +64,9 @@ export class SegmentAPLRepository implements APLRepository {
         .item(this.segmentAPLMapper.authDataToDynamoPutEntity(args.authData))
         .send(),
       (error) =>
-        new SegmentAPLRepository.WriteEntityError("Failed to write APL entity", { cause: error }),
+        new SegmentConfigRepository.WriteEntityError("Failed to write APL entity", {
+          cause: error,
+        }),
     );
 
     if (setEntryResult.isErr()) {
@@ -90,7 +92,7 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.DeleteEntityError("Failed to delete APL entity", {
+        new SegmentConfigRepository.DeleteEntityError("Failed to delete APL entity", {
           cause: error,
         }),
     );
@@ -117,7 +119,9 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.ScanEntityError("Failed to scan APL entities", { cause: error }),
+        new SegmentConfigRepository.ScanEntityError("Failed to scan APL entities", {
+          cause: error,
+        }),
     );
 
     if (scanEntriesResult.isErr()) {

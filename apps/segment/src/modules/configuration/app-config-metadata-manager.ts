@@ -1,42 +1,71 @@
-import { AuthData } from "@saleor/app-sdk/APL";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
 
+import { env } from "@/env";
+import { BaseError } from "@/errors";
+
+import { ConfigRepository } from "../db/segment-config-repository";
 import { AppConfig } from "./app-config";
-import { createSettingsManager } from "./metadata-manager";
 
-export interface IAppConfigMetadataManager {
-  get(): Promise<AppConfig>;
-  set(config: AppConfig): Promise<void>;
+export interface AppConfigMetadataManager {
+  get(args: { saleorApiUrl: string; appId: string }): Promise<AppConfig | null>;
+  set(args: { config: AppConfig; saleorApiUrl: string; appId: string }): Promise<void>;
 }
 
-export class AppConfigMetadataManager implements IAppConfigMetadataManager {
+export class DynamoDBAppConfigMetadataManager implements AppConfigMetadataManager {
   public readonly metadataKey = "app-config-v1";
 
-  private constructor(private mm: SettingsManager) {}
+  static GetConfigDataError = BaseError.subclass("GetConfigDataError");
+  static SetConfigDataError = BaseError.subclass("SetConfigDataError");
 
-  async get() {
-    const metadata = await this.mm.get(this.metadataKey);
+  private constructor(
+    private deps: {
+      repository: ConfigRepository;
+      encryptionKey: string;
+    },
+  ) {}
 
-    return metadata ? AppConfig.parse(metadata) : new AppConfig();
+  static create(repository: ConfigRepository) {
+    return new DynamoDBAppConfigMetadataManager({ repository, encryptionKey: env.SECRET_KEY });
   }
 
-  set(config: AppConfig) {
-    return this.mm.set({
-      key: this.metadataKey,
-      value: config.serialize(),
+  async get(args: { saleorApiUrl: string; appId: string }) {
+    const getEntryResult = await this.deps.repository.getEntry({
+      saleorApiUrl: args.saleorApiUrl,
+      appId: args.appId,
+      configKey: this.metadataKey,
     });
+
+    if (getEntryResult.isErr()) {
+      throw new DynamoDBAppConfigMetadataManager.GetConfigDataError("Failed to get config data", {
+        cause: getEntryResult.error,
+      });
+    }
+
+    if (!getEntryResult.value) {
+      return null;
+    }
+
+    const decryptedConfig = decrypt(getEntryResult.value, this.deps.encryptionKey);
+
+    return AppConfig.parse(decryptedConfig);
   }
 
-  static createFromAuthData(authData: AuthData): AppConfigMetadataManager {
-    const settingsManager = createSettingsManager(
-      createGraphQLClient({
-        saleorApiUrl: authData.saleorApiUrl,
-        token: authData.token,
-      }),
-      authData.appId,
-    );
+  async set(args: { config: AppConfig; saleorApiUrl: string; appId: string }) {
+    const encryptedConfig = encrypt(args.config.serialize(), this.deps.encryptionKey);
 
-    return new AppConfigMetadataManager(settingsManager);
+    const setEntryResult = await this.deps.repository.setEntry({
+      appId: args.appId,
+      saleorApiUrl: args.saleorApiUrl,
+      configKey: this.metadataKey,
+      configValue: encryptedConfig,
+    });
+
+    if (setEntryResult.isErr()) {
+      throw new DynamoDBAppConfigMetadataManager.SetConfigDataError("Failed to set config data", {
+        cause: setEntryResult.error,
+      });
+    }
+
+    return undefined;
   }
 }

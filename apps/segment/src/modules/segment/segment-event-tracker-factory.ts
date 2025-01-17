@@ -2,27 +2,28 @@ import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { IAppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
+import { AppConfig } from "../configuration/app-config";
 import { SegmentClient } from "./segment.client";
 import { SegmentEventsTracker } from "./segment-events-tracker";
 
 export interface ISegmentEventTrackerFactory {
-  createFromAppConfig(): Promise<Result<SegmentEventsTracker, unknown>>;
+  createFromAppConfig(args: { config: AppConfig }): Promise<Result<SegmentEventsTracker, unknown>>;
 }
 
 export class SegmentEventTrackerFactory implements ISegmentEventTrackerFactory {
   static SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
+  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
 
-  constructor(
-    private deps: {
-      appConfigMetadataManager: IAppConfigMetadataManager;
-    },
-  ) {}
+  constructor() {}
 
-  async createFromAppConfig() {
-    const config = await this.deps.appConfigMetadataManager.get();
+  async createFromAppConfig(args: { config: AppConfig }) {
+    const config = args.config.getConfig();
 
-    const segmentKey = config.getConfig()?.segmentWriteKey;
+    if (!config) {
+      return err(new SegmentEventTrackerFactory.ConfigNotFoundError("App config not found"));
+    }
+
+    const segmentKey = config.segmentWriteKey;
 
     if (!segmentKey) {
       return err(

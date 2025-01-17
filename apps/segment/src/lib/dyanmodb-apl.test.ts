@@ -159,8 +159,18 @@ describe("DynamoAPL", () => {
   });
 
   it("should return ready:true when APL related env variables are set", async () => {
+    const repository = new InMemoryAPLRepository();
+    const apl = new DynamoAPL({ repository });
+
+    const result = await apl.isReady();
+
+    expect(result).toStrictEqual({ ready: true });
+  });
+
+  it("should return ready:false when APL related env variables are not set", async () => {
     vi.spyOn(await import("@/env"), "env", "get").mockReturnValue({
-      DYNAMODB_MAIN_TABLE_NAME: "table_name",
+      // @ts-expect-error - testing missing env variables
+      DYNAMODB_MAIN_TABLE_NAME: undefined,
       AWS_REGION: "region",
       AWS_ACCESS_KEY_ID: "access_key_id",
       AWS_SECRET_ACCESS_KEY: "secret_access_key",
@@ -173,16 +183,6 @@ describe("DynamoAPL", () => {
       NODE_ENV: "test",
       ENV: "local",
     });
-
-    const repository = new InMemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
-
-    const result = await apl.isReady();
-
-    expect(result).toStrictEqual({ ready: true });
-  });
-
-  it("should return ready:false when APL related env variables are not set", async () => {
     const repository = new InMemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
@@ -195,20 +195,6 @@ describe("DynamoAPL", () => {
   });
 
   it("should return configured:true when APL related env variables are set", async () => {
-    vi.spyOn(await import("@/env"), "env", "get").mockReturnValue({
-      DYNAMODB_MAIN_TABLE_NAME: "table_name",
-      AWS_REGION: "region",
-      AWS_ACCESS_KEY_ID: "access_key_id",
-      AWS_SECRET_ACCESS_KEY: "secret_access_key",
-      APL: "dynamodb",
-      APP_LOG_LEVEL: "info",
-      MANIFEST_APP_ID: "",
-      OTEL_ENABLED: false,
-      PORT: 0,
-      SECRET_KEY: "",
-      NODE_ENV: "test",
-      ENV: "local",
-    });
     const repository = new InMemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
@@ -218,6 +204,19 @@ describe("DynamoAPL", () => {
   });
 
   it("should return configured:false when APL related env variables are not set", async () => {
+    vi.spyOn(await import("@/env"), "env", "get").mockReturnValue({
+      // @ts-expect-error - testing missing env variables
+      DYNAMODB_MAIN_TABLE_NAME: undefined,
+      APL: "dynamodb",
+      APP_LOG_LEVEL: "info",
+      MANIFEST_APP_ID: "",
+      OTEL_ENABLED: false,
+      PORT: 0,
+      SECRET_KEY: "",
+      NODE_ENV: "test",
+      ENV: "local",
+    });
+
     const repository = new InMemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
