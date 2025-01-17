@@ -63,7 +63,7 @@ const SegmentConfigTableSchema = {
   config: schema({
     PK: string().key(),
     SK: string().key(),
-    value: string(),
+    encryptedSegmentWriteKey: string(),
   }),
 };
 

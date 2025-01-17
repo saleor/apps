@@ -1,17 +1,15 @@
-import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
-
 import { env } from "@/env";
 import { BaseError } from "@/errors";
 
 import { ConfigRepository } from "../db/types";
 import { AppConfig } from "./app-config";
 
-export interface AppConfigMetadataManager {
+export interface AppConfigManager {
   get(args: { saleorApiUrl: string; appId: string }): Promise<AppConfig | null>;
   set(args: { config: AppConfig; saleorApiUrl: string; appId: string }): Promise<void>;
 }
 
-export class DynamoDBAppConfigMetadataManager implements AppConfigMetadataManager {
+export class DynamoDBAppConfigManager implements AppConfigManager {
   public readonly metadataKey = "app-config-v1";
 
   static GetConfigDataError = BaseError.subclass("GetConfigDataError");
@@ -25,18 +23,18 @@ export class DynamoDBAppConfigMetadataManager implements AppConfigMetadataManage
   ) {}
 
   static create(repository: ConfigRepository) {
-    return new DynamoDBAppConfigMetadataManager({ repository, encryptionKey: env.SECRET_KEY });
+    return new DynamoDBAppConfigManager({ repository, encryptionKey: env.SECRET_KEY });
   }
 
   async get(args: { saleorApiUrl: string; appId: string }) {
-    const getEntryResult = await this.deps.repository.getEntry({
+    const getEntryResult = await this.deps.repository.getAppConfigEntry({
       saleorApiUrl: args.saleorApiUrl,
       appId: args.appId,
       configKey: this.metadataKey,
     });
 
     if (getEntryResult.isErr()) {
-      throw new DynamoDBAppConfigMetadataManager.GetConfigDataError("Failed to get config data", {
+      throw new DynamoDBAppConfigManager.GetConfigDataError("Failed to get config data", {
         cause: getEntryResult.error,
       });
     }
@@ -45,23 +43,19 @@ export class DynamoDBAppConfigMetadataManager implements AppConfigMetadataManage
       return null;
     }
 
-    const decryptedConfig = decrypt(getEntryResult.value, this.deps.encryptionKey);
-
-    return AppConfig.parse(decryptedConfig);
+    return getEntryResult.value;
   }
 
   async set(args: { config: AppConfig; saleorApiUrl: string; appId: string }) {
-    const encryptedConfig = encrypt(args.config.serialize(), this.deps.encryptionKey);
-
-    const setEntryResult = await this.deps.repository.setEntry({
+    const setEntryResult = await this.deps.repository.setAppConfigEntry({
       appId: args.appId,
       saleorApiUrl: args.saleorApiUrl,
       configKey: this.metadataKey,
-      configValue: encryptedConfig,
+      config: args.config,
     });
 
     if (setEntryResult.isErr()) {
-      throw new DynamoDBAppConfigMetadataManager.SetConfigDataError("Failed to set config data", {
+      throw new DynamoDBAppConfigManager.SetConfigDataError("Failed to set config data", {
         cause: setEntryResult.error,
       });
     }

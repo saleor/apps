@@ -3,6 +3,8 @@ import { Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
+import { AppConfig } from "../configuration/app-config";
+
 export interface APLRepository {
   getEntry(args: {
     saleorApiUrl: string;
@@ -15,15 +17,15 @@ export interface APLRepository {
 }
 
 export interface ConfigRepository {
-  getEntry: (args: {
+  getAppConfigEntry: (args: {
     saleorApiUrl: string;
     appId: string;
     configKey: string;
-  }) => Promise<Result<string | null, InstanceType<typeof BaseError>>>;
-  setEntry: (args: {
+  }) => Promise<Result<AppConfig | null, InstanceType<typeof BaseError>>>;
+  setAppConfigEntry: (args: {
     appId: string;
     saleorApiUrl: string;
     configKey: string;
-    configValue: string;
+    config: AppConfig;
   }) => Promise<Result<void, InstanceType<typeof BaseError>>>;
 }

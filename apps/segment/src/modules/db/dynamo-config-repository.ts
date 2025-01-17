@@ -1,14 +1,20 @@
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
-import { err, ok, ResultAsync } from "neverthrow";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 
+import { env } from "@/env";
 import { BaseError } from "@/errors";
 import { createLogger } from "@/logger";
 
+import { AppConfig } from "../configuration/app-config";
+import { DynamoConfigMapper } from "./dynamo-config-mapper";
 import { SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
 import { ConfigRepository } from "./types";
 
-export class SegmentConfigRepository implements ConfigRepository {
+export class DynamoConfigRepository implements ConfigRepository {
   private logger = createLogger("SegmentConfigRepository");
+  private mapper = new DynamoConfigMapper({
+    encryptionKey: env.SECRET_KEY,
+  });
 
   static GetEntryError = BaseError.subclass("GetEntryError");
   static SetEntryError = BaseError.subclass("SetEntryError");
@@ -19,7 +25,11 @@ export class SegmentConfigRepository implements ConfigRepository {
     },
   ) {}
 
-  async getEntry(args: { saleorApiUrl: string; appId: string; configKey: string }) {
+  async getAppConfigEntry(args: {
+    saleorApiUrl: string;
+    appId: string;
+    configKey: string;
+  }): Promise<Result<AppConfig | null, InstanceType<typeof BaseError>>> {
     const getEntryResult = await ResultAsync.fromPromise(
       this.deps.segmentConfigEntity
         .build(GetItemCommand)
@@ -34,7 +44,7 @@ export class SegmentConfigRepository implements ConfigRepository {
         })
         .send(),
       (error) =>
-        new SegmentConfigRepository.GetEntryError("Failed to get config entry", { cause: error }),
+        new DynamoConfigRepository.GetEntryError("Failed to get config entry", { cause: error }),
     );
 
     if (getEntryResult.isErr()) {
@@ -51,31 +61,29 @@ export class SegmentConfigRepository implements ConfigRepository {
       return ok(null);
     }
 
-    return ok(getEntryResult.value.Item.value);
+    return ok(this.mapper.dynamoEntityToAppConfig({ entity: getEntryResult.value.Item }));
   }
 
-  async setEntry(args: {
+  async setAppConfigEntry(args: {
     appId: string;
     saleorApiUrl: string;
     configKey: string;
-    configValue: string;
-  }) {
+    config: AppConfig;
+  }): Promise<Result<void, InstanceType<typeof BaseError>>> {
     const setEntryResult = await ResultAsync.fromPromise(
       this.deps.segmentConfigEntity
         .build(PutItemCommand)
-        .item({
-          PK: SegmentMainTable.getConfigPrimaryKey({
-            saleorApiUrl: args.saleorApiUrl,
+        .item(
+          this.mapper.appConfigToDynamoPutEntity({
+            config: args.config,
             appId: args.appId,
-          }),
-          SK: SegmentMainTable.getConfigSortKey({
+            saleorApiUrl: args.saleorApiUrl,
             configKey: args.configKey,
           }),
-          value: args.configValue,
-        })
+        )
         .send(),
       (error) =>
-        new SegmentConfigRepository.SetEntryError("Failed to set config entry", { cause: error }),
+        new DynamoConfigRepository.SetEntryError("Failed to set config entry", { cause: error }),
     );
 
     if (setEntryResult.isErr()) {
