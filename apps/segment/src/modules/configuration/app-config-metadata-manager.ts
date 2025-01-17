@@ -3,7 +3,7 @@ import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
 import { env } from "@/env";
 import { BaseError } from "@/errors";
 
-import { ConfigRepository } from "../db/segment-config-repository";
+import { ConfigRepository } from "../db/types";
 import { AppConfig } from "./app-config";
 
 export interface AppConfigMetadataManager {
