@@ -1,24 +1,11 @@
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 import { createLogger } from "@/logger";
 
 import { SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
-
-export interface ConfigRepository {
-  getEntry: (args: {
-    saleorApiUrl: string;
-    appId: string;
-    configKey: string;
-  }) => Promise<Result<string | null, InstanceType<typeof BaseError>>>;
-  setEntry: (args: {
-    appId: string;
-    saleorApiUrl: string;
-    configKey: string;
-    configValue: string;
-  }) => Promise<Result<void, InstanceType<typeof BaseError>>>;
-}
+import { ConfigRepository } from "./types";
 
 export class SegmentConfigRepository implements ConfigRepository {
   private logger = createLogger("SegmentConfigRepository");

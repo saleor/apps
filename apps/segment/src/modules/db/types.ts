@@ -13,3 +13,17 @@ export interface APLRepository {
   }): Promise<Result<void, InstanceType<typeof BaseError>>>;
   getAllEntries(): Promise<Result<AuthData[] | null, InstanceType<typeof BaseError>>>;
 }
+
+export interface ConfigRepository {
+  getEntry: (args: {
+    saleorApiUrl: string;
+    appId: string;
+    configKey: string;
+  }) => Promise<Result<string | null, InstanceType<typeof BaseError>>>;
+  setEntry: (args: {
+    appId: string;
+    saleorApiUrl: string;
+    configKey: string;
+    configValue: string;
+  }) => Promise<Result<void, InstanceType<typeof BaseError>>>;
+}
