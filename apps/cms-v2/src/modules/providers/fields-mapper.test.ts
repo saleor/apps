@@ -1,4 +1,4 @@
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { FieldsMapper } from "./fields-mapper";
 
@@ -12,10 +12,12 @@ describe("FieldsMapper", () => {
         productSlug: "product-slug",
         variantId: "variant-id",
         variantName: "variant-name",
+        sku: "sku",
       },
       variant: {
         id: "aaa-bbb-ccc",
         name: "43",
+        sku: "SHOE-43",
         channelListings: [
           {
             channel: {
@@ -38,6 +40,7 @@ describe("FieldsMapper", () => {
       "product-name": "Shoes",
       "product-slug": "shoes",
       "variant-id": "aaa-bbb-ccc",
+      sku: "SHOE-43",
       channels: [
         {
           channel: {

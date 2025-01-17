@@ -358,6 +358,7 @@ const AddVariant = () => {
           productName: "",
           productSlug: "",
           variantId: "",
+          sku: "",
         },
         spaceId: "",
       }}

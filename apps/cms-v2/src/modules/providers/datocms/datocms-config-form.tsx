@@ -266,6 +266,7 @@ const AddFormVariant = () => {
           productName: "",
           productSlug: "",
           variantId: "",
+          sku: "",
         },
       }}
     />

@@ -10,6 +10,7 @@ export const SaleorProviderFieldsMappingSchema = z.object({
   productName: z.string().min(1),
   productSlug: z.string().min(1),
   channels: z.string().min(1),
+  sku: z.string().min(1),
 });
 
 export type SaleorProviderFieldsMappingType = z.infer<typeof SaleorProviderFieldsMappingSchema>;
@@ -22,4 +23,5 @@ export const SaleorProviderFieldsMappingKeys: Array<SaleorProviderFieldsMappingK
   "productName",
   "productSlug",
   "channels",
+  "sku",
 ];
