@@ -1125,6 +1125,15 @@ importers:
 
   apps/segment:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 3.651.1
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 3.651.1
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 3.651.1
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
@@ -1227,6 +1236,9 @@ importers:
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 1.8.2
+        version: 1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1312,6 +1324,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: 7.15.0
         version: 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      aws-sdk-client-mock:
+        specifier: 4.0.1
+        version: 4.0.1
       eslint:
         specifier: ../../node_modules/eslint
         version: link:../../node_modules/eslint
