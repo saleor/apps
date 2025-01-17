@@ -2,6 +2,7 @@ import { err, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
+import { AppConfig } from "../configuration/app-config";
 import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
 import { TrackingBaseEvent } from "./tracking-events";
 
@@ -15,9 +16,9 @@ export class TrackEventUseCase {
     },
   ) {}
 
-  async track(event: TrackingBaseEvent) {
+  async track(event: TrackingBaseEvent, config: AppConfig) {
     const segmentEventTrackerResult =
-      await this.deps.segmentEventTrackerFactory.createFromAppConfig();
+      await this.deps.segmentEventTrackerFactory.createFromAppConfig({ config });
 
     if (segmentEventTrackerResult.isErr()) {
       return err(

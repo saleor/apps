@@ -64,7 +64,9 @@ export class SegmentAPLRepository implements APLRepository {
         .item(this.segmentAPLMapper.authDataToDynamoPutEntity(args.authData))
         .send(),
       (error) =>
-        new SegmentAPLRepository.WriteEntityError("Failed to write APL entity", { cause: error }),
+        new SegmentAPLRepository.WriteEntityError("Failed to write APL entity", {
+          cause: error,
+        }),
     );
 
     if (setEntryResult.isErr()) {
@@ -117,7 +119,9 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.ScanEntityError("Failed to scan APL entities", { cause: error }),
+        new SegmentAPLRepository.ScanEntityError("Failed to scan APL entities", {
+          cause: error,
+        }),
     );
 
     if (scanEntriesResult.isErr()) {

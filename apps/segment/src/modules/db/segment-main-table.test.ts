@@ -56,4 +56,25 @@ describe("SegmentMainTable", () => {
       });
     });
   });
+
+  describe("SegementConfigEntity", () => {
+    it("should create a new entity in DynamoDB with default fields", () => {
+      const configEntity = SegmentMainTableEntityFactory.createConfigEntity(segmentMainTable);
+
+      const parseResult = configEntity.build(EntityParser).parse({
+        PK: "saleorApiUrl#saleorAppId",
+        SK: "APP_CONFIG#configKey",
+        encryptedSegmentWriteKey: "key",
+      });
+
+      expect(parseResult.item).toStrictEqual({
+        PK: "saleorApiUrl#saleorAppId",
+        SK: "APP_CONFIG#configKey",
+        _et: "Config",
+        createdAt: "2023-01-01T00:00:00.000Z",
+        modifiedAt: "2023-01-01T00:00:00.000Z",
+        encryptedSegmentWriteKey: "key",
+      });
+    });
+  });
 });
