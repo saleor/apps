@@ -4,30 +4,32 @@ import { err, ok, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 import { createLogger } from "@/logger";
-import { SegmentAPLEntityType, SegmentMainTable } from "@/modules/db/segment-main-table";
+import {
+  SegmentMainTable,
+  segmentMainTable,
+  SegmentMainTableEntityFactory,
+} from "@/modules/db/segment-main-table";
 
-import { SegmentAPLMapper } from "./segment-apl-mapper";
+import { DynamoAPLMapper } from "./dynamo-apl-mapper";
 import { APLRepository } from "./types";
 
-export class SegmentAPLRepository implements APLRepository {
+export class DynamoAPLRepository implements APLRepository {
   private logger = createLogger("SegmentAPLRepository");
 
-  private segmentAPLMapper = new SegmentAPLMapper();
+  private aplEntity = SegmentMainTableEntityFactory.createAPLEntity(segmentMainTable);
+
+  private segmentAPLMapper = new DynamoAPLMapper();
 
   static ReadEntityError = BaseError.subclass("ReadEntityError");
   static WriteEntityError = BaseError.subclass("WriteEntityError");
   static DeleteEntityError = BaseError.subclass("DeleteEntityError");
   static ScanEntityError = BaseError.subclass("ScanEntityError");
 
-  constructor(
-    private deps: {
-      segmentAPLEntity: SegmentAPLEntityType;
-    },
-  ) {}
+  constructor() {}
 
   async getEntry(args: { saleorApiUrl: string }) {
     const getEntryResult = await ResultAsync.fromPromise(
-      this.deps.segmentAPLEntity
+      this.aplEntity
         .build(GetItemCommand)
         .key({
           PK: SegmentMainTable.getAPLPrimaryKey({
@@ -37,7 +39,7 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.ReadEntityError("Failed to read APL entity", { cause: error }),
+        new DynamoAPLRepository.ReadEntityError("Failed to read APL entity", { cause: error }),
     );
 
     if (getEntryResult.isErr()) {
@@ -54,17 +56,17 @@ export class SegmentAPLRepository implements APLRepository {
       return ok(null);
     }
 
-    return ok(this.segmentAPLMapper.dynamoDBEntityToAuthData(getEntryResult.value.Item));
+    return ok(this.segmentAPLMapper.dynamoEntityToAuthData(getEntryResult.value.Item));
   }
 
   async setEntry(args: { authData: AuthData }) {
     const setEntryResult = await ResultAsync.fromPromise(
-      this.deps.segmentAPLEntity
+      this.aplEntity
         .build(PutItemCommand)
         .item(this.segmentAPLMapper.authDataToDynamoPutEntity(args.authData))
         .send(),
       (error) =>
-        new SegmentAPLRepository.WriteEntityError("Failed to write APL entity", {
+        new DynamoAPLRepository.WriteEntityError("Failed to write APL entity", {
           cause: error,
         }),
     );
@@ -82,7 +84,7 @@ export class SegmentAPLRepository implements APLRepository {
 
   async deleteEntry(args: { saleorApiUrl: string }) {
     const deleteEntryResult = await ResultAsync.fromPromise(
-      this.deps.segmentAPLEntity
+      this.aplEntity
         .build(DeleteItemCommand)
         .key({
           PK: SegmentMainTable.getAPLPrimaryKey({
@@ -92,7 +94,7 @@ export class SegmentAPLRepository implements APLRepository {
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.DeleteEntityError("Failed to delete APL entity", {
+        new DynamoAPLRepository.DeleteEntityError("Failed to delete APL entity", {
           cause: error,
         }),
     );
@@ -110,16 +112,16 @@ export class SegmentAPLRepository implements APLRepository {
 
   async getAllEntries() {
     const scanEntriesResult = await ResultAsync.fromPromise(
-      this.deps.segmentAPLEntity.table
+      this.aplEntity.table
         .build(ScanCommand)
-        .entities(this.deps.segmentAPLEntity)
+        .entities(this.aplEntity)
         .options({
           // keep all the entries in memory - we should introduce pagination in the future
           maxPages: Infinity,
         })
         .send(),
       (error) =>
-        new SegmentAPLRepository.ScanEntityError("Failed to scan APL entities", {
+        new DynamoAPLRepository.ScanEntityError("Failed to scan APL entities", {
           cause: error,
         }),
     );
@@ -135,7 +137,7 @@ export class SegmentAPLRepository implements APLRepository {
     const possibleItems = scanEntriesResult.value.Items ?? [];
 
     if (possibleItems.length > 0) {
-      return ok(possibleItems.map(this.segmentAPLMapper.dynamoDBEntityToAuthData));
+      return ok(possibleItems.map(this.segmentAPLMapper.dynamoEntityToAuthData));
     }
 
     return ok(null);

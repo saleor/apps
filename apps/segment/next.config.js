@@ -23,6 +23,15 @@ const nextConfig = {
       "@trpc/next",
       "@saleor/apps-shared",
     ],
+    serverComponentsExternalPackages: [
+      "@aws-sdk/client-dynamodb",
+      "@aws-sdk/lib-dynamodb",
+      "@aws-sdk/util-dynamodb",
+      // dependencies of aws-sdk-client-mock
+      "@aws-sdk/client-s3",
+      "@aws-sdk/client-sns",
+      "@aws-sdk/client-sqs",
+    ],
     bundlePagesExternals: true,
   },
 };
