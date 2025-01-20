@@ -53,7 +53,7 @@ export const SegmentConfigForm = () => {
   const { data: config, isLoading, refetch } = trpcClient.configuration.getConfig.useQuery();
   const utils = trpcClient.useUtils();
 
-  const { mutate } = trpcClient.configuration.setOrCreateConfig.useMutation({
+  const { mutate } = trpcClient.configuration.setOrCreateSegmentWriteKey.useMutation({
     onSuccess() {
       notifySuccess("Configuration saved");
       refetch();

@@ -16,7 +16,7 @@ describe("DynamoAppConfigManager", () => {
     repository.setAppConfigEntry({
       appId: "appId",
       saleorApiUrl: "saleorApiUrl",
-      configKey: manager.metadataKey,
+      configKey: manager.configKey,
       config: config,
     });
 
@@ -72,7 +72,7 @@ describe("DynamoAppConfigManager", () => {
     const respositoryResult = await repository.getAppConfigEntry({
       appId: "appId",
       saleorApiUrl: "saleorApiUrl",
-      configKey: manager.metadataKey,
+      configKey: manager.configKey,
     });
 
     expect(respositoryResult._unsafeUnwrap()).toBe(config);

@@ -10,7 +10,7 @@ export interface AppConfigManager {
 }
 
 export class DynamoAppConfigManager implements AppConfigManager {
-  public readonly metadataKey = "app-config-v1";
+  public readonly configKey = "app-config-v1";
 
   static GetConfigDataError = BaseError.subclass("GetConfigDataError");
   static SetConfigDataError = BaseError.subclass("SetConfigDataError");
@@ -30,7 +30,7 @@ export class DynamoAppConfigManager implements AppConfigManager {
     const getEntryResult = await this.deps.repository.getAppConfigEntry({
       saleorApiUrl: args.saleorApiUrl,
       appId: args.appId,
-      configKey: this.metadataKey,
+      configKey: this.configKey,
     });
 
     if (getEntryResult.isErr()) {
@@ -50,7 +50,7 @@ export class DynamoAppConfigManager implements AppConfigManager {
     const setEntryResult = await this.deps.repository.setAppConfigEntry({
       appId: args.appId,
       saleorApiUrl: args.saleorApiUrl,
-      configKey: this.metadataKey,
+      configKey: this.configKey,
       config: args.config,
     });
 

@@ -7,7 +7,11 @@ import { createLogger } from "@/logger";
 
 import { AppConfig } from "../configuration/app-config";
 import { DynamoConfigMapper } from "./dynamo-config-mapper";
-import { SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
+import {
+  SegmentMainTable,
+  segmentMainTable,
+  SegmentMainTableEntityFactory,
+} from "./segment-main-table";
 import { ConfigRepository } from "./types";
 
 export class DynamoConfigRepository implements ConfigRepository {
@@ -15,15 +19,12 @@ export class DynamoConfigRepository implements ConfigRepository {
   private mapper = new DynamoConfigMapper({
     encryptionKey: env.SECRET_KEY,
   });
+  private configEntity = SegmentMainTableEntityFactory.createConfigEntity(segmentMainTable);
 
   static GetEntryError = BaseError.subclass("GetEntryError");
   static SetEntryError = BaseError.subclass("SetEntryError");
 
-  constructor(
-    private deps: {
-      segmentConfigEntity: SegmentConfigEntityType;
-    },
-  ) {}
+  constructor() {}
 
   async getAppConfigEntry(args: {
     saleorApiUrl: string;
@@ -31,7 +32,7 @@ export class DynamoConfigRepository implements ConfigRepository {
     configKey: string;
   }): Promise<Result<AppConfig | null, InstanceType<typeof BaseError>>> {
     const getEntryResult = await ResultAsync.fromPromise(
-      this.deps.segmentConfigEntity
+      this.configEntity
         .build(GetItemCommand)
         .key({
           PK: SegmentMainTable.getConfigPrimaryKey({
@@ -71,7 +72,7 @@ export class DynamoConfigRepository implements ConfigRepository {
     config: AppConfig;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
     const setEntryResult = await ResultAsync.fromPromise(
-      this.deps.segmentConfigEntity
+      this.configEntity
         .build(PutItemCommand)
         .item(
           this.mapper.appConfigToDynamoPutEntity({

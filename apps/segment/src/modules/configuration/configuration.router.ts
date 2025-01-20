@@ -48,7 +48,7 @@ export const configurationRouter = router({
 
     return null;
   }),
-  setOrCreateConfig: protectedClientProcedure
+  setOrCreateSegmentWriteKey: protectedClientProcedure
     .input(z.string().min(1))
     .mutation(async ({ input, ctx }) => {
       let config: AppConfig | null;
