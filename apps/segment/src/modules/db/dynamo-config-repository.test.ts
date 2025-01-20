@@ -39,7 +39,7 @@ describe("DynamoConfigRepository", () => {
       Item: mockedConfigEntry,
     });
 
-    const repository = new DynamoConfigRepository({ segmentConfigEntity });
+    const repository = new DynamoConfigRepository();
 
     const result = await repository.getAppConfigEntry({
       saleorApiUrl: "saleorApiUrl",
@@ -55,7 +55,7 @@ describe("DynamoConfigRepository", () => {
   it("should handle errors when getting AppConfig from DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoConfigRepository({ segmentConfigEntity });
+    const repository = new DynamoConfigRepository();
 
     const result = await repository.getAppConfigEntry({
       saleorApiUrl: "saleorApiUrl",
@@ -70,7 +70,7 @@ describe("DynamoConfigRepository", () => {
   it("should return null if AppConfig entry does not exist in DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).resolvesOnce({});
 
-    const repository = new DynamoConfigRepository({ segmentConfigEntity });
+    const repository = new DynamoConfigRepository();
 
     const result = await repository.getAppConfigEntry({
       saleorApiUrl: "saleorApiUrl",
@@ -86,7 +86,7 @@ describe("DynamoConfigRepository", () => {
   it("should successfully set AppConfig entry in DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).resolvesOnce({});
 
-    const repository = new DynamoConfigRepository({ segmentConfigEntity });
+    const repository = new DynamoConfigRepository();
 
     const result = await repository.setAppConfigEntry({
       saleorApiUrl: "saleorApiUrl",
@@ -105,7 +105,7 @@ describe("DynamoConfigRepository", () => {
   it("should handle errors when setting AppConfig entry in DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoConfigRepository({ segmentConfigEntity });
+    const repository = new DynamoConfigRepository();
 
     const result = await repository.setAppConfigEntry({
       saleorApiUrl: "saleorApiUrl",
