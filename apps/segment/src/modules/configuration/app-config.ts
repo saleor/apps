@@ -1,46 +1,34 @@
-import { z } from "zod";
+import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
 import { RootConfig } from "./schemas/root-config.schema";
 
 export class AppConfig {
-  private rootData: RootConfig.Shape = null;
+  static SetSegmentKeyError = BaseError.subclass("SetSegmentKeyError");
 
-  static JSONParseError = BaseError.subclass("JSONParseError");
+  constructor(private rootData: RootConfig.Shape) {}
 
-  constructor(initialData?: RootConfig.Shape) {
-    if (initialData) {
-      this.rootData = RootConfig.Schema.parse(initialData);
-    }
-  }
+  setSegmentWriteKey(
+    key: string,
+  ): Result<AppConfig, InstanceType<typeof AppConfig.SetSegmentKeyError>> {
+    const parsedKey = RootConfig.Schema.shape.segmentWriteKey.safeParse(key);
 
-  static parse(serializedSchema: string) {
-    try {
-      const parsedJSON = JSON.parse(serializedSchema);
-
-      return new AppConfig(parsedJSON as RootConfig.Shape);
-    } catch (e) {
-      throw new AppConfig.JSONParseError("Error parsing JSON with app config", { cause: e });
-    }
-  }
-
-  serialize() {
-    return JSON.stringify(this.rootData);
-  }
-
-  setSegmentWriteKey(key: string) {
-    const parsedKey = z.string().min(1).parse(key);
-
-    if (this.rootData) {
-      this.rootData.segmentWriteKey = parsedKey;
-    } else {
-      this.rootData = {
-        segmentWriteKey: parsedKey,
-      };
+    if (!parsedKey.success) {
+      return err(
+        new AppConfig.SetSegmentKeyError("Invalid segment write key", {
+          cause: parsedKey.error,
+        }),
+      );
     }
 
-    return this;
+    this.rootData.segmentWriteKey = parsedKey.data;
+
+    return ok(this);
+  }
+
+  getSegmentWriteKey() {
+    return this.rootData.segmentWriteKey;
   }
 
   getConfig() {

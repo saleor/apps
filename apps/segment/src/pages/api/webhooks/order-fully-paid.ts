@@ -6,7 +6,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { OrderFullyPaidSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { DynamoDBAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";
+import { DynamoAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";
 import { DynamoConfigRepositoryFactory } from "@/modules/db/dynamo-config-factory";
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
 import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
@@ -22,7 +22,7 @@ export const config = {
 const logger = createLogger("orderFullyPaidAsyncWebhook");
 
 const configRepository = DynamoConfigRepositoryFactory.create();
-const configManager = DynamoDBAppConfigManager.create(configRepository);
+const configManager = DynamoAppConfigManager.create(configRepository);
 const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
 const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 

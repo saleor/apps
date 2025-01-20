@@ -14,16 +14,4 @@ describe("SegmentEventTrackerFactory", () => {
 
     expect(instance._unsafeUnwrap()).toBeInstanceOf(SegmentEventsTracker);
   });
-
-  it("should return error when app config is not found", async () => {
-    const appConfig = new AppConfig();
-
-    const factory = new SegmentEventTrackerFactory();
-
-    const instance = await factory.createFromAppConfig({ config: appConfig });
-
-    expect(instance._unsafeUnwrapErr()).toBeInstanceOf(
-      SegmentEventTrackerFactory.ConfigNotFoundError,
-    );
-  });
 });

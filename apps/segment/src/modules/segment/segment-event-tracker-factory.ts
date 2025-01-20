@@ -1,4 +1,4 @@
-import { err, ok, Result } from "neverthrow";
+import { ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
@@ -12,26 +12,11 @@ export interface ISegmentEventTrackerFactory {
 
 export class SegmentEventTrackerFactory implements ISegmentEventTrackerFactory {
   static SegmentWriteKeyNotFoundError = BaseError.subclass("SegmentNotConfiguredError");
-  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
 
   constructor() {}
 
   async createFromAppConfig(args: { config: AppConfig }) {
-    const config = args.config.getConfig();
-
-    if (!config) {
-      return err(new SegmentEventTrackerFactory.ConfigNotFoundError("App config not found"));
-    }
-
-    const segmentKey = config.segmentWriteKey;
-
-    if (!segmentKey) {
-      return err(
-        new SegmentEventTrackerFactory.SegmentWriteKeyNotFoundError(
-          "Segment write key not found in app config",
-        ),
-      );
-    }
+    const segmentKey = args.config.getSegmentWriteKey();
 
     return ok(
       new SegmentEventsTracker(

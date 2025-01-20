@@ -92,7 +92,9 @@ describe("DynamoConfigRepository", () => {
       saleorApiUrl: "saleorApiUrl",
       appId: "saleorAppId",
       configKey: "configKey",
-      config: new AppConfig(),
+      config: new AppConfig({
+        segmentWriteKey: "segmentWriteKey",
+      }),
     });
 
     expect(result.isOk()).toBe(true);
@@ -109,7 +111,9 @@ describe("DynamoConfigRepository", () => {
       saleorApiUrl: "saleorApiUrl",
       appId: "saleorAppId",
       configKey: "configKey",
-      config: new AppConfig(),
+      config: new AppConfig({
+        segmentWriteKey: "segmentWriteKey",
+      }),
     });
 
     expect(result.isErr()).toBe(true);

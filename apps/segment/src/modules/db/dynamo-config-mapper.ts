@@ -31,15 +31,7 @@ export class DynamoConfigMapper {
       SK: SegmentMainTable.getConfigSortKey({
         configKey: args.configKey,
       }),
-      encryptedSegmentWriteKey: encrypt(
-        /*
-         * TODO: maybe we should handle this in neverthrow and don't allow empty string in DynamoDB
-         *
-         * save empty string if config is just created and it doesn't have segmentWriteKey set yet
-         */
-        args.config.getConfig()?.segmentWriteKey ?? "",
-        this.deps.encryptionKey,
-      ),
+      encryptedSegmentWriteKey: encrypt(args.config.getSegmentWriteKey(), this.deps.encryptionKey),
     };
   }
 }

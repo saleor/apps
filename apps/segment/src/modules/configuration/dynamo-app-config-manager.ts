@@ -9,7 +9,7 @@ export interface AppConfigManager {
   set(args: { config: AppConfig; saleorApiUrl: string; appId: string }): Promise<void>;
 }
 
-export class DynamoDBAppConfigManager implements AppConfigManager {
+export class DynamoAppConfigManager implements AppConfigManager {
   public readonly metadataKey = "app-config-v1";
 
   static GetConfigDataError = BaseError.subclass("GetConfigDataError");
@@ -23,7 +23,7 @@ export class DynamoDBAppConfigManager implements AppConfigManager {
   ) {}
 
   static create(repository: ConfigRepository) {
-    return new DynamoDBAppConfigManager({ repository, encryptionKey: env.SECRET_KEY });
+    return new DynamoAppConfigManager({ repository, encryptionKey: env.SECRET_KEY });
   }
 
   async get(args: { saleorApiUrl: string; appId: string }) {
@@ -34,7 +34,7 @@ export class DynamoDBAppConfigManager implements AppConfigManager {
     });
 
     if (getEntryResult.isErr()) {
-      throw new DynamoDBAppConfigManager.GetConfigDataError("Failed to get config data", {
+      throw new DynamoAppConfigManager.GetConfigDataError("Failed to get config data", {
         cause: getEntryResult.error,
       });
     }
@@ -55,7 +55,7 @@ export class DynamoDBAppConfigManager implements AppConfigManager {
     });
 
     if (setEntryResult.isErr()) {
-      throw new DynamoDBAppConfigManager.SetConfigDataError("Failed to set config data", {
+      throw new DynamoAppConfigManager.SetConfigDataError("Failed to set config data", {
         cause: setEntryResult.error,
       });
     }
