@@ -6,11 +6,9 @@ export namespace RootConfig {
    * - Only one request
    * - Always transactional
    */
-  export const Schema = z
-    .object({
-      segmentWriteKey: z.string(),
-    })
-    .nullable();
+  export const Schema = z.object({
+    segmentWriteKey: z.string().min(1),
+  });
 
   export type Shape = z.infer<typeof Schema>;
 }

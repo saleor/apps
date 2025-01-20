@@ -6,7 +6,8 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability
 import { OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { AppConfigMetadataManager } from "@/modules/configuration/app-config-metadata-manager";
+import { DynamoAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";
+import { DynamoConfigRepositoryFactory } from "@/modules/db/dynamo-config-factory";
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
 import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
@@ -20,34 +21,48 @@ export const config = {
 
 const logger = createLogger("orderRefundedAsyncWebhook");
 
+const configRepository = DynamoConfigRepositoryFactory.create();
+const configManager = DynamoAppConfigManager.create(configRepository);
+const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
+const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
+
 const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> = async (
   req,
   res,
   context,
 ) => {
-  const { authData, payload } = context;
-
-  if (!payload.order) {
-    logger.info("Payload does not contain order data. Skipping.");
-
-    return res
-      .status(200)
-      .json({ message: "Payload does not contain order data. It will be skipped by app" });
-  }
-
-  loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.order.id);
-
   try {
-    const appConfigMetadataManager = AppConfigMetadataManager.createFromAuthData(authData);
-    const segmentEventTrackerFactory = new SegmentEventTrackerFactory({ appConfigMetadataManager });
-    const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
+    const { authData, payload } = context;
+
+    const config = await configManager.get({
+      saleorApiUrl: authData.saleorApiUrl,
+      appId: authData.appId,
+    });
+
+    if (!config) {
+      logger.warn("App config not found. Event won't be send to Segment");
+
+      return res.status(200).json({
+        message: "App config not found. Event won't be send to Segment",
+      });
+    }
+
+    if (!payload.order) {
+      logger.info("Payload does not contain order data. Skipping.");
+
+      return res
+        .status(200)
+        .json({ message: "Payload does not contain order data. It will be skipped by app" });
+    }
+
+    loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.order.id);
 
     const event = trackingEventFactory.createOrderRefundedEvent({
       orderBase: payload.order,
       issuedAt: payload.issuedAt,
     });
 
-    return useCase.track(event).then((result) => {
+    return useCase.track(event, config).then((result) => {
       return result.match(
         () => {
           logger.info("Order refunded event successfully sent to Segment");
