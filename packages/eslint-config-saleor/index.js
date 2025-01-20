@@ -35,6 +35,13 @@ module.exports = {
       "error",
       { name: "@saleor/apps-logger", message: "Use your app logger directly" },
     ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        selector: "ImportDeclaration[source.value='@sentry/nextjs'] > ImportDefaultSpecifier",
+        message: "Use `import * as Sentry from '@sentry/nextjs';`",
+      },
+    ],
   },
   parserOptions: {
     babelOptions: {
