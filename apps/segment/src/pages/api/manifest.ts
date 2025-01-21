@@ -1,6 +1,7 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { captureException } from "@sentry/nextjs";
 
 import { env } from "@/env";
 import { loggerContext } from "@/logger-context";
@@ -13,6 +14,10 @@ export default wrapWithLoggerContext(
     async manifestFactory({ appBaseUrl }) {
       const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
       const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
+
+      const error = new Error("Test error - checking if importing sentry works");
+
+      captureException(error);
 
       const manifest: AppManifest = {
         about: "Seamlessly feed Twillo Segment with Saleor events",
