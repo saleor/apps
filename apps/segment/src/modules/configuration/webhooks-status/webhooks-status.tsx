@@ -16,8 +16,8 @@ export const WebhookStatus = () => {
         {config.areWebhooksActive ? (
           <>
             <Text size={2} color="default2">
-              Webhooks are active. For more information about webhooks check Manage app button in
-              header above.
+              App webhooks are active. For more information about webhooks check Manage app button
+              in header above.
             </Text>
             <SemanticChip marginLeft={"auto"} size="small" variant={"success"}>
               ACTIVE
@@ -26,7 +26,7 @@ export const WebhookStatus = () => {
         ) : (
           <>
             <Text size={2} color="default2">
-              Your webhooks were disabled. Most likely, your configuration is invalid. Check your
+              App webhooks were disabled. Most likely, your configuration is invalid. Check your
               credentials.
             </Text>
             <SemanticChip marginLeft={"auto"} size="small" variant={"error"}>

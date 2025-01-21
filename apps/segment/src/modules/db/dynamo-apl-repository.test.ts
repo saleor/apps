@@ -10,19 +10,11 @@ import { mockClient } from "aws-sdk-client-mock";
 import { SavedItem } from "dynamodb-toolbox";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { SegmentAPLRepository } from "./segment-apl-repository";
-import { SegmentMainTable, SegmentMainTableEntityFactory } from "./segment-main-table";
+import { DynamoAPLRepository } from "./dynamo-apl-repository";
+import { SegmentAPLEntityType } from "./segment-main-table";
 
-describe("SegmentAPLRepository", () => {
+describe("DynamoAPLRepository", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
-
-  const segmentMainTable = SegmentMainTable.create({
-    // @ts-expect-error https://github.com/m-radzikowski/aws-sdk-client-mock/issues/197
-    documentClient: mockDocumentClient,
-    tableName: "segment-test-table",
-  });
-
-  const segmentAPLEntity = SegmentMainTableEntityFactory.createAPLEntity(segmentMainTable);
 
   const mockedAuthData: AuthData = {
     appId: "appId",
@@ -35,7 +27,7 @@ describe("SegmentAPLRepository", () => {
   });
 
   it("should successfully get AuthData entry from DynamoDB", async () => {
-    const mockedAPLEntry: SavedItem<typeof segmentAPLEntity> = {
+    const mockedAPLEntry: SavedItem<SegmentAPLEntityType> = {
       PK: "saleorApiUrl",
       SK: "APL",
       token: "appToken",
@@ -50,7 +42,7 @@ describe("SegmentAPLRepository", () => {
       Item: mockedAPLEntry,
     });
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
 
@@ -68,19 +60,19 @@ describe("SegmentAPLRepository", () => {
   it("should handle errors when getting AuthData from DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).rejectsOnce("Exception");
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
 
     expect(result.isErr()).toBe(true);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(SegmentAPLRepository.ReadEntityError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(DynamoAPLRepository.ReadEntityError);
   });
 
   it("should return null if AuthData entry does not exist in DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).resolvesOnce({});
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
 
@@ -92,7 +84,7 @@ describe("SegmentAPLRepository", () => {
   it("should successfully set AuthData entry in DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).resolvesOnce({});
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.setEntry({
       authData: mockedAuthData,
@@ -106,7 +98,7 @@ describe("SegmentAPLRepository", () => {
   it("should handle errors when setting AuthData entry DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).rejectsOnce("Exception");
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.setEntry({
       authData: mockedAuthData,
@@ -114,13 +106,13 @@ describe("SegmentAPLRepository", () => {
 
     expect(result.isErr()).toBe(true);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(SegmentAPLRepository.WriteEntityError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(DynamoAPLRepository.WriteEntityError);
   });
 
   it("should successfully delete AuthData entry from DynamoDB", async () => {
     mockDocumentClient.on(DeleteCommand, {}).resolvesOnce({});
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.deleteEntry({ saleorApiUrl: "saleorApiUrl" });
 
@@ -132,17 +124,17 @@ describe("SegmentAPLRepository", () => {
   it("should handle errors when deleting AuthData entry from DynamoDB", async () => {
     mockDocumentClient.on(DeleteCommand, {}).rejectsOnce("Exception");
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.deleteEntry({ saleorApiUrl: "saleorApiUrl" });
 
     expect(result.isErr()).toBe(true);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(SegmentAPLRepository.DeleteEntityError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(DynamoAPLRepository.DeleteEntityError);
   });
 
   it("should successfully get all AuthData entries from DynamoDB", async () => {
-    const mockedAPLEntries: SavedItem<typeof segmentAPLEntity>[] = [
+    const mockedAPLEntries: SavedItem<SegmentAPLEntityType>[] = [
       {
         PK: "saleorApiUrl",
         SK: "APL",
@@ -169,7 +161,7 @@ describe("SegmentAPLRepository", () => {
       Items: mockedAPLEntries,
     });
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getAllEntries();
 
@@ -198,7 +190,7 @@ describe("SegmentAPLRepository", () => {
       Items: [],
     });
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getAllEntries();
 
@@ -210,12 +202,12 @@ describe("SegmentAPLRepository", () => {
   it("should handle error when getting all AuthData entries from DynamoDB", async () => {
     mockDocumentClient.on(ScanCommand, {}).rejectsOnce("Exception");
 
-    const repository = new SegmentAPLRepository({ segmentAPLEntity });
+    const repository = new DynamoAPLRepository();
 
     const result = await repository.getAllEntries();
 
     expect(result.isErr()).toBe(true);
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(SegmentAPLRepository.ScanEntityError);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(DynamoAPLRepository.ScanEntityError);
   });
 });
