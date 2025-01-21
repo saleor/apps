@@ -1,31 +1,31 @@
-import { Box, Input, RangeInput, Skeleton, Switch, Text } from "@saleor/macaw-ui";
+import {
+  Box,
+  Button,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  Input,
+  RangeInput,
+  Skeleton,
+  Switch,
+  Text,
+} from "@saleor/macaw-ui";
 import { useState } from "react";
 
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
+import { formatDateForInput, formatDateForQuery, formatUserFriendlyDate } from "./format-date";
+import { useClientLogsPagination } from "./use-client-logs-pagination";
+
 type LogsTypeSwitchState = "date" | "orderOrCheckoutID";
-
-const formatUserFriendlyDate = (date: Date) => {
-  const lang = navigator.language ?? "en-GB";
-
-  return Intl.DateTimeFormat(lang, {
-    day: "numeric",
-    month: "numeric",
-    year: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(date);
-};
 
 const LogsSkeleton = () => {
   const count = 3;
 
   return (
     <Box>
-      {new Array(count).fill(null).map((index) => {
-        return <Skeleton height={20} marginBottom={4} />;
+      {new Array(count).fill(null).map((_v, i) => {
+        return <Skeleton key={i} height={20} marginBottom={4} />;
       })}
     </Box>
   );
@@ -78,33 +78,46 @@ const LogsList = ({ logs }: { logs: Array<ClientLogValue> }) => {
   );
 };
 
-/**
- * Format date for format yyyy-mm-dd T hh:mm -> required by RangePicker
- */
-const formatDateForInput = (d: Date) => {
-  const pad = (n: number) => n.toString().padStart(2, "0");
-
-  const yyyy = d.getFullYear();
-  const MM = pad(d.getMonth() + 1);
-  const hh = pad(d.getHours());
-  const mm = pad(d.getMinutes());
-
-  return `${yyyy}-${MM}-${pad(d.getDate())}T${hh}:${mm}`;
-};
-
-/**
- * Format date for ISO format with seconds & milliseconds set to 00 -> required by clientLogsRouter.getByDate.
- * It allows us to cache the query as seconds won't change between UI changes.
- */
-const formatDateForQuery = (d: Date): string => {
-  d.setSeconds(0);
-
-  d.setMilliseconds(0);
-
-  return d.toISOString();
+const LogsPagiation = ({
+  onForwardButtonClick,
+  onBackwardButtonClick,
+  isForwardButtonDisabled,
+  isBackwardButtonDisabled,
+}: {
+  onForwardButtonClick: () => void;
+  onBackwardButtonClick: () => void;
+  isForwardButtonDisabled: boolean;
+  isBackwardButtonDisabled: boolean;
+}) => {
+  return (
+    <Box display="flex" marginTop={4} justifyContent="flex-end">
+      <Box display="flex" gap={2}>
+        <Button
+          onClick={onBackwardButtonClick}
+          disabled={isBackwardButtonDisabled}
+          icon={<ChevronLeftIcon />}
+          variant="secondary"
+        />
+        <Button
+          onClick={onForwardButtonClick}
+          disabled={isForwardButtonDisabled}
+          icon={<ChevronRightIcon />}
+          variant="secondary"
+        />
+      </Box>
+    </Box>
+  );
 };
 
 const LogsByDate = () => {
+  const {
+    currentEvaluatedKey,
+    goToNextEvaluatedKey,
+    goToPreviousEvaluatedKey,
+    isNextButtonDisabled,
+    isPreviousButtonDisabled,
+  } = useClientLogsPagination();
+
   const [rangeDates, setRangeDates] = useState<{ start: Date; end: Date }>(() => {
     const now = Date.now();
     const anHour = 60 * 60 * 1000;
@@ -116,17 +129,14 @@ const LogsByDate = () => {
     };
   });
 
-  const {
-    data: logs,
-    error,
-    isLoading,
-  } = trpcClient.clientLogs.getByDate.useQuery({
+  const { data, error, isLoading } = trpcClient.clientLogs.getByDate.useQuery({
     startDate: formatDateForQuery(rangeDates.start),
     endDate: formatDateForQuery(rangeDates.end),
+    lastEvaluatedKey: currentEvaluatedKey,
   });
 
-  const isEmpty = !isLoading && logs && logs.length === 0;
-  const isLoaded = !isLoading && logs && logs.length > 0;
+  const isEmpty = !isLoading && data?.clientLogs && data.clientLogs.length === 0;
+  const isLoaded = !isLoading && data?.clientLogs && data.clientLogs.length > 0;
 
   return (
     <Box>
@@ -150,25 +160,34 @@ const LogsByDate = () => {
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for specified date range</Text>}
-      {isLoaded && <LogsList logs={logs} />}
+      {isLoaded && <LogsList logs={data.clientLogs} />}
       {isLoading && <LogsSkeleton />}
+      <LogsPagiation
+        onForwardButtonClick={() => goToNextEvaluatedKey(data?.lastEvaluatedKey)}
+        onBackwardButtonClick={() => goToPreviousEvaluatedKey()}
+        isForwardButtonDisabled={isNextButtonDisabled(data?.lastEvaluatedKey)}
+        isBackwardButtonDisabled={isPreviousButtonDisabled()}
+      />
     </Box>
   );
 };
 
 const LogsByCheckoutOrOrderId = () => {
-  const [query, setQuery] = useState<string | null>(null);
   const {
-    data: logs,
-    error,
-    isLoading,
-  } = trpcClient.clientLogs.getByCheckoutOrOrderId.useQuery(
+    currentEvaluatedKey,
+    goToNextEvaluatedKey,
+    goToPreviousEvaluatedKey,
+    isNextButtonDisabled,
+    isPreviousButtonDisabled,
+  } = useClientLogsPagination();
+  const [query, setQuery] = useState<string | null>(null);
+  const { data, error, isLoading } = trpcClient.clientLogs.getByCheckoutOrOrderId.useQuery(
     { checkoutOrOrderId: query ?? "" }, // Set default to empty string, for typescript - but this will not be called
     { enabled: !!query },
   );
 
-  const isEmpty = !isLoading && logs && logs.length === 0;
-  const isLoaded = !isLoading && logs && logs.length > 0;
+  const isEmpty = !isLoading && data?.clientLogs && data.clientLogs.length === 0;
+  const isLoaded = !isLoading && data?.clientLogs && data.clientLogs.length > 0;
 
   return (
     <Box>
@@ -185,9 +204,15 @@ const LogsByCheckoutOrOrderId = () => {
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for the specified ID</Text>}
-      {isLoaded && <LogsList logs={logs} />}
+      {isLoaded && <LogsList logs={data.clientLogs} />}
       {isLoading && query && <LogsSkeleton />}
       {!query && <Text>Enter Checkout or Order ID and wait for results</Text>}
+      <LogsPagiation
+        onForwardButtonClick={() => goToNextEvaluatedKey(data?.lastEvaluatedKey)}
+        onBackwardButtonClick={() => goToPreviousEvaluatedKey()}
+        isForwardButtonDisabled={isNextButtonDisabled(data?.lastEvaluatedKey)}
+        isBackwardButtonDisabled={isPreviousButtonDisabled()}
+      />
     </Box>
   );
 };
