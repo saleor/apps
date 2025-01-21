@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.20.0
+
+### Minor Changes
+
+- e86926f2: Product feed: prioritize media assigned to a specific product variant. with a fallback mechanism to use product media when no variant-specific media is available. The changes aim to enhance the precision of media selection
+
 ## 1.19.18
 
 ### Patch Changes

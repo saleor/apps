@@ -1,5 +1,13 @@
 # segment
 
+## 2.0.3
+
+### Patch Changes
+
+- b61ce914: Added DynamoDB APL. This APL is using DynamoDB as storage.
+- 820f5b90: Cleanup Segment app - rename of files or fix naming.
+- 36aea8d9: Store app config in DynamoDB instead of Saleor app metadata.
+
 ## 2.0.2
 
 ### Patch Changes
