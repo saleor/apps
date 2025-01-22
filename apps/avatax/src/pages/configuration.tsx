@@ -2,8 +2,6 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
-import { trpcClient } from "@/modules/trpc/trpc-client";
-
 import { ChannelSection } from "../modules/channel-configuration/ui/channel-section";
 import { ProvidersSection } from "../modules/provider-connections/ui/providers-section";
 import { AppPageLayout } from "../modules/ui/app-page-layout";
@@ -11,7 +9,6 @@ import { Section } from "../modules/ui/app-section";
 import { MatcherSection } from "../modules/ui/matcher-section";
 
 const Header = () => {
-  const { data: logsEnabled } = trpcClient.clientLogs.isEnabled.useQuery();
   const { push } = useRouter();
 
   return (
@@ -19,7 +16,7 @@ const Header = () => {
       <Section.Header>
         Configure the app by connecting to AvaTax. You can connect to multiple accounts.
       </Section.Header>
-      {logsEnabled && <Button onClick={() => push("/logs")}>Open Logs</Button>}
+      <Button onClick={() => push("/logs")}>Open Logs</Button>
     </Box>
   );
 };
