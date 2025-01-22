@@ -4,7 +4,7 @@ import { err, ok, Result } from "neverthrow";
 import { BaseError } from "@/errors";
 import { APLRepository } from "@/modules/db/types";
 
-export class InMemoryAPLRepository implements APLRepository {
+export class MemoryAPLRepository implements APLRepository {
   public entries: Record<string, AuthData> = {};
 
   async getEntry(args: {

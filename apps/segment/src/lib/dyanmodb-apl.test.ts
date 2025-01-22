@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { BaseError } from "@/errors";
 
-import { InMemoryAPLRepository } from "./__tests__/in-memory-apl-repository";
+import { MemoryAPLRepository } from "../modules/db/__tests__/memory-apl-repository";
 import { DynamoAPL } from "./dynamodb-apl";
 
 describe("DynamoAPL", () => {
@@ -20,7 +20,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should get auth data if it exists", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
@@ -33,7 +33,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should return undefined if auth data does not exist", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.get("saleorApiUrl");
@@ -42,7 +42,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should throw an error if getting auth data fails", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     vi.spyOn(repository, "getEntry").mockReturnValue(
@@ -53,7 +53,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should set auth data", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.set(mockedAuthData);
@@ -68,7 +68,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should throw an error if setting auth data fails", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
 
     vi.spyOn(repository, "setEntry").mockResolvedValue(err(new BaseError("Error setting data")));
 
@@ -78,7 +78,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should update existing auth data", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
@@ -103,7 +103,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should delete auth data", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
@@ -118,14 +118,14 @@ describe("DynamoAPL", () => {
   });
 
   it("should throw an error if deleting auth data fails", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     await expect(apl.delete("saleorApiUrl")).rejects.toThrowError(DynamoAPL.DeleteAuthDataError);
   });
 
   it("should get all auth data", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const secondEntry: AuthData = {
       saleorApiUrl: "saleorApiUrl2",
       token: "appToken2",
@@ -148,7 +148,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should throw an error if getting all auth data fails", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     vi.spyOn(repository, "getAllEntries").mockResolvedValue(
@@ -159,7 +159,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should return ready:true when APL related env variables are set", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.isReady();
@@ -183,7 +183,7 @@ describe("DynamoAPL", () => {
       NODE_ENV: "test",
       ENV: "local",
     });
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.isReady();
@@ -195,7 +195,7 @@ describe("DynamoAPL", () => {
   });
 
   it("should return configured:true when APL related env variables are set", async () => {
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.isConfigured();
@@ -217,7 +217,7 @@ describe("DynamoAPL", () => {
       ENV: "local",
     });
 
-    const repository = new InMemoryAPLRepository();
+    const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
     const result = await apl.isConfigured();

@@ -8,25 +8,17 @@ import { env } from "@/env";
 
 import { AppConfig } from "../configuration/app-config";
 import { DynamoConfigRepository } from "./dynamo-config-repository";
-import { SegmentMainTable, SegmentMainTableEntityFactory } from "./segment-main-table";
+import { SegmentConfigEntityType } from "./segment-main-table";
 
 describe("DynamoConfigRepository", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
-
-  const segmentMainTable = SegmentMainTable.create({
-    // @ts-expect-error https://github.com/m-radzikowski/aws-sdk-client-mock/issues/197
-    documentClient: mockDocumentClient,
-    tableName: "segment-test-table",
-  });
-
-  const segmentConfigEntity = SegmentMainTableEntityFactory.createConfigEntity(segmentMainTable);
 
   beforeEach(() => {
     mockDocumentClient.reset();
   });
 
   it("should successfully get AppConfig from DynamoDB", async () => {
-    const mockedConfigEntry: SavedItem<typeof segmentConfigEntity> = {
+    const mockedConfigEntry: SavedItem<SegmentConfigEntityType> = {
       PK: "saleorApiUrl#saleorAppId",
       SK: "APP_CONFIG#configKey",
       encryptedSegmentWriteKey: encrypt("encryptedKey", env.SECRET_KEY),

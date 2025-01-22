@@ -3,8 +3,8 @@ import { FormattedItem, type PutItemInput } from "dynamodb-toolbox";
 
 import { SegmentAPLEntityType, SegmentMainTable } from "@/modules/db/segment-main-table";
 
-export class SegmentAPLMapper {
-  dynamoDBEntityToAuthData(entity: FormattedItem<SegmentAPLEntityType>): AuthData {
+export class DynamoAPLMapper {
+  dynamoEntityToAuthData(entity: FormattedItem<SegmentAPLEntityType>): AuthData {
     return {
       domain: entity.domain,
       token: entity.token,
