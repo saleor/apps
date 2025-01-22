@@ -3,11 +3,10 @@ import "@saleor/macaw-ui/style";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { NoSSRWrapper } from "@saleor/apps-shared";
+import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
 import { ThemeProvider } from "@saleor/macaw-ui";
 import { AppProps } from "next/app";
 
-import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { trpcClient } from "../modules/trpc/trpc-client";
 import { AppLayout } from "../modules/ui/app-layout";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
