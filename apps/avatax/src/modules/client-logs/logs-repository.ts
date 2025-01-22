@@ -19,18 +19,20 @@ import {
 } from "./dynamo-schema";
 import { LogsTransformer } from "./log-transformer";
 
+export type LastEvaluatedKey = Record<string, unknown> | undefined;
+
 export interface ILogsRepository {
   getLogsByDate(args: {
     saleorApiUrl: string;
     startDate: Date;
     endDate: Date;
     appId: string;
-  }): Promise<Result<ClientLog[], unknown>>;
+  }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, unknown>>;
   getLogsByCheckoutOrOrderId(args: {
     saleorApiUrl: string;
     appId: string;
     checkoutOrOrderId: string;
-  }): Promise<Result<ClientLog[], unknown>>;
+  }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, unknown>>;
   writeLog(args: {
     clientLogRequest: ClientLogStoreRequest;
     saleorApiUrl: string;
@@ -74,14 +76,16 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
     startDate,
     endDate,
     appId,
+    lastEvaluatedKey,
   }: {
     saleorApiUrl: string;
     startDate: Date;
     endDate: Date;
     appId: string;
+    lastEvaluatedKey: LastEvaluatedKey;
   }): Promise<
     Result<
-      ClientLog[],
+      { clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey },
       | InstanceType<typeof LogsRepositoryDynamodb.LogsFetchError>
       | InstanceType<typeof LogsRepositoryDynamodb.DataMappingError>
     >
@@ -105,7 +109,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
           },
         })
         .entities(this.logByDateEntity)
-        .options({ limit: 100, capacity: "TOTAL" })
+        .options({ limit: 100, capacity: "TOTAL", exclusiveStartKey: lastEvaluatedKey })
         .send(),
       (err) =>
         new LogsRepositoryDynamodb.LogsFetchError(
@@ -133,10 +137,10 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
     if (!fetchResult.value.Items) {
       this.logger.info("No logs found for specified dates", { startDate, endDate });
 
-      return ok([]);
+      return ok({ clientLogs: [], lastEvaluatedKey: undefined });
     }
 
-    return Result.combine(
+    const clientLogs = Result.combine(
       fetchResult.value.Items.map((item) => transformer.fromDynamoEntityToClientLog(item)),
     ).mapErr((error) => {
       this.logger.error("Unexpected error while mapping DynamoDB response to ClientLog", { error });
@@ -146,17 +150,33 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
         { cause: error },
       );
     });
+
+    if (clientLogs.isErr()) {
+      return err(clientLogs.error);
+    }
+
+    return ok({
+      clientLogs: clientLogs.value,
+      lastEvaluatedKey: fetchResult.value.LastEvaluatedKey,
+    });
   }
 
   async getLogsByCheckoutOrOrderId({
     saleorApiUrl,
     appId,
     checkoutOrOrderId,
+    lastEvaluatedKey,
   }: {
     saleorApiUrl: string;
     appId: string;
     checkoutOrOrderId: string;
-  }): Promise<Result<ClientLog[], InstanceType<typeof LogsRepositoryDynamodb.DataMappingError>>> {
+    lastEvaluatedKey: LastEvaluatedKey;
+  }): Promise<
+    Result<
+      { clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey },
+      InstanceType<typeof LogsRepositoryDynamodb.DataMappingError>
+    >
+  > {
     const transformer = new LogsTransformer();
 
     this.logger.debug("Starting fetching logs by checkoutOrOrderId from DynamoDB", {
@@ -175,7 +195,7 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
           },
         })
         .entities(this.logsByCheckoutOrOrderId)
-        .options({ limit: 100, capacity: "TOTAL" })
+        .options({ limit: 100, capacity: "TOTAL", exclusiveStartKey: lastEvaluatedKey })
         .send(),
       (err) =>
         new LogsRepositoryDynamodb.LogsFetchError(
@@ -203,10 +223,10 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
     if (!fetchResult.value.Items) {
       this.logger.info("No logs found for checkoutOrOrderId", { checkoutOrOrderId });
 
-      return ok([]);
+      return ok({ clientLogs: [], lastEvaluatedKey: undefined });
     }
 
-    return Result.combine(
+    const clientLogs = Result.combine(
       fetchResult.value.Items.map((item) => transformer.fromDynamoEntityToClientLog(item)),
     ).mapErr((error) => {
       this.logger.error("Unexpected error while mapping DynamoDB response to ClientLog", { error });
@@ -215,6 +235,15 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
         "Error while mapping DynamoDB response to ClientLog",
         { cause: error },
       );
+    });
+
+    if (clientLogs.isErr()) {
+      return err(clientLogs.error);
+    }
+
+    return ok({
+      clientLogs: clientLogs.value,
+      lastEvaluatedKey: fetchResult.value.LastEvaluatedKey,
     });
   }
 
@@ -307,8 +336,9 @@ export class LogsRepositoryMemory implements ILogsRepository {
     startDate: Date;
     endDate: Date;
     appId: string;
-  }): Promise<Result<ClientLog[], never>> {
-    return ok(this.logs);
+    lastEvaluatedKey: LastEvaluatedKey;
+  }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, never>> {
+    return ok({ clientLogs: this.logs, lastEvaluatedKey: undefined });
   }
 
   static UnexpectedWriteLogError = BaseError.subclass("UnexpectedWriteLogError");
@@ -342,7 +372,8 @@ export class LogsRepositoryMemory implements ILogsRepository {
     saleorApiUrl: string;
     appId: string;
     checkoutOrOrderId: string;
-  }): Promise<Result<ClientLog[], never>> {
-    return ok(this.logs);
+    lastEvaluatedKey: LastEvaluatedKey;
+  }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, never>> {
+    return ok({ clientLogs: this.logs, lastEvaluatedKey: undefined });
   }
 }

@@ -4,8 +4,42 @@
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
 
+// cache request for 1 day (in seconds) + revalidate once 60 seconds
+const cacheValue = "private,s-maxage=60,stale-while-revalidate=86400";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/api/trpc/clientLogs.getByCheckoutOrOrderId",
+        // Keys based on https://vercel.com/docs/edge-network/headers/cache-control-headers
+        headers: [
+          {
+            key: "CDN-Cache-Control",
+            value: cacheValue,
+          },
+          {
+            key: "Cache-Control",
+            value: cacheValue,
+          },
+        ],
+      },
+      {
+        source: "/api/trpc/clientLogs.getByDate",
+        headers: [
+          {
+            key: "CDN-Cache-Control",
+            value: cacheValue,
+          },
+          {
+            key: "Cache-Control",
+            value: cacheValue,
+          },
+        ],
+      },
+    ];
+  },
   reactStrictMode: true,
   transpilePackages: [
     "@saleor/apps-otel",
