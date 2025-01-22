@@ -35,7 +35,7 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });
@@ -43,27 +43,28 @@ describe("TrackEventUseCase", () => {
     await useCase.track(event, mockedAppConfig);
 
     expect(mockedSegmentClient.track).toHaveBeenCalledWith({
-      event: "Saleor Order Created",
+      event: "Saleor Order Updated",
       issuedAt: "2025-01-07",
       properties: {
-        channel: {
-          id: "channel-id",
-          name: "channel-name",
-          slug: "channel-slug",
-        },
-        id: "order-id",
-        lines: [],
-        number: "order-number",
-        total: {
-          gross: {
-            amount: 37,
-            currency: "USD",
+        coupon: undefined,
+        currency: "USD",
+        discount: 7,
+        order_id: "order-id",
+        products: [
+          {
+            category: "categoryName",
+            coupon: undefined,
+            name: "productName",
+            price: 37,
+            product_id: "line-id",
+            quantity: 1,
+            sku: "sku",
+            variant: "variantName",
           },
-          net: {
-            amount: 21,
-            currency: "USD",
-          },
-        },
+        ],
+        shipping: 5,
+        tax: 0.21,
+        total: 37,
       },
       user: {
         id: "user-email",
@@ -83,7 +84,7 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });
@@ -113,7 +114,7 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });

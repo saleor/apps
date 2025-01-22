@@ -2,30 +2,46 @@ fragment OrderBase on Order {
   id
   user {
     id
-    email
-  }
-  channel {
-    id
-    slug
-    name
   }
   userEmail
-  shippingMethodName
   total {
     gross {
       amount
       currency
     }
-    net {
-      currency
+    tax {
       amount
     }
   }
+  undiscountedTotal {
+    gross {
+      amount
+    }
+  }
+  shippingPrice {
+    gross {
+      amount
+    }
+  }
+  voucherCode
   lines {
     id
-    productVariantId
+    quantity
+    totalPrice {
+      gross {
+        amount
+      }
+    }
+    voucherCode
     productSku
-    variantName
+    variant {
+      name
+      product {
+        name
+        category {
+          name
+        }
+      }
+    }
   }
-  number
 }
