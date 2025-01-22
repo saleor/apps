@@ -2,6 +2,9 @@ import { OrderBaseFragment } from "@/generated/graphql";
 
 export const mockedOrderBase: OrderBaseFragment = {
   id: "order-id",
+  channel: {
+    id: "channel-id",
+  },
   userEmail: "user-email",
   total: {
     gross: {

@@ -73,6 +73,7 @@ export const trackingEventFactory = {
       issuedAt,
       payload: filterEmptyValuesFromObject({
         order_id: order.id,
+        channel_id: order.channel.id,
         total: order.total.gross.amount,
         shipping: order.shippingPrice.gross.amount,
         tax: order.total.tax.amount,
@@ -102,6 +103,7 @@ export const trackingEventFactory = {
       issuedAt,
       payload: filterEmptyValuesFromObject({
         order_id: order.id,
+        channel_id: order.channel.id,
         total: order.total.gross.amount,
         shipping: order.shippingPrice?.gross.amount,
         tax: order.total.tax.amount,
@@ -131,6 +133,7 @@ export const trackingEventFactory = {
       issuedAt,
       payload: filterEmptyValuesFromObject({
         order_id: order.id,
+        channel_id: order.channel.id,
         products: order.lines.map(getProductInfo),
       }),
     };
@@ -151,6 +154,7 @@ export const trackingEventFactory = {
       issuedAt,
       payload: filterEmptyValuesFromObject({
         order_id: order.id,
+        channel_id: order.channel.id,
         total: order.total.gross.amount,
         shipping: order.shippingPrice?.gross.amount,
         tax: order.total.tax.amount,

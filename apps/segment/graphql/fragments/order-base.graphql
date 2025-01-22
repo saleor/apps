@@ -3,6 +3,9 @@ fragment OrderBase on Order {
   user {
     id
   }
+  channel {
+    id
+  }
   userEmail
   total {
     gross {

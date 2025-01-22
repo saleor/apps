@@ -50,6 +50,7 @@ describe("TrackEventUseCase", () => {
         currency: "USD",
         discount: 7,
         order_id: "order-id",
+        channel_id: "channel-id",
         products: [
           {
             category: "categoryName",

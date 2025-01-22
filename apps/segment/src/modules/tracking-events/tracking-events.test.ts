@@ -16,6 +16,7 @@ describe("trackingEventFactory", () => {
       {
         "issuedAt": "2025-01-07",
         "payload": {
+          "channel_id": "channel-id",
           "currency": "USD",
           "discount": 7,
           "order_id": "order-id",
@@ -53,6 +54,7 @@ describe("trackingEventFactory", () => {
       {
         "issuedAt": "2025-01-07",
         "payload": {
+          "channel_id": "channel-id",
           "currency": "USD",
           "discount": 7,
           "order_id": "order-id",
