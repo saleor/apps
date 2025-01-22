@@ -2,7 +2,7 @@ import { type DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Entity, number, schema, string, Table } from "dynamodb-toolbox";
 import { ulid } from "ulid";
 
-import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
+import { env } from "@/env";
 
 export class LogsTable extends Table<
   {
@@ -61,7 +61,7 @@ export class LogsTable extends Table<
   }
 
   static getDefaultTTL() {
-    const daysUntilExpire = clientLogsFeatureConfig.ttlInDays;
+    const daysUntilExpire = env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS;
     const today = new Date();
 
     // Add today + days until expire, export to UNIX epoch timestamp
