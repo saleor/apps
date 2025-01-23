@@ -55,6 +55,10 @@ jobs:
           E2E_USER_NAME: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_NAME"
           E2E_USER_PASSWORD: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_PASSWORD"
           SECRET_KEY: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/SECRET_KEY"
+          DYNAMODB_LOGS_TABLE_NAME: "op//Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/DYNAMODB_LOGS_TABLE_NAME"
+          AWS_REGION: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_REGION"
+          AWS_ACCESS_KEY_ID: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
+          AWS_SECRET_ACCESS_KEY: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
       - name: Run e2e tests
         run: pnpm --filter=app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
