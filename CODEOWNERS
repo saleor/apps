@@ -1,10 +1,1 @@
-* @saleor/apps-guild
-
-/apps/avatax  @saleor/shopex-js
-/apps/segment @saleor/shopex-js
-
-/apps/cms-v2 @saleor/merchant-js
-/apps/klaviyo @saleor/merchant-js
-/apps/products-feed @saleor/merchant-js
-/apps/search @saleor/merchant-js
-/apps/smtp @saleor/merchant-js
+* @saleor/extensibility-team-js
