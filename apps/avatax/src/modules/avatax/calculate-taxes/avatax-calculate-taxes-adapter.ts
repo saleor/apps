@@ -10,6 +10,22 @@ export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
 
 const errorParser = new AvataxErrorsParser();
 
+export function suspiciousLineCalculationCheck(line: {
+  total_gross_amount: number;
+  total_net_amount: number;
+  tax_rate: number;
+}) {
+  const tax = line.total_gross_amount - line.total_net_amount;
+  const rate = line.tax_rate;
+  const lineIsZero = line.total_net_amount === 0 ?? line.total_gross_amount === 0;
+
+  if (tax === 0 && rate !== 0 && !lineIsZero) {
+    return true;
+  }
+
+  return false;
+}
+
 export class AvataxCalculateTaxesAdapter {
   private logger = createLogger("AvataxCalculateTaxesAdapter");
 
@@ -38,11 +54,9 @@ export class AvataxCalculateTaxesAdapter {
       const transformedResponse = this.avataxCalculateTaxesResponseTransformer.transform(response);
 
       transformedResponse.lines.forEach((l) => {
-        const tax = l.total_gross_amount - l.total_net_amount;
-        const rate = l.tax_rate;
-        const lineIsZero = l.total_net_amount === 0 ?? l.total_gross_amount === 0;
+        const isSuspiciousLine = suspiciousLineCalculationCheck(l);
 
-        if (tax === 0 && rate !== 0 && !lineIsZero) {
+        if (isSuspiciousLine) {
           this.logger.warn("Non-zero line has zero tax, but rate is not zero", {
             taxCalculationSummary: response.summary,
           });
