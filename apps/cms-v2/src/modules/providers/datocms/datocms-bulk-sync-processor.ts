@@ -29,6 +29,7 @@ export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
                 id: variant.id,
                 name: variant.name,
                 channelListings: variant.channelListings,
+                sku: variant.sku,
                 product: {
                   id: product.id,
                   name: product.name,

@@ -8,44 +8,46 @@ export class StrapiBulkSyncProcessor implements BulkSyncProcessor {
 
   async uploadProducts(
     products: BulkImportProductFragment[],
-    hooks: BulkSyncProcessorHooks
+    hooks: BulkSyncProcessorHooks,
   ): Promise<void> {
     const client = new StrapiClient({
       token: this.config.authToken,
       url: this.config.url,
     });
 
-    products.flatMap((product) =>
-      product.variants?.map((variant) => {
-        if (hooks.onUploadStart) {
-          hooks.onUploadStart({ variantId: variant.id });
-        }
+    products.flatMap(
+      (product) =>
+        product.variants?.map((variant) => {
+          if (hooks.onUploadStart) {
+            hooks.onUploadStart({ variantId: variant.id });
+          }
 
-        return client
-          .upsertProduct({
-            configuration: this.config,
-            variant: {
-              id: variant.id,
-              name: variant.name,
-              channelListings: variant.channelListings,
-              product: {
-                id: product.id,
-                name: product.name,
-                slug: product.slug,
+          return client
+            .upsertProduct({
+              configuration: this.config,
+              variant: {
+                id: variant.id,
+                name: variant.name,
+                channelListings: variant.channelListings,
+                sku: variant.sku,
+                product: {
+                  id: product.id,
+                  name: product.name,
+                  slug: product.slug,
+                },
               },
-            },
-          })
-          .then((r) => {
-            if (hooks.onUploadSuccess) {
-              hooks.onUploadSuccess({ variantId: variant.id });
-            }
-          })
-          .catch((e) => {
-            if (hooks.onUploadError) {
-              hooks.onUploadError({ variantId: variant.id, error: e });
-            }
-          });
-      })
+            })
+            .then((r) => {
+              if (hooks.onUploadSuccess) {
+                hooks.onUploadSuccess({ variantId: variant.id });
+              }
+            })
+            .catch((e) => {
+              if (hooks.onUploadError) {
+                hooks.onUploadError({ variantId: variant.id, error: e });
+              }
+            });
+        }),
     );
   }
 }
