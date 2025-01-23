@@ -1,5 +1,11 @@
 # saleor-app-cms-v2
 
+## 2.9.19
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+
 ## 2.9.18
 
 ### Patch Changes

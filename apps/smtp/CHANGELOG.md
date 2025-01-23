@@ -1,5 +1,11 @@
 # smtp
 
+## 1.2.22
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+
 ## 1.2.21
 
 ### Patch Changes

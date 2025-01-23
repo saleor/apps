@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.20.1
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+
 ## 1.20.0
 
 ### Minor Changes
