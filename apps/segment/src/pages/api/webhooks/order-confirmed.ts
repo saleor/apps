@@ -3,7 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
 
-import { OrderFullyPaidSubscriptionPayloadFragment } from "@/generated/graphql";
+import { OrderConfirmedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { DynamoAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";
@@ -11,7 +11,7 @@ import { DynamoConfigRepositoryFactory } from "@/modules/db/dynamo-config-factor
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
 import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-case";
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
-import { orderFullyPaidAsyncWebhook } from "@/modules/webhooks/definitions/order-fully-paid";
+import { orderConfirmedAsyncWebhook } from "@/modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
@@ -26,7 +26,7 @@ const configManager = DynamoAppConfigManager.create(configRepository);
 const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
 const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
-const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> = async (
+const handler: NextWebhookApiHandler<OrderConfirmedSubscriptionPayloadFragment> = async (
   req,
   res,
   context,
@@ -65,11 +65,11 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
     return useCase.track(event, config).then((result) => {
       return result.match(
         () => {
-          logger.info("Order fully paid event successfully sent to Segment");
+          logger.info("Order completed event successfully sent to Segment");
 
           return res
             .status(200)
-            .json({ message: "Order fully paid event successfully sent to Segment" });
+            .json({ message: "Order completed event successfully sent to Segment" });
         },
         (error) => {
           switch (error.constructor) {
@@ -85,28 +85,28 @@ const handler: NextWebhookApiHandler<OrderFullyPaidSubscriptionPayloadFragment> 
             }
 
             case TrackEventUseCase.TrackEventUseCaseUnknownError: {
-              logger.error("Unknown error while sending order fully paid event to Segment", {
+              logger.error("Unknown error while sending order completed event to Segment", {
                 error: error,
               });
 
               return res
                 .status(500)
-                .json({ message: "Error while sending order fully paid event to Segment" });
+                .json({ message: "Error while sending order completed event to Segment" });
             }
           }
         },
       );
     });
   } catch (e) {
-    logger.error("Unhandled error while sending order fully paid event to Segment", { error: e });
+    logger.error("Unhandled error while sending order completed event to Segment", { error: e });
 
     return res
       .status(500)
-      .json({ message: "Error while sending order fully paid event to Segment" });
+      .json({ message: "Error while sending order completed event to Segment" });
   }
 };
 
 export default wrapWithLoggerContext(
-  withOtel(orderFullyPaidAsyncWebhook.createHandler(handler), "/api/webhooks/order-fully-paid"),
+  withOtel(orderConfirmedAsyncWebhook.createHandler(handler), "/api/webhooks/order-fully-paid"),
   loggerContext,
 );
