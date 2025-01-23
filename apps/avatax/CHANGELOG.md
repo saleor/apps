@@ -1,5 +1,15 @@
 # app-avatax
 
+## 1.12.6
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+- 18a9c3d9: Implement client logs cache. Right now app will cache request for 1 day and revalidate the cache every 60 seconds.
+  Added forward / backward pagination to client logs. After this change end user can browse logs that exceeds current pagination limit (first 100).
+- e195c8d7: Remove feature flag for client logs. After this change logs are enabled by default.
+- e3e0d6d2: Added test for suspicious line+tax calculation checker and additional debugging logs
+
 ## 1.12.5
 
 ### Patch Changes

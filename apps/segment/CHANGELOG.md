@@ -1,5 +1,14 @@
 # segment
 
+## 2.0.4
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+- 989cb683: - Changed what we sent to Segment to be in sync with their [spec](https://segment.com/docs/connections/spec/ecommerce/v2/)
+  - Added new Saleor event - `OrderConfirmed` that will be mapped to Segment `OrderCompleted`
+  - Removed Saleor event - `OrderCreated` - it didn't have respective Segment event
+
 ## 2.0.3
 
 ### Patch Changes
