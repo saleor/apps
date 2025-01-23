@@ -1,7 +1,6 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withOtel } from "@saleor/apps-otel";
-import escapeStringRegexp from "escape-string-regexp";
 
 import { saleorApp } from "../../../saleor-app";
 import { loggerContext } from "../../logger-context";
@@ -17,7 +16,8 @@ const handler = createAppRegisterHandler({
   allowedSaleorUrls: [
     (url) => {
       if (allowedUrlsPattern) {
-        const regex = new RegExp(escapeStringRegexp(allowedUrlsPattern));
+        // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
+        const regex = new RegExp(allowedUrlsPattern);
 
         return regex.test(url);
       }

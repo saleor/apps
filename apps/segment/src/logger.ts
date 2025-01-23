@@ -1,11 +1,14 @@
 import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
+import { createRequire } from "module";
 
 import packageJson from "../package.json";
 import { env } from "./env";
 
 rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
-if (env.NODE_ENV !== "production") {
+const require = createRequire(import.meta.url);
+
+if (env.NODE_ENV === "development") {
   attachLoggerConsoleTransport(rootLogger);
 }
 

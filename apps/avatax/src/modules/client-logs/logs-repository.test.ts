@@ -1,7 +1,7 @@
 import { BatchWriteCommand, DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import { type SavedItem } from "dynamodb-toolbox";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { ClientLog, ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 
@@ -203,13 +203,14 @@ describe("LogsRepositoryDynamodb", () => {
         startDate: new Date("2023-01-01T00:00:00Z"),
         endDate: new Date("2023-01-02T00:00:00Z"),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isOk()).toBe(true);
 
-      expect(result._unsafeUnwrap()).toHaveLength(1);
+      expect(result._unsafeUnwrap().clientLogs).toHaveLength(1);
 
-      expect(result._unsafeUnwrap()[0]).toBeInstanceOf(ClientLog);
+      expect(result._unsafeUnwrap().clientLogs[0]).toBeInstanceOf(ClientLog);
     });
 
     it("should return an empty array when no items are found in the database", async () => {
@@ -230,11 +231,12 @@ describe("LogsRepositoryDynamodb", () => {
         startDate: new Date("2023-01-01T00:00:00Z"),
         endDate: new Date("2023-01-02T00:00:00Z"),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isOk()).toBe(true);
 
-      expect(result._unsafeUnwrap()).toEqual([]);
+      expect(result._unsafeUnwrap()).toStrictEqual({ clientLogs: [], lastEvaluatedKey: undefined });
     });
 
     it("should return an error when data cannot be mapped to ClientLog", async () => {
@@ -289,6 +291,7 @@ describe("LogsRepositoryDynamodb", () => {
         startDate: new Date("2023-01-01T00:00:00Z"),
         endDate: new Date("2023-01-02T00:00:00Z"),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -323,6 +326,7 @@ describe("LogsRepositoryDynamodb", () => {
         startDate: new Date("2023-01-01T00:00:00Z"),
         endDate: new Date("2023-01-02T00:00:00Z"),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -344,6 +348,7 @@ describe("LogsRepositoryDynamodb", () => {
         startDate: new Date("2023-01-01T00:00:00Z"),
         endDate: new Date("2023-01-02T00:00:00Z"),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -387,13 +392,14 @@ describe("LogsRepositoryDynamodb", () => {
         saleorApiUrl,
         checkoutOrOrderId: "test-order-id",
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isOk()).toBe(true);
 
-      expect(result._unsafeUnwrap()).toHaveLength(1);
+      expect(result._unsafeUnwrap().clientLogs).toHaveLength(1);
 
-      expect(result._unsafeUnwrap()[0]).toBeInstanceOf(ClientLog);
+      expect(result._unsafeUnwrap().clientLogs[0]).toBeInstanceOf(ClientLog);
     });
 
     it("should return an empty array when no items are found in the database", async () => {
@@ -413,11 +419,12 @@ describe("LogsRepositoryDynamodb", () => {
         saleorApiUrl,
         checkoutOrOrderId: "test-order-id",
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isOk()).toBe(true);
 
-      expect(result._unsafeUnwrap()).toEqual([]);
+      expect(result._unsafeUnwrap()).toStrictEqual({ clientLogs: [], lastEvaluatedKey: undefined });
     });
 
     it("should return an error when data cannot be mapped to ClientLog", async () => {
@@ -473,6 +480,7 @@ describe("LogsRepositoryDynamodb", () => {
         saleorApiUrl,
         checkoutOrOrderId: "test-order-id",
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -506,6 +514,7 @@ describe("LogsRepositoryDynamodb", () => {
         saleorApiUrl,
         checkoutOrOrderId: "test-order-id",
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -526,6 +535,7 @@ describe("LogsRepositoryDynamodb", () => {
         saleorApiUrl,
         checkoutOrOrderId: "test-order-id",
         appId,
+        lastEvaluatedKey: undefined,
       });
 
       expect(result.isErr()).toBe(true);
@@ -560,9 +570,13 @@ describe("LogsRepositoryMemory", () => {
         // endDate = startDate + 1h
         endDate: new Date(new Date().getTime() + 60 * 60 * 1000),
         appId,
+        lastEvaluatedKey: undefined,
       });
 
-      expect(result._unsafeUnwrap()).toEqual([testLog]);
+      expect(result._unsafeUnwrap()).toStrictEqual({
+        clientLogs: [testLog],
+        lastEvaluatedKey: undefined,
+      });
     });
   });
 
@@ -611,9 +625,13 @@ describe("LogsRepositoryMemory", () => {
         saleorApiUrl,
         appId,
         checkoutOrOrderId: "test-order-id",
+        lastEvaluatedKey: undefined,
       });
 
-      expect(result._unsafeUnwrap()).toEqual([testLog]);
+      expect(result._unsafeUnwrap()).toStrictEqual({
+        clientLogs: [testLog],
+        lastEvaluatedKey: undefined,
+      });
     });
   });
 });

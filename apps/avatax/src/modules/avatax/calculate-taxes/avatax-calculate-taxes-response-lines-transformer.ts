@@ -76,6 +76,8 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
             total_net_amount: lineTotalNetAmount,
             tax_code: line.taxCode,
             tax_rate: rate,
+            line_taxable_amount: line.taxableAmount,
+            line_tax_calculated: line.taxCalculated,
           },
         );
 

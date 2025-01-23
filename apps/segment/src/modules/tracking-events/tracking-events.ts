@@ -1,7 +1,9 @@
+import Decimal from "decimal.js-light";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 import { OrderBaseFragment } from "@/generated/graphql";
+import { filterEmptyValuesFromObject } from "@/lib/filter-empty-values-from-object";
 
 export type TrackingBaseEvent = {
   type: string;
@@ -34,29 +36,28 @@ const getUserInfo = ({ user, userEmail }: OrderBaseFragment) => {
   } as const;
 };
 
+const getProductInfo = (line: OrderBaseFragment["lines"][number]) => ({
+  product_id: line.id,
+  sku: line.productSku,
+  category: line.variant?.product.category?.name,
+  name: line.variant?.product.name,
+  variant: line.variant?.name,
+  price: line.totalPrice.gross.amount,
+  quantity: line.quantity,
+  coupon: line.voucherCode,
+});
+
+const getDiscount = (args: {
+  total: OrderBaseFragment["total"];
+  undiscountedTotal: OrderBaseFragment["undiscountedTotal"];
+}) => new Decimal(args.total.gross.amount).sub(args.undiscountedTotal.gross.amount).toNumber();
+
 /**
  * Semantic events from Segment:
  * https://segment.com/docs/connections/spec/ecommerce/v2/
  */
 export const trackingEventFactory = {
-  createOrderCreatedEvent({
-    orderBase,
-    issuedAt,
-  }: {
-    orderBase: OrderBaseFragment;
-    issuedAt: string | null | undefined;
-  }): TrackingBaseEvent {
-    const { user, userEmail, ...order } = orderBase;
-
-    return {
-      type: "Saleor Order Created",
-      user: getUserInfo(orderBase),
-      issuedAt,
-      payload: {
-        ...order,
-      },
-    };
-  },
+  // https://segment.com/docs/connections/spec/ecommerce/v2/#order-updated
   createOrderUpdatedEvent({
     orderBase,
     issuedAt,
@@ -70,11 +71,23 @@ export const trackingEventFactory = {
       type: "Saleor Order Updated",
       user: getUserInfo(orderBase),
       issuedAt,
-      payload: {
-        ...order,
-      },
+      payload: filterEmptyValuesFromObject({
+        order_id: order.id,
+        channel_id: order.channel.id,
+        total: order.total.gross.amount,
+        shipping: order.shippingPrice.gross.amount,
+        tax: order.total.tax.amount,
+        discount: getDiscount({
+          total: order.total,
+          undiscountedTotal: order.undiscountedTotal,
+        }),
+        coupon: order.voucherCode,
+        currency: order.total.gross.currency,
+        products: order.lines.map(getProductInfo),
+      }),
     };
   },
+  // https://segment.com/docs/connections/spec/ecommerce/v2/#order-cancelled
   createOrderCancelledEvent({
     orderBase,
     issuedAt,
@@ -88,11 +101,23 @@ export const trackingEventFactory = {
       type: "Saleor Order Cancelled",
       user: getUserInfo(orderBase),
       issuedAt,
-      payload: {
-        ...order,
-      },
+      payload: filterEmptyValuesFromObject({
+        order_id: order.id,
+        channel_id: order.channel.id,
+        total: order.total.gross.amount,
+        shipping: order.shippingPrice?.gross.amount,
+        tax: order.total.tax.amount,
+        discount: getDiscount({
+          total: order.total,
+          undiscountedTotal: order.undiscountedTotal,
+        }),
+        coupon: order.voucherCode,
+        currency: order.total.gross.currency,
+        products: order.lines.map(getProductInfo),
+      }),
     };
   },
+  // https://segment.com/docs/connections/spec/ecommerce/v2/#order-refunded
   createOrderRefundedEvent({
     orderBase,
     issuedAt,
@@ -106,11 +131,14 @@ export const trackingEventFactory = {
       type: "Saleor Order Refunded",
       user: getUserInfo(orderBase),
       issuedAt,
-      payload: {
-        ...order,
-      },
+      payload: filterEmptyValuesFromObject({
+        order_id: order.id,
+        channel_id: order.channel.id,
+        products: order.lines.map(getProductInfo),
+      }),
     };
   },
+  // https://segment.com/docs/connections/spec/ecommerce/v2/#order-completed
   createOrderCompletedEvent({
     orderBase,
     issuedAt,
@@ -124,9 +152,20 @@ export const trackingEventFactory = {
       type: "Saleor Order Completed",
       user: getUserInfo(orderBase),
       issuedAt,
-      payload: {
-        ...order,
-      },
+      payload: filterEmptyValuesFromObject({
+        order_id: order.id,
+        channel_id: order.channel.id,
+        total: order.total.gross.amount,
+        shipping: order.shippingPrice?.gross.amount,
+        tax: order.total.tax.amount,
+        discount: getDiscount({
+          total: order.total,
+          undiscountedTotal: order.undiscountedTotal,
+        }),
+        coupon: order.voucherCode,
+        currency: order.total.gross.currency,
+        products: order.lines.map(getProductInfo),
+      }),
     };
   },
 };

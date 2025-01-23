@@ -4,19 +4,17 @@ import { ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
 import { Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 import { RootConfig } from "../schemas/root-config.schema";
 
-const Schema = RootConfig.Schema.unwrap();
-
-type Shape = z.infer<typeof Schema>;
-
-const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): void }) => {
+const SegmentConfigFormBase = (props: {
+  values: RootConfig.Shape;
+  onSubmit(values: RootConfig.Shape): void;
+}) => {
   const { control, handleSubmit } = useForm({
-    resolver: zodResolver(Schema),
+    resolver: zodResolver(RootConfig.Schema),
     defaultValues: props.values,
   });
 
@@ -35,6 +33,7 @@ const SegmentConfigFormBase = (props: { values: Shape; onSubmit(values: Shape): 
         name="segmentWriteKey"
         type="password"
         label="Segment write key"
+        required
         helperText={
           <Text>
             Read about write keys in{" "}
@@ -54,7 +53,7 @@ export const SegmentConfigForm = () => {
   const { data: config, isLoading, refetch } = trpcClient.configuration.getConfig.useQuery();
   const utils = trpcClient.useUtils();
 
-  const { mutate } = trpcClient.configuration.setConfig.useMutation({
+  const { mutate } = trpcClient.configuration.setOrCreateSegmentWriteKey.useMutation({
     onSuccess() {
       notifySuccess("Configuration saved");
       refetch();

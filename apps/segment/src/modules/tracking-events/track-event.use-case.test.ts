@@ -1,6 +1,7 @@
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
+import { AppConfig } from "../configuration/app-config";
 import { ISegmentClient } from "../segment/segment.client";
 import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
 import { SegmentEventsTracker } from "../segment/segment-events-tracker";
@@ -19,6 +20,7 @@ describe("TrackEventUseCase", () => {
       return Promise.resolve(ok(mockedSegmentEventTracker));
     },
   };
+  const mockedAppConfig = new AppConfig({ segmentWriteKey: "key" });
 
   it("creates instance", () => {
     const instance = new TrackEventUseCase({
@@ -33,35 +35,37 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });
 
-    await useCase.track(event);
+    await useCase.track(event, mockedAppConfig);
 
     expect(mockedSegmentClient.track).toHaveBeenCalledWith({
-      event: "Saleor Order Created",
+      event: "Saleor Order Updated",
       issuedAt: "2025-01-07",
       properties: {
-        channel: {
-          id: "channel-id",
-          name: "channel-name",
-          slug: "channel-slug",
-        },
-        id: "order-id",
-        lines: [],
-        number: "order-number",
-        total: {
-          gross: {
-            amount: 37,
-            currency: "USD",
+        coupon: undefined,
+        currency: "USD",
+        discount: 7,
+        order_id: "order-id",
+        channel_id: "channel-id",
+        products: [
+          {
+            category: "categoryName",
+            coupon: undefined,
+            name: "productName",
+            price: 37,
+            product_id: "line-id",
+            quantity: 1,
+            sku: "sku",
+            variant: "variantName",
           },
-          net: {
-            amount: 21,
-            currency: "USD",
-          },
-        },
+        ],
+        shipping: 5,
+        tax: 0.21,
+        total: 37,
       },
       user: {
         id: "user-email",
@@ -81,12 +85,12 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event);
+    const result = await useCase.track(event, mockedAppConfig);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseSegmentClientError,
@@ -111,12 +115,12 @@ describe("TrackEventUseCase", () => {
       segmentEventTrackerFactory: mockedSegmentEventTrackerFactory,
     });
 
-    const event = trackingEventFactory.createOrderCreatedEvent({
+    const event = trackingEventFactory.createOrderUpdatedEvent({
       orderBase: mockedOrderBase,
       issuedAt: "2025-01-07",
     });
 
-    const result = await useCase.track(event);
+    const result = await useCase.track(event, mockedAppConfig);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
       TrackEventUseCase.TrackEventUseCaseUnknownError,
