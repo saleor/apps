@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.12
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 0.2.11
 
 ### Patch Changes

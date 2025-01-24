@@ -1,0 +1,12 @@
+fragment OrderConfirmedSubscriptionPayload on OrderConfirmed {
+  issuedAt
+  order {
+    ...OrderBase
+  }
+}
+
+subscription OrderConfirmed {
+  event {
+    ...OrderConfirmedSubscriptionPayload
+  }
+}

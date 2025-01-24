@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.3
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 0.2.2
 
 ### Patch Changes

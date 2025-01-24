@@ -1,5 +1,38 @@
 # app-avatax
 
+## 1.12.6
+
+### Patch Changes
+
+- 0f0bff21: Move `ThemeSynchronizer` utility to shared packages.
+- 18a9c3d9: Implement client logs cache. Right now app will cache request for 1 day and revalidate the cache every 60 seconds.
+  Added forward / backward pagination to client logs. After this change end user can browse logs that exceeds current pagination limit (first 100).
+- e195c8d7: Remove feature flag for client logs. After this change logs are enabled by default.
+- e3e0d6d2: Added test for suspicious line+tax calculation checker and additional debugging logs
+
+## 1.12.5
+
+### Patch Changes
+
+- 0db174a8: Removed regex escape for `ALLOWED_DOMAINS_URL` env variable from register handler. It isn't user input and escaping regex was causing problem with apps installation.
+
+## 1.12.4
+
+### Patch Changes
+
+- 9bbf9ee5: Increased Vercel log limit to new value - 256KB. See [announcement](https://vercel.com/changelog/updated-logging-limits-for-vercel-functions) blog post from Vercel for more details.
+- 9bbf9ee5: Escape ALLOWED_DOMAIN_PATTERN regex. It ensures that regex constructed from env variable is sanitized and can't be used to Denial of Service attack.
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+- 9bbf9ee5: Add log when suspicious calculation happen - when line tax rate is non-zero but amount of taxes is zero
+- Updated dependencies [9bbf9ee5]
+- Updated dependencies [9bbf9ee5]
+  - @saleor/apps-logger@1.4.3
+  - @saleor/react-hook-form-macaw@0.2.12
+  - @saleor/webhook-utils@0.2.3
+  - @saleor/apps-shared@1.11.4
+  - @saleor/apps-otel@1.3.5
+  - @saleor/apps-ui@1.2.10
+
 ## 1.12.3
 
 ### Patch Changes

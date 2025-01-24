@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.7
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,130 +1,116 @@
-import * as Sentry from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
-import { err, ok } from "neverthrow";
 import { z } from "zod";
 
-import { createLogger } from "@/logger";
+import { env } from "@/env";
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
-import { clientLogsFeatureConfig } from "@/modules/client-logs/client-logs-feature-config";
 import {
   createLogsDocumentClient,
   createLogsDynamoClient,
 } from "@/modules/client-logs/dynamo-client";
-import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
+import { LastEvaluatedKey, LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
 
 import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-schema";
 
-// TODO: Remove this lazy method once feature is not behind feature flag
-const getLogsRepository = () => {
-  const logger = createLogger("getLogsRepository");
-
-  if (!clientLogsFeatureConfig.dynamoTableName) {
-    logger.warn("DYNAMODB_LOGS_TABLE_NAME is not set.");
-
-    return err(new Error("DYNAMODB_LOGS_TABLE_NAME is not set."));
-  }
-
-  const logsTable = LogsTable.create({
-    documentClient: createLogsDocumentClient(createLogsDynamoClient()),
-    tableName: clientLogsFeatureConfig.dynamoTableName,
-  });
-  const logByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);
-  const logByCheckoutOrOrderId =
-    ClientLogDynamoEntityFactory.createLogByCheckoutOrOrderId(logsTable);
-
-  return ok(
-    new LogsRepositoryDynamodb({
-      logsTable,
-      logByDateEntity,
-      logByCheckoutOrOrderId: logByCheckoutOrOrderId,
-    }),
-  );
-};
-
-const procedureWithFlag = protectedClientProcedure.use(({ ctx, next }) => {
-  if (!clientLogsFeatureConfig.isEnabled) {
-    throw new TRPCError({
-      cause: "Feature disabled",
-      code: "FORBIDDEN",
-      message: "Feature is disabled",
+const procedureWithLogsRepository = protectedClientProcedure.use(({ ctx, next }) => {
+  try {
+    const logsTable = LogsTable.create({
+      documentClient: createLogsDocumentClient(createLogsDynamoClient()),
+      tableName: env.DYNAMODB_LOGS_TABLE_NAME,
     });
-  }
+    const logByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);
+    const logByCheckoutOrOrderId =
+      ClientLogDynamoEntityFactory.createLogByCheckoutOrOrderId(logsTable);
 
-  const logsRepositoryResult = getLogsRepository();
-
-  if (logsRepositoryResult.isErr()) {
-    Sentry.captureException(logsRepositoryResult.error);
-
+    return next({
+      ctx: {
+        ...ctx,
+        logsRepository: new LogsRepositoryDynamodb({
+          logsTable,
+          logByDateEntity,
+          logByCheckoutOrOrderId,
+        }),
+      },
+    });
+  } catch (e) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Logs unavailable, contact support",
+      message: "Logs are not available, contact Saleor support",
     });
   }
-
-  return next({
-    ctx: {
-      ...ctx,
-      logsRepository: logsRepositoryResult.value,
-    },
-  });
 });
 
 /**
- * TODO: Implement pagination
  *
  * Router that fetches logs in the frontend.
  * To write log, use directly repository
  */
 export const clientLogsRouter = router({
-  isEnabled: protectedClientProcedure.query(({ ctx }) => {
-    return clientLogsFeatureConfig.isEnabled;
-  }),
-  getByDate: procedureWithFlag
+  getByDate: procedureWithLogsRepository
     .input(
       z.object({
         startDate: z.string().datetime(),
         endDate: z.string().datetime(),
+        lastEvaluatedKey: z.record(z.unknown()).optional(),
       }),
     )
-    .query(async ({ input, ctx }): Promise<ClientLogValue[]> => {
-      const logsResult = await ctx.logsRepository.getLogsByDate({
-        startDate: new Date(input.startDate),
-        endDate: new Date(input.endDate),
-        appId: ctx.appId,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
-
-      if (logsResult.isErr()) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch logs",
+    .query(
+      async ({
+        input,
+        ctx,
+      }): Promise<{ clientLogs: ClientLogValue[]; lastEvaluatedKey: LastEvaluatedKey }> => {
+        const logsResult = await ctx.logsRepository.getLogsByDate({
+          startDate: new Date(input.startDate),
+          endDate: new Date(input.endDate),
+          appId: ctx.appId,
+          saleorApiUrl: ctx.saleorApiUrl,
+          lastEvaluatedKey: input.lastEvaluatedKey,
         });
-      }
 
-      return logsResult.value.map((l) => l.getValue());
-    }),
-  getByCheckoutOrOrderId: procedureWithFlag
+        if (logsResult.isErr()) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch logs",
+          });
+        }
+
+        return {
+          clientLogs: logsResult.value.clientLogs.map((l) => l.getValue()),
+          lastEvaluatedKey: logsResult.value.lastEvaluatedKey,
+        };
+      },
+    ),
+  getByCheckoutOrOrderId: procedureWithLogsRepository
     .input(
       z.object({
         checkoutOrOrderId: z.string(),
+        lastEvaluatedKey: z.record(z.unknown()).optional(),
       }),
     )
-    .query(async ({ input, ctx }): Promise<ClientLogValue[]> => {
-      const logsResult = await ctx.logsRepository.getLogsByCheckoutOrOrderId({
-        checkoutOrOrderId: input.checkoutOrOrderId,
-        appId: ctx.appId,
-        saleorApiUrl: ctx.saleorApiUrl,
-      });
-
-      if (logsResult.isErr()) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch logs",
+    .query(
+      async ({
+        input,
+        ctx,
+      }): Promise<{ clientLogs: ClientLogValue[]; lastEvaluatedKey: LastEvaluatedKey }> => {
+        const logsResult = await ctx.logsRepository.getLogsByCheckoutOrOrderId({
+          checkoutOrOrderId: input.checkoutOrOrderId,
+          appId: ctx.appId,
+          saleorApiUrl: ctx.saleorApiUrl,
+          lastEvaluatedKey: input.lastEvaluatedKey,
         });
-      }
 
-      return logsResult.value.map((l) => l.getValue());
-    }),
+        if (logsResult.isErr()) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch logs",
+          });
+        }
+
+        return {
+          clientLogs: logsResult.value.clientLogs.map((l) => l.getValue()),
+          lastEvaluatedKey: logsResult.value.lastEvaluatedKey,
+        };
+      },
+    ),
 });

@@ -1,5 +1,13 @@
 # @saleor/trpc
 
+## 3.0.4
+
+### Patch Changes
+
+- 9bbf9ee5: Fixed autofixable linting issues. No functional changes.
+- Updated dependencies [9bbf9ee5]
+  - @saleor/apps-shared@1.11.4
+
 ## 3.0.3
 
 ### Patch Changes
