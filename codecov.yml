@@ -1,0 +1,51 @@
+coverage:
+  status:
+    project:
+      default: off
+      app-avatax:
+        flags: avatax
+      app-cms:
+        flags: cms
+      app-products-feed:
+        flags: products-feed
+      app-search:
+        flags: search
+      app-segment:
+        flags: segment
+      app-smtp:
+        flags: smtp
+      packages-logger:
+        flags: logger
+      packages-shared:
+        flags: shared
+      packages-webhook-utils:
+        flags: webhook-utils
+
+flags:
+  avatax:
+    paths:
+      - apps/avatax/
+  cms:
+    paths:
+      - apps/cms-v2/
+  products-feed:
+    paths:
+      - apps/products-feed/
+  search:
+    paths:
+      - apps/search/
+  segment:
+    paths:
+      - apps/segment/
+  smtp:
+    paths:
+      - apps/smtp/
+  logger:
+    paths:
+      - packages/logger/
+  shared:
+    paths:
+      - packages/shared/
+  webhook-utils:
+    paths:
+      - packages/webhook-utils/

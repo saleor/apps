@@ -13,7 +13,8 @@
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.651.1",
@@ -84,6 +85,7 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@typescript-eslint/eslint-plugin": "7.15.0",
+    "@vitest/coverage-v8": "1.6.0",
     "@typescript-eslint/parser": "7.15.0",
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "../../node_modules/eslint",
