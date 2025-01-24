@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.332.0",
@@ -75,6 +76,7 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@vitest/coverage-v8": "1.6.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "eslint": "../../node_modules/eslint",

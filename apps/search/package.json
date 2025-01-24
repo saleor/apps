@@ -12,7 +12,8 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -74,6 +75,7 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitejs/plugin-react": "4.3.1",
+    "@vitest/coverage-v8": "1.6.0",
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
     "node-mocks-http": "^1.12.2",
