@@ -4,6 +4,9 @@ on:
     types:
       - synchronize
       - opened
+  push:
+    branches:
+      - main
 
 jobs:
   lint:
