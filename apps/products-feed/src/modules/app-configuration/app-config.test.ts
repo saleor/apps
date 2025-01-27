@@ -25,6 +25,7 @@ const exampleAttributeMappingConfig: RootConfig["attributeMapping"] = {
   materialAttributeIds: [],
   sizeAttributeIds: [],
   gtinAttributeIds: [],
+  shippingLabelAttributeIds: [],
 };
 
 const exampleTitleTemplate: RootConfig["titleTemplate"] =
@@ -120,6 +121,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -174,6 +176,7 @@ describe("AppConfig", function () {
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
         gtinAttributeIds: [],
+        shippingLabelAttributeIds: [],
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       imageSize: 1024,

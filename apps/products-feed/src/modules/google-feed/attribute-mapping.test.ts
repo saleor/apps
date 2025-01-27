@@ -158,6 +158,7 @@ describe("attribute-mapping", () => {
             materialAttributeIds: ["material-id"],
             sizeAttributeIds: ["size-id"],
             gtinAttributeIds: ["gtin-id"],
+            shippingLabelAttributeIds: ["shipping-label-id"],
           },
         }),
       ).toStrictEqual({
@@ -271,6 +272,7 @@ describe("attribute-mapping", () => {
             sizeAttributeIds: ["size-id"],
             patternAttributeIds: ["pattern-id"],
             gtinAttributeIds: ["gtin-id"],
+            shippingLabelAttributeIds: ["shipping-label-id"],
           },
         }),
       ).toStrictEqual({
