@@ -168,6 +168,7 @@ describe("attribute-mapping", () => {
         brand: undefined,
         pattern: undefined,
         gtin: undefined,
+        shipping_label: undefined,
       });
     });
 
@@ -282,6 +283,7 @@ describe("attribute-mapping", () => {
         brand: "Saleor",
         pattern: "Plain",
         gtin: "01234500001-0",
+        shipping_label: undefined,
       });
     });
   });
