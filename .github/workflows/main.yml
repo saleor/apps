@@ -4,6 +4,9 @@ on:
     types:
       - synchronize
       - opened
+  push:
+    branches:
+      - main
 
 jobs:
   lint:
@@ -53,4 +56,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:ci
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps

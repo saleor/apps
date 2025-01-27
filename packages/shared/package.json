@@ -5,7 +5,8 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@urql/exchange-auth": "2.1.4",
@@ -24,6 +25,7 @@
     "react-dom": "18.2.0",
     "typescript": "5.5.4",
     "urql": "4.0.4",
+    "@vitest/coverage-v8": "1.6.0",
     "vite": "5.3.3",
     "vitest": "1.6.0",
     "zod": "3.21.4"
