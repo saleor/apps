@@ -4,5 +4,6 @@
     "src/pages/api/webhooks/*.*": {
       "memory": 512
     }
-  }
+  },
+  "regions": ["dub1", "iad1"]
 }
