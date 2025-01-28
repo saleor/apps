@@ -1,6 +1,7 @@
 fragment WebhookProductVariant on ProductVariant {
   id
   name
+  sku
   product {
     id
     name

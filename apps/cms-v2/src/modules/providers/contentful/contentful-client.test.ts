@@ -1,9 +1,9 @@
-import { beforeEach,describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ContentfulProviderConfig } from "@/modules/configuration";
 
 import { WebhookProductVariantFragment } from "../../../../generated/graphql";
-import { ContentfulApiClientChunk,ContentfulClient } from "./contentful-client";
+import { ContentfulApiClientChunk, ContentfulClient } from "./contentful-client";
 
 const getMockContenfulConfiguration = (): ContentfulProviderConfig.FullShape => ({
   authToken: "test-token",
@@ -20,6 +20,7 @@ const getMockContenfulConfiguration = (): ContentfulProviderConfig.FullShape => 
     productSlug: "product-slug",
     variantId: "variant-id",
     variantName: "variant-name",
+    sku: "sku",
   },
 });
 
@@ -27,6 +28,7 @@ const getMockWebhookProductVariant = (): WebhookProductVariantFragment => {
   return {
     id: "test-id",
     name: "test-name",
+    sku: "test-sku",
     product: {
       id: "test-product-id",
       name: "test-product-name",
@@ -107,7 +109,26 @@ describe("ContentfulClient", () => {
   describe("updateProductVariant", () => {
     it("Mutates the entry fields and calls update method", async () => {
       const mockEntry = {
-        fields: {},
+        fields: {
+          [getMockContenfulConfiguration().productVariantFieldsMapping.productId]: {
+            "en-US": getMockWebhookProductVariant().product.id,
+          },
+          [getMockContenfulConfiguration().productVariantFieldsMapping.productName]: {
+            "en-US": getMockWebhookProductVariant().product.name,
+          },
+          [getMockContenfulConfiguration().productVariantFieldsMapping.productSlug]: {
+            "en-US": getMockWebhookProductVariant().product.slug,
+          },
+          [getMockContenfulConfiguration().productVariantFieldsMapping.variantId]: {
+            "en-US": getMockWebhookProductVariant().id,
+          },
+          [getMockContenfulConfiguration().productVariantFieldsMapping.variantName]: {
+            "en-US": getMockWebhookProductVariant().name,
+          },
+          [getMockContenfulConfiguration().productVariantFieldsMapping.channels]: {
+            "en-US": getMockWebhookProductVariant().channelListings,
+          },
+        },
         update: vi.fn().mockReturnValue(Promise.resolve({})),
       };
 
@@ -153,6 +174,9 @@ describe("ContentfulClient", () => {
         },
         [mockMapping.variantName]: {
           "en-US": mockVariant.name,
+        },
+        [mockMapping.sku]: {
+          "en-US": mockVariant.sku,
         },
         [mockMapping.channels]: {
           "en-US": mockVariant.channelListings,
@@ -221,6 +245,9 @@ describe("ContentfulClient", () => {
           [mockMapping.variantName]: {
             "en-US": mockVariant.name,
           },
+          [mockMapping.sku]: {
+            "en-US": mockVariant.sku,
+          },
           [mockMapping.channels]: {
             "en-US": mockVariant.channelListings,
           },
@@ -262,6 +289,9 @@ describe("ContentfulClient", () => {
           [mockMapping.variantName]: {
             "en-US": mockVariant.name,
           },
+          [mockMapping.sku]: {
+            "en-US": mockVariant.sku,
+          },
           [mockMapping.channels]: {
             "en-US": mockVariant.channelListings,
           },
@@ -276,7 +306,26 @@ describe("ContentfulClient", () => {
       const mockVariant = getMockWebhookProductVariant();
 
       const mockEntry = {
-        fields: {},
+        fields: {
+          [mockMapping.productId]: {
+            "en-US": mockVariant.product.id,
+          },
+          [mockMapping.productName]: {
+            "en-US": mockVariant.product.name,
+          },
+          [mockMapping.productSlug]: {
+            "en-US": mockVariant.product.slug,
+          },
+          [mockMapping.variantId]: {
+            "en-US": mockVariant.id,
+          },
+          [mockMapping.variantName]: {
+            "en-US": mockVariant.name,
+          },
+          [mockMapping.channels]: {
+            "en-US": mockVariant.channelListings,
+          },
+        },
         update: vi.fn().mockReturnValue(Promise.resolve({})),
       };
 
@@ -288,7 +337,6 @@ describe("ContentfulClient", () => {
         variant: mockVariant,
       });
 
-      // todo fix
       expect(mockEntry.fields).toEqual({
         [mockMapping.productId]: {
           "en-US": mockVariant.product.id,
@@ -304,6 +352,9 @@ describe("ContentfulClient", () => {
         },
         [mockMapping.variantName]: {
           "en-US": mockVariant.name,
+        },
+        [mockMapping.sku]: {
+          "en-US": mockVariant.sku,
         },
         [mockMapping.channels]: {
           "en-US": mockVariant.channelListings,
