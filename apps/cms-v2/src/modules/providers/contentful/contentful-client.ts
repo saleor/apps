@@ -57,6 +57,7 @@ export class ContentfulClient {
       productName,
       productSlug,
       variantId,
+      sku,
     } = productVariantFieldsMapping;
 
     return {
@@ -74,6 +75,9 @@ export class ContentfulClient {
       },
       [variantId]: {
         "en-US": variant.id,
+      },
+      [sku]: {
+        "en-US": variant.sku,
       },
       [channels]: {
         "en-US": variant.channelListings,

@@ -1,4 +1,4 @@
-import { beforeEach,describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { AppConfig } from "./app-config";
 import { ContentfulProviderConfig } from "./schemas/contentful-provider.schema";
@@ -18,6 +18,7 @@ const getMockContentfulInput = (): ContentfulProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      sku: "sku",
     },
     spaceId: "test",
   };
@@ -35,6 +36,7 @@ const getMockDatocmsInput = (): DatocmsProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      sku: "sku",
     },
   };
 };
