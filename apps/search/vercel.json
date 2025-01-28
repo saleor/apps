@@ -3,5 +3,6 @@
     "src/pages/api/webhooks/saleor/**/*": {
       "memory": 256
     }
-  }
+  },
+  "regions": ["dub1", "iad1"]
 }
