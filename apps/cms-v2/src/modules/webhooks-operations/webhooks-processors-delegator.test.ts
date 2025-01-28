@@ -1,4 +1,4 @@
-import { beforeEach,describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WebhookProductVariantFragment } from "../../../generated/graphql";
 import { AppConfig, ContentfulProviderConfig, DatocmsProviderConfig } from "../configuration";
@@ -19,6 +19,7 @@ const getMockContentfulInput = (): ContentfulProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      sku: "sku",
     },
     spaceId: "test",
   };
@@ -37,6 +38,7 @@ const getMockDatocmsInput = (): DatocmsProviderConfig.InputShape => {
       productSlug: "productSlug",
       variantId: "variantId",
       variantName: "variantName",
+      sku: "sku",
     },
   };
 };
@@ -82,6 +84,7 @@ const getMockProductVariantWebhookFragment = (): WebhookProductVariantFragment =
   return {
     id: "variant-id",
     name: "variant-name",
+    sku: "test-sku",
     product: {
       id: "product-id",
       name: "product-name",

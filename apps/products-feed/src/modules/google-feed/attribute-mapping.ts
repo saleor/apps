@@ -62,12 +62,18 @@ export const getMappedAttributes = ({
   );
   const gtinValue = attributeArrayToValueString(gtinAttributes);
 
+  const shippingLabelAttributes = attributes.filter((a) =>
+    mapping.shippingLabelAttributeIds.includes(a.attribute.id),
+  );
+  const shippingLabelValue = attributeArrayToValueString(shippingLabelAttributes);
+
   return {
     material: materialValue,
     brand: brandValue,
     color: colorValue,
     size: sizeValue,
     pattern: patternValue,
+    shipping_label: shippingLabelValue,
     gtin: gtinValue,
   };
 };
