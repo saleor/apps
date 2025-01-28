@@ -1,7 +1,11 @@
 coverage:
   status:
+    patch:
+      default:
+        informational: true
     project:
-      default: off
+      default:
+        informational: true
       app-avatax:
         flags: [avatax]
       app-cms:
