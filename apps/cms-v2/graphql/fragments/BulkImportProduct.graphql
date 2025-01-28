@@ -5,6 +5,7 @@ fragment BulkImportProduct on Product {
   variants {
     id
     name
+    sku
     channelListings {
       channel {
         id
