@@ -158,6 +158,7 @@ describe("attribute-mapping", () => {
             materialAttributeIds: ["material-id"],
             sizeAttributeIds: ["size-id"],
             gtinAttributeIds: ["gtin-id"],
+            shippingLabelAttributeIds: ["shipping-label-id"],
           },
         }),
       ).toStrictEqual({
@@ -167,6 +168,7 @@ describe("attribute-mapping", () => {
         brand: undefined,
         pattern: undefined,
         gtin: undefined,
+        shipping_label: undefined,
       });
     });
 
@@ -271,6 +273,7 @@ describe("attribute-mapping", () => {
             sizeAttributeIds: ["size-id"],
             patternAttributeIds: ["pattern-id"],
             gtinAttributeIds: ["gtin-id"],
+            shippingLabelAttributeIds: ["shipping-label-id"],
           },
         }),
       ).toStrictEqual({
@@ -280,6 +283,7 @@ describe("attribute-mapping", () => {
         brand: "Saleor",
         pattern: "Plain",
         gtin: "01234500001-0",
+        shipping_label: undefined,
       });
     });
   });

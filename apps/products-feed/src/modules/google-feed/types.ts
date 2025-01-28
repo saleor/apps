@@ -21,6 +21,7 @@ export type ProductEntry = {
   pattern?: string;
   weight?: string;
   gtin?: string;
+  shipping_label?: string;
 };
 
 export type ShopDetailsEntry = {

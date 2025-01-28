@@ -25,6 +25,7 @@ const attributeMappingSchema = z.object({
   materialAttributeIds: z.array(z.string()).default([]),
   patternAttributeIds: z.array(z.string()).default([]),
   gtinAttributeIds: z.array(z.string()).default([]),
+  shippingLabelAttributeIds: z.array(z.string()).default([]),
 });
 
 const s3ConfigSchema = z.object({

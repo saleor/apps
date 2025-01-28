@@ -99,6 +99,7 @@ export const generateGoogleXmlFeed = ({
       pattern: attributes?.pattern,
       size: attributes?.size,
       gtin: attributes?.gtin,
+      shipping_label: attributes?.shipping_label,
       weight,
       ...pricing,
     });

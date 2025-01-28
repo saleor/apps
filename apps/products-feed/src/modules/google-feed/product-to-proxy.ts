@@ -193,6 +193,16 @@ export const productToProxy = (p: ProductEntry) => {
     });
   }
 
+  if (p.shipping_label) {
+    item.push({
+      "g:shipping_label": [
+        {
+          "#text": p.shipping_label,
+        },
+      ],
+    });
+  }
+
   return {
     item,
   };
