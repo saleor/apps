@@ -25,6 +25,7 @@ const exampleAttributeMappingConfig: RootConfig["attributeMapping"] = {
   materialAttributeIds: [],
   sizeAttributeIds: [],
   gtinAttributeIds: [],
+  shippingLabelAttributeIds: [],
 };
 
 const exampleTitleTemplate: RootConfig["titleTemplate"] =
@@ -55,6 +56,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -88,6 +90,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: [],
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -120,6 +123,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -144,6 +148,7 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: [],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: [],
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -174,6 +179,7 @@ describe("AppConfig", function () {
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
         gtinAttributeIds: [],
+        shippingLabelAttributeIds: ["shipping-label-id"],
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       imageSize: 1024,
@@ -202,6 +208,37 @@ describe("AppConfig", function () {
           materialAttributeIds: [],
           sizeAttributeIds: ["size-id"],
           gtinAttributeIds: [],
+          shippingLabelAttributeIds: ["shipping-label-id"],
+        },
+        titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
+        imageSize: 1024,
+      });
+    });
+
+    it("getRootConfig returns root config data with shipping label attributes", () => {
+      expect(instance.getRootConfig()).toEqual({
+        s3: {
+          region: "region",
+          bucketName: "bucket",
+          accessKeyId: "access",
+          secretAccessKey: "secret",
+        },
+        channelConfig: {
+          test: {
+            storefrontUrls: {
+              productStorefrontUrl: "https://example.com",
+              storefrontUrl: "https://example.com/p/{{ variant.product.slug }}",
+            },
+          },
+        },
+        attributeMapping: {
+          brandAttributeIds: [],
+          colorAttributeIds: [],
+          patternAttributeIds: [],
+          materialAttributeIds: [],
+          sizeAttributeIds: ["size-id"],
+          gtinAttributeIds: [],
+          shippingLabelAttributeIds: ["shipping-label-id"],
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
@@ -234,6 +271,7 @@ describe("AppConfig", function () {
         materialAttributeIds: [],
         sizeAttributeIds: ["size-id"],
         gtinAttributeIds: [],
+        shippingLabelAttributeIds: ["shipping-label-id"],
       });
     });
   });

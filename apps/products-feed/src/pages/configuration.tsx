@@ -215,6 +215,11 @@ const ConfigurationPage: NextPage = () => {
                   Size
                 </TextLink>
               </li>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324504" newTab>
+                  Shipping Label
+                </TextLink>
+              </li>
             </ul>
           </Box>
         }

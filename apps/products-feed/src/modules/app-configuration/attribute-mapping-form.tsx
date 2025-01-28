@@ -71,6 +71,12 @@ export const AttributeMappingConfigurationForm = (props: Props) => {
         label="GTIN attributes"
         options={options}
       />
+      <Multiselect
+        control={control}
+        name="shippingLabelAttributeIds"
+        label="Shipping Label attributes"
+        options={options}
+      />
       <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
         <Button type="submit" variant="primary">
           Save mapping
@@ -118,6 +124,7 @@ export const ConnectedAttributeMappingForm = () => {
       patternAttributeIds: [],
       materialAttributeIds: [],
       gtinAttributeIds: [],
+      shippingLabelAttributeIds: [],
     };
   }, [data]);
 
