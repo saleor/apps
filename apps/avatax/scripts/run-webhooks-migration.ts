@@ -1,4 +1,5 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/node";
 
@@ -77,7 +78,14 @@ const runMigrations = async () => {
 
           const baseUrl = new URL(targetUrl).origin;
 
-          return appWebhooks.map((w) => ({ ...w.getWebhookManifest(baseUrl), isActive: enabled }));
+          return appWebhooks.map((w) => {
+            const manifest: WebhookManifest = {
+              ...w.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            };
+
+            return manifest;
+          });
         },
       });
 
