@@ -47,6 +47,7 @@ describe("TrackEventUseCase", () => {
       issuedAt: "2025-01-07",
       properties: {
         coupon: undefined,
+        email: "user-email",
         currency: "USD",
         discount: 7,
         order_id: "order-id",
