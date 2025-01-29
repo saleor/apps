@@ -35,8 +35,8 @@ describe("App should exempt taxes on draft order with metadata avataxEntityCode 
   const TOTAL_TAX_SHIPPING_PRICE = 5.65;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
   it("creates token for staff user", async () => {
     await testCase

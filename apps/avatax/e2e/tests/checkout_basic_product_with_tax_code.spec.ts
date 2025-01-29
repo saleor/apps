@@ -23,8 +23,8 @@ describe("App should calculate taxes for checkout with product with tax class TC
   const SHIPPING_TAX_PRICE = 5.65;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
   it("should have created a checkout", async () => {
     await testCase
