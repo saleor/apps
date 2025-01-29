@@ -8,8 +8,13 @@ export const extractTransactionRedactedLogProperties = (model: CreateTransaction
   companyCode: model.companyCode,
   isAutocommit: model.commit,
   currencyCode: model.currencyCode,
-  linesCount: model.lines.length,
+  lines: model.lines.map((line) => ({
+    amount: line.amount,
+    taxCode: line.taxCode,
+    taxIncluded: line.taxIncluded,
+    discounted: line.discounted,
+    quantity: line.quantity,
+  })),
   date: model.date.toISOString(),
-  isTaxIncluded: model.lines[0]?.taxIncluded ?? false,
   discountAmount: model.discount,
 });
