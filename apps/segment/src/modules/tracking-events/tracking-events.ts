@@ -72,6 +72,7 @@ export const trackingEventFactory = {
       user: getUserInfo(orderBase),
       issuedAt,
       payload: filterEmptyValuesFromObject({
+        email: userEmail,
         order_id: order.id,
         channel_id: order.channel.id,
         total: order.total.gross.amount,
@@ -102,6 +103,7 @@ export const trackingEventFactory = {
       user: getUserInfo(orderBase),
       issuedAt,
       payload: filterEmptyValuesFromObject({
+        email: userEmail,
         order_id: order.id,
         channel_id: order.channel.id,
         total: order.total.gross.amount,
@@ -132,6 +134,7 @@ export const trackingEventFactory = {
       user: getUserInfo(orderBase),
       issuedAt,
       payload: filterEmptyValuesFromObject({
+        email: userEmail,
         order_id: order.id,
         channel_id: order.channel.id,
         products: order.lines.map(getProductInfo),
@@ -153,6 +156,7 @@ export const trackingEventFactory = {
       user: getUserInfo(orderBase),
       issuedAt,
       payload: filterEmptyValuesFromObject({
+        email: userEmail,
         order_id: order.id,
         channel_id: order.channel.id,
         total: order.total.gross.amount,

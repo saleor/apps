@@ -57,6 +57,7 @@ describe("trackingEventFactory", () => {
           "channel_id": "channel-id",
           "currency": "USD",
           "discount": 7,
+          "email": "user-email",
           "order_id": "order-id",
           "products": [
             {

@@ -19,7 +19,7 @@ export const config = {
   },
 };
 
-const logger = createLogger("orderFullyPaidAsyncWebhook");
+const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const configRepository = DynamoConfigRepositoryFactory.create();
 const configManager = DynamoAppConfigManager.create(configRepository);
