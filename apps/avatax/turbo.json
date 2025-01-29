@@ -29,7 +29,8 @@
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_ORG",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "REDIS_URL"
       ]
     },
     "test": {

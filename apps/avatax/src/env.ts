@@ -14,7 +14,7 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file"]).optional().default("file"),
+    APL: z.enum(["saleor-cloud", "file", "redis"]).optional().default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
@@ -36,6 +36,7 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     TEST_SALEOR_API_URL: z.string().optional(),
     VERCEL_URL: z.string().optional(),
+    REDIS_URL: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -69,6 +70,7 @@ export const env = createEnv({
     SECRET_KEY: process.env.SECRET_KEY,
     TEST_SALEOR_API_URL: process.env.TEST_SALEOR_API_URL,
     VERCEL_URL: process.env.VERCEL_URL,
+    REDIS_URL: process.env.REDIS_URL,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

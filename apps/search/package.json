@@ -58,6 +58,7 @@
     "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.9",
+    "redis": "^4.7.0",
     "urql": "4.0.4",
     "zod": "3.21.4"
   },

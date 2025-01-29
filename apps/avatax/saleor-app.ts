@@ -1,5 +1,7 @@
 import { APL, FileAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { RedisAPL } from "@saleor/app-sdk/APL/redis";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
+import { createClient } from "redis";
 
 import { env } from "@/env";
 
@@ -23,6 +25,20 @@ switch (env.APL) {
       token: env.REST_APL_TOKEN,
     });
 
+    break;
+  }
+  case "redis": {
+    if (!env.REDIS_URL) {
+      throw new Error("Redis APL is not configured - missing env variables. Check saleor-app.ts");
+    }
+
+    const client = createClient({
+      url: env.REDIS_URL,
+    });
+
+    apl = new RedisAPL({
+      client,
+    });
     break;
   }
   default: {

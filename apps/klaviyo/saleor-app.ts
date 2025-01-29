@@ -1,5 +1,7 @@
 import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { RedisAPL } from "@saleor/app-sdk/APL/redis";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
+import { createClient } from "redis";
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -32,6 +34,20 @@ switch (aplType) {
 
     break;
   }
+  case "redis": {
+    if (!process.env.REDIS_URL) {
+      throw new Error("Redis APL is not configured - missing env variables. Check saleor-app.ts");
+    }
+
+    const client = createClient({
+      url: process.env.REDIS_URL,
+    });
+
+    apl = new RedisAPL({
+      client,
+    });
+    break;
+  }
   default: {
     throw new Error("Invalid APL config, ");
   }
@@ -39,7 +55,7 @@ switch (aplType) {
 
 if (!process.env.SECRET_KEY && process.env.NODE_ENV === "production") {
   throw new Error(
-    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager."
+    "For production deployment SECRET_KEY is mandatory to use EncryptedSettingsManager.",
   );
 }
 
