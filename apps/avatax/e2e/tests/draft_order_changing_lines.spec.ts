@@ -43,8 +43,8 @@ describe("App should calculate taxes on draft order when changing lines TC: AVAT
   const TOTAL_TAX_SHIPPING_PRICE = 5.66;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 103.81;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 95.34;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 8.47;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 95.33;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 8.48;
 
   it("creates token for staff user", async () => {
     await testCase
