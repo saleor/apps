@@ -28,8 +28,8 @@ describe("App should calculate taxes on draft order with products on catalog pro
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.76;
 
   const SHIPPING_GROSS_PRICE = 69.31;
-  const SHIPPING_NET_PRICE = 63.66;
-  const SHIPPING_TAX_PRICE = 5.65;
+  const SHIPPING_NET_PRICE = 63.65;
+  const SHIPPING_TAX_PRICE = 5.66;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 397.53;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 365.11;

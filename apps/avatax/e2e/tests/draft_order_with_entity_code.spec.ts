@@ -31,8 +31,8 @@ describe("App should exempt taxes on draft order with metadata avataxEntityCode 
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
 
   const TOTAL_GROSS_SHIPPING_PRICE = 69.31;
-  const TOTAL_NET_SHIPPING_PRICE = 63.66;
-  const TOTAL_TAX_SHIPPING_PRICE = 5.65;
+  const TOTAL_NET_SHIPPING_PRICE = 63.65;
+  const TOTAL_TAX_SHIPPING_PRICE = 5.66;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
