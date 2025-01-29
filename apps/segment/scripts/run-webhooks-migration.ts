@@ -1,3 +1,4 @@
+import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/node";
 
@@ -56,6 +57,7 @@ const runMigrations = async () => {
             return [];
           }
 
+          // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
           const enabled = webhooks.some((w) => w.isActive);
 
           const targetUrl = appDetails.appUrl;
@@ -67,7 +69,14 @@ const runMigrations = async () => {
 
           const baseUrl = new URL(targetUrl).origin;
 
-          return appWebhooks.map((w) => w.getWebhookManifest(baseUrl));
+          return appWebhooks.map((w) => {
+            const manifest: WebhookManifest = {
+              ...w.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            };
+
+            return manifest;
+          });
         },
       });
 

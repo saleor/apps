@@ -13,6 +13,6 @@ export class SegmentEventsTracker {
       issuedAt: event.issuedAt,
     });
 
-    this.segmentClient.flush();
+    await this.segmentClient.flush();
   }
 }
