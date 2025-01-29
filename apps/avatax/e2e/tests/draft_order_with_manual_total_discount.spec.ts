@@ -40,8 +40,8 @@ describe("App should calculate taxes for draft order with manual total discount 
   const TOTAL_TAX_PRICE_AFTER_SHIPPING_AFTER_DISCOUNT = 6.2;
 
   const TOTAL_GROSS_SHIPPING_PRICE_AFTER_DISCOUNT = 62.38;
-  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 57.3;
-  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 5.08;
+  const TOTAL_NET_SHIPPING_PRICE_AFTER_DISCOUNT = 57.29;
+  const TOTAL_TAX_SHIPPING_PRICE_AFTER_DISCOUNT = 5.09;
 
   it("creates token for staff user", async () => {
     await testCase
