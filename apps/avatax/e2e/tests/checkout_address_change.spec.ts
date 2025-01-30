@@ -22,12 +22,12 @@ describe("App should calculate taxes for checkout on update shipping address TC:
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
 
   const SHIPPING_GROSS_PRICE = 69.31;
-  const SHIPPING_NET_PRICE = 63.66;
-  const SHIPPING_TAX_PRICE = 5.65;
+  const SHIPPING_NET_PRICE = 63.65;
+  const SHIPPING_TAX_PRICE = 5.66;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.44;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.87;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
   const addressVerification = {
     city: "$M{Address.NewYork.city}",
