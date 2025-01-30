@@ -1,5 +1,12 @@
 # smtp
 
+## 1.2.23
+
+### Patch Changes
+
+- 2f06b1e9: Bumping app-sdk to v0.52.0 - adding native APL support for vercel-kv and redis
+- a8f63fc4: Modified vercel.json to allow multiple regions. Now Vercel will replicate function in "dub1" and "iad1"
+
 ## 1.2.22
 
 ### Patch Changes

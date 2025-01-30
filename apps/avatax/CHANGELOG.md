@@ -1,5 +1,13 @@
 # app-avatax
 
+## 1.12.7
+
+### Patch Changes
+
+- 2f06b1e9: Bumping app-sdk to v0.52.0 - adding native APL support for vercel-kv and redis
+- 99f64efc: - Fixed bug in webhook migration script that was causing app webhooks to be disabled by migration
+- a8f63fc4: Modified vercel.json to allow multiple regions. Now Vercel will replicate function in "dub1" and "iad1"
+
 ## 1.12.6
 
 ### Patch Changes
