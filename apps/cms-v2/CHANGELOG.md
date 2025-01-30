@@ -1,5 +1,16 @@
 # saleor-app-cms-v2
 
+## 2.10.0
+
+### Minor Changes
+
+- 34da7f12: Adding the SKU as synced field to the CMS app
+
+### Patch Changes
+
+- 2f06b1e9: Bumping app-sdk to v0.52.0 - adding native APL support for vercel-kv and redis
+- a8f63fc4: Modified vercel.json to allow multiple regions. Now Vercel will replicate function in "dub1" and "iad1"
+
 ## 2.9.19
 
 ### Patch Changes

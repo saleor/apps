@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.12.20
+
+### Patch Changes
+
+- 2f06b1e9: Bumping app-sdk to v0.52.0 - adding native APL support for vercel-kv and redis
+
 ## 1.12.19
 
 ### Patch Changes

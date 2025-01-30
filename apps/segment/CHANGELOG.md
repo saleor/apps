@@ -1,5 +1,15 @@
 # segment
 
+## 2.0.5
+
+### Patch Changes
+
+- 2f06b1e9: Bumping app-sdk to v0.52.0 - adding native APL support for vercel-kv and redis
+- a8f63fc4: Modified vercel.json to allow multiple regions. Now Vercel will replicate function in "dub1" and "iad1"
+- 99f64efc: - Fixed bug in webhook migration script that was causing app webhooks to be disabled by migration
+  - Awaited Segment flush event - after this change events will be properly send to Segment
+  - Added user email to properties sent to Segment.
+
 ## 2.0.4
 
 ### Patch Changes
