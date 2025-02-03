@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "src/pages/api/webhooks/*": {
-      "memory": 1024,
+      "memory": 256,
       "maxDuration": 15
     }
   },
