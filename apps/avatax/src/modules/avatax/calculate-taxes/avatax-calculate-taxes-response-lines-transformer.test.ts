@@ -1,3 +1,4 @@
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { describe, expect, it } from "vitest";
 
 import { avataxMockFactory } from "../avatax-mock-factory";
@@ -5,6 +6,7 @@ import { AvataxCalculateTaxesResponseLinesTransformer } from "./avatax-calculate
 
 const transformer = new AvataxCalculateTaxesResponseLinesTransformer();
 
+const TAXABLE_TRANSACTION_MOCK = avataxMockFactory.createMockTransaction("taxIncludedShipping");
 const NON_TAXABLE_TRANSACTION_MOCK = avataxMockFactory.createMockTransaction("nonTaxable");
 const NON_TAXABLE_TRANSACTION_MOCK_WITH_DISCOUNT =
   avataxMockFactory.createMockTransaction("nonTaxableWithDiscount");
@@ -84,5 +86,39 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
         tax_rate: 9.5,
       },
     ]);
+  });
+
+  /**
+   * AvaTax will return non-zero rate even if item is not taxable or there is some tax exemption.
+   * That's why we overwrite the rate to be effectively zero too.
+   */
+  describe("GIVEN non-zero tax rate from AvaTax", () => {
+    const transaction = structuredClone(TAXABLE_TRANSACTION_MOCK);
+
+    // Assert only first line
+    transaction.lines![0].details![0].rate = 0.1;
+
+    describe("AND calculated tax from AvaTax is zero", () => {
+      const localTransaction = structuredClone(transaction);
+
+      localTransaction!.lines![0].taxCalculated = 0;
+
+      it("Should return tax rate as zero", () => {
+        const result = transformer.transform(localTransaction);
+
+        expect(result[0].tax_rate).toBe(0);
+      });
+    });
+    describe("AND taxableAmount from AvaTax is zero", () => {
+      const localTransaction = structuredClone(transaction);
+
+      localTransaction!.lines![0].taxableAmount = 0;
+
+      it("Should return tax rate as zero", () => {
+        const result = transformer.transform(localTransaction);
+
+        expect(result[0].tax_rate).toBe(0);
+      });
+    });
   });
 });
