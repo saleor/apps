@@ -44,7 +44,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           };
         }
 
-        const rate = extractIntegerRateFromTaxDetailsRates(
+        let rate = extractIntegerRateFromTaxDetailsRates(
           line.details?.map((details) => details.rate),
         );
 
@@ -68,6 +68,18 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
           .add(new Decimal(lineTaxCalculated))
           .toDecimalPlaces(2)
           .toNumber();
+
+        /**
+         * Avalara will return non-zero rate as a standard rate, but
+         * it's possible that there is a tax exemption. So the tax effectively
+         * is zero, but rate is not.
+         *
+         * In this scenario, we reset rate to 0, so Saleor properly apply such rate in further
+         * calculations
+         */
+        if (lineTaxCalculated === 0 || lineTotalNetAmount === 0) {
+          rate = 0;
+        }
 
         this.logger.info(
           "Transforming taxable product line from AvaTax to Saleor CalculateTaxesResponse",
