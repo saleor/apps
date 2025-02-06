@@ -26,7 +26,7 @@ jobs:
         run: |
           jq --null-input \
              --arg token "Token $ACCESS_TOKEN" \
-             '{"token":$token,"telemetry":"false","saleor_env":"production","cloud_api_url":"https://cloud.saleor.io/platform/api","organization_slug":"shopex","organization_name":"Shopex"}' > ~/.config/saleor.json
+             '{"token":$token,"telemetry":"false","saleor_env":"staging","cloud_api_url":"https://cloud.staging.saleor.io/platform/api","organization_slug":"saleor","organization_name":"Saleor"}' > ~/.config/saleor.json
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile --filter=app-avatax
       - name: Get Saleor snapshot
         run: |
-          BACKUP=$(pnpm dlx saleor backup list --name="snapshot-avatax-$SALEOR_VERSION" --latest --json)
+          BACKUP=$(pnpm dlx saleor backup list --name="snapshot-$SALEOR_VERSION-e2e" --latest --json)
           BACKUP_ID=$(echo "$BACKUP" | jq -r '.[0].key')
           echo "BACKUP_ID=$BACKUP_ID" >> "$GITHUB_ENV"
       - name: Restore Saleor snapshot
