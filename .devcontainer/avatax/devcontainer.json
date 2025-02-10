@@ -12,7 +12,7 @@
       "label": "Local DynamoDB"
     }
   },
-  "postCreateCommand": "./.devcontainer/avatax/setup-dynamodb.sh",
+  "postCreateCommand": "./scripts/setup-dynamodb.sh",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli": {}
   }
