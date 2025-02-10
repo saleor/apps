@@ -10,16 +10,16 @@ services:
       - "pnpm-store:/root/.pnpm-store"
 
   dynamodb:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: "amazon/dynamodb-local:latest"
     ports:
       - 8000:8000
     volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
-    working_dir: /home/dynamodblocal
+      - "dynamodb-data:/home/dynamodblocal/data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    user: root
 
 volumes:
-  dynamodb:
+  dynamodb-data:
     driver: local
   pnpm-store:
     driver: local
