@@ -7,7 +7,7 @@ services:
       dockerfile: .devcontainer/avatax/Dockerfile
     volumes:
       - "../..:/app"
-      - "pnpm-store:/root/.pnpm-store"
+      - "pnpm-store:/app/.pnpm-store"
     user: node # needed to write to volume
 
   dynamodb:
