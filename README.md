@@ -70,3 +70,9 @@ Some of the Saleor apps are available in separate repositories:
 ## Development
 
 You can find the documentation for saleor/apps on [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/app-store/development).
+
+## ADR
+
+This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `docs/adr` directory.
+
+To add new ADR follow [the guide](https://github.com/npryce/adr-tools).

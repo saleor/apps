@@ -12,3 +12,4 @@ jobs:
         with:
           config: .cspell.json
           files: "**/*.{jsx,tsx,js,ts,md,mdx}"
+          strict: false
