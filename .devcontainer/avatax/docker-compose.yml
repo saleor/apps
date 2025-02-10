@@ -1,13 +1,14 @@
 services:
   avatax:
     image: avatax
-    command: sleep infinity
+    command: sleep infinity # keeps docker container running
     build:
       context: ../..
       dockerfile: .devcontainer/avatax/Dockerfile
     volumes:
       - "../..:/app"
       - "pnpm-store:/root/.pnpm-store"
+    user: node # needed to write to volume
 
   dynamodb:
     image: "amazon/dynamodb-local:latest"
@@ -16,7 +17,7 @@ services:
     volumes:
       - "dynamodb-data:/home/dynamodblocal/data"
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
-    user: root
+    user: root # needed to write to volume
 
 volumes:
   dynamodb-data:
