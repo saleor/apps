@@ -18,31 +18,50 @@
   <a href="https://twitter.com/getsaleor">🐦 Twitter</a>
 </div>
 
-## Documentation
+## Running app locally in development containers
 
-Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/avatax/overview) to learn how to configure and develop the app locally.
+The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
 
-### DynamoDB
+Development container only creates container, you still need to start the server. See [common-commands](#common-commands) section to learn more.
 
-DynamoDB is used to store Client-side logs. To develop this feature locally:
+Development container will have two ports opened:
+
+1. `3000` - were AvaTax app dev server will listen to requests
+2. `8000` - were local DynamoDB will listen to requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
+
+### Common commands
+
+Running app in development server:
+
+```shell
+pnpm run dev
+```
+
+Running tests:
+
+```shell
+pnpm run test
+```
+
+## DynamoDB
+
+DynamoDB is used to store Client-side logs. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
 
 1. Run `docker compose up` for local DynamoDB instance
-2. Run `bash scripts/setup-dynamodb.sh` to describe DynamoDB table
+2. Run `./scripts/setup-dynamodb.sh` to describe DynamoDB table
 
 Ensure following env variables are set
 
 ```dotenv
-FF_ENABLE_EXPERIMENTAL_LOGS=true
 DYNAMODB_LOGS_ITEM_TTL_IN_DAYS=30
 DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs # must match scripts/setup-dynamodb.sh
 ```
 
 Alternatively, you can connect to AWS-based DynamoDB:
 
-1. Create table in your AWS, based on parameters in `scripts/setup-dynamodb.sh`
+1. Create table in your AWS, based on parameters in [`scripts/setup-dynamodb.sh`](./scripts/setup-dynamodb.sh)
 2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)
-
-If `FF_ENABLE_EXPERIMENTAL_LOGS` is not set, you don't have to provide anything - feature will be disabled
 
 ## Testing
 
@@ -119,7 +138,7 @@ PROMO_CODE=
 
 The app has an example environment for `localhost` in `environments/localhost.bru`. You can copy it to bootstrap your own environment e.g `cloud.bru` (which will be ignored by git).
 
-### Webhook migration scripts
+## Webhook migration scripts
 
 > [!NOTE]
 > This section refers to apps hosted by Saleor or using REST APL. If you self host AvaTax app you need to write your own logic for updating migration scripts.
@@ -139,16 +158,6 @@ To start the migration run command:
 pnpm migrate
 ```
 
-### Running the app in docker
+## Documentation
 
-To run the app in docker, you need to build the image first (run this command in the root directory of the monorepo):
-
-```shell
-docker build --tag saleor-app-avatax-docker --file Dockerfile.avatax.dev .
-```
-
-Then you can run the image (run this command in the root directory of the monorepo):
-
-```shell
-docker run -p 3000:3000 --env-file apps/avatax/.env saleor-app-avatax-docker
-```
+Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-store/apps/avatax/overview) to learn how to configure the app.
