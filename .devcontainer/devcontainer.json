@@ -1,0 +1,19 @@
+{
+  "name": "AvaTax app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "avatax",
+  "workspaceFolder": "/app",
+  "forwardPorts": [3000, "dynamodb:8000"],
+  "portsAttributes": {
+    "3000": {
+      "label": "AvaTax app"
+    },
+    "dynamodb:8000": {
+      "label": "Local DynamoDB"
+    }
+  },
+  "postCreateCommand": "./.devcontainer/setup-dynamodb.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli": {}
+  }
+}

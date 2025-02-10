@@ -1,0 +1,25 @@
+services:
+  avatax:
+    image: avatax
+    command: sleep infinity
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - "..:/app"
+      - "pnpm-store:/root/.pnpm-store"
+
+  dynamodb:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    ports:
+      - 8000:8000
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+volumes:
+  dynamodb:
+    driver: local
+  pnpm-store:
+    driver: local
