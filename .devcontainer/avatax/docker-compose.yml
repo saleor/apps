@@ -3,10 +3,10 @@ services:
     image: avatax
     command: sleep infinity
     build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
+      context: ../..
+      dockerfile: .devcontainer/avatax/Dockerfile
     volumes:
-      - "..:/app"
+      - "../..:/app"
       - "pnpm-store:/root/.pnpm-store"
 
   dynamodb:
