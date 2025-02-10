@@ -25,18 +25,23 @@ If you have Visual Studio Code follow their [guide](https://code.visualstudio.co
 
 Development container only creates container, you still need to start the server. See [common-commands](#common-commands) section to learn more.
 
+Development container will have two ports opened:
+
+1. `3000` - were AvaTax app dev server will listen to requests
+2. `8000` - were local DynamoDB will listen to requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
+
 ### Common commands
 
-Running app in development server (from root of monorepo):
+Running app in development server:
 
 ```shell
-pnpm run dev --filter=app-avatax
+pnpm run dev
 ```
 
-Running tests (from root of monorepo):
+Running tests:
 
 ```shell
-pnpm run test --filter=app-avatax
+pnpm run test
 ```
 
 ## DynamoDB
@@ -44,7 +49,7 @@ pnpm run test --filter=app-avatax
 DynamoDB is used to store Client-side logs. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
 
 1. Run `docker compose up` for local DynamoDB instance
-2. Run `bash setup-dynamodb.sh` to describe DynamoDB table
+2. Run `./scripts/setup-dynamodb.sh` to describe DynamoDB table
 
 Ensure following env variables are set
 
@@ -55,7 +60,7 @@ DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs # must match scripts/setup-dynamodb.
 
 Alternatively, you can connect to AWS-based DynamoDB:
 
-1. Create table in your AWS, based on parameters in `setup-dynamodb.sh`
+1. Create table in your AWS, based on parameters in [`scripts/setup-dynamodb.sh`](./scripts/setup-dynamodb.sh)
 2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)
 
 ## Testing
