@@ -7,6 +7,7 @@ services:
       dockerfile: .devcontainer/avatax/Dockerfile
     volumes:
       - "../..:/app"
+      - "pnpm-store:/app/.pnpm-store"
 
   dynamodb:
     image: "amazon/dynamodb-local:latest"
@@ -19,4 +20,6 @@ services:
 
 volumes:
   dynamodb-data:
+    driver: local
+  pnpm-store:
     driver: local

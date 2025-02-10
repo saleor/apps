@@ -1,6 +1,5 @@
 #!/bin/bash
-
-set -ex
+set -e
 
 # needed for aws-cli to work with local dynamodb
 aws configure set aws_access_key_id test
