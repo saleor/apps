@@ -1,3 +1,4 @@
+name: saleor-app-avatax_devcontainer
 services:
   avatax:
     image: avatax

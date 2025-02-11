@@ -15,5 +15,16 @@
   "postCreateCommand": "./scripts/setup-dynamodb.sh",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
   }
 }
