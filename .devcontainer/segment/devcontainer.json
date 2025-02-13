@@ -1,7 +1,7 @@
 {
   "name": "Segment app",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "Segment",
+  "service": "segment",
   "workspaceFolder": "/app/apps/segment",
   "forwardPorts": [3000, "dynamodb:8000"],
   "portsAttributes": {
