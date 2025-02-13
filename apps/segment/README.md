@@ -18,6 +18,18 @@
 - [PNPM](https://pnpm.io/) v9+
 - An account on [Twilio Segment](https://segment.com/) with configured [source](https://segment.com/docs/partners/sources/).
 
+### Running app locally in development containers
+
+The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+
+Development container only creates container, you still need to start the server.
+
+Development container will have two ports opened:
+
+1. `3000` - were app dev server will listen to requests
+2. `8000` - were local DynamoDB will listen to requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
+
 ### Running app in development mode
 
 1. Install the dependencies by running the following command in the shell:
