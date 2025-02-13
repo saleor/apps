@@ -1,0 +1,15 @@
+name: saleor-app-smtp_devcontainer
+services:
+  smtp:
+    image: smtp
+    command: sleep infinity # keeps docker container running
+    build:
+      context: ../..
+      dockerfile: .devcontainer/smtp/Dockerfile
+    volumes:
+      - "../..:/app"
+      - "pnpm-store:/app/.pnpm-store"
+
+volumes:
+  pnpm-store:
+    driver: local

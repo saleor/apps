@@ -25,11 +25,22 @@
 
 #### Requirements
 
-- [node v20](https://nodejs.org)
+- [node v22](https://nodejs.org)
 - [pnpm](https://pnpm.io/)
 - [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
 - An account of one of the cms providers listed above
+
+#### Running app locally in development containers
+
+The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+
+Development container only creates container, you still need to start the server.
+
+Development container will have port opened:
+
+1. `3000` - were app dev server will listen to requests
 
 #### Running app in development mode
 

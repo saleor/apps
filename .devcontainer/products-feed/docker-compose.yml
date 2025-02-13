@@ -1,0 +1,15 @@
+name: saleor-app-products-feed_devcontainer
+services:
+  products-feed:
+    image: products-feed
+    command: sleep infinity # keeps docker container running
+    build:
+      context: ../..
+      dockerfile: .devcontainer/products-feed/Dockerfile
+    volumes:
+      - "../..:/app"
+      - "pnpm-store:/app/.pnpm-store"
+
+volumes:
+  pnpm-store:
+    driver: local

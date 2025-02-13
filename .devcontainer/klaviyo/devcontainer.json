@@ -1,0 +1,23 @@
+{
+  "name": "Klaviyo app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "klaviyo",
+  "workspaceFolder": "/app/apps/klaviyo",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Klaviyo app"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
