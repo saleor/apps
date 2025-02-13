@@ -1,0 +1,30 @@
+{
+  "name": "Segment app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "Segment",
+  "workspaceFolder": "/app/apps/segment",
+  "forwardPorts": [3000, "dynamodb:8000"],
+  "portsAttributes": {
+    "3000": {
+      "label": "Segment app"
+    },
+    "dynamodb:8000": {
+      "label": "Local DynamoDB"
+    }
+  },
+  "postCreateCommand": "./scripts/setup-dynamodb.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}

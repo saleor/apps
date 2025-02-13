@@ -1,0 +1,23 @@
+{
+  "name": "CMS app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "CMS v2",
+  "workspaceFolder": "/app/apps/cms-v2",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "CMS app"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}

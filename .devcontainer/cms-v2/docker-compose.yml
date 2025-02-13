@@ -1,0 +1,15 @@
+name: saleor-app-cms-v2_devcontainer
+services:
+  cms-v2:
+    image: cms-v2
+    command: sleep infinity # keeps docker container running
+    build:
+      context: ../..
+      dockerfile: .devcontainer/cms-v2/Dockerfile
+    volumes:
+      - "../..:/app"
+      - "pnpm-store:/app/.pnpm-store"
+
+volumes:
+  pnpm-store:
+    driver: local

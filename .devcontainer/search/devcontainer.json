@@ -1,0 +1,23 @@
+{
+  "name": "Search app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "search",
+  "workspaceFolder": "/app/apps/search",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Search app"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
