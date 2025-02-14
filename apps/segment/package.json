@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",

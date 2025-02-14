@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.12.21
+
+### Patch Changes
+
+- b3e136b0: Add `saleor-app` prefix to `package.json` so names of npm app projects are in sync with names of Vercel projects. No visible changes to the user.
+
 ## 1.12.20
 
 ### Patch Changes
