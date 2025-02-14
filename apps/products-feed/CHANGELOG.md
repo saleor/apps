@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.21.1
+
+### Patch Changes
+
+- b3e136b0: Add `saleor-app` prefix to `package.json` so names of npm app projects are in sync with names of Vercel projects. No visible changes to the user.
+
 ## 1.21.0
 
 ### Minor Changes
