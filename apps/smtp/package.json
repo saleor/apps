@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "1.2.23",
+  "version": "1.2.24",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",

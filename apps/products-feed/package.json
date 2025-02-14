@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
