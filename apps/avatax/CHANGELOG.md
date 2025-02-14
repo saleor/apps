@@ -1,4 +1,4 @@
-# app-avatax
+# saleor-app-avatax
 
 ## 1.12.8
 

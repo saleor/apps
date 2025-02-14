@@ -1,4 +1,4 @@
-# segment
+# saleor-app-segment
 
 ## 2.0.6
 

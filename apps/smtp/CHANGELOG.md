@@ -1,4 +1,4 @@
-# smtp
+# saleor-app-smtp
 
 ## 1.2.23
 
