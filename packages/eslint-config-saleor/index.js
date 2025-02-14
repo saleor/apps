@@ -18,6 +18,16 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["simple-import-sort", "@vitest"],
   rules: {
+    /**
+     * In case of more than 3 args, ensure object param is introduced.
+     * This should be error once fixed in the codebase
+     */
+    "max-params": [
+      "warn",
+      {
+        max: 3,
+      },
+    ],
     "import/order": "off", // to avoid conflicts with simple-import-sort
     "import/first": "warn",
     "import/newline-after-import": "warn",
