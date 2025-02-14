@@ -16,7 +16,7 @@
 
 "App: CMS":
   - changed-files:
-      - any-glob-to-any-file: "apps/cms-v2/**/*"
+      - any-glob-to-any-file: "apps/cms/**/*"
 
 "App: SMTP":
   - changed-files:

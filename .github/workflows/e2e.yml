@@ -36,7 +36,7 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --filter=app-avatax
+        run: pnpm install --frozen-lockfile --filter=saleor-app-avatax
       - name: Get Saleor snapshot
         run: |
           BACKUP=$(pnpm dlx saleor backup list --name="snapshot-ext-$SALEOR_VERSION-e2e" --latest --json)
@@ -60,5 +60,5 @@ jobs:
           AWS_ACCESS_KEY_ID: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Shop-ex/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
       - name: Run e2e tests
-        run: pnpm --filter=app-avatax e2e
+        run: pnpm --filter=saleor-app-avatax e2e
       # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304

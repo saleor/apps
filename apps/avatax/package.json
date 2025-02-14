@@ -1,8 +1,8 @@
 {
-  "name": "app-avatax",
+  "name": "saleor-app-avatax",
   "version": "1.12.8",
   "scripts": {
-    "build": " next build",
+    "build": "next build",
     "check-types": "tsc --noEmit",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",

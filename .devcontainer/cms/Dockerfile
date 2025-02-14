@@ -10,4 +10,4 @@ WORKDIR /app
 RUN mkdir -p /app/.pnpm-store
 RUN chown -R node:node /app/.pnpm-store
 
-RUN pnpm install --frozen-lockfile --filter=cms-v2
+RUN pnpm install --frozen-lockfile --filter=saleor-app-cms

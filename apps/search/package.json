@@ -1,5 +1,5 @@
 {
-  "name": "search",
+  "name": "saleor-app-search",
   "version": "1.22.21",
   "scripts": {
     "build": "next build",

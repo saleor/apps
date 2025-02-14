@@ -6,7 +6,7 @@ import { VariantsSyncStatusListItem } from "./variants-sync-status-list";
 export const useBulkSyncProductsState = () => {
   const [finished, setFinished] = useState(false);
   const [productsStatusList, setProductsStatusList] = useState<VariantsSyncStatusListItem[] | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const useBulkSyncProductsState = () => {
             })) ?? [];
 
           return items;
-        })
+        }),
       );
     }, []),
     setItemStatus: useCallback(
@@ -46,10 +46,10 @@ export const useBulkSyncProductsState = () => {
             }
 
             return item;
-          })
+          }),
         );
       },
-      []
+      [],
     ),
   };
 };
