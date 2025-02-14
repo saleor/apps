@@ -31,7 +31,7 @@ flags:
       - apps/avatax/
   cms:
     paths:
-      - apps/cms-v2/
+      - apps/cms/
   products-feed:
     paths:
       - apps/products-feed/

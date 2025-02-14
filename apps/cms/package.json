@@ -1,5 +1,5 @@
 {
-  "name": "cms-v2",
+  "name": "saleor-app-cms",
   "version": "2.10.0",
   "scripts": {
     "build": "next build",

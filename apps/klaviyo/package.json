@@ -1,5 +1,5 @@
 {
-  "name": "klaviyo",
+  "name": "saleor-app-klaviyo",
   "version": "1.12.20",
   "scripts": {
     "build": "next build",

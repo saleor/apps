@@ -1,5 +1,5 @@
 {
-  "name": "products-feed",
+  "name": "saleor-app-products-feed",
   "version": "1.21.0",
   "scripts": {
     "build": "next build",

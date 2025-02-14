@@ -1,8 +1,8 @@
 {
   "name": "CMS app",
   "dockerComposeFile": "docker-compose.yml",
-  "service": "cms-v2",
-  "workspaceFolder": "/app/apps/cms-v2",
+  "service": "cms",
+  "workspaceFolder": "/app/apps/cms",
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": {
