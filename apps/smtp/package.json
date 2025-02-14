@@ -1,5 +1,5 @@
 {
-  "name": "smtp",
+  "name": "saleor-app-smtp",
   "version": "1.2.23",
   "scripts": {
     "build": "next build",

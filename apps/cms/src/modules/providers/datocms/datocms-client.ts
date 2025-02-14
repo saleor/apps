@@ -1,4 +1,4 @@
-import { ApiError,buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-browser";
+import { ApiError, buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-browser";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 

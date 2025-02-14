@@ -1,4 +1,4 @@
-import { SALEOR_API_URL_HEADER,SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
 import { getAppBaseUrl } from "@saleor/apps-shared";
 import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";

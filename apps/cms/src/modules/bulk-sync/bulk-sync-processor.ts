@@ -9,6 +9,6 @@ export type BulkSyncProcessorHooks = {
 export interface BulkSyncProcessor {
   uploadProducts(
     products: BulkImportProductFragment[],
-    hooks: BulkSyncProcessorHooks
+    hooks: BulkSyncProcessorHooks,
   ): Promise<void>;
 }

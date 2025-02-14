@@ -1,4 +1,4 @@
-# saleor-app-cms-v2
+# saleor-app-cms
 
 ## 2.10.0
 
