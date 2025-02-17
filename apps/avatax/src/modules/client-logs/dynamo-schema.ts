@@ -62,10 +62,11 @@ export class LogsTable extends Table<
 
   static getDefaultTTL() {
     const daysUntilExpire = env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS;
-    const today = new Date();
+    const now = new Date();
+    const expireDate = new Date(now.getTime() + daysUntilExpire * 24 * 60 * 60 * 1000);
 
-    // Add today + days until expire, export to UNIX epoch timestamp
-    return new Date(today.setDate(today.getDate() + daysUntilExpire)).getTime();
+    // Export to UNIX epoch timestamp in seconds
+    return Math.floor(expireDate.getTime() / 1000);
   }
 }
 

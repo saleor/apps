@@ -119,10 +119,9 @@ describe("LogsTable", () => {
 
       const result = LogsTable.getDefaultTTL();
 
-      const expectedDate = new Date("2023-01-08T00:00:00Z");
-      const expected = expectedDate.getTime();
+      const expectedDateInSeconds = 1673136000; // 2023-01-08T00:00:00Z;
 
-      expect(result).toBe(expected);
+      expect(result).toBe(expectedDateInSeconds);
     });
   });
 });
