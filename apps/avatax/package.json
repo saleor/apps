@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.12.9",
+  "version": "1.12.10",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",

@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.12.10
+
+### Patch Changes
+
+- 708a0a8b: Fix time to live of client logs. After this change logs will be deleted after 14 days by default.
+
 ## 1.12.9
 
 ### Patch Changes
