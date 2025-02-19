@@ -6,7 +6,7 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 
 import { env } from "@/env";
 
-import pkg from "./package.json";
+import pkg from "../package.json";
 
 const sdk = new NodeSDK({
   resource: new Resource({
@@ -19,3 +19,5 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
+
+console.log("OTEL enabled, starting SDK");

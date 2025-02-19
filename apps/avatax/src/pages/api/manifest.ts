@@ -9,6 +9,7 @@ import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
 export default wrapWithLoggerContext(
+  // withOtel(
   createManifestHandler({
     async manifestFactory({ appBaseUrl }) {
       const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
@@ -39,5 +40,9 @@ export default wrapWithLoggerContext(
       return manifest;
     },
   }),
+  /*
+   * "/api/manifest",
+   * ),
+   */
   loggerContext,
 );

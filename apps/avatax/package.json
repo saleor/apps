@@ -27,6 +27,7 @@
     "@aws-sdk/util-dynamodb": "3.651.1",
     "@hookform/resolvers": "^3.3.1",
     "@next/env": "^13.5.4",
+    "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
     "@opentelemetry/sdk-node": "../../node_modules/@opentelemetry/sdk-node",
     "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
