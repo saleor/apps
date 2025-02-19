@@ -1,7 +1,7 @@
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { Resource } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { SimpleSpanProcessor } from "@opentelemetry/sdk-trace-node";
+import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 
 import { env } from "@/env";
@@ -17,12 +17,19 @@ const sdk = new NodeSDK({
     "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
   }),
   sampler: new OTELSampler(), // custom sampler to test allow all spans
-  spanProcessor: new SimpleSpanProcessor(
+  spanProcessor: new BatchSpanProcessor(
     new OTLPTraceExporter({
+      timeoutMillis: 1_000,
       headers: {
         "x-alb-access-token": env.OTEL_ACCESS_TOKEN,
       },
     }),
+    {
+      exportTimeoutMillis: 1_000,
+      maxExportBatchSize: 1024,
+      maxQueueSize: 1024,
+      scheduledDelayMillis: 2 * 5 * 60 * 1000,
+    },
   ),
 });
 
