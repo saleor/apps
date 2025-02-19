@@ -36,6 +36,8 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     TEST_SALEOR_API_URL: z.string().optional(),
     VERCEL_URL: z.string().optional(),
+    NEXT_RUNTIME: z.enum(["nodejs", "edge"]).optional(),
+    VERCEL_GIT_COMMIT_SHA: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -69,6 +71,8 @@ export const env = createEnv({
     SECRET_KEY: process.env.SECRET_KEY,
     TEST_SALEOR_API_URL: process.env.TEST_SALEOR_API_URL,
     VERCEL_URL: process.env.VERCEL_URL,
+    NEXT_RUNTIME: process.env.NEXT_RUNTIME,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

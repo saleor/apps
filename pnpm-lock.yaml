@@ -127,39 +127,15 @@ importers:
       '@next/env':
         specifier: ^13.5.4
         version: 13.5.4
-      '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: 1.9.0
-      '@opentelemetry/api-logs':
-        specifier: ../../node_modules/@opentelemetry/api-logs
-        version: link:../../node_modules/@opentelemetry/api-logs
-      '@opentelemetry/core':
-        specifier: ../../node_modules/@opentelemetry/core
-        version: link:../../node_modules/@opentelemetry/core
-      '@opentelemetry/exporter-logs-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
         version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
-      '@opentelemetry/instrumentation-http':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-http
-        version: link:../../node_modules/@opentelemetry/instrumentation-http
-      '@opentelemetry/instrumentation-winston':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-winston
-        version: link:../../node_modules/@opentelemetry/instrumentation-winston
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-logs':
-        specifier: ../../node_modules/@opentelemetry/sdk-logs
-        version: link:../../node_modules/@opentelemetry/sdk-logs
       '@opentelemetry/sdk-node':
         specifier: ../../node_modules/@opentelemetry/sdk-node
         version: link:../../node_modules/@opentelemetry/sdk-node
-      '@opentelemetry/sdk-trace-base':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-base
-        version: link:../../node_modules/@opentelemetry/sdk-trace-base
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -172,9 +148,6 @@ importers:
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
-      '@saleor/apps-otel':
-        specifier: workspace:*
-        version: link:../../packages/otel
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -18579,7 +18552,8 @@ snapshots:
 
   '@opentelemetry/api@1.7.0': {}
 
-  '@opentelemetry/api@1.9.0': {}
+  '@opentelemetry/api@1.9.0':
+    optional: true
 
   '@opentelemetry/context-async-hooks@1.18.1(@opentelemetry/api@1.7.0)':
     dependencies:
