@@ -13,8 +13,8 @@ const sdk = new NodeSDK({
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: env.OTEL_SERVICE_NAME,
     [SemanticResourceAttributes.SERVICE_VERSION]: pkg.version,
-    "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: env.ENV,
+    "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
   }),
   sampler: new OTELSampler(), // custom sampler to test allow all spans
   spanProcessor: new SimpleSpanProcessor(
