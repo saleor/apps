@@ -19,17 +19,10 @@ const sdk = new NodeSDK({
   sampler: new OTELSampler(), // custom sampler to test allow all spans
   spanProcessor: new BatchSpanProcessor(
     new OTLPTraceExporter({
-      timeoutMillis: 1_000,
       headers: {
         "x-alb-access-token": env.OTEL_ACCESS_TOKEN,
       },
     }),
-    {
-      exportTimeoutMillis: 1_000,
-      maxExportBatchSize: 1024,
-      maxQueueSize: 1024,
-      scheduledDelayMillis: 2 * 5 * 60 * 1000,
-    },
   ),
 });
 
