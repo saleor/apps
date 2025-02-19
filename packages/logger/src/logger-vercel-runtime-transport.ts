@@ -31,11 +31,8 @@ export const attachLoggerVercelRuntimeTransport = (
         deployment: {
           environment: process.env.ENV,
         },
-        otel: {
-          span_id: trace.getActiveSpan()?.spanContext().spanId,
-          trace_id: trace.getActiveSpan()?.spanContext().traceId,
-          timestamp: _meta.date.getTime(),
-        },
+        span_id: trace.getActiveSpan()?.spanContext().spanId,
+        trace_id: trace.getActiveSpan()?.spanContext().traceId,
         "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
         service: {
           name: process.env.OTEL_SERVICE_NAME,
