@@ -1,8 +1,6 @@
-import { env } from "@/env";
-
 export async function register() {
-  console.log("Registering instrumentation");
-  if (env.NEXT_RUNTIME === "nodejs" && env.OTEL_ENABLED) {
+  // eslint-disable-next-line node/no-process-env
+  if (process.env.NEXT_RUNTIME === "nodejs" && process.env.OTEL_ENABLED === "true") {
     await import("./instrumentation.node");
   }
 }
