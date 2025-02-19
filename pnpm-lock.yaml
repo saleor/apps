@@ -151,6 +151,9 @@ importers:
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
+      '@saleor/apps-otel':
+        specifier: workspace:*
+        version: link:../../packages/otel
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../../packages/shared
