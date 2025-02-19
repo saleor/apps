@@ -2,6 +2,7 @@ import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import { env } from "@/env";
+import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 
@@ -16,29 +17,31 @@ const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
  * It will exchange tokens with app, so saleorApp.apl will contain token
  */
 export default wrapWithLoggerContext(
-  createAppRegisterHandler({
-    apl: saleorApp.apl,
-    /**
-     * Prohibit installation from Saleor other than specified by the regex.
-     * Regex source is ENV so if ENV is not set, all installations will be allowed.
-     */
-    allowedSaleorUrls: [
-      (url) => {
-        if (allowedUrlsPattern) {
-          // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
-          const regex = new RegExp(allowedUrlsPattern);
+  wrapWithSpanAttrs(
+    createAppRegisterHandler({
+      apl: saleorApp.apl,
+      /**
+       * Prohibit installation from Saleor other than specified by the regex.
+       * Regex source is ENV so if ENV is not set, all installations will be allowed.
+       */
+      allowedSaleorUrls: [
+        (url) => {
+          if (allowedUrlsPattern) {
+            // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
+            const regex = new RegExp(allowedUrlsPattern);
 
-          return regex.test(url);
-        }
+            return regex.test(url);
+          }
 
-        return true;
+          return true;
+        },
+      ],
+      onAuthAplSaved: async (_req, context) => {
+        logger.info("AvaTax app configuration set up successfully", {
+          saleorApiUrl: context.authData.saleorApiUrl,
+        });
       },
-    ],
-    onAuthAplSaved: async (_req, context) => {
-      logger.info("AvaTax app configuration set up successfully", {
-        saleorApiUrl: context.authData.saleorApiUrl,
-      });
-    },
-  }),
+    }),
+  ),
   loggerContext,
 );

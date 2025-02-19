@@ -3,6 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -331,4 +332,4 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
   }
 });
 
-export default wrapWithLoggerContext(withMetadataCache(handler), loggerContext);
+export default wrapWithLoggerContext(withMetadataCache(wrapWithSpanAttrs(handler)), loggerContext);

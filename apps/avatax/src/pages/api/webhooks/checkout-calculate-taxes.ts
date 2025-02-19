@@ -1,4 +1,3 @@
-import { trace } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
@@ -7,6 +6,7 @@ import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
@@ -44,12 +44,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
   try {
     const { payload, authData } = ctx;
-
-    const span = trace.getActiveSpan();
-
-    if (span) {
-      span.setAttribute("saleorApiUrl", authData.saleorApiUrl);
-    }
 
     subscriptionErrorChecker.checkPayload(payload);
 
@@ -160,4 +154,4 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 /**
  * TODO: Add tests to handler
  */
-export default wrapWithLoggerContext(withMetadataCache(handler), loggerContext);
+export default wrapWithLoggerContext(withMetadataCache(wrapWithSpanAttrs(handler)), loggerContext);
