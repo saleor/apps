@@ -15,7 +15,13 @@ const sdk = new NodeSDK({
     "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: env.ENV,
   }),
-  spanProcessor: new SimpleSpanProcessor(new OTLPTraceExporter()),
+  spanProcessor: new SimpleSpanProcessor(
+    new OTLPTraceExporter({
+      headers: {
+        "x-alb-access-token": env.OTEL_ACCESS_TOKEN,
+      },
+    }),
+  ),
 });
 
 sdk.start();

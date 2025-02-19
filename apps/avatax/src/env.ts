@@ -38,6 +38,7 @@ export const env = createEnv({
     VERCEL_URL: z.string().optional(),
     NEXT_RUNTIME: z.enum(["nodejs", "edge"]).optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
+    OTEL_ACCESS_TOKEN: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -73,6 +74,7 @@ export const env = createEnv({
     VERCEL_URL: process.env.VERCEL_URL,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
