@@ -45,6 +45,7 @@ export default wrapWithLoggerContext(
             webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
           };
 
+          console.log("MANIFEST SPAN", span);
           span.end();
 
           return manifest;

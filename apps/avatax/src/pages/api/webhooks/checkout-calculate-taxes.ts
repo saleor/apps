@@ -112,6 +112,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
         return useCase.calculateTaxes(payload, authData).then((result) => {
           return result.match(
             (value) => {
+              console.log("SPAN!!!", span);
               span.end();
               return res.status(200).json(ctx.buildResponse(value));
             },

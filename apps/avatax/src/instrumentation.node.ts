@@ -7,6 +7,7 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 import { env } from "@/env";
 
 import pkg from "../package.json";
+import { OTELSampler } from "./lib/otel-sampler";
 
 const sdk = new NodeSDK({
   resource: new Resource({
@@ -15,6 +16,7 @@ const sdk = new NodeSDK({
     "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
     [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: env.ENV,
   }),
+  sampler: new OTELSampler(), // custom sampler to test allow all spans
   spanProcessor: new SimpleSpanProcessor(
     new OTLPTraceExporter({
       headers: {
