@@ -1,0 +1,18 @@
+FROM node:22.11-alpine
+RUN apk update
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm i --global corepack@latest && corepack enable
+
+RUN pnpm install --global turbo@1.12.4
+
+COPY . .
+
+RUN turbo prune saleor-app-avatax --docker
+
+RUN pnpm install --frozen-lockfile --filter=saleor-app-avatax
+
+CMD pnpm dev --filter=saleor-app-avatax
