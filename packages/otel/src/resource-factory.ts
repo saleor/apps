@@ -4,7 +4,7 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 export const createResource = (args: {
   serviceName: string | undefined;
   serviceVersion: string;
-  serviceEnviroment: string;
+  serviceEnviroment: string | undefined;
   serviceCommitSha: string | undefined;
 }) => {
   return new Resource({
