@@ -25,5 +25,3 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
-
-console.log("OTEL enabled, starting SDK");

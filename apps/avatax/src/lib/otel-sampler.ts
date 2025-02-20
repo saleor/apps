@@ -1,6 +1,7 @@
 /* eslint-disable max-params */
 import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";
 
+// TODO: remove after testing
 export class OTELSampler implements Sampler {
   shouldSample(
     context: Context,
