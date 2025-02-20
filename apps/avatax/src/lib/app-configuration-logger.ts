@@ -1,3 +1,5 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+
 import { createLogger } from "../logger";
 import { AppConfig } from "./app-config";
 
@@ -10,7 +12,7 @@ export class AppConfigurationLogger {
     if (config.isErr()) {
       this.injectedLogger.warn("Failed to resolve configuration properly", {
         error: config.error,
-        // [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
+        [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
       });
 
       return;
@@ -19,7 +21,7 @@ export class AppConfigurationLogger {
     const resolvedAvataxConfig = config.value.avataxConfig;
 
     this.injectedLogger.info("Received configuration", {
-      // [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
+      [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
       /**
        * Be careful changing these values. They are likely used as a metric in Datadog
        */

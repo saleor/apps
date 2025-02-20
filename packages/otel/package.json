@@ -25,6 +25,7 @@
   "exports": {
     "./batch-span-processor-factory": "./src/batch-span-processor-factory.ts",
     "./http-instrumentation-factory": "./src/http-instrumentation-factory.ts",
-    "./resource-factory": "./src/resource-factory.ts"
+    "./resource-factory": "./src/resource-factory.ts",
+    "./observability-attributes": "./src/observability-attributes.ts"
   }
 }

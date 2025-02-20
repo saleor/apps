@@ -1,4 +1,5 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -43,10 +44,8 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
   subscriptionErrorChecker.checkPayload(payload);
 
   if (payload.version) {
-    /*
-     * Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-     * loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-     */
+    Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+    loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
   }
 
   logger.info("Handler called with payload");

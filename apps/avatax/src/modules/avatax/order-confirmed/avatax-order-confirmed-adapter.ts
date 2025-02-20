@@ -1,6 +1,8 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
 
-// import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { loggerContext } from "@/logger-context";
+
 import { createLogger } from "../../../logger";
 import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
@@ -36,13 +38,11 @@ export class AvataxOrderConfirmedAdapter
     authData: AuthData,
     discountsStrategy: PriceReductionDiscountsStrategy,
   ): Promise<AvataxOrderConfirmedResponse> {
-    /*
-     * loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.confirmedOrderEvent.getOrderId());
-     * loggerContext.set(
-     *   ObservabilityAttributes.CHANNEL_SLUG,
-     *   payload.confirmedOrderEvent.getChannelSlug(),
-     * );
-     */
+    loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.confirmedOrderEvent.getOrderId());
+    loggerContext.set(
+      ObservabilityAttributes.CHANNEL_SLUG,
+      payload.confirmedOrderEvent.getChannelSlug(),
+    );
 
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 

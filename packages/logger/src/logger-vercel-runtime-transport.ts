@@ -34,6 +34,7 @@ export const attachLoggerVercelRuntimeTransport = (
         otel: {
           span_id: trace.getActiveSpan()?.spanContext().spanId,
           trace_id: trace.getActiveSpan()?.spanContext().traceId,
+          timestamp: _meta.date.getTime(),
         },
         "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
         service: {

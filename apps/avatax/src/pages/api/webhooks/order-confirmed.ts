@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -72,10 +73,8 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
   const { saleorApiUrl, token } = authData;
 
   if (payload.version) {
-    /*
-     * Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-     * loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-     */
+    Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+    loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
   }
 
   logger.info("Handler called with payload");
@@ -101,7 +100,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
     return res.status(500).json({ message: error.message });
   }
 
-  // loggerContext.set(ObservabilityAttributes.ORDER_ID, confirmedOrderFromPayload.value.getOrderId());
+  loggerContext.set(ObservabilityAttributes.ORDER_ID, confirmedOrderFromPayload.value.getOrderId());
 
   try {
     const confirmedOrderEvent = confirmedOrderFromPayload.value;
