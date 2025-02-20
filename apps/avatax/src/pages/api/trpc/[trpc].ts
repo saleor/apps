@@ -1,5 +1,5 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/wrap-with-span-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 

@@ -1,4 +1,4 @@
-import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 
 import { createLogger } from "../logger";
 import { AppConfig } from "./app-config";

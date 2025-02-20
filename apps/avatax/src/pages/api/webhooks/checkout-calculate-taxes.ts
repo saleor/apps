@@ -1,6 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/wrap-with-span-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 

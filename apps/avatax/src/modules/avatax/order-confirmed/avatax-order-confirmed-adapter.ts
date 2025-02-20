@@ -1,5 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 
 import { loggerContext } from "@/logger-context";
 

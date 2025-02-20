@@ -1,8 +1,8 @@
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { createBatchSpanProcessor } from "@saleor/apps-otel/batch-span-processor-factory";
-import { createHttpInstrumentation } from "@saleor/apps-otel/http-instrumentation-factory";
-import { createResource } from "@saleor/apps-otel/resource-factory";
+import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
+import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
+import { createResource } from "@saleor/apps-otel/src/resource-factory";
 
 import { env } from "@/env";
 

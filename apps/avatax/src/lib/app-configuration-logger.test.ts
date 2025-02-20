@@ -1,4 +1,4 @@
-import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AppConfig } from "./app-config";
