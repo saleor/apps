@@ -31,7 +31,7 @@ export const attachLoggerVercelRuntimeTransport = (
         deployment: {
           environment: process.env.ENV,
         },
-        dd: {
+        otel: {
           span_id: trace.getActiveSpan()?.spanContext().spanId,
           trace_id: trace.getActiveSpan()?.spanContext().traceId,
         },
