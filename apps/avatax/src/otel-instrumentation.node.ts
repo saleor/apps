@@ -7,7 +7,6 @@ import { createResource } from "@saleor/apps-otel/src/resource-factory";
 import { env } from "@/env";
 
 import pkg from "../package.json";
-import { OTELSampler } from "./lib/otel-sampler";
 
 const sdk = new NodeSDK({
   resource: createResource({
@@ -17,7 +16,6 @@ const sdk = new NodeSDK({
     serviceCommitSha: env.VERCEL_GIT_COMMIT_SHA,
   }),
   textMapPropagator: new W3CTraceContextPropagator(),
-  sampler: new OTELSampler(), // custom sampler to test allow all spans
   spanProcessor: createBatchSpanProcessor({
     accessToken: env.OTEL_ACCESS_TOKEN,
   }),
