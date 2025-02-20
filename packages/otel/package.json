@@ -21,5 +21,10 @@
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*"
   },
-  "type": "module"
+  "type": "module",
+  "exports": {
+    "./batch-span-processor-factory": "./src/batch-span-processor-factory.ts",
+    "./http-instrumentation-factory": "./src/http-instrumentation-factory.ts",
+    "./resource-factory": "./src/resource-factory.ts"
+  }
 }
