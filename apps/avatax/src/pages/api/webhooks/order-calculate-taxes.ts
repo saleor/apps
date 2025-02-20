@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -332,6 +332,6 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 });
 
 export default wrapWithLoggerContext(
-  withOtel(withMetadataCache(handler), "/api/order-calculate-taxes"),
+  withMetadataCache(wrapWithSpanAttributes(handler)),
   loggerContext,
 );

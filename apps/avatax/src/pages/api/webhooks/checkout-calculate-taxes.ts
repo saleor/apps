@@ -1,6 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -152,6 +152,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
  * TODO: Add tests to handler
  */
 export default wrapWithLoggerContext(
-  withOtel(withMetadataCache(handler), "/api/webhooks/checkout-calculate-taxes"),
+  withMetadataCache(wrapWithSpanAttributes(handler)),
   loggerContext,
 );

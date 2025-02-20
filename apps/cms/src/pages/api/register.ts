@@ -1,6 +1,6 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import { saleorApp } from "@/saleor-app";
 
@@ -28,4 +28,4 @@ const handler = createAppRegisterHandler({
   ],
 });
 
-export default wrapWithLoggerContext(withOtel(handler, "/api/register"), loggerContext);
+export default wrapWithLoggerContext(wrapWithSpanAttributes(handler), loggerContext);
