@@ -2,7 +2,9 @@ import { trace } from "@opentelemetry/api";
 import { SALEOR_API_URL_HEADER, SALEOR_SCHEMA_VERSION } from "@saleor/app-sdk/const";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-export const wrapWithSpanAttrs = (handler: NextApiHandler) => {
+import { ObservabilityAttributes } from "./observability-attributes";
+
+export const wrapWithSpanAttributes = (handler: NextApiHandler) => {
   return (req: NextApiRequest, res: NextApiResponse) => {
     const span = trace.getActiveSpan();
 
@@ -11,11 +13,11 @@ export const wrapWithSpanAttrs = (handler: NextApiHandler) => {
       const saleorVersion = req.headers[SALEOR_SCHEMA_VERSION] as string | undefined;
 
       if (saleorApiUrl) {
-        span.setAttribute("saleorApiUrl", saleorApiUrl);
+        span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
       }
 
       if (saleorVersion) {
-        span.setAttribute("saleorVersion", saleorVersion);
+        span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, saleorVersion);
       }
     }
     return handler(req, res);

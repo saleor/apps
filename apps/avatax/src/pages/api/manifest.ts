@@ -2,16 +2,16 @@ import { trace } from "@opentelemetry/api";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/wrap-with-span-attributes";
 
 import { env } from "@/env";
-import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttrs(
+  wrapWithSpanAttributes(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;

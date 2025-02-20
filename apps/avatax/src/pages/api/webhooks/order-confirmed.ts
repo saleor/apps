@@ -1,10 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
-import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
@@ -330,4 +330,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
   }
 });
 
-export default wrapWithLoggerContext(withMetadataCache(wrapWithSpanAttrs(handler)), loggerContext);
+export default wrapWithLoggerContext(
+  withMetadataCache(wrapWithSpanAttributes(handler)),
+  loggerContext,
+);

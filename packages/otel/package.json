@@ -27,6 +27,7 @@
     "./http-instrumentation-factory": "./src/http-instrumentation-factory.ts",
     "./resource-factory": "./src/resource-factory.ts",
     "./observability-attributes": "./src/observability-attributes.ts",
-    "./otel-urql-exchange-factory": "./src/otel-urql-exchange-factory.ts"
+    "./otel-urql-exchange-factory": "./src/otel-urql-exchange-factory.ts",
+    "./wrap-with-span-attributes": "./src/wrap-with-span-attributes.ts"
   }
 }

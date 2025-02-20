@@ -8,7 +8,6 @@ export class OTELSampler implements Sampler {
     spanName: string,
     spanKind: SpanKind,
   ): SamplingResult {
-    console.log("shouldSample");
     return { decision: 2 };
   }
 

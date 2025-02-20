@@ -1,9 +1,9 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
-import { wrapWithSpanAttrs } from "@/lib/wrap-with-span-attrs";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
@@ -249,4 +249,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
   return res.status(200).end();
 });
 
-export default wrapWithLoggerContext(withMetadataCache(wrapWithSpanAttrs(handler)), loggerContext);
+export default wrapWithLoggerContext(
+  withMetadataCache(wrapWithSpanAttributes(handler)),
+  loggerContext,
+);
